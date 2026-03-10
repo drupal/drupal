@@ -12,7 +12,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\RedundantEditableConfigNamesTrait;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure cron settings for this site.
@@ -38,20 +37,6 @@ class CronForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return ['system.cron'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.factory'),
-      $container->get('state'),
-      $container->get('cron'),
-      $container->get('date.formatter'),
-      $container->get('module_handler'),
-      $container->get('config.typed')
-    );
   }
 
   /**

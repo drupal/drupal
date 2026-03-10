@@ -4268,12 +4268,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/ContentEntityForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/ContentEntityForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityForm\\:\\:flagViolations\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -5366,34 +5360,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/FieldableEntityStorageInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Form\\\\DeleteMultipleForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Form/DeleteMultipleForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Form\\\\DeleteMultipleForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Form/DeleteMultipleForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Form\\\\RevisionDeleteForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Form/RevisionDeleteForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Form\\\\RevisionDeleteForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Form/RevisionDeleteForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Form\\\\RevisionRevertForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Form/RevisionRevertForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Form\\\\RevisionRevertForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -7454,12 +7430,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/FileTransfer/FileTransfer.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\FileTransfer\\\\Form\\\\FileTransferAuthorizeForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/FileTransfer/Form/FileTransferAuthorizeForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\FileTransfer\\\\Form\\\\FileTransferAuthorizeForm\\:\\:setConnectionSettingsDefaults\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -7634,12 +7604,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Flood/MemoryBackend.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Form\\\\ConfigFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Form/ConfigFormBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Form\\\\ConfigFormBase\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -7662,12 +7626,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Form/EventSubscriber/FormAjaxSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Form\\\\FormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Form/FormBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Form\\\\FormBase\\:\\:resetConfigFactory\\(\\) has no return type specified\\.$#',
@@ -8078,12 +8036,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Installer/Form/SelectProfileForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Installer\\\\Form\\\\SiteConfigureForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Installer/Form/SiteConfigureForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Installer\\\\Form\\\\SiteConfigureForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -8094,12 +8046,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Installer/Form/SiteConfigureForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Installer\\\\Form\\\\SiteSettingsForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Installer/Form/SiteSettingsForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Installer\\\\Form\\\\SiteSettingsForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -10952,12 +10898,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/ban/src/BanIpManagerInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ban\\\\Form\\\\BanAdmin\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/src/Form/BanAdmin.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\ban\\\\Form\\\\BanAdmin\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -10968,12 +10908,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ban/src/Form/BanAdmin.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ban\\\\Form\\\\BanDelete\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/src/Form/BanDelete.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\ban\\\\Form\\\\BanDelete\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -11156,12 +11090,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block/src/BlockAccessControlHandler.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\block\\\\BlockForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/src/BlockForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\block\\\\BlockForm\\:\\:form\\(\\) has no return type specified\\.$#',
@@ -12214,12 +12142,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/comment.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\comment\\\\CommentForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/src/CommentForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\CommentForm\\:\\:flagViolations\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -12310,12 +12232,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/src/CommentTranslationHandler.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\comment\\\\CommentTypeForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/src/CommentTypeForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\CommentTypeForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -12370,12 +12286,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/src/Entity/Comment.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\comment\\\\Form\\\\CommentAdminOverview\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/src/Form/CommentAdminOverview.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\Form\\\\CommentAdminOverview\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -12386,12 +12296,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/Form/CommentAdminOverview.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\comment\\\\Form\\\\CommentTypeDeleteForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/src/Form/CommentTypeDeleteForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\Form\\\\DeleteForm\\:\\:getDeletionMessage\\(\\) has no return type specified\\.$#',
@@ -12928,12 +12832,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/config/src/Form/ConfigExportForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config\\\\Form\\\\ConfigImportForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/src/Form/ConfigImportForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config\\\\Form\\\\ConfigImportForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -12944,12 +12842,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config/src/Form/ConfigImportForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config\\\\Form\\\\ConfigSingleExportForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/src/Form/ConfigSingleExportForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config\\\\Form\\\\ConfigSingleExportForm\\:\\:findConfiguration\\(\\) has no return type specified\\.$#',
@@ -12976,12 +12868,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/config/src/Form/ConfigSingleExportForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config\\\\Form\\\\ConfigSingleImportForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/src/Form/ConfigSingleImportForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config\\\\Form\\\\ConfigSingleImportForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -12998,12 +12884,6 @@ $ignoreErrors[] = [
 	'identifier' => 'variable.undefined',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/config/src/Form/ConfigSingleImportForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config\\\\Form\\\\ConfigSync\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/src/Form/ConfigSync.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config\\\\Form\\\\ConfigSync\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -13366,12 +13246,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/config_translation/src/ConfigNamesMapper.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_translation\\\\Form\\\\ConfigTranslationDeleteForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config_translation/src/Form/ConfigTranslationDeleteForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config_translation\\\\Form\\\\ConfigTranslationDeleteForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -13382,12 +13256,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config_translation/src/Form/ConfigTranslationEditForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_translation\\\\Form\\\\ConfigTranslationFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config_translation/src/Form/ConfigTranslationFormBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config_translation\\\\Form\\\\ConfigTranslationFormBase\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -13456,12 +13324,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/config_translation/tests/src/Functional/ConfigTranslationUiTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\contact\\\\ContactFormEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contact/src/ContactFormEditForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\contact\\\\ContactFormEditForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -13526,12 +13388,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contact/src/MailHandlerInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\contact\\\\MessageForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contact/src/MessageForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\contact\\\\MessageForm\\:\\:form\\(\\) has no return type specified\\.$#',
@@ -13968,12 +13824,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_moderation/src/EventSubscriber/ConfigImportSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\content_moderation\\\\Form\\\\ContentModerationConfigureEntityTypesForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/src/Form/ContentModerationConfigureEntityTypesForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\content_moderation\\\\Form\\\\ContentModerationConfigureEntityTypesForm\\:\\:getTitle\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -14002,12 +13852,6 @@ $ignoreErrors[] = [
 	'identifier' => 'isset.variable',
 	'count' => 3,
 	'path' => __DIR__ . '/modules/content_moderation/src/Form/ContentModerationStateForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\content_moderation\\\\Form\\\\EntityModerationForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/src/Form/EntityModerationForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\content_moderation\\\\Form\\\\EntityModerationForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -14918,12 +14762,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/datetime_range/tests/src/Functional/EntityResource/EntityTest/EntityTestDateRangeTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\dblog\\\\Form\\\\DblogClearLogConfirmForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/dblog/src/Form/DblogClearLogConfirmForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\dblog\\\\Form\\\\DblogClearLogConfirmForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -15726,12 +15564,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field_layout/src/FieldLayoutBuilder.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_layout\\\\Form\\\\FieldLayoutEntityFormDisplayEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_layout/src/Form/FieldLayoutEntityFormDisplayEditForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_layout\\\\Form\\\\FieldLayoutEntityFormDisplayEditForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -15760,12 +15592,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_layout/src/Form/FieldLayoutEntityFormDisplayEditForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_layout\\\\Form\\\\FieldLayoutEntityViewDisplayEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_layout/src/Form/FieldLayoutEntityViewDisplayEditForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_layout\\\\Form\\\\FieldLayoutEntityViewDisplayEditForm\\:\\:form\\(\\) has no return type specified\\.$#',
@@ -15882,12 +15708,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityDisplayModeAddForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityDisplayModeFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityDisplayModeFormBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityDisplayModeFormBase\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -15912,12 +15732,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityFormDisplayEditForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityFormDisplayEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityFormDisplayEditForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityFormModeAddForm\\:\\:prepareEntity\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -15928,18 +15742,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityViewDisplayEditForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\EntityViewDisplayEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Form/EntityViewDisplayEditForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\FieldConfigDeleteForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldConfigDeleteForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\FieldConfigDeleteForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -15967,12 +15769,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\FieldConfigEditForm\\:\\:copyFormValuesToEntity\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldConfigEditForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\FieldConfigEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldConfigEditForm.php',
@@ -16014,12 +15810,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldConfigEditForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\FieldStorageAddForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldStorageAddForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\FieldStorageAddForm\\:\\:rebuildWithOptions\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -16042,12 +15832,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldStorageAddForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\FieldStorageConfigEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldStorageConfigEditForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\FieldStorageConfigEditForm\\:\\:form\\(\\) has no return type specified\\.$#',
@@ -16075,12 +15859,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\FieldStorageReuseForm\\:\\:configureEntityViewDisplay\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldStorageReuseForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_ui\\\\Form\\\\FieldStorageReuseForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldStorageReuseForm.php',
@@ -16728,12 +16506,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/file_module_test/src/Form/FileModuleTestForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\file_test\\\\Form\\\\FileTestSaveUploadFromForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/file_test/src/Form/FileTestSaveUploadFromForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\file_test\\\\Form\\\\FileTestSaveUploadFromForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -17770,12 +17542,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/src/Entity/ImageStyle.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\image\\\\Form\\\\ImageEffectAddForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/src/Form/ImageEffectAddForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\image\\\\Form\\\\ImageEffectDeleteForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -17810,12 +17576,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/src/Form/ImageStyleDeleteForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\image\\\\Form\\\\ImageStyleEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/src/Form/ImageStyleEditForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\image\\\\Form\\\\ImageStyleEditForm\\:\\:effectSave\\(\\) has no return type specified\\.$#',
@@ -17858,12 +17618,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/src/Form/ImageStyleFlushForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\image\\\\Form\\\\ImageStyleFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/src/Form/ImageStyleFormBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\image\\\\Form\\\\ImageStyleFormBase\\:\\:form\\(\\) has no return type specified\\.$#',
@@ -19232,12 +18986,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/language/src/EventSubscriber/LanguageRequestSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\language\\\\Form\\\\ContentLanguageSettingsForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/src/Form/ContentLanguageSettingsForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\language\\\\Form\\\\ContentLanguageSettingsForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -19298,12 +19046,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/language/src/Form/LanguageFormBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\language\\\\Form\\\\LanguageFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/src/Form/LanguageFormBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\language\\\\Form\\\\LanguageFormBase\\:\\:validateCommon\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -19314,12 +19056,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/src/Form/NegotiationBrowserDeleteForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\language\\\\Form\\\\NegotiationBrowserForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/src/Form/NegotiationBrowserForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\language\\\\Form\\\\NegotiationBrowserForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -19341,12 +19077,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\language\\\\Form\\\\NegotiationConfigureForm\\:\\:configureFormTable\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/src/Form/NegotiationConfigureForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\language\\\\Form\\\\NegotiationConfigureForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/src/Form/NegotiationConfigureForm.php',
@@ -19374,12 +19104,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/src/Form/NegotiationSessionForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\language\\\\Form\\\\NegotiationUrlForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/src/Form/NegotiationUrlForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\language\\\\Form\\\\NegotiationUrlForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -19962,12 +19686,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/src/Field/LayoutSectionItemList.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\ConfigureBlockFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/ConfigureBlockFormBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\ConfigureBlockFormBase\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -19978,12 +19696,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/ConfigureBlockFormBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\ConfigureSectionForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/ConfigureSectionForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\ConfigureSectionForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -19998,34 +19710,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/ConfigureSectionForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\DefaultsEntityForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/DefaultsEntityForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\DefaultsEntityForm\\:\\:redirectOnSubmit\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/DefaultsEntityForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\DiscardLayoutChangesForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/DiscardLayoutChangesForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\DiscardLayoutChangesForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/DiscardLayoutChangesForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\LayoutBuilderDisableForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/LayoutBuilderDisableForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\LayoutBuilderDisableForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -20052,12 +19746,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/LayoutBuilderEntityViewDisplayForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\LayoutRebuildConfirmFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/LayoutRebuildConfirmFormBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\LayoutRebuildConfirmFormBase\\:\\:handleSectionStorage\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -20070,22 +19758,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/LayoutRebuildConfirmFormBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\MoveBlockForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/MoveBlockForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\MoveBlockForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/MoveBlockForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\OverridesEntityForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/OverridesEntityForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\OverridesEntityForm\\:\\:init\\(\\) has no return type specified\\.$#',
@@ -20110,12 +19786,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/RemoveSectionForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\RevertOverridesForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/RevertOverridesForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Form\\\\RevertOverridesForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -21066,12 +20736,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/locale/src/EventSubscriber/LocaleTranslationCacheTag.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\locale\\\\Form\\\\ExportForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/src/Form/ExportForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\locale\\\\Form\\\\ExportForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -21082,12 +20746,6 @@ $ignoreErrors[] = [
 	'identifier' => 'empty.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/src/Form/ExportForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\locale\\\\Form\\\\ImportForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/src/Form/ImportForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\locale\\\\Form\\\\ImportForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -21138,22 +20796,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/locale/src/Form/TranslateFilterForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\locale\\\\Form\\\\TranslateFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/src/Form/TranslateFormBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\locale\\\\Form\\\\TranslateFormBase\\:\\:translateFilters\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/src/Form/TranslateFormBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\locale\\\\Form\\\\TranslationStatusForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/src/Form/TranslationStatusForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\locale\\\\Form\\\\TranslationStatusForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -21732,18 +21378,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media/src/EventSubscriber/MediaConfigSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media\\\\Form\\\\MediaSettingsForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/src/Form/MediaSettingsForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media\\\\Form\\\\MediaTypeDeleteConfirmForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/src/Form/MediaTypeDeleteConfirmForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media\\\\MediaForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -21799,12 +21433,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media\\\\MediaTypeForm\\:\\:ajaxHandlerData\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/src/MediaTypeForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media\\\\MediaTypeForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/src/MediaTypeForm.php',
@@ -22428,12 +22056,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media_library/src/Ajax/UpdateSelectionCommand.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_library\\\\Form\\\\AddFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/src/Form/AddFormBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media_library\\\\Form\\\\AddFormBase\\:\\:prepareMediaEntityForSave\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -22470,12 +22092,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media_library/src/Form/AddFormBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_library\\\\Form\\\\FileUploadForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/src/Form/FileUploadForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media_library\\\\Form\\\\FileUploadForm\\:\\:prepareMediaEntityForSave\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -22495,12 +22111,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media_library\\\\Form\\\\OEmbedForm\\:\\:addButtonSubmit\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/src/Form/OEmbedForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_library\\\\Form\\\\OEmbedForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media_library/src/Form/OEmbedForm.php',
@@ -22776,12 +22386,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/menu_link_content/src/Form/MenuLinkContentDeleteForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\menu_link_content\\\\Form\\\\MenuLinkContentForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/src/Form/MenuLinkContentForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\menu_link_content\\\\Form\\\\MenuLinkContentForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -22918,12 +22522,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/PathAliasMenuLinkContentTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\menu_ui\\\\Form\\\\MenuDeleteForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/src/Form/MenuDeleteForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\menu_ui\\\\Form\\\\MenuDeleteForm\\:\\:logDeletionMessage\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -22934,12 +22532,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_ui/src/Form/MenuDeleteForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\menu_ui\\\\Form\\\\MenuLinkEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/src/Form/MenuLinkEditForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\menu_ui\\\\Form\\\\MenuLinkEditForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -22954,12 +22546,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/menu_ui/src/Form/MenuLinkEditForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\menu_ui\\\\Form\\\\MenuLinkResetForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/src/Form/MenuLinkResetForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\menu_ui\\\\Form\\\\MenuLinkResetForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -22967,12 +22553,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\menu_ui\\\\MenuForm\\:\\:buildOverviewForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/src/MenuForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\menu_ui\\\\MenuForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_ui/src/MenuForm.php',
@@ -23072,12 +22652,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/src/Event/RollbackAwareInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\migrate\\\\Form\\\\MessageForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/src/Form/MessageForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate\\\\Form\\\\MessageForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -24804,12 +24378,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Batch/MigrateUpgradeImportBatch.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\migrate_drupal_ui\\\\Form\\\\CredentialForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Form/CredentialForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate_drupal_ui\\\\Form\\\\CredentialForm\\:\\:setupMigrations\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -24846,22 +24414,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Form/IdConflictForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\migrate_drupal_ui\\\\Form\\\\IncrementalForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Form/IncrementalForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate_drupal_ui\\\\Form\\\\IncrementalForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Form/IncrementalForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\migrate_drupal_ui\\\\Form\\\\MigrateUpgradeFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Form/MigrateUpgradeFormBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate_drupal_ui\\\\Form\\\\MigrateUpgradeFormBase\\:\\:createDatabaseStateSettings\\(\\) has no return type specified\\.$#',
@@ -24880,12 +24436,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Form/OverviewForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\migrate_drupal_ui\\\\Form\\\\ReviewForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Form/ReviewForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate_drupal_ui\\\\Form\\\\ReviewForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -25342,12 +24892,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/Form/NodeDeleteForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -25366,22 +24910,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/Form/NodeForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodePreviewForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodePreviewForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodePreviewForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/Form/NodePreviewForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeRevisionDeleteForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeRevisionDeleteForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeRevisionDeleteForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -25390,28 +24922,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/Form/NodeRevisionDeleteForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeRevisionRevertForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeRevisionRevertForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeRevisionRevertForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/Form/NodeRevisionRevertForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeRevisionRevertTranslationForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeRevisionRevertTranslationForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeTypeForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeTypeForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeTypeForm\\:\\:form\\(\\) has no return type specified\\.$#',
@@ -27062,12 +26576,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/responsive_image/src/ResponsiveImageStyleForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/responsive_image/src/ResponsiveImageStyleForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
 	'count' => 2,
@@ -27758,12 +27266,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/search/src/Form/ReindexConfirm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\search\\\\Form\\\\SearchBlockForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/src/Form/SearchBlockForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\search\\\\Form\\\\SearchBlockForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -27786,12 +27288,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/src/Form/SearchPageForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\search\\\\Form\\\\SearchPageFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/src/Form/SearchPageFormBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\search\\\\Form\\\\SearchPageFormBase\\:\\:form\\(\\) has no return type specified\\.$#',
@@ -28644,18 +28140,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/shortcut/src/Form/SetCustomize.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\shortcut\\\\Form\\\\ShortcutSetDeleteForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/src/Form/ShortcutSetDeleteForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\shortcut\\\\Form\\\\SwitchShortcutSet\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/shortcut/src/Form/SwitchShortcutSet.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\shortcut\\\\Form\\\\SwitchShortcutSet\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29280,40 +28764,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Form/ClearCacheForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\CronForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/CronForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\CronForm\\:\\:runCron\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/CronForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\DateFormatDeleteForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/DateFormatDeleteForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\DateFormatEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/DateFormatEditForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\DateFormatEditForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/DateFormatEditForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\DateFormatFormBase\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/DateFormatFormBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\DateFormatFormBase\\:\\:form\\(\\) has no return type specified\\.$#',
@@ -29340,28 +28800,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Form/DateFormatFormBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\DevelopmentSettingsForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/DevelopmentSettingsForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\DevelopmentSettingsForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/DevelopmentSettingsForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\FileSystemForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/FileSystemForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ImageToolkitForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/ImageToolkitForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ImageToolkitForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -29376,22 +28818,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Form/ImageToolkitForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\MenuLinksetSettingsForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/MenuLinksetSettingsForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\MenuLinksetSettingsForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/MenuLinksetSettingsForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ModulesListConfirmForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/ModulesListConfirmForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ModulesListConfirmForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -29400,22 +28830,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Form/ModulesListConfirmForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ModulesListForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/ModulesListForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ModulesListForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/ModulesListForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ModulesListNonStableConfirmForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/ModulesListNonStableConfirmForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ModulesListNonStableConfirmForm\\:\\:getQuestion\\(\\) should return Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup but return statement is missing\\.$#',
@@ -29430,22 +28848,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Form/ModulesUninstallConfirmForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ModulesUninstallConfirmForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/ModulesUninstallConfirmForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ModulesUninstallConfirmForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/ModulesUninstallConfirmForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ModulesUninstallForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/ModulesUninstallForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ModulesUninstallForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -29460,22 +28866,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Form/ModulesUninstallForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\PerformanceForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/PerformanceForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\PerformanceForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/PerformanceForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\PrepareModulesEntityUninstallForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/PrepareModulesEntityUninstallForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\PrepareModulesEntityUninstallForm\\:\\:deleteContentEntities\\(\\) has no return type specified\\.$#',
@@ -29496,28 +28890,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Form/PrepareModulesEntityUninstallForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\RegionalForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/RegionalForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\SiteInformationForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/SiteInformationForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\SiteInformationForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/SiteInformationForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\SiteMaintenanceModeForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/SiteMaintenanceModeForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\SiteMaintenanceModeForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -29574,22 +28950,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Form/ThemeAdminForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ThemeExperimentalConfirmForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/ThemeExperimentalConfirmForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ThemeExperimentalConfirmForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/ThemeExperimentalConfirmForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ThemeSettingsForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/ThemeSettingsForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\ThemeSettingsForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -31450,12 +30814,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/FormTestAutocompleteForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\FormTestControllerObject\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/FormTestControllerObject.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\FormTestControllerObject\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -32270,12 +31628,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/system_test/src/MockFileTransfer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\tabledrag_test\\\\Form\\\\TableDragTestForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/tabledrag_test/src/Form/TableDragTestForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\tabledrag_test\\\\Form\\\\TableDragTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -33318,12 +32670,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Entity/Vocabulary.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\taxonomy\\\\Form\\\\OverviewTerms\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/Form/OverviewTerms.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Form\\\\OverviewTerms\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -33340,12 +32686,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Form/TermDeleteForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\taxonomy\\\\Form\\\\VocabularyResetForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/Form/VocabularyResetForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Form\\\\VocabularyResetForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -33734,12 +33074,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/TermTranslationHandler.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\taxonomy\\\\VocabularyForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/VocabularyForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\VocabularyForm\\:\\:form\\(\\) has no return type specified\\.$#',
@@ -34419,12 +33753,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/update/update.post_update.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user\\\\AccountForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/AccountForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\AccountForm\\:\\:flagViolations\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -34447,12 +33775,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/AccountForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user\\\\AccountSettingsForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/AccountSettingsForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Authentication\\\\Provider\\\\Cookie\\:\\:addCheckToUrl\\(\\) has no return type specified\\.$#',
@@ -34539,18 +33861,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/src/EventSubscriber/UserRequestSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user\\\\Form\\\\EntityPermissionsForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Form/EntityPermissionsForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user\\\\Form\\\\RoleSettingsForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Form/RoleSettingsForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Form\\\\RoleSettingsForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -34561,12 +33871,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Form/UserCancelForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user\\\\Form\\\\UserLoginForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Form/UserLoginForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Form\\\\UserLoginForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -34587,22 +33891,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/src/Form/UserLoginForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user\\\\Form\\\\UserMultipleCancelConfirm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Form/UserMultipleCancelConfirm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Form\\\\UserMultipleCancelConfirm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Form/UserMultipleCancelConfirm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user\\\\Form\\\\UserPasswordForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Form/UserPasswordForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Form\\\\UserPasswordForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -34621,12 +33913,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Form/UserPasswordResetForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user\\\\Form\\\\UserPermissionsForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Form/UserPermissionsForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Form\\\\UserPermissionsForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -35997,12 +35283,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/ExposedFormCache.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views\\\\Form\\\\ViewsExposedForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Form/ViewsExposedForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views\\\\Form\\\\ViewsExposedForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -43271,12 +42551,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views_ui/src/Form/Ajax/ViewsFormBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_ui\\\\Form\\\\BreakLockForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/src/Form/BreakLockForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_ui\\\\Form\\\\BreakLockForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -43284,12 +42558,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_ui\\\\ViewAddForm\\:\\:cancel\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/src/ViewAddForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_ui\\\\ViewAddForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/src/ViewAddForm.php',
@@ -43319,12 +42587,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views_ui/src/ViewAddForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_ui\\\\ViewDuplicateForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/src/ViewDuplicateForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_ui\\\\ViewDuplicateForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -43350,12 +42612,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_ui\\\\ViewEditForm\\:\\:cancel\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/src/ViewEditForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_ui\\\\ViewEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/src/ViewEditForm.php',
@@ -43757,12 +43013,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workflows/src/Form/WorkflowAddForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowAddForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workflows/src/Form/WorkflowAddForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowAddForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -43776,12 +43026,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowEditForm\\:\\:copyFormValuesToEntity\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workflows/src/Form/WorkflowEditForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workflows/src/Form/WorkflowEditForm.php',
@@ -43806,12 +43050,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowStateAddForm\\:\\:copyFormValuesToEntity\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workflows/src/Form/WorkflowStateAddForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowStateAddForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workflows/src/Form/WorkflowStateAddForm.php',
@@ -43847,12 +43085,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workflows/src/Form/WorkflowStateEditForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowStateEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workflows/src/Form/WorkflowStateEditForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowStateEditForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -43872,12 +43104,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowTransitionAddForm\\:\\:copyFormValuesToEntity\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workflows/src/Form/WorkflowTransitionAddForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowTransitionAddForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workflows/src/Form/WorkflowTransitionAddForm.php',
@@ -43908,12 +43134,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowTransitionEditForm\\:\\:copyFormValuesToEntity\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workflows/src/Form/WorkflowTransitionEditForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowTransitionEditForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workflows/src/Form/WorkflowTransitionEditForm.php',
@@ -44801,40 +44021,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\SwitchToLiveForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/SwitchToLiveForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\SwitchToLiveForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/SwitchToLiveForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\WorkspaceActivateForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/WorkspaceActivateForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\WorkspaceActivateForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/WorkspaceActivateForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\WorkspaceDeleteForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/WorkspaceDeleteForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\WorkspaceForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/WorkspaceForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\WorkspaceForm\\:\\:flagViolations\\(\\) has no return type specified\\.$#',
@@ -44855,34 +44051,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/WorkspaceForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\WorkspaceMergeForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/WorkspaceMergeForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\WorkspaceMergeForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/WorkspaceMergeForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\WorkspacePublishForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/WorkspacePublishForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\WorkspacePublishForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/WorkspacePublishForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\WorkspaceSwitcherForm\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/WorkspaceSwitcherForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\WorkspaceSwitcherForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
