@@ -2684,8 +2684,8 @@ function hook_validation_constraint_alter(array &$definitions) {
  * Creating a tag for a service does not do anything on its own, but tags
  * can be discovered or queried in a compiler pass when the container is built,
  * and a corresponding action can be taken. See
- * \Drupal\Core\Render\MainContent\MainContentRenderersPass for an example of
- * finding tagged services.
+ * \Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass for an example
+ * of finding tagged services.
  *
  * See @link container Services and Dependency Injection Container @endlink for
  * information on services and the dependency injection container.
