@@ -37,11 +37,18 @@ final class MultiplexErrorFormatter implements ErrorFormatter {
     $exitCode = 0;
 
     foreach ($this->outputs as $formatterName => $outputPath) {
-      if ($this->basePath && !str_contains($outputPath, '/')) {
-        $outputPath = $this->basePath . '/' . $outputPath;
-      }
       $formatter = $this->container->getService('errorFormatter.' . $formatterName);
-      $formatterOutput = new FileOutput($outputPath, $output->getStyle());
+      if ($outputPath !== NULL) {
+        if ($this->basePath && !str_contains($outputPath, '/')) {
+          $outputPath = $this->basePath . '/' . $outputPath;
+        }
+        $formatterOutput = new FileOutput($outputPath, $output->getStyle());
+      }
+      else {
+        // When no output path is specified for the formatter, just use the
+        // current output.
+        $formatterOutput = $output;
+      }
       $result = $formatter->formatErrors($analysisResult, $formatterOutput);
       $exitCode = max($result, $exitCode);
     }

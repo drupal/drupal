@@ -16,10 +16,8 @@ final class FileOutput implements Output {
 
   /**
    * The file handle.
-   *
-   * @var resource
    */
-  private $handle;
+  private \SplFileObject $handle;
 
   /**
    * Constructs a FileOutput.
@@ -34,40 +32,28 @@ final class FileOutput implements Output {
     if ($directory && $directory !== 'php:' && !is_dir($directory)) {
       mkdir($directory, 0777, TRUE);
     }
-
-    $handle = fopen($filePath, 'w');
-    if ($handle === FALSE) {
-      throw new \RuntimeException(sprintf('Unable to open file for writing: %s', $filePath));
-    }
-    $this->handle = $handle;
-  }
-
-  /**
-   * Ensures the file is closed on destruction.
-   */
-  public function __destruct() {
-    fclose($this->handle);
+    $this->handle = new \SplFileObject($filePath, 'w');
   }
 
   /**
    * {@inheritdoc}
    */
   public function writeFormatted(string $message): void {
-    fwrite($this->handle, $message);
+    $this->handle->fwrite($message);
   }
 
   /**
    * {@inheritdoc}
    */
   public function writeLineFormatted(string $message): void {
-    fwrite($this->handle, $message . "\n");
+    $this->handle->fwrite($message . "\n");
   }
 
   /**
    * {@inheritdoc}
    */
   public function writeRaw(string $message): void {
-    fwrite($this->handle, $message);
+    $this->handle->fwrite($message);
   }
 
   /**
