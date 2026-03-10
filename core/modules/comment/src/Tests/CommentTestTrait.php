@@ -35,7 +35,7 @@ trait CommentTestTrait {
    *   (optional) The comment view mode to be used in comment field formatter.
    *   Defaults to 'full'.
    */
-  protected function addDefaultCommentField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN, $comment_type_id = 'comment', $comment_view_mode = 'full') {
+  protected function addDefaultCommentField($entity_type, $bundle, $field_name = 'comment', $default_value = CommentItemInterface::OPEN, $comment_type_id = 'comment', $comment_view_mode = 'full'): void {
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_display_repository = \Drupal::service('entity_display.repository');
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
