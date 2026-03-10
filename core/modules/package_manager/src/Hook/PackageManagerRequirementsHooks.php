@@ -117,7 +117,7 @@ class PackageManagerRequirementsHooks {
       $requirements['testing_package_manager'] = [
         'title' => 'Package Manager',
         'description' => $this->t("Package Manager is available for early testing. To install the module set the value of 'testing_package_manager' to TRUE in your settings.php file."),
-        'severity' => RequirementSeverity::Error,
+        'severity' => RequirementSeverity::Warning,
       ];
     }
 
