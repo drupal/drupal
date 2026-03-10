@@ -4,6 +4,7 @@ namespace Drupal\comment\Plugin\Field\FieldType;
 
 use Drupal\comment\AnonymousContact;
 use Drupal\comment\CommentFieldItemList;
+use Drupal\comment\CommentingStatus;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\CommentPreviewMode;
 use Drupal\comment\Entity\CommentType;
@@ -157,9 +158,8 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
    * {@inheritdoc}
    */
   public function isEmpty() {
-    // There is always a value for this field, it is one of
-    // CommentItemInterface::OPEN, CommentItemInterface::CLOSED or
-    // CommentItemInterface::HIDDEN.
+    // There is always a value for this field, it is one of the values of the
+    // \Drupal\comment\CommentingStatus enum.
     return FALSE;
   }
 
@@ -195,11 +195,7 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
    * {@inheritdoc}
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-    $statuses = [
-      CommentItemInterface::HIDDEN,
-      CommentItemInterface::CLOSED,
-      CommentItemInterface::OPEN,
-    ];
+    $statuses = array_column(CommentingStatus::cases(), 'value');
     return [
       'status' => $statuses[mt_rand(0, count($statuses) - 1)],
     ];

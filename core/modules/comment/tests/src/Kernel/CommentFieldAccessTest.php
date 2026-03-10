@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\comment\AnonymousContact;
+use Drupal\comment\CommentingStatus;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\entity_test\Entity\EntityTest;
@@ -144,8 +144,8 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     $host->save();
 
     $host2 = EntityTest::create();
-    $host2->comment->status = CommentItemInterface::CLOSED;
-    $host2->comment_other->status = CommentItemInterface::CLOSED;
+    $host2->comment->status = CommentingStatus::Closed->value;
+    $host2->comment_other->status = CommentingStatus::Closed->value;
     $host2->save();
 
     // Change the second field's anonymous contact setting.
@@ -322,7 +322,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
             $set['comment']->getSubject(),
           ),
         );
-        $expected = $set['user']->hasPermission('post comments') && $set['comment']->isNew() && (int) $set['comment']->getCommentedEntity()->get($set['comment']->getFieldName())->status !== CommentItemInterface::CLOSED;
+        $expected = $set['user']->hasPermission('post comments') && $set['comment']->isNew() && (int) $set['comment']->getCommentedEntity()->get($set['comment']->getFieldName())->status !== CommentingStatus::Closed->value;
         $this->assertEquals(
           $expected,
           $may_update,
