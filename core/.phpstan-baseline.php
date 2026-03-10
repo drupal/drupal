@@ -12866,12 +12866,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_moderation/src/Routing/ContentModerationRouteSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\content_moderation_test_local_task\\\\Controller\\\\TestLocalTaskController\\:\\:methodWithoutUpcastNode\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/modules/content_moderation_test_local_task/src/Controller/TestLocalTaskController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ModerationStateTestBase\\:\\:createContentTypeFromUi\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -28862,18 +28856,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/taxonomy.module',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\vocabulary_serialization_test\\\\VocabularyResponse\\:\\:setVocabulary\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/modules/vocabulary_serialization_test/src/VocabularyResponse.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\vocabulary_serialization_test\\\\VocabularySerializationTestController\\:\\:vocabularyResponse\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/modules/vocabulary_serialization_test/src/VocabularySerializationTestController.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Functional\\\\Rest\\\\TermJsonAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',

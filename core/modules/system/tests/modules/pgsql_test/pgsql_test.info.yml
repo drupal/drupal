@@ -1,5 +1,0 @@
-name: 'PostgreSQL Tests'
-type: module
-description: 'Supports testing pgsql driver.'
-package: Testing
-version: VERSION
