@@ -76,9 +76,9 @@ class UrlTest extends UnitTestCase {
     parent::setUp();
 
     $map = [];
-    $map[] = ['view.frontpage.page_1', [], [], FALSE, '/node'];
-    $map[] = ['node_view', ['node' => '1'], [], FALSE, '/node/1'];
-    $map[] = ['node_edit', ['node' => '2'], [], FALSE, '/node/2/edit'];
+    $map[] = ['view.frontpage.page_1', [], ['query' => []], FALSE, '/node'];
+    $map[] = ['node_view', ['node' => '1'], ['query' => []], FALSE, '/node/1'];
+    $map[] = ['node_edit', ['node' => '2'], ['query' => []], FALSE, '/node/2/edit'];
     $this->map = $map;
 
     $alias_map = [
@@ -152,6 +152,35 @@ class UrlTest extends UnitTestCase {
       $urls[$index] = $url;
     }
     return $urls;
+  }
+
+  /**
+   * Tests creating a URL from a request with query parameters.
+   *
+   * @param array<string, string|list<string>> $queryParameters
+   *   An array of request query parameters.
+   */
+  #[DataProvider('providerUrlFromRequestWithQueryParameters')]
+  public function testUrlFromRequestWithQueryParameters(array $queryParameters): void {
+    $this->router->expects($this->once())
+      ->method('matchRequest')
+      ->willReturn([
+        RouteObjectInterface::ROUTE_NAME => 'view.frontpage.page_1',
+        '_raw_variables' => new InputBag([]),
+      ]);
+    $request = Request::create('/node', 'GET', $queryParameters);
+    $url = Url::createFromRequest($request);
+    $this->assertSame($queryParameters, $url->getOption('query'));
+  }
+
+  /**
+   * Data provider for testUrlFromRequestWithQueryParameters.
+   */
+  public static function providerUrlFromRequestWithQueryParameters(): iterable {
+    yield [['foo' => 'bar']];
+    yield [['foo' => 'bar', 'bar' => 'baz']];
+    yield [['foo' => ['bar', 'baz']]];
+    yield [[]];
   }
 
   /**
@@ -251,7 +280,7 @@ class UrlTest extends UnitTestCase {
       ->willReturn($attributes);
 
     $url = Url::createFromRequest($request);
-    $expected = new Url('the_route_name', ['color' => 'chartreuse']);
+    $expected = new Url('the_route_name', ['color' => 'chartreuse'], ['query' => []]);
     $this->assertEquals($expected, $url);
   }
 
