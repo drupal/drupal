@@ -95,7 +95,7 @@ class MigrateSourceTest extends MigrateTestCase {
       ->willReturn($key_value);
     $container->set('keyvalue', $key_value_factory);
 
-    $container->set('cache.migrate', $this->createMock(CacheBackendInterface::class));
+    $container->set('cache.migrate', $this->createStub(CacheBackendInterface::class));
 
     $this->migrationConfiguration = $this->defaultMigrationConfiguration + $migrate_config;
     $this->migration = parent::getMigration();
@@ -170,20 +170,20 @@ class MigrateSourceTest extends MigrateTestCase {
    * Tests that the source count is correct.
    */
   public function testCount(): void {
-    // Mock the cache to validate set() receives appropriate arguments.
-    $container = new ContainerBuilder();
-    $cache = $this->createMock(CacheBackendInterface::class);
-    $cache->expects($this->any())->method('set')
-      ->with($this->isString(), $this->isInt(), $this->isInt());
-    $container->set('cache.migrate', $cache);
-    \Drupal::setContainer($container);
-
     // Test that the basic count works.
     $source = $this->getSource();
     $this->assertEquals(1, $source->count());
 
     // Test caching the count works.
     $source = $this->getSource(['cache_counts' => TRUE]);
+    // Override the stubbed cache service to validate that set() receives
+    // appropriate arguments.
+    $cache = $this->createMock(CacheBackendInterface::class);
+    $cache->expects($this->once())
+      ->method('set')
+      ->with($this->isString(), $this->isInt(), $this->isInt());
+    \Drupal::getContainer()->set('cache.migrate', $cache);
+
     $this->assertEquals(1, $source->count());
 
     // Test the skip argument.
@@ -206,16 +206,15 @@ class MigrateSourceTest extends MigrateTestCase {
    * Tests that the key can be set for the count cache.
    */
   public function testCountCacheKey(): void {
-    // Mock the cache to validate set() receives appropriate arguments.
-    $container = new ContainerBuilder();
-    $cache = $this->createMock(CacheBackendInterface::class);
-    $cache->expects($this->any())->method('set')
-      ->with('test_key', $this->isInt(), $this->isInt());
-    $container->set('cache.migrate', $cache);
-    \Drupal::setContainer($container);
-
     // Test caching the count with a configured key works.
     $source = $this->getSource(['cache_counts' => TRUE, 'cache_key' => 'test_key']);
+    // Override the stubbed cache service to validate that set() receives
+    // appropriate arguments.
+    $cache = $this->createMock(CacheBackendInterface::class);
+    $cache->expects($this->once())
+      ->method('set')
+      ->with('test_key', $this->isInt(), $this->isInt());
+    \Drupal::getContainer()->set('cache.migrate', $cache);
     $this->assertEquals(1, $source->count());
   }
 
