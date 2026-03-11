@@ -1,6 +1,6 @@
 name: 'Testing config import theme'
 type: theme
-base theme: stable9
+base theme: false
 description: 'Theme for testing profile uninstall'
 version: VERSION
 regions:

@@ -166,7 +166,7 @@ class MiniPagerTest extends ViewTestBase {
     $view->display_handler->setOption('pager', $pager);
     $view->save();
 
-    // Stark and Stable9 are handled below.
+    // Stark and test_base_theme are handled below.
     $themes = ['olivero', 'claro', 'starterkit_theme'];
     $this->container->get('theme_installer')->install($themes);
 
@@ -176,9 +176,9 @@ class MiniPagerTest extends ViewTestBase {
       $this->assertEquals('h3', $this->assertSession()->elementExists('css', ".pager .visually-hidden")->getTagName());
     }
 
-    // The core views template and Stable9 use a different class structure than
-    // other core themes.
-    $themes = ['stark', 'stable9'];
+    // The core views template and test_base_theme use a different class
+    // structure than other core themes.
+    $themes = ['stark', 'test_base_theme'];
     $this->container->get('theme_installer')->install($themes);
     foreach ($themes as $theme) {
       $this->config('system.theme')->set('default', $theme)->save();

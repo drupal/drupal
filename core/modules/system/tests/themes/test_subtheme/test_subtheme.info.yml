@@ -15,5 +15,5 @@ libraries-override:
       base:
         base-add.sub-remove.css: false
 libraries-extend:
-  starterkit_theme/base:
+  test_base_theme/base:
     - test_subtheme/global-styling

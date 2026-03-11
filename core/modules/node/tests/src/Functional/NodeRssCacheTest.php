@@ -84,7 +84,7 @@ class NodeRssCacheTest extends NodeTestBase {
     $build = $viewBuilder->view($node, 'teaser');
     $output = $this->container->get('renderer')->renderInIsolation($build);
 
-    // Teaser must contain an "<article" tag from the stable9 theme.
+    // Teaser output must contain an "<article" tag.
     $this->assertStringContainsString('<article', (string) $output);
   }
 

@@ -1,5 +1,5 @@
 name: Test Stable
 type: theme
-base theme: stable9
-description: A theme to test that stable 9 is set as the default.
+base theme: false
+description: A theme fixture used for theme registry tests.
 version: VERSION

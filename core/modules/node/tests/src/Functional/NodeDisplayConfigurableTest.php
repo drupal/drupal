@@ -180,7 +180,6 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
       // @todo Add coverage for olivero after fixing
       // https://www.drupal.org/project/drupal/issues/3215220.
       // ['olivero', 'footer', TRUE],
-      ['stable9', 'footer', FALSE],
     ];
   }
 
