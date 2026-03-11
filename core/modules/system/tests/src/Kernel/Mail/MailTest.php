@@ -6,6 +6,7 @@ namespace Drupal\Tests\system\Kernel\Mail;
 
 use Drupal\Component\Utility\Random;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\Plugin\Mail\TestMailCollector;
 use Drupal\Core\Messenger\MessengerInterface;
@@ -30,7 +31,6 @@ class MailTest extends KernelTestBase {
    */
   protected static $modules = [
     'file',
-    'mail_cancel_test',
     'mail_html_test',
     'system',
     'system_mail_failure_test',
@@ -99,9 +99,23 @@ class MailTest extends KernelTestBase {
   }
 
   /**
+   * Implements hook_mail_alter().
+   *
+   * Aborts sending of messages with ID 'mail_cancel_test_cancel_test'.
+   *
+   * @see ::testCancelMessage()
+   */
+  #[Hook('mail_alter')]
+  public function mailAlter(&$message): void {
+    if ($message['id'] == 'mail_cancel_test_cancel_test') {
+      $message['send'] = FALSE;
+    }
+  }
+
+  /**
    * Tests that message sending may be canceled.
    *
-   * @see mail_cancel_test_mail_alter()
+   * @see ::mailAlter()
    */
   public function testCancelMessage(): void {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
