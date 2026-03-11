@@ -267,7 +267,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
         'status' => TRUE,
       ])
       ->shouldBeCalled();
-    $config_object->save(FALSE)->shouldBeCalled();
+    $config_object->save()->shouldBeCalled();
     $config_object->get()->willReturn([
       'id' => 'foo',
       'uuid' => 'bar',
@@ -328,7 +328,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
         'status' => TRUE,
       ])
       ->shouldBeCalled();
-    $config_object->save(FALSE)->shouldBeCalled();
+    $config_object->save()->shouldBeCalled();
     $config_object->get()->willReturn([
       'id' => 'foo',
       'uuid' => 'bar',
@@ -390,7 +390,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
         'status' => TRUE,
       ])
       ->shouldBeCalled();
-    $config_object->save(FALSE)
+    $config_object->save()
       ->shouldBeCalled();
     $config_object->get()->willReturn([
       'id' => 'bar',
@@ -513,7 +513,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
         'status' => TRUE,
       ])
       ->shouldBeCalled();
-    $config_object->save(FALSE)->shouldBeCalled();
+    $config_object->save()->shouldBeCalled();
 
     $this->cacheTagsInvalidator->invalidateTags([$this->entityTypeId . '_list'])
       ->shouldBeCalled();

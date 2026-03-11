@@ -199,7 +199,7 @@ class MenuLinkContentTest extends ResourceTestBase {
    * @see https://security.drupal.org/node/161923
    */
   public function testLinkOptionsSerialization(): void {
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $document = $this->getPostDocument();
     $document['data']['attributes']['link']['options'] = "O:44:\"Symfony\\Component\\Process\\Pipes\\WindowsPipes\":8:{s:51:\"\\Symfony\\Component\\Process\\Pipes\\WindowsPipes\0files\";a:1:{i:0;s:3:\"foo\";}s:57:\"\0Symfony\\Component\\Process\\Pipes\\WindowsPipes\0fileHandles\";a:0:{}s:55:\"\0Symfony\\Component\\Process\\Pipes\\WindowsPipes\0readBytes\";a:2:{i:1;i:0;i:2;i:0;}s:59:\"\0Symfony\\Component\\Process\\Pipes\\WindowsPipes\0disableOutput\";b:0;s:5:\"pipes\";a:0:{}s:58:\"\0Symfony\\Component\\Process\\Pipes\\AbstractPipes\0inputBuffer\";s:0:\"\";s:52:\"\0Symfony\\Component\\Process\\Pipes\\AbstractPipes\0input\";N;s:54:\"\0Symfony\\Component\\Process\\Pipes\\AbstractPipes\0blocked\";b:1;}";

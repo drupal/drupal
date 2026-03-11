@@ -23,7 +23,7 @@ function system_install(): void {
   if (!$site->get('name')) {
     $site->set('name', 'Drupal');
   }
-  $site->save(TRUE);
+  $site->save();
 
   // Populate the dummy query string added to all CSS and JavaScript files.
   \Drupal::service('asset.query_string')->reset();

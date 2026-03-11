@@ -148,7 +148,7 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
       $all_overrides = $this->getConfig()->get('definitions');
       // Combine with any existing data.
       $all_overrides[$id] = $definition + $this->loadOverride($id);
-      $this->getConfig()->set('definitions', $all_overrides)->save(TRUE);
+      $this->getConfig()->set('definitions', $all_overrides)->save();
     }
     return array_keys($definition);
   }

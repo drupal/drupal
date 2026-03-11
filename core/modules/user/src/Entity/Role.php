@@ -193,7 +193,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
       }, 0);
     }
 
-    if (!$this->isSyncing() && $this->hasTrustedData()) {
+    if (!$this->isSyncing()) {
       // Permissions are always ordered alphabetically to avoid conflicts in the
       // exported configuration. If the save is not trusted then the
       // configuration will be sorted by StorableConfigBase.

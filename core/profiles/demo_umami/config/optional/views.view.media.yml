@@ -130,8 +130,8 @@ display:
           click_sort_column: target_id
           type: image
           settings:
-            image_style: thumbnail
             image_link: ''
+            image_style: thumbnail
             image_loading:
               attribute: lazy
           group_column: ''
@@ -798,7 +798,6 @@ display:
         type: table
         options:
           grouping: {  }
-          class: ''
           row_class: ''
           default_row_class: true
           columns:
@@ -858,6 +857,7 @@ display:
           empty_table: true
           caption: ''
           description: ''
+          class: ''
       row:
         type: fields
       query:

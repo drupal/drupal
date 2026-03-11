@@ -257,18 +257,26 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
 
     // Retrieve the desired properties and set them in config.
     $config->setData($this->mapToStorageRecord($entity));
-    $config->save($entity->hasTrustedData());
+
+    // Trusted data is deprecated in Drupal 11.4.0 and removed in Drupal 13.0.
+    // This code preserves the existing behavior and will be removed when the
+    // \Drupal\Core\Config\Entity\ConfigEntityInterface::hasTrustedData() is
+    // removed.
+    if ($entity->hasTrustedData()) {
+      $config->save(TRUE);
+    }
+    else {
+      $config->save();
+    }
 
     // Update the entity with the values stored in configuration. It is possible
     // that configuration schema has casted some of the values.
-    if (!$entity->hasTrustedData()) {
-      $data = $this->mapFromStorageRecords([$config->get()]);
-      $updated_entity = current($data);
+    $data = $this->mapFromStorageRecords([$config->get()]);
+    $updated_entity = current($data);
 
-      foreach (array_keys($config->get()) as $property) {
-        $value = $updated_entity->get($property);
-        $entity->set($property, $value);
-      }
+    foreach (array_keys($config->get()) as $property) {
+      $value = $updated_entity->get($property);
+      $entity->set($property, $value);
     }
 
     return $is_new ? SAVED_NEW : SAVED_UPDATED;

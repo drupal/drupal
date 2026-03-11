@@ -51,6 +51,8 @@ class ViewUIObjectTest extends UnitTestCase {
           'getConfigDependencyKey',
           'getConfigDependencyName',
           'calculateDependencies',
+          // Deprecated methods that are now no-ops.
+          'trustData',
         ])) {
         if (count($reflection_method->getParameters()) == 0) {
           $method_args[$reflection_method->getName()] = [];

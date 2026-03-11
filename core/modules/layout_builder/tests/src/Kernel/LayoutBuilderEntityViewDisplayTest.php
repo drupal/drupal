@@ -6,6 +6,8 @@ namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -106,18 +108,29 @@ class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
    * Tests that enabling Layout Builder moves fields to hidden.
    */
   public function testFieldsMovedToHiddenOnEnable(): void {
+    // Add a display-configurable field so we can verify it gets moved to
+    // hidden when Layout Builder is enabled.
+    FieldStorageConfig::create([
+      'field_name' => 'field_test',
+      'entity_type' => 'entity_test',
+      'type' => 'string',
+    ])->save();
+    FieldConfig::create([
+      'field_name' => 'field_test',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+      'label' => 'Test field',
+    ])->save();
+
     $display = LayoutBuilderEntityViewDisplay::load('entity_test.entity_test.default');
+    $display->setComponent('field_test', ['type' => 'string', 'region' => 'content']);
     $display->disableLayoutBuilder()->save();
-    $display->trustData();
-    $this->assertNotEmpty($display->get('content'));
-    $this->assertNotContains('langcode', $display->get('hidden'));
-    $this->assertNotContains('name', $display->get('hidden'));
+    $this->assertArrayHasKey('field_test', $display->get('content'));
+    $this->assertArrayNotHasKey('field_test', $display->get('hidden'));
+
     $display->enableLayoutBuilder()->save();
-    $this->assertEmpty($display->get('content'));
-    $this->assertEquals([
-      'langcode' => TRUE,
-      'name' => TRUE,
-    ], $display->get('hidden'));
+    $this->assertArrayNotHasKey('field_test', $display->get('content'));
+    $this->assertArrayHasKey('field_test', $display->get('hidden'));
   }
 
   /**

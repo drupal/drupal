@@ -301,7 +301,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     // Calculating the cacheability metadata is only needed when the view is
     // saved through the UI or API. It should not be done when we are syncing
     // configuration or installing modules.
-    if (!$this->isSyncing() && !$this->hasTrustedData()) {
+    if (!$this->isSyncing()) {
       $this->addCacheMetadata();
     }
   }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Functional\Wizard;
 
+use Drupal\Tests\Traits\Core\Config\RawConfigWriterTrait;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('views')]
 #[RunTestsInSeparateProcesses]
 class ItemsPerPageTest extends WizardTestBase {
+  use RawConfigWriterTrait;
 
   /**
    * {@inheritdoc}
@@ -193,7 +195,8 @@ class ItemsPerPageTest extends WizardTestBase {
     // @see \Drupal\views\Hook\ViewsHooks::blockPresave()
     $block->set('settings', [
       'items_per_page' => 'none',
-    ])->trustData()->save();
+      'label' => 'Test',
+    ])->save();
     $this->expectUserDeprecationMessage('Saving a views block with "none" items per page is deprecated in drupal:11.2.0 and removed in drupal:12.0.0. To use the items per page defined by the view, use NULL. See https://www.drupal.org/node/3522240');
     self::assertNull($block->get('settings')['items_per_page']);
     self::assertSame(4, View::load($view['id'])->toArray()['display']['default']['display_options']['pager']['options']['items_per_page']);
@@ -209,7 +212,9 @@ class ItemsPerPageTest extends WizardTestBase {
     // Explicitly set the `items_per_page` setting to a string without casting.
     $block->set('settings', [
       'items_per_page' => '5',
-    ])->trustData()->save();
+      'label' => 'Test',
+    ]);
+    $this->writeRawConfigEntity($block);
     self::assertSame('5', $block->get('settings')['items_per_page']);
     self::assertSame(4, View::load($view['id'])->toArray()['display']['default']['display_options']['pager']['options']['items_per_page']);
     self::assertSame(3, View::load($view['id'])->toArray()['display']['block_1']['display_options']['pager']['options']['items_per_page']);

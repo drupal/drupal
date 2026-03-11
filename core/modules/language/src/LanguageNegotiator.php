@@ -286,7 +286,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
         unset($enabled_methods[$method_id]);
       }
     }
-    $this->configFactory->getEditable('language.types')->set('negotiation.' . $type . '.enabled', $enabled_methods)->save(TRUE);
+    $this->configFactory->getEditable('language.types')->set('negotiation.' . $type . '.enabled', $enabled_methods)->save();
   }
 
   /**

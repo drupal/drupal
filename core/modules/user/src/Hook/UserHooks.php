@@ -264,7 +264,7 @@ class UserHooks {
         ],
         'plugin' => 'user_add_role_action',
       ]);
-      $action->trustData()->save();
+      $action->save();
     }
     $remove_id = 'user_remove_role_action.' . $role->id();
     if (!Action::load($remove_id)) {
@@ -279,7 +279,7 @@ class UserHooks {
         ],
         'plugin' => 'user_remove_role_action',
       ]);
-      $action->trustData()->save();
+      $action->save();
     }
   }
 
