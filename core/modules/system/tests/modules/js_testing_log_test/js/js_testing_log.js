@@ -10,7 +10,7 @@
         sessionStorage.getItem('js_testing_log_test.warnings') ||
           JSON.stringify([]),
       );
-      warnings.push(warning);
+      warnings.push(`${window.location.pathname}|${warning}`);
       sessionStorage.setItem(
         'js_testing_log_test.warnings',
         JSON.stringify(warnings),
@@ -24,7 +24,7 @@
       sessionStorage.getItem('js_testing_log_test.errors') ||
         JSON.stringify([]),
     );
-    errors.push(evt.error.stack);
+    errors.push(`${window.location.pathname}|${evt.error.stack}`);
     sessionStorage.setItem(
       'js_testing_log_test.errors',
       JSON.stringify(errors),
