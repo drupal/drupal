@@ -4214,6 +4214,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/ContentEntityConfirmFormBase.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityConfirmFormBase\\:\\:validateForm\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/ContentEntityConfirmFormBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityDeleteForm\\:\\:addDependencyListsToForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -4311,6 +4317,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityForm\\:\\:updateFormLangcode\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/ContentEntityForm.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/ContentEntityForm.php',
@@ -5346,6 +5358,24 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Event/BundleConfigImportValidate.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\FieldableEntityInterface\\:\\:get\\(\\) return type with generic interface Drupal\\\\Core\\\\Field\\\\FieldItemListInterface does not specify its types\\: T$#',
+	'identifier' => 'missingType.generics',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/FieldableEntityInterface.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\FieldableEntityInterface\\:\\:getFields\\(\\) return type with generic interface Drupal\\\\Core\\\\Field\\\\FieldItemListInterface does not specify its types\\: T$#',
+	'identifier' => 'missingType.generics',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/FieldableEntityInterface.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\FieldableEntityInterface\\:\\:getTranslatableFields\\(\\) return type with generic interface Drupal\\\\Core\\\\Field\\\\FieldItemListInterface does not specify its types\\: T$#',
+	'identifier' => 'missingType.generics',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/FieldableEntityInterface.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\FieldableEntityInterface\\:\\:onChange\\(\\) has no return type specified\\.$#',
@@ -10406,6 +10436,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/TypedData/Plugin/DataType/DurationIso8601.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Core\\\\TypedData\\\\Plugin\\\\DataType\\\\ItemList\\:\\:getIterator\\(\\) return type with generic class ArrayIterator does not specify its types\\: TKey, TValue$#',
+	'identifier' => 'missingType.generics',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/TypedData/Plugin/DataType/ItemList.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\TypedData\\\\Plugin\\\\DataType\\\\ItemList\\:\\:onChange\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -11596,6 +11632,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block_content/tests/src/Functional/BlockContentTypeTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/block_content/tests/src/Functional/BlockContentTypeTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Functional\\\\PageEditTest\\:\\:assertBreadcrumb\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -11610,6 +11652,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Functional\\\\PageEditTest\\:\\:assertMenuActiveTrail\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/block_content/tests/src/Functional/PageEditTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/tests/src/Functional/PageEditTest.php',
 ];
@@ -13408,6 +13456,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/contact/src/MessageForm.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\contact\\\\MessageForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/contact/src/MessageForm.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\contact\\\\MessageInterface\\:\\:setCopySender\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -14830,6 +14884,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\dblog\\\\Functional\\\\DbLogTest\\:\\:generateLogEntries\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/dblog/tests/src/Functional/DbLogTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/dblog/tests/src/Functional/DbLogTest.php',
 ];
@@ -16392,6 +16452,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/src/Plugin/Validation/Constraint/FileImageDimensionsConstraintValidator.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Variable \\$height in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/file/src/Plugin/Validation/Constraint/FileImageDimensionsConstraintValidator.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\file\\\\Plugin\\\\Validation\\\\Constraint\\\\FileIsImageConstraintValidator\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -17108,8 +17174,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/filter/src/FilterPluginCollection.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\filter\\\\FilterProcessResult\\:\\:createPlaceholder\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
+	'message' => '#^\\#lazy_builder value \'string\' at key \'0\' is invalid\\.$#',
+	'identifier' => 'renderCallback.invalidKeyValue',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/filter/src/FilterProcessResult.php',
 ];
@@ -17370,6 +17436,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\help\\\\Functional\\\\HelpTopicTest\\:\\:assertMenuActiveTrail\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/help/tests/src/Functional/HelpTopicTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/help/tests/src/Functional/HelpTopicTest.php',
 ];
@@ -19400,6 +19472,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\language\\\\Functional\\\\LanguageBreadcrumbTest\\:\\:assertMenuActiveTrail\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/language/tests/src/Functional/LanguageBreadcrumbTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/tests/src/Functional/LanguageBreadcrumbTest.php',
 ];
@@ -25492,6 +25570,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTitleTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTitleTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeTranslationUITest\\:\\:getNewEntityValues\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -25548,6 +25632,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeTypeTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTypeTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTypeTest.php',
 ];
@@ -32052,6 +32142,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/BreadcrumbFrontCacheContextsTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/BreadcrumbFrontCacheContextsTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Menu\\\\BreadcrumbTest\\:\\:assertBreadcrumb\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -32073,6 +32169,12 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$parent might not be defined\\.$#',
 	'identifier' => 'variable.undefined',
 	'count' => 3,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/BreadcrumbTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
+	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/BreadcrumbTest.php',
 ];
 $ignoreErrors[] = [
@@ -33028,9 +33130,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/TermForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\taxonomy\\\\TermForm\\:\\:validateForm\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#',
-	'identifier' => 'return.missing',
-	'count' => 2,
+	'message' => '#^Method Drupal\\\\taxonomy\\\\TermForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/TermForm.php',
 ];
 $ignoreErrors[] = [
@@ -33268,6 +33370,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/TermTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/TermTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Functional\\\\TermTranslationFieldViewTest\\:\\:enableTranslation\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -33318,6 +33426,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Functional\\\\TermTranslationTest\\:\\:setupLanguages\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/TermTranslationTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/TermTranslationTest.php',
 ];
