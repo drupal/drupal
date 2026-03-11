@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\comment\CommentingStatus;
 use Drupal\comment\Entity\Comment;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -156,8 +156,8 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $output = $token_service->replace($input, ['comment' => $comment], ['langcode' => $language_interface->getId()]);
     $this->assertSame((string) Html::escape($author_name), (string) $output);
     // Add comment field to user and term entities.
-    $this->addDefaultCommentField('user', 'user', 'comment', CommentingStatus::Open, 'comment_user');
-    $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentingStatus::Open, 'comment_term');
+    $this->addDefaultCommentField('user', 'user', 'comment', CommentItemInterface::OPEN, 'comment_user');
+    $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentItemInterface::OPEN, 'comment_term');
 
     // Create a user and a comment.
     $user = User::create(['name' => 'alice']);

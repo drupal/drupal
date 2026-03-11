@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\search\Functional;
 
-use Drupal\comment\CommentingStatus;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -79,7 +79,7 @@ class SearchRankingTest extends BrowserTestBase {
       $settings = [
         'type' => 'page',
         'comment' => [
-          ['status' => CommentingStatus::Hidden->value],
+          ['status' => CommentItemInterface::HIDDEN],
         ],
         'title' => 'Drupal rocks',
         'body' => [['value' => "Drupal's search rocks"]],
@@ -106,7 +106,7 @@ class SearchRankingTest extends BrowserTestBase {
               break;
 
             case 'comments':
-              $settings['comment'][0]['status'] = CommentingStatus::Open->value;
+              $settings['comment'][0]['status'] = CommentItemInterface::OPEN;
               break;
           }
         }

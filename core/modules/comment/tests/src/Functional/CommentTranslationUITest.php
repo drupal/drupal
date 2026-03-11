@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\comment\CommentingStatus;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
@@ -83,7 +83,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     parent::setupBundle();
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'article']);
     // Add a comment field to the article content type.
-    $this->addDefaultCommentField('node', 'article', 'comment_article', CommentingStatus::Open, 'comment_article');
+    $this->addDefaultCommentField('node', 'article', 'comment_article', CommentItemInterface::OPEN, 'comment_article');
     // Create a page content type.
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'page']);
     // Add a comment field to the page content type - this one won't be
@@ -117,7 +117,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     $node = $this->drupalCreateNode([
       'type' => $node_type,
       $field_name => [
-        ['status' => CommentingStatus::Open->value],
+        ['status' => CommentItemInterface::OPEN],
       ],
     ]);
     $values['entity_id'] = $node->id();

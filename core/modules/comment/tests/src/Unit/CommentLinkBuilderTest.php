@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Unit;
 
-use Drupal\comment\CommentingStatus;
 use Drupal\comment\CommentLinkBuilder;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -151,7 +150,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
     $cases = [];
     // No links should be created if the entity doesn't have the field.
     $cases[] = [
-      [FALSE, CommentingStatus::Open, CommentItemInterface::FORM_BELOW, 1],
+      [FALSE, CommentItemInterface::OPEN, CommentItemInterface::FORM_BELOW, 1],
       ['view_mode' => 'teaser'],
       TRUE,
       TRUE,
@@ -161,7 +160,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
     foreach (['search_result', 'search_index', 'print'] as $view_mode) {
       // Nothing should be output in these view modes.
       $cases[] = [
-        [TRUE, CommentingStatus::Open, CommentItemInterface::FORM_BELOW, 1],
+        [TRUE, CommentItemInterface::OPEN, CommentItemInterface::FORM_BELOW, 1],
         ['view_mode' => $view_mode],
         TRUE,
         TRUE,
@@ -176,7 +175,11 @@ class CommentLinkBuilderTest extends UnitTestCase {
       'has_access_comments' => [0, 1],
       'has_post_comments'   => [0, 1],
       'form_location'            => [CommentItemInterface::FORM_BELOW, CommentItemInterface::FORM_SEPARATE_PAGE],
-      'comments' => CommentingStatus::cases(),
+      'comments'        => [
+        CommentItemInterface::OPEN,
+        CommentItemInterface::CLOSED,
+        CommentItemInterface::HIDDEN,
+      ],
       'view_mode' => [
         'teaser', 'rss', 'full',
       ],
@@ -193,13 +196,13 @@ class CommentLinkBuilderTest extends UnitTestCase {
       $expected = [];
       // When comments are enabled in teaser mode, and comments exist, and the
       // user has access - we can output the comment count.
-      if ($combination['comments'] !== CommentingStatus::Hidden && $combination['view_mode'] == 'teaser' && $combination['comment_count'] && $combination['has_access_comments']) {
+      if ($combination['comments'] && $combination['view_mode'] == 'teaser' && $combination['comment_count'] && $combination['has_access_comments']) {
         $expected['comment-comments'] = '1 comment';
       }
       // All view modes other than RSS.
       if ($combination['view_mode'] != 'rss') {
         // Where commenting is open.
-        if ($combination['comments'] == CommentingStatus::Open) {
+        if ($combination['comments'] == CommentItemInterface::OPEN) {
           // And the user has post-comments permission.
           if ($combination['has_post_comments']) {
             // If the view mode is teaser, or the user can access comments and
@@ -242,8 +245,8 @@ class CommentLinkBuilderTest extends UnitTestCase {
    *
    * @param bool $has_field
    *   TRUE if the node has the 'comment' field.
-   * @param \Drupal\comment\CommentingStatus $comment_status
-   *   One of the CommentingStatus enum cases.
+   * @param int $comment_status
+   *   One of CommentItemInterface::OPEN|HIDDEN|CLOSED.
    * @param int $form_location
    *   One of CommentItemInterface::FORM_BELOW|FORM_SEPARATE_PAGE.
    * @param int $comment_count
@@ -262,7 +265,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
       $this->timestamp = time();
     }
     $field_item = (object) [
-      'status' => $comment_status->value,
+      'status' => $comment_status,
       'comment_count' => $comment_count,
       'last_comment_timestamp' => $this->timestamp,
     ];

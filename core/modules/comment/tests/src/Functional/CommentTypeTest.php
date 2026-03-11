@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\comment\CommentingStatus;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -161,7 +161,7 @@ class CommentTypeTest extends CommentTestBase {
     // Create a comment type programmatically.
     $type = $this->createCommentType('foo');
     $this->drupalCreateContentType(['type' => 'page']);
-    $this->addDefaultCommentField('node', 'page', 'foo', CommentingStatus::Open, 'foo');
+    $this->addDefaultCommentField('node', 'page', 'foo', CommentItemInterface::OPEN, 'foo');
     $field_storage = FieldStorageConfig::loadByName('node', 'foo');
 
     $this->drupalLogin($this->adminUser);

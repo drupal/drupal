@@ -2,7 +2,6 @@
 
 namespace Drupal\comment\Hook;
 
-use Drupal\comment\CommentingStatus;
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -13,6 +12,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
 use Drupal\field\FieldStorageConfigInterface;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\field\FieldConfigInterface;
 use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Url;
@@ -106,7 +106,7 @@ class CommentHooks {
       $default_value = $field->getDefaultValueLiteral();
       $default_value += [[]];
       $default_value[0] += [
-        'status' => CommentingStatus::Open->value,
+        'status' => CommentItemInterface::OPEN,
         'cid' => 0,
         'last_comment_timestamp' => 0,
         'last_comment_name' => '',
@@ -184,7 +184,7 @@ class CommentHooks {
       $comment_manager = \Drupal::service('comment.manager');
       $fields = $comment_manager->getFields($entity->getEntityTypeId());
       foreach ($fields as $field_name => $detail) {
-        if ($entity->hasField($field_name) && $entity->get($field_name)->status != CommentingStatus::Hidden->value) {
+        if ($entity->hasField($field_name) && $entity->get($field_name)->status != CommentItemInterface::HIDDEN) {
           // Add a comments RSS element which is a URL to the comments of this
           // entity.
           $options = ['fragment' => 'comments', 'absolute' => TRUE];
@@ -352,9 +352,9 @@ class CommentHooks {
         continue;
       }
       // Do not make a string if comments are hidden.
-      $status = CommentingStatus::tryFrom((int) $node->get($field_name)->status);
-      if (\Drupal::currentUser()->hasPermission('access comments') && $status != CommentingStatus::Hidden) {
-        if ($status == CommentingStatus::Open) {
+      $status = $node->get($field_name)->status;
+      if (\Drupal::currentUser()->hasPermission('access comments') && $status != CommentItemInterface::HIDDEN) {
+        if ($status == CommentItemInterface::OPEN) {
           // At least one comment field is open.
           $open = TRUE;
         }

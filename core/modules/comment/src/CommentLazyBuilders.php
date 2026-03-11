@@ -2,6 +2,7 @@
 
 namespace Drupal\comment;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityFormBuilderInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -173,9 +174,9 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
    */
   protected function buildLinks(CommentInterface $entity, EntityInterface $commented_entity) {
     $links = [];
-    $status = CommentingStatus::tryFrom((int) $commented_entity->get($entity->getFieldName())->status);
+    $status = $commented_entity->get($entity->getFieldName())->status;
 
-    if ($status == CommentingStatus::Open) {
+    if ($status == CommentItemInterface::OPEN) {
       if ($entity->access('delete')) {
         $links['comment-delete'] = [
           'title' => $this->t('Delete'),

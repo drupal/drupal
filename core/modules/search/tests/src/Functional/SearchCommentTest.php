@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\search\Functional;
 
 use Behat\Mink\Exception\ResponseTextException;
-use Drupal\comment\CommentingStatus;
 use Drupal\comment\CommentPreviewMode;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
@@ -226,7 +226,7 @@ class SearchCommentTest extends BrowserTestBase {
 
     // Hide comments.
     $this->drupalLogin($this->adminUser);
-    $node->set('comment', CommentingStatus::Hidden->value);
+    $node->set('comment', CommentItemInterface::HIDDEN);
     $node->save();
 
     // Invoke search index update.

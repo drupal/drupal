@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\comment_base_field_test\Entity;
 
-use Drupal\comment\CommentingStatus;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
@@ -33,7 +33,7 @@ class CommentTestBaseField extends EntityTest {
       ->setLabel(t('A comment field'))
       ->setSetting('comment_type', 'test_comment_type')
       ->setDefaultValue([
-        'status' => CommentingStatus::Open->value,
+        'status' => CommentItemInterface::OPEN,
       ]);
 
     return $fields;

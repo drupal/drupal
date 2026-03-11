@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Kernel;
 
-use Drupal\comment\CommentingStatus;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
@@ -62,7 +61,11 @@ class CommentItemTest extends FieldKernelTestBase {
     $entity = EntityTest::create();
     $entity->comment->generateSampleItems();
     $this->entityValidateAndSave($entity);
-    $this->assertContains($entity->get('comment')->status, array_column(CommentingStatus::cases(), 'value'), 'Comment status value in defined range');
+    $this->assertContains($entity->get('comment')->status, [
+      CommentItemInterface::HIDDEN,
+      CommentItemInterface::CLOSED,
+      CommentItemInterface::OPEN,
+    ], 'Comment status value in defined range');
 
     $mainProperty = $entity->comment[0]->mainPropertyName();
     $this->assertEquals('status', $mainProperty);

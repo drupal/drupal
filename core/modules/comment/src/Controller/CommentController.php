@@ -4,7 +4,7 @@ namespace Drupal\comment\Controller;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
-use Drupal\comment\CommentingStatus;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Controller\ControllerBase;
@@ -231,7 +231,7 @@ class CommentController extends ControllerBase {
         // We make sure the field value isn't set so we don't end up with a
         // redirect loop.
         $entity = clone $entity;
-        $entity->{$field_name}->status = CommentingStatus::Hidden->value;
+        $entity->{$field_name}->status = CommentItemInterface::HIDDEN;
         // Render array of the entity full view mode.
         $build['commented_entity'] = $this->entityTypeManager()->getViewBuilder($entity->getEntityTypeId())->view($entity, 'full');
         unset($build['commented_entity']['#cache']);
@@ -295,8 +295,8 @@ class CommentController extends ControllerBase {
     $access = AccessResult::allowedIfHasPermission($account, 'post comments');
 
     // If commenting is open on the entity.
-    $status = CommentingStatus::tryFrom((int) $entity->{$field_name}->status);
-    $access = $access->andIf(AccessResult::allowedIf($status == CommentingStatus::Open)
+    $status = $entity->{$field_name}->status;
+    $access = $access->andIf(AccessResult::allowedIf($status == CommentItemInterface::OPEN)
       ->addCacheableDependency($entity))
       // And if user has access to the host entity.
       ->andIf(AccessResult::allowedIf($entity->access('view')));

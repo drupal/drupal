@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Theme;
 
-use Drupal\comment\CommentingStatus;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\ExtensionLifecycle;
@@ -116,7 +116,7 @@ class EntityFilteringThemeTest extends BrowserTestBase {
 
     $this->createContentType(['type' => 'article']);
     // Add a comment field.
-    $this->addDefaultCommentField('node', 'article', 'comment', CommentingStatus::Open);
+    $this->addDefaultCommentField('node', 'article', 'comment', CommentItemInterface::OPEN);
     // Create a test node tagged with the test term.
     $this->node = $this->drupalCreateNode([
       'title' => $this->xssLabel,
