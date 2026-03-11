@@ -1718,7 +1718,7 @@ services:
   Drupal\Core\Session\WriteSafeSessionHandlerInterface: '@session_handler.write_safe'
   session_manager:
     class: Drupal\Core\Session\SessionManager
-    arguments: ['@request_stack', '@session_handler', '@session_manager.metadata_bag', '@session_configuration', '@datetime.time', '@Drupal\Core\Session\UserSessionRepositoryInterface']
+    arguments: ['@request_stack', '@session_handler', '@session_manager.metadata_bag', '@session_configuration', '@datetime.time']
   Drupal\Core\Session\SessionManagerInterface: '@session_manager'
   session_manager.metadata_bag:
     class: Drupal\Core\Session\MetadataBag
