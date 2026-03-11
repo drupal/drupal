@@ -38,6 +38,10 @@ $connection->delete('key_value')
   ->execute();
 
 // Remove contact config entries.
-$connection->delete('config')
+$query = $connection->delete('config');
+$group = $query->orConditionGroup()
   ->condition('name', 'contact.%', 'LIKE')
+  ->condition('name', 'core.entity_form_display.contact%', 'LIKE')
+  ->condition('name', 'core.entity_view_display.contact%', 'LIKE');
+$query->condition($group)
   ->execute();
