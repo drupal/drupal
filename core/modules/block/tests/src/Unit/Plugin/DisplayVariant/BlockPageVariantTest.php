@@ -5,7 +5,12 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\Unit\Plugin\DisplayVariant;
 
 use Drupal\block\Plugin\DisplayVariant\BlockPageVariant;
+use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Block\MainContentBlockPluginInterface;
+use Drupal\Core\Block\MessagesBlockPluginInterface;
+use Drupal\Core\Block\TitleBlockPluginInterface;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -56,12 +61,9 @@ class BlockPageVariantTest extends UnitTestCase {
   public function setUpDisplayVariant($configuration = [], $definition = []) {
 
     $container = new Container();
-    $cache_context_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
-      ->disableOriginalConstructor()
-      ->onlyMethods(['assertValidTokens'])
-      ->getMock();
+    $cache_context_manager = $this->createStub(CacheContextsManager::class);
     $container->set('cache_contexts_manager', $cache_context_manager);
-    $cache_context_manager->expects($this->any())
+    $cache_context_manager
       ->method('assertValidTokens')
       ->willReturn(TRUE);
     \Drupal::setContainer($container);
@@ -212,10 +214,10 @@ class BlockPageVariantTest extends UnitTestCase {
     $display_variant->setMainContent(['#markup' => 'Hello kittens!']);
 
     $blocks = ['top' => [], 'center' => [], 'bottom' => []];
-    $block_plugin = $this->createMock('Drupal\Core\Block\BlockPluginInterface');
-    $main_content_block_plugin = $this->createMock('Drupal\Core\Block\MainContentBlockPluginInterface');
-    $messages_block_plugin = $this->createMock('Drupal\Core\Block\MessagesBlockPluginInterface');
-    $title_block_plugin = $this->createMock('Drupal\Core\Block\TitleBlockPluginInterface');
+    $block_plugin = $this->createStub(BlockPluginInterface::class);
+    $main_content_block_plugin = $this->createStub(MainContentBlockPluginInterface::class);
+    $messages_block_plugin = $this->createStub(MessagesBlockPluginInterface::class);
+    $title_block_plugin = $this->createStub(TitleBlockPluginInterface::class);
     foreach ($blocks_config as $block_id => $block_config) {
       $block = $this->createMock('Drupal\block\BlockInterface');
       $block->expects($this->atLeastOnce())
@@ -242,6 +244,8 @@ class BlockPageVariantTest extends UnitTestCase {
    */
   public function testBuildWithoutMainContent(): void {
     $display_variant = $this->setUpDisplayVariant();
+    $this->blockViewBuilder->expects($this->never())
+      ->method('view');
     $this->blockRepository->expects($this->once())
       ->method('getVisibleBlocksPerRegion')
       ->willReturn([]);
@@ -273,10 +277,12 @@ class BlockPageVariantTest extends UnitTestCase {
    */
   public function testCacheMetadataFromPlugin(): void {
     $display_variant = $this->setUpDisplayVariant();
+    $this->blockViewBuilder->expects($this->never())
+      ->method('view');
     $this->blockRepository->expects($this->once())
       ->method('getVisibleBlocksPerRegion')
       ->willReturn([]);
-    $route_match = $this->createMock(RouteMatchInterface::class);
+    $route_match = $this->createStub(RouteMatchInterface::class);
 
     $event = new PageDisplayVariantSelectionEvent($display_variant->getPluginId(), $route_match);
     $event->addCacheTags(['my_tag']);
