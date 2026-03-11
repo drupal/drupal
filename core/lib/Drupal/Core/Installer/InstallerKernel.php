@@ -14,15 +14,35 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class InstallerKernel extends DrupalKernel {
 
   /**
+   * The extensions from the last container compilation.
+   */
+  protected array $compiledExtensions = [];
+
+  /**
    * {@inheritdoc}
    */
   protected function initializeContainer() {
-    // Always force a container rebuild.
-    $this->containerNeedsRebuild = TRUE;
     // Ensure the InstallerKernel's container is not dumped.
     $this->allowDumping = FALSE;
-    $container = parent::initializeContainer();
-    return $container;
+
+    // During installation, initializeContainer() can be called multiple times
+    // without any module changes in between. Since allowDumping is FALSE, no
+    // cached container exists, so the parent will always recompile.
+    $extensions = $this->getExtensions();
+    if (isset($this->container)
+      && count($extensions['module'] ?? []) === count($this->compiledExtensions['module'] ?? [])
+      && count($extensions['theme'] ?? []) === count($this->compiledExtensions['theme'] ?? [])
+      && !array_diff_key($extensions['module'] ?? [], $this->compiledExtensions['module'] ?? [])
+      && !array_diff_key($extensions['theme'] ?? [], $this->compiledExtensions['theme'] ?? [])
+    ) {
+      $this->containerNeedsRebuild = FALSE;
+      return $this->container;
+    }
+    else {
+      $this->containerNeedsRebuild = TRUE;
+      $this->compiledExtensions = $extensions;
+      return parent::initializeContainer();
+    }
   }
 
   /**
