@@ -1997,7 +1997,7 @@ services:
     class: Drupal\Core\Theme\Icon\IconExtractorPluginManager
     parent: default_plugin_manager
     arguments: ['@plugin_form.factory']
-  Drupal\Core\Theme\Icon\IconExtractorInterface: '@plugin.manager.icon_extractor'
+  Drupal\Core\Theme\Icon\IconExtractorPluginManager: '@plugin.manager.icon_extractor'
   Drupal\Core\Theme\Icon\IconFinder:
     autowire: true
     arguments:
