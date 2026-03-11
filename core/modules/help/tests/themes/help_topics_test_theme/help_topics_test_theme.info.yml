@@ -1,5 +1,5 @@
 name: Test Help Topics
 type: theme
-base theme: stable9
+base theme: false
 description: A theme to test help topics.
 version: VERSION

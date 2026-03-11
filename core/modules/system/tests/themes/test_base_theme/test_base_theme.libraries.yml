@@ -1,3 +1,23 @@
+base:
+  version: VERSION
+  css:
+    component:
+      css/components/button.css: {}
+      css/components/container-inline.css: {}
+      css/components/details.css: {}
+
+messages:
+  version: VERSION
+  css:
+    component:
+      css/components/messages.css: {}
+
+dialog:
+  version: VERSION
+  css:
+    component:
+      css/components/dialog.css: {}
+
 global-styling:
   version: VERSION
   css:

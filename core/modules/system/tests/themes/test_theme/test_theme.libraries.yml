@@ -1,3 +1,23 @@
+base:
+  version: VERSION
+  css:
+    component:
+      /core/modules/system/tests/themes/test_base_theme/css/components/button.css: {}
+      /core/modules/system/tests/themes/test_base_theme/css/components/container-inline.css: {}
+      /core/modules/system/tests/themes/test_base_theme/css/components/details.css: {}
+
+messages:
+  version: VERSION
+  css:
+    component:
+      /core/modules/system/tests/themes/test_base_theme/css/components/messages.css: {}
+
+dialog:
+  version: VERSION
+  css:
+    component:
+      /core/modules/system/tests/themes/test_base_theme/css/components/dialog.css: {}
+
 global-styling:
   version: VERSION
   css:

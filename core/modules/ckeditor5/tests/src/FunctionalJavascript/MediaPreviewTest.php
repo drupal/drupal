@@ -72,9 +72,9 @@ class MediaPreviewTest extends MediaTestBase {
     $this->waitForEditor();
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-widget.drupal-media .this-error-message-is-themeable'));
 
-    // Test when using the starterkit_theme theme, an additional class is added
-    // to the error, which is supported by
-    // stable9/templates/content/media-embed-error.html.twig.
+    // Test when using the starterkit_theme theme, the source media embed error
+    // template from ./core/modules/media/templates/media-embed-error.html.twig
+    // still adds the expected class.
     $this->assertTrue($this->container->get('theme_installer')->install(['starterkit_theme']));
     $this->config('system.theme')
       ->set('default', 'starterkit_theme')
@@ -104,7 +104,7 @@ class MediaPreviewTest extends MediaTestBase {
 
     // Configure a different default and admin theme, like on most Drupal sites.
     $this->config('system.theme')
-      ->set('default', 'stable9')
+      ->set('default', 'stark')
       ->set('admin', 'starterkit_theme')
       ->save();
 
@@ -116,7 +116,7 @@ class MediaPreviewTest extends MediaTestBase {
     $assert_session = $this->assertSession();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]'));
     $element = $assert_session->elementExists('css', '[data-media-embed-test-active-theme]');
-    $this->assertSame('stable9', $element->getAttribute('data-media-embed-test-active-theme'));
+    $this->assertSame('stark', $element->getAttribute('data-media-embed-test-active-theme'));
     // Assert that the first preview request transferred >500 B over the wire.
     // Then toggle source mode on and off. This causes the CKEditor widget to be
     // destroyed and then reconstructed. Assert that during this reconstruction,

@@ -6,6 +6,8 @@ base theme: false
 hidden: true
 
 libraries:
+  - test_base_theme/base
+  - test_base_theme/messages
   - test_base_theme/global-styling
 libraries-override:
   core/drupal.dialog:
@@ -18,7 +20,3 @@ libraries-override:
     css:
       base:
         css/base-remove.css: false
-
-libraries-extend:
-  starterkit_theme/base:
-    - test_base_theme/global-styling

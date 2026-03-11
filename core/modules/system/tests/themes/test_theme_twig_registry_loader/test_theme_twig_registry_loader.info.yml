@@ -1,5 +1,5 @@
 name: 'Twig registry loader test'
 type: theme
-base theme: stable9
+base theme: false
 description: 'Support module for Twig registry loader testing.'
 version: VERSION

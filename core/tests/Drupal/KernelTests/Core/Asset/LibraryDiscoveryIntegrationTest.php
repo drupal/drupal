@@ -76,16 +76,16 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     // Assert that entire library was correctly overridden.
     $this->assertEquals($this->libraryDiscovery->getLibraryByName('core', 'drupal.collapse'), $this->libraryDiscovery->getLibraryByName('test_theme', 'collapse'), 'Entire library correctly overridden.');
 
-    // Assert that starterkit_theme library assets were correctly overridden or
+    // Assert that the test theme library assets were correctly overridden or
     // removed.
-    $this->assertNoAssetInLibrary('core/themes/starterkit_theme/css/components/button.css', 'starterkit_theme', 'base', 'css');
-    $this->assertNoAssetInLibrary('core/themes/starterkit_theme/css/components/container-inline.css', 'starterkit_theme', 'base', 'css');
-    $this->assertNoAssetInLibrary('core/themes/starterkit_theme/css/components/details.css', 'starterkit_theme', 'base', 'css');
-    $this->assertNoAssetInLibrary('core/themes/starterkit_theme/css/components/dialog.css', 'starterkit_theme', 'dialog', 'css');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_base_theme/css/components/button.css', 'test_theme', 'base', 'css');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_base_theme/css/components/container-inline.css', 'test_theme', 'base', 'css');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_base_theme/css/components/details.css', 'test_theme', 'base', 'css');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_base_theme/css/components/dialog.css', 'test_theme', 'dialog', 'css');
 
-    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_theme/css/my-button.css', 'starterkit_theme', 'base', 'css');
-    $this->assertAssetInLibrary('themes/my_theme/css/my-container-inline.css', 'starterkit_theme', 'base', 'css');
-    $this->assertAssetInLibrary('themes/my_theme/css/my-details.css', 'starterkit_theme', 'base', 'css');
+    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_theme/css/my-button.css', 'test_theme', 'base', 'css');
+    $this->assertAssetInLibrary('themes/my_theme/css/my-container-inline.css', 'test_theme', 'base', 'css');
+    $this->assertAssetInLibrary('themes/my_theme/css/my-details.css', 'test_theme', 'base', 'css');
 
     // Assert that entire library was correctly removed.
     $this->assertFalse($this->libraryDiscovery->getLibraryByName('core', 'drupal.progress'), 'Entire library correctly removed.');
@@ -223,11 +223,11 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
 
     // Activate a sub theme and confirm that it inherits the library assets
     // extended in the base theme as well as its own.
-    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_base_theme/css/base-libraries-extend.css', 'starterkit_theme', 'base', 'css');
-    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_subtheme/css/sub-libraries-extend.css', 'starterkit_theme', 'base', 'css');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_base_theme/css/base-libraries-extend.css', 'test_base_theme', 'base', 'css');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_subtheme/css/sub-libraries-extend.css', 'test_base_theme', 'base', 'css');
     $this->activateTheme('test_subtheme');
-    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_base_theme/css/base-libraries-extend.css', 'starterkit_theme', 'base', 'css');
-    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_subtheme/css/sub-libraries-extend.css', 'starterkit_theme', 'base', 'css');
+    $this->assertNoAssetInLibrary('core/modules/system/tests/themes/test_base_theme/css/base-libraries-extend.css', 'test_base_theme', 'base', 'css');
+    $this->assertAssetInLibrary('core/modules/system/tests/themes/test_subtheme/css/sub-libraries-extend.css', 'test_base_theme', 'base', 'css');
 
     // Activate test theme that extends with a non-existent library. An
     // exception should be thrown.

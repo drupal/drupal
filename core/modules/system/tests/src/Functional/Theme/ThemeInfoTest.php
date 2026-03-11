@@ -67,7 +67,7 @@ class ThemeInfoTest extends BrowserTestBase {
     // Make sure we are not testing the wrong theme.
     $this->assertEquals('test_theme', $active_theme->getName());
     $this->assertEquals(
-      ['starterkit_theme/base', 'starterkit_theme/messages', 'core/normalize', 'test_theme/global-styling'],
+      ['test_theme/base', 'test_theme/messages', 'test_theme/global-styling'],
       $active_theme->getLibraries(),
     );
 
@@ -76,7 +76,7 @@ class ThemeInfoTest extends BrowserTestBase {
     $this->resetAll();
     $active_theme = $this->container->get('theme.manager')->getActiveTheme();
     $this->assertEquals(
-      ['starterkit_theme/base', 'starterkit_theme/messages', 'core/normalize', 'test_theme/global-styling', 'core/once'],
+      ['test_theme/base', 'test_theme/messages', 'test_theme/global-styling', 'core/once'],
       $active_theme->getLibraries(),
     );
   }
