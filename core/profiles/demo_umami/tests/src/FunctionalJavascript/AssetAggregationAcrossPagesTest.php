@@ -21,9 +21,19 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   protected $profile = 'demo_umami';
 
   /**
+   * Tests asset aggregation duplication across multiple pages.
+   */
+  public function testAssetsAcrossMultiplePages(): void {
+    $this->doTestFrontAndRecipesPages();
+    $this->doTestFrontAndRecipesPagesAuthenticated();
+    $this->doTestFrontAndRecipesPagesEditor();
+    $this->doTestNodeAddPagesAuthor();
+  }
+
+  /**
    * Checks the asset requests made when the front and recipe pages are visited.
    */
-  public function testFrontAndRecipesPages(): void {
+  protected function doTestFrontAndRecipesPages(): void {
     $performance_data = $this->collectPerformanceData(function () {
       $this->doRequests();
     }, 'umamiFrontAndRecipePages');
@@ -40,7 +50,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   /**
    * Checks the front and recipe page asset requests as an authenticated user.
    */
-  public function testFrontAndRecipesPagesAuthenticated(): void {
+  protected function doTestFrontAndRecipesPagesAuthenticated(): void {
     $user = $this->createUser();
     $this->drupalLogin($user);
     sleep(2);
@@ -60,7 +70,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   /**
    * Checks the front and recipe page asset requests as an editor.
    */
-  public function testFrontAndRecipesPagesEditor(): void {
+  protected function doTestFrontAndRecipesPagesEditor(): void {
     $user = $this->createUser();
     $user->addRole('editor');
     $user->save();
@@ -81,7 +91,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   /**
    * Checks the node/add page asset requests as an author.
    */
-  public function testNodeAddPagesAuthor(): void {
+  protected function doTestNodeAddPagesAuthor(): void {
     $user = $this->createUser();
     $user->addRole('author');
     $user->save();
