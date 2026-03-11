@@ -12,7 +12,7 @@ module.exports.assertion = function (expected) {
         : [];
 
     return deprecationMessages.map((message) =>
-      message.replace('[Deprecation] ', ''),
+      message.replace(/.*\[Deprecation\] /, ''),
     );
   };
   this.command = (callback) =>

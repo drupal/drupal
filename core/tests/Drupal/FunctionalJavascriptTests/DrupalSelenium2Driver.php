@@ -244,9 +244,9 @@ JS);
   public function processJavascriptDeprecations(): void {
     $warnings = $this->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.warnings') || JSON.stringify([]))");
     foreach ($warnings as $warning) {
-      if (str_starts_with($warning, '[Deprecation]')) {
+      if (str_contains($warning, '[Deprecation]')) {
         // phpcs:ignore Drupal.Semantics.FunctionTriggerError
-        @trigger_error('Javascript Deprecation:' . substr($warning, 13), E_USER_DEPRECATED);
+        @trigger_error('Javascript Deprecation:' . preg_replace('/.*\[Deprecation\]/', '', $warning), E_USER_DEPRECATED);
       }
     }
   }
