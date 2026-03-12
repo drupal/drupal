@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\link\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
@@ -29,21 +28,11 @@ class LinkFormatterTest extends UnitTestCase {
    * LinkItem::getUrl will throw \InvalidArgumentException.
    */
   public function testFormatterLinkItemUrlMalformed(): void {
-    $entity = $this->createMock(EntityInterface::class);
-
     $linkItem = $this->createMock(LinkItemInterface::class);
-    $exception = new \InvalidArgumentException();
-    $linkItem->expects($this->any())
-      ->method('getParent')
-      ->willReturn($entity);
     $linkItem->expects($this->once())
       ->method('getUrl')
-      ->willThrowException($exception);
-    $linkItem->expects($this->any())
-      ->method('__get')
-      ->with('options')
-      ->willReturn([]);
-    $fieldDefinition = $this->createMock(FieldDefinitionInterface::class);
+      ->willThrowException(new \InvalidArgumentException());
+    $fieldDefinition = $this->createStub(FieldDefinitionInterface::class);
     $fieldList = new FieldItemList($fieldDefinition, '', $linkItem);
 
     $fieldTypePluginManager = $this->createMock(FieldTypePluginManagerInterface::class);
@@ -61,7 +50,7 @@ class LinkFormatterTest extends UnitTestCase {
     \Drupal::setContainer($container);
     $fieldList->setValue([$linkItem]);
 
-    $pathValidator = $this->createMock(PathValidatorInterface::class);
+    $pathValidator = $this->createStub(PathValidatorInterface::class);
     $linkFormatter = new LinkFormatter('', [], $fieldDefinition, [], '', '', [], $pathValidator);
     $elements = $linkFormatter->viewElements($fieldList, 'es');
     $this->assertEquals('link', $elements[0]['#type']);
@@ -71,21 +60,11 @@ class LinkFormatterTest extends UnitTestCase {
    * Tests when LinkItem::getUrl throws an unexpected exception.
    */
   public function testFormatterLinkItemUrlUnexpectedException(): void {
-    $exception = new \Exception('Unexpected!!!');
-
     $linkItem = $this->createMock(LinkItemInterface::class);
-    $entity = $this->createMock(EntityInterface::class);
-    $linkItem->expects($this->any())
-      ->method('getParent')
-      ->willReturn($entity);
     $linkItem->expects($this->once())
       ->method('getUrl')
-      ->willThrowException($exception);
-    $linkItem->expects($this->any())
-      ->method('__get')
-      ->with('options')
-      ->willReturn([]);
-    $fieldDefinition = $this->createMock(FieldDefinitionInterface::class);
+      ->willThrowException(new \Exception('Unexpected!!!'));
+    $fieldDefinition = $this->createStub(FieldDefinitionInterface::class);
     $fieldList = new FieldItemList($fieldDefinition, '', $linkItem);
 
     $fieldTypePluginManager = $this->createMock(FieldTypePluginManagerInterface::class);
@@ -97,7 +76,7 @@ class LinkFormatterTest extends UnitTestCase {
     \Drupal::setContainer($container);
     $fieldList->setValue([$linkItem]);
 
-    $pathValidator = $this->createMock(PathValidatorInterface::class);
+    $pathValidator = $this->createStub(PathValidatorInterface::class);
     $linkFormatter = new LinkFormatter('', [], $fieldDefinition, [], '', '', [], $pathValidator);
     $this->expectException(\Exception::class);
     $this->expectExceptionMessage('Unexpected!!!');
@@ -111,18 +90,10 @@ class LinkFormatterTest extends UnitTestCase {
     $expectedUrl = Url::fromUri('route:<front>');
 
     $linkItem = $this->createMock(LinkItemInterface::class);
-    $entity = $this->createMock(EntityInterface::class);
-    $linkItem->expects($this->any())
-      ->method('getParent')
-      ->willReturn($entity);
     $linkItem->expects($this->once())
       ->method('getUrl')
       ->willReturn($expectedUrl);
-    $linkItem->expects($this->any())
-      ->method('__get')
-      ->with('options')
-      ->willReturn([]);
-    $fieldDefinition = $this->createMock(FieldDefinitionInterface::class);
+    $fieldDefinition = $this->createStub(FieldDefinitionInterface::class);
     $fieldList = new FieldItemList($fieldDefinition, '', $linkItem);
 
     $fieldTypePluginManager = $this->createMock(FieldTypePluginManagerInterface::class);
@@ -140,7 +111,7 @@ class LinkFormatterTest extends UnitTestCase {
     \Drupal::setContainer($container);
     $fieldList->setValue([$linkItem]);
 
-    $pathValidator = $this->createMock(PathValidatorInterface::class);
+    $pathValidator = $this->createStub(PathValidatorInterface::class);
     $linkFormatter = new LinkFormatter('', [], $fieldDefinition, [], '', '', [], $pathValidator);
     $elements = $linkFormatter->viewElements($fieldList, 'zh');
     $this->assertEquals([

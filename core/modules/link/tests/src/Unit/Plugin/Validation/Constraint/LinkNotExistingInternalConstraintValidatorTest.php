@@ -13,6 +13,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
@@ -31,9 +32,8 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
   public function testValidateFromUri(): void {
     $url = Url::fromUri('https://www.drupal.org');
 
-    $link = $this->createMock(LinkItemInterface::class);
-    $link->expects($this->any())
-      ->method('getUrl')
+    $link = $this->createStub(LinkItemInterface::class);
+    $link->method('getUrl')
       ->willReturn($url);
 
     $context = $this->createMock(ExecutionContextInterface::class);
@@ -50,15 +50,14 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
     $url = Url::fromRoute('example.existing_route');
 
     $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-    $urlGenerator->expects($this->any())
+    $urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with('example.existing_route', [], [])
       ->willReturn('/example/existing');
     $url->setUrlGenerator($urlGenerator);
 
-    $link = $this->createMock(LinkItemInterface::class);
-    $link->expects($this->any())
-      ->method('getUrl')
+    $link = $this->createStub(LinkItemInterface::class);
+    $link->method('getUrl')
       ->willReturn($url);
 
     $context = $this->createMock(ExecutionContextInterface::class);
@@ -75,19 +74,19 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
     $url = Url::fromRoute('example.not_existing_route');
 
     $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-    $urlGenerator->expects($this->any())
+    $urlGenerator->expects($this->once())
       ->method('generateFromRoute')
       ->with('example.not_existing_route', [], [])
       ->willThrowException(new RouteNotFoundException());
     $url->setUrlGenerator($urlGenerator);
 
-    $link = $this->createMock(LinkItemInterface::class);
-    $link->expects($this->any())
-      ->method('getUrl')
+    $link = $this->createStub(LinkItemInterface::class);
+    $link->method('getUrl')
       ->willReturn($url);
 
     $constraintViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
-    $constraintViolationBuilder->method('atPath')
+    $constraintViolationBuilder->expects($this->once())
+      ->method('atPath')
       ->with('uri')
       ->willReturn($constraintViolationBuilder);
     $context = $this->createMock(ExecutionContextInterface::class);
@@ -104,9 +103,8 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
    * @see \Drupal\Core\Url::fromUri
    */
   public function testValidateWithMalformedUri(): void {
-    $link = $this->createMock(LinkItemInterface::class);
-    $link->expects($this->any())
-      ->method('getUrl')
+    $link = $this->createStub(LinkItemInterface::class);
+    $link->method('getUrl')
       ->willThrowException(new \InvalidArgumentException());
 
     $context = $this->createMock(ExecutionContextInterface::class);
@@ -119,7 +117,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
   /**
    * Validate the link.
    */
-  protected function validate(LinkItemInterface&MockObject $link, ExecutionContextInterface&MockObject $context): void {
+  protected function validate(LinkItemInterface&Stub $link, ExecutionContextInterface&MockObject $context): void {
     $validator = new LinkNotExistingInternalConstraintValidator();
     $validator->initialize($context);
     $validator->validate($link, new LinkNotExistingInternalConstraint());
@@ -131,7 +129,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
   public function testUnexpectedValue(): void {
     $this->expectException(UnexpectedValueException::class);
     $validator = new LinkNotExistingInternalConstraintValidator();
-    $context = $this->createMock(ExecutionContextInterface::class);
+    $context = $this->createStub(ExecutionContextInterface::class);
     $validator->initialize($context);
     $constraint = new LinkNotExistingInternalConstraint();
     $validator->validate('bad value', $constraint);
@@ -149,7 +147,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
       ->method('getUrl');
 
     $validator = new LinkNotExistingInternalConstraintValidator();
-    $context = $this->createMock(ExecutionContextInterface::class);
+    $context = $this->createStub(ExecutionContextInterface::class);
     $validator->initialize($context);
     $constraint = new LinkNotExistingInternalConstraint();
     $validator->validate($link, $constraint);
