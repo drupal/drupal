@@ -13,7 +13,6 @@ use Drupal\module_handler_test_all1\Hook\ModuleHandlerTestAll1Hooks;
 use Drupal\user_hooks_test\Hook\UserHooksTest;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -62,7 +61,6 @@ class HookCollectorPassTest extends KernelTestBase {
   /**
    * Test that ordering works.
    */
-  #[IgnoreDeprecations]
   public function testOrdering(): void {
     $container = new ContainerBuilder();
     $module_filenames = [

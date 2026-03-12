@@ -7,14 +7,12 @@ namespace Drupal\FunctionalTests\Libraries;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the loading of jQuery UI CSS and JS assets.
  */
 #[Group('libraries')]
-#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class JqueryUiLibraryAssetsTest extends BrowserTestBase {
 

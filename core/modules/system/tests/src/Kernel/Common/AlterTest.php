@@ -6,7 +6,6 @@ namespace Drupal\Tests\system\Kernel\Common;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -28,7 +27,6 @@ class AlterTest extends KernelTestBase {
   /**
    * Tests if the theme has been altered.
    */
-  #[IgnoreDeprecations]
   public function testDrupalAlter(): void {
     // This test depends on Olivero, so make sure that it is always the current
     // active theme.

@@ -18,7 +18,6 @@ use Drupal\ddd_hook_order_test\Hook\DHooks;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -36,7 +35,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[CoversClass(RemoveHook::class)]
 #[CoversClass(ReorderHook::class)]
 #[Group('Hook')]
-#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class HookOrderTest extends KernelTestBase {
 

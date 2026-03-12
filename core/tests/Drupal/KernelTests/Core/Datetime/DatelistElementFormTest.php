@@ -13,7 +13,6 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Security\UntrustedCallbackException;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -115,7 +114,6 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * Tests that exceptions are raised if untrusted callbacks are used.
    */
-  #[IgnoreDeprecations]
   public function testDatelistElementUntrustedCallbacks() : void {
     $this->expectException(UntrustedCallbackException::class);
     $this->expectExceptionMessage(sprintf(

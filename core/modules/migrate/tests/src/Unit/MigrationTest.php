@@ -16,7 +16,6 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests Drupal\migrate\Plugin\Migration.
@@ -189,7 +188,6 @@ class MigrationTest extends UnitTestCase {
    * @legacy-covers ::getMigrationDependencies
    */
   #[DataProvider('getInvalidMigrationDependenciesProvider')]
-  #[IgnoreDeprecations]
   public function testMigrationDependenciesWithInvalidConfig(array $dependencies): void {
     $migration = new TestMigration();
 

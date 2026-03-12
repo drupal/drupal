@@ -94,7 +94,6 @@ class ModuleHandlerTest extends UnitTestCase {
   /**
    * Tests loading all modules.
    */
-  #[IgnoreDeprecations]
   public function testLoadAllModules(): void {
     $moduleList = [
       'module_handler_test_all1' => 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all1',
@@ -270,7 +269,6 @@ class ModuleHandlerTest extends UnitTestCase {
   /**
    * Tests invoke all.
    */
-  #[IgnoreDeprecations]
   public function testInvokeAll(): void {
     $implementations = [
       'hook' => [

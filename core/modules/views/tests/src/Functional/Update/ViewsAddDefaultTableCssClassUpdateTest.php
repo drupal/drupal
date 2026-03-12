@@ -7,7 +7,6 @@ namespace Drupal\Tests\views\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\views\Entity\View;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -16,7 +15,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @see views_post_update_table_css_class()
  */
 #[Group('Update')]
-#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class ViewsAddDefaultTableCssClassUpdateTest extends UpdatePathTestBase {
 

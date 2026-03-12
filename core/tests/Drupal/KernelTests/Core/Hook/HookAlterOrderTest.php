@@ -14,7 +14,6 @@ use Drupal\ccc_hook_order_test\Hook\CAlterHooks;
 use Drupal\ddd_hook_order_test\Hook\DAlterHooks;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -24,7 +23,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *  are procedural only
  */
 #[Group('Hook')]
-#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class HookAlterOrderTest extends KernelTestBase {
 

@@ -20,7 +20,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[CoversClass(Container::class)]
 #[Group('Container')]
-#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class ServiceDeprecationTest extends BrowserTestBase {
 
@@ -37,6 +36,7 @@ class ServiceDeprecationTest extends BrowserTestBase {
   /**
    * Tests get deprecated.
    */
+  #[IgnoreDeprecations]
   public function testGetDeprecated(): void {
     $this->expectUserDeprecationMessage('The "deprecation_test.service" service is deprecated in drupal:9.0.0 and is removed from drupal:20.0.0. This is a test.');
     // @phpstan-ignore-next-line
@@ -48,6 +48,7 @@ class ServiceDeprecationTest extends BrowserTestBase {
    *
    * @legacy-covers ::get
    */
+  #[IgnoreDeprecations]
   public function testGetDeprecatedAlias(): void {
     $this->expectUserDeprecationMessage('The "deprecation_test.service" service is deprecated in drupal:9.0.0 and is removed from drupal:20.0.0. This is a test.');
     $this->expectUserDeprecationMessage('The "deprecation_test.alias" alias is deprecated in drupal:9.0.0 and is removed from drupal:20.0.0. This is a test.');

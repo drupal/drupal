@@ -14,7 +14,6 @@ use Drupal\Core\Security\UntrustedCallbackException;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -186,7 +185,6 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
    *   NULL if otherwise.
    */
   #[DataProvider('providerUntrusted')]
-  #[IgnoreDeprecations]
   public function testDatetimeElementUntrustedCallbacks(string $date_callback = 'datetimeDateCallbackTrusted', string $time_callback = 'datetimeTimeCallbackTrusted', ?string $expected_exception = NULL) : void {
     if ($expected_exception) {
       $this->expectException(UntrustedCallbackException::class);

@@ -17,7 +17,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @see \Drupal\Core\Template\TwigNodeCheckDeprecations
  */
 #[Group('Twig')]
-#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class TwigDeprecationsTest extends KernelTestBase {
 
@@ -29,6 +28,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test deprecating variables at definition in hook_theme().
    */
+  #[IgnoreDeprecations]
   public function testHookThemeDeprecations(): void {
     $element = [
       '#theme' => 'theme_test_deprecations_hook_theme',
@@ -63,6 +63,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test deprecation of single variable triggers error.
    */
+  #[IgnoreDeprecations]
   public function testSingleDeprecation(): void {
     $preprocess = [
       'deprecations' => [
@@ -76,6 +77,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test deprecation of empty variable triggers error.
    */
+  #[IgnoreDeprecations]
   public function testEmptyDeprecation(): void {
     $preprocess = [
       'foo' => '',
@@ -90,6 +92,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test deprecation of multiple variables triggers errors.
    */
+  #[IgnoreDeprecations]
   public function testMultipleDeprecations(): void {
     $preprocess = [
       'deprecations' => [
@@ -119,6 +122,7 @@ class TwigDeprecationsTest extends KernelTestBase {
   /**
    * Test deprecation of variables in parent does not leak to child.
    */
+  #[IgnoreDeprecations]
   public function testParentVariableDeprecation(): void {
     // 'foo' is used before the child template is processed, so this test
     // shows that processing the child does not lead to parent usage being

@@ -8,7 +8,6 @@ use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Element\StatusReportPage;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 include_once \DRUPAL_ROOT . '/core/includes/install.inc';
@@ -17,7 +16,6 @@ include_once \DRUPAL_ROOT . '/core/includes/install.inc';
  * Tests the status report page element.
  */
 #[Group('system')]
-#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class StatusReportPageTest extends KernelTestBase {
 

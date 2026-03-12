@@ -26,7 +26,6 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 #[CoversClass(TestDiscovery::class)]
 #[Group('Test')]
-#[IgnoreDeprecations]
 class TestDiscoveryTest extends UnitTestCase {
 
   /**
@@ -36,6 +35,7 @@ class TestDiscoveryTest extends UnitTestCase {
    */
   #[DataProvider('infoParserProvider')]
   #[RunInSeparateProcess]
+  #[IgnoreDeprecations]
   public function testTestInfoParser(array $expected, $classname, $doc_comment = NULL): void {
     try {
       $info = TestDiscovery::getTestInfo($classname, $doc_comment);
@@ -246,6 +246,7 @@ class TestDiscoveryTest extends UnitTestCase {
   /**
    * @legacy-covers ::getTestInfo
    */
+  #[IgnoreDeprecations]
   public function testTestInfoParserMissingGroup(): void {
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
@@ -261,6 +262,7 @@ EOT;
   /**
    * @legacy-covers ::getTestInfo
    */
+  #[IgnoreDeprecations]
   public function testTestInfoParserMissingSummary(): void {
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
@@ -361,6 +363,7 @@ EOF;
   /**
    * Tests get test classes.
    */
+  #[IgnoreDeprecations]
   public function testGetTestClasses(): void {
     $this->setupVfsWithTestClasses();
     $extensions = [
@@ -430,6 +433,7 @@ EOF;
   /**
    * Tests get test classes with selected types.
    */
+  #[IgnoreDeprecations]
   public function testGetTestClassesWithSelectedTypes(): void {
     $this->setupVfsWithTestClasses();
     $extensions = [
@@ -475,6 +479,7 @@ EOF;
   /**
    * @legacy-covers ::getTestClasses
    */
+  #[IgnoreDeprecations]
   public function testGetTestsInProfiles(): void {
     $this->setupVfsWithTestClasses();
     $class_loader = $this->prophesize(ClassLoader::class);
@@ -533,6 +538,7 @@ EOF;
   /**
    * Ensure that classes are not reflected when the docblock is empty.
    */
+  #[IgnoreDeprecations]
   public function testGetTestInfoEmptyDocblock(): void {
     // If getTestInfo() performed reflection, it won't be able to find the
     // class we asked it to analyze, so it will throw a ReflectionException.
@@ -546,6 +552,7 @@ EOF;
   /**
    * Ensure TestDiscovery::scanDirectory() ignores certain abstract file types.
    */
+  #[IgnoreDeprecations]
   public function testScanDirectoryNoAbstract(): void {
     $this->setupVfsWithTestClasses();
     $files = TestDiscovery::scanDirectory('Drupal\\Tests\\test_module\\Kernel\\', vfsStream::url('drupal/modules/test_module/tests/src/Kernel'));

@@ -10,7 +10,6 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cSpell:ignore downlander
@@ -316,7 +315,6 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Tests hook_form_field_storage_config_form_edit_alter().
    */
-  #[IgnoreDeprecations]
   public function testFieldTypeCardinalityAlter(): void {
     $node_type = $this->drupalCreateContentType();
     $bundle = $node_type->id();

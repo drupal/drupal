@@ -10,14 +10,12 @@ use Drupal\Core\Routing\Router;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests Drupal\Core\Routing\Router.
  */
 #[CoversClass(Router::class)]
 #[Group('Routing')]
-#[IgnoreDeprecations]
 class RouterUnsupportedTest extends UnitTestCase {
 
   /**

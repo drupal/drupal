@@ -26,10 +26,8 @@
 
 # Drupal 12.
 %ExpectDeprecationTrait is deprecated in drupal:11\.4\.0%
-%The "Drupal\\workspaces\\WorkspaceManager::setActiveWorkspace\(\)" method will require a new "bool \$persist" argument in the next major version of its interface%
 %.*::getDefaultOperations\(\) will require a new "\Drupal\Core\Cache\CacheableMetadata|null \$cacheability" argument in the next major version of its parent class%
 %.*::getOperations\(\) will require a new "\Drupal\Core\Cache\CacheableMetadata|null \$cacheability" argument in the next major version of its interface%
-%The \$long argument to Drupal\\filter\\Plugin\\Filter\\Filter(Align|AutoP|Caption|Html|HtmlEscape|HtmlImageSecure|Url)::tips\(\) is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Only short tips are used. See https://www.drupal.org/node/3567879%
 
 # Drupal 13.
 %The "cache.backend.memory" service is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use cache.backend.memory.memory instead. See https://www.drupal.org/node/3546856%
