@@ -57,6 +57,13 @@ parameters:
     - "#^Class .* extends @internal class#"
     - identifier: missingType.iterableValue
 
+  disallowedMethodCalls:
+    # Remove this when PHPUnit is upgraded to a version >=12.5.0.
+    -
+        method: 'PHPUnit\Framework\TestCase::any()'
+        message: 'any() will be deprecated in PHPUnit 12.5.0 and should not be used.'
+        errorTip: 'See https://www.drupal.org/node/3573259.'
+
 rules:
   - Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest
   - Drupal\PHPStan\Rules\TestClassClassMetadata

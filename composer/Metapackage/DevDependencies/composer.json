@@ -31,6 +31,7 @@
         "phpstan/phpstan": "^2.1.40",
         "phpstan/phpstan-phpunit": "^2.0.16",
         "phpunit/phpunit": "^11.5.50",
+        "spaze/phpstan-disallowed-calls": "^4.8",
         "symfony/browser-kit": "^8.0",
         "symfony/css-selector": "^8.0",
         "symfony/dom-crawler": "^8.0",

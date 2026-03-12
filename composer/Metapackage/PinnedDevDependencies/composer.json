@@ -82,6 +82,7 @@
         "seld/signal-handler": "2.0.2",
         "sirbrillig/phpcs-variable-analysis": "v2.13.0",
         "slevomat/coding-standard": "8.22.1",
+        "spaze/phpstan-disallowed-calls": "v4.8.0",
         "squizlabs/php_codesniffer": "3.13.5",
         "staabm/side-effects-detector": "1.0.5",
         "symfony/browser-kit": "v8.0.4",
