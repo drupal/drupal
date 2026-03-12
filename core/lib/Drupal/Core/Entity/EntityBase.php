@@ -41,9 +41,9 @@ abstract class EntityBase implements EntityInterface {
   protected $enforceIsNew;
 
   /**
-   * A typed data object wrapping this entity.
+   * A weak reference to the typed data object wrapping this entity.
    *
-   * @var \Drupal\Core\TypedData\ComplexDataInterface
+   * @var \WeakReference
    */
   protected $typedData;
 
@@ -626,12 +626,19 @@ abstract class EntityBase implements EntityInterface {
   /**
    * {@inheritdoc}
    */
+  #[\NoDiscard]
   public function getTypedData() {
-    if (!isset($this->typedData)) {
-      $class = $this->getTypedDataClass();
-      $this->typedData = $class::createFromEntity($this);
+    if ($this->typedData instanceof \WeakReference) {
+      $return = $this->typedData->get();
+      if ($return !== NULL) {
+        return $return;
+      }
     }
-    return $this->typedData;
+
+    $class = $this->getTypedDataClass();
+    $return = $class::createFromEntity($this);
+    $this->typedData = \WeakReference::create($return);
+    return $return;
   }
 
   /**
