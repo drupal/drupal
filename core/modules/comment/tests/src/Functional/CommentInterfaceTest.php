@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\comment\CommentingStatus;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\CommentPreviewMode;
 use Drupal\comment\Entity\Comment;
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\Url;
@@ -190,7 +190,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->node = $this->drupalCreateNode([
       'type' => 'article',
       'promote' => 1,
-      'comment' => [['status' => CommentItemInterface::HIDDEN]],
+      'comment' => [['status' => CommentingStatus::Hidden->value]],
     ]);
     $this->assertNotNull($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
@@ -201,7 +201,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->node = $this->drupalCreateNode([
       'type' => 'article',
       'promote' => 1,
-      'comment' => [['status' => CommentItemInterface::CLOSED]],
+      'comment' => [['status' => CommentingStatus::Closed->value]],
     ]);
     $this->assertNotNull($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
@@ -212,7 +212,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->node = $this->drupalCreateNode([
       'type' => 'article',
       'promote' => 1,
-      'comment' => [['status' => CommentItemInterface::OPEN]],
+      'comment' => [['status' => CommentingStatus::Open->value]],
     ]);
     $this->assertNotNull($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');

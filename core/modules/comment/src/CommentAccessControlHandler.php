@@ -2,7 +2,6 @@
 
 namespace Drupal\comment;
 
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
@@ -109,9 +108,9 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
         if ($commented_entity && $comment_field_name) {
           // We are creating a new comment, user can edit create only fields if
           // commenting is open.
-          $commenting_status = (int) $commented_entity->get($comment_field_name)->status;
+          $commenting_status = CommentingStatus::tryFrom((int) $commented_entity->get($comment_field_name)->status);
           $access_result = $access_result
-            ->andIf(AccessResult::allowedIf($commenting_status !== CommentItemInterface::CLOSED))
+            ->andIf(AccessResult::allowedIf($commenting_status !== CommentingStatus::Closed))
             ->addCacheableDependency($commented_entity);
         }
         return $access_result;

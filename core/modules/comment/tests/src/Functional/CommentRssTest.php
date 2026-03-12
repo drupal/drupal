@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\comment\CommentingStatus;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
@@ -77,7 +77,7 @@ class CommentRssTest extends CommentTestBase {
     $this->assertSession()->responseContains($raw);
 
     // Hide comments from RSS feed and check presence.
-    $this->node->set('comment', CommentItemInterface::HIDDEN);
+    $this->node->set('comment', CommentingStatus::Hidden->value);
     $this->node->save();
     $this->drupalGet('rss.xml');
     $this->assertSession()->responseNotContains($raw);

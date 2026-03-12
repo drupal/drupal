@@ -17458,6 +17458,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/history/src/Controller/HistoryController.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Fetching deprecated class constant HIDDEN of interface Drupal\\\\comment\\\\Plugin\\\\Field\\\\FieldType\\\\CommentItemInterface\\:
+in drupal\\:11\\.4\\.0 and is removed from drupal\\:13\\.0\\.0\\.
+  Use \\\\Drupal\\\\comment\\\\CommentingStatus\\:\\:Hidden instead\\.$#',
+	'identifier' => 'classConstant.deprecated',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/history/src/HistoryCommentLinkBuilder.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\history\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -25886,6 +25894,22 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeRevisionTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Fetching deprecated class constant CLOSED of interface Drupal\\\\comment\\\\Plugin\\\\Field\\\\FieldType\\\\CommentItemInterface\\:
+in drupal\\:11\\.4\\.0 and is removed from drupal\\:13\\.0\\.0\\.
+  Use \\\\Drupal\\\\comment\\\\CommentingStatus\\:\\:Closed instead\\.$#',
+	'identifier' => 'classConstant.deprecated',
+	'count' => 3,
+	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Fetching deprecated class constant OPEN of interface Drupal\\\\comment\\\\Plugin\\\\Field\\\\FieldType\\\\CommentItemInterface\\:
+in drupal\\:11\\.4\\.0 and is removed from drupal\\:13\\.0\\.0\\.
+  Use \\\\Drupal\\\\comment\\\\CommentingStatus\\:\\:Open instead\\.$#',
+	'identifier' => 'classConstant.deprecated',
+	'count' => 4,
+	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateNodeTest\\:\\:fileMigrationSetup\\(\\) has no return type specified\\.$#',

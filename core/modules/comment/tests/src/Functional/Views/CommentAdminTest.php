@@ -7,8 +7,8 @@ namespace Drupal\Tests\comment\Functional\Views;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\comment\AnonymousContact;
+use Drupal\comment\CommentingStatus;
 use Drupal\comment\Entity\Comment;
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -224,7 +224,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $block_content->save();
 
     // Create comment field on block_content.
-    $this->addDefaultCommentField('block_content', 'basic', 'block_comment', CommentItemInterface::OPEN, 'block_comment');
+    $this->addDefaultCommentField('block_content', 'basic', 'block_comment', CommentingStatus::Open, 'block_comment');
     $this->drupalLogin($this->webUser);
     // Post a comment to node.
     $node_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
