@@ -8,6 +8,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\text\TextSummary;
 
 /**
  * Plugin implementation of the 'text_trimmed' formatter.
@@ -110,16 +111,16 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
    *     filter the text. Defaults to the fallback format. See
    *     filter_fallback_format().
    *   - #text_summary_trim_length: the desired character length of the summary
-   *     (used by text_summary())
+   *     (used by \Drupal\text\TextSummary::generate())
    *
    * @return array
    *   The passed-in element with the filtered text in '#markup' trimmed.
    *
    * @see filter_pre_render_text()
-   * @see text_summary()
+   * @see \Drupal\text\TextSummary::generate()
    */
   public static function preRenderSummary(array $element) {
-    $element['#markup'] = text_summary($element['#markup'], $element['#format'], $element['#text_summary_trim_length']);
+    $element['#markup'] = \Drupal::service(TextSummary::class)->generate($element['#markup'], $element['#format'], $element['#text_summary_trim_length']);
     return $element;
   }
 
