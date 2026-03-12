@@ -1,0 +1,143 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\text;
+
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+
+/**
+ * Summary generator for text fields.
+ */
+class TextSummary {
+
+  public function __construct(
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
+  ) {}
+
+  /**
+   * Generates a trimmed, formatted version of a text field value.
+   *
+   * If the end of the summary is not indicated using the <!--break--> delimiter
+   * then we generate the summary automatically, trying to end it at a sensible
+   * place such as the end of a paragraph, a line break, or the end of a
+   * sentence (in that order of preference).
+   *
+   * @param string|\Stringable $text
+   *   The content for which a summary will be generated.
+   * @param string|null $format
+   *   The format of the content. If the line break filter is present then we
+   *   treat newlines embedded in $text as line breaks. If the htmlcorrector
+   *   filter is present, it will be run on the generated summary (if different
+   *   from the incoming $text).
+   * @param int $size
+   *   The desired character length of the summary. If omitted, the default
+   *   value will be used. Ignored if the special delimiter is present in $text.
+   *
+   * @return string|\Stringable
+   *   The generated summary.
+   */
+  public function generate(string|\Stringable $text, string|null $format = NULL, int $size = 600): string|\Stringable {
+    // Find where the delimiter is in the body.
+    $delimiter = strpos((string) $text, '<!--break-->');
+
+    // If the size is zero, and there is no delimiter, the entire body is the
+    // summary.
+    if ($size == 0 && $delimiter === FALSE) {
+      return $text;
+    }
+
+    // If a valid delimiter has been specified, use it to chop off the summary.
+    if ($delimiter !== FALSE) {
+      return substr((string) $text, 0, $delimiter);
+    }
+
+    // Retrieve the filters of the specified text format, if any.
+    if (isset($format)) {
+      $filter_format = $this->entityTypeManager->getStorage('filter_format')->load($format);
+      // If the specified format does not exist, return nothing.
+      // $text is already filtered text, but the remainder of this function will
+      // not be able to ensure a sane and secure summary.
+      if (!$filter_format || !($filters = $filter_format->filters())) {
+        return '';
+      }
+    }
+
+    // If we have a short body, the entire body is the summary.
+    if (mb_strlen((string) $text) <= $size) {
+      return $text;
+    }
+
+    // If the delimiter has not been specified, try to split at paragraph or
+    // sentence boundaries.
+
+    // The summary may not be longer than the maximum length specified.
+    // Initial slice.
+    $summary = Unicode::truncate((string) $text, $size);
+
+    // Store the actual length of the UTF8 string -- which might not be the same
+    // as $size.
+    $max_right_pos = strlen($summary);
+
+    // How much to cut off the end of the summary so that it doesn't end in the
+    // middle of a paragraph, sentence, or word.
+    // Initialize it to maximum in order to find the minimum.
+    $min_right_pos = $max_right_pos;
+
+    // Store the reverse of the summary. We use strpos on the reversed needle
+    // and haystack for speed and convenience.
+    $reversed = strrev($summary);
+
+    // Build an array of arrays of break points grouped by preference.
+    $break_points = [];
+
+    // A paragraph near the end of the sliced summary is most preferable.
+    $break_points[] = ['</p>' => 0];
+
+    // If no complete paragraph then treat line breaks as paragraphs.
+    $line_breaks = ['<br />' => 6, '<br>' => 4];
+    // Newline only indicates a line break if line break converter
+    // filter is present.
+    if (isset($format) && $filters->has('filter_autop') && $filters->get('filter_autop')->status) {
+      $line_breaks["\n"] = 1;
+    }
+    $break_points[] = $line_breaks;
+
+    // If the first paragraph is too long, split at the end of a sentence.
+    $break_points[] = ['. ' => 1, '! ' => 1, '? ' => 1, '。' => 0, '؟ ' => 1];
+
+    // Iterate over the groups of break points until a break point is found.
+    foreach ($break_points as $points) {
+      // Look for each break point, starting at the end of the summary.
+      foreach ($points as $point => $offset) {
+        // The summary is already reversed, but the break point isn't.
+        $right_pos = strpos($reversed, strrev($point));
+        if ($right_pos !== FALSE) {
+          $min_right_pos = min($right_pos + $offset, $min_right_pos);
+        }
+      }
+
+      // If a break point was found in this group, slice and stop searching.
+      if ($min_right_pos !== $max_right_pos) {
+        // Don't slice with length 0. Length must be <0 to slice from RHS.
+        $summary = ($min_right_pos === 0) ? $summary : substr($summary, 0, 0 - $min_right_pos);
+        break;
+      }
+    }
+
+    // If filter_html or filter_htmlcorrector is enabled, normalize the output.
+    if (isset($format)) {
+      $filter_enabled = function (string $filter) use ($filters): bool {
+        return $filters->has($filter) && $filters->get($filter)->status;
+      };
+      if ($filter_enabled('filter_html') || $filter_enabled('filter_htmlcorrector')) {
+        $summary = Html::normalize($summary);
+      }
+    }
+
+    return $summary;
+  }
+
+}
