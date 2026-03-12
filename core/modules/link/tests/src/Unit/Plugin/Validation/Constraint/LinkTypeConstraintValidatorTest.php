@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 use Drupal\link\Plugin\Validation\Constraint\LinkTypeConstraint;
@@ -13,7 +12,7 @@ use Drupal\link\Plugin\Validation\Constraint\LinkTypeConstraintValidator;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
@@ -30,13 +29,6 @@ class LinkTypeConstraintValidatorTest extends UnitTestCase {
    */
   public function testInternal(): void {
     $url = Url::fromRoute('example.existing_route');
-
-    $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-    $urlGenerator->expects($this->any())
-      ->method('generateFromRoute')
-      ->with('example.existing_route', [], [])
-      ->willReturn('/example/existing');
-    $url->setUrlGenerator($urlGenerator);
 
     $link = $this->createMock(LinkItemInterface::class);
     $link->expects($this->once())
@@ -68,7 +60,8 @@ class LinkTypeConstraintValidatorTest extends UnitTestCase {
       ->willReturn($url);
 
     $constraintViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
-    $constraintViolationBuilder->method('atPath')
+    $constraintViolationBuilder->expects($this->once())
+      ->method('atPath')
       ->with('uri')
       ->willReturn($constraintViolationBuilder);
 
@@ -107,29 +100,23 @@ class LinkTypeConstraintValidatorTest extends UnitTestCase {
   public function testBadExternal(): void {
     $url = Url::fromRoute('example.existing_route');
 
-    $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-    $urlGenerator->expects($this->any())
-      ->method('generateFromRoute')
-      ->with('example.existing_route', [], [])
-      ->willReturn('/example/existing');
-    $url->setUrlGenerator($urlGenerator);
-
     $link = $this->createMock(LinkItemInterface::class);
     $link->expects($this->once())
       ->method('getFieldDefinition')
       ->willReturn($this->getMockFieldDefinition(LinkItemInterface::LINK_EXTERNAL));
-    $link->expects($this->any())
-      ->method('getUrl')
+    $link->method('getUrl')
       ->willReturn($url);
 
     $constraintViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
-    $constraintViolationBuilder->method('atPath')
+    $constraintViolationBuilder->expects($this->once())
+      ->method('atPath')
       ->with('uri')
       ->willReturn($constraintViolationBuilder);
 
     $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->once())
-      ->method('buildViolation');
+      ->method('buildViolation')
+      ->willReturn($constraintViolationBuilder);
 
     $this->doValidate($link, $context);
   }
@@ -147,7 +134,8 @@ class LinkTypeConstraintValidatorTest extends UnitTestCase {
       ->willThrowException(new \InvalidArgumentException());
 
     $constraintViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
-    $constraintViolationBuilder->method('atPath')
+    $constraintViolationBuilder->expects($this->once())
+      ->method('atPath')
       ->with('uri')
       ->willReturn($constraintViolationBuilder);
 
@@ -185,7 +173,7 @@ class LinkTypeConstraintValidatorTest extends UnitTestCase {
    */
   public function testUnexpectedValue(): void {
     $this->expectException(UnexpectedValueException::class);
-    $context = $this->createMock(ExecutionContextInterface::class);
+    $context = $this->createStub(ExecutionContextInterface::class);
     $this->doValidate('bad value', $context);
   }
 
@@ -194,8 +182,7 @@ class LinkTypeConstraintValidatorTest extends UnitTestCase {
    */
   public function testEmptyField(): void {
     $link = $this->createMock(LinkItemInterface::class);
-    $link->expects($this->any())
-      ->method('getFieldDefinition')
+    $link->method('getFieldDefinition')
       ->willReturn($this->getMockFieldDefinition(LinkItemInterface::LINK_INTERNAL));
     $link->expects($this->once())
       ->method('isEmpty')
@@ -203,7 +190,7 @@ class LinkTypeConstraintValidatorTest extends UnitTestCase {
     $link->expects($this->never())
       ->method('getUrl');
 
-    $context = $this->createMock(ExecutionContextInterface::class);
+    $context = $this->createStub(ExecutionContextInterface::class);
     $this->doValidate($link, $context);
   }
 
@@ -212,29 +199,27 @@ class LinkTypeConstraintValidatorTest extends UnitTestCase {
    *
    * @param mixed $link
    *   A field value to validate.
-   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface&\PHPUnit\Framework\MockObject\MockObject $context
+   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The execution context.
    */
-  protected function doValidate($link, ExecutionContextInterface&MockObject $context): void {
+  protected function doValidate($link, ExecutionContextInterface $context): void {
     $validator = new LinkTypeConstraintValidator();
     $validator->initialize($context);
     $validator->validate($link, new LinkTypeConstraint());
   }
 
   /**
-   * Builds a mock Link field definition.
+   * Builds a stub Link field definition.
    *
    * @param int $type
    *   The type of Link field as defined in LinkItemInterface.
    *
-   * @return \Drupal\Core\Field\FieldDefinitionInterface
-   *   The mock field definition.
+   * @return \Drupal\Core\Field\FieldDefinitionInterface&\PHPUnit\Framework\MockObject\Stub
+   *   The stub field definition.
    */
-  protected function getMockFieldDefinition(int $type): FieldDefinitionInterface {
-    $definition = $this->createMock(FieldDefinitionInterface::class);
-    $definition->expects($this->any())
-      ->method('getSetting')
-      ->with('link_type')
+  protected function getMockFieldDefinition(int $type): FieldDefinitionInterface&Stub {
+    $definition = $this->createStub(FieldDefinitionInterface::class);
+    $definition->method('getSetting')
       ->willReturn($type);
     return $definition;
   }

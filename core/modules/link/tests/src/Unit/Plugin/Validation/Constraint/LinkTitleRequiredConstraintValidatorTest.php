@@ -31,7 +31,7 @@ class LinkTitleRequiredConstraintValidatorTest extends UnitTestCase {
    */
   public function testUnexpectedValue(): void {
     $this->expectException(UnexpectedValueException::class);
-    $context = $this->createMock(ExecutionContextInterface::class);
+    $context = $this->createStub(ExecutionContextInterface::class);
     $this->doValidate('bad value', $context);
   }
 
@@ -75,7 +75,8 @@ class LinkTitleRequiredConstraintValidatorTest extends UnitTestCase {
         ['title', ''],
       ]);
     $constraintViolationBuilder = $this->createMock(ConstraintViolationBuilderInterface::class);
-    $constraintViolationBuilder->method('atPath')
+    $constraintViolationBuilder->expects($this->once())
+      ->method('atPath')
       ->with('title')
       ->willReturn($constraintViolationBuilder);
     $context = $this->createMock(ExecutionContextInterface::class);
@@ -90,10 +91,10 @@ class LinkTitleRequiredConstraintValidatorTest extends UnitTestCase {
    *
    * @param mixed $value
    *   A link field value.
-   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface&\PHPUnit\Framework\MockObject\MockObject $context
+   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validation context.
    */
-  protected function doValidate($value, ExecutionContextInterface&MockObject $context): void {
+  protected function doValidate($value, ExecutionContextInterface $context): void {
     $validator = new LinkTitleRequiredConstraintValidator();
     $validator->initialize($context);
     $validator->validate($value, new LinkTitleRequiredConstraint());
