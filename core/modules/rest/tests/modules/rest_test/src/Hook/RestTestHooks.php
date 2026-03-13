@@ -25,36 +25,36 @@ class RestTestHooks {
    */
   #[Hook('entity_field_access')]
   public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL): AccessResultInterface {
-    // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::doTestPost()
-    // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::doTestPatch()
+    // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::testPost()
+    // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::testPatch()
     if ($field_definition->getName() === 'field_rest_test') {
       switch ($operation) {
         case 'view':
           // Never ever allow this field to be viewed: this lets
-          // EntityResourceTestBase::doTestGet() test in a "vanilla" way.
+          // EntityResourceTestBase::testGet() test in a "vanilla" way.
           return AccessResult::forbidden();
 
         case 'edit':
           return AccessResult::forbidden();
       }
     }
-    // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::doTestGet()
-    // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::doTestPatch()
+    // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::testGet()
+    // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::testPatch()
     if ($field_definition->getName() === 'field_rest_test_multivalue') {
       switch ($operation) {
         case 'view':
           // Never ever allow this field to be viewed: this lets
-          // EntityResourceTestBase::doTestGet() test in a "vanilla" way.
+          // EntityResourceTestBase::testGet() test in a "vanilla" way.
           return AccessResult::forbidden();
       }
     }
-    // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::doTestGet()
-    // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::doTestPatch()
+    // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::testGet()
+    // @see \Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase::testPatch()
     if ($field_definition->getName() === 'rest_test_validation') {
       switch ($operation) {
         case 'view':
           // Never ever allow this field to be viewed: this lets
-          // EntityResourceTestBase::doTestGet() test in a "vanilla" way.
+          // EntityResourceTestBase::testGet() test in a "vanilla" way.
           return AccessResult::forbidden();
       }
     }
