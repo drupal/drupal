@@ -11,7 +11,6 @@ use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use Psr\Log\LoggerInterface;
 
 /**
  * Unit tests for the component loader class.
@@ -56,10 +55,7 @@ class ComponentLoaderTest extends UnitTestCase {
 
     $component_manager = $this->prophesize(ComponentPluginManager::class);
     $component_manager->find('sdc_test:loader-test')->willReturn($component);
-    $component_loader = new ComponentLoader(
-      $component_manager->reveal(),
-      $this->createMock(LoggerInterface::class),
-    );
+    $component_loader = new ComponentLoader($component_manager->reveal());
 
     // Assert the component is fresh, as it changed before the current time.
     $this->assertTrue($component_loader->isFresh('sdc_test:loader-test', $current_time), 'Twig and YAML files were supposed to be fresh');
