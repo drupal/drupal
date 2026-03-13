@@ -47,17 +47,13 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    if ($this->name() === 'testPost') {
-      // Drupal does not allow creating file entities independently. It allows
-      // you to create file entities that are referenced from another entity
-      // (e.g. an image for a node's image field).
-      // For that purpose, there is the "file_upload" REST resource plugin.
-      // @see \Drupal\file\FileAccessControlHandler::checkCreateAccess()
-      // @see \Drupal\file\Plugin\rest\resource\FileUploadResource
-      $this->markTestSkipped('Drupal does not allow creating file entities independently.');
-    }
-    parent::setUp();
+  protected function doTestPost(): void {
+    // Drupal does not allow creating file entities independently. It allows
+    // you to create file entities that are referenced from another entity
+    // (e.g. an image for a node's image field).
+    // For that purpose, there is the "file_upload" REST resource plugin.
+    // @see \Drupal\file\FileAccessControlHandler::checkCreateAccess()
+    // @see \Drupal\file\Plugin\rest\resource\FileUploadResource
   }
 
   /**
