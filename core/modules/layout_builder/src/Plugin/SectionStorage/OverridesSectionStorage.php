@@ -154,7 +154,8 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
   public function deriveContextsFromRoute($value, $definition, $name, array $defaults) {
     $contexts = [];
 
-    if ($entity = $this->extractEntityFromRoute($value, $defaults)) {
+    $entity = $this->extractEntityFromRoute($value, $defaults);
+    if ($entity instanceof FieldableEntityInterface) {
       $contexts = $this->getSectionStorageContextsForEntity($entity);
     }
     return $contexts;

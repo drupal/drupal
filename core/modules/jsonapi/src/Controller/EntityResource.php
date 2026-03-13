@@ -711,6 +711,7 @@ class EntityResource {
     $internal_relationship_field_name = $resource_type->getInternalName($related);
     // According to the specification, PATCH works a little bit different if the
     // relationship is to-one or to-many.
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->{$internal_relationship_field_name};
     $field_definition = $field_list->getFieldDefinition();
@@ -792,6 +793,7 @@ class EntityResource {
   public function removeFromRelationshipData(ResourceType $resource_type, EntityInterface $entity, $related, Request $request) {
     $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
     $internal_relationship_field_name = $resource_type->getInternalName($related);
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->{$internal_relationship_field_name};
     $is_multiple = $field_list->getFieldDefinition()

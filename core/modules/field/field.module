@@ -22,7 +22,7 @@ require_once __DIR__ . '/field.purge.inc';
  *   An object with the properties entity_type (required), entity_id (required),
  *   revision_id (optional) and bundle (optional).
  *
- * @return \Drupal\Core\Entity\EntityInterface
+ * @return \Drupal\Core\Entity\FieldableEntityInterface
  *   An entity, initialized with the provided IDs.
  */
 function _field_create_entity_from_ids($ids) {
@@ -37,6 +37,7 @@ function _field_create_entity_from_ids($ids) {
   if (isset($ids->bundle) && $bundle_key = $entity_type->getKey('bundle')) {
     $id_properties[$bundle_key] = $ids->bundle;
   }
+  /** @var \Drupal\Core\Entity\FieldableEntityInterface */
   return \Drupal::entityTypeManager()
     ->getStorage($ids->entity_type)
     ->create($id_properties);

@@ -54,6 +54,7 @@ class EntityNormalizer extends ComplexDataNormalizer implements DenormalizerInte
       }
 
       // Create the entity from bundle data only, then apply field values after.
+      /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
       $entity = $this->entityTypeManager->getStorage($entity_type_id)->create($create_params);
 
       $this->denormalizeFieldData($data, $entity, $format, $context);

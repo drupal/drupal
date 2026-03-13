@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Kernel;
 
+use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -214,6 +215,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
     $entity_init = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
       ->create(['id' => 1, 'revision_id' => 1]);
+    $this->assertInstanceOf(EntityTestRev::class, $entity_init);
     $default = FieldTestHelper::defaultValue($entity_init, $this->fieldTestData->field);
     $this->assertEquals($default, $entity_init->{$this->fieldTestData->field_name}->getValue(), 'Default field value correctly populated.');
 

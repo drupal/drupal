@@ -387,7 +387,7 @@ class EditorHooks {
    *
    * @param array $uuids
    *   An array of file entity UUIDs.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   An entity whose fields to inspect for file references.
    * @param int $count
    *   The number of references to delete. Should be 1 when deleting a single
