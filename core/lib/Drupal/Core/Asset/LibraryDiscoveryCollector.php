@@ -133,11 +133,12 @@ class LibraryDiscoveryCollector extends CacheCollector implements LibraryDiscove
    * @throws \Drupal\Core\Asset\Exception\InvalidLibrariesExtendSpecificationException
    */
   protected function applyLibrariesExtend($extension, $library_name, $library_definition) {
-    $libraries_extend = $this->themeManager->getActiveTheme()->getLibrariesExtend();
+    $active_theme = $this->themeManager->getActiveTheme();
+    $libraries_extend = $active_theme->getLibrariesExtend();
     if (!empty($libraries_extend["$extension/$library_name"])) {
       foreach ($libraries_extend["$extension/$library_name"] as $library_extend_name) {
         if (isset($library_definition['deprecated'])) {
-          $extend_message = sprintf('Theme "%s" is extending a deprecated library.', $extension);
+          $extend_message = sprintf('Theme "%s" is extending a deprecated library.', $active_theme->getName());
           $library_deprecation = str_replace('%library_id%', "$extension/$library_name", $library_definition['deprecated']);
           // phpcs:ignore Drupal.Semantics.FunctionTriggerError
           @trigger_error("$extend_message $library_deprecation", E_USER_DEPRECATED);
