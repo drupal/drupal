@@ -46,7 +46,7 @@ class EnabledConfigurablePluginsConstraintValidator extends ConstraintValidator 
       // If this plugin is configurable but it has empty default configuration,
       // that means the configuration must be stored out of band.
       // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
-      // @see editor_image_upload_settings_form()
+      // @see \Drupal\editor\EditorImageUploadSettings::getForm()
       $default_configuration = $plugin->defaultConfiguration();
       if ($default_configuration === []) {
         continue;

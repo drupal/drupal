@@ -16,3 +16,4 @@ services:
   Drupal\editor\Element: '@element.editor'
   editor.config_translation_mapper_subscriber:
     class: Drupal\editor\EventSubscriber\EditorConfigTranslationSubscriber
+  Drupal\editor\EditorImageUploadSettings: ~
