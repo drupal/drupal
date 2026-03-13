@@ -852,6 +852,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       // Assert that the entity was indeed created, and that the response body
       // contains the serialized created entity.
       $created_entity = $this->entityStorage->loadUnchanged(static::$firstCreatedEntityId);
+      $this->assertInstanceOf(FieldableEntityInterface::class, $created_entity);
       $created_entity_normalization = $this->serializer->normalize($created_entity, static::$format, ['account' => $this->account]);
       $this->assertSame($created_entity_normalization, $this->serializer->decode((string) $response->getBody(), static::$format));
       $this->assertStoredEntityMatchesSentNormalization($this->getNormalizedPostEntity(), $created_entity);
@@ -1098,6 +1099,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Assert that the entity was indeed updated, and that the response body
     // contains the serialized updated entity.
     $updated_entity = $this->entityStorage->loadUnchanged($this->entity->id());
+    $this->assertInstanceOf(FieldableEntityInterface::class, $updated_entity);
     $updated_entity_normalization = $this->serializer->normalize($updated_entity, static::$format, ['account' => $this->account]);
     $this->assertSame($updated_entity_normalization, $this->serializer->decode((string) $response->getBody(), static::$format));
     $this->assertStoredEntityMatchesSentNormalization($this->getNormalizedPatchEntity(), $updated_entity);

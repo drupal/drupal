@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\options\Kernel;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -30,7 +29,7 @@ class OptionsDynamicValuesApiTest extends OptionsFieldUnitTestBase {
   /**
    * The created entity.
    */
-  protected EntityInterface $entity;
+  protected EntityTestRev $entity;
 
   /**
    * {@inheritdoc}

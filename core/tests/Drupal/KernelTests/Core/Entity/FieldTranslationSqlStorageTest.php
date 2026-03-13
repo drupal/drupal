@@ -28,6 +28,7 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
       $this->fieldName => $this->randomMachineName(),
       $this->untranslatableFieldName => $this->randomMachineName(),
     ];
+    /** @var \Drupal\entity_test\Entity\EntityTestMul $entity */
     $entity = $controller->create($values);
     $entity->save();
 

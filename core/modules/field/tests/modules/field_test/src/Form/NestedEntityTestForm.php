@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\field_test\Form;
 
 use Drupal\Core\Entity\EntityChangedInterface;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -27,7 +27,7 @@ class NestedEntityTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ?EntityInterface $entity_1 = NULL, ?EntityInterface $entity_2 = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?FieldableEntityInterface $entity_1 = NULL, ?FieldableEntityInterface $entity_2 = NULL) {
     // First entity.
     $form_state->set('entity_1', $entity_1);
     $form_display_1 = EntityFormDisplay::collectRenderDisplay($entity_1, 'default');
