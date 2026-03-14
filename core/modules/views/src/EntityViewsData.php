@@ -53,18 +53,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   protected $translationManager;
 
   /**
-   * The field storage definitions for all base fields of the entity type.
-   *
-   * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No
-   * replacement is provided.
-   *
-   * @see https://www.drupal.org/node/3240278
-   */
-  protected $fieldStorageDefinitions;
-
-  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -115,25 +103,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       $container->get('string_translation'),
       $container->get('entity_field.manager')
     );
-  }
-
-  /**
-   * Gets the field storage definitions.
-   *
-   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
-   *   The array of field storage definitions, keyed by field name.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No
-   * replacement is provided.
-   *
-   * @see https://www.drupal.org/node/3240278
-   */
-  protected function getFieldStorageDefinitions() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No replacement is provided. See https://www.drupal.org/node/3240278', E_USER_DEPRECATED);
-    if (!isset($this->fieldStorageDefinitions)) {
-      $this->fieldStorageDefinitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityType->id());
-    }
-    return $this->fieldStorageDefinitions;
   }
 
   /**

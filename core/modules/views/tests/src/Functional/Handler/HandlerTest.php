@@ -74,7 +74,6 @@ class HandlerTest extends ViewTestBase {
         $data['views_test_data']['access_callback'][$type]['access callback'] = 'views_test_data_handler_test_access_callback';
 
         $data['views_test_data']['access_callback_arguments'][$type]['access callback'] = 'views_test_data_handler_test_access_callback_argument';
-        $data['views_test_data']['access_callback_arguments'][$type]['access arguments'] = [TRUE];
       }
     }
 

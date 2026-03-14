@@ -129,9 +129,9 @@ class ViewsThemeHooks {
       $plugins[$plugin_type] = \Drupal::service('views.plugin_managers')->get($plugin_type)->getDefinitions();
     }
     // Register theme functions for all style plugins. It provides a basic auto
-    // implementation of template files by using the plugin
-    // definitions (theme, theme_file, module, register_theme). Template files
-    // are assumed to be located in the templates folder.
+    // implementation of template files by using the plugin definitions (theme,
+    // module, register_theme). Template files are assumed to be located in the
+    // templates folder.
     foreach ($plugins as $type => $info) {
       foreach ($info as $def) {
         // Not all plugins have theme functions, and they can also explicitly
@@ -150,17 +150,6 @@ class ViewsThemeHooks {
         // We always use the module directory as base dir.
         $module_dir = $this->moduleExtensionList->getPath($def['provider']);
         $hooks[$def['theme']]['path'] = $module_dir;
-        if (!empty($def['theme_file'])) {
-          @trigger_error('Providing a theme_file definition for plugin ' . $def['id'] . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Theme hook include files are deprecated. See https://www.drupal.org/node/3548325', E_USER_DEPRECATED);
-          $hooks[$def['theme']]['file'] = $def['theme_file'];
-          // Whenever we have a theme file, we include it directly so we can
-          // auto-detect the theme function.
-          $include = \Drupal::root() . '/' . $module_dir . '/' . $def['theme_file'];
-          if (is_file($include)) {
-            require_once $include;
-          }
-        }
-
         $initial_preprocess_class = 'Drupal\\' . $def['provider'] . '\\Hook\\' . Container::camelize($def['provider']) . 'ThemeHooks';
         $initial_preprocess_method = 'preprocess' . Container::camelize($def['theme']);
 
@@ -182,34 +171,6 @@ class ViewsThemeHooks {
       'initial preprocess' => static::class . ':preprocessViewsExposedForm',
     ];
     return $hooks;
-  }
-
-  /**
-   * Implements hook_preprocess_HOOK().
-   *
-   * Allows view-based node templates if called from a view.
-   */
-  #[Hook('preprocess_node')]
-  public function preprocessNode(&$variables): void {
-    // The 'view' attribute of the node is added in
-    // \Drupal\views\Plugin\views\row\EntityRow::preRender().
-    if (!empty($variables['node']->view) && $variables['node']->view->storage->id()) {
-      $variables['view'] = $variables['node']->view;
-
-      // The view variable is deprecated.
-      $variables['deprecations']['view'] = "'view' is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3459903";
-
-      // If a node is being rendered in a view, and the view does not have a
-      // path, prevent drupal from accidentally setting the $page variable.
-      if (
-        !empty($variables['view']->current_display)
-        && $variables['page']
-        && $variables['view_mode'] == 'full'
-        && !$variables['view']->display_handler->hasPath()
-      ) {
-        $variables['page'] = FALSE;
-      }
-    }
   }
 
   /**

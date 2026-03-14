@@ -124,7 +124,8 @@ class Rss extends RssPluginBase {
     $item->title = $comment->label();
     $item->link = $comment->toUrl('canonical', ['absolute' => TRUE])->toString();
     // Provide a reference so that the render call in
-    // template_preprocess_views_view_row_rss() can still access it.
+    // \Drupal\views\Hook\ViewsThemeHooks::preprocessViewsViewRowRss()
+    // can still access it.
     $item->elements = &$comment->rss_elements;
     $item->cid = $comment->id();
 

@@ -29,8 +29,9 @@ class DateTimeViewsHelper {
    * @param \Drupal\field\FieldStorageConfigInterface $field_storage
    *   The field storage config entity.
    * @param array $data
-   *   Field view data or views_field_default_views_data($field_storage) if
-   *   empty.
+   *   Field view data or
+   *   \Drupal::service('views.field_data_provider')->defaultFieldImplementation($field_storage)
+   *   if empty.
    * @param string $column_name
    *   The schema column name with the datetime value.
    *

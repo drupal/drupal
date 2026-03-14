@@ -197,7 +197,6 @@ class ItemsPerPageTest extends WizardTestBase {
       'items_per_page' => 'none',
       'label' => 'Test',
     ])->save();
-    $this->expectUserDeprecationMessage('Saving a views block with "none" items per page is deprecated in drupal:11.2.0 and removed in drupal:12.0.0. To use the items per page defined by the view, use NULL. See https://www.drupal.org/node/3522240');
     self::assertNull($block->get('settings')['items_per_page']);
     self::assertSame(4, View::load($view['id'])->toArray()['display']['default']['display_options']['pager']['options']['items_per_page']);
     self::assertSame(3, View::load($view['id'])->toArray()['display']['block_1']['display_options']['pager']['options']['items_per_page']);

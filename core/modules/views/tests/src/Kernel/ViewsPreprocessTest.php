@@ -63,9 +63,9 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests template_preprocess_views_mini_pager() when an empty pagination_heading_level value is passed.
+   * Tests the mini pager when an empty pagination_heading_level is passed.
    *
-   * @legacy-covers ::template_preprocess_views_mini_pager
+   * @legacy-covers ViewsThemeHooks::preprocessViewsMiniPager
    */
   public function testEmptyPaginationHeadingLevelSet(): void {
     $variables = [
@@ -81,9 +81,9 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests template_preprocess_views_mini_pager() when no pagination_heading_level is passed.
+   * Tests the mini pager when no pagination_heading_level is passed.
    *
-   * @legacy-covers ::template_preprocess_views_mini_pager
+   * @legacy-covers ViewsThemeHooks::preprocessViewsMiniPager
    */
   public function testPaginationHeadingLevelNotSet(): void {
     $variables = [
@@ -98,9 +98,9 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests template_preprocess_views_mini_pager() when a pagination_heading_level value is passed.
+   * Tests the mini pager when a pagination_heading_level value is passed.
    *
-   * @legacy-covers ::template_preprocess_views_mini_pager
+   * @legacy-covers ViewsThemeHooks::preprocessViewsMiniPager
    */
   public function testPaginationHeadingLevelSet(): void {
     $variables = [

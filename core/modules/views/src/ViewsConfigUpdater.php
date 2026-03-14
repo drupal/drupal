@@ -205,12 +205,6 @@ class ViewsConfigUpdater {
       $view->set('display', $displays);
     }
 
-    $deprecations_triggered = &$this->triggeredDeprecations['2640994'][$view->id()];
-    if ($this->areDeprecationsEnabled() && $changed && !$deprecations_triggered) {
-      $deprecations_triggered = TRUE;
-      @trigger_error(sprintf('The update to convert "numeric" arguments to "entity_target_id" for entity reference fields for view "%s" is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3441945', $view->id()), E_USER_DEPRECATED);
-    }
-
     return $changed;
   }
 
@@ -334,12 +328,6 @@ class ViewsConfigUpdater {
 
     if ($changed) {
       $view->set('display', $displays);
-    }
-
-    $deprecations_triggered = &$this->triggeredDeprecations['table_css_class'][$view->id()];
-    if ($this->areDeprecationsEnabled() && $changed && !$deprecations_triggered) {
-      $deprecations_triggered = TRUE;
-      @trigger_error(sprintf('The update to add a default table CSS class for view "%s" is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3499943', $view->id()), E_USER_DEPRECATED);
     }
 
     return $changed;
