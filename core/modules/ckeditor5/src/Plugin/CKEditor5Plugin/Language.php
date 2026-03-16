@@ -96,8 +96,6 @@ class Language extends CKEditor5PluginDefault implements CKEditor5PluginConfigur
 
   /**
    * {@inheritdoc}
-   *
-   * @see editor_image_upload_settings_form()
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $configured = count($this->languageManager->getLanguages());

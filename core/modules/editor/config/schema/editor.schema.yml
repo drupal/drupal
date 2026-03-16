@@ -78,7 +78,7 @@ editor.image_upload_settings.1:
           label: 'Maximum width'
           constraints:
             Range:
-              # @see editor_image_upload_settings_form()
+              # @see \Drupal\editor\EditorImageUploadSettings::getForm()
               min: 1
               max: 99999
         height:
@@ -87,6 +87,6 @@ editor.image_upload_settings.1:
           label: 'Maximum height'
           constraints:
             Range:
-              # @see editor_image_upload_settings_form()
+              # @see \Drupal\editor\EditorImageUploadSettings::getForm()
               min: 1
               max: 99999

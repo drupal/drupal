@@ -16,3 +16,5 @@ services:
   editor.config_translation_mapper_subscriber:
     class: Drupal\editor\EventSubscriber\EditorConfigTranslationSubscriber
     arguments: ['@config.factory']
+  Drupal\editor\EditorImageUploadSettings:
+    autowire: true
