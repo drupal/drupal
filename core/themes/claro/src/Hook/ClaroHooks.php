@@ -1,0 +1,1620 @@
+<?php
+
+namespace Drupal\claro\Hook;
+
+use Drupal\claro\ClaroPreRender;
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
+use Drupal\media\MediaForm;
+use Drupal\views\ViewExecutable;
+use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
+/**
+ * Hook implementations for claro.
+ */
+class ClaroHooks {
+  use StringTranslationTrait;
+
+  /**
+   * Implements hook_theme_suggestions_HOOK_alter() for form_element.
+   */
+  #[Hook('theme_suggestions_form_element_alter')]
+  public function themeSuggestionsFormElementAlter(&$suggestions, $variables): void {
+    if (!empty($variables['element']['#type'])) {
+      $suggestions[] = 'form_element__' . $variables['element']['#type'];
+    }
+  }
+
+  /**
+   * Implements hook_theme_suggestions_HOOK_alter() for details.
+   */
+  #[Hook('theme_suggestions_details_alter')]
+  public function themeSuggestionsDetailsAlter(&$suggestions, $variables): void {
+    if (!empty($variables['element']['#vertical_tab_item'])) {
+      $suggestions[] = 'details__vertical_tabs';
+    }
+  }
+
+  /**
+   * Implements hook_page_attachments_alter().
+   */
+  #[Hook('page_attachments_alter')]
+  public function pageAttachmentsAlter(array &$attachments): void {
+    $theme_path = \Drupal::request()->getBasePath() . '/' . \Drupal::service('extension.list.theme')->getPath('claro');
+    $query_string = \Drupal::service('asset.query_string')->get();
+    // Attach non-JavaScript specific CSS via a noscript tag to prevent unwanted
+    // layout shifts.
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#tag' => 'link',
+        '#noscript' => TRUE,
+        '#attributes' => [
+          'rel' => 'stylesheet',
+          'href' => $theme_path . '/css/components/dropbutton-noscript.css?' . $query_string,
+        ],
+      ],
+      'dropbutton_noscript',
+    ];
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#tag' => 'link',
+        '#noscript' => TRUE,
+        '#attributes' => [
+          'rel' => 'stylesheet',
+          'href' => $theme_path . '/css/components/views-ui-noscript.css?' . $query_string,
+        ],
+      ],
+      'views_ui_noscript',
+    ];
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for menu-local-tasks templates.
+   *
+   * Use preprocess hook to set #attached to child elements because they will be
+   * processed by Twig and \Drupal::service('renderer')->render() will be
+   * invoked.
+   */
+  #[Hook('preprocess_menu_local_tasks')]
+  public function preprocessMenuLocalTasks(&$variables): void {
+    if (!empty($variables['primary'])) {
+      $variables['primary']['#attached'] = [
+        'library' => [
+          'claro/drupal.nav-tabs',
+        ],
+      ];
+    }
+    elseif (!empty($variables['secondary'])) {
+      $variables['secondary']['#attached'] = [
+        'library' => [
+          'claro/drupal.nav-tabs',
+        ],
+      ];
+    }
+    foreach (Element::children($variables['primary']) as $key) {
+      $variables['primary'][$key]['#level'] = 'primary';
+    }
+    foreach (Element::children($variables['secondary']) as $key) {
+      $variables['secondary'][$key]['#level'] = 'secondary';
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for menu-local-task templates.
+   */
+  #[Hook('preprocess_menu_local_task')]
+  public function preprocessMenuLocalTask(&$variables): void {
+    $variables['link']['#options']['attributes']['class'][] = 'tabs__link';
+    $variables['link']['#options']['attributes']['class'][] = 'js-tabs-link';
+    // Ensure is-active class is set when the tab is active. The generic active
+    // link handler applies stricter comparison rules than what is necessary for
+    // tabs.
+    if (isset($variables['is_active']) && $variables['is_active'] === TRUE) {
+      $variables['link']['#options']['attributes']['class'][] = 'is-active';
+    }
+    if (isset($variables['element']['#level'])) {
+      $variables['level'] = $variables['element']['#level'];
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for menu-local-task Views UI templates.
+   */
+  #[Hook('preprocess_menu_local_task__views_ui')]
+  public function preprocessMenuLocalTaskViewsUi(&$variables): void {
+    // Remove 'tabs__link' without adding a new class because it couldn't be
+    // used reliably.
+    // @see https://www.drupal.org/node/3051605
+    $link_class_index = array_search('tabs__link', $variables['link']['#options']['attributes']['class']);
+    if ($link_class_index !== FALSE) {
+      unset($variables['link']['#options']['attributes']['class'][$link_class_index]);
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for node_add_list.
+   *
+   * Makes node_add_list variables compatible with entity_add_list.
+   */
+  #[Hook('preprocess_node_add_list')]
+  public function preprocessNodeAddList(&$variables): void {
+    if (!empty($variables['content'])) {
+      /** @var \Drupal\node\NodeTypeInterface $type */
+      foreach ($variables['content'] as $type) {
+        $label = $type->label();
+        $description = $type->getDescription();
+        $type_id = $type->id();
+        $add_url = Url::fromRoute('entity.node.add_form', [
+          'node_type' => $type_id,
+        ]);
+        $variables['bundles'][$type_id] = [
+          'label' => $label,
+          'add_link' => Link::fromTextAndUrl($label, $add_url),
+          'description' => [],
+        ];
+        if (!empty($description)) {
+          $variables['bundles'][$type_id]['description'] = [
+            '#markup' => $description,
+          ];
+        }
+      }
+      $variables['attributes']['class'][] = 'node-type-list';
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for entity_add_list.
+   */
+  #[Hook('preprocess_entity_add_list')]
+  public function preprocessEntityAddList(&$variables): void {
+    // Remove description if empty.
+    foreach ($variables['bundles'] as $type_id => $values) {
+      if (isset($values['description']['#markup']) && empty($values['description']['#markup'])) {
+        $variables['bundles'][$type_id]['description'] = [];
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_block() for block content.
+   *
+   * Disables contextual links for all blocks except for layout builder blocks.
+   */
+  #[Hook('preprocess_block')]
+  public function preprocessBlock(&$variables): void {
+    if (isset($variables['title_suffix']['contextual_links']) && !isset($variables['elements']['#contextual_links']['layout_builder_block'])) {
+      unset($variables['title_suffix']['contextual_links']);
+      unset($variables['elements']['#contextual_links']);
+      $variables['attributes']['class'] = array_diff($variables['attributes']['class'], [
+        'contextual-region',
+      ]);
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for admin_block.
+   */
+  #[Hook('preprocess_admin_block')]
+  public function preprocessAdminBlock(&$variables): void {
+    if (!empty($variables['block']['content'])) {
+      $variables['block']['content']['#attributes']['class'][] = 'admin-list--panel';
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for admin_block_content.
+   */
+  #[Hook('preprocess_admin_block_content')]
+  public function preprocessAdminBlockContent(&$variables): void {
+    foreach ($variables['content'] as &$item) {
+      $link_attributes = $item['url']->getOption('attributes') ?: [];
+      $link_attributes['class'][] = 'admin-item__link';
+      $item['url']->setOption('attributes', $link_attributes);
+      $item['link'] = Link::fromTextAndUrl($item['title'], $item['url']);
+      if (empty($item['description']) || empty($item['description']['#markup'])) {
+        unset($item['description']);
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for menu-local-action templates.
+   */
+  #[Hook('preprocess_menu_local_action')]
+  public function preprocessMenuLocalAction(array &$variables): void {
+    $variables['link']['#options']['attributes']['class'][] = 'button--primary';
+    $variables['attributes']['class'][] = 'local-actions__item';
+    $legacy_class_key = array_search('button-action', $variables['link']['#options']['attributes']['class']);
+    if ($legacy_class_key !== FALSE) {
+      $variables['link']['#options']['attributes']['class'][$legacy_class_key] = 'button--action';
+    }
+  }
+
+  /**
+   * Implements hook_element_info_alter().
+   */
+  #[Hook('element_info_alter')]
+  public function elementInfoAlter(&$type): void {
+    // Add a pre-render function that handles the sidebar of the node form.
+    // @todo Refactor when https://www.drupal.org/node/3056089 is in.
+    if (isset($type['container'])) {
+      $container_pre_renders = !empty($type['container']['#pre_render']) ? $type['container']['#pre_render'] : [];
+      array_unshift($container_pre_renders, [
+        ClaroPreRender::class,
+        'container',
+      ]);
+      $type['container']['#pre_render'] = $container_pre_renders;
+    }
+    // @todo Refactor when https://www.drupal.org/node/3016343 is fixed.
+    if (isset($type['text_format'])) {
+      $type['text_format']['#pre_render'][] = [
+        ClaroPreRender::class,
+        'textFormat',
+      ];
+    }
+    // Add a pre-render function for Operations to set #dropbutton_type.
+    if (isset($type['operations'])) {
+      // In Claro, Operations should always use the extrasmall dropbutton
+      // variant. To add CSS classes based on variants, the element must have
+      // the #dropbutton_type property before it is processed by
+      // \Drupal\Core\Render\Element\Dropbutton::preRenderDropbutton(). This
+      // ensures #dropbutton_type is available to preRenderDropbutton().
+      $operations_pre_renders = !empty($type['operations']['#pre_render']) ? $type['operations']['#pre_render'] : [];
+      array_unshift($operations_pre_renders, [
+        ClaroPreRender::class,
+        'operations',
+      ]);
+      $type['operations']['#pre_render'] = $operations_pre_renders;
+      // @todo Remove when https://www.drupal.org/node/1945262 is fixed.
+      $type['operations']['#attached']['library'][] = 'core/drupal.dialog.ajax';
+    }
+    if (isset($type['vertical_tabs'])) {
+      $type['vertical_tabs']['#pre_render'][] = [
+        ClaroPreRender::class,
+        'verticalTabs',
+      ];
+    }
+    // Add a pre-render to managed_file.
+    if (isset($type['managed_file'])) {
+      $type['managed_file']['#pre_render'][] = [
+        ClaroPreRender::class,
+        'managedFile',
+      ];
+    }
+    // Add a pre-render to status_messages to alter the placeholder markup.
+    if (isset($type['status_messages'])) {
+      $type['status_messages']['#pre_render'][] = [
+        ClaroPreRender::class,
+        'messagePlaceholder',
+      ];
+    }
+  }
+
+  /**
+   * Implements hook_theme_registry_alter().
+   */
+  #[Hook('theme_registry_alter')]
+  public function themeRegistryAlter(&$theme_registry): void {
+    if (!empty($theme_registry['admin_block_content'])) {
+      $theme_registry['admin_block_content']['variables']['attributes'] = [];
+    }
+    // @todo Remove when https://www.drupal.org/node/3016346 is fixed.
+    if (!empty($theme_registry['text_format_wrapper'])) {
+      $theme_registry['text_format_wrapper']['variables']['disabled'] = FALSE;
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_install_page().
+   */
+  #[Hook('preprocess_install_page')]
+  public function preprocessInstallPage(&$variables): void {
+    // Claro has custom styling for the install page.
+    $variables['#attached']['library'][] = 'claro/install-page';
+  }
+
+  /**
+   * Implements hook_preprocess_maintenance_page().
+   */
+  #[Hook('preprocess_maintenance_page')]
+  public function preprocessMaintenancePage(&$variables): void {
+    // Claro has custom styling for the maintenance page.
+    $variables['#attached']['library'][] = 'claro/maintenance-page';
+  }
+
+  /**
+   * Implements hook_theme_suggestions_maintenance_page_alter().
+   */
+  #[Hook('theme_suggestions_maintenance_page_alter')]
+  public function themeSuggestionsMaintenancePageAlter(&$suggestions): void {
+    try {
+      $is_front = \Drupal::service('path.matcher')->isFrontPage();
+    }
+    catch (\Exception) {
+      // An exception could mean that the database is offline. This scenario
+      // should also be rendered using the frontpage template.
+      $is_front = TRUE;
+    }
+    if ($is_front) {
+      // Add theme suggestion for maintenance page rendered as front page. This
+      // allows separating different applications such as update.php from the
+      // actual maintenance page.
+      $suggestions[] = 'maintenance_page__front';
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for details.
+   *
+   * @todo Revisit when https://www.drupal.org/node/3056089 is in.
+   */
+  #[Hook('preprocess_details')]
+  public function preprocessDetails(&$variables): void {
+    $element = $variables['element'];
+    if (!empty($element['#accordion_item'])) {
+      // Details should appear as an accordion item.
+      $variables['accordion_item'] = TRUE;
+    }
+    if (!empty($element['#accordion'])) {
+      // Details should appear as a standalone accordion.
+      $variables['accordion'] = TRUE;
+    }
+    if (!empty($element['#theme']) && $element['#theme'] === 'file_widget_multiple') {
+      // Mark the details required if needed. If the file widget allows
+      // uploading multiple files, the required state is checked by checking
+      // the state of the first child.
+      $variables['required'] = $element[0]['#required'] ?? !empty($element['#required']);
+      // If the error is the same as the one in the multiple field widget
+      // element, we have to avoid displaying it twice. Stark has this issue as
+      // well. @todo Revisit when https://www.drupal.org/node/3084906 is fixed.
+      if (isset($element['#errors']) && isset($variables['errors']) && $element['#errors'] === $variables['errors']) {
+        unset($variables['errors']);
+      }
+    }
+    $variables['disabled'] = !empty($element['#disabled']);
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for links.
+   */
+  #[Hook('preprocess_links')]
+  public function preprocessLinks(&$variables): void {
+    foreach ($variables['links'] as $links_item) {
+      if (!empty($links_item['link']) && !empty($links_item['link']['#url']) && $links_item['link']['#url'] instanceof Url) {
+        if ($links_item['link']['#url']->isRouted()) {
+          switch ($links_item['link']['#url']->getRouteName()) {
+            case 'system.theme_settings_theme':
+              $links_item['link'] = _claro_convert_link_to_action_link($links_item['link'], 'cog', 'small');
+              break;
+
+            case 'system.theme_uninstall':
+              $links_item['link'] = _claro_convert_link_to_action_link($links_item['link'], 'ex', 'small');
+              break;
+
+            case 'system.theme_set_default':
+              $links_item['link'] = _claro_convert_link_to_action_link($links_item['link'], 'checkmark', 'small');
+              break;
+
+            case 'system.theme_install':
+              $links_item['link'] = _claro_convert_link_to_action_link($links_item['link'], 'plus', 'small');
+              break;
+          }
+        }
+      }
+    }
+    // This makes it so array keys of #links items are added as a class. This
+    // functionality was removed in Drupal 8.1, but still necessary in some
+    // instances.
+    // @todo Remove in https://drupal.org/node/3120962
+    if (!empty($variables['links'])) {
+      foreach ($variables['links'] as $key => $value) {
+        if (!is_numeric($key)) {
+          $class = Html::getClass($key);
+          $variables['links'][$key]['attributes']->addClass($class);
+        }
+      }
+    }
+  }
+
+  /**
+   * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\node\Form\NodeForm.
+   *
+   * Changes vertical tabs to container.
+   */
+  #[Hook('form_node_form_alter')]
+  public function formNodeFormAlter(&$form, FormStateInterface $form_state): void {
+    $form['#theme'] = [
+      'node_edit_form',
+    ];
+    $form['#attached']['library'][] = 'claro/form-two-columns';
+    $form['advanced']['#type'] = 'container';
+    $form['advanced']['#accordion'] = TRUE;
+    $form['meta']['#type'] = 'container';
+    $form['meta']['#access'] = TRUE;
+    $form['revision_information']['#type'] = 'container';
+    $form['revision_information']['#group'] = 'meta';
+    $form['revision_information']['#attributes']['class'][] = 'entity-meta__revision';
+  }
+
+  /**
+   * Implements hook_form_BASE_FORM_ID_alter() for MenuLinkContentForm.
+   *
+   * Alters the menu_link_content_form by organizing form elements into
+   * different 'details' sections.
+   */
+  #[Hook('form_menu_link_content_form_alter')]
+  public function formMenuLinkContentFormAlter(&$form, FormStateInterface $form_state): void {
+    $form['#theme'] = [
+      'menu_link_form',
+    ];
+    $form['#attached']['library'][] = 'claro/form-two-columns';
+    $form['advanced'] = [
+      '#type' => 'container',
+      '#weight' => 10,
+      '#accordion' => TRUE,
+    ];
+    $form['menu_parent']['#wrapper_attributes'] = [
+      'class' => [
+        'accordion__item',
+        'entity-meta__header',
+      ],
+    ];
+    $form['menu_parent']['#prefix'] = '<div class="accordion">';
+    $form['menu_parent']['#suffix'] = '</div>';
+    $form['menu_parent']['#group'] = 'advanced';
+    $form['menu_link_display_settings'] = [
+      '#type' => 'details',
+      '#group' => 'advanced',
+      '#title' => $this->t('Display settings'),
+      '#attributes' => [
+        'class' => [
+          'entity-meta__options',
+        ],
+      ],
+      '#tree' => FALSE,
+      '#accordion' => TRUE,
+    ];
+    if (!empty($form['weight'])) {
+      $form['menu_link_display_settings']['weight'] = $form['weight'];
+      unset($form['weight'], $form['menu_link_display_settings']['weight']['#weight']);
+    }
+    if (!empty($form['expanded'])) {
+      $form['menu_link_display_settings']['expanded'] = $form['expanded'];
+      unset($form['expanded']);
+    }
+    if (isset($form['description'])) {
+      $form['menu_link_description'] = [
+        '#type' => 'details',
+        '#group' => 'advanced',
+        '#title' => $this->t('Description'),
+        '#attributes' => [
+          'class' => [
+            'entity-meta__description',
+          ],
+        ],
+        '#tree' => FALSE,
+        '#accordion' => TRUE,
+        'description' => $form['description'],
+      ];
+      unset($form['description']);
+    }
+  }
+
+  /**
+   * Implements hook_form_FORM_ID_alter() for MenuLinkEditForm.
+   *
+   * Alters the menu_link_edit form by organizing form elements into different
+   * 'details' sections.
+   */
+  #[Hook('form_menu_link_edit_alter')]
+  public function formMenuLinkEditAlter(&$form, FormStateInterface $form_state): void {
+    $this->formMenuLinkContentFormAlter($form, $form_state);
+  }
+
+  /**
+   * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\media\MediaForm.
+   */
+  #[Hook('form_media_form_alter')]
+  public function formMediaFormAlter(&$form, FormStateInterface $form_state): void {
+    // Only attach CSS from core if this form comes from Media core, and not
+    // from the contrib Media Entity 1.x branch.
+    if (\Drupal::moduleHandler()->moduleExists('media') && $form_state->getFormObject() instanceof MediaForm) {
+      // @todo Revisit after https://www.drupal.org/node/2892304 is in. It
+      //   introduces a footer region to these forms which will allow for us to
+      //   display a top border over the published checkbox by defining a
+      //   media-edit-form.html.twig template the same way node does.
+      $form['#attached']['library'][] = 'claro/media-form';
+    }
+  }
+
+  /**
+   * Implements hook_views_ui_display_top_alter().
+   */
+  #[Hook('views_ui_display_top_alter')]
+  public function viewsUiDisplayTopAlter(&$element): void {
+    // @todo Remove this after https://www.drupal.org/node/3051605 has been
+    //   solved.
+    $element['tabs']['#prefix'] = preg_replace('/(class="(.+\s)?)tabs(\s.+"|")/', '$1views-tabs$3', $element['tabs']['#prefix']);
+    $element['tabs']['#prefix'] = preg_replace('/(class="(.+\s)?)secondary(\s.+"|")/', '$1views-tabs--secondary$3', $element['tabs']['#prefix']);
+    foreach (Element::children($element['tabs']) as $tab) {
+      $element['tabs'][$tab]['#theme'] = 'menu_local_task__views_ui';
+    }
+    // Change top extra actions to use the small dropbutton variant.
+    // @todo Revisit after https://www.drupal.org/node/3057581 is added.
+    if (!empty($element['extra_actions'])) {
+      $element['extra_actions']['#dropbutton_type'] = 'small';
+    }
+    // Add a class to each item in the add display dropdown so they can be
+    // styled with a single selector.
+    if (isset($element['add_display'])) {
+      foreach ($element['add_display'] as &$display_item) {
+        if (isset($display_item['#type']) && in_array($display_item['#type'], [
+          'submit',
+          'button',
+        ], TRUE)) {
+          $display_item['#attributes']['class'][] = 'views-tabs__action-list-button';
+        }
+      }
+    }
+    // Rearrange top bar contents so floats aren't necessary for positioning.
+    if (isset($element['extra_actions'], $element['tabs'], $element['add_display'])) {
+      $element['extra_actions']['#weight'] = 10;
+      $element['extra_actions']['#theme_wrappers'] = [
+        'container' => [
+          '#attributes' => [
+            'class' => [
+              'views-display-top__extra-actions-wrapper',
+            ],
+          ],
+        ],
+      ];
+      $element['#attributes']['class'] = array_diff($element['#attributes']['class'], [
+        'clearfix',
+      ]);
+    }
+  }
+
+  /**
+   * Implements hook_views_ui_display_tab_alter().
+   */
+  #[Hook('views_ui_display_tab_alter')]
+  public function viewsUiDisplayTabAlter(&$element): void {
+    // We process the dropbutton-like element on views edit form's
+    // display settings top section.
+    //
+    // That element should be a regular Dropbutton.
+    //
+    // After that the reported issue is fixed and the element is rendered with
+    // the Dropbutton type, we just have to set it's '#dropbutton_type' to
+    // 'extrasmall'.
+    //
+    // @todo Revisit after https://www.drupal.org/node/3057577 is fixed.
+    $dummy_dropbutton = &$element['details']['top']['actions'];
+    if ($dummy_dropbutton) {
+      $child_keys = Element::children($dummy_dropbutton);
+      $prefix_regex = '/(<.*class\s*= *["\']?)([^"\']*)(.*)/i';
+      $child_count = 0;
+      foreach ($child_keys as $key) {
+        if (in_array($key, [
+          'prefix',
+          'suffix',
+        ])) {
+          continue;
+        }
+        $nested_child_keys = Element::children($dummy_dropbutton[$key], TRUE);
+        if (!empty($nested_child_keys)) {
+          foreach ($nested_child_keys as $nested_key) {
+            $child_count++;
+            $prefix = $dummy_dropbutton[$key][$nested_key]['#prefix'];
+            $dummy_dropbutton[$key][$nested_key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item$3', $prefix);
+          }
+        }
+        else {
+          $child_count++;
+          $prefix = $dummy_dropbutton[$key]['#prefix'];
+          $dummy_dropbutton[$key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item$3', $prefix);
+        }
+      }
+      if (!empty($dummy_dropbutton['prefix']) && !empty($dummy_dropbutton['prefix']['#markup'])) {
+        $classes = 'dropbutton--extrasmall ';
+        $classes .= $child_count > 1 ? 'dropbutton--multiple' : 'dropbutton--single';
+        $prefix = $dummy_dropbutton['prefix']['#markup'];
+        $dummy_dropbutton['prefix']['#markup'] = preg_replace($prefix_regex, '$1$2 ' . $classes . '$3', $prefix);
+      }
+    }
+    // If the top details have both actions and title, the `actions` weights
+    // need to be adjusted so the DOM order matches the order of appearance.
+    if (isset($element['details']['top']['actions'], $element['details']['top']['display_title'])) {
+      $top = &$element['details']['top'];
+      $top['actions']['#weight'] = 10;
+      $top['#attributes']['class'] = array_diff($top['#attributes']['class'], [
+        'clearfix',
+      ]);
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for views_exposed_form.
+   */
+  #[Hook('preprocess_views_exposed_form')]
+  public function preprocessViewsExposedForm(&$variables): void {
+    $form = &$variables['form'];
+    // Add BEM classes for items in the form.
+    // Sorted keys.
+    $child_keys = Element::children($form, TRUE);
+    $last_key = NULL;
+    $child_before_actions_key = NULL;
+    foreach ($child_keys as $child_key) {
+      if (!empty($form[$child_key]['#type'])) {
+        if ($form[$child_key]['#type'] === 'actions') {
+          // We need the key of the element that precedes the actions element.
+          $child_before_actions_key = $last_key;
+          $form[$child_key]['#attributes']['class'][] = 'views-exposed-form__item';
+          $form[$child_key]['#attributes']['class'][] = 'views-exposed-form__item--actions';
+        }
+        if (!in_array($form[$child_key]['#type'], [
+          'hidden',
+          'actions',
+        ])) {
+          $form[$child_key]['#wrapper_attributes']['class'][] = 'views-exposed-form__item';
+          $last_key = $child_key;
+        }
+      }
+    }
+    if ($child_before_actions_key) {
+      // Add a modifier class to the item that precedes the form actions.
+      $form[$child_before_actions_key]['#wrapper_attributes']['class'][] = 'views-exposed-form__item--preceding-actions';
+    }
+  }
+
+  /**
+   * Implements hook_form_FORM_ID_alter() for views_exposed_form.
+   */
+  #[Hook('form_views_exposed_form_alter')]
+  public function formViewsExposedFormAlter(&$form, FormStateInterface $form_state): void {
+    $view = $form_state->getStorage()['view'];
+    $view_title = $view->getTitle();
+    // Add a label so screen readers can identify the purpose of the exposed
+    // form without having to scan content that appears further down the page.
+    $form['#attributes']['aria-label'] = $this->t('Filter the contents of the %view_title view', [
+      '%view_title' => $view_title,
+    ]);
+  }
+
+  /**
+   * Implements hook_form_FORM_ID_alter() for the system_modules form.
+   */
+  #[Hook('form_system_modules_alter')]
+  public function formSystemModulesAlter(&$form, FormStateInterface $form_state): void {
+    if (isset($form['filters'])) {
+      $form['filters']['#attributes']['class'][] = 'modules-table-filter';
+      if (isset($form['filters']['text'])) {
+        unset($form['filters']['text']['#title_display']);
+        $form['filters']['text']['#title'] = $this->t('Filter');
+      }
+    }
+    // Convert module links to action links.
+    foreach (Element::children($form['modules']) as $key) {
+      $link_key_to_action_link_type = [
+        'help' => 'questionmark',
+        'permissions' => 'key',
+        'configure' => 'cog',
+      ];
+      if (isset($form['modules'][$key]['#type']) && $form['modules'][$key]['#type'] === 'details') {
+        $form['modules'][$key]['#module_package_listing'] = TRUE;
+        foreach (Element::children($form['modules'][$key]) as $module_key) {
+          if (isset($form['modules'][$key][$module_key]['links'])) {
+            foreach ($form['modules'][$key][$module_key]['links'] as $link_key => &$link) {
+              if (array_key_exists($link_key, $link_key_to_action_link_type)) {
+                $action_link_type = $link_key_to_action_link_type[$link_key];
+                $link['#options']['attributes']['class'][] = 'action-link';
+                $link['#options']['attributes']['class'][] = 'action-link--small';
+                $link['#options']['attributes']['class'][] = "action-link--icon-{$action_link_type}";
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_form_element().
+   */
+  #[Hook('preprocess_form_element')]
+  public function preprocessFormElement(&$variables): void {
+    if (!empty($variables['element']['#errors'])) {
+      $variables['label']['#attributes']['class'][] = 'has-error';
+    }
+    if ($variables['disabled']) {
+      $variables['label']['#attributes']['class'][] = 'is-disabled';
+      if (!empty($variables['description']['attributes'])) {
+        $variables['description']['attributes']->addClass('is-disabled');
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for input.
+   */
+  #[Hook('preprocess_input')]
+  public function preprocessInput(&$variables): void {
+    if (!empty($variables['element']['#title_display']) && $variables['element']['#title_display'] === 'attribute' && !empty((string) $variables['element']['#title'])) {
+      $variables['attributes']['title'] = (string) $variables['element']['#title'];
+    }
+    $type_api = $variables['element']['#type'];
+    $type_html = $variables['attributes']['type'];
+    $text_types_html = [
+      'text',
+      'email',
+      'tel',
+      'number',
+      'search',
+      'password',
+      'date',
+      'time',
+      'file',
+      'color',
+      'datetime-local',
+      'url',
+      'month',
+      'week',
+    ];
+    if (in_array($type_html, $text_types_html)) {
+      $variables['attributes']['class'][] = 'form-element';
+      $variables['attributes']['class'][] = Html::getClass('form-element--type-' . $type_html);
+      $variables['attributes']['class'][] = Html::getClass('form-element--api-' . $type_api);
+      if (!empty($variables['element']['#autocomplete_route_name'])) {
+        $variables['autocomplete_message'] = $this->t('Loading…');
+      }
+    }
+    if (in_array($type_html, [
+      'checkbox',
+      'radio',
+    ])) {
+      $variables['attributes']['class'][] = 'form-boolean';
+      $variables['attributes']['class'][] = Html::getClass('form-boolean--type-' . $type_html);
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for select.
+   */
+  #[Hook('preprocess_select')]
+  public function preprocessSelect(&$variables): void {
+    if (!empty($variables['element']['#title_display']) && $variables['element']['#title_display'] === 'attribute' && !empty((string) $variables['element']['#title'])) {
+      $variables['attributes']['title'] = (string) $variables['element']['#title'];
+    }
+    $variables['attributes']['class'][] = 'form-element';
+    $variables['attributes']['class'][] = $variables['element']['#multiple'] ? 'form-element--type-select-multiple' : 'form-element--type-select';
+    if (in_array('block-region-select', $variables['attributes']['class'])) {
+      $variables['attributes']['class'][] = 'form-element--extrasmall';
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for datetime_wrapper.
+   */
+  #[Hook('preprocess_datetime_wrapper')]
+  public function preprocessDatetimeWrapper(&$variables): void {
+    if (!empty($variables['element']['#errors'])) {
+      $variables['title_attributes']['class'][] = 'has-error';
+    }
+    if (!empty($variables['element']['#disabled'])) {
+      $variables['title_attributes']['class'][] = 'is-disabled';
+      if (!empty($variables['description_attributes'])) {
+        $variables['description_attributes']->addClass('is-disabled');
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for fieldset.
+   */
+  #[Hook('preprocess_fieldset')]
+  public function preprocessFieldset(&$variables): void {
+    $element = $variables['element'];
+    $composite_types = [
+      'checkboxes',
+      'radios',
+    ];
+    if (!empty($element['#type']) && in_array($element['#type'], $composite_types) && !empty($variables['element']['#children_errors'])) {
+      $variables['legend_span']['attributes']->addClass('has-error');
+    }
+    if (!empty($element['#disabled'])) {
+      $variables['legend_span']['attributes']->addClass('is-disabled');
+      if (!empty($variables['description']) && !empty($variables['description']['attributes'])) {
+        $variables['description']['attributes']->addClass('is-disabled');
+      }
+    }
+    // Remove 'container-inline' class from the main attributes and add a flag
+    // instead.
+    // @todo Remove this after https://www.drupal.org/node/3059593 has been
+    //   resolved.
+    if (!empty($variables['attributes']['class'])) {
+      $container_inline_key = array_search('container-inline', $variables['attributes']['class']);
+      if ($container_inline_key !== FALSE) {
+        unset($variables['attributes']['class'][$container_inline_key]);
+        $variables['inline_items'] = TRUE;
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for field_multiple_value_form.
+   */
+  #[Hook('preprocess_field_multiple_value_form')]
+  public function preprocessFieldMultipleValueForm(&$variables): void {
+    // Make disabled available for the template.
+    $variables['disabled'] = !empty($variables['element']['#disabled']);
+    if ($variables['multiple']) {
+      // Add an additional CSS class to the field label table cell. The table
+      // header cell should always exist unless removed by contrib.
+      // @see \Drupal\Core\Field\FieldPreprocess::preprocessFieldMultipleValueForm().
+      if (isset($variables['table']['#header'][0]['data']['#attributes'])) {
+        $variables['table']['#header'][0]['data']['#attributes']->removeClass('label');
+        $variables['table']['#header'][0]['data']['#attributes']->addClass('form-item__label', 'form-item__label--multiple-value-form');
+      }
+      if ($variables['disabled']) {
+        $variables['table']['#attributes']['class'][] = 'tabledrag-disabled';
+        $variables['table']['#attributes']['class'][] = 'js-tabledrag-disabled';
+        // We will add the 'is-disabled' CSS class to the disabled table header
+        // cells.
+        $header_attributes['class'][] = 'is-disabled';
+        foreach ($variables['table']['#header'] as &$cell) {
+          if (is_array($cell) && isset($cell['data'])) {
+            $cell = $cell + [
+              'class' => [],
+            ];
+            $cell['class'][] = 'is-disabled';
+          }
+          else {
+            // We have to modify the structure of this header cell.
+            $cell = [
+              'data' => $cell,
+              'class' => [
+                'is-disabled',
+              ],
+            ];
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for form_element__password_confirm.
+   */
+  #[Hook('preprocess_form_element__password_confirm')]
+  public function preprocessFormElementPasswordConfirm(&$variables): void {
+    // Add CSS classes needed for theming the password confirm widget.
+    $variables['attributes']['class'][] = 'password-confirm';
+    $variables['attributes']['class'][] = 'is-initial';
+    $variables['attributes']['class'][] = 'is-password-empty';
+    $variables['attributes']['class'][] = 'is-confirm-empty';
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for form_element__password.
+   */
+  #[Hook('preprocess_form_element__password')]
+  public function preprocessFormElementPassword(&$variables): void {
+    if (!empty($variables['element']['#array_parents']) && in_array('pass1', $variables['element']['#array_parents'], TRUE)) {
+      // This is the main password form element.
+      $variables['attributes']['class'][] = 'password-confirm__password';
+    }
+    if (!empty($variables['element']['#array_parents']) && in_array('pass2', $variables['element']['#array_parents'], TRUE)) {
+      // This is the password confirm form element.
+      $variables['attributes']['class'][] = 'password-confirm__confirm';
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for filter_tips.
+   */
+  #[Hook('preprocess_filter_tips')]
+  public function preprocessFilterTips(&$variables): void {
+    $variables['#attached']['library'][] = 'filter/drupal.filter';
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for table.
+   */
+  #[Hook('preprocess_table')]
+  public function preprocessTable(&$variables): void {
+    // Adding table sort indicator CSS class for inactive sort link.
+    // @todo Revisit after https://www.drupal.org/node/3025726 or
+    //   https://www.drupal.org/node/1973418 is in.
+    if (!empty($variables['header'])) {
+      foreach ($variables['header'] as &$header_cell) {
+        if ($header_cell['content'] instanceof Link) {
+          $query = $header_cell['content']->getUrl()->getOption('query') ?: [];
+          if (isset($query['order']) && isset($query['sort'])) {
+            $header_cell['attributes']->addClass('sortable-heading');
+          }
+        }
+      }
+    }
+    // Mark the whole table and the first cells if rows are draggable.
+    if (!empty($variables['rows'])) {
+      $draggable_row_found = FALSE;
+      foreach ($variables['rows'] as &$row) {
+        /** @var \Drupal\Core\Template\Attribute $row['attributes'] */
+        if (!empty($row['attributes']) && $row['attributes']->hasClass('draggable')) {
+          if (!$draggable_row_found) {
+            $variables['attributes']['class'][] = 'draggable-table';
+            $draggable_row_found = TRUE;
+          }
+          $first_cell_key = array_key_first($row['cells']);
+          // The 'attributes' key is always here and it is an
+          // \Drupal\Core\Template\Attribute.
+          // @see \Drupal\Core\Theme\ThemePreprocess::preprocessTable();
+          $row['cells'][$first_cell_key]['attributes']->addClass('tabledrag-cell');
+          // Check that the first cell is empty or not.
+          if (empty($row['cells'][$first_cell_key]) || empty($row['cells'][$first_cell_key]['content'])) {
+            $row['cells'][$first_cell_key]['attributes']->addClass('tabledrag-cell--only-drag');
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for field_ui_table.
+   */
+  #[Hook('preprocess_field_ui_table')]
+  public function preprocessFieldUiTable(&$variables): void {
+    $this->preprocessTable($variables);
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for views_view_table.
+   *
+   * @todo Revisit after https://www.drupal.org/node/3025726 or
+   *   https://www.drupal.org/node/1973418 is in.
+   */
+  #[Hook('preprocess_views_view_table')]
+  public function preprocessViewsViewTable(&$variables): void {
+    if (!empty($variables['header'])) {
+      foreach ($variables['header'] as &$header_cell) {
+        if (!empty($header_cell['url'])) {
+          $parsed_url = UrlHelper::parse($header_cell['url']);
+          $query = !empty($parsed_url['query']) ? $parsed_url['query'] : [];
+          if (isset($query['order']) && isset($query['sort'])) {
+            $header_cell['attributes']->addClass('sortable-heading');
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for links__dropbutton.
+   */
+  #[Hook('preprocess_links__dropbutton')]
+  public function preprocessLinksDropbutton(&$variables): void {
+    // Add the right CSS class for the dropbutton list that helps reducing FOUC.
+    if (!empty($variables['links'])) {
+      $variables['attributes']['class'][] = count($variables['links']) > 1 ? 'dropbutton--multiple' : 'dropbutton--single';
+    }
+    foreach ($variables['links'] as &$link_data) {
+      $link_data['attributes']->addClass('dropbutton__item');
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for views_ui_display_tab_bucket.
+   */
+  #[Hook('preprocess_views_ui_display_tab_bucket')]
+  public function preprocessViewsUiDisplayTabBucket(&$variables): void {
+    // Instead of re-styling Views UI dropbuttons with module-specific CSS
+    // styles, change dropbutton variants to the extra small version.
+    // @todo Revisit after https://www.drupal.org/node/3057581 is added.
+    if (!empty($variables['actions']) && $variables['actions']['#type'] === 'dropbutton') {
+      $variables['actions']['#dropbutton_type'] = 'extrasmall';
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for status_messages.
+   */
+  #[Hook('preprocess_status_messages')]
+  public function preprocessStatusMessages(&$variables): void {
+    $variables['title_ids'] = [];
+    foreach ($variables['message_list'] as $message_type => $messages) {
+      $variables['title_ids'][$message_type] = Html::getUniqueId("message-{$message_type}-title");
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for system_themes_page.
+   */
+  #[Hook('preprocess_system_themes_page')]
+  public function preprocessSystemThemesPage(&$variables): void {
+    if (!empty($variables['theme_groups'])) {
+      foreach ($variables['theme_groups'] as &$theme_group) {
+        if (!empty($theme_group['themes'])) {
+          foreach ($theme_group['themes'] as &$theme_card) {
+            // @todo Remove dependency on attributes after
+            //   https://www.drupal.org/project/drupal/issues/2511548 has been
+            //   resolved.
+            if (isset($theme_card['screenshot']['#attributes']) && $theme_card['screenshot']['#attributes'] instanceof Attribute && $theme_card['screenshot']['#attributes']->hasClass('no-screenshot')) {
+              unset($theme_card['screenshot']);
+            }
+            $theme_card['title_id'] = Html::getUniqueId($theme_card['name'] . '-label');
+            $description_is_empty = empty((string) $theme_card['description']);
+            // Set description_id only if the description is not empty.
+            if (!$description_is_empty) {
+              $theme_card['description_id'] = Html::getUniqueId($theme_card['name'] . '-description');
+            }
+            if (!empty($theme_card['operations']) && !empty($theme_card['operations']['#theme']) && $theme_card['operations']['#theme'] === 'links') {
+              $theme_card['operations']['#theme'] = 'links__action_links';
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for links__action_links.
+   */
+  #[Hook('preprocess_links__action_links')]
+  public function preprocessLinksActionLinks(&$variables): void {
+    $variables['attributes']['class'][] = 'action-links';
+    foreach ($variables['links'] as $delta => $link_item) {
+      $variables['links'][$delta]['attributes']->addClass('action-links__item');
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for file_managed_file.
+   */
+  #[Hook('preprocess_file_managed_file')]
+  public function preprocessFileManagedFile(&$variables): void {
+    // Produce the same renderable element structure as image widget has.
+    $child_keys = Element::children($variables['element']);
+    foreach ($child_keys as $child_key) {
+      $variables['data'][$child_key] = $variables['element'][$child_key];
+    }
+    _claro_preprocess_file_and_image_widget($variables);
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for file_widget_multiple.
+   */
+  #[Hook('preprocess_file_widget_multiple')]
+  public function preprocessFileWidgetMultiple(&$variables): void {
+    $has_upload = FALSE;
+    if (isset($variables['table']['#type']) && $variables['table']['#type'] === 'table') {
+      // Add a variant class for the table.
+      $variables['table']['#attributes']['class'][] = 'table-file-multiple-widget';
+      // Mark table disabled if the field widget is disabled.
+      if (isset($variables['element']['#disabled']) && $variables['element']['#disabled']) {
+        $variables['table']['#attributes']['class'][] = 'tabledrag-disabled';
+        $variables['table']['#attributes']['class'][] = 'js-tabledrag-disabled';
+        // We will add the 'is-disabled' CSS class to the disabled table header
+        // cells.
+        foreach ($variables['table']['#header'] as &$cell) {
+          if (is_array($cell) && isset($cell['data'])) {
+            $cell = $cell + [
+              'class' => [],
+            ];
+            $cell['class'][] = 'is-disabled';
+          }
+          else {
+            // We have to modify the structure of this header cell.
+            $cell = [
+              'data' => $cell,
+              'class' => [
+                'is-disabled',
+              ],
+            ];
+          }
+        }
+      }
+      // Mark operations column cells with a CSS class.
+      if (isset($variables['table']['#rows']) && is_array($variables['table']['#rows'])) {
+        foreach ($variables['table']['#rows'] as $row_key => $row) {
+          if (isset($row['data']) && is_array($row['data'])) {
+            $last_cell = end($row['data']);
+            $last_cell_key = key($row['data']);
+            if (is_array($last_cell['data'])) {
+              foreach ($last_cell['data'] as $last_cell_item) {
+                if (isset($last_cell_item['#attributes']['class']) && is_array($last_cell_item['#attributes']['class']) && in_array('remove-button', $last_cell_item['#attributes']['class'])) {
+                  $variables['table']['#rows'][$row_key]['data'][$last_cell_key] += [
+                    'class' => [],
+                  ];
+                  $variables['table']['#rows'][$row_key]['data'][$last_cell_key]['class'][] = 'file-operations-cell';
+                  break 1;
+                }
+              }
+            }
+          }
+        }
+      }
+      // Add a CSS class to the table if an upload widget is present.
+      // This is required for removing the border of the last table row.
+      if (!empty($variables['element'])) {
+        $element_keys = Element::children($variables['element']);
+        foreach ($element_keys as $delta) {
+          if (!isset($variables['element'][$delta]['upload']['#access']) || $variables['element'][$delta]['upload']['#access'] !== FALSE) {
+            $has_upload = TRUE;
+            break 1;
+          }
+        }
+      }
+      $variables['table']['#attributes']['class'][] = $has_upload ? 'table-file-multiple-widget--has-upload' : 'table-file-multiple-widget--no-upload';
+    }
+    $table_is_not_empty = isset($variables['table']['#rows']) && !empty($variables['table']['#rows']);
+    $table_is_accessible = !isset($variables['table']['#access']) || isset($variables['table']['#access']) && $variables['table']['#access'] !== FALSE;
+    $variables['has_table'] = $table_is_not_empty && $table_is_accessible;
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for image_widget.
+   */
+  #[Hook('preprocess_image_widget')]
+  public function preprocessImageWidget(&$variables): void {
+    // This prevents image widget templates from rendering preview container
+    // HTML to users that do not have permission to access these previews.
+    // @todo Revisit in https://drupal.org/node/953034
+    // @todo Revisit in https://drupal.org/node/3114318
+    if (isset($variables['data']['preview']['#access']) && $variables['data']['preview']['#access'] === FALSE) {
+      unset($variables['data']['preview']);
+    }
+    _claro_preprocess_file_and_image_widget($variables);
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for views_view_fields__media_library.
+   *
+   * This targets each rendered media item in the grid display of the media
+   * library's modal dialog.
+   */
+  #[Hook('preprocess_views_view_fields__media_library')]
+  public function preprocessViewsViewFieldsMediaLibrary(array &$variables): void {
+    // Add classes to media rendered entity field so it can be targeted for
+    // styling. Adding this class in a template is very difficult to do.
+    if (isset($variables['fields']['rendered_entity']->wrapper_attributes)) {
+      $variables['fields']['rendered_entity']->wrapper_attributes->addClass('media-library-item__click-to-select-trigger');
+    }
+  }
+
+  /**
+   * Implements hook_form_BASE_FORM_ID_alter() for media_library_add_form.
+   */
+  #[Hook('form_media_library_add_form_alter')]
+  public function formMediaLibraryAddFormAlter(array &$form, FormStateInterface $form_state): void {
+    $form['#attributes']['class'][] = 'media-library-add-form';
+    $form['#attached']['library'][] = 'claro/media_library.theme';
+    // If there are unsaved media items, apply styling classes to various parts
+    // of the form.
+    if (isset($form['media'])) {
+      $form['#attributes']['class'][] = 'media-library-add-form--with-input';
+      // Put a wrapper around the informational message above the unsaved media
+      // items.
+      $form['description']['#template'] = '<p class="media-library-add-form__description">{{ text }}</p>';
+    }
+    else {
+      $form['#attributes']['class'][] = 'media-library-add-form--without-input';
+    }
+  }
+
+  /**
+   * Implements hook_form_FORM_ID_alter() for media_library_add_form_upload.
+   */
+  #[Hook('form_media_library_add_form_upload_alter')]
+  public function formMediaLibraryAddFormUploadAlter(array &$form, FormStateInterface $form_state): void {
+    $form['#attributes']['class'][] = 'media-library-add-form--upload';
+    if (isset($form['container']['upload'])) {
+      // Set this flag so we can prevent the details element from being added
+      // in \Drupal\claro\ClaroPreRender::managedFile.
+      $form['container']['upload']['#do_not_wrap_in_details'] = TRUE;
+    }
+    if (isset($form['container'])) {
+      $form['container']['#attributes']['class'][] = 'media-library-add-form__input-wrapper';
+    }
+  }
+
+  /**
+   * Implements hook_form_FORM_ID_alter() for media_library_add_form_oembed.
+   */
+  #[Hook('form_media_library_add_form_oembed_alter')]
+  public function formMediaLibraryAddFormOembedAlter(array &$form, FormStateInterface $form_state): void {
+    $form['#attributes']['class'][] = 'media-library-add-form--oembed';
+    // If no media items have been added yet, add a couple of styling classes
+    // to the initial URL form.
+    if (isset($form['container'])) {
+      $form['container']['#attributes']['class'][] = 'media-library-add-form__input-wrapper';
+      $form['container']['url']['#attributes']['class'][] = 'media-library-add-form-oembed-url';
+      $form['container']['submit']['#attributes']['class'][] = 'media-library-add-form-oembed-submit';
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for item_list__media_library_add_form_media_list.
+   *
+   * This targets each new, unsaved media item added to the media library,
+   * before they are saved.
+   */
+  #[Hook('preprocess_item_list__media_library_add_form_media_list')]
+  public function preprocessItemListMediaLibraryAddFormMediaList(array &$variables): void {
+    foreach ($variables['items'] as &$item) {
+      $item['value']['preview']['#attributes']['class'][] = 'media-library-add-form__preview';
+      $item['value']['fields']['#attributes']['class'][] = 'media-library-add-form__fields';
+      $item['value']['remove_button']['#attributes']['class'][] = 'media-library-add-form__remove-button';
+      $item['value']['remove_button']['#attributes']['class'][] = 'button--extrasmall';
+      // #source_field_name is set by AddFormBase::buildEntityFormElement()
+      // to help themes and form_alter hooks identify the source field.
+      $fields = &$item['value']['fields'];
+      $source_field_name = $fields['#source_field_name'];
+      // Set this flag so we can remove the details element.
+      $fields[$source_field_name]['widget'][0]['#do_not_wrap_in_details'] = TRUE;
+      if (isset($fields[$source_field_name])) {
+        $fields[$source_field_name]['#attributes']['class'][] = 'media-library-add-form__source-field';
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for media_library_item__widget.
+   *
+   * This targets each media item selected in an entity reference field.
+   */
+  #[Hook('preprocess_media_library_item__widget')]
+  public function preprocessMediaLibraryItemWidget(array &$variables): void {
+    $variables['content']['remove_button']['#attributes']['class'][] = 'media-library-item__remove';
+    $variables['content']['remove_button']['#attributes']['class'][] = 'icon-link';
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for media_library_item__small.
+   *
+   * This targets each pre-selected media item selected when adding new media in
+   * the modal media library dialog.
+   */
+  #[Hook('preprocess_media_library_item__small')]
+  public function preprocessMediaLibraryItemSmall(array &$variables): void {
+    $variables['content']['select']['#attributes']['class'][] = 'media-library-item__click-to-select-checkbox';
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for fieldset__media_library_widget.
+   *
+   * @todo Remove this when https://www.drupal.org/project/drupal/issues/2999549
+   *   lands.
+   *
+   * @see \Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::formElement()
+   */
+  #[Hook('preprocess_fieldset__media_library_widget')]
+  public function preprocessFieldsetMediaLibraryWidget(array &$variables): void {
+    if (isset($variables['prefix']['weight_toggle'])) {
+      $variables['prefix']['weight_toggle']['#attributes']['class'][] = 'action-link';
+      $variables['prefix']['weight_toggle']['#attributes']['class'][] = 'action-link--extrasmall';
+      $variables['prefix']['weight_toggle']['#attributes']['class'][] = 'action-link--icon-show';
+      $variables['prefix']['weight_toggle']['#attributes']['class'][] = 'media-library-widget__toggle-weight';
+    }
+    if (isset($variables['suffix']['open_button'])) {
+      $variables['suffix']['open_button']['#attributes']['class'][] = 'media-library-open-button';
+    }
+  }
+
+  /**
+   * Implements hook_views_pre_render().
+   */
+  #[Hook('views_pre_render')]
+  public function viewsPreRender(ViewExecutable $view): void {
+    $add_classes = function (&$option, array $classes_to_add) {
+      $classes = preg_split('/\s+/', $option);
+      $classes = array_filter($classes);
+      $classes = array_merge($classes, $classes_to_add);
+      $option = implode(' ', array_unique($classes));
+    };
+    if ($view->id() === 'media_library') {
+      if ($view->display_handler->options['defaults']['css_class']) {
+        $add_classes($view->displayHandlers->get('default')->options['css_class'], [
+          'media-library-view',
+        ]);
+      }
+      else {
+        $add_classes($view->display_handler->options['css_class'], [
+          'media-library-view',
+        ]);
+      }
+      if ($view->current_display === 'page') {
+        if (array_key_exists('media_bulk_form', $view->field)) {
+          $add_classes($view->field['media_bulk_form']->options['element_class'], [
+            'media-library-item__click-to-select-checkbox',
+          ]);
+        }
+        if (array_key_exists('rendered_entity', $view->field)) {
+          $add_classes($view->field['rendered_entity']->options['element_class'], [
+            'media-library-item__content',
+          ]);
+        }
+        if (array_key_exists('edit_media', $view->field)) {
+          $add_classes($view->field['edit_media']->options['alter']['link_class'], [
+            'media-library-item__edit',
+          ]);
+          $add_classes($view->field['edit_media']->options['alter']['link_class'], [
+            'icon-link',
+          ]);
+        }
+        if (array_key_exists('delete_media', $view->field)) {
+          $add_classes($view->field['delete_media']->options['alter']['link_class'], [
+            'media-library-item__remove',
+          ]);
+          $add_classes($view->field['delete_media']->options['alter']['link_class'], [
+            'icon-link',
+          ]);
+        }
+      }
+      elseif (str_starts_with($view->current_display, 'widget')) {
+        if (array_key_exists('rendered_entity', $view->field)) {
+          $add_classes($view->field['rendered_entity']->options['element_class'], [
+            'media-library-item__content',
+          ]);
+        }
+        if (array_key_exists('media_library_select_form', $view->field)) {
+          $add_classes($view->field['media_library_select_form']->options['element_wrapper_class'], [
+            'media-library-item__click-to-select-checkbox',
+          ]);
+        }
+        if ($view->display_handler->options['defaults']['css_class']) {
+          $add_classes($view->displayHandlers->get('default')->options['css_class'], [
+            'media-library-view--widget',
+          ]);
+        }
+        else {
+          $add_classes($view->display_handler->options['css_class'], [
+            'media-library-view--widget',
+          ]);
+        }
+      }
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for links__media_library_menu.
+   *
+   * This targets the menu of available media types in the media library's modal
+   * dialog.
+   *
+   * @todo Do this in the relevant template once
+   *   https://www.drupal.org/project/drupal/issues/3088856 is resolved.
+   */
+  #[Hook('preprocess_links__media_library_menu')]
+  public function preprocessLinksMediaLibraryMenu(array &$variables): void {
+    foreach ($variables['links'] as &$link) {
+      // Add a class to the Media Library menu items.
+      $link['attributes']->addClass('media-library-menu__item');
+      $link['link']['#options']['attributes']['class'][] = 'media-library-menu__link';
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for views_ui_rearrange_filter_form.
+   *
+   * Views UI rearrange filter form.
+   */
+  #[Hook('preprocess_views_ui_rearrange_filter_form')]
+  public function preprocessViewsUiRearrangeFilterForm(array &$variables): void {
+    foreach ($variables['table']['#rows'] as &$row) {
+      // Remove the container-inline class from the operator table cell.
+      if (isset($row['data'][0]['class'])) {
+        $row['data'][0]['class'] = array_diff($row['data'][0]['class'], [
+          'container-inline',
+        ]);
+      }
+    }
+  }
+
+  /**
+   * Implements hook_form_FORM_ID_alter() for the Views UI config form.
+   */
+  #[Hook('form_views_ui_config_item_form_alter')]
+  public function formViewsUiConfigItemFormAlter(array &$form, FormStateInterface $form_state): void {
+    $type = $form_state->get('type');
+    if ($type === 'filter') {
+      // Remove clearfix classes from several elements. They add unwanted
+      // whitespace and are no longer needed because uses of `float:` in this
+      // form have been removed.
+      // @todo Many of the changes to classes within this conditional may not be
+      //   needed or require refactoring in https://drupal.org/node/3164890
+      unset($form['options']['clear_markup_start']);
+      unset($form['options']['clear_markup_end']);
+      if (isset($form['options']['expose_button']['#prefix'])) {
+        $form['options']['expose_button']['#prefix'] = str_replace('clearfix', '', $form['options']['expose_button']['#prefix']);
+      }
+      if (isset($form['options']['group_button']['#prefix'])) {
+        $form['options']['group_button']['#prefix'] = str_replace('clearfix', '', $form['options']['group_button']['#prefix']);
+      }
+      // Remove `views-(direction)-(amount)` classes, replace with
+      // `views-group-box--operator`, and add a `views-config-group-region`
+      // wrapper.
+      if (isset($form['options']['operator']['#prefix'])) {
+        foreach (
+          [
+            'views-left-30',
+            'views-left-40',
+          ] as $left_class
+        ) {
+          if (str_contains($form['options']['operator']['#prefix'], $left_class)) {
+            $form['options']['operator']['#prefix'] = '<div class="views-config-group-region">' . str_replace($left_class, 'views-group-box--operator', $form['options']['operator']['#prefix']);
+            $form['options']['value']['#suffix'] = ($form['options']['value']['#suffix'] ?? '') . '</div>';
+          }
+        }
+      }
+      // Some instances of this form input have an added wrapper that needs to
+      // be removed in order to style these forms consistently.
+      // @see \Drupal\views\Plugin\views\filter\InOperator::valueForm
+      $wrapper_div_to_remove = '<div id="edit-options-value-wrapper">';
+      if (isset($form['options']['value']['#prefix']) && str_contains($form['options']['value']['#prefix'], $wrapper_div_to_remove)) {
+        $form['options']['value']['#prefix'] = str_replace($wrapper_div_to_remove, '', $form['options']['value']['#prefix']);
+        $form['options']['value']['#suffix'] = preg_replace('/<\/div>/', '', $form['options']['value']['#suffix'], 1);
+      }
+      if (isset($form['options']['value']['#prefix'])) {
+        foreach (
+          [
+            'views-right-70',
+            'views-right-60',
+          ] as $right_class
+        ) {
+          if (str_contains($form['options']['value']['#prefix'], $right_class)) {
+            $form['options']['value']['#prefix'] = str_replace($right_class, 'views-group-box--value', $form['options']['value']['#prefix']);
+          }
+        }
+      }
+      // If the form includes a `value` field, the `.views-group-box--value` and
+      // `.views-group-box` classes must be present in a wrapper div. Add them
+      // here if it they are not yet present.
+      if (!isset($form['options']['value']['#prefix']) || !str_contains($form['options']['value']['#prefix'], 'views-group-box--value')) {
+        $prefix = $form['options']['value']['#prefix'] ?? '';
+        $suffix = $form['options']['value']['#suffix'] ?? '';
+        $form['options']['value']['#prefix'] = '<div class="views-group-box views-group-box--value">' . $prefix;
+        $form['options']['value']['#suffix'] = $suffix . '</div>';
+      }
+      // If operator or value have no children, remove them from the render
+      // array so their prefixes and suffixes aren't added without any content.
+      foreach (
+        [
+          'operator',
+          'value',
+        ] as $form_item
+      ) {
+        if (isset($form['options'][$form_item]) && count($form['options'][$form_item]) === 2 && isset($form['options'][$form_item]['#prefix']) && $form['options'][$form_item]['#suffix']) {
+          unset($form['options'][$form_item]);
+        }
+      }
+    }
+  }
+
+  /**
+   * Implements hook_form_FORM_ID_alter() for Views UI add handler form.
+   */
+  #[Hook('form_views_ui_add_handler_form_alter')]
+  public function formViewsUiAddHandlerFormAlter(array &$form, FormStateInterface $form_state): void {
+    // Remove container-inline class to allow more control over styling.
+    if (isset($form['selected']['#attributes']['class'])) {
+      $form['selected']['#attributes']['class'] = array_diff($form['selected']['#attributes']['class'], [
+        'container-inline',
+      ]);
+    }
+    // Move all form elements in controls to its parent, this places them all in
+    // the same div, which makes it possible to position them with flex styling
+    // instead of floats.
+    if (isset($form['override']['controls'])) {
+      foreach (Element::children($form['override']['controls']) as $key) {
+        $form['override']["controls_{$key}"] = $form['override']['controls'][$key];
+        // The wrapper array for controls is removed after this loop completes.
+        // The wrapper ensured that its child elements were hidden in browsers
+        // without JavaScript. To replicate this functionality, the `.js-show`
+        // class is added to each item previously contained in the wrapper.
+        if (isset($form['override']['controls']['#id']) && $form['override']['controls']['#id'] === 'views-filterable-options-controls') {
+          $form['override']["controls_{$key}"]['#wrapper_attributes']['class'][] = 'js-show';
+        }
+      }
+      unset($form['override']['controls']);
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for toolbar.
+   *
+   * This is also called by system_preprocess_toolbar() in instances where Claro
+   * is the admin theme but not the active theme.
+   *
+   * @see system_preprocess_toolbar()
+   */
+  #[Hook('preprocess_toolbar')]
+  public function preprocessToolbar(&$variables, $hook, $info): void {
+    $variables['attributes']['data-drupal-claro-processed-toolbar'] = TRUE;
+  }
+
+  /**
+   * Implements hook_form_FORM_ID_alter() for the user_admin_permissions form.
+   */
+  #[Hook('form_user_admin_permissions_alter')]
+  public function formUserAdminPermissionsAlter(&$form, FormStateInterface $form_state): void {
+    if (isset($form['filters'])) {
+      $form['filters']['#attributes']['class'][] = 'permissions-table-filter';
+      if (isset($form['filters']['text'])) {
+        unset($form['filters']['text']['#title_display']);
+        $form['filters']['text']['#title'] = $this->t('Filter');
+      }
+    }
+  }
+
+  /**
+   * Implements hook_form_FORM_ID_alter() for node_preview_form_select.
+   */
+  #[Hook('form_node_preview_form_select_alter')]
+  public function formNodePreviewFormSelectAlter(array &$form, FormStateInterface $form_state): void {
+    if (isset($form['backlink'])) {
+      $form['backlink']['#options']['attributes']['class'][] = 'action-link';
+      $form['backlink']['#options']['attributes']['class'][] = 'action-link--icon-chevron-left';
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK().
+   *
+   * @todo Remove when https://www.drupal.org/node/3016343 is fixed.
+   */
+  #[Hook('preprocess_text_format_wrapper')]
+  public function preprocessTextFormatWrapper(&$variables): void {
+    $description_attributes = [];
+    if (!empty($variables['attributes']['id'])) {
+      $description_attributes['id'] = $variables['attributes']['aria-describedby'] = $variables['attributes']['id'];
+      unset($variables['attributes']['id']);
+    }
+    $variables['description_attributes'] = new Attribute($description_attributes);
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for block_content_add_list.
+   *
+   * Makes block_content_add_list variables compatible with entity_add_list.
+   *
+   * @deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use entity_add_list instead.
+   *
+   * @see https://www.drupal.org/node/3530643
+   */
+  #[Hook('preprocess_block_content_add_list')]
+  public function preprocessBlockContentAddList(&$variables): void {
+    @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use entity_add_list instead. See https://www.drupal.org/node/3530643', E_USER_DEPRECATED);
+    if (!empty($variables['content'])) {
+      $query = \Drupal::request()->query->all();
+      /** @var \Drupal\block_content\BlockContentTypeInterface $type */
+      foreach ($variables['content'] as $type) {
+        $label = $type->label();
+        $description = $type->getDescription();
+        $type_id = $type->id();
+        $add_url = Url::fromRoute('block_content.add_form', [
+          'block_content_type' => $type_id,
+        ], [
+          'query' => $query,
+        ]);
+        $variables['bundles'][$type_id] = [
+          'label' => $label,
+          'add_link' => Link::fromTextAndUrl($label, $add_url),
+          'description' => [],
+        ];
+
+        if (!empty($description)) {
+          $variables['bundles'][$type_id]['description'] = [
+            '#markup' => $description,
+          ];
+        }
+      }
+    }
+  }
+
+}

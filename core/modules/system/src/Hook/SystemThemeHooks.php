@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Hook;
 
+use Drupal\claro\Hook\ClaroHooks;
 use Drupal\Core\Theme\ThemeCommonElements;
 use Drupal\system\Theme\SystemAdminThemePreprocess;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -277,8 +278,7 @@ class SystemThemeHooks {
     // If Claro is the admin theme but not the active theme, still include
     // Claro's toolbar preprocessing.
     if (_system_is_claro_admin_and_not_active()) {
-      require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
-      claro_preprocess_toolbar($variables, $hook, $info);
+      \Drupal::service(ClaroHooks::class)->preprocessToolbar($variables, $hook, $info);
     }
   }
 

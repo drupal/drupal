@@ -106,7 +106,7 @@ class ToolbarClaroOverridesTest extends BrowserTestBase {
       $this->assertStringNotContainsString($stylesheet, $head);
     }
 
-    // Confirm toolbar is not processed by claro_preprocess_toolbar().
+    // Confirm toolbar is not processed by ClaroHooks::preprocessToolbar.
     $this->assertFalse($this->getSession()->getPage()->find('css', '#toolbar-administration')->hasAttribute('data-drupal-claro-processed-toolbar'));
 
     // Confirm menu--toolbar.html.twig is not loaded from Claro.
@@ -139,7 +139,7 @@ class ToolbarClaroOverridesTest extends BrowserTestBase {
       $this->assertStringNotContainsString($stylesheet, $head);
     }
 
-    // Confirm toolbar is processed by claro_preprocess_toolbar().
+    // Confirm toolbar is processed by ClaroHooks::preprocessToolbar.
     $this->assertTrue($this->getSession()->getPage()->find('css', '#toolbar-administration')->hasAttribute('data-drupal-claro-processed-toolbar'));
 
     // Confirm toolbar templates are loaded from Claro.
