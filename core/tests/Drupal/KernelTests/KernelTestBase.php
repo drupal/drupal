@@ -540,8 +540,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->container = $container;
 
     $container
-      ->register('datetime.time', 'Drupal\Component\Datetime\Time');
-    $container
       ->register('flood', 'Drupal\Core\Flood\MemoryBackend')
       ->addArgument(new Reference('request_stack'));
     $container

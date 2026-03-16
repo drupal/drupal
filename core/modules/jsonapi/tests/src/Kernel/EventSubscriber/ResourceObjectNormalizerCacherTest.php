@@ -160,21 +160,22 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
       ->normalize($resource_object, 'api_json', ['account' => NULL]);
     $this->assertEquals($baseMaxAge - 500, $resource_normalization->getCacheMaxAge(), 'Max age should be 300 since 500 seconds has passed');
 
-    // Change request time to 800 seconds later, this is the last second the
-    // cache backend would return cached data. The max-age at that time should
-    // be 0 which is the same as the expire time of the cache entry.
-    $current_request->server->set('REQUEST_TIME', $current_request->server->get('REQUEST_TIME') + 800);
+    // Change request time to 300 seconds later (800 seconds later in total),
+    // this is the last second the cache backend would return cached data. The
+    // max-age at that time should be 0 as the request time is the same as the
+    // expiration time of the cache entry.
+    $current_request->server->set('REQUEST_TIME', $current_request->server->get('REQUEST_TIME') + 300);
     $resource_normalization = $this->serializer
       ->normalize($resource_object, 'api_json', ['account' => NULL]);
     $this->assertEquals(0, $resource_normalization->getCacheMaxAge(), 'Max age should be 0 since max-age has passed');
 
-    // Change request time to 801 seconds later. This validates that max-age
-    // never becomes negative. This should never happen as the cache entry
-    // is expired at this time and the cache backend would not return data.
-    $current_request->server->set('REQUEST_TIME', $current_request->server->get('REQUEST_TIME') + 801);
+    // Change request time to 1 second later (801 seconds later in total). This
+    // will generate a new cache entry because the one from above has now
+    // expired. Thus, the max age of the normalization is back to 800.
+    $current_request->server->set('REQUEST_TIME', $current_request->server->get('REQUEST_TIME') + 1);
     $resource_normalization = $this->serializer
       ->normalize($resource_object, 'api_json', ['account' => NULL]);
-    $this->assertEquals(0, $resource_normalization->getCacheMaxAge(), 'Max age should be 0 since max-age has passed a second ago');
+    $this->assertEquals(800, $resource_normalization->getCacheMaxAge(), 'Max age should be 800 since a new cache item has been created');
 
   }
 
