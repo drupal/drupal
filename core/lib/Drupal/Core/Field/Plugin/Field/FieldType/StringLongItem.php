@@ -46,7 +46,7 @@ class StringLongItem extends StringItemBase {
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
     $random = new Random();
-    $values['value'] = $random->paragraphs();
+    $values['value'] = $random->paragraphs(2);
     return $values;
   }
 
