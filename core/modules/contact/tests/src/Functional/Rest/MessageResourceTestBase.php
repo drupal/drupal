@@ -115,7 +115,7 @@ abstract class MessageResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testGet(): void {
+  protected function doTestGet(): void {
     // Contact Message entities are not stored, so they cannot be retrieved.
     $this->expectException(RouteNotFoundException::class);
     $this->expectExceptionMessage('Route "rest.entity.contact_message.GET" does not exist.');
@@ -127,7 +127,7 @@ abstract class MessageResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPatch(): void {
+  protected function doTestPatch(): void {
     // Contact Message entities are not stored, so they cannot be modified.
     $this->expectException(RouteNotFoundException::class);
     $this->expectExceptionMessage('Route "rest.entity.contact_message.PATCH" does not exist.');
@@ -139,7 +139,7 @@ abstract class MessageResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testDelete(): void {
+  protected function doTestDelete(): void {
     // Contact Message entities are not stored, so they cannot be deleted.
     $this->expectException(RouteNotFoundException::class);
     $this->expectExceptionMessage('Route "rest.entity.contact_message.DELETE" does not exist.');

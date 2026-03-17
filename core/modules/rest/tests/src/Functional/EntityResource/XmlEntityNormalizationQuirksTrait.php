@@ -39,6 +39,20 @@ trait XmlEntityNormalizationQuirksTrait {
   /**
    * {@inheritdoc}
    */
+  protected function doTestPost(): void {
+    // Deserialization of the XML format is not supported.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function doTestPatch(): void {
+    // Deserialization of the XML format is not supported.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getExpectedNormalizedEntity() {
     $default_normalization = parent::getExpectedNormalizedEntity();
 

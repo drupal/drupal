@@ -6,7 +6,6 @@ namespace Drupal\Tests\image\Functional\Rest;
 
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
-use PHPUnit\Framework\Attributes\Before;
 
 /**
  * ResourceTestBase for ImageStyle entity.
@@ -40,12 +39,12 @@ abstract class ImageStyleResourceTestBase extends ConfigEntityResourceTestBase {
   /**
    * Marks some tests as skipped because XML cannot be deserialized.
    */
-  #[Before]
-  public function imageStyleResourceTestBaseSkipTests(): void {
-    if ($this->name() === 'testGet' && static::$format === 'xml') {
+  protected function setUp(): void {
+    if ($this->name() === 'testCrud' && static::$format === 'xml') {
       // @todo Remove this method override in https://www.drupal.org/node/2905655
       $this->markTestSkipped('XML encoder does not support UUIDs as keys: makes ImageStyle config entity XML serialization crash');
     }
+    parent::setUp();
   }
 
   /**

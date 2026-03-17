@@ -326,7 +326,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPost(): void {
+  protected function doTestPost(): void {
     $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
 
     // Step 1: upload file, results in File entity marked temporary.
@@ -336,7 +336,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
     $this->assertFalse($file->isPermanent());
 
     // Step 2: create Media entity using the File, makes File entity permanent.
-    parent::testPost();
+    parent::doTestPost();
     $file = $file_storage->loadUnchanged(3);
     $this->assertFalse($file->isTemporary());
     $this->assertTrue($file->isPermanent());

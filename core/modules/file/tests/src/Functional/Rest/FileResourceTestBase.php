@@ -7,7 +7,6 @@ namespace Drupal\Tests\file\Functional\Rest;
 use Drupal\file\Entity\File;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\Before;
 
 /**
  * Resource test base for file entity.
@@ -48,17 +47,13 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
   /**
    * Marks some tests as skipped because XML cannot be deserialized.
    */
-  #[Before]
-  public function fileResourceTestBaseSkipTests(): void {
-    if ($this->name() === 'testPost') {
-      // Drupal does not allow creating file entities independently. It allows
-      // you to create file entities that are referenced from another entity
-      // (e.g. an image for a node's image field).
-      // For that purpose, there is the "file_upload" REST resource plugin.
-      // @see \Drupal\file\FileAccessControlHandler::checkCreateAccess()
-      // @see \Drupal\file\Plugin\rest\resource\FileUploadResource
-      $this->markTestSkipped('Drupal does not allow creating file entities independently.');
-    }
+  protected function doTestPost(): void {
+    // Drupal does not allow creating file entities independently. It allows
+    // you to create file entities that are referenced from another entity
+    // (e.g. an image for a node's image field).
+    // For that purpose, there is the "file_upload" REST resource plugin.
+    // @see \Drupal\file\FileAccessControlHandler::checkCreateAccess()
+    // @see \Drupal\file\Plugin\rest\resource\FileUploadResource
   }
 
   /**
