@@ -231,6 +231,13 @@ function locale_schema(): array {
         'description' => 'Unix timestamp of the imported file.',
         'size' => 'big',
       ],
+      'hash' => [
+        'type' => 'varchar_ascii',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The hash of the imported file.',
+      ],
       'last_checked' => [
         'type' => 'int',
         'not null' => FALSE,
@@ -310,4 +317,21 @@ function locale_update_10300(): void {
     $schema->dropIndex('locales_location', 'type_name');
   }
   $schema->addIndex('locales_location', 'type_name', ['type', 'name'], $spec['locales_location']);
+}
+
+/**
+ * Add a hash column to the {locale_file} table.
+ */
+function locale_update_11401(): void {
+  $spec = [
+    'type' => 'varchar_ascii',
+    'length' => 32,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'The hash of the imported file.',
+  ];
+  $schema = \Drupal::database()->schema();
+  if (!$schema->fieldExists('locale_file', 'hash')) {
+    $schema->addField('locale_file', 'hash', $spec);
+  }
 }

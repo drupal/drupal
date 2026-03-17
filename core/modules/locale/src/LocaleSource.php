@@ -11,6 +11,11 @@ use Drupal\Core\StreamWrapper\StreamWrapperManager;
  */
 class LocaleSource {
 
+  /**
+   * The hash algorithm used to calculate the hash of the local file.
+   */
+  public const string LOCAL_FILE_HASH_ALGO = 'xxh128';
+
   public function __construct(
     protected readonly LocaleProjectStorageInterface $projectStorage,
     protected readonly FileSystemInterface $fileSystem,
@@ -109,6 +114,7 @@ class LocaleSource {
           $file = current($files);
           $source_file->uri = $file->uri;
           $source_file->timestamp = filemtime($file->uri);
+          $source_file->hash = hash_file(self::LOCAL_FILE_HASH_ALGO, $file->uri);
           return $source_file;
         }
       }
@@ -169,6 +175,7 @@ class LocaleSource {
     $source->langcode = $langcode;
     $source->type = '';
     $source->timestamp = 0;
+    $source->hash = '';
     $source->last_checked = 0;
 
     $filename = $filename ?: $this->configFactory->get('locale.settings')->get('translation.default_filename');
@@ -218,6 +225,7 @@ class LocaleSource {
       $source->files[LOCALE_TRANSLATION_CURRENT] = $history[$project->name][$langcode];
       $source->type = LOCALE_TRANSLATION_CURRENT;
       $source->timestamp = $history[$project->name][$langcode]->timestamp;
+      $source->hash = $history[$project->name][$langcode]->hash;
       $source->last_checked = $history[$project->name][$langcode]->last_checked;
     }
     else {

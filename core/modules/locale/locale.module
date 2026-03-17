@@ -455,7 +455,7 @@ function locale_translation_get_file_history() {
   if (empty($history)) {
     // Get file history from the database.
     $result = \Drupal::database()->select('locale_file')
-      ->fields('locale_file', ['project', 'langcode', 'filename', 'version', 'uri', 'timestamp', 'last_checked'])
+      ->fields('locale_file', ['project', 'langcode', 'filename', 'version', 'uri', 'timestamp', 'hash', 'last_checked'])
       ->execute()
       ->fetchAll();
     foreach ($result as $file) {
@@ -484,6 +484,7 @@ function locale_translation_update_file_history($file) {
     ->fields([
       'version' => $file->version,
       'timestamp' => $file->timestamp,
+      'hash' => $file->hash ?? '',
       'last_checked' => $file->last_checked,
     ])
     ->execute();
@@ -569,7 +570,6 @@ function locale_translation_status_save($project, $langcode, $type, $data): void
     $request_time = \Drupal::time()->getRequestTime();
     switch ($type) {
       case LOCALE_TRANSLATION_REMOTE:
-      case LOCALE_TRANSLATION_LOCAL:
         // Add the source data to the status array.
         $status[$project][$langcode]->files[$type] = $data;
 
@@ -584,9 +584,38 @@ function locale_translation_status_save($project, $langcode, $type, $data): void
         }
         break;
 
+      case LOCALE_TRANSLATION_LOCAL:
+        // Add the source data to the status array.
+        $status[$project][$langcode]->files[$type] = $data;
+
+        // Determine if the translation source has changed by comparing by
+        // content hash (mtime is unreliable).
+        $current_hash = $status[$project][$langcode]->hash ?? '';
+        if (!empty($current_hash)) {
+          if ($data->hash !== $current_hash) {
+            $status[$project][$langcode]->timestamp = $data->timestamp;
+            $status[$project][$langcode]->last_checked = $request_time;
+            $status[$project][$langcode]->type = $type;
+            $status[$project][$langcode]->hash = $data->hash;
+          }
+        }
+        // For legacy rows (pre-hash column being added), fall back to timestamp
+        // comparison. This may trigger a one-time re-import, after which a hash
+        // is stored and used for all future comparisons.
+        elseif (isset($data->timestamp) && $data->timestamp) {
+          if ($data->timestamp > $status[$project][$langcode]->timestamp) {
+            $status[$project][$langcode]->timestamp = $data->timestamp;
+            $status[$project][$langcode]->last_checked = $request_time;
+            $status[$project][$langcode]->type = $type;
+            $status[$project][$langcode]->hash = $data->hash;
+          }
+        }
+        break;
+
       case LOCALE_TRANSLATION_CURRENT:
         $data->last_checked = $request_time;
         $status[$project][$langcode]->timestamp = $data->timestamp;
+        $status[$project][$langcode]->hash = $data->hash ?? '';
         $status[$project][$langcode]->last_checked = $data->last_checked;
         $status[$project][$langcode]->type = $type;
         locale_translation_update_file_history($data);

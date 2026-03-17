@@ -365,6 +365,7 @@ function locale_translation_download_source($source_file, $directory = 'temporar
       $file->uri = $uri;
       $file->directory = $directory;
       $file->timestamp = filemtime($uri);
+      $file->hash = hash_file(LocaleSource::LOCAL_FILE_HASH_ALGO, $uri);
       return $file;
     }
   }
