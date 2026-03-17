@@ -62,13 +62,23 @@ trait AutowiredInstanceTrait {
   private static function getAutowireArguments(ContainerInterface $container, array $parameters, string $method_name): array {
     $args = [];
     foreach ($parameters as $parameter) {
-      $service = ltrim((string) $parameter->getType(), '?');
+      $type = 'service';
+      $argument = ltrim((string) $parameter->getType(), '?');
       foreach ($parameter->getAttributes(Autowire::class) as $attribute) {
-        $service = (string) $attribute->newInstance()->value;
+        $argument = (string) $attribute->newInstance()->value;
       }
 
-      if ($container->has($service)) {
-        $args[] = $container->get($service);
+      // Check if the value is a container parameter (wrapped in %).
+      if (preg_match('/^%([^%]+)%$/', $argument, $matches)) {
+        $type = 'parameter';
+        $argument = $matches[1];
+        if ($container->hasParameter($argument)) {
+          $args[] = $container->getParameter($argument);
+          continue;
+        }
+      }
+      elseif ($container->has($argument)) {
+        $args[] = $container->get($argument);
         continue;
       }
 
@@ -77,7 +87,7 @@ trait AutowiredInstanceTrait {
         continue;
       }
 
-      throw new AutowiringFailedException($service, sprintf('Cannot autowire service "%s": argument "$%s" of method "%s::%s()". Check that either the argument type is correct or the Autowire attribute is passed a valid identifier. Otherwise configure its value explicitly if possible.', $service, $parameter->getName(), static::class, $method_name));
+      throw new AutowiringFailedException($argument, sprintf('Cannot autowire %s "%s": argument "$%s" of method "%s::%s()". Check that either the argument type is correct or the Autowire attribute is passed a valid identifier. Otherwise configure its value explicitly if possible.', $type, $argument, $parameter->getName(), static::class, $method_name));
     }
     return $args;
   }
