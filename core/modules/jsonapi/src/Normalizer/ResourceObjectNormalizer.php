@@ -2,6 +2,7 @@
 
 namespace Drupal\jsonapi\Normalizer;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -243,6 +244,12 @@ class ResourceObjectNormalizer extends NormalizerBase {
         $normalized_field = $this->serializer->normalize($field, $format, $context);
       }
       assert($normalized_field instanceof CacheableNormalization);
+
+      // Add cacheability metadata if field item list provides some.
+      if ($field instanceof CacheableDependencyInterface) {
+        $normalized_field = $normalized_field->withCacheableDependency($field);
+      }
+
       return $normalized_field->withCacheableDependency(CacheableMetadata::createFromObject($field_access_result));
     }
     else {

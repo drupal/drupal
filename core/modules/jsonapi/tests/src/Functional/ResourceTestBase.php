@@ -587,6 +587,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
                     $cacheability->addCacheableDependency(CacheableMetadata::createFromObject($property));
                   }
                 }
+                $cacheability->addCacheableDependency(CacheableMetadata::createFromObject($field_item_list));
               }
             }
           }
