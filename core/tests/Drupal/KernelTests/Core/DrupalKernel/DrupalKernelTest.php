@@ -304,6 +304,16 @@ class DrupalKernelTest extends KernelTestBase {
     // Ensure persisted services are persisted.
     $request_stack = $container->get('request_stack');
 
+    $container->get('stream_wrapper_manager')->register();
+    $stream_wrappers = array_keys($container->get('stream_wrapper_manager')->getWrappers());
+    $this->assertSame([
+      'assets',
+      'public',
+      'temporary',
+      'module',
+      'theme',
+    ], $stream_wrappers);
+
     $kernel->resetContainer();
 
     // Ensure services are reset when ::resetContainer is called.
@@ -320,6 +330,9 @@ class DrupalKernelTest extends KernelTestBase {
 
     // Ensure persisted services are persisted.
     $this->assertSame($request_stack, $container->get('request_stack'));
+
+    // Ensure stream wrappers are registered.
+    $this->assertSame($stream_wrappers, array_keys($container->get('stream_wrapper_manager')->getWrappers()));
   }
 
   /**
