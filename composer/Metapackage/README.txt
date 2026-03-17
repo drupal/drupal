@@ -20,10 +20,10 @@ Drupal Core provides three metapackages that serve different purposes.
    the Drupal tests directly, or for projects that may wish to use the same
    components that Drupal does for testing.
 
- - drupal/core-dev-pinned: This project should be used INSTEAD OF
-   drupal/core-dev in instances where a project wishes to pin to the exact
-   version of each testing dependency used in Drupal. This in general should not
-   be necessary.
+ - drupal/core-dev-pinned: Deprecated. This project is deprecated and will be
+   removed in Drupal 12. Use drupal/core-dev instead. Pinning to exact versions
+   of testing dependencies can create security vulnerabilities when security
+   updates are released for development tools.
 
 Note that a project that uses both drupal/core-recommended and
 drupal/core-dev-pinned must update them both at the same time, e.g.:

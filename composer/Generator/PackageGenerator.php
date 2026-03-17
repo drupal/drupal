@@ -70,6 +70,7 @@ class PackageGenerator {
     return [
       DrupalCoreRecommendedBuilder::class,
       DrupalDevDependenciesBuilder::class,
+      // @phpstan-ignore classConstant.deprecatedClass
       DrupalPinnedDevDependenciesBuilder::class,
     ];
   }
