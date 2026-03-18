@@ -19,7 +19,7 @@ $base = [
   0x70 => '0', '', '', '', '4', '5', '6', '7', '8', '9', '+', '-', '=', '(', ')', 'n',
   0x80 => '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '=', '(', ')', NULL,
   0x90 => NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-  0xA0 => 'CE', 'CL', 'Cr', 'Fr.', 'L.', 'mil', 'N', 'Pts', 'Rs', 'W', 'NS', 'D', 'EU', 'K', 'T', 'Dr',
+  0xA0 => 'CE', 'CL', 'Cr', 'Fr.', 'L.', 'mil', 'N', 'Pts', 'Rs', 'W', 'NS', 'D', 'EUR', 'K', 'T', 'Dr',
   0xB0 => NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Rs', NULL, NULL, NULL, NULL, NULL, NULL,
   0xC0 => NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   0xD0 => '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
