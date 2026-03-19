@@ -279,6 +279,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
   /**
    * {@inheritdoc}
    */
+  #[\NoDiscard]
   public function orIf(AccessResultInterface $other) {
     $merge_other = FALSE;
     // $other's cacheability metadata is merged if $merge_other gets set to TRUE
@@ -340,6 +341,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
   /**
    * {@inheritdoc}
    */
+  #[\NoDiscard]
   public function andIf(AccessResultInterface $other) {
     // The other access result's cacheability metadata is merged if $merge_other
     // gets set to TRUE. It gets set to TRUE in one case: if the other access
