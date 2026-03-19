@@ -307,13 +307,13 @@ class MigrationLookupTest extends MigrationLookupTestCase {
     $row1 = $this->row;
     $row2 = clone $this->row;
 
-    $row1
+    $row1->expects($this->any())
       ->method('getMultiple')
       ->willReturn([1, 2]);
     $result = $migration->transform([1], $this->migrateExecutable, $row1, '');
     $this->assertEquals(2, $result);
 
-    $row2
+    $row2->expects($this->any())
       ->method('getMultiple')
       ->willReturn([3, 4]);
     $result = $migration->transform([2], $this->migrateExecutable, $row2, '');

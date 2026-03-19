@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
-use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\migrate\process\Log;
 use Drupal\migrate\Row;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -22,7 +21,6 @@ class LogTest extends MigrateProcessTestCase {
   #[DataProvider('providerTestLog')]
   public function testLog($value, $expected_message): void {
     // Test the expected log message.
-    $this->migrateExecutable = $this->createMock(MigrateExecutableInterface::class);
     $this->migrateExecutable->expects($this->once())
       ->method('saveMessage')
       ->with($expected_message);

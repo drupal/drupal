@@ -12,7 +12,6 @@ use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\migrate\Event\MigrateRollbackEvent;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -20,7 +19,6 @@ use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests Drupal\migrate\Plugin\migrate\source\SourcePluginBase.
@@ -81,19 +79,20 @@ class MigrateSourceTest extends MigrateTestCase {
    * @param int $high_water_value
    *   (optional) The high water mark to start from, if set.
    *
-   * @return \Drupal\migrate\Plugin\MigrateSourceInterface&\PHPUnit\Framework\MockObject\MockObject
+   * @return \Drupal\migrate\Plugin\MigrateSourceInterface
    *   A mocked source plugin.
    */
   protected function getSource($configuration = [], $migrate_config = [], $status = MigrateIdMapInterface::STATUS_NEEDS_UPDATE, $high_water_value = NULL) {
-    $configuration += ['skip_count' => FALSE];
-
     $container = new ContainerBuilder();
     \Drupal::setContainer($container);
 
-    $key_value_factory = $this->createStub(KeyValueFactoryInterface::class);
+    $key_value = $this->createMock(KeyValueStoreInterface::class);
+
+    $key_value_factory = $this->createMock(KeyValueFactoryInterface::class);
     $key_value_factory
       ->method('get')
-      ->willReturn($this->createStub(KeyValueStoreInterface::class));
+      ->with('migrate:high_water')
+      ->willReturn($key_value);
     $container->set('keyvalue', $key_value_factory);
 
     $container->set('cache.migrate', $this->createStub(CacheBackendInterface::class));
@@ -107,6 +106,7 @@ class MigrateSourceTest extends MigrateTestCase {
     // outcome of whether we choose to import the row.
     $id_map_array = ['original_hash' => '', 'hash' => '', 'source_row_status' => $status];
     $this->idMap
+      ->expects($this->any())
       ->method('getRowBySource')
       ->willReturn($id_map_array);
 
@@ -139,13 +139,14 @@ class MigrateSourceTest extends MigrateTestCase {
     }
     $iterator = new \ArrayIterator($rows);
 
-    $source_plugin->expects($configuration['skip_count'] ? $this->never() : $this->once())
+    $source_plugin
       ->method('initializeIterator')
       ->willReturn($iterator);
 
+    $module_handler = $this->createMock(ModuleHandlerInterface::class);
     $source_plugin
       ->method('getModuleHandler')
-      ->willReturn($this->createStub(ModuleHandlerInterface::class));
+      ->willReturn($module_handler);
 
     $this->migration
       ->method('getSourcePlugin')
@@ -300,7 +301,6 @@ class MigrateSourceTest extends MigrateTestCase {
     $source->setModuleHandler($module_handler->reveal());
 
     // Ensure we don't log this to the mapping table.
-    $this->idMap = $this->createMock(MigrateIdMapInterface::class);
     $this->idMap->expects($this->never())
       ->method('saveIdMapping');
 
@@ -327,7 +327,7 @@ class MigrateSourceTest extends MigrateTestCase {
   public function testPrepareRowGlobalPrepareSkip(): void {
     $this->migrationConfiguration['id'] = 'test_migration';
 
-    $migration = $this->getMigration($this->createMock(MigrateIdMapInterface::class));
+    $migration = $this->getMigration();
     $source = new StubSourcePlugin([], '', [], $migration);
     $row = new Row();
 
@@ -354,7 +354,7 @@ class MigrateSourceTest extends MigrateTestCase {
   public function testPrepareRowMigratePrepareSkip(): void {
     $this->migrationConfiguration['id'] = 'test_migration';
 
-    $migration = $this->getMigration($this->createMock(MigrateIdMapInterface::class));
+    $migration = $this->getMigration();
     $source = new StubSourcePlugin([], '', [], $migration);
     $row = new Row();
 
@@ -381,7 +381,7 @@ class MigrateSourceTest extends MigrateTestCase {
   public function testPrepareRowPrepareException(): void {
     $this->migrationConfiguration['id'] = 'test_migration';
 
-    $migration = $this->getMigration($this->createMock(MigrateIdMapInterface::class));
+    $migration = $this->getMigration();
     $source = new StubSourcePlugin([], '', [], $migration);
     $row = new Row();
 
@@ -435,9 +435,9 @@ class MigrateSourceTest extends MigrateTestCase {
    */
   protected function getMigrateExecutable($migration) {
     /** @var \Drupal\migrate\MigrateMessageInterface $message */
-    $message = $this->createStub(MigrateMessageInterface::class);
+    $message = $this->createMock('Drupal\migrate\MigrateMessageInterface');
     /** @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher */
-    $event_dispatcher = $this->createStub(EventDispatcherInterface::class);
+    $event_dispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
     return new MigrateExecutable($migration, $message, $event_dispatcher);
   }
 

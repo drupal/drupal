@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
-use Drupal\Core\Database\Connection;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
-use Drupal\migrate\Plugin\MigrateSourceInterface;
-use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests the SQL ID map plugin ensureTables() method.
@@ -171,16 +167,18 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
    *   it are the actual test and there are no additional asserts added.
    */
   protected function runEnsureTablesTest($schema): void {
-    $database = $this->createStub(Connection::class);
-    $database
+    $database = $this->getMockBuilder('Drupal\Core\Database\Connection')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $database->expects($this->any())
       ->method('schema')
       ->willReturn($schema);
-    $database
+    $database->expects($this->any())
       ->method('getPrefix')
       ->willReturn('');
     $migration = $this->getMigration();
-    $plugin = $this->createStub(MigrateSourceInterface::class);
-    $plugin
+    $plugin = $this->createMock('Drupal\migrate\Plugin\MigrateSourceInterface');
+    $plugin->expects($this->any())
       ->method('getIds')
       ->willReturn([
         'source_id_property' => [
@@ -190,23 +188,23 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
           'type' => 'integer',
         ],
       ]);
-    $migration
+    $migration->expects($this->any())
       ->method('getSourcePlugin')
       ->willReturn($plugin);
-    $plugin = $this->createStub(MigrateSourceInterface::class);
-    $plugin
+    $plugin = $this->createMock('Drupal\migrate\Plugin\MigrateSourceInterface');
+    $plugin->expects($this->any())
       ->method('getIds')
       ->willReturn([
         'destination_id_property' => [
           'type' => 'string',
         ],
       ]);
-    $migration
+    $migration->expects($this->any())
       ->method('getDestinationPlugin')
       ->willReturn($plugin);
     /** @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher */
-    $event_dispatcher = $this->createStub(EventDispatcherInterface::class);
-    $migration_manager = $this->createStub(MigrationPluginManagerInterface::class);
+    $event_dispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
+    $migration_manager = $this->createMock('Drupal\migrate\Plugin\MigrationPluginManagerInterface');
     $map = new TestSqlIdMap($database, [], 'sql', [], $migration, $event_dispatcher, $migration_manager);
     $map->getDatabase();
   }

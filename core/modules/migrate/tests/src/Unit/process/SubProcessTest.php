@@ -52,13 +52,14 @@ class SubProcessTest extends MigrateProcessTestCase {
     }
     // Set up the key plugins.
     $key_plugin['key'][] = new Get(['source' => '@id'], 'get', []);
-    $migration
+    $migration->expects($this->exactly(2))
       ->method('getProcessPlugins')
       ->willReturnOnConsecutiveCalls(
         $sub_process_plugins,
         $key_plugin,
       );
-    $migrate_executable = new MigrateExecutable($migration, $this->createStub(MigrateMessageInterface::class), $this->createStub(EventDispatcherInterface::class));
+    $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
+    $migrate_executable = new MigrateExecutable($migration, $this->createMock(MigrateMessageInterface::class), $event_dispatcher);
 
     // The current value of the pipeline.
     $current_value = [
@@ -143,13 +144,14 @@ class SubProcessTest extends MigrateProcessTestCase {
       $sub_process_plugins[$destination][] = new Get(['source' => $source], 'get', []);
     }
     $key_plugin['key'][] = new Get(['source' => '@id'], 'get', []);
-    $migration
+    $migration->expects($this->exactly(2))
       ->method('getProcessPlugins')
       ->willReturnOnConsecutiveCalls(
         $sub_process_plugins,
         $key_plugin,
       );
-    $migrate_executable = new MigrateExecutable($migration, $this->createStub(MigrateMessageInterface::class), $this->createStub(EventDispatcherInterface::class));
+    $event_dispatcher = $this->createMock(EventDispatcherInterface::class);
+    $migrate_executable = new MigrateExecutable($migration, $this->createMock(MigrateMessageInterface::class), $event_dispatcher);
 
     // The current value of the pipeline.
     $current_value = [
