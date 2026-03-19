@@ -106,6 +106,14 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
    * {@inheritdoc}
    */
   public function processPlaceholders(array $placeholders) {
+    // Prevent placeholders from being processed by BigPipe if the request is
+    // a sub request. BigPipe cannot process placeholder in sub requests because
+    // the request stack is not the same when BigPipe is rendering the
+    // placeholders.
+    if ($this->requestStack->getParentRequest()) {
+      return [];
+    }
+
     $request = $this->requestStack->getCurrentRequest();
 
     // Prevent placeholders from being processed by BigPipe on uncacheable

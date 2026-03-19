@@ -28,7 +28,7 @@ class BigPipeStrategyTest extends UnitTestCase {
    * Tests process placeholders.
    */
   #[DataProvider('placeholdersProvider')]
-  public function testProcessPlaceholders(array $placeholders, $method, $route_match_has_no_big_pipe_option, $request_has_session, $request_has_big_pipe_nojs_cookie, array $expected_big_pipe_placeholders): void {
+  public function testProcessPlaceholders(array $placeholders, $method, $route_match_has_no_big_pipe_option, $request_has_session, $request_has_big_pipe_nojs_cookie, array $expected_big_pipe_placeholders, bool $sub_request = FALSE): void {
     $request = new Request();
     $request->setMethod($method);
     if ($request_has_big_pipe_nojs_cookie) {
@@ -37,6 +37,8 @@ class BigPipeStrategyTest extends UnitTestCase {
     $request_stack = $this->prophesize(RequestStack::class);
     $request_stack->getCurrentRequest()
       ->willReturn($request);
+    $request_stack->getParentRequest()
+      ->willReturn($sub_request ? $request : NULL);
 
     $session_configuration = $this->prophesize(SessionConfigurationInterface::class);
     $session_configuration->hasSession(Argument::type(Request::class))
@@ -52,7 +54,7 @@ class BigPipeStrategyTest extends UnitTestCase {
     $big_pipe_strategy = new BigPipeStrategy($session_configuration->reveal(), $request_stack->reveal(), $route_match->reveal());
     $processed_placeholders = $big_pipe_strategy->processPlaceholders($placeholders);
 
-    if ($request->isMethodCacheable() && !$route_match_has_no_big_pipe_option && $request_has_session) {
+    if ($request->isMethodCacheable() && !$route_match_has_no_big_pipe_option && $request_has_session && !$sub_request) {
       $this->assertSameSize($expected_big_pipe_placeholders, $processed_placeholders, 'BigPipe is able to deliver all placeholders.');
       foreach (array_keys($placeholders) as $placeholder) {
         $this->assertSame($expected_big_pipe_placeholders[$placeholder], $processed_placeholders[$placeholder], "Verifying how BigPipeStrategy handles the placeholder '$placeholder'");
@@ -179,6 +181,15 @@ class BigPipeStrategyTest extends UnitTestCase {
         TRUE,
         TRUE,
         [],
+      ],
+      '_no_big_pipe absent, session, no-JS cookie present, sub-request' => [
+        $placeholders,
+        'GET',
+        FALSE,
+        TRUE,
+        FALSE,
+        [],
+        TRUE,
       ],
     ];
   }
