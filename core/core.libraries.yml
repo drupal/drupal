@@ -392,7 +392,7 @@ drupal.ajax:
     misc/ajax.js: {}
   css:
     component:
-      misc/components/ajax-progress.module.css: { weight: -10 }
+      misc/components/ajax-progress.module.css: {}
 
   drupalSettings:
     # These placeholder values will be set by system_js_settings_alter().
@@ -605,7 +605,7 @@ drupal.fieldgroup:
   version: VERSION
   css:
     component:
-      misc/components/fieldgroup.module.css: { weight: -10 }
+      misc/components/fieldgroup.module.css: {}
   moved_files:
     system/base:
       deprecation_version: 11.2.0
@@ -649,7 +649,7 @@ drupal.item-list:
   version: VERSION
   css:
     component:
-      misc/components/item-list.module.css: { weight: -10 }
+      misc/components/item-list.module.css: {}
   moved_files:
     system/base:
       deprecation_version: 11.3.0
@@ -686,7 +686,7 @@ drupal.progress:
     misc/progress.js: {}
   css:
     component:
-      misc/components/progress.module.css: { weight: -10 }
+      misc/components/progress.module.css: {}
 
   dependencies:
     - core/drupal
@@ -697,7 +697,7 @@ drupal.textarea-resize:
   version: VERSION
   css:
     component:
-      misc/components/resize.module.css: { weight: -10 }
+      misc/components/resize.module.css: {}
   moved_files:
     system/base:
       deprecation_version: 11.2.0
@@ -712,7 +712,7 @@ drupal.reset-appearance:
   version: VERSION
   css:
     component:
-      misc/components/reset-appearance.module.css: { weight: -10 }
+      misc/components/reset-appearance.module.css: {}
   moved_files:
     system/base:
       deprecation_version: 11.3.0
@@ -748,8 +748,8 @@ drupal.tabledrag:
     misc/tabledrag.js: { weight: -1 }
   css:
     component:
-      misc/components/tabledrag.module.css: { weight: -10 }
-      misc/components/tree-child.module.css: { weight: -10 }
+      misc/components/tabledrag.module.css: {}
+      misc/components/tree-child.module.css: {}
 
   dependencies:
     - core/jquery
@@ -770,7 +770,7 @@ drupal.tableheader:
   version: VERSION
   css:
     component:
-      misc/components/sticky-header.module.css: { weight: -10 }
+      misc/components/sticky-header.module.css: {}
 
 drupal.tableresponsive:
   version: VERSION
@@ -795,7 +795,7 @@ drupal.tablesort:
   version: VERSION
   css:
     component:
-      misc/components/tablesort.module.css: { weight: -10 }
+      misc/components/tablesort.module.css: {}
   moved_files:
     system/base:
       deprecation_version: 11.2.0
