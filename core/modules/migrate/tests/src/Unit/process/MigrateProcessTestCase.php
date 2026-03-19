@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 
 /**
@@ -21,14 +23,14 @@ abstract class MigrateProcessTestCase extends MigrateTestCase {
   /**
    * A mock of a process row.
    *
-   * @var \Drupal\migrate\Row|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\migrate\Row
    */
   protected $row;
 
   /**
    * The migration executable or a mock.
    *
-   * @var \Drupal\migrate\MigrateExecutable|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\migrate\MigrateExecutable
    */
   protected $migrateExecutable;
 
@@ -36,12 +38,8 @@ abstract class MigrateProcessTestCase extends MigrateTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->row = $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->migrateExecutable = $this->getMockBuilder('Drupal\migrate\MigrateExecutable')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->row = $this->createStub(Row::class);
+    $this->migrateExecutable = $this->createStub(MigrateExecutableInterface::class);
 
     parent::setUp();
   }

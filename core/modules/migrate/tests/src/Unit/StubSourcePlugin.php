@@ -47,7 +47,7 @@ class StubSourcePlugin extends SourcePluginBase {
    * {@inheritdoc}
    */
   protected function initializeIterator(): \Iterator {
-    return [];
+    return new \ArrayIterator([]);
   }
 
 }

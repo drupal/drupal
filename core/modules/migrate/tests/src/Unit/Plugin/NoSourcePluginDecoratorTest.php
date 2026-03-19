@@ -25,8 +25,8 @@ class NoSourcePluginDecoratorTest extends UnitTestCase {
    */
   #[DataProvider('providerGetDefinitions')]
   public function testGetDefinitions(array $definition, bool $source_exists): void {
-    $source_manager = $this->createMock(MigrateSourcePluginManager::class);
-    $source_manager->expects($this->any())
+    $source_manager = $this->createStub(MigrateSourcePluginManager::class);
+    $source_manager
       ->method('hasDefinition')
       ->willReturn($source_exists);
     $container = new ContainerBuilder();

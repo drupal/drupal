@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use Drupal\Component\Transliteration\TransliterationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\MachineName;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -14,29 +15,6 @@ use PHPUnit\Framework\Attributes\Group;
  */
 #[Group('migrate')]
 class MachineNameTest extends MigrateProcessTestCase {
-
-  /**
-   * The mock transliteration.
-   *
-   * @var \Drupal\Component\Transliteration\TransliterationInterface
-   */
-  protected $transliteration;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    $this->transliteration = $this->getMockBuilder('Drupal\Component\Transliteration\TransliterationInterface')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->row = $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->migrateExecutable = $this->getMockBuilder('Drupal\migrate\MigrateExecutable')
-      ->disableOriginalConstructor()
-      ->getMock();
-    parent::setUp();
-  }
 
   /**
    * Tests machine name transformation of non-alphanumeric characters.
@@ -51,7 +29,8 @@ class MachineNameTest extends MigrateProcessTestCase {
   #[DataProvider('providerTestMachineNames')]
   public function testMachineNames(string $human_name, array $configuration, string $expected_result): void {
     // Test for calling transliterate on mock object.
-    $this->transliteration
+    $transliteration = $this->createMock(TransliterationInterface::class);
+    $transliteration
       ->expects($this->once())
       ->method('transliterate')
       ->with($human_name)
@@ -59,7 +38,7 @@ class MachineNameTest extends MigrateProcessTestCase {
         return str_replace(['á', 'é', 'ő'], ['a', 'e', 'o'], $string);
       });
 
-    $plugin = new MachineName($configuration, 'machine_name', [], $this->transliteration);
+    $plugin = new MachineName($configuration, 'machine_name', [], $transliteration);
     $value = $plugin->transform($human_name, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertEquals($expected_result, $value);
   }
@@ -99,7 +78,7 @@ class MachineNameTest extends MigrateProcessTestCase {
     $configuration['replace_pattern'] = 1;
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The replace pattern should be a string');
-    new MachineName($configuration, 'machine_name', [], $this->transliteration);
+    new MachineName($configuration, 'machine_name', [], $this->createStub(TransliterationInterface::class));
   }
 
 }

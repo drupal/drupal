@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -25,7 +26,7 @@ abstract class MigrateTestCase extends UnitTestCase {
   /**
    * The migration ID map.
    *
-   * @var \Drupal\migrate\Plugin\MigrateIdMapInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\migrate\Plugin\MigrateIdMapInterface
    */
   protected $idMap;
 
@@ -43,22 +44,20 @@ abstract class MigrateTestCase extends UnitTestCase {
    *   An ID map plugin to use, or NULL for using a mocked one. Optional,
    *   defaults to NULL.
    *
-   * @return \Drupal\migrate\Plugin\MigrationInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @return \Drupal\migrate\Plugin\MigrationInterface|\PHPUnit\Framework\MockObject\Stub
    *   The mocked migration.
    */
   protected function getMigration($id_map = NULL) {
     $this->migrationConfiguration += ['migrationClass' => 'Drupal\migrate\Plugin\Migration'];
     $this->idMap = $id_map;
     if (is_null($id_map)) {
-      $this->idMap = $this->createMock(MigrateIdMapInterface::class);
+      $this->idMap = $this->createStub(MigrateIdMapInterface::class);
       $this->idMap
         ->method('getQualifiedMapTableName')
         ->willReturn('test_map');
     }
 
-    $migration = $this->getMockBuilder($this->migrationConfiguration['migrationClass'])
-      ->disableOriginalConstructor()
-      ->getMock();
+    $migration = $this->createStub($this->migrationConfiguration['migrationClass']);
 
     $migration->method('checkRequirements')
       ->willReturn(TRUE);
@@ -68,12 +67,12 @@ abstract class MigrateTestCase extends UnitTestCase {
 
     // We need the state to be toggled throughout the test so we store the value
     // on the test class and use a return callback.
-    $migration->expects($this->any())
+    $migration
       ->method('getStatus')
       ->willReturnCallback(function () {
         return $this->migrationStatus;
       });
-    $migration->expects($this->any())
+    $migration
       ->method('setStatus')
       ->willReturnCallback(function ($status) {
         $this->migrationStatus = $status;
@@ -123,7 +122,7 @@ abstract class MigrateTestCase extends UnitTestCase {
 
     // Initialize the DIC with a fake module handler for alterable queries.
     $container = new ContainerBuilder();
-    $container->set('module_handler', $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface'));
+    $container->set('module_handler', $this->createStub(ModuleHandlerInterface::class));
     \Drupal::setContainer($container);
 
     // Create the tables and load them up with data, skipping empty ones.
