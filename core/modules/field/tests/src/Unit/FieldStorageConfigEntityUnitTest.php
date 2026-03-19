@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Unit;
 
+use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -25,7 +28,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * The entity type manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\Stub
    */
   protected $entityTypeManager;
 
@@ -39,7 +42,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * The UUID generator used for testing.
    *
-   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit\Framework\MockObject\Stub
    */
   protected $uuid;
 
@@ -56,8 +59,8 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
-    $this->uuid = $this->createMock('\Drupal\Component\Uuid\UuidInterface');
+    $this->entityTypeManager = $this->createStub(EntityTypeManagerInterface::class);
+    $this->uuid = $this->createStub(UuidInterface::class);
     $this->fieldTypeManager = $this->createMock(FieldTypePluginManagerInterface::class);
 
     $container = new ContainerBuilder();
@@ -72,15 +75,15 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    */
   public function testCalculateDependencies(): void {
     // Create a mock entity type for FieldStorageConfig.
-    $fieldStorageConfigentityType = $this->createMock('\Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
-    $fieldStorageConfigentityType->expects($this->any())
+    $fieldStorageConfigentityType = $this->createStub(ConfigEntityTypeInterface::class);
+    $fieldStorageConfigentityType
       ->method('getProvider')
       ->willReturn('field');
 
     // Create a mock entity type to attach the field to.
     $attached_entity_type_id = $this->randomMachineName();
-    $attached_entity_type = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
-    $attached_entity_type->expects($this->any())
+    $attached_entity_type = $this->createStub(EntityTypeInterface::class);
+    $attached_entity_type
       ->method('getProvider')
       ->willReturn('entity_provider_module');
 
@@ -88,7 +91,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
     // ConfigEntityBase::addDependency() to get the provider of the field config
     // entity type and once in FieldStorageConfig::calculateDependencies() to
     // get the provider of the entity type that field is attached to.
-    $this->entityTypeManager->expects($this->any())
+    $this->entityTypeManager
       ->method('getDefinition')
       ->willReturnMap([
         ['field_storage_config', TRUE, $fieldStorageConfigentityType],
@@ -120,7 +123,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    * @legacy-covers ::getCardinality
    */
   public function testStoredCardinality(): void {
-    $this->fieldTypeManager->expects($this->any())
+    $this->fieldTypeManager->expects($this->atLeastOnce())
       ->method('getDefinition')
       ->with('test_field_type')
       ->willReturn([
@@ -147,7 +150,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    * @legacy-covers ::getCardinality
    */
   public function testEnforcedCardinality(): void {
-    $this->fieldTypeManager->expects($this->any())
+    $this->fieldTypeManager->expects($this->atLeastOnce())
       ->method('getDefinition')
       ->with('test_field_type')
       ->willReturn([
@@ -179,7 +182,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    */
   #[DataProvider('providerInvalidEnforcedCardinality')]
   public function testInvalidEnforcedCardinality($enforced_cardinality): void {
-    $this->fieldTypeManager->expects($this->any())
+    $this->fieldTypeManager->expects($this->atLeastOnce())
       ->method('getDefinition')
       ->with('test_field_type')
       ->willReturn([

@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\StringFormatter;
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
+use Drupal\Core\TypedData\ComplexDataDefinitionInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -58,10 +59,10 @@ final class StringFormatterTest extends UnitTestCase {
       $entity->toUrl('canonical')->willReturn($url);
     }
 
-    $item = $this->getMockBuilder(StringItem::class)
-      ->disableOriginalConstructor()
-      ->onlyMethods([])
-      ->getMock();
+    $definition = $this->createStub(ComplexDataDefinitionInterface::class);
+    $definition->method('getPropertyDefinitions')
+      ->willReturn([]);
+    $item = new StringItem($definition);
     $item->setValue(['value' => 'FooText']);
 
     $items = $this->prophesize(FieldItemListInterface::class);
