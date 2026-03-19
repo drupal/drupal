@@ -150,6 +150,28 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests that the action fails when the label property is not set.
+   */
+  public function testMissingLabel(): void {
+    $contents = <<<YAML
+name: Instantiate field on all bundles
+config:
+  import:
+    entity_test_with_storage:
+      - field.storage.entity_test.body
+  actions:
+    field.storage.entity_test.body:
+      addToAllBundles:
+        description: Set by config actions.
+YAML;
+    $recipe = $this->createRecipe($contents);
+
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage('The `label` property must be set for entity_test.entity_test.body.');
+    RecipeRunner::processRecipe($recipe);
+  }
+
+  /**
    * Applies a recipe with the addToAllBundles action.
    *
    * @param string $config_name
