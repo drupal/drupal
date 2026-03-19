@@ -316,11 +316,21 @@ class ContentEntityCacheTest extends KernelTestBase {
     $persistent_cache = \Drupal::cache('entity');
     $memory_cache = \Drupal::service('entity.memory_cache');
 
-    $assert_cache_exists = function ($cid) use ($persistent_cache, $memory_cache) {
-      $this->assertNotFalse($persistent_cache->get($cid));
-      $this->assertNotFalse($memory_cache->get($cid));
+    $assert_cache_exists = function ($cid, $expected_cache_tag = NULL) use ($persistent_cache, $memory_cache): void {
+      $cache_item = $persistent_cache->get($cid);
+      $this->assertNotFalse($cache_item);
+      if ($expected_cache_tag) {
+        $expected_cache_tags = ['entity_field_info', $expected_cache_tag];
+        $this->assertEquals($expected_cache_tags, $cache_item->tags);
+      }
+      $cache_item = $memory_cache->get($cid);
+      $this->assertNotFalse($cache_item);
+      if ($expected_cache_tag) {
+        $expected_cache_tags = ['entity.memory_cache:' . $this->revEntityTypeId, $expected_cache_tag];
+        $this->assertEquals($expected_cache_tags, $cache_item->tags);
+      }
     };
-    $assert_cache_not_exists = function ($cid) use ($persistent_cache, $memory_cache) {
+    $assert_cache_not_exists = function ($cid) use ($persistent_cache, $memory_cache): void {
       $this->assertFalse($persistent_cache->get($cid));
       $this->assertFalse($memory_cache->get($cid));
     };
@@ -403,6 +413,21 @@ class ContentEntityCacheTest extends KernelTestBase {
     $assert_cache_exists($other_revision_cache_id);
     $other_cache_id = "values:{$entity->getEntityTypeId()}:" . $other_entity->id();
     $assert_cache_exists($other_cache_id);
+
+    // Load revisions of multiple entities, ensure they get the right cache
+    // tags.
+    $storage->resetCache();
+
+    $storage->loadMultipleRevisions([$loaded_revision->getRevisionId(), $other_entity->getRevisionId()]);
+    $assert_cache_exists($revision_cache_id, $this->revEntityTypeId . ":{$loaded_revision->id()}:revisions");
+    $assert_cache_exists($other_revision_cache_id, $this->revEntityTypeId . ":{$other_entity->id()}:revisions");
+
+    // Save the loaded revision, ensure that the other revision is still
+    // cached.
+    $loaded_revision->save();
+
+    $assert_cache_not_exists($revision_cache_id);
+    $assert_cache_exists($other_revision_cache_id);
   }
 
   /**

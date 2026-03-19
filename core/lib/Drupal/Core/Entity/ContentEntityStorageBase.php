@@ -1308,17 +1308,18 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       return;
     }
     $items = [];
-    $cache_tags = ['entity_field_info'];
     foreach ($entities as $entity) {
       // When an entity is cleared from the entity cache via ::resetCache()
       // we must clear the related revisions from the revision cache, as well.
       // To make this possible, we add a tag with the entity's ID to the
       // revision's cache entry.
       // @see \Drupal\Core\Entity\ContentEntityStorageBase::resetCache()
-      $cache_tags[] = "{$this->entityTypeId}:{$entity->id()}:revisions";
       $items[$this->buildRevisionCacheId($entity->getRevisionId())] = [
         'data' => $entity,
-        'tags' => $cache_tags,
+        'tags' => [
+          'entity_field_info',
+          "{$this->entityTypeId}:{$entity->id()}:revisions",
+        ],
       ];
     }
     $this->cacheBackend->setMultiple($items);
