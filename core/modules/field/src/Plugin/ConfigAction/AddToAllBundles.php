@@ -76,9 +76,9 @@ final class AddToAllBundles implements ConfigActionPluginInterface, ContainerFac
         throw new ConfigActionException(sprintf('Field %s already exists.', $id));
       }
       $storage->create([
-        'label' => $value['label'],
+        'label' => $value['label'] ?? throw new ConfigActionException(sprintf('The `label` property must be set for %s.', $id)),
         'bundle' => $bundle,
-        'description' => $value['description'],
+        'description' => $value['description'] ?? '',
         'field_storage' => $field_storage,
       ])->save();
     }
