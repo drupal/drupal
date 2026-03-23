@@ -11,6 +11,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\Hook\MediaLibraryThemeHooks;
+use Drupal\media_library\MediaLibraryDisplayManager;
 
 /**
  * Prepares variables for the media library modal dialog.
@@ -54,8 +55,14 @@ function template_preprocess_media_library_item(array &$variables): void {
 
 /**
  * Form #after_build callback for media_library view's exposed filters form.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function _media_library_views_form_media_library_after_build(array $form, FormStateInterface $form_state) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   // Remove .form-actions from the view's exposed filter actions. This prevents
   // the "Apply filters" submit button from being moved into the dialog's
   // button area.
@@ -71,13 +78,19 @@ function _media_library_views_form_media_library_after_build(array $form, FormSt
 
 /**
  * Submit callback for media type form.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function _media_library_media_type_form_submit(array &$form, FormStateInterface $form_state): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   $form_object = $form_state->getFormObject();
   if ($form_object->getOperation() === 'add') {
     $type = $form_object->getEntity();
-    $form_display_created = _media_library_configure_form_display($type);
-    $view_display_created = _media_library_configure_view_display($type);
+    $form_display_created = MediaLibraryDisplayManager::configureFormDisplay($type);
+    $view_display_created = MediaLibraryDisplayManager::configureViewDisplay($type);
     if ($form_display_created || $view_display_created) {
       \Drupal::messenger()->addStatus(t('Media Library form and view displays have been created for the %type media type.', [
         '%type' => $type->label(),
@@ -96,8 +109,14 @@ function _media_library_media_type_form_submit(array &$form, FormStateInterface 
  *   Whether a form display has been created or not.
  *
  * @throws \Drupal\Core\Entity\EntityStorageException
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function _media_library_configure_form_display(MediaTypeInterface $type) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   $display = EntityFormDisplay::load('media.' . $type->id() . '.media_library');
 
   if ($display) {
@@ -143,8 +162,14 @@ function _media_library_configure_form_display(MediaTypeInterface $type) {
  *   Whether a view display has been created or not.
  *
  * @throws \Drupal\Core\Entity\EntityStorageException
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function _media_library_configure_view_display(MediaTypeInterface $type) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   $display = EntityViewDisplay::load('media.' . $type->id() . '.media_library');
 
   if ($display) {

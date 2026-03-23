@@ -20,6 +20,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Render\Element;
+use Drupal\media_library\MediaLibraryDisplayManager;
 
 /**
  * Hook implementations for media_library.
@@ -183,14 +184,14 @@ class MediaLibraryHooks {
     // Add a process callback to ensure that the media library view's exposed
     // filters submit button is not moved to the modal dialog's button area.
     if ($form_id === 'views_exposed_form' && str_starts_with($form['#id'], 'views-exposed-form-media-library-widget')) {
-      $form['#after_build'][] = '_media_library_views_form_media_library_after_build';
+      $form['#after_build'][] = static::class . ':viewsFormAfterBuild';
     }
     // Configures media_library displays when a type is submitted.
     if ($form_state->getFormObject() instanceof MediaTypeForm) {
-      $form['actions']['submit']['#submit'][] = '_media_library_media_type_form_submit';
+      $form['actions']['submit']['#submit'][] = static::class . ':mediaTypeFormSubmit';
       // @see field_ui_form_alter()
       if (isset($form['actions']['save_continue'])) {
-        $form['actions']['save_continue']['#submit'][] = '_media_library_media_type_form_submit';
+        $form['actions']['save_continue']['#submit'][] = static::class . ':mediaTypeFormSubmit';
       }
     }
   }
@@ -260,6 +261,44 @@ class MediaLibraryHooks {
       return AccessResult::forbidden();
     }
     return AccessResult::neutral();
+  }
+
+  /**
+   * Form #after_build callback for media_library view's exposed filters form.
+   *
+   * @internal
+   */
+  public function viewsFormAfterBuild(array $form, FormStateInterface $form_state): array {
+    // Remove .form-actions from the view's exposed filter actions. This
+    // prevents the "Apply filters" submit button from being moved into the
+    // dialog's button area.
+    // @see \Drupal\Core\Render\Element\Actions::processActions
+    // @see Drupal.behaviors.dialog.prepareDialogButtons
+    // @todo Remove this after
+    //   https://www.drupal.org/project/drupal/issues/3089751 is fixed.
+    if (($key = array_search('form-actions', $form['actions']['#attributes']['class'])) !== FALSE) {
+      unset($form['actions']['#attributes']['class'][$key]);
+    }
+    return $form;
+  }
+
+  /**
+   * Submit callback for media type form.
+   *
+   * @internal
+   */
+  public function mediaTypeFormSubmit(array &$form, FormStateInterface $form_state): void {
+    $form_object = $form_state->getFormObject();
+    if ($form_object->getOperation() === 'add') {
+      $type = $form_object->getEntity();
+      $form_display_created = MediaLibraryDisplayManager::configureFormDisplay($type);
+      $view_display_created = MediaLibraryDisplayManager::configureViewDisplay($type);
+      if ($form_display_created || $view_display_created) {
+        \Drupal::messenger()->addStatus($this->t('Media Library form and view displays have been created for the %type media type.', [
+          '%type' => $type->label(),
+        ]));
+      }
+    }
   }
 
 }
