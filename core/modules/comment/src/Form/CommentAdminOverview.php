@@ -61,17 +61,19 @@ class CommentAdminOverview extends FormBase {
    *   The entity type manager service.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory|\Drupal\Core\Extension\ModuleHandlerInterface $temp_store_factory
    *   The tempstore factory.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, DateFormatterInterface $date_formatter, ModuleHandlerInterface $module_handler, PrivateTempStoreFactory $temp_store_factory) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, DateFormatterInterface $date_formatter, PrivateTempStoreFactory|ModuleHandlerInterface $temp_store_factory) {
     $this->entityTypeManager = $entity_type_manager;
     $this->commentStorage = $entity_type_manager->getStorage('comment');
     $this->dateFormatter = $date_formatter;
-    $this->moduleHandler = $module_handler;
     $this->tempStoreFactory = $temp_store_factory;
+    if ($temp_store_factory instanceof ModuleHandlerInterface) {
+      $this->moduleHandler = $temp_store_factory;
+      $this->tempStoreFactory = func_get_arg(3);
+      @trigger_error('Calling ' . __METHOD__ . '() with the $module_handler argument is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3566911', E_USER_DEPRECATED);
+    }
   }
 
   /**
@@ -81,7 +83,6 @@ class CommentAdminOverview extends FormBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('date.formatter'),
-      $container->get('module_handler'),
       $container->get('tempstore.private')
     );
   }
@@ -227,12 +228,7 @@ class CommentAdminOverview extends FormBase {
         'title' => $this->t('Edit'),
         'url' => $comment->toUrl('edit-form', $comment_uri_options),
       ];
-      if ($this->moduleHandler->moduleExists('content_translation') && content_translation_translate_access($comment)->isAllowed()) {
-        $links['translate'] = [
-          'title' => $this->t('Translate'),
-          'url' => $comment->toUrl('drupal:content-translation-overview', $comment_uri_options),
-        ];
-      }
+
       $options[$comment->id()]['operations']['data'] = [
         '#type' => 'operations',
         '#links' => $links,

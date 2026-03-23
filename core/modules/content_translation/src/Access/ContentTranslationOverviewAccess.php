@@ -7,27 +7,21 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Utility\CallableResolver;
 
 /**
  * Access check for entity translation overview.
  */
 class ContentTranslationOverviewAccess implements AccessInterface {
 
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Constructs a ContentTranslationOverviewAccess object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ?CallableResolver $callableResolver = NULL,
+  ) {
+    if (!$callableResolver) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $callableResolver argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3567484', E_USER_DEPRECATED);
+      $this->callableResolver = \Drupal::service('callable_resolver');
+    }
   }
 
   /**
@@ -54,7 +48,7 @@ class ContentTranslationOverviewAccess implements AccessInterface {
       $definition = $this->entityTypeManager->getDefinition($entity_type_id);
       $translation = $definition->get('translation');
       $access_callback = $translation['content_translation']['access_callback'];
-      $access = call_user_func($access_callback, $entity);
+      $access = call_user_func($this->callableResolver->getCallableFromDefinition($access_callback), $entity);
       if ($access->isAllowed()) {
         return $access;
       }

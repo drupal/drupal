@@ -214,14 +214,6 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
       }
     }
 
-    // Add translations link for translation-enabled comment bundles.
-    if ($this->moduleHandler->moduleExists('content_translation') && $this->access($entity)->isAllowed()) {
-      $links['comment-translations'] = [
-        'title' => $this->t('Translate'),
-        'url' => $entity->toUrl('drupal:content-translation-overview'),
-      ];
-    }
-
     return [
       '#theme' => 'links__comment__comment',
       // The "entity" property is specified to be present, so no need to check.
@@ -232,9 +224,15 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
 
   /**
    * Wraps content_translation_translate_access.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the
+   *   access() method of the content_translation.manager service instead.
+   *
+   * @see https://www.drupal.org/node/3567484
    */
   protected function access(EntityInterface $entity) {
-    return content_translation_translate_access($entity);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the access() method of the content_translation.manager service instead. See https://www.drupal.org/node/3567484', E_USER_DEPRECATED);
+    return \Drupal::service('content_translation.manager')->access($entity);
   }
 
   /**

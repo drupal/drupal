@@ -27,7 +27,7 @@ services:
 
   content_translation.overview_access:
     class: Drupal\content_translation\Access\ContentTranslationOverviewAccess
-    arguments: ['@entity_type.manager']
+    arguments: ['@entity_type.manager', '@callable_resolver']
     tags:
       - { name: access_check, applies_to: _access_content_translation_overview }
 
@@ -39,8 +39,10 @@ services:
 
   content_translation.manager:
     class: Drupal\content_translation\ContentTranslationManager
-    arguments: ['@entity_type.manager', '@entity_type.bundle.info']
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@current_user', '@language_manager']
   Drupal\content_translation\ContentTranslationManagerInterface: '@content_translation.manager'
   Drupal\content_translation\BundleTranslationSettingsInterface: '@content_translation.manager'
   Drupal\content_translation\FieldSyncWidget:
+    autowire: true
+  Drupal\content_translation\ContentTranslationEnableTranslationPerBundle:
     autowire: true

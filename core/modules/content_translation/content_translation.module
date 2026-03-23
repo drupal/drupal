@@ -4,13 +4,12 @@
  * @file
  */
 
+use Drupal\content_translation\ContentTranslationEnableTranslationPerBundle;
 use Drupal\content_translation\FieldSyncWidget;
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\content_translation\Hook\ContentTranslationHooks;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Installs Content Translation's fields for a given entity type.
@@ -19,24 +18,16 @@ use Drupal\Core\Language\LanguageInterface;
  *   The entity type ID.
  *
  * @todo Generalize this code in https://www.drupal.org/node/2346013.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+ *   ContentTranslationHooks::installFieldStorageDefinitions() instead.
+ *
+ * @see https://www.drupal.org/node/3567484
+ * @see \Drupal\content_translation\Hook\ContentTranslationHooks::installFieldStorageDefinitions()
  */
 function _content_translation_install_field_storage_definitions($entity_type_id): void {
-  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
-  $field_manager = \Drupal::service('entity_field.manager');
-  /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $schema_repository */
-  $schema_repository = \Drupal::service('entity.last_installed_schema.repository');
-  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
-
-  $field_manager->useCaches(FALSE);
-  $storage_definitions = $field_manager->getFieldStorageDefinitions($entity_type_id);
-  $field_manager->useCaches(TRUE);
-  $installed_storage_definitions = $schema_repository->getLastInstalledFieldStorageDefinitions($entity_type_id);
-  foreach (array_diff_key($storage_definitions, $installed_storage_definitions) as $storage_definition) {
-    /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition */
-    if ($storage_definition->getProvider() == 'content_translation') {
-      $definition_update_manager->installFieldStorageDefinition($storage_definition->getName(), $entity_type_id, 'content_translation', $storage_definition);
-    }
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\content_translation\Hook\ContentTranslationHooks::installFieldStorageDefinitions() instead. See https://www.drupal.org/node/3567484', E_USER_DEPRECATED);
+  \Drupal::service(ContentTranslationHooks::class)->installFieldStorageDefinitions($entity_type_id);
 }
 
 /**
@@ -47,14 +38,15 @@ function _content_translation_install_field_storage_definitions($entity_type_id)
  *
  * @return \Drupal\Core\Access\AccessResultInterface
  *   The access result.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the
+ *   access() method of the content_translation.manager service instead.
+ *
+ * @see https://www.drupal.org/node/3567484
  */
 function content_translation_translate_access(EntityInterface $entity) {
-  $account = \Drupal::currentUser();
-  $condition = $entity instanceof ContentEntityInterface && $entity->access('view') &&
-    !$entity->getUntranslated()->language()->isLocked() && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable() &&
-    ($account->hasPermission('create content translations') || $account->hasPermission('update content translations') || $account->hasPermission('delete content translations') ||
-    ($account->hasPermission('translate editable entities') && $entity->access('update')));
-  return AccessResult::allowedIf($condition)->cachePerPermissions()->addCacheableDependency($entity);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the access() method of the content_translation.manager service instead. See https://www.drupal.org/node/3567484', E_USER_DEPRECATED);
+  return \Drupal::service('content_translation.manager')->access($entity);
 }
 
 /**
@@ -62,8 +54,6 @@ function content_translation_translate_access(EntityInterface $entity) {
  *
  * Backward compatibility layer to support entities not using the language
  * configuration form element.
- *
- * @todo Remove once all core entities have language configuration.
  *
  * @param string $entity_type
  *   The type of the entity being configured for translation.
@@ -73,15 +63,16 @@ function content_translation_translate_access(EntityInterface $entity) {
  *   The configuration form array.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   ContentTranslationEnableTranslationPerBundle::getWidget() instead.
+ *
+ * @see https://www.drupal.org/node/3566911
+ * @see \Drupal\content_translation\ContentTranslationEnableTranslationPerBundle::getWidget()
  */
 function content_translation_enable_widget($entity_type, $bundle, array &$form, FormStateInterface $form_state) {
-  $key = $form_state->get(['content_translation', 'key']);
-  $context = $form_state->get(['language', $key]) ?: [];
-  $context += ['entity_type' => $entity_type, 'bundle' => $bundle];
-  $form_state->set(['language', $key], $context);
-  $element = content_translation_language_configuration_element_process(['#name' => $key], $form_state, $form);
-  unset($element['content_translation']['#element_validate']);
-  return $element;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use Drupal\content_translation\ContentTranslationEnableTranslationPerBundle::getWidget() instead. See https://www.drupal.org/node/3566911', E_USER_DEPRECATED);
+  return \Drupal::service(ContentTranslationEnableTranslationPerBundle::class)->getWidget($entity_type, $bundle, $form, $form_state);
 }
 
 /**
@@ -92,33 +83,17 @@ function content_translation_enable_widget($entity_type, $bundle, array &$form, 
  *
  * @return array
  *   Processed language configuration element.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   ContentTranslationEnableTranslationPerBundle::configElementProcess()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3566911
+ * @see \Drupal\content_translation\ContentTranslationEnableTranslationPerBundle::configElementProcess()
  */
 function content_translation_language_configuration_element_process(array $element, FormStateInterface $form_state, array &$form) {
-  if (empty($element['#content_translation_skip_alter']) && \Drupal::currentUser()->hasPermission('administer content translation')) {
-    $key = $element['#name'];
-    $form_state->set(['content_translation', 'key'], $key);
-    $context = $form_state->get(['language', $key]);
-
-    $element['content_translation'] = [
-      '#type' => 'checkbox',
-      '#title' => t('Enable translation'),
-      // For new bundle, we don't know the bundle name yet,
-      // default to no translatability.
-      '#default_value' => $context['bundle'] ? \Drupal::service('content_translation.manager')->isEnabled($context['entity_type'], $context['bundle']) : FALSE,
-      '#element_validate' => ['content_translation_language_configuration_element_validate'],
-    ];
-
-    $submit_name = isset($form['actions']['save_continue']) ? 'save_continue' : 'submit';
-    // Only add the submit handler on the submit button if the #submit property
-    // is already available, otherwise this breaks the form submit function.
-    if (isset($form['actions'][$submit_name]['#submit'])) {
-      $form['actions'][$submit_name]['#submit'][] = 'content_translation_language_configuration_element_submit';
-    }
-    else {
-      $form['#submit'][] = 'content_translation_language_configuration_element_submit';
-    }
-  }
-  return $element;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\content_translation\ContentTranslationEnableTranslationPerBundle::configElementProcess() instead. See https://www.drupal.org/node/3566911', E_USER_DEPRECATED);
+  return \Drupal::service(ContentTranslationEnableTranslationPerBundle::class)->configElementProcess($element, $form_state, $form);
 }
 
 /**
@@ -128,20 +103,16 @@ function content_translation_language_configuration_element_process(array $eleme
  * special languages and language selector is not hidden, translation cannot be
  * enabled.
  *
- * @see content_translation_language_configuration_element_submit()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   ContentTranslationEnableTranslationPerBundle::configElementValidate()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3566911
+ * @see \Drupal\content_translation\ContentTranslationEnableTranslationPerBundle::configElementValidate()
  */
 function content_translation_language_configuration_element_validate($element, FormStateInterface $form_state, array $form): void {
-  $key = $form_state->get(['content_translation', 'key']);
-  $values = $form_state->getValue($key);
-  if (!$values['language_alterable'] && $values['content_translation'] && \Drupal::languageManager()->isLanguageLocked($values['langcode'])) {
-    foreach (\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_LOCKED) as $language) {
-      $locked_languages[$language->getId()] = $language->getName();
-    }
-    // @todo Set the correct form element name as soon as the element parents
-    //   are correctly set. We should be using NestedArray::getValue() but for
-    //   now we cannot.
-    $form_state->setErrorByName('', t('"Show language selector" is not compatible with translating content that has default language: %choice. Either do not hide the language selector or pick a specific language.', ['%choice' => $locked_languages[$values['langcode']]]));
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use Drupal\content_translation\ContentTranslationEnableTranslationPerBundle::configElementValidate() instead. See https://www.drupal.org/node/3566911', E_USER_DEPRECATED);
+  \Drupal::service(ContentTranslationEnableTranslationPerBundle::class)->configElementValidate($element, $form_state, $form);
 }
 
 /**
@@ -149,17 +120,16 @@ function content_translation_language_configuration_element_validate($element, F
  *
  * Stores the content translation settings.
  *
- * @see content_translation_language_configuration_element_validate()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *    ContentTranslationEnableTranslationPerBundle::configElementSubmit()
+ *    instead.
+ *
+ * @see https://www.drupal.org/node/3566911
+ * @see \Drupal\content_translation\ContentTranslationEnableTranslationPerBundle::configElementSubmit()
  */
 function content_translation_language_configuration_element_submit(array $form, FormStateInterface $form_state): void {
-  $key = $form_state->get(['content_translation', 'key']);
-  $context = $form_state->get(['language', $key]);
-  $enabled = $form_state->getValue([$key, 'content_translation']);
-
-  if (\Drupal::service('content_translation.manager')->isEnabled($context['entity_type'], $context['bundle']) != $enabled) {
-    \Drupal::service('content_translation.manager')->setEnabled($context['entity_type'], $context['bundle'], $enabled);
-    \Drupal::service('router.builder')->setRebuildNeeded();
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use Drupal\content_translation\ContentTranslationEnableTranslationPerBundle::configElementSubmit() instead. See https://www.drupal.org/node/3566911', E_USER_DEPRECATED);
+  \Drupal::service(ContentTranslationEnableTranslationPerBundle::class)->configElementSubmit($form, $form_state);
 }
 
 /**
@@ -174,12 +144,12 @@ function content_translation_language_configuration_element_submit(array $form, 
  * @return array
  *   A form element to configure field synchronization.
  *
- * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
  *   Drupal\content_translation\FieldSyncWidget::widget() instead.
  *
  * @see https://www.drupal.org/node/3548573
  */
 function content_translation_field_sync_widget(FieldDefinitionInterface $field, $element_name = 'third_party_settings[content_translation][translation_sync]'): array {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use Drupal\content_translation\FieldSyncWidget::widget() instead. See https://www.drupal.org/node/3548573', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use Drupal\content_translation\FieldSyncWidget::widget() instead. See https://www.drupal.org/node/3548573', E_USER_DEPRECATED);
   return \Drupal::service(FieldSyncWidget::class)->widget($field, $element_name);
 }

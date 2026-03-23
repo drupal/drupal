@@ -2,40 +2,34 @@
 
 namespace Drupal\content_translation;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 
 /**
  * Provides common functionality for content translation.
  */
 class ContentTranslationManager implements ContentTranslationManagerInterface, BundleTranslationSettingsInterface {
 
-  /**
-   * The entity type bundle info provider.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Constructs a ContentTranslationManageAccessCheck object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
-   *   The entity type bundle info provider.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+    protected ?AccountProxyInterface $currentUser = NULL,
+    protected ?LanguageManagerInterface $languageManager = NULL,
+  ) {
+    if (!$this->currentUser) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $currentUser argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3567484', E_USER_DEPRECATED);
+      $this->currentUser = \Drupal::currentUser();
+    }
+    if (!$this->languageManager) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $languageManager argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3567484', E_USER_DEPRECATED);
+      $this->languageManager = \Drupal::languageManager();
+    }
   }
 
   /**
@@ -119,6 +113,30 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
   public function getBundleTranslationSettings($entity_type_id, $bundle) {
     $config = $this->loadContentLanguageSettings($entity_type_id, $bundle);
     return $config->getThirdPartySetting('content_translation', 'bundle_settings', []);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access(EntityInterface $entity): AccessResultInterface {
+    $condition = $entity instanceof ContentEntityInterface
+      && $entity->access('view')
+      && !$entity->getUntranslated()->language()->isLocked()
+      && $this->languageManager->isMultilingual()
+      && $entity->isTranslatable()
+      && (
+        $this->currentUser->hasPermission('create content translations')
+        || $this->currentUser->hasPermission('update content translations')
+        || $this->currentUser->hasPermission('delete content translations')
+        || (
+          $this->currentUser->hasPermission('translate editable entities')
+          && $entity->access('update')
+        )
+      );
+
+    return AccessResult::allowedIf($condition)
+      ->cachePerPermissions()
+      ->addCacheableDependency($entity);
   }
 
   /**

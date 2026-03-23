@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\content_translation\Hook;
 
+use Drupal\comment\CommentInterface;
+use Drupal\content_translation\ContentTranslationEnableTranslationPerBundle;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -170,7 +172,7 @@ class ContentTranslationHooks {
           }
           // @todo Remove this as soon as menu access checks rely on the
           //   controller. See https://www.drupal.org/node/2155787.
-          $translation['content_translation'] += ['access_callback' => 'content_translation_translate_access'];
+          $translation['content_translation'] += ['access_callback' => 'content_translation.manager:access'];
         }
         $entity_type->set('translation', $translation);
       }
@@ -193,7 +195,7 @@ class ContentTranslationHooks {
   #[Hook('language_content_settings_insert')]
   public function languageContentSettingsInsert(ContentLanguageSettingsInterface $settings): void {
     if ($settings->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
-      _content_translation_install_field_storage_definitions($settings->getTargetEntityTypeId());
+      $this->installFieldStorageDefinitions($settings->getTargetEntityTypeId());
     }
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
   }
@@ -214,7 +216,7 @@ class ContentTranslationHooks {
   public function languageContentSettingsUpdate(ContentLanguageSettingsInterface $settings): void {
     $original_settings = $settings->getOriginal();
     if ($settings->getThirdPartySetting('content_translation', 'enabled', FALSE) && !$original_settings->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
-      _content_translation_install_field_storage_definitions($settings->getTargetEntityTypeId());
+      $this->installFieldStorageDefinitions($settings->getTargetEntityTypeId());
     }
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
   }
@@ -340,7 +342,7 @@ class ContentTranslationHooks {
   #[Hook('entity_operation')]
   public function entityOperation(EntityInterface $entity): array {
     $operations = [];
-    if ($entity->hasLinkTemplate('drupal:content-translation-overview') && content_translation_translate_access($entity)->isAllowed()) {
+    if ($entity->hasLinkTemplate('drupal:content-translation-overview') && \Drupal::service('content_translation.manager')->access($entity)->isAllowed()) {
       $operations['translate'] = [
         'title' => $this->t('Translate'),
         'url' => $entity->toUrl('drupal:content-translation-overview'),
@@ -475,7 +477,7 @@ class ContentTranslationHooks {
   #[Hook('element_info_alter')]
   public function elementInfoAlter(&$type): void {
     if (isset($type['language_configuration'])) {
-      $type['language_configuration']['#process'][] = 'content_translation_language_configuration_element_process';
+      $type['language_configuration']['#process'][] = ContentTranslationEnableTranslationPerBundle::class . ':configElementProcess';
     }
   }
 
@@ -529,6 +531,47 @@ class ContentTranslationHooks {
     }
     // Apply updated caching information.
     $cache->applyTo($page);
+  }
+
+  /**
+   * Implements hook_comment_links_alter().
+   */
+  #[Hook('comment_links_alter')]
+  public function addTranslateLink(array &$links, CommentInterface $comment, array $context): void {
+    if (\Drupal::service('content_translation.manager')->access($comment)->isAllowed()) {
+      $links['comment-translations'] = [
+        'title' => $this->t('Translate'),
+        'url' => $comment->toUrl('drupal:content-translation-overview'),
+      ];
+    }
+  }
+
+  /**
+   * Installs Content Translation's fields for a given entity type.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   *
+   * @todo Generalize this code in https://www.drupal.org/node/2346013.
+   */
+  public function installFieldStorageDefinitions(string $entity_type_id): void {
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
+    $field_manager = \Drupal::service('entity_field.manager');
+
+    /** @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $schema_repository */
+    $schema_repository = \Drupal::service('entity.last_installed_schema.repository');
+    $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+    $field_manager->useCaches();
+    $storage_definitions = $field_manager->getFieldStorageDefinitions($entity_type_id);
+    $field_manager->useCaches(TRUE);
+    $installed_storage_definitions = $schema_repository->getLastInstalledFieldStorageDefinitions($entity_type_id);
+    foreach (array_diff_key($storage_definitions, $installed_storage_definitions) as $storage_definition) {
+      /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition */
+      if ($storage_definition->getProvider() == 'content_translation') {
+        $definition_update_manager->installFieldStorageDefinition($storage_definition->getName(), $entity_type_id, 'content_translation', $storage_definition);
+      }
+    }
   }
 
 }

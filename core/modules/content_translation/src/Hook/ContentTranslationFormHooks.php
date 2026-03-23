@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\content_translation\Hook;
 
+use Drupal\content_translation\ContentTranslationEnableTranslationPerBundle;
 use Drupal\content_translation\ContentTranslationManagerInterface;
 use Drupal\content_translation\FieldSyncWidget;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -29,6 +30,7 @@ class ContentTranslationFormHooks {
     protected readonly ContentTranslationManagerInterface $contentTranslationManager,
     protected readonly RedirectDestinationInterface $redirectDestination,
     protected readonly FieldSyncWidget $fieldSyncWidget,
+    protected readonly ContentTranslationEnableTranslationPerBundle $contentTranslationWidget,
   ) {}
 
   /**
@@ -100,6 +102,45 @@ class ContentTranslationFormHooks {
       if ($element) {
         $form['third_party_settings']['content_translation']['translation_sync'] = $element;
         $form['third_party_settings']['content_translation']['translation_sync']['#weight'] = -10;
+      }
+    }
+  }
+
+  /**
+   * Implements hook_form_FORM_ID_alter() for 'user_admin_settings' form.
+   */
+  #[Hook('form_user_admin_settings_alter')]
+  public function userAccountSettingsFormAlter(array &$form, FormStateInterface $form_state): void {
+    // Insert the new element just after 'anonymous_settings'.
+    $index = array_search('anonymous_settings', array_keys($form));
+    $form = array_slice($form, 0, $index + 1) + [
+      'language' => [
+        '#type' => 'details',
+        '#title' => $this->t('Language settings'),
+        '#open' => TRUE,
+        '#tree' => TRUE,
+      ],
+    ] + $form;
+    $form_state->set(['content_translation', 'key'], 'language');
+    $form['language'] += $this->contentTranslationWidget->getWidget('user', 'user', $form, $form_state);
+  }
+
+  /**
+   * Implements hook_form_FORM_ID_alter() for 'comment_admin_overview' form.
+   */
+  #[Hook('form_comment_admin_overview_alter')]
+  public function commentAdminOverviewFormAlter(array &$form, FormStateInterface $form_state): void {
+    $storage = $this->entityTypeManager->getStorage('comment');
+    $destination = $this->redirectDestination->getAsArray();
+
+    $comments = $storage->loadMultiple(array_keys($form['comments']['#options']));
+    foreach ($comments as $cid => $comment) {
+      if ($this->contentTranslationManager->access($comment)->isAllowed()) {
+        $comment_uri_options = $comment->toUrl()->getOptions() + ['query' => $destination];
+        $form['comments']['#options'][$cid]['operations']['data']['#links']['translate'] = [
+          'title' => $this->t('Translate'),
+          'url' => $comment->toUrl('drupal:content-translation-overview', $comment_uri_options),
+        ];
       }
     }
   }

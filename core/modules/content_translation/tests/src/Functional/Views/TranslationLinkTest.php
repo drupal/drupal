@@ -75,7 +75,7 @@ class TranslationLinkTest extends ContentTranslationTestBase {
   public function testTranslationLink(): void {
     $this->drupalGet('test-entity-translations-link');
     $this->assertSession()->linkByHrefExists('user/1/translations');
-    $this->assertSession()->linkByHrefNotExists('user/2/translations', 'The translations link is not present when content_translation_translate_access() is FALSE.');
+    $this->assertSession()->linkByHrefNotExists('user/2/translations', 'The translations link is not present when \Drupal::service("content_translation.manager")->access() is FALSE.');
   }
 
 }
