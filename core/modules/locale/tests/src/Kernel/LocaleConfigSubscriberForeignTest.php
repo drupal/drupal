@@ -122,6 +122,22 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
   }
 
   /**
+   * Tests that unchanged active translations are not re-saved.
+   */
+  public function testUnchangedActiveTranslationNotResaved(): void {
+    $config_name = 'locale_test.translation';
+
+    // After setUp(), the Hungarian active translation already exists. Calling
+    // updateConfigTranslations() again without changes should not re-save it.
+    $this->localeConfigManager->reset();
+    $count = $this->localeConfigManager->updateConfigTranslations([$config_name], ['hu']);
+    $this->assertSame(0, $count, 'Unchanged active config translation should not be re-saved.');
+
+    // Verify the active config is still intact.
+    $this->assertActiveConfig($config_name, 'test', 'Hungarian test', 'hu');
+  }
+
+  /**
    * Tests that adding English creates a translation override.
    */
   public function testEnglish(): void {
