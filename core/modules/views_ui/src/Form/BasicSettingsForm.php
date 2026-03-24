@@ -40,7 +40,7 @@ class BasicSettingsForm extends ConfigFormBase {
     $form['basic']['ui_show_display_embed'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow embedded displays'),
-      '#description' => $this->t('Embedded displays can be used in code via views_embed_view().'),
+      '#description' => $this->t("Embedded displays can be used in code via '#type' => 'view' render elements."),
       '#config_target' => 'views.settings:ui.show.display_embed',
     ];
 

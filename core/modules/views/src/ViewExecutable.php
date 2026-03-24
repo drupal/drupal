@@ -548,7 +548,7 @@ class ViewExecutable {
    */
   public function setArguments(array $args) {
     // The array keys of the arguments will be incorrect if set by
-    // views_embed_view() or \Drupal\views\ViewExecutable:preview().
+    // \Drupal\views\ViewExecutable:preview().
     $this->args = array_values($args);
   }
 
@@ -1699,7 +1699,7 @@ class ViewExecutable {
    * This function does not do any access checks on the view. It is the
    * responsibility of the caller to check $view->access() or implement other
    * access logic. To render the view normally with access checks, use
-   * views_embed_view() instead.
+   * '#type' => 'view' render elements instead.
    *
    * @return array|null
    *   A renderable array containing the view output or NULL if the display ID
@@ -1728,8 +1728,10 @@ class ViewExecutable {
    *   An array of arguments from the URL that can be used by the view.
    */
   public function preExecute($args = []) {
-    $this->old_view[] = views_get_current_view();
-    views_set_current_view($this);
+    // @todo remove when views_set|get_current_view is removed.
+    // https://www.drupal.org/project/drupal/issues/3572671
+    $this->old_view[] = $GLOBALS['_current_view'] ?? NULL;
+    $GLOBALS['_current_view'] = $this;
     $display_id = $this->current_display;
 
     // Prepare the view with the information we have, but only if we were
@@ -1759,7 +1761,9 @@ class ViewExecutable {
       $old_view = array_pop($this->old_view);
     }
 
-    views_set_current_view($old_view ?? FALSE);
+    // @todo remove when views_set|get_current_view is removed.
+    // https://www.drupal.org/project/drupal/issues/3572671
+    $GLOBALS['_current_view'] = $old_view ?? FALSE;
   }
 
   /**

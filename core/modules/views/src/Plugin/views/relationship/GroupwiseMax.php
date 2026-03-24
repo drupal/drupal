@@ -303,7 +303,7 @@ class GroupwiseMax extends RelationshipPluginBase {
   /**
    * Recursive helper to add a namespace to conditions.
    *
-   * Similar to _views_query_tag_alter_condition().
+   * Similar to ViewsHooks::viewsQueryTagAlterCondition().
    *
    * (Though why is the condition we get in a simple query 3 levels deep???)
    */

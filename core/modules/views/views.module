@@ -184,14 +184,22 @@ function views_invalidate_cache(): void {
  * @return \Drupal\views\ViewExecutable|null|false
  *   The current view object, NULL if no view is set yet,
  *   or FALSE if the view was removed.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There
+ *   is no replacement.
+ *
+ * @see https://www.drupal.org/node/3572594
  */
 function &views_set_current_view($view = NULL) {
-  static $cache = NULL;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3572594', E_USER_DEPRECATED);
   if (isset($view)) {
-    $cache = $view;
+    $GLOBALS['_current_view'] = $view;
   }
 
-  return $cache;
+  // @todo remove $GLOBALS['_current_view'] from ViewExecutable when this is
+  // removed. https://www.drupal.org/project/drupal/issues/3572671
+  $GLOBALS['_current_view'] ??= NULL;
+  return $GLOBALS['_current_view'];
 }
 
 /**
@@ -203,9 +211,18 @@ function &views_set_current_view($view = NULL) {
  * @return \Drupal\views\ViewExecutable|null|false
  *   The current view object, NULL if no view is set yet,
  *    or FALSE if the view was removed.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There
+ *   is no replacement.
+ *
+ * @see https://www.drupal.org/node/3572594
  */
 function &views_get_current_view() {
-  return views_set_current_view();
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3572594', E_USER_DEPRECATED);
+  // @todo remove $GLOBALS['_current_view'] from ViewExecutable when this is
+  // removed. https://www.drupal.org/project/drupal/issues/3572671
+  $GLOBALS['_current_view'] ??= NULL;
+  return $GLOBALS['_current_view'];
 }
 
 /**
@@ -259,8 +276,14 @@ function views_hook_info(): array {
  *
  * @return bool
  *   Returns TRUE if a view is enabled, FALSE otherwise.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   $view->status() instead.
+ *
+ * @see https://www.drupal.org/node/3572594
  */
 function views_view_is_enabled(View $view) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use $view->status() instead. See https://www.drupal.org/node/3572594', E_USER_DEPRECATED);
   return $view->status();
 }
 
@@ -272,8 +295,14 @@ function views_view_is_enabled(View $view) {
  *
  * @return bool
  *   Returns TRUE if a view is disabled, FALSE otherwise.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   !$view->status() instead.
+ *
+ * @see https://www.drupal.org/node/3572594
  */
 function views_view_is_disabled(View $view) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use !$view->status() instead. See https://www.drupal.org/node/3572594', E_USER_DEPRECATED);
   return !$view->status();
 }
 
@@ -282,8 +311,14 @@ function views_view_is_disabled(View $view) {
  *
  * @param \Drupal\views\Entity\View $view
  *   The View object to disable.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   $view->enable()->save() instead.
+ *
+ * @see https://www.drupal.org/node/3572594
  */
 function views_enable_view(View $view): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use $view->enable()->save() instead. See https://www.drupal.org/node/3572594', E_USER_DEPRECATED);
   $view->enable()->save();
 }
 
@@ -292,15 +327,27 @@ function views_enable_view(View $view): void {
  *
  * @param \Drupal\views\Entity\View $view
  *   The View object to disable.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   $view->disable()->save() instead.
+ *
+ * @see https://www.drupal.org/node/3572594
  */
 function views_disable_view(View $view): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use $view->disable()->save() instead. See https://www.drupal.org/node/3572594', E_USER_DEPRECATED);
   $view->disable()->save();
 }
 
 /**
  * Replaces the substitutions recursive foreach condition.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There
+ *   is no replacement.
+ *
+ * @see https://www.drupal.org/node/3572594
  */
 function _views_query_tag_alter_condition(AlterableInterface $query, &$conditions, $substitutions): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3572594', E_USER_DEPRECATED);
   foreach ($conditions as $condition_id => &$condition) {
     if (is_numeric($condition_id)) {
       if (is_string($condition['field'])) {
@@ -358,8 +405,14 @@ function _views_query_tag_alter_condition(AlterableInterface $query, &$condition
  * @return array|null
  *   A renderable array containing the view output or NULL if the display ID
  *   of the view to be executed doesn't exist.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   '#type' => 'view' render elements instead.
+ *
+ * @see https://www.drupal.org/node/3572594
  */
 function views_embed_view($name, $display_id = 'default', ...$args) {
+  @trigger_error(__FUNCTION__ . "() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use '#type' => 'view' render elements instead. See https://www.drupal.org/node/3572594", E_USER_DEPRECATED);
   $view = Views::getView($name);
   if (!$view || !$view->access($display_id)) {
     return;
@@ -390,32 +443,27 @@ function views_embed_view($name, $display_id = 'default', ...$args) {
  *
  * @return array
  *   An array containing an object for each view item.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   Views::getViewResult($name, $display_id, ...$args) instead.
+ *
+ * @see https://www.drupal.org/node/3572594
  */
 function views_get_view_result($name, $display_id = NULL, ...$args) {
-  $view = Views::getView($name);
-  if (is_object($view)) {
-    if (is_array($args)) {
-      $view->setArguments($args);
-    }
-    if (is_string($display_id)) {
-      $view->setDisplay($display_id);
-    }
-    else {
-      $view->initDisplay();
-    }
-    $view->preExecute();
-    $view->execute();
-    return $view->result;
-  }
-  else {
-    return [];
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use Views::getViewResult($name, $display_id, ...$args) instead. See https://www.drupal.org/node/3572594', E_USER_DEPRECATED);
+  return Views::getViewResult($name, $display_id, ...$args);
 }
 
 /**
  * Validation callback for query tags.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There
+ *   is no replacement.
+ *
+ * @see https://www.drupal.org/node/3572594
  */
 function views_element_validate_tags($element, FormStateInterface $form_state): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3572594', E_USER_DEPRECATED);
   $values = array_map('trim', explode(',', $element['#value']));
   foreach ($values as $value) {
     if (preg_match("/[^a-z_]/", $value)) {
