@@ -144,11 +144,13 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    * @param \Drupal\workspaces\WorkspaceInterface|null $workspace
    *   The workspace to set as active or NULL to switch out of the currently
    *   active workspace.
+   * @param bool $is_temporary
+   *   Whether this is a temporary switch that will be automatically reverted.
    *
    * @throws \Drupal\workspaces\WorkspaceAccessException
    *   Thrown when the current user doesn't have access to view the workspace.
    */
-  protected function doSwitchWorkspace($workspace) {
+  protected function doSwitchWorkspace($workspace, bool $is_temporary = FALSE) {
     // If the current user doesn't have access to view the workspace, they
     // shouldn't be allowed to switch to it, except in CLI processes.
     if ($workspace && PHP_SAPI !== 'cli' && !$workspace->access('view')) {
@@ -158,7 +160,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     $previous_workspace = $this->activeWorkspace ?: NULL;
     $this->activeWorkspace = $workspace ?: FALSE;
 
-    $event = new WorkspaceSwitchEvent($this->activeWorkspace ?: NULL, $previous_workspace);
+    $event = new WorkspaceSwitchEvent($this->activeWorkspace ?: NULL, $previous_workspace, $is_temporary);
     ($this->eventDispatcher)()->dispatch($event);
   }
 
@@ -179,13 +181,13 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     // workspace.
     $should_switch_workspace = !$previous_active_workspace || $previous_active_workspace->id() != $workspace_id;
     if ($should_switch_workspace) {
-      $this->doSwitchWorkspace($workspace);
+      $this->doSwitchWorkspace($workspace, TRUE);
     }
     $result = $function();
 
     // Switch back if needed.
     if ($should_switch_workspace) {
-      $this->doSwitchWorkspace($previous_active_workspace);
+      $this->doSwitchWorkspace($previous_active_workspace, TRUE);
     }
 
     return $result;
@@ -199,13 +201,13 @@ class WorkspaceManager implements WorkspaceManagerInterface {
 
     // Switch to Live if we're in a workspace.
     if ($previous_active_workspace) {
-      $this->doSwitchWorkspace(NULL);
+      $this->doSwitchWorkspace(NULL, TRUE);
     }
     $result = $function();
 
     // Switch back if needed.
     if ($previous_active_workspace) {
-      $this->doSwitchWorkspace($previous_active_workspace);
+      $this->doSwitchWorkspace($previous_active_workspace, TRUE);
     }
 
     return $result;

@@ -13,6 +13,7 @@ class WorkspaceSwitchEvent extends Event {
   public function __construct(
     protected readonly ?WorkspaceInterface $workspace = NULL,
     protected readonly ?WorkspaceInterface $previousWorkspace = NULL,
+    protected readonly bool $isTemporary = FALSE,
   ) {}
 
   /**
@@ -33,6 +34,19 @@ class WorkspaceSwitchEvent extends Event {
    */
   public function getPreviousWorkspace(): ?WorkspaceInterface {
     return $this->previousWorkspace;
+  }
+
+  /**
+   * Whether this switch is temporary (e.g. executeInWorkspace).
+   *
+   * Temporary switches are automatically reverted after the callable finishes,
+   * as opposed to persistent switches via setActiveWorkspace/switchToLive.
+   *
+   * @return bool
+   *   TRUE if the switch is temporary, FALSE otherwise.
+   */
+  public function isTemporary(): bool {
+    return $this->isTemporary;
   }
 
 }
