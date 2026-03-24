@@ -3,12 +3,15 @@
 namespace Drupal\filter\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 
 /**
  * Theme hooks for filter.
  */
 class FilterThemeHooks {
+
+  public function __construct(protected AccountInterface $currentUser) {}
 
   /**
    * Implements hook_theme().
@@ -61,7 +64,7 @@ class FilterThemeHooks {
     $format = $variables['format'];
     $variables['tips'] = [
       '#theme' => 'filter_tips',
-      '#tips' => _filter_tips($format->id()),
+      '#tips' => $this->getFilterTips($format->id()),
     ];
 
     // Add format id for filter.js.
@@ -86,6 +89,46 @@ class FilterThemeHooks {
       // Remove aria-describedby attribute as it shouldn't be visible here.
       unset($variables['attributes']['aria-describedby']);
     }
+  }
+
+  /**
+   * Retrieves the filter tips.
+   *
+   * @param string|null $formatId
+   *   (optional) The ID of the text format for which to retrieve tips. If
+   *   omitted, will return tips for all formats accessible to the current user.
+   *
+   * @return array
+   *   An associative array of filtering tips, keyed by the filter name. Each
+   *   filtering tip is an associative array with elements:
+   *   - tip: Tip text.
+   *   - id: Filter ID.
+   */
+  protected function getFilterTips(?string $formatId = NULL): array {
+    $formats = filter_formats($this->currentUser);
+
+    $tips = [];
+
+    // If only listing one format, extract it from the $formats array.
+    if ($formatId !== NULL) {
+      $formats = [$formats[$formatId]];
+    }
+
+    foreach ($formats as $format) {
+      foreach ($format->filters() as $name => $filter) {
+        if ($filter->status) {
+          $tip = $filter->tips();
+          if (isset($tip)) {
+            $tips[$format->label()][$name] = [
+              'tip' => ['#markup' => $tip],
+              'id' => $name,
+            ];
+          }
+        }
+      }
+    }
+
+    return $tips;
   }
 
   /**

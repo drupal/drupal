@@ -254,12 +254,17 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
  *   filtering tip is an associative array with elements:
  *   - tip: Tip text.
  *   - id: Filter ID.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function _filter_tips($format_id): array {
   if (func_num_args() > 1) {
     @trigger_error('The $long argument to _filter_tips() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Only short tips are used. See https://www.drupal.org/node/3567879', E_USER_DEPRECATED);
   }
-
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   $formats = filter_formats(\Drupal::currentUser());
 
   $tips = [];
