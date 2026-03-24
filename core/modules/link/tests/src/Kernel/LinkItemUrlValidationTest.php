@@ -51,7 +51,7 @@ class LinkItemUrlValidationTest extends FieldKernelTestBase {
   /**
    * Builds an array of links to test.
    *
-   * @return array
+   * @return list<list{string, list<string>}>
    *   The first element of the array is the link value to test. The second
    *   value is an array of expected violation messages.
    */

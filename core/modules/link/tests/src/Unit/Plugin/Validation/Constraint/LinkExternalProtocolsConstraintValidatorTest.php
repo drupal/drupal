@@ -27,10 +27,16 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
 
   /**
    * Tests validate.
+   *
+   * @param string $url
+   *   The URL returned from LinkItemInterface::getUrl().
+   * @param bool $valid
+   *   TRUE if the URL is valid, FALSE if the URL should cause a build
+   *   violation.
    */
   #[DataProvider('providerValidate')]
   #[RunInSeparateProcess]
-  public function testValidate($url, $valid): void {
+  public function testValidate(string $url, bool $valid): void {
     $link = $this->createStub(LinkItemInterface::class);
     $link->method('getUrl')
       ->willReturn(Url::fromUri($url));
@@ -64,7 +70,7 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
   /**
    * Data provider for ::testValidate.
    */
-  public static function providerValidate() {
+  public static function providerValidate(): array {
     $data = [];
 
     // Test allowed protocols.

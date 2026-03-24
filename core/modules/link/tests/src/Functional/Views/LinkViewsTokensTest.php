@@ -30,7 +30,7 @@ class LinkViewsTokensTest extends ViewTestBase {
   /**
    * Views used by this test.
    *
-   * @var array
+   * @var array<string>
    */
   public static $testViews = ['test_link_tokens'];
 

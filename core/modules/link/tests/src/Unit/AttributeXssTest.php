@@ -19,6 +19,11 @@ final class AttributeXssTest extends UnitTestCase {
 
   /**
    * Covers ::sanitizeAttributes.
+   *
+   * @param array<string, mixed> $attributes
+   *   The input attributes.
+   * @param array<string, mixed> $expected
+   *   The expected sanitized attributes.
    */
   #[DataProvider('providerSanitizeAttributes')]
   public function testSanitizeAttributes(array $attributes, array $expected): void {

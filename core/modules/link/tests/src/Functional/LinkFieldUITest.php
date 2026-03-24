@@ -86,7 +86,7 @@ class LinkFieldUITest extends BrowserTestBase {
   /**
    * Provides test data for ::testFieldUI().
    */
-  protected function providerTestFieldUI() {
+  protected function providerTestFieldUI(): \Generator {
     // There are many combinations of field settings: where the description
     // should show: variation on internal, external, both; cardinality (where
     // the fieldset is hidden or used); and link text shown (required or

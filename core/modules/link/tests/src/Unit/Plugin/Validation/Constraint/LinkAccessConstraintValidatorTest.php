@@ -82,7 +82,7 @@ class LinkAccessConstraintValidatorTest extends UnitTestCase {
   /**
    * Data provider for LinkAccessConstraintValidator::validate().
    *
-   * @return array
+   * @return \Generator
    *   An array of tests, matching the parameter inputs for testValidate.
    *
    * @see \Drupal\Tests\link\LinkAccessConstraintValidatorTest::validate()
