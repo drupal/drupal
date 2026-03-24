@@ -418,32 +418,6 @@ class SystemHooks {
   }
 
   /**
-   * Implements hook_library_info_alter().
-   */
-  #[Hook('library_info_alter')]
-  public function libraryInfoAlter(&$libraries, $extension): void {
-    // If Claro is the admin theme but not the active theme, grant Claro the
-    // ability to override the toolbar library with its own assets.
-    if ($extension === 'toolbar' && _system_is_claro_admin_and_not_active()) {
-      require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
-      claro_system_module_invoked_library_info_alter($libraries, $extension);
-    }
-  }
-
-  /**
-   * Implements hook_theme_registry_alter().
-   */
-  #[Hook('theme_registry_alter')]
-  public function themeRegistryAlter(array &$theme_registry): void {
-    // If Claro is the admin theme but not the active theme, use Claro's toolbar
-    // templates.
-    if (_system_is_claro_admin_and_not_active()) {
-      require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
-      claro_system_module_invoked_theme_registry_alter($theme_registry);
-    }
-  }
-
-  /**
    * Implements hook_page_top().
    */
   #[Hook('page_top')]

@@ -2,6 +2,7 @@
 
 namespace Drupal\claro\Hook;
 
+use Drupal\claro\ClaroLinkActionTrait;
 use Drupal\claro\ClaroPreRender;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
@@ -14,12 +15,14 @@ use Drupal\media\MediaForm;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\file\FileInterface;
 
 /**
  * Hook implementations for claro.
  */
 class ClaroHooks {
   use StringTranslationTrait;
+  use ClaroLinkActionTrait;
 
   /**
    * Implements hook_theme_suggestions_HOOK_alter() for form_element.
@@ -390,19 +393,19 @@ class ClaroHooks {
         if ($links_item['link']['#url']->isRouted()) {
           switch ($links_item['link']['#url']->getRouteName()) {
             case 'system.theme_settings_theme':
-              $links_item['link'] = _claro_convert_link_to_action_link($links_item['link'], 'cog', 'small');
+              $links_item['link'] = $this->convertLinkToActionLink($links_item['link'], 'cog', 'small');
               break;
 
             case 'system.theme_uninstall':
-              $links_item['link'] = _claro_convert_link_to_action_link($links_item['link'], 'ex', 'small');
+              $links_item['link'] = $this->convertLinkToActionLink($links_item['link'], 'ex', 'small');
               break;
 
             case 'system.theme_set_default':
-              $links_item['link'] = _claro_convert_link_to_action_link($links_item['link'], 'checkmark', 'small');
+              $links_item['link'] = $this->convertLinkToActionLink($links_item['link'], 'checkmark', 'small');
               break;
 
             case 'system.theme_install':
-              $links_item['link'] = _claro_convert_link_to_action_link($links_item['link'], 'plus', 'small');
+              $links_item['link'] = $this->convertLinkToActionLink($links_item['link'], 'plus', 'small');
               break;
           }
         }
@@ -1083,7 +1086,7 @@ class ClaroHooks {
     foreach ($child_keys as $child_key) {
       $variables['data'][$child_key] = $variables['element'][$child_key];
     }
-    _claro_preprocess_file_and_image_widget($variables);
+    $this->fileAndImageWidgetHelper($variables);
   }
 
   /**
@@ -1169,7 +1172,7 @@ class ClaroHooks {
     if (isset($variables['data']['preview']['#access']) && $variables['data']['preview']['#access'] === FALSE) {
       unset($variables['data']['preview']);
     }
-    _claro_preprocess_file_and_image_widget($variables);
+    $this->fileAndImageWidgetHelper($variables);
   }
 
   /**
@@ -1526,19 +1529,6 @@ class ClaroHooks {
   }
 
   /**
-   * Implements hook_preprocess_HOOK() for toolbar.
-   *
-   * This is also called by system_preprocess_toolbar() in instances where Claro
-   * is the admin theme but not the active theme.
-   *
-   * @see system_preprocess_toolbar()
-   */
-  #[Hook('preprocess_toolbar')]
-  public function preprocessToolbar(&$variables, $hook, $info): void {
-    $variables['attributes']['data-drupal-claro-processed-toolbar'] = TRUE;
-  }
-
-  /**
    * Implements hook_form_FORM_ID_alter() for the user_admin_permissions form.
    */
   #[Hook('form_user_admin_permissions_alter')]
@@ -1613,6 +1603,70 @@ class ClaroHooks {
             '#markup' => $description,
           ];
         }
+      }
+    }
+  }
+
+  /**
+   * Helper pre-process callback for file_managed_file and image_widget.
+   *
+   * @param array $variables
+   *   The renderable array of image and file widgets, with 'element' and 'data'
+   *   keys.
+   */
+  protected function fileAndImageWidgetHelper(array &$variables): void {
+    $element = $variables['element'];
+    $main_item_keys = [
+      'upload',
+      'upload_button',
+      'remove_button',
+    ];
+
+    // Calculate helper values for the template.
+    $upload_is_accessible = !isset($element['upload']['#access']) || $element['upload']['#access'] !== FALSE;
+    $is_multiple = !empty($element['#cardinality']) && $element['#cardinality'] !== 1;
+    $has_value = isset($element['#value']['fids']) && !empty($element['#value']['fids']);
+
+    // File widget properties.
+    $display_can_be_displayed = !empty($element['#display_field']);
+    // Display is rendered in a separate table cell for multiple value widgets.
+    $display_is_visible = $display_can_be_displayed && !$is_multiple && isset($element['display']['#type']) && $element['display']['#type'] !== 'hidden';
+    $description_can_be_displayed = !empty($element['#description_field']);
+    $description_is_visible = $description_can_be_displayed && isset($element['description']);
+
+    // Image widget properties.
+    $alt_can_be_displayed = !empty($element['#alt_field']);
+    $alt_is_visible = $alt_can_be_displayed && (!isset($element['alt']['#access']) || $element['alt']['#access'] !== FALSE);
+    $title_can_be_displayed = !empty($element['#title_field']);
+    $title_is_visible = $title_can_be_displayed && (!isset($element['title']['#access']) || $element['title']['#access'] !== FALSE);
+
+    $variables['multiple'] = $is_multiple;
+    $variables['upload'] = $upload_is_accessible;
+    $variables['has_value'] = $has_value;
+    $variables['has_meta'] = $alt_is_visible || $title_is_visible || $display_is_visible || $description_is_visible;
+    $variables['display'] = $display_is_visible;
+
+    // Handle the default checkbox display after the file is uploaded.
+    if (array_key_exists('display', $element)) {
+      $variables['data']['display']['#checked'] = $element['display']['#value'];
+    }
+
+    // Render file upload input and upload button (or file name and remove
+    // button, if the field is not empty) in an emphasized div.
+    foreach ($variables['data'] as $key => $item) {
+      $item_is_filename = isset($item['filename']['#file']) && $item['filename']['#file'] instanceof FileInterface;
+
+      // Move filename to main items.
+      if ($item_is_filename) {
+        $variables['main_items']['filename'] = $item;
+        unset($variables['data'][$key]);
+        continue;
+      }
+
+      // Move buttons, upload input and hidden items to main items.
+      if (in_array($key, $main_item_keys)) {
+        $variables['main_items'][$key] = $item;
+        unset($variables['data'][$key]);
       }
     }
   }

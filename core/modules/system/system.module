@@ -383,18 +383,6 @@ function system_admin_compact_mode() {
 }
 
 /**
- * Determines if Claro is the admin theme but not the active theme.
- *
- * @return bool
- *   TRUE if Claro is the admin theme but not the active theme.
- */
-function _system_is_claro_admin_and_not_active() {
-  $admin_theme = \Drupal::configFactory()->get('system.theme')->get('admin');
-  $active_theme = \Drupal::theme()->getActiveTheme()->getName();
-  return $active_theme !== 'claro' && $admin_theme === 'claro';
-}
-
-/**
  * Prepares variables for administrative content block templates.
  *
  * Default template: admin-block-content.html.twig.

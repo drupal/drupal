@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\claro\Hook;
 
+use Drupal\claro\ClaroLinkActionTrait;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
@@ -18,6 +19,7 @@ use Drupal\views_ui\Form\Ajax\ViewsFormInterface;
 class ClaroFormHooks {
 
   use StringTranslationTrait;
+  use ClaroLinkActionTrait;
 
   /**
    * Implements hook_form_alter().
@@ -29,11 +31,11 @@ class ClaroFormHooks {
 
     // Make entity forms delete link use the action-link component.
     if (isset($form['actions']['delete']['#type']) && $form['actions']['delete']['#type'] === 'link' && !empty($build_info['callback_object']) && $build_info['callback_object'] instanceof EntityForm) {
-      $form['actions']['delete'] = _claro_convert_link_to_action_link($form['actions']['delete'], 'trash', 'default', 'danger');
+      $form['actions']['delete'] = $this->convertLinkToActionLink($form['actions']['delete'], 'trash', 'default', 'danger');
     }
 
     if (isset($form['actions']['delete_translation']['#type']) && $form['actions']['delete_translation']['#type'] === 'link' && !empty($build_info['callback_object']) && $build_info['callback_object'] instanceof EntityForm) {
-      $form['actions']['delete_translation'] = _claro_convert_link_to_action_link($form['actions']['delete_translation'], 'trash', 'default', 'danger');
+      $form['actions']['delete_translation'] = $this->convertLinkToActionLink($form['actions']['delete_translation'], 'trash', 'default', 'danger');
     }
 
     if (($form_object instanceof ViewsForm || $form_object instanceof ViewsFormInterface) && isset($form['override']['#prefix'])) {

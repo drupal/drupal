@@ -2,7 +2,6 @@
 
 namespace Drupal\system\Hook;
 
-use Drupal\claro\Hook\ClaroHooks;
 use Drupal\Core\Theme\ThemeCommonElements;
 use Drupal\system\Theme\SystemAdminThemePreprocess;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -262,23 +261,6 @@ class SystemThemeHooks {
           ];
         }
         break;
-    }
-  }
-
-  /**
-   * Implements hook_preprocess_toolbar().
-   */
-  #[Hook('preprocess_toolbar')]
-  public function preprocessToolbar(array &$variables, $hook, $info): void {
-    // When Claro is the admin theme, Claro overrides the active theme's if that
-    // active theme is not Claro. Because of these potential overrides, the
-    // toolbar cache should be invalidated any time the default or admin theme
-    // changes.
-    $variables['#cache']['tags'][] = 'config:system.theme';
-    // If Claro is the admin theme but not the active theme, still include
-    // Claro's toolbar preprocessing.
-    if (_system_is_claro_admin_and_not_active()) {
-      \Drupal::service(ClaroHooks::class)->preprocessToolbar($variables, $hook, $info);
     }
   }
 

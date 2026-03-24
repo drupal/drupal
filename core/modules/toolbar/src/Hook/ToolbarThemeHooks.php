@@ -2,10 +2,14 @@
 
 namespace Drupal\toolbar\Hook;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
  * Hook implementations for toolbar.
@@ -14,9 +18,11 @@ class ToolbarThemeHooks {
 
   public function __construct(
     protected RendererInterface $renderer,
-  ) {
-
-  }
+    protected readonly ThemeHandlerInterface $themeHandler,
+    protected readonly ThemeManagerInterface $themeManager,
+    protected readonly AccountProxyInterface $currentUser,
+    protected readonly ConfigFactoryInterface $configFactory,
+  ) {}
 
   /**
    * Implements hook_theme().
@@ -111,10 +117,89 @@ class ToolbarThemeHooks {
    */
   #[Hook('preprocess_html')]
   public function preprocessHtml(&$variables): void {
-    if (!\Drupal::currentUser()->hasPermission('access toolbar')) {
+    if (!$this->currentUser->hasPermission('access toolbar')) {
       return;
     }
     $variables['attributes']['class'][] = 'toolbar-loading';
+  }
+
+  /**
+   * Implements hook_preprocess_toolbar().
+   */
+  #[Hook('preprocess_toolbar')]
+  public function preprocessToolbarForClaro(array &$variables, $hook, $info): void {
+    // When Claro is the admin theme, Claro overrides the active theme's if that
+    // active theme is not Claro. Because of these potential overrides, the
+    // toolbar cache should be invalidated any time the default or admin theme
+    // changes.
+    $variables['#cache']['tags'][] = 'config:system.theme';
+    // If Claro is the admin theme but not the active theme, still include
+    // Claro's toolbar preprocessing.
+    if ($this->isClaroAdminAndNotActive()) {
+      $variables['attributes']['data-drupal-claro-processed-toolbar'] = TRUE;
+    }
+  }
+
+  /**
+   * Implements hook_library_info_alter().
+   */
+  #[Hook('library_info_alter')]
+  public function libraryInfoAlter(&$libraries, $extension): void {
+    // If Claro is the admin theme but not the active theme, grant Claro the
+    // ability to override the toolbar library with its own assets.
+    if ($extension === 'toolbar' && $this->isClaroAdminAndNotActive()) {
+      // If the active theme is not Claro, but Claro is the admin theme, this
+      // alters the toolbar library config so Claro's toolbar stylesheets are
+      // used.
+      $claro_info = $this->themeHandler->listInfo()['claro']->info;
+      $path_prefix = '/core/themes/claro/';
+      $claro_toolbar_overrides = $claro_info['libraries-override']['toolbar/toolbar'];
+      foreach ($claro_toolbar_overrides['css'] as $concern => $overrides) {
+        foreach ($claro_toolbar_overrides['css'][$concern] as $key => $value) {
+          $config = $libraries['toolbar']['css'][$concern][$key];
+          $libraries['toolbar']['css'][$concern][$path_prefix . $value] = $config;
+          unset($libraries['toolbar']['css'][$concern][$key]);
+        }
+      }
+      $claro_toolbar_menu_overrides = $claro_info['libraries-override']['toolbar/toolbar.menu'];
+      foreach ($claro_toolbar_menu_overrides['css'] as $concern => $overrides) {
+        foreach ($claro_toolbar_menu_overrides['css'][$concern] as $key => $value) {
+          $config = $libraries['toolbar.menu']['css'][$concern][$key];
+          $libraries['toolbar.menu']['css'][$concern][$path_prefix . $value] = $config;
+          unset($libraries['toolbar.menu']['css'][$concern][$key]);
+        }
+      }
+    }
+  }
+
+  /**
+   * Implements hook_theme_registry_alter().
+   */
+  #[Hook('theme_registry_alter')]
+  public function themeRegistryAlter(array &$theme_registry): void {
+    // If Claro is the admin theme but not the active theme, use Claro's toolbar
+    // templates.
+    if ($this->isClaroAdminAndNotActive()) {
+      // If the active theme is not Claro, but Claro is the admin theme, this
+      // alters the registry so Claro's toolbar templates are used.
+      foreach (['toolbar', 'menu__toolbar'] as $registry_item) {
+        if (isset($theme_registry[$registry_item])) {
+          $theme_registry[$registry_item]['path'] = 'core/themes/claro/templates/navigation';
+        }
+      }
+    }
+  }
+
+  /**
+   * Determines if Claro is the admin theme but not the active theme.
+   *
+   * @return bool
+   *   TRUE if Claro is the admin theme but not the active theme.
+   */
+  protected function isClaroAdminAndNotActive() {
+    $admin_theme = $this->configFactory->get('system.theme')->get('admin');
+    $active_theme = $this->themeManager->getActiveTheme()->getName();
+    return $active_theme !== 'claro' && $admin_theme === 'claro';
   }
 
 }
