@@ -68,7 +68,11 @@ class UserLanguageCreationTest extends BrowserTestBase {
     $this->drupalGet($langcode . '/admin/people/create');
     $this->submitForm($edit, 'Create new account');
 
-    $user = user_load_by_name($username);
+    $users = \Drupal::entityTypeManager()
+      ->getStorage('user')
+      ->loadByProperties(['name' => $username]);
+    $user = reset($users);
+
     $this->assertEquals($langcode, $user->getPreferredLangcode(), 'New user has correct preferred language set.');
     $this->assertEquals($langcode, $user->language()->getId(), 'New user has correct profile language set.');
 
@@ -87,7 +91,11 @@ class UserLanguageCreationTest extends BrowserTestBase {
     $this->drupalGet($langcode . '/user/register');
     $this->submitForm($edit, 'Create new account');
 
-    $user = user_load_by_name($username);
+    $users = \Drupal::entityTypeManager()
+      ->getStorage('user')
+      ->loadByProperties(['name' => $username]);
+    $user = reset($users);
+
     $this->assertEquals($langcode, $user->getPreferredLangcode(), 'New user has correct preferred language set.');
     $this->assertEquals($langcode, $user->language()->getId(), 'New user has correct profile language set.');
 

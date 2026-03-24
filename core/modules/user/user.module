@@ -37,9 +37,14 @@ function user_picture_enabled() {
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.
  *
- * @see \Drupal\user\Entity\User::loadMultiple()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0.
+ *   Use \Drupal::entityTypeManager()->getStorage('user')->loadByProperties()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3555936
  */
 function user_load_by_mail($mail) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use entityTypeManager()->getStorage("user")->loadByProperties() instead. See https://www.drupal.org/node/3555936', E_USER_DEPRECATED);
   $users = \Drupal::entityTypeManager()->getStorage('user')
     ->loadByProperties(['mail' => $mail]);
   return $users ? reset($users) : FALSE;
@@ -55,9 +60,14 @@ function user_load_by_mail($mail) {
  *   A fully-loaded $user object upon successful user load or FALSE if user
  *   cannot be loaded.
  *
- * @see \Drupal\user\Entity\User::loadMultiple()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0.
+ *   Use \Drupal::entityTypeManager()->getStorage('user')->loadByProperties()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3555936
  */
 function user_load_by_name($name) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use entityTypeManager()->getStorage("user")->loadByProperties() instead. See https://www.drupal.org/node/3555936', E_USER_DEPRECATED);
   $users = \Drupal::entityTypeManager()->getStorage('user')
     ->loadByProperties(['name' => $name]);
   return $users ? reset($users) : FALSE;

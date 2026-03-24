@@ -210,7 +210,11 @@ class UserRegistrationRestTest extends ResourceTestBase {
     // Verify that an anonymous user can register.
     $response = $this->registerRequest($name, $include_password, $include_email);
     $this->assertResourceResponse(200, FALSE, $response);
-    $user = user_load_by_name($name);
+    $users = \Drupal::entityTypeManager()
+      ->getStorage('user')
+      ->loadByProperties(['name' => $name]);
+    $user = reset($users);
+
     $this->assertNotEmpty($user, 'User was create as expected');
     return $user;
   }

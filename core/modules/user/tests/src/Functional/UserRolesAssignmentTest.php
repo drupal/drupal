@@ -71,7 +71,10 @@ class UserRolesAssignmentTest extends BrowserTestBase {
     $this->submitForm($edit, 'Create new account');
     $this->assertSession()->pageTextContains('Created a new user account for ' . $edit['name'] . '.');
     // Get the newly added user.
-    $account = user_load_by_name($edit['name']);
+    $users = \Drupal::entityTypeManager()
+      ->getStorage('user')
+      ->loadByProperties(['name' => $edit['name']]);
+    $account = reset($users);
 
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->assertSession()->checkboxChecked('edit-roles-' . $rid);

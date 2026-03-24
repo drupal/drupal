@@ -196,7 +196,12 @@ class ContentExportTest extends BrowserTestBase {
     // Ensure the import succeeded, and that we can log in with the imported
     // account. We want to use the standard login form, rather than a one-time
     // login link, to ensure the password is preserved.
-    $this->assertIsObject(user_load_by_name($account->getAccountName()));
+    $users = \Drupal::entityTypeManager()
+      ->getStorage('user')
+      ->loadByProperties(['name' => $account->getAccountName()]);
+    $user = reset($users);
+
+    $this->assertIsObject($user);
     $this->useOneTimeLoginLinks = FALSE;
     $this->drupalLogin($account);
     $this->assertSession()->addressMatches('/\/user\/[0-9]+$/');
