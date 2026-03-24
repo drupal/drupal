@@ -4,6 +4,7 @@ namespace Drupal\Core\Template;
 
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Template\Attribute\TwigAllowed;
+use Twig\Extra\Html\Cva;
 use Twig\Sandbox\SecurityError;
 use Twig\Sandbox\SecurityPolicyInterface;
 
@@ -54,6 +55,8 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
       // Allow any operations on the Attribute object as it is intended to be
       // changed from a Twig template, for example calling addClass().
       'Drupal\Core\Template\Attribute',
+      // The CVA class's only public method is meant to be called by templates.
+      Cva::class,
     ]);
     // Flip the array so we can check using isset().
     $this->allowed_classes = array_flip($allowed_classes);

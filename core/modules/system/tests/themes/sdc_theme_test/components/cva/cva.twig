@@ -1,0 +1,14 @@
+{% set cva =
+  html_cva(
+    base: [
+      'cva-friendliness'
+    ],
+    variants: {
+      friendliness: {
+        nice: 'friendly',
+        mean: 'unfriendly',
+      }
+    }
+  )
+%}
+<div class="{{ cva.apply({ friendliness: friendliness }) }}"></div>

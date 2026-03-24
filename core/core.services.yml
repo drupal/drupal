@@ -1827,6 +1827,9 @@ services:
     arguments: ['@plugin.manager.sdc', '@Drupal\Core\Theme\Component\ComponentValidator']
     tags:
       - { name: twig.extension, priority: 101 }
+  Twig\Extra\Html\HtmlExtension:
+    tags:
+      - { name: twig.extension, priority: 101 }
   Drupal\Core\Template\IconsTwigExtension:
     arguments: ['@plugin.manager.icon_pack']
     tags:

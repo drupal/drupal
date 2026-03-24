@@ -1,0 +1,18 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: CVA Test
+status: experimental
+props:
+  type: object
+  properties:
+    friendliness:
+      type: string
+      title: Friendliness
+      enum:
+        - nice
+        - mean
+      meta:enum:
+        nice: Nice
+        mean: Mean
+      examples:
+        - mean
+      default: nice

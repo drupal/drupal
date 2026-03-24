@@ -62,6 +62,7 @@
         "symfony/var-dumper": "~v7.4.0",
         "symfony/var-exporter": "~v7.4.0",
         "symfony/yaml": "~v7.4.0",
+        "twig/html-extra": "~v3.24.0",
         "twig/twig": "~v3.22.0"
     },
     "extra": {

@@ -53,7 +53,8 @@
         "mck89/peast": "^1.17.4",
         "sebastian/diff": "^4 || ^5 || ^6 || ^7",
         "php-tuf/composer-stager": "^2.0",
-        "justinrainbow/json-schema": "^5.2 || ^6.5.2"
+        "justinrainbow/json-schema": "^5.2 || ^6.5.2",
+        "twig/html-extra": "^3.23"
     },
     "conflict": {
         "drupal/automatic_updates": "<4",
