@@ -597,7 +597,7 @@ class LocaleConfigManager {
             $this->deleteTranslationOverride($name, $langcode);
             $count++;
           }
-          elseif (!empty($data)) {
+          elseif (!empty($data) && $override->get() !== $data) {
             // Update translation data in configuration override.
             $this->saveTranslationOverride($name, $langcode, $data);
             $count++;
@@ -607,9 +607,11 @@ class LocaleConfigManager {
           // If the language code is the active storage language, we should
           // update. If it is English, we should only update if English is also
           // translatable.
-          $active = NestedArray::mergeDeepArray([$active, $processed], TRUE);
-          $this->saveTranslationActive($name, $active);
-          $count++;
+          $data = NestedArray::mergeDeepArray([$active, $processed], TRUE);
+          if ($data !== $active) {
+            $this->saveTranslationActive($name, $data);
+            $count++;
+          }
         }
       }
     }
