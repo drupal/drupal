@@ -1874,16 +1874,12 @@ services:
   Drupal\Core\File\HtaccessWriterInterface: '@file.htaccess_writer'
   file.mime_type.guesser:
     class: Drupal\Core\File\MimeType\MimeTypeGuesser
-    arguments: ['@stream_wrapper_manager']
-    tags:
-      - { name: service_collector, tag: mime_type_guesser, call: addMimeTypeGuesser }
-    lazy: true
+    arguments: ['@stream_wrapper_manager', !tagged_iterator mime_type_guesser]
   file.mime_type.guesser.extension:
     class: Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser
     arguments: ['@Drupal\Core\File\MimeType\MimeTypeMapInterface']
     tags:
       - { name: mime_type_guesser }
-    lazy: true
   Drupal\Core\File\MimeType\MimeTypeMapFactory:
     autowire: true
     public: false
