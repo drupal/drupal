@@ -27,16 +27,15 @@ class BatchTestDefinitions {
    * Operations: op 1 from 1 to 10.
    */
   public function batch1(): array {
-    $batch_test_callbacks = new BatchTestCallbacks();
     // Ensure the batch takes at least two iterations.
     $total = 10;
     $sleep = (int) (1000000 / $total) * 2;
 
     $batch_builder = (new BatchBuilder())
-      ->setFinishCallback([$batch_test_callbacks, 'finished1']);
+      ->setFinishCallback(BatchTestCallbacks::class . ':finished1');
 
     for ($i = 1; $i <= $total; $i++) {
-      $batch_builder->addOperation([$batch_test_callbacks, 'callback1'], [$i, $sleep]);
+      $batch_builder->addOperation(BatchTestCallbacks::class . ':callback1', [$i, $sleep]);
     }
 
     return $batch_builder->toArray() + ['batch_test_id' => 'batch1'];
@@ -48,14 +47,13 @@ class BatchTestDefinitions {
    * Operations: op 2 from 1 to 10.
    */
   public function batch2(): array {
-    $batch_test_callbacks = new BatchTestCallbacks();
     // Ensure the batch takes at least two iterations.
     $total = 10;
     $sleep = (1000000 / $total) * 2;
 
     $batch_builder = (new BatchBuilder())
-      ->addOperation([$batch_test_callbacks, 'callback2'], [1, $total, $sleep])
-      ->setFinishCallback([$batch_test_callbacks, 'finished2']);
+      ->addOperation(BatchTestCallbacks::class . ':callback2', [1, $total, $sleep])
+      ->setFinishCallback(BatchTestCallbacks::class . ':finished2');
 
     return $batch_builder->toArray() + ['batch_test_id' => 'batch2'];
   }
@@ -98,19 +96,18 @@ class BatchTestDefinitions {
    * - op 1 from 6 to 10,
    */
   public function batch4(): array {
-    $batch_test_callbacks = new BatchTestCallbacks();
     // Ensure the batch takes at least two iterations.
     $total = 10;
     $sleep = (1000000 / $total) * 2;
 
     $batch_builder = (new BatchBuilder())
-      ->setFinishCallback([$batch_test_callbacks, 'finished4']);
+      ->setFinishCallback(BatchTestCallbacks::class . ':finished4');
     for ($i = 1; $i <= round($total / 2); $i++) {
-      $batch_builder->addOperation([$batch_test_callbacks, 'callback1'], [$i, $sleep]);
+      $batch_builder->addOperation(BatchTestCallbacks::class . ':callback1', [$i, $sleep]);
     }
-    $batch_builder->addOperation([$batch_test_callbacks, 'nestedBatchCallback'], [[2]]);
+    $batch_builder->addOperation(BatchTestCallbacks::class . ':nestedBatchCallback', [[2]]);
     for ($i = round($total / 2) + 1; $i <= $total; $i++) {
-      $batch_builder->addOperation([$batch_test_callbacks, 'callback1'], [$i, $sleep]);
+      $batch_builder->addOperation(BatchTestCallbacks::class . ':callback1', [$i, $sleep]);
     }
 
     return $batch_builder->toArray() + ['batch_test_id' => 'batch4'];
@@ -122,15 +119,14 @@ class BatchTestDefinitions {
    * Operations: op 1 from 1 to 10.
    */
   public function batch5(): array {
-    $batch_test_callbacks = new BatchTestCallbacks();
     // Ensure the batch takes at least two iterations.
     $total = 10;
     $sleep = (1000000 / $total) * 2;
 
     $batch_builder = (new BatchBuilder())
-      ->setFinishCallback([$batch_test_callbacks, 'finished5']);
+      ->setFinishCallback(BatchTestCallbacks::class . ':finished5');
     for ($i = 1; $i <= $total; $i++) {
-      $batch_builder->addOperation([$batch_test_callbacks, 'callback5'], [$i, $sleep]);
+      $batch_builder->addOperation(BatchTestCallbacks::class . ':callback5', [$i, $sleep]);
     }
 
     return $batch_builder->toArray() + ['batch_test_id' => 'batch5'];
@@ -142,15 +138,14 @@ class BatchTestDefinitions {
    * Operations: op 6 from 1 to 10.
    */
   public function batch6(): array {
-    $batch_test_callbacks = new BatchTestCallbacks();
     // Ensure the batch takes at least two iterations.
     $total = 10;
     $sleep = (1000000 / $total) * 2;
 
     $batch_builder = (new BatchBuilder())
-      ->setFinishCallback([$batch_test_callbacks, 'finished6']);
+      ->setFinishCallback(BatchTestCallbacks::class . ':finished6');
     for ($i = 1; $i <= $total; $i++) {
-      $batch_builder->addOperation([$batch_test_callbacks, 'callback6'], [$i, $sleep]);
+      $batch_builder->addOperation(BatchTestCallbacks::class . ':callback6', [$i, $sleep]);
     }
 
     return $batch_builder->toArray() + ['batch_test_id' => 'batch6'];
@@ -166,19 +161,18 @@ class BatchTestDefinitions {
    * - op 7 from 6 to 10,
    */
   public function batch7(): array {
-    $batch_test_callbacks = new BatchTestCallbacks();
     // Ensure the batch takes at least two iterations.
     $total = 10;
     $sleep = (1000000 / $total) * 2;
 
     $batch_builder = (new BatchBuilder())
-      ->setFinishCallback([$batch_test_callbacks, 'finished7']);
+      ->setFinishCallback(BatchTestCallbacks::class . ':finished7');
     for ($i = 1; $i <= $total / 2; $i++) {
-      $batch_builder->addOperation([$batch_test_callbacks, 'callback7'], [$i, $sleep]);
+      $batch_builder->addOperation(BatchTestCallbacks::class . ':callback7', [$i, $sleep]);
     }
-    $batch_builder->addOperation([$batch_test_callbacks, 'nestedBatchCallback'], [[6, 5]]);
+    $batch_builder->addOperation(BatchTestCallbacks::class . ':nestedBatchCallback', [[6, 5]]);
     for ($i = ($total / 2) + 1; $i <= $total; $i++) {
-      $batch_builder->addOperation([$batch_test_callbacks, 'callback7'], [$i, $sleep]);
+      $batch_builder->addOperation(BatchTestCallbacks::class . ':callback7', [$i, $sleep]);
     }
 
     return $batch_builder->toArray() + ['batch_test_id' => 'batch7'];
@@ -188,10 +182,9 @@ class BatchTestDefinitions {
    * Batch 8: Throws an exception.
    */
   public function batch8(): array {
-    $batch_test_callbacks = new BatchTestCallbacks();
     $batch_builder = (new BatchBuilder())
-      ->addOperation([$batch_test_callbacks, 'callback8'], [FALSE])
-      ->addOperation([$batch_test_callbacks, 'callback8'], [TRUE]);
+      ->addOperation(BatchTestCallbacks::class . ':callback8', [FALSE])
+      ->addOperation(BatchTestCallbacks::class . ':callback8', [TRUE]);
     return $batch_builder->toArray() + ['batch_test_id' => 'batch8'];
   }
 
