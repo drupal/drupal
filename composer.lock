@@ -368,7 +368,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "3a46eee48869daf39ae2bf07f79e6bf13fcf18aa"
+                "reference": "824cbcf21d9a38c0706b622145be4a6498065910"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -533,6 +533,12 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
+            "funding": [
+                {
+                    "type": "other",
+                    "url": "https://www.drupal.org/composer-fund"
+                }
+            ],
             "transport-options": {
                 "relative": true
             }
