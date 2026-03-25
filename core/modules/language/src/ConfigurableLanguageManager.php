@@ -11,6 +11,7 @@ use Drupal\Core\Language\LanguageDefault;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\FiberResumeType;
 use Drupal\language\Config\LanguageConfigFactoryOverrideInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -437,12 +438,36 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
                 $this->negotiatedLanguages[LanguageInterface::TYPE_CONTENT] = $language;
                 $this->negotiatedLanguages[LanguageInterface::TYPE_INTERFACE] = $language;
               }
-              try {
-                return $url instanceof Url && $url->access();
+
+              $check_access_fn = function () use ($url) {
+                try {
+                  return $url instanceof Url && $url->access();
+                }
+                catch (\Exception) {
+                  return FALSE;
+                }
+              };
+              // If this method is running in a Fiber, contain the URL access
+              // checks to within child fibers. This is to prevent the
+              // negotiated languages changes from escaping to other fibers
+              // where rendering or other processes could run in the context of
+              // the wrong languages.
+              if (\Fiber::getCurrent()) {
+                $fiber = new \Fiber($check_access_fn);
+                $fiber->start();
+                while (!$fiber->isTerminated()) {
+                  if ($fiber->isSuspended()) {
+                    $resume_type = $fiber->resume();
+                    if (!$fiber->isTerminated() && $resume_type !== FiberResumeType::Immediate) {
+                      usleep(500);
+                    }
+                  }
+                }
+                return $fiber->getReturn();
               }
-              catch (\Exception) {
-                return FALSE;
-              }
+
+              // If not running in a fiber, check URL access as usual.
+              return $check_access_fn();
             });
             $this->negotiatedLanguages = $original_languages;
 
