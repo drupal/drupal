@@ -75,39 +75,31 @@ class DependencyTest extends ModuleTestBase {
   }
 
   /**
-   * Attempts to enable a module with a missing dependency.
+   * Tests that modules that don't pass requirement checks cannot be enabled.
    */
-  public function testMissingModules(): void {
+  public function testMissingRequirements(): void {
     // Test that the system_dependencies_test module is marked
     // as missing a dependency.
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextContains(Unicode::ucfirst('_missing_dependency') . ' (missing)');
     $this->assertSession()->elementTextEquals('xpath', '//tr[@data-drupal-selector="edit-modules-system-dependencies-test"]//span[@class="admin-missing"]', 'missing');
     $this->assertSession()->checkboxNotChecked('modules[system_dependencies_test][enable]');
-  }
 
-  /**
-   * Tests enabling a module with an incompatible dependency version.
-   */
-  public function testIncompatibleModuleVersionDependency(): void {
     // Test that the system_incompatible_module_version_dependencies_test is
     // marked as having an incompatible dependency.
-    $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextContains('System incompatible module version test (>2.0) (incompatible with version 1.0)');
     $this->assertSession()->elementTextEquals('xpath', '//tr[@data-drupal-selector="edit-modules-system-incompatible-module-version-dependencies-test"]//span[@class="admin-missing"]', 'incompatible with');
     $this->assertSession()->fieldDisabled('modules[system_incompatible_module_version_dependencies_test][enable]');
-  }
 
-  /**
-   * Tests enabling a module that depends on a module with an incompatible core version.
-   */
-  public function testIncompatibleCoreVersionDependency(): void {
     // Test that the system_incompatible_core_version_dependencies_test is
     // marked as having an incompatible dependency.
-    $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextContains('System core incompatible semver test (incompatible with this version of Drupal core)');
     $this->assertSession()->elementTextEquals('xpath', '//tr[@data-drupal-selector="edit-modules-system-incompatible-core-version-dependencies-test"]//span[@class="admin-missing"]', 'incompatible with');
     $this->assertSession()->fieldDisabled('modules[system_incompatible_core_version_dependencies_test][enable]');
+
+    // Test PHP version requirements.
+    $this->assertSession()->pageTextContains('This module requires PHP version 6502.* and is incompatible with PHP version ' . phpversion() . '.');
+    $this->assertSession()->fieldDisabled('modules[system_incompatible_php_version_test][enable]');
   }
 
   /**
@@ -170,15 +162,6 @@ class DependencyTest extends ModuleTestBase {
     $this->drupalLogin($this->createUser(['administer site configuration']));
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
-  }
-
-  /**
-   * Tests failing PHP version requirements.
-   */
-  public function testIncompatiblePhpVersionDependency(): void {
-    $this->drupalGet('admin/modules');
-    $this->assertSession()->pageTextContains('This module requires PHP version 6502.* and is incompatible with PHP version ' . phpversion() . '.');
-    $this->assertSession()->fieldDisabled('modules[system_incompatible_php_version_test][enable]');
   }
 
   /**
