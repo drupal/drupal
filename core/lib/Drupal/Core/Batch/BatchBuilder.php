@@ -162,12 +162,12 @@ class BatchBuilder {
    *
    * This callback will be executed if the batch process is done.
    *
-   * @param callable $callback
+   * @param callable|string $callback
    *   The callback.
    *
    * @return $this
    */
-  public function setFinishCallback(callable $callback) {
+  public function setFinishCallback(callable|string $callback) {
     $this->finished = $callback;
     return $this;
   }
@@ -329,14 +329,14 @@ class BatchBuilder {
   /**
    * Adds a batch operation.
    *
-   * @param callable $callback
+   * @param callable|string $callback
    *   The name of the callback function.
    * @param array $arguments
    *   An array of arguments to pass to the callback function.
    *
    * @return $this
    */
-  public function addOperation(callable $callback, array $arguments = []) {
+  public function addOperation(callable|string $callback, array $arguments = []) {
     $this->operations[] = [$callback, $arguments];
     return $this;
   }
