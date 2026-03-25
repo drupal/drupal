@@ -155,7 +155,12 @@ trait CacheTagsChecksumTrait {
       $this->preloadTags = [];
     }
 
-    $query_tags = array_diff($tags_with_preload, array_keys($this->tagCache));
+    $query_tags = [];
+    foreach ($tags_with_preload as $tag) {
+      if (!isset($this->tagCache[$tag])) {
+        $query_tags[] = $tag;
+      }
+    }
     if ($query_tags) {
       $tag_invalidations = $this->getTagInvalidationCounts($query_tags);
       $this->tagCache += $tag_invalidations;
