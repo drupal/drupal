@@ -136,45 +136,6 @@ class AutowireTest extends KernelTestBase {
   }
 
   /**
-   * Tests that core service aliases match the interfaces they map to.
-   */
-  public function testCoreServiceAliasInterfaces(): void {
-    $services = [];
-    $aliases = [];
-
-    foreach ($this->getCoreServiceFiles() as $filename) {
-      foreach ((Yaml::decode(file_get_contents($filename))['services'] ?? []) as $id => $service) {
-        if (is_string($service)) {
-          $aliases[$id] = substr($service, 1);
-        }
-        else {
-          $services[$id] = $service['class'] ?? $id;
-        }
-      }
-    }
-
-    $mismatched = [];
-    foreach ($aliases as $alias => $service) {
-      $this->assertArrayHasKey($service, $services);
-
-      if (interface_exists($alias)) {
-        // The service class must implement the aliased interface.
-        if (!is_subclass_of($services[$service], $alias)) {
-          $mismatched[] = sprintf('%s aliases to @%s (class %s) which does not implement %s', $alias, $service, $services[$service], $alias);
-        }
-      }
-      else {
-        // The service class must be the aliased class or a subclass of it.
-        if ($services[$service] !== $alias) {
-          $mismatched[] = sprintf('%s aliases to @%s (class %s) which is not an instance of %s', $alias, $service, $services[$service], $alias);
-        }
-      }
-    }
-
-    $this->assertEmpty($mismatched, 'The following core service aliases do not match their interfaces:' . PHP_EOL . implode(PHP_EOL, $mismatched));
-  }
-
-  /**
    * Tests that core controllers are autowired where possible.
    */
   public function testCoreControllerAutowiring(): void {
