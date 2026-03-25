@@ -132,7 +132,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
     $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $previous_revision . '/view');
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
     $role->revokePermission('view own unpublished media')->save();
     $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $user_media->getRevisionId() . '/view');
