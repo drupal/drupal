@@ -62,7 +62,9 @@ class ContentEntityDeleteForm extends ContentEntityConfirmFormBase {
 
     // Make sure that deleting a translation does not delete the whole entity.
     if (!$entity->isDefaultTranslation()) {
-      $untranslated_entity = $entity->getUntranslated();
+      // Clone the entity before deleting, as other methods will need to access
+      // the label and other data of the deleted translation.
+      $untranslated_entity = clone $entity->getUntranslated();
       $untranslated_entity->removeTranslation($entity->language()->getId());
       $untranslated_entity->save();
       $form_state->setRedirectUrl($untranslated_entity->toUrl('canonical'));

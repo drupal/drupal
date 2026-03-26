@@ -6,6 +6,7 @@ use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
+use Drupal\Core\Entity\EntityFieldValueTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -78,7 +79,7 @@ use Drupal\user\UserViewsData;
 )]
 class User extends ContentEntityBase implements UserInterface {
 
-  use EntityChangedTrait;
+  use EntityChangedTrait, EntityFieldValueTrait;
 
   /**
    * Stores a reference for a reusable anonymous user entity.
@@ -288,7 +289,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function getLastAccessedTime() {
-    return $this->get('access')->value;
+    return $this->getFieldValue('access', 'value');
   }
 
   /**
@@ -318,7 +319,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function isActive() {
-    return $this->get('status')->value == 1;
+    return $this->getFieldValue('status', 'value') == 1;
   }
 
   /**
@@ -351,7 +352,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function getTimeZone() {
-    return $this->get('timezone')->value;
+    return $this->getFieldValue('timezone', 'value');
   }
 
   /**
@@ -407,7 +408,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function getAccountName() {
-    return $this->get('name')->value ?: '';
+    return $this->getFieldValue('name', 'value') ?: '';
   }
 
   /**
