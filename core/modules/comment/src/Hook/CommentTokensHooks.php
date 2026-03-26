@@ -146,7 +146,8 @@ class CommentTokensHooks {
             break;
 
           case 'homepage':
-            $replacements[$original] = UrlHelper::stripDangerousProtocols($comment->getHomepage());
+            $homepage = $comment->getHomepage();
+            $replacements[$original] = $homepage ? UrlHelper::stripDangerousProtocols($homepage) : '';
             break;
 
           case 'title':
