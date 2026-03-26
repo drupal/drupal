@@ -13,19 +13,18 @@ CONTENTS OF THIS FILE
 
 QUICKSTART
 ----------------------
+This quick start solution uses PHP's built-in web server and is not
+intended for production use. Read more about how to run Drupal in a production
+environment below.
 
 Prerequisites:
 - PHP 8.3.0 (or greater) (https://php.net).
+- Composer 2.9.3 (https://getcomposer.org/doc/00-intro.md)
 
-In the instructions below, replace the version x.y.z with the specific version
-you wish to download. Example: 8.6.0.zip. You can find the latest stable version
-at https://www.drupal.org/project/drupal.
+1. Run the following commands
 
-Download and extract the Drupal package:
-- curl -sS https://ftp.drupal.org/files/projects/drupal-x.y.z.zip --output drupal-x.y.z.zip
-- unzip drupal-x.y.z.zip
-- cd /path/to/drupal-x.y.z
-- php core/scripts/drupal quick-start
+- composer create-project drupal/recommended-project drupal
+- cd drupal && php -d memory_limit=256M web/core/scripts/drupal quick-start standard
 
 Wait… installation can take a minute or two. A successful installation will
 result in opening the new site in your browser.
@@ -35,10 +34,6 @@ configure quick-start:
 - php core/scripts/drupal quick-start --help
 
 Follow the instructions in the REINSTALL section below to start over.
-
-NOTE: This quick start solution uses PHP's built-in web server and is not
-intended for production use. Read more about how to run Drupal in a production
-environment below.
 
 REQUIREMENTS AND NOTES
 ----------------------
@@ -57,6 +52,7 @@ Drupal requires:
     Server is a backwards-compatible replacement for MySQL.
   - PostgreSQL 16 (or greater) (http://www.postgresql.org/).
   - SQLite 3.45 (or greater) (http://www.sqlite.org/).
+- Composer 2.9.3 (https://getcomposer.org/doc/00-intro.md)
 
 For more detailed information about Drupal requirements, including a list of
 PHP extensions and configurations that are required, see "System requirements"
@@ -76,8 +72,7 @@ OPTIONAL SERVER REQUIREMENTS
 
 - If you want to use Drupal's "Clean URLs" feature on an Apache web server, you
   will need the mod_rewrite module and the ability to use local .htaccess
-  files. For Clean URLs support on IIS, see "Clean URLs with IIS"
-  (https://www.drupal.org/node/3854) in the Drupal.org online documentation.
+  files.
 
 - If you plan to use XML-based services such as RSS aggregation, you will need
   PHP's XML extension. This extension is enabled by default on most PHP
@@ -95,41 +90,25 @@ OPTIONAL SERVER REQUIREMENTS
 
 INSTALLATION
 ------------
+1. Get Drupal
 
-1. Download and extract Drupal.
+   You can obtain the latest Drupal release using the following composer
+   command.
 
-   You can obtain the latest Drupal release from https://www.drupal.org -- the
-   files are available in .tar.gz and .zip formats and can be extracted using
-   most compression tools.
+   composer create-project drupal/recommended-project drupal
 
-   To download and extract the files, on a typical Unix/Linux command line, use
-   the following commands (assuming you want version x.y.z of Drupal in .tar.gz
-   format):
+   This will create a project in the drupal directory and automatically
+   execute composer install to download the latest stable version of Drupal and
+   all its dependencies.
 
-     wget https://www.drupal.org/files/projects/drupal-x.y.z.tar.gz
-     tar -zxvf drupal-x.y.z.tar.gz
-
-   This will create a new directory drupal-x.y.z/ containing all Drupal files
+   This will create a new directory "drupal" containing all Drupal files
    and directories. Then, to move the contents of that directory into a
    directory within your web server's document root or your public HTML
    directory, continue with this command:
 
-     mv drupal-x.y.z/* drupal-x.y.z/.htaccess drupal-x.y.z/.csslintrc drupal-x.y.z/.editorconfig drupal-x.y.z/.eslintignore drupal-x.y.z/.eslintrc.json drupal-x.y.z/.gitattributes /path/to/your/installation
+   mv my_site_name /path/to/your/installation
 
-   You can also download the latest version of Drupal using Git on the command
-   line and set up a repository by following the instructions at
-   https://www.drupal.org/project/drupal/git-instructions for "Setting up
-   repository for the first time".
-
-   Once you have downloaded Drupal successfully, you may install Composer
-   globally using the instructions at
-   https://getcomposer.org/doc/00-intro.md#globally
-
-   With Composer installed, run the following command from the Drupal web root:
-
-     composer install
-
-2. Create the Drupal database.
+2. Create the Drupal database
 
    Because Drupal stores all site information in a database, the Drupal
    installer will attempt to create this database for you. If you create the
@@ -141,7 +120,7 @@ INSTALLATION
    Take note of the username, password, database name, and hostname as you
    create the database. You will enter this information during the install.
 
-3. Run the install script.
+3. Run the install script
 
    To run the install script, point your browser to the base URL of your
    website (e.g., http://www.example.com).
@@ -228,15 +207,16 @@ INSTALLATION
         chmod go-w sites/default/settings.php
         chmod go-w sites/default
 
-4. Verify that the site is working.
+4. Verify that the site is working
 
    When the install script finishes, you will be logged in with the site
    maintenance account on a "Welcome" page. If the default Drupal theme is not
    displaying properly and links on the page result in "Page Not Found" errors,
    you may be experiencing problems with clean URLs. Visit
-   https://www.drupal.org/docs/8/clean-urls-in-drupal-8 to troubleshoot.
+   https://www.drupal.org/docs/administering-a-drupal-site/troubleshooting-drupal/fix-drupal-clean-urls-problems
+   to troubleshoot.
 
-5. Change file system storage settings (optional).
+5. Change file system storage settings (optional)
 
    The files directory created in step 3 is the default file system path used to
    store all uploaded files, as well as some temporary files created by
@@ -284,7 +264,7 @@ INSTALLATION
    on an existing site, remember to copy all files from the original location
    to the new location.
 
-6. Revoke documentation file permissions (optional).
+6. Revoke documentation file permissions (optional)
 
    Some administrators suggest making the documentation files, especially
    CHANGELOG.txt, non-readable so that the exact version of Drupal you are
@@ -303,7 +283,7 @@ INSTALLATION
    permissions and ownership" (https://www.drupal.org/node/3092168) in the
    Drupal.org online documentation.
 
-7. Set up independent "cron" maintenance jobs.
+7. Set up independent "cron" maintenance jobs
 
    Many Drupal modules have tasks that must be run periodically, including the
    Search module (building and updating the index used for keyword searching)
@@ -444,7 +424,7 @@ accessible to other sites, the setup would look like this:
     modules/custom_module
 
 For more information about multiple virtual hosts or the configuration
-settings, consult https://www.drupal.org/docs/8/multisite
+settings, consult https://www.drupal.org/docs/getting-started/multisite-drupal
 
 For more information on configuring Drupal's file system path in a multisite
 configuration, see step 6 above.
@@ -456,4 +436,4 @@ By default, Drupal is installed in one language, and further languages may be
 installed later.
 
 For detailed instructions, visit
-https://www.drupal.org/docs/8/multilingual
+https://www.drupal.org/docs/administering-a-drupal-site/multilingual-guide
