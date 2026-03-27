@@ -64,8 +64,19 @@ class InfoParserDynamic implements InfoParserInterface {
     catch (\UnexpectedValueException) {
       throw new InfoParserException("The 'core_version_requirement' constraint ({$parsed_info['core_version_requirement']}) is not a valid value in $filename");
     }
-    if (isset($parsed_info['version']) && $parsed_info['version'] === 'VERSION') {
-      $parsed_info['version'] = \Drupal::VERSION;
+    if (isset($parsed_info['version'])) {
+      if ($parsed_info['version'] === 'VERSION') {
+        $parsed_info['version'] = \Drupal::VERSION;
+      }
+      elseif (!is_scalar($parsed_info['version'])) {
+        throw new InfoParserException("The 'version' value must be a scalar in $filename");
+      }
+      elseif (!is_string($parsed_info['version'])) {
+        // @todo Replace this with an InfoParserException in Drupal 13.
+        // @see https://www.drupal.org/project/drupal/issues/3576313
+        @trigger_error("Using a non-string as the 'version' value in $filename is deprecated in drupal:11.4.0 and will be a fatal error in drupal:13.0.0. Instead, wrap the version value in single quotes. See https://www.drupal.org/node/3576311", E_USER_DEPRECATED);
+        $parsed_info['version'] = (string) $parsed_info['version'];
+      }
     }
     $parsed_info += [ExtensionLifecycle::LIFECYCLE_IDENTIFIER => ExtensionLifecycle::STABLE];
     $lifecycle = $parsed_info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER];
