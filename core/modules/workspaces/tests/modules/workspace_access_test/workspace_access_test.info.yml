@@ -1,7 +1,0 @@
-name: 'Workspace Access Test'
-type: module
-description: 'Provides supporting code for testing access for workspaces.'
-package: Testing
-version: VERSION
-dependencies:
-  - drupal:workspaces

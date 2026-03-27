@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\workspaces\Kernel;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
@@ -28,7 +32,6 @@ class WorkspaceAccessTest extends KernelTestBase {
     'user',
     'system',
     'workspaces',
-    'workspace_access_test',
     'workspaces_test',
     'workspaces_ui',
   ];
@@ -94,6 +97,14 @@ class WorkspaceAccessTest extends KernelTestBase {
   }
 
   /**
+   * Implements hook_ENTITY_TYPE_access() for the 'workspace' entity type.
+   */
+  #[Hook('workspace_access')]
+  public function workspaceAccess(EntityInterface $entity, $operation, AccountInterface $account): AccessResultInterface {
+    return \Drupal::keyValue('workspace_access_test')->get("result.{$operation}", AccessResult::neutral());
+  }
+
+  /**
    * Tests workspace publishing access.
    */
   public function testPublishWorkspaceAccess(): void {
@@ -111,7 +122,7 @@ class WorkspaceAccessTest extends KernelTestBase {
 
     // Simulate an external factor which decides that a workspace can not be
     // published.
-    \Drupal::state()->set('workspace_access_test.result.publish', AccessResult::forbidden());
+    \Drupal::keyValue('workspace_access_test')->set('result.publish', AccessResult::forbidden());
     \Drupal::entityTypeManager()->getAccessControlHandler('workspace')->resetCache();
     $this->assertFalse($workspace->access('publish'));
   }
