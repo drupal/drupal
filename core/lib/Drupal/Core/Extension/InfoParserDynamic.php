@@ -64,8 +64,16 @@ class InfoParserDynamic implements InfoParserInterface {
     catch (\UnexpectedValueException) {
       throw new InfoParserException("The 'core_version_requirement' constraint ({$parsed_info['core_version_requirement']}) is not a valid value in $filename");
     }
-    if (isset($parsed_info['version']) && $parsed_info['version'] === 'VERSION') {
-      $parsed_info['version'] = \Drupal::VERSION;
+    if (isset($parsed_info['version'])) {
+      if ($parsed_info['version'] === 'VERSION') {
+        $parsed_info['version'] = \Drupal::VERSION;
+      }
+      elseif (!is_scalar($parsed_info['version'])) {
+        throw new InfoParserException("The 'version' value must be a scalar in $filename");
+      }
+      elseif (!is_string($parsed_info['version'])) {
+        $parsed_info['version'] = (string) $parsed_info['version'];
+      }
     }
     $parsed_info += [ExtensionLifecycle::LIFECYCLE_IDENTIFIER => ExtensionLifecycle::STABLE];
     $lifecycle = $parsed_info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER];

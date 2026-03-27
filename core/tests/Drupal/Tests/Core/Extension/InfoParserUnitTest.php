@@ -119,6 +119,18 @@ dependencies:
 YML,
         'Missing required keys (type, name) in',
       ],
+      'version is not scalar' => [
+      <<<YML
+package: Core
+type: module
+name: Broken
+core_version_requirement: '*'
+version:
+  - Not
+  - Scalar
+YML,
+        "The 'version' value must be a scalar in",
+      ],
     ];
   }
 
@@ -174,6 +186,52 @@ MISSING_CORE_VERSION_REQUIREMENT;
     ]);
     $info_values = $this->infoParser->parse(vfsStream::url('modules/fixtures/missing_core_version_requirement.info.txt'));
     $this->assertSame($info_values['core_version_requirement'], \Drupal::VERSION);
+  }
+
+  /**
+   * Tests a version string that looks like a float.
+   *
+   * @legacy-covers ::parse
+   */
+  public function testFloatLikeVersion(): void {
+    $float_like_version = <<<VERSION_TEST
+core_version_requirement: '*'
+name: 'Float-like version'
+type: module
+version: '1.0'
+VERSION_TEST;
+
+    vfsStream::setup('modules');
+    vfsStream::create([
+      'fixtures' => [
+        'float_like_version.info.txt' => $float_like_version,
+      ],
+    ]);
+    $info_values = $this->infoParser->parse(vfsStream::url('modules/fixtures/float_like_version.info.txt'));
+    $this->assertSame('1.0', $info_values['version'], 'Version that looks like a float should be a string');
+  }
+
+  /**
+   * Tests a version string that is a float.
+   *
+   * @legacy-covers ::parse
+   */
+  public function testFloatVersion(): void {
+    $float_version = <<<VERSION_TEST
+core_version_requirement: '*'
+name: 'Float version'
+type: module
+version: 1.1
+VERSION_TEST;
+
+    vfsStream::setup('modules');
+    vfsStream::create([
+      'fixtures' => [
+        'float_version.info.txt' => $float_version,
+      ],
+    ]);
+    $info_values = $this->infoParser->parse(vfsStream::url('modules/fixtures/float_version.info.txt'));
+    $this->assertSame('1.1', $info_values['version'], 'Floating point version should be cast to a string');
   }
 
   /**
