@@ -5,6 +5,7 @@ namespace Drupal\dblog\Form;
 use Drupal\Core\DependencyInjection\AutowireTrait;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\dblog\DbLogFilters;
 
 /**
@@ -12,7 +13,7 @@ use Drupal\dblog\DbLogFilters;
  *
  * @internal
  */
-class DblogFilterForm extends FormBase {
+class DblogFilterForm extends FormBase implements WorkspaceSafeFormInterface {
 
   use AutowireTrait;
 
