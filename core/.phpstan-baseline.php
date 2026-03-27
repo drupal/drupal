@@ -46278,5 +46278,11 @@ $ignoreErrors[] = [
 	'count' => 1,
 	'path' => __DIR__ . '/themes/olivero/src/OliveroPreRender.php',
 ];
+$ignoreErrors[] = [
+	'message' => '#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#',
+	'identifier' => 'phpunit.callParent',
+	'count' => 1,
+	'path' => __DIR__ . '/themes/stable9/tests/Kernel/Stable9LibraryOverrideTest.php',
+];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];

@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\KernelTests\Core\Theme;
+namespace Drupal\Tests\stable9\Kernel;
 
+use Drupal\KernelTests\Core\Theme\StableLibraryOverrideTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -12,6 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Theme')]
 #[Group('#slow')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
 
@@ -50,7 +53,7 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
+    StableLibraryOverrideTestBase::setUp();
 
     $this->installConfig('system');
     $this->container->get('theme_installer')->install(['stable9']);

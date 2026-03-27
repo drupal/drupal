@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Drupal\KernelTests\Core\Theme;
+namespace Drupal\Tests\stable9\Kernel;
 
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Theme\Registry;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Theme')]
 #[Group('#slow')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class Stable9TemplateOverrideTest extends KernelTestBase {
 
