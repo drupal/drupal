@@ -126,9 +126,15 @@ class StandardRecipeTest extends StandardTest {
     // $this->assertSame($sync->read('node.settings'), $active->read('node.settings'));
     $comparer = $this->configImporter()->getStorageComparer();
     $expected_list = $comparer->getEmptyChangelist();
+    $expected_list['create'] = [
+      'core.entity_view_mode.node.search_result',
+      'core.entity_view_mode.node.search_index',
+    ];
     // We expect core.extension to be different because standard is no longer
     // installed.
-    $expected_list['update'] = ['core.extension'];
+    $expected_list['update'] = [
+      'core.extension',
+    ];
     $this->assertSame($expected_list, $comparer->getChangelist());
 
     parent::testStandard();

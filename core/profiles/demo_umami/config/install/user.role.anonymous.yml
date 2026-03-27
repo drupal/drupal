@@ -6,7 +6,6 @@ dependencies:
   module:
     - filter
     - media
-    - search
     - system
 id: anonymous
 label: 'Anonymous user'
@@ -14,6 +13,5 @@ weight: 0
 is_admin: false
 permissions:
   - 'access content'
-  - 'search content'
   - 'use text format restricted_html'
   - 'view media'

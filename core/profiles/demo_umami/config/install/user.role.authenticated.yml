@@ -6,7 +6,6 @@ dependencies:
   module:
     - filter
     - media
-    - search
     - system
 id: authenticated
 label: 'Authenticated user'
@@ -14,6 +13,5 @@ weight: 1
 is_admin: false
 permissions:
   - 'access content'
-  - 'search content'
   - 'use text format basic_html'
   - 'view media'

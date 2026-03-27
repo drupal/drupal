@@ -9,7 +9,6 @@ recipes:
   - page_content_type
   - basic_html_format_editor
   - full_html_format_editor
-  - content_search
   - core_recommended_performance
   - core_recommended_maintenance
   - core_recommended_admin_theme
@@ -39,9 +38,6 @@ config:
   import:
     claro:
       - block.block.claro_help
-    help:
-      - search.page.help_search
-      - block.block.claro_help_search
     image:
       - image.style.large
       - image.style.thumbnail
@@ -58,11 +54,8 @@ config:
       - views.view.glossary
     olivero:
       - block.block.olivero_help
-      - block.block.olivero_search_form_narrow
-      - block.block.olivero_search_form_wide
     user:
       - core.entity_view_mode.user.compact
-      - search.page.user_search
       - views.view.user_admin_people
       - views.view.who_s_new
       - views.view.who_s_online

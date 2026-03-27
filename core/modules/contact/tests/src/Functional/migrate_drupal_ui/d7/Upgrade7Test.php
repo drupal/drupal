@@ -67,7 +67,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     return [
       'action' => 24,
       'base_field_override' => 2,
-      'block' => 25,
+      'block' => 23,
       'block_content' => 1,
       'block_content_type' => 1,
       'comment' => 1,
@@ -92,7 +92,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'node' => 1,
       'node_type' => 5,
       'path_alias' => 1,
-      'search_page' => 3,
       'shortcut' => 4,
       'shortcut_set' => 2,
       'taxonomy_term' => 2,
@@ -151,7 +150,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'Node',
       'Options',
       'Path',
-      'Search',
       'Shortcut',
       'String translation',
       'Synchronize translations',
@@ -170,6 +168,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths(): array {
     return [
+      'Search',
       'Syslog',
       'Translation sets',
       'Update manager',

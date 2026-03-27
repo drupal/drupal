@@ -66,7 +66,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     return [
       'action' => 30,
       'base_field_override' => 6,
-      'block' => 31,
+      'block' => 28,
       'block_content' => 1,
       'block_content_type' => 1,
       'comment' => 1,
@@ -91,7 +91,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'node' => 1,
       'node_type' => 2,
       'path_alias' => 0,
-      'search_page' => 3,
       'shortcut' => 0,
       'shortcut_set' => 1,
       'taxonomy_term' => 1,
@@ -146,7 +145,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Option Widgets',
       'Path',
       'Profile translation',
-      'Search',
       'String translation',
       'Synchronize translations',
       'System',
@@ -176,6 +174,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Aggregator',
       'Book',
       'Forum',
+      'Search',
       'Statistics',
     ];
   }
