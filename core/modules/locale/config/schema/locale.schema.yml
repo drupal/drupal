@@ -42,6 +42,7 @@ locale.settings:
         path:
           type: string
           label: 'Interface translations directory'
+          deprecated: "The 'translation.path' config is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the locale_translation_path setting instead. See https://www.drupal.org/node/3571594."
         import_enabled:
           type: boolean
           label: 'Import enabled'

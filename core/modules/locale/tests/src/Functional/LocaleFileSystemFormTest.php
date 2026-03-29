@@ -6,6 +6,7 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -37,27 +38,35 @@ class LocaleFileSystemFormTest extends BrowserTestBase {
   /**
    * Tests translation directory settings on the file settings form.
    */
+  #[IgnoreDeprecations]
   public function testFileConfigurationPage(): void {
     // By default there should be no setting for the translation directory.
     $this->drupalGet('admin/config/media/file-system');
-    $this->assertSession()->fieldNotExists('translation_path');
+    $this->assertSession()->elementNotExists('css', '.form-item-translation-path');
 
     // With locale module installed, the setting should appear.
     $module_installer = $this->container->get('module_installer');
     $module_installer->install(['locale']);
     $this->rebuildContainer();
     $this->drupalGet('admin/config/media/file-system');
-    $this->assertSession()->fieldExists('translation_path');
+    $this->assertSession()->elementExists('css', '.form-item-translation-path');
 
-    // The setting should persist.
+    // The setting should be reported correctly.
     $translation_path = $this->publicFilesDirectory . '/translations_changed';
-    $fields = [
-      'translation_path' => $translation_path,
+    $settings['settings']['locale_translation_path'] = (object) [
+      'value' => $this->publicFilesDirectory . '/translations_changed',
+      'required' => TRUE,
     ];
-    $this->submitForm($fields, 'Save configuration');
+    $this->writeSettings($settings);
     $this->drupalGet('admin/config/media/file-system');
-    $this->assertSession()->fieldValueEquals('translation_path', $translation_path);
-    $this->assertEquals($this->config('locale.settings')->get('translation.path'), $translation_path);
+    $this->assertSession()->elementContains('css', '.form-item-translation-path', $translation_path);
+
+    // If set, the config is preferred over the setting.
+    // @todo remove this part when BC support for the config is removed.
+    $translation_path_config = $this->publicFilesDirectory . '/translations_changed_config';
+    $this->config('locale.settings')->set('translation.path', $translation_path_config)->save();
+    $this->drupalGet('admin/config/media/file-system');
+    $this->assertSession()->elementContains('css', '.form-item-translation-path', $translation_path_config);
   }
 
 }

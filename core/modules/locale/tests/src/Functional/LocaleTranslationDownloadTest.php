@@ -41,9 +41,11 @@ class LocaleTranslationDownloadTest extends LocaleUpdateBase {
     // Let the translations:// stream wrapper point to a virtual file system to
     // make it independent from the test environment.
     $this->translationsStream = vfsStream::setup('translations');
-    \Drupal::configFactory()->getEditable('locale.settings')
-      ->set('translation.path', $this->translationsStream->url())
-      ->save();
+    $settings['settings']['locale_translation_path'] = (object) [
+      'value' => $this->translationsStream->url(),
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
   }
 
   /**

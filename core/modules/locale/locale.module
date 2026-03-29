@@ -432,8 +432,14 @@ function locale_is_translatable($langcode) {
  * Clears the translation status when the Interface translations directory
  * changes. Without a translations directory local po files in the directory
  * should be ignored. The old translation status is no longer valid.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3571594
  */
 function locale_system_file_system_settings_submit(&$form, FormStateInterface $form_state): void {
+  @trigger_error(__FUNCTION__ . 'is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3571594', E_USER_DEPRECATED);
   if ($form['translation_path']['#default_value'] != $form_state->getValue('translation_path')) {
     locale_translation_clear_status();
   }

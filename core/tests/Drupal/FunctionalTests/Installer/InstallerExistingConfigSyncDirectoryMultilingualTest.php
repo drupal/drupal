@@ -59,7 +59,6 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerConf
     file_put_contents($this->publicFilesDirectory . '/translations/drupal-8.0.0.es.po', $this->getPo('es'));
     $locale_settings = Yaml::decode(file_get_contents($this->siteDirectory . '/config/sync/locale.settings.yml'));
     $locale_settings['translation']['use_source'] = 'local';
-    $locale_settings['translation']['path'] = $this->publicFilesDirectory . '/translations';
     file_put_contents($this->siteDirectory . '/config/sync/locale.settings.yml', Yaml::encode($locale_settings));
   }
 

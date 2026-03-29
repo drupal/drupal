@@ -124,6 +124,16 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     $this->replaceUser1();
 
+    // Ensure the locale.settings:translation.path config is set to the dynamic
+    // files folder.
+    // @todo remove this part when BC support for the config is removed.
+    $config = $this->config('locale.settings');
+    if (!$config->isNew() && $config->get('translation.path')) {
+      $translation_path_config = $this->publicFilesDirectory . '/translations';
+      \Drupal::service('file_system')->prepareDirectory($translation_path_config, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+      $config->set('translation.path', $translation_path_config)->save();
+    }
+
     require_once $this->root . '/core/includes/update.inc';
   }
 

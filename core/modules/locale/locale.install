@@ -7,17 +7,14 @@
 
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\locale\StreamWrapper\TranslationsStream;
 
 /**
  * Implements hook_install().
  */
 function locale_install(): void {
   // Create the interface translations directory and ensure it's writable.
-  if (!$directory = \Drupal::config('locale.settings')->get('translation.path')) {
-    $site_path = \Drupal::getContainer()->getParameter('site.path');
-    $directory = $site_path . '/files/translations';
-    \Drupal::configFactory()->getEditable('locale.settings')->set('translation.path', $directory)->save();
-  }
+  $directory = TranslationsStream::basePath();
   \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
 }
 

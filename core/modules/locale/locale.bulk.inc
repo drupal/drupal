@@ -11,6 +11,7 @@ use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\locale\Gettext;
 use Drupal\locale\LocaleSource;
+use Drupal\locale\StreamWrapper\TranslationsStream;
 
 /**
  * Get interface translation files present in the translations directory.
@@ -35,7 +36,7 @@ function locale_translate_get_interface_translation_files(array $projects = [], 
   // containing a project name and language code: {project}.{langcode}.po or
   // {project}-{version}.{langcode}.po.
   // Only files of known projects and languages will be returned.
-  $directory = \Drupal::config('locale.settings')->get('translation.path');
+  $directory = TranslationsStream::basePath();
   $result = [];
   if (is_dir($directory)) {
     $result = \Drupal::service('file_system')->scanDirectory($directory, '![a-z_]+(\-[0-9a-z\.\-\+]+|)\.[^\./]+\.po$!', ['recurse' => FALSE]);
