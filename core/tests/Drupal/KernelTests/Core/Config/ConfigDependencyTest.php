@@ -108,6 +108,12 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $this->assertContains('config_test:entity3', $dependent_ids, 'config_test.dynamic.entity3 has a dependency on config_test.dynamic.entity2.');
     $this->assertContains('config_test:entity4', $dependent_ids, 'config_test.dynamic.entity4 has a dependency on config_test.dynamic.entity2.');
 
+    // Test that config entities are loaded without overrides.
+    $GLOBALS['config']['config_test.dynamic.entity3'] = ['status' => FALSE];
+    $this->container->get('config.factory')->clearStaticCache();
+    $dependents = $config_manager->findConfigEntityDependenciesAsEntities('config', [$entity2->getConfigDependencyName()]);
+    $this->assertTrue($dependents['config_test.dynamic.entity3']->get('status'));
+
     // Test getting node module's dependencies as configuration dependency
     // objects.
     $dependents = $config_manager->findConfigEntityDependencies('module', ['node']);

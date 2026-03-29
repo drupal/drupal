@@ -120,6 +120,8 @@ interface ConfigManagerInterface {
   /**
    * Finds config entities that are dependent on extensions or entities.
    *
+   * Config entities are loaded without overrides.
+   *
    * @param string $type
    *   The type of dependency being checked. Either 'module', 'theme', 'config'
    *   or 'content'.
