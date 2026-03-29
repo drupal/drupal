@@ -13,9 +13,9 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests search integration filters with multilingual nodes.
  */
-#[Group('views')]
+#[Group('search')]
 #[RunTestsInSeparateProcesses]
-class SearchMultilingualTest extends ViewTestBase {
+class ViewsMultilingualTest extends ViewTestBase {
 
   use CronRunTrait;
   use LanguageTestTrait;
