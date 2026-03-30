@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\search\Functional;
+namespace Drupal\Tests\views\Functional;
 
 use Drupal\Tests\Traits\Core\CronRunTrait;
-use Drupal\Tests\views\Functional\ViewTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests search integration filters.
  */
-#[Group('search')]
+#[Group('views')]
 #[RunTestsInSeparateProcesses]
-class ViewsIntegrationTest extends ViewTestBase {
+class SearchIntegrationTest extends ViewTestBase {
 
   use CronRunTrait;
 
