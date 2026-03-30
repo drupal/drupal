@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Url;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Render\RenderContext;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
@@ -18,13 +20,30 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[RunTestsInSeparateProcesses]
 class LinkGenerationTest extends KernelTestBase {
 
+  use StringTranslationTrait;
+
   /**
-   * {@inheritdoc}
+   * Implements hook_link_alter().
+   *
+   * @see ::testHookLinkAlter()
    */
-  protected static $modules = ['link_generation_test'];
+  #[Hook('link_alter')]
+  public function linkAlter(&$variables): void {
+    if (\Drupal::state()->get('link_generation_test_link_alter', FALSE)) {
+      // Add text to the end of links.
+      if (\Drupal::state()->get('link_generation_test_link_alter_safe', FALSE)) {
+        $variables['text'] = $this->t('@text <strong>Test!</strong>', ['@text' => $variables['text']]);
+      }
+      else {
+        $variables['text'] .= ' <strong>Test!</strong>';
+      }
+    }
+  }
 
   /**
    * Tests how hook_link_alter() can affect escaping of the link text.
+   *
+   * @see ::linkAlter()
    */
   public function testHookLinkAlter(): void {
     $url = Url::fromUri('http://example.com');
