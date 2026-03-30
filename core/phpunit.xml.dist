@@ -139,7 +139,6 @@
       <directory>./lib</directory>
       <directory>./modules</directory>
       <directory>../modules</directory>
-      <directory>../sites</directory>
     </include>
     <exclude>
       <directory>./lib/Drupal/Component</directory>
