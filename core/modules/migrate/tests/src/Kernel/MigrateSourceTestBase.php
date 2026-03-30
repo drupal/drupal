@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -41,7 +44,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['migrate', 'migrate_skip_all_rows_test'];
+  protected static $modules = ['migrate'];
 
   /**
    * The mocked migration.
@@ -152,6 +155,8 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    *   (optional) Configuration for the source plugin.
    * @param mixed $high_water
    *   (optional) The value of the high water field.
+   *
+   * @see ::migratePrepareRow()
    */
   #[DataProvider('providerSource')]
   public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = [], $high_water = NULL): void {
@@ -211,6 +216,18 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
       foreach ($clone_plugin as $row) {
         $this->fail('Row not skipped');
       }
+    }
+  }
+
+  /**
+   * Implements hook_migrate_prepare_row().
+   *
+   * @see ::testSource()
+   */
+  #[Hook('migrate_prepare_row')]
+  public function migratePrepareRow(Row $row, MigrateSourceInterface $source, MigrationInterface $migration): void {
+    if (\Drupal::state()->get('migrate_skip_all_rows_test_migrate_prepare_row')) {
+      throw new MigrateSkipRowException();
     }
   }
 
