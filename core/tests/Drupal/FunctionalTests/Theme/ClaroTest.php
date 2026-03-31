@@ -18,15 +18,11 @@ class ClaroTest extends BrowserTestBase {
   /**
    * Modules to install.
    *
-   * Install the shortcut module so that claro.settings has its schema checked.
-   * There's currently no way for Claro to provide a default and have valid
-   * configuration as themes cannot react to a module install.
-   *
    * Install dblog and pager_test for testing of pager attributes.
    *
    * @var string[]
    */
-  protected static $modules = ['dblog', 'shortcut', 'pager_test'];
+  protected static $modules = ['dblog', 'pager_test'];
 
   /**
    * {@inheritdoc}

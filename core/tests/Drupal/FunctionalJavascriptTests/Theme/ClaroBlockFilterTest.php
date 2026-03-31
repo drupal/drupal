@@ -18,17 +18,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class ClaroBlockFilterTest extends BlockFilterTest {
 
   /**
-   * Modules to install.
-   *
-   * Install the shortcut module so that claro.settings has its schema checked.
-   * There's currently no way for Claro to provide a default and have valid
-   * configuration as themes cannot react to a module install.
-   *
-   * @var string[]
-   */
-  protected static $modules = ['shortcut'];
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
