@@ -178,6 +178,11 @@ trait FunctionalTestSetupTrait {
       'tags' => [['name' => 'http_middleware', 'priority' => -1024]],
     ];
     $services['parameters']['drupal.test_wait_terminate'] = FALSE;
+
+    // Relax the password hashing cost in tests to avoid performance issues.
+    $services['parameters']['password.algorithm'] = PASSWORD_BCRYPT;
+    $services['parameters']['password.options'] = ['cost' => 4];
+
     file_put_contents($directory . '/services.yml', $yaml->dump($services));
     // Since Drupal is bootstrapped already, install_begin_request() will not
     // bootstrap again. Hence, we have to reload the newly written custom
