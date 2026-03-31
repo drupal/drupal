@@ -6,7 +6,6 @@ namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Link;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -235,24 +234,6 @@ class TermIndexTest extends TaxonomyTestBase {
       ->execute()
       ->fetchField();
     $this->assertEquals(0, $index_count, 'Term 2 is not indexed.');
-  }
-
-  /**
-   * Tests that there is a link to the parent term on the child term page.
-   */
-  public function testTaxonomyTermHierarchyBreadcrumbs(): void {
-    // Create two taxonomy terms and set term2 as the parent of term1.
-    $term1 = $this->createTerm($this->vocabulary);
-    $term2 = $this->createTerm($this->vocabulary);
-    $term1->parent = [$term2->id()];
-    $term1->save();
-
-    // Verify that the page breadcrumbs include a link to the parent term.
-    $this->drupalGet('taxonomy/term/' . $term1->id());
-    // Breadcrumbs are not rendered with a language, prevent the term
-    // language from being added to the options.
-    // Check that parent term link is displayed when viewing the node.
-    $this->assertSession()->responseContains(Link::fromTextAndUrl($term2->getName(), $term2->toUrl('canonical', ['language' => NULL]))->toString());
   }
 
 }

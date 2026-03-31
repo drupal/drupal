@@ -2,9 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\node\Functional;
+namespace Drupal\Tests\node\Kernel;
 
+use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,23 +18,58 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('node')]
 #[RunTestsInSeparateProcesses]
-class NodeLinksTest extends NodeTestBase {
+class NodeLinksTest extends KernelTestBase {
+
+  use UserCreationTrait;
+  use NodeCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['views'];
+  protected static $modules = [
+    'system',
+    'user',
+    'field',
+    'datetime',
+    'filter',
+    'text',
+    'node',
+    'views',
+  ];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('node');
+    $this->installConfig(['filter']);
+    $this->installConfig(['node']);
+
+    $this->setUpCurrentUser(permissions: [
+      'access content',
+    ]);
+
+    DateFormat::create([
+      'id' => 'fallback',
+      'label' => 'Fallback',
+      'pattern' => 'Y-m-d',
+    ])->save();
+
+    $node_type = NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ]);
+    $node_type->save();
+  }
 
   /**
    * Tests that the links can be hidden in the view display settings.
    */
   public function testHideLinks(): void {
-    $node = $this->drupalCreateNode([
+    $node = $this->createNode([
       'type' => 'article',
       'promote' => NodeInterface::PROMOTED,
     ]);

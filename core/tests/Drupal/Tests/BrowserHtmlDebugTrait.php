@@ -106,7 +106,7 @@ trait BrowserHtmlDebugTrait {
    *
    * @see \Drupal\Tests\Listeners\VerbosePrinter::printResult()
    */
-  protected function htmlOutput($message = NULL) {
+  protected function htmlOutput($message = NULL): void {
     if (!$this->htmlOutputEnabled) {
       return;
     }
@@ -124,7 +124,7 @@ trait BrowserHtmlDebugTrait {
   /**
    * Creates the directory to store browser output.
    */
-  protected function initBrowserOutputFile() {
+  protected function initBrowserOutputFile(): void {
     $browserOutputFile = getenv('BROWSERTEST_OUTPUT_FILE');
     $this->htmlOutputEnabled = $browserOutputFile !== FALSE;
     $this->htmlOutputBaseUrl = getenv('BROWSERTEST_OUTPUT_BASE_URL') ?: $GLOBALS['base_url'];
@@ -143,7 +143,7 @@ trait BrowserHtmlDebugTrait {
         file_put_contents($this->htmlOutputDirectory . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
       }
       $this->htmlOutputCounterStorage = $this->htmlOutputDirectory . '/' . $this->htmlOutputClassName . '.counter';
-      $this->htmlOutputTestId = str_replace('sites/simpletest/', '', $this->siteDirectory);
+      $this->htmlOutputTestId = str_replace(['sites/simpletest/', 'vfs://root/'], '', $this->siteDirectory);
       if (is_file($this->htmlOutputCounterStorage)) {
         $this->htmlOutputCounter = max(1, (int) file_get_contents($this->htmlOutputCounterStorage)) + 1;
       }
