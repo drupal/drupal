@@ -48,6 +48,7 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
     'language',
     'help',
     'node',
+    'search',
     'views',
   ];
 
@@ -83,9 +84,10 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'page', 'title' => 'Basic page']);
     $this->addDefaultCommentField('node', 'page');
 
-    // To generate comment tags.
+    // To generate search and comment tags.
     $anonymous = Role::load(RoleInterface::ANONYMOUS_ID);
     $anonymous
+      ->grantPermission('search content')
       ->grantPermission('access comments');
     $anonymous->save();
 
@@ -143,9 +145,11 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'local_task',
       'config:block_list',
       'node_view',
+      'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
       'node:' . $node_1->id(),
       'user:' . $author_1->id(),
       'config:filter.format.basic_html',
+      'config:search.settings',
       'config:system.menu.account',
       'config:system.menu.main',
       'config:system.site',
@@ -164,9 +168,11 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'local_task',
       'config:block_list',
       'node_view',
+      'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
       'node:' . $node_2->id(),
       'user:' . $author_2->id(),
       'config:filter.format.full_html',
+      'config:search.settings',
       'config:system.menu.account',
       'config:system.menu.main',
       'config:system.site',
