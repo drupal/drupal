@@ -78,6 +78,11 @@ parameters:
       - json
     theme:
       - json
+  # Can be argon2i, argon2id or 2y (bcrypt). Setting to NULL (~) will use PASSWORD_DEFAULT.
+  # See https://www.php.net/password_hash
+  password.algorithm: ~
+  # Options passed to password_hash. See https://www.php.net/password_hash
+  password.options: []
 services:
   _defaults:
     autoconfigure: true
@@ -1209,6 +1214,7 @@ services:
   Drupal\Core\Path\PathValidatorInterface: '@path.validator'
   password:
     class: Drupal\Core\Password\PhpPassword
+    arguments: ['%password.algorithm%', '%password.options%']
   Drupal\Core\Password\PasswordInterface: '@password'
   password_generator:
     class: Drupal\Core\Password\DefaultPasswordGenerator

@@ -248,3 +248,9 @@ parameters:
     # This is not applicable when a queue is suspended but does not specify
     # how long to wait before attempting to resume.
     suspendMaximumWait: 30
+
+  # Can be argon2i, argon2id or 2y (bcrypt). Setting to NULL (~) will use PASSWORD_DEFAULT.
+  # See https://www.php.net/password_hash
+  password.algorithm: ~
+  # Options passed to password_hash. See https://www.php.net/password_hash
+  password.options: [ ]

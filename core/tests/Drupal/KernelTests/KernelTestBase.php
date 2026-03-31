@@ -603,10 +603,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       ->addTag('event_subscriber');
 
     // Relax the password hashing cost in tests to avoid performance issues.
-    if ($container->hasDefinition('password')) {
-      $container->getDefinition('password')
-        ->setArguments([PASSWORD_BCRYPT, ['cost' => 4]]);
-    }
+    $container->setParameter('password.algorithm', PASSWORD_BCRYPT);
+    $container->setParameter('password.options', ['cost' => 4]);
 
     // Add the on demand rebuild route provider service.
     $route_provider_service_name = 'router.route_provider';
