@@ -60,6 +60,7 @@ Initiative facilitators
 General core committers
 - Drew Webber 'mcdruid' https://www.drupal.org/u/mcdruid
 - Juraj Nemec 'poker10' https://www.drupal.org/u/poker10
+- (provisional) Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
 
 Subsystem maintainers
 ---------------------
