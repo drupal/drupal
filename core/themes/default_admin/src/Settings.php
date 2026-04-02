@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\default_admin;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Form\FormStateInterface;
@@ -29,8 +28,6 @@ final class Settings implements ContainerInjectionInterface {
    *   The current user.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $classResolver
-   *   The class resolver.
    * @param \Drupal\user\UserDataInterface|null $userData
    *   The user data service.
    * @param \Drupal\Core\Extension\ThemeSettingsProvider $themeSettingsProvider
@@ -39,7 +36,6 @@ final class Settings implements ContainerInjectionInterface {
   public function __construct(
     protected AccountInterface $currentUser,
     protected ConfigFactoryInterface $configFactory,
-    protected ClassResolverInterface $classResolver,
     protected ?UserDataInterface $userData,
     protected ThemeSettingsProvider $themeSettingsProvider,
   ) {
@@ -52,7 +48,6 @@ final class Settings implements ContainerInjectionInterface {
     return new Settings(
       $container->get('current_user'),
       $container->get('config.factory'),
-      $container->get('class_resolver'),
       $container->get('user.data', ContainerInterface::NULL_ON_INVALID_REFERENCE),
       $container->get(ThemeSettingsProvider::class),
     );

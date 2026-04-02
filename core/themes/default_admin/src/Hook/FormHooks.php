@@ -7,19 +7,14 @@ namespace Drupal\default_admin\Hook;
 use Drupal\default_admin\Helper;
 use Drupal\default_admin\Settings;
 use Drupal\Core\Ajax\AjaxHelperTrait;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityFormInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings as CoreSettings;
-use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\views\Form\ViewsForm;
 use Drupal\views_ui\Form\Ajax\ViewsFormInterface;
@@ -38,11 +33,6 @@ class FormHooks {
    * Constructs the form related hooks.
    */
   public function __construct(
-    protected ClassResolverInterface $classResolver,
-    protected readonly ModuleHandlerInterface $moduleHandler,
-    protected readonly ConfigFactoryInterface $configFactory,
-    protected readonly StateInterface $state,
-    protected readonly MessengerInterface $messenger,
     protected RouteMatchInterface $routeMatch,
     protected AccountInterface $currentUser,
   ) {}

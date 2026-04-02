@@ -8,7 +8,6 @@ use Drupal\default_admin\Helper;
 use Drupal\default_admin\Settings;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Asset\AssetQueryStringInterface;
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
@@ -29,7 +28,6 @@ class ThemeHooks implements TrustedCallbackInterface {
     protected readonly ThemeHandlerInterface $themeHandler,
     protected readonly RequestStack $requestStack,
     protected readonly AssetQueryStringInterface $assetQueryString,
-    protected ClassResolverInterface $classResolver,
   ) {}
 
   /**

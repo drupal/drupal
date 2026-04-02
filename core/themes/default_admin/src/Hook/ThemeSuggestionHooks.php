@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Drupal\default_admin\Hook;
 
 use Drupal\default_admin\Helper;
-use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Path\PathMatcherInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -22,15 +20,13 @@ class ThemeSuggestionHooks {
   public function __construct(
     protected readonly RequestStack $requestStack,
     protected readonly PathMatcherInterface $pathMatcher,
-    protected readonly RouteMatchInterface $routeMatch,
-    protected ClassResolverInterface $classResolver,
   ) {}
 
   /**
    * Implements hook_theme_suggestions_HOOK_alter() for details.
    */
   #[Hook('theme_suggestions_details_alter')]
-  public function details(array &$suggestions, array $variables): void {
+  public function themeSuggestionsDetailsAlter(array &$suggestions, array $variables): void {
     if (!empty($variables['element']['#vertical_tab_item'])) {
       $suggestions[] = 'details__vertical_tabs';
     }
@@ -40,7 +36,7 @@ class ThemeSuggestionHooks {
    * Implements hook_theme_suggestions_HOOK_alter() for form.
    */
   #[Hook('theme_suggestions_form_alter')]
-  public function form(array &$suggestions, array $variables): void {
+  public function themeSuggestionsFormAlter(array &$suggestions, array $variables): void {
     $suggestions[] = 'form__' . str_replace('-', '_', $variables['element']['#id']);
   }
 
@@ -48,7 +44,7 @@ class ThemeSuggestionHooks {
    * Implements hook_theme_suggestions_HOOK_alter() for form_element.
    */
   #[Hook('theme_suggestions_form_element_alter')]
-  public function formElement(array &$suggestions, array $variables): void {
+  public function themeSuggestionsFormElementAlter(array &$suggestions, array $variables): void {
     if (!empty($variables['element']['#type'])) {
       $suggestions[] = 'form_element__' . $variables['element']['#type'];
     }
@@ -58,7 +54,7 @@ class ThemeSuggestionHooks {
    * Implements hook_theme_suggestions_HOOK_alter() for maintenance_page.
    */
   #[Hook('theme_suggestions_maintenance_page_alter')]
-  public function maintenancePage(array &$suggestions): void {
+  public function themeSuggestionsMaintenancePageAlter(array &$suggestions): void {
     try {
       $is_front = $this->pathMatcher->isFrontPage();
     }
@@ -80,7 +76,7 @@ class ThemeSuggestionHooks {
    * Implements hook_theme_suggestions_HOOK_alter() for page.
    */
   #[Hook('theme_suggestions_page_alter')]
-  public function page(array &$suggestions): void {
+  public function themeSuggestionsPageAlter(array &$suggestions): void {
     $path = $this->requestStack->getCurrentRequest()?->getPathInfo();
 
     if ($path !== '/') {
@@ -99,7 +95,7 @@ class ThemeSuggestionHooks {
    * Implements hook_theme_suggestions_HOOK_alter() for table.
    */
   #[Hook('theme_suggestions_table_alter')]
-  public function table(array &$suggestions, array $variables): void {
+  public function themeSuggestionsTableAlter(array &$suggestions, array $variables): void {
     if (empty($variables['attributes']['class'])) {
       return;
     }
@@ -113,7 +109,7 @@ class ThemeSuggestionHooks {
    * Implements hook_theme_suggestions_HOOK_alter() for top_bar.
    */
   #[Hook('theme_suggestions_top_bar_alter')]
-  public function topBar(array &$suggestions): void {
+  public function themeSuggestionsTopBarAlter(array &$suggestions): void {
     $suggestions[] = 'top_bar__gin';
   }
 
@@ -121,7 +117,7 @@ class ThemeSuggestionHooks {
    * Implements hook_theme_suggestions_HOOK_alter() for views_view_field.
    */
   #[Hook('theme_suggestions_views_view_field_alter')]
-  public function viewsViewField(array &$suggestions, array $variables): void {
+  public function themeSuggestionsViewsViewFieldAlter(array &$suggestions, array $variables): void {
     $field_name = $variables['field']->field;
     if ($field_name === 'status') {
       $suggestions[] = 'views_view_field__' . $field_name;
