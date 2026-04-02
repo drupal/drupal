@@ -64,6 +64,12 @@ class AutowireTest extends KernelTestBase {
           $aliases[$id] = substr($service, 1);
         }
         elseif (isset($service['class']) && class_exists($service['class'])) {
+          // Check that the number of arguments matches the constructor.
+          if (isset($service['arguments'])) {
+            $constructor = new \ReflectionMethod($service['class'], '__construct');
+            $this->assertLessThanOrEqual($constructor->getNumberOfParameters(), count($service['arguments']), sprintf('%s (%s): %d arguments defined, but constructor only accepts %d', $id, $service['class'], count($service['arguments']), $constructor->getNumberOfParameters()));
+          }
+
           // Ignore services named by their own class.
           if ($id === $service['class']) {
             continue;
