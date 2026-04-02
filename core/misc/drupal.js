@@ -407,15 +407,6 @@ window.Drupal = { behaviors: {}, locale: {} };
    */
   Drupal.url.toAbsolute = function (url) {
     const urlParsingNode = document.createElement('a');
-
-    // Decode the URL first; this is required by IE <= 6. Decoding non-UTF-8
-    // strings may throw an exception.
-    try {
-      url = decodeURIComponent(url);
-    } catch (e) {
-      // Empty.
-    }
-
     urlParsingNode.setAttribute('href', url);
 
     return urlParsingNode.href;
