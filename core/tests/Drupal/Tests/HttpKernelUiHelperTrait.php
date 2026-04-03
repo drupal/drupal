@@ -74,6 +74,30 @@ trait HttpKernelUiHelperTrait {
   }
 
   /**
+   * Follows a link by complete name.
+   *
+   * Will click the first link found with this link text unless $index is
+   * specified.
+   *
+   * If the link is not found, an assertion will fail, halting the test.
+   *
+   * @param string|\Stringable $label
+   *   Text between the anchor tags.
+   * @param int $index
+   *   (optional) The index number for cases where multiple links have the same
+   *   text. Defaults to 0.
+   */
+  protected function clickLink(string|\Stringable $label, int $index = 0): void {
+    $label = (string) $label;
+    $links = $this->getSession()->getPage()->findAll('named', ['link', $label]);
+    $this->assertArrayHasKey($index, $links, 'The link ' . $label . ' was not found on the page.');
+
+    // Use static::drupalGet() rather than the click() method on the element,
+    // because that will not produce HTML debug output.
+    $this->drupalGet($links[$index]->getAttribute('href'));
+  }
+
+  /**
    * Returns Mink session.
    *
    * The lazily initializes Mink the first time it is called.

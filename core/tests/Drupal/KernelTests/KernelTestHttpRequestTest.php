@@ -27,6 +27,7 @@ class KernelTestHttpRequestTest extends KernelTestBase {
   protected static $modules = [
     'system',
     'system_test',
+    'test_page_test',
   ];
 
   /**
@@ -43,6 +44,21 @@ class KernelTestHttpRequestTest extends KernelTestBase {
     $this->drupalGet('/system-test/main-content-handling');
     $this->assertEquals(Response::HTTP_OK, $this->getSession()->getStatusCode());
     $this->assertSession()->pageTextContains('Content to test main content fallback');
+  }
+
+  /**
+   * Tests clickLink() functionality.
+   */
+  public function testClickLink(): void {
+    $this->drupalGet('test-page');
+    $this->clickLink('Visually identical test links');
+    $this->assertStringContainsString('user/login', $this->getSession()->getCurrentUrl());
+    $this->drupalGet('test-page');
+    $this->clickLink('Visually identical test links', 0);
+    $this->assertStringContainsString('user/login', $this->getSession()->getCurrentUrl());
+    $this->drupalGet('test-page');
+    $this->clickLink('Visually identical test links', 1);
+    $this->assertStringContainsString('user/register', $this->getSession()->getCurrentUrl());
   }
 
 }
