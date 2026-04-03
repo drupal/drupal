@@ -1518,4 +1518,32 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     }
   }
 
+  /**
+   * Assembles a partial entity structure with initial IDs.
+   *
+   * @param array{entity_id: int|string, revision_id?: int|string, bundle?: string} $entity_identifiers
+   *   Array with the following keys:
+   *   - entity_id (required),
+   *   - revision_id (optional),
+   *   - bundle (optional).
+   *
+   * @return \Drupal\Core\Entity\ContentEntityInterface
+   *   An entity object, initialized with the provided IDs.
+   *
+   * @internal
+   */
+  public function createEntityFromIds(array $entity_identifiers): ContentEntityInterface {
+    $id_properties = [];
+    if ($id_key = $this->entityType->getKey('id')) {
+      $id_properties[$id_key] = $entity_identifiers['entity_id'];
+    }
+    if (isset($entity_identifiers['revision_id']) && $revision_key = $this->entityType->getKey('revision')) {
+      $id_properties[$revision_key] = $entity_identifiers['revision_id'];
+    }
+    if (isset($entity_identifiers['bundle']) && $bundle_key = $this->entityType->getKey('bundle')) {
+      $id_properties[$bundle_key] = $entity_identifiers['bundle'];
+    }
+    return $this->create($id_properties);
+  }
+
 }

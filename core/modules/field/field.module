@@ -24,8 +24,14 @@ require_once __DIR__ . '/field.purge.inc';
  *
  * @return \Drupal\Core\Entity\FieldableEntityInterface
  *   An entity, initialized with the provided IDs.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is
+ *   no replacement.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function _field_create_entity_from_ids($ids) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   $id_properties = [];
   $entity_type = \Drupal::entityTypeManager()->getDefinition($ids->entity_type);
   if ($id_key = $entity_type->getKey('id')) {
@@ -55,10 +61,13 @@ function _field_create_entity_from_ids($ids) {
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  *
- * @see \Drupal\field_ui\Form\FieldConfigEditForm::form
- * @see \Drupal\field_ui\Form\FieldConfigEditForm::copyFormValuesToEntity
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is
+ *   no replacement.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function field_form_field_config_edit_form_entity_builder($entity_type_id, $entity, &$form, FormStateInterface $form_state): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   assert($entity instanceof FieldConfigInterface);
   $previous_field_storage = $form_state->getFormObject()->getEntity()->getFieldStorageDefinition();
   assert($previous_field_storage instanceof FieldStorageConfigInterface);

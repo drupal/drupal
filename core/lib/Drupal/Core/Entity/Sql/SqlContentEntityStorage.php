@@ -1831,7 +1831,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $item_row['entity_type'] = $this->entityTypeId;
           // @todo Replace this by an entity object created via an entity
           //   factory. https://www.drupal.org/node/1867228.
-          $entities[$item_row['revision_id']] = _field_create_entity_from_ids((object) $item_row);
+          $entities[$item_row['revision_id']] = $this->createEntityFromIds($item_row);
         }
         $item = [];
         foreach ($column_map as $db_column => $field_column) {
