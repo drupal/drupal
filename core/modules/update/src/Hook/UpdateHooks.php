@@ -66,7 +66,9 @@ class UpdateHooks {
         case 'update.status':
         case 'update.settings':
         case 'system.status':
+        case 'system.modules_uninstall':
         case 'system.theme_install':
+        case 'system.theme_uninstall':
         case 'system.batch_page.html':
           return;
 
