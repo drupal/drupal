@@ -33,7 +33,7 @@
   --accent-color-900: color-mix(in lch, var(--accent-mix-base-dark) 60%, var(--accent-color-base));
 
   /*
-   * Polyfill for Admin theme.
+   * Polyfill for Default Admin theme.
    */
   --gin-bg-app: var(--app-bg-color);
   --gin-color-primary: var(--accent-color-500);

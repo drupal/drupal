@@ -232,8 +232,7 @@
 /**
  * The actual vertical tabs pane.
  *
- * This is a gin-details element which in this case is also
- * vertical-tabs__item.
+ * This is a gin-details element which in this case is also vertical-tabs__item.
  */
 .vertical-tabs__item {
   /* Render on top of the border of vertical-tabs__items. */

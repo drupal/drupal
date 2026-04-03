@@ -64,7 +64,7 @@
           if (stateChanged) {
             $checkbox.prop('checked', state).trigger('change');
 
-            // Update status in Admin theme sticky table header.
+            // Update status in Default Admin theme sticky table header.
             $table
               .parents('.gin-table-scroll-wrapper')
               .prev('table.gin--sticky-table-header')
@@ -74,7 +74,7 @@
         });
     };
 
-    // Gin: Check if select-all already exists, if not add it.
+    // Check if select-all already exists, if not add it.
     if ($table.find('th.select-all').find('input[type="checkbox"]').length === 0) {
       $table.find('th.select-all').prepend($(Drupal.theme('checkbox')).attr('title', strings.selectAll));
     }

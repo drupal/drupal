@@ -60,7 +60,7 @@ class ThemeHooks implements TrustedCallbackInterface {
       $css[$base_css]['group'] = 200;
     }
 
-    // The gin-custom.css file should be loaded just after our gin.css file.
+    // The admin-custom.css file should be loaded just after admin.css file.
     $custom_css = 'public://admin-custom.css';
     if (isset($css[$custom_css])) {
       $css[$custom_css]['group'] = 201;

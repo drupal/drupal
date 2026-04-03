@@ -51,7 +51,7 @@ class AdminTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the Default Admin theme always adds its message CSS and Classy's.
+   * Tests that Default Admin always adds its message CSS and Classy's.
    */
   public function testDefaultAdminSettings(): void {
     $response = $this->drupalGet('/admin/content');

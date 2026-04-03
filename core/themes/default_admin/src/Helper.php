@@ -221,7 +221,8 @@ final class Helper {
       // Add theme name to base theme array.
       $frontend_base_themes[$frontend_theme_name] = $frontend_theme_name;
 
-      // Admin theme will have no value if it is set to use the default theme.
+      // Default Admin theme will have no value if it is set to use the default
+      // theme.
       if ($admin_theme_name && isset($theme_handler[$admin_theme_name]->base_themes)) {
         $admin_base_themes = $theme_handler[$admin_theme_name]->base_themes;
         $admin_base_themes[$admin_theme_name] = $admin_theme_name;

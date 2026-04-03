@@ -340,10 +340,10 @@
 /**
  * Details wrapper and content.
  *
- * Accordion and accordion-item variants should have an extra background.
- * In that case, we render an additional wrapper 'gin-details__content' that
- * creates the visual margins around the content, and use the original
- * wrapper for setting the background color.
+ * Accordion and accordion-item variants should have an extra background. In
+ * that case, we render an additional wrapper 'gin-details__content' that
+ * creates the visual margins around the content, and use the original wrapper
+ * for setting the background color.
  *
  * If there is no border or padding defined, margins of parent-child elements
  * collapse to the highest value. We want to take benefit of this behavior,
