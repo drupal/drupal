@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\filter\Functional;
 
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -42,7 +43,6 @@ class FilterDefaultFormatTest extends BrowserTestBase {
       ];
       $this->drupalGet('admin/config/content/formats/add');
       $this->submitForm($edit, 'Save configuration');
-      $this->resetFilterCaches();
       $formats[] = FilterFormat::load($edit['format']);
     }
     [$first_format, $second_format] = $formats;
@@ -60,14 +60,15 @@ class FilterDefaultFormatTest extends BrowserTestBase {
     $edit['formats[' . $second_format->id() . '][weight]'] = -1;
     $this->drupalGet('admin/config/content/formats');
     $this->submitForm($edit, 'Save');
-    $this->resetFilterCaches();
+
+    $format_repository = \Drupal::service(FilterFormatRepositoryInterface::class);
 
     // Check that each user's default format is the lowest weighted format that
     // the user has access to.
-    $actual = filter_default_format($first_user);
+    $actual = $format_repository->getDefaultFormat($first_user)->id();
     $expected = $first_format->id();
     $this->assertEquals($expected, $actual, "First user's default format {$actual} is the expected lowest weighted format {$expected} that the user has access to.");
-    $actual = filter_default_format($second_user);
+    $actual = $format_repository->getDefaultFormat($second_user)->id();
     $expected = $second_format->id();
     $this->assertEquals($expected, $actual, "Second user's default format {$actual} is the expected lowest weighted format {$expected} that the user has access to, and different to the first user's.");
 
@@ -77,15 +78,7 @@ class FilterDefaultFormatTest extends BrowserTestBase {
     $edit['formats[' . $second_format->id() . '][weight]'] = -3;
     $this->drupalGet('admin/config/content/formats');
     $this->submitForm($edit, 'Save');
-    $this->resetFilterCaches();
-    $this->assertEquals(filter_default_format($first_user), filter_default_format($second_user), 'After the formats are reordered, both users have the same default format.');
-  }
-
-  /**
-   * Rebuilds text format and permission caches in the thread running the tests.
-   */
-  protected function resetFilterCaches(): void {
-    filter_formats_reset();
+    $this->assertEquals($format_repository->getDefaultFormat($second_user), $format_repository->getDefaultFormat($first_user));
   }
 
 }

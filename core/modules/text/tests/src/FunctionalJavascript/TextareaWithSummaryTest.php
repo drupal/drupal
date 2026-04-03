@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\text\FunctionalJavascript;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\filter\FilterFormatRepositoryInterface;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -126,7 +127,7 @@ class TextareaWithSummaryTest extends WebDriverTestBase {
         [
           'value' => $this->randomMachineName(32),
           'summary' => $this->randomMachineName(32),
-          'format' => filter_default_format(),
+          'format' => \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id(),
         ],
       ],
     ]);

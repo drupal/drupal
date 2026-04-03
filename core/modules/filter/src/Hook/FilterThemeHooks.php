@@ -5,13 +5,17 @@ namespace Drupal\filter\Hook;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\filter\FilterFormatRepositoryInterface;
 
 /**
  * Theme hooks for filter.
  */
 class FilterThemeHooks {
 
-  public function __construct(protected AccountInterface $currentUser) {}
+  public function __construct(
+    protected AccountInterface $currentUser,
+    protected FilterFormatRepositoryInterface $formatRepository,
+  ) {}
 
   /**
    * Implements hook_theme().
@@ -105,7 +109,7 @@ class FilterThemeHooks {
    *   - id: Filter ID.
    */
   protected function getFilterTips(?string $formatId = NULL): array {
-    $formats = filter_formats($this->currentUser);
+    $formats = $this->formatRepository->getFormatsForAccount($this->currentUser);
 
     $tips = [];
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\node\NodeInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -99,7 +100,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
     $node->title = $this->randomMachineName();
     $node->body = [
       'value' => $this->randomMachineName(32),
-      'format' => filter_default_format(),
+      'format' => \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id(),
     ];
     $node->setNewRevision();
     // Ensure the revision author is a different user.

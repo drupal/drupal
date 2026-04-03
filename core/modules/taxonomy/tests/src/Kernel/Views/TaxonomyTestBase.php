@@ -6,6 +6,7 @@ namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -169,7 +170,7 @@ abstract class TaxonomyTestBase extends ViewsKernelTestBase {
    *   The created taxonomy term.
    */
   protected function createTerm(array $settings = []) {
-    $filter_formats = filter_formats();
+    $filter_formats = \Drupal::service(FilterFormatRepositoryInterface::class)->getAllFormats();
     $format = array_pop($filter_formats);
     $settings += [
       'name' => $this->randomMachineName(),

@@ -6,12 +6,10 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\filter\FilterFormatInterface;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\filter\Hook\FilterThemeHooks;
-use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 
 /**
  * Retrieves a list of enabled text formats, ordered by weight.
@@ -25,50 +23,38 @@ use Drupal\user\RoleInterface;
  *   An array of text format objects, keyed by the format ID and ordered by
  *   weight.
  *
- * @see filter_formats_reset()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the
+ *   Drupal\filter\FilterFormatRepositoryInterface service with the
+ *   ::getAllFormats() method to get all formats, or with the
+ *   ::getFormatsForAccount() method to get all formats that a user is able to
+ *   access.
+ *
+ * @see https://www.drupal.org/node/3035368
  */
 function filter_formats(?AccountInterface $account = NULL) {
-  $formats = &drupal_static(__FUNCTION__, []);
-
-  // All available formats are cached for performance.
-  if (!isset($formats['all'])) {
-    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-    if ($cache = \Drupal::cache()->get("filter_formats:{$language_interface->getId()}")) {
-      $formats['all'] = $cache->data;
-    }
-    else {
-      $formats['all'] = \Drupal::entityTypeManager()->getStorage('filter_format')->loadByProperties(['status' => TRUE]);
-      uasort($formats['all'], 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-      \Drupal::cache()->set("filter_formats:{$language_interface->getId()}", $formats['all'], Cache::PERMANENT, \Drupal::entityTypeManager()->getDefinition('filter_format')->getListCacheTags());
-    }
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the Drupal\filter\FilterFormatRepositoryInterface service with the ::getAllFormats() method to get all formats, or with the ::getFormatsForAccount() method to get all formats that a user is able to access. See https://www.drupal.org/node/3035368', E_USER_DEPRECATED);
+  $filter_format_repository = \Drupal::service(FilterFormatRepositoryInterface::class);
 
   // If no user was specified, return all formats.
   if (!isset($account)) {
-    return $formats['all'];
+    return $filter_format_repository->getAllFormats();
   }
 
-  // Build a list of user-specific formats.
-  $account_id = $account->id();
-  if (!isset($formats['user'][$account_id])) {
-    $formats['user'][$account_id] = [];
-    foreach ($formats['all'] as $format) {
-      if ($format->access('use', $account)) {
-        $formats['user'][$account_id][$format->id()] = $format;
-      }
-    }
-  }
-
-  return $formats['user'][$account_id];
+  return $filter_format_repository->getFormatsForAccount($account);
 }
 
 /**
  * Resets the text format caches.
  *
- * @see filter_formats()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Invalidate
+ *   'filter_formats' entity type list cache tags instead.
+ *
+ * @see https://www.drupal.org/node/3035368
  */
 function filter_formats_reset(): void {
-  drupal_static_reset('filter_formats');
+  @trigger_error(__FUNCTION__ . "() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Invalidate 'filter_formats' entity type list cache tags instead. See https://www.drupal.org/node/3035368", E_USER_DEPRECATED);
+  $tags = \Drupal::entityTypeManager()->getDefinition('filter_format')->getListCacheTags();
+  \Drupal::cache('memory')->invalidateTags($tags);
 }
 
 /**
@@ -79,20 +65,15 @@ function filter_formats_reset(): void {
  *
  * @return array
  *   An array of role names, keyed by role ID.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the
+ *   \Drupal\filter\FilterFormatInterface::getRoles() method instead.
+ *
+ * @see https://www.drupal.org/node/3035368
  */
 function filter_get_roles_by_format(FilterFormatInterface $format): array {
-  // Handle the fallback format upfront (all roles have access to this format).
-  if ($format->isFallbackFormat()) {
-    return array_map(fn(RoleInterface $role) => $role->label(), Role::loadMultiple());
-  }
-  // Do not list any roles if the permission does not exist.
-  $permission = $format->getPermissionName();
-  if (empty($permission)) {
-    return [];
-  }
-
-  $roles = array_filter(Role::loadMultiple(), fn(RoleInterface $role) => $role->hasPermission($permission));
-  return array_map(fn(RoleInterface $role) => $role->label(), $roles);
+  @trigger_error('filter_get_roles_by_format() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the \Drupal\filter\FilterFormatInterface::getRoles() method instead. See https://www.drupal.org/node/3035368', E_USER_DEPRECATED);
+  return $format->getRoles();
 }
 
 /**
@@ -104,16 +85,16 @@ function filter_get_roles_by_format(FilterFormatInterface $format): array {
  * @return \Drupal\filter\FilterFormatInterface[]
  *   An array of text format objects that are allowed for the role, keyed by
  *   the text format ID and ordered by weight.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the
+ *   \Drupal\filter\FilterFormatRepositoryInterface service with the
+ *   ::getFormatsByRole() method instead.
+ *
+ * @see https://www.drupal.org/node/3035368
  */
 function filter_get_formats_by_role($rid): array {
-  $formats = [];
-  foreach (filter_formats() as $format) {
-    $roles = filter_get_roles_by_format($format);
-    if (isset($roles[$rid])) {
-      $formats[$format->id()] = $format;
-    }
-  }
-  return $formats;
+  @trigger_error('filter_get_formats_by_role() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the Drupal\filter\FilterFormatRepositoryInterface service with the ::getFormatsByRole() method instead. See https://www.drupal.org/node/3035368', E_USER_DEPRECATED);
+  return \Drupal::service(FilterFormatRepositoryInterface::class)->getFormatsByRole($rid);
 }
 
 /**
@@ -139,17 +120,15 @@ function filter_get_formats_by_role($rid): array {
  * @return string
  *   The ID of the user's default text format.
  *
- * @see filter_fallback_format()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the
+ *   \Drupal\filter\FilterFormatRepositoryInterface service with the
+ *   ::getDefaultFormat() method instead.
+ *
+ * @see https://www.drupal.org/node/3035368
  */
 function filter_default_format(?AccountInterface $account = NULL) {
-  if (!isset($account)) {
-    $account = \Drupal::currentUser();
-  }
-  // Get a list of formats for this user, ordered by weight. The first one
-  // available is the user's default format.
-  $formats = filter_formats($account);
-  $format = reset($formats);
-  return $format->id();
+  @trigger_error('filter_default_format() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the Drupal\filter\FilterFormatRepositoryInterface service with the ::getDefaultFormat() method instead. See https://www.drupal.org/node/3035368', E_USER_DEPRECATED);
+  return \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat($account)->id();
 }
 
 /**
@@ -178,17 +157,16 @@ function filter_default_format(?AccountInterface $account = NULL) {
  * @return string|null
  *   The ID of the fallback text format.
  *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the
+ *   \Drupal\filter\FilterFormatRepositoryInterface service with the
+ *   ::getFallbackFormatId() method instead.
+ *
+ * @see https://www.drupal.org/node/3035368
  * @see hook_filter_format_disable()
- * @see filter_default_format()
  */
 function filter_fallback_format() {
-  // This variable is automatically set in the database for all installations
-  // of Drupal. In the event that it gets disabled or deleted somehow, there
-  // is no safe default to return, since we do not want to risk making an
-  // existing (and potentially unsafe) text format on the site automatically
-  // available to all users. Returning NULL at least guarantees that this
-  // cannot happen.
-  return \Drupal::config('filter.settings')->get('fallback_format');
+  @trigger_error('filter_fallback_format() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the Drupal\filter\FilterFormatRepositoryInterface service with the ::getFallbackFormatId() method instead. See https://www.drupal.org/node/3035368', E_USER_DEPRECATED);
+  return \Drupal::service(FilterFormatRepositoryInterface::class)->getFallbackFormatId();
 }
 
 /**
@@ -265,7 +243,7 @@ function _filter_tips($format_id): array {
     @trigger_error('The $long argument to _filter_tips() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Only short tips are used. See https://www.drupal.org/node/3567879', E_USER_DEPRECATED);
   }
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
-  $formats = filter_formats(\Drupal::currentUser());
+  $formats = \Drupal::service(FilterFormatRepositoryInterface::class)->getFormatsForAccount(\Drupal::currentUser());
 
   $tips = [];
 

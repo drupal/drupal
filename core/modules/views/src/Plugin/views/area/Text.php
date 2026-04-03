@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\area;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\views\Attribute\ViewsArea;
 
 /**
@@ -12,6 +13,21 @@ use Drupal\views\Attribute\ViewsArea;
  */
 #[ViewsArea("text")]
 class Text extends TokenizeAreaPluginBase {
+
+  /**
+   * The filter format repository service.
+   */
+  protected FilterFormatRepositoryInterface $formatRepository;
+
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ?FilterFormatRepositoryInterface $format_repository = NULL) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    if (!$format_repository) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $format_repository argument is deprecated in drupal:11.4.0 and the $format_repository argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3035368', E_USER_DEPRECATED);
+      $format_repository = \Drupal::service(FilterFormatRepositoryInterface::class);
+    }
+    $this->formatRepository = $format_repository;
+  }
 
   /**
    * {@inheritdoc}
@@ -38,7 +54,7 @@ class Text extends TokenizeAreaPluginBase {
       '#type' => 'text_format',
       '#default_value' => $this->options['content']['value'],
       '#rows' => 6,
-      '#format' => $this->options['content']['format'] ?? filter_default_format(),
+      '#format' => $this->options['content']['format'] ?? $this->formatRepository->getDefaultFormat()->id(),
       '#editor' => FALSE,
     ];
   }
@@ -58,7 +74,7 @@ class Text extends TokenizeAreaPluginBase {
    * {@inheritdoc}
    */
   public function render($empty = FALSE) {
-    $format = $this->options['content']['format'] ?? filter_default_format();
+    $format = $this->options['content']['format'] ?? $this->formatRepository->getDefaultFormat()->id();
     if (!$empty || !empty($this->options['empty'])) {
       return [
         '#type' => 'processed_text',

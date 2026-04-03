@@ -7,6 +7,7 @@ namespace Drupal\Tests\node\Functional\Views;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
@@ -273,7 +274,7 @@ class FrontPageTest extends ViewTestBase {
         'body' => [
           [
             'value' => $this->randomMachineName(32),
-            'format' => filter_default_format(),
+            'format' => \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id(),
           ],
         ],
         'type' => 'article',

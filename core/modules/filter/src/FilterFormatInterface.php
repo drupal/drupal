@@ -85,4 +85,12 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    */
   public function removeFilter($instance_id);
 
+  /**
+   * Retrieves a list of roles that are allowed to use this format.
+   *
+   * @return array<string, string>
+   *   An array of role names, keyed by role ID.
+   */
+  public function getRoles(): array;
+
 }

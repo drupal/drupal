@@ -439,6 +439,9 @@ function drupal_static_reset($name = NULL): void {
       }
       break;
 
+    case 'filter_formats':
+      @trigger_error("Using drupal_static_reset() with 'filter_formats' as argument is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. No replacement is provided. See https://www.drupal.org/node/3035368", E_USER_DEPRECATED);
+      break;
   }
   drupal_static($name, NULL, TRUE);
 }

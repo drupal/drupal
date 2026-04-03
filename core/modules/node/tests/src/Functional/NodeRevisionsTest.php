@@ -8,6 +8,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
@@ -115,7 +116,7 @@ class NodeRevisionsTest extends NodeTestBase {
       $node->title = $this->randomMachineName();
       $node->body = [
         'value' => $this->randomMachineName(32),
-        'format' => filter_default_format(),
+        'format' => \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id(),
       ];
       $node->untranslatable_string_field->value = $this->randomString();
       $node->setNewRevision();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Functional\Plugin;
 
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
@@ -103,7 +104,7 @@ class DisplayFeedTranslationTest extends ViewTestBase {
       'body' => [
         0 => [
           'value' => 'Something in English.',
-          'format' => filter_default_format(),
+          'format' => \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id(),
         ],
       ],
       'langcode' => 'en',

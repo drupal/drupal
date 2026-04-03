@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
@@ -69,7 +70,7 @@ class AreaTextTest extends ViewsKernelTestBase {
     $build = $view->display_handler->handlers['header']['area']->render();
     $this->assertEquals('', $renderer->renderRoot($build), 'Nonexistent format should return empty markup.');
 
-    $view->display_handler->handlers['header']['area']->options['content']['format'] = filter_default_format();
+    $view->display_handler->handlers['header']['area']->options['content']['format'] = \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id();
     $build = $view->display_handler->handlers['header']['area']->render();
     $this->assertEquals(check_markup($string), $renderer->renderRoot($build), 'Existent format should return something');
 

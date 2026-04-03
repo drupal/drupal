@@ -6,6 +6,7 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Url;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
@@ -77,7 +78,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
       'body' => [
         [
           'value' => 'This is the block content',
-          'format' => filter_default_format(),
+          'format' => \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id(),
         ],
       ],
     ])->save();

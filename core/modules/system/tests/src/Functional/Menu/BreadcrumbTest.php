@@ -6,6 +6,7 @@ namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\Url;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
@@ -152,7 +153,7 @@ class BreadcrumbTest extends BrowserTestBase {
     $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/node.$type.body", $trail);
 
     // Verify Filter text format administration breadcrumbs.
-    $filter_formats = filter_formats();
+    $filter_formats = \Drupal::service(FilterFormatRepositoryInterface::class)->getAllFormats();
     $format = reset($filter_formats);
     $format_id = $format->id();
     $trail = $config + [

@@ -19,6 +19,7 @@ use Drupal\filter\Form\FilterDisableForm;
 use Drupal\filter\Form\FilterEnableForm;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 
 /**
  * Represents a text format.
@@ -30,6 +31,7 @@ use Drupal\user\Entity\Role;
   label_singular: new TranslatableMarkup('text format'),
   label_plural: new TranslatableMarkup('text formats'),
   config_prefix: 'format',
+  static_cache: TRUE,
   entity_keys: [
     'id' => 'format',
     'label' => 'name',
@@ -203,9 +205,6 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
     // Allow modules to react on text format deletion.
     \Drupal::moduleHandler()->invokeAll('filter_format_disable', [$this]);
 
-    // Clear the filter cache whenever a text format is disabled.
-    filter_formats_reset();
-
     return $this;
   }
 
@@ -236,17 +235,11 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    // Clear the static caches of filter_formats() and others.
-    filter_formats_reset();
-
     if (!$update && !$this->isSyncing()) {
       // Default configuration of modules and installation profiles is allowed
       // to specify a list of user roles to grant access to for the new format;
       // apply the defined user role permissions when a new format is inserted
       // and has a non-empty $roles property.
-      // Note: user_role_change_permissions() triggers a call chain back into
-      // \Drupal\filter\FilterPermissions::permissions() and lastly
-      // filter_formats(), so its cache must be reset upfront.
       if (($roles = $this->get('roles')) && $permission = $this->getPermissionName()) {
         foreach (Role::loadMultiple() as $rid => $role) {
           $enabled = in_array($rid, $roles, TRUE);
@@ -404,6 +397,27 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
   public function removeFilter($instance_id) {
     unset($this->filters[$instance_id]);
     $this->filterCollection->removeInstanceId($instance_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRoles(): array {
+    $roles = $this->entityTypeManager()->getStorage('user_role')->loadMultiple();
+
+    // Handle the fallback format: all roles have access to this format.
+    if ($this->isFallbackFormat()) {
+      return array_map(fn(RoleInterface $role) => $role->label(), $roles);
+    }
+
+    // Do not list any roles if the permission does not exist.
+    $permission = $this->getPermissionName();
+    if (empty($permission)) {
+      return [];
+    }
+
+    $roles = array_filter($roles, fn(RoleInterface $role) => $role->hasPermission($permission));
+    return array_map(fn(RoleInterface $role) => $role->label(), $roles);
   }
 
   /**

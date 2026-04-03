@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional\Views;
 
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
 use PHPUnit\Framework\Attributes\Group;
@@ -73,7 +74,7 @@ class FilterNodeAccessTest extends NodeTestBase {
           'body' => [
             [
               'value' => $type . ' node',
-              'format' => filter_default_format(),
+              'format' => \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id(),
             ],
           ],
           'title' => "$type Article created by " . $web_user->getAccountName(),

@@ -6,6 +6,7 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
@@ -114,7 +115,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $node->title = $this->randomMachineName();
     $node->body = [
       'value' => $this->randomMachineName(32),
-      'format' => filter_default_format(),
+      'format' => \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id(),
     ];
     $node->setNewRevision();
     $revision_log = 'Revision <em>message</em> with markup.';

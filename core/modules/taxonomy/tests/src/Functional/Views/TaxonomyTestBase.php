@@ -6,6 +6,7 @@ namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -146,7 +147,7 @@ abstract class TaxonomyTestBase extends ViewTestBase {
    *   The created taxonomy term.
    */
   protected function createTerm(array $settings = []) {
-    $filter_formats = filter_formats();
+    $filter_formats = \Drupal::service(FilterFormatRepositoryInterface::class)->getAllFormats();
     $format = array_pop($filter_formats);
     $settings += [
       'name' => $this->randomMachineName(),

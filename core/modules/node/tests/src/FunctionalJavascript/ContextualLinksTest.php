@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\FunctionalJavascript;
 
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
@@ -65,7 +66,7 @@ class ContextualLinksTest extends WebDriverTestBase {
       $node->title = $this->randomMachineName();
       $node->body = [
         'value' => $this->randomMachineName(32),
-        'format' => filter_default_format(),
+        'format' => \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id(),
       ];
       $node->setNewRevision();
 

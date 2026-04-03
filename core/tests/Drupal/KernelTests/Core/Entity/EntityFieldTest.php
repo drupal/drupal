@@ -24,6 +24,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestComputedField;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\entity_test\EntityTestHelper;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use PHPUnit\Framework\Attributes\Group;
@@ -976,7 +977,7 @@ class EntityFieldTest extends EntityKernelTestBase {
   protected function doTestComputedProperties($entity_type): void {
     $entity = $this->createTestEntity($entity_type);
     $entity->field_test_text->value = "The <strong>text</strong> text to filter.";
-    $entity->field_test_text->format = filter_default_format();
+    $entity->field_test_text->format = \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id();
 
     $target = "<p>The &lt;strong&gt;text&lt;/strong&gt; text to filter.</p>\n";
     $this->assertSame($target, (string) $entity->field_test_text->processed, "$entity_type: Text is processed with the default filter.");

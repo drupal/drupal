@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\filter\Kernel;
 
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -35,7 +36,7 @@ class FilterNoFormatTest extends KernelTestBase {
 
     // Make sure that when this text is run through check_markup() with no text
     // format, it is filtered as though it is in the fallback format.
-    $this->assertEquals(check_markup($text), check_markup($text, filter_fallback_format()));
+    $this->assertEquals(check_markup($text), check_markup($text, \Drupal::service(FilterFormatRepositoryInterface::class)->getFallbackFormatId()));
   }
 
 }

@@ -30,6 +30,7 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'filter',
     'system',
     'views',
     'views_test_config',

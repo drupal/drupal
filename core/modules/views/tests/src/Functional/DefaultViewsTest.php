@@ -11,6 +11,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
@@ -168,7 +169,7 @@ class DefaultViewsTest extends ViewTestBase {
    * Returns a new term with random properties in vocabulary $vid.
    */
   public function createTerm($vocabulary) {
-    $filter_formats = filter_formats();
+    $filter_formats = \Drupal::service(FilterFormatRepositoryInterface::class)->getAllFormats();
     $format = array_pop($filter_formats);
     $term = Term::create([
       'name' => $this->randomMachineName(),

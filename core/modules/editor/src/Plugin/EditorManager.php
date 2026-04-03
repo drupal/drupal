@@ -60,7 +60,7 @@ class EditorManager extends DefaultPluginManager {
    * Retrieves text editor libraries and JavaScript settings.
    *
    * @param array $format_ids
-   *   An array of format IDs as returned by array_keys(filter_formats()).
+   *   An array of format IDs.
    *
    * @return array
    *   An array of attachments, for use with #attached.

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Traits;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
@@ -55,7 +56,7 @@ trait TaxonomyTestTrait {
       'description' => [
         'value' => $this->randomMachineName(),
         // Use the fallback text format.
-        'format' => filter_fallback_format(),
+        'format' => \Drupal::service(FilterFormatRepositoryInterface::class)->getFallbackFormatId(),
       ],
       'vid' => $vocabulary->id(),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,

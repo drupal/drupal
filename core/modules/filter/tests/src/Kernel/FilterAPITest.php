@@ -499,8 +499,6 @@ class FilterAPITest extends EntityKernelTestBase {
     $filters = $filter_format->get('filters');
     $this->assertTrue(isset($filters['filter_test_restrict_tags_and_attributes']), 'The filter plugin filter_test_restrict_tags_and_attributes is configured by the filtered_html filter format.');
 
-    drupal_static_reset('filter_formats');
-    \Drupal::entityTypeManager()->getStorage('filter_format')->resetCache();
     $module_data = \Drupal::service('extension.list.module')->getList();
     $this->assertFalse(isset($module_data['filter_test']->info['required']), 'The filter_test module is required.');
 
