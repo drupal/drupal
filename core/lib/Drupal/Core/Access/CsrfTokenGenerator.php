@@ -81,7 +81,7 @@ class CsrfTokenGenerator {
    * @return bool
    *   TRUE for a valid token, FALSE for an invalid token.
    */
-  public function validate($token, $value = '') {
+  public function validate(#[\SensitiveParameter] $token, $value = '') {
     $seed = $this->sessionMetadata->getCsrfTokenSeed();
     if (empty($seed)) {
       return FALSE;
