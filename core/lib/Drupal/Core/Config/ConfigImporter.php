@@ -907,10 +907,7 @@ class ConfigImporter {
     \Drupal::service('config.installer')
       ->setSourceStorage($this->storageComparer->getSourceStorage());
     if ($type == 'module') {
-      $this->moduleInstaller->$op($names, FALSE);
-      // Installing a module can cause a kernel boot therefore inject all the
-      // services again.
-      $this->reInjectMe();
+      $this->callAndReInjectIfNeeded(fn () => $this->moduleInstaller->$op($names, FALSE));
       // During a module install or uninstall the container is rebuilt and the
       // module handler is called. This causes the container's instance of the
       // module handler not to have loaded all the enabled modules.
@@ -926,10 +923,7 @@ class ConfigImporter {
         $this->configManager->getConfigFactory()->reset('system.theme');
         $this->processedSystemTheme = TRUE;
       }
-      \Drupal::service('theme_installer')->$op($names);
-      // Installing a theme can also cause a kernel boot, so re-inject services
-      // as is done with modules.
-      $this->reInjectMe();
+      $this->callAndReInjectIfNeeded(fn () => \Drupal::service('theme_installer')->$op($names));
     }
     $this->setProcessedExtension($type, $op, $names);
   }
@@ -1035,14 +1029,20 @@ class ConfigImporter {
     if ($old_data = $this->storageComparer->getTargetStorage($collection)->read($name)) {
       $config->initWithData($old_data);
     }
-    if ($op == 'delete') {
-      $config->delete();
-    }
-    else {
-      $data = $this->storageComparer->getSourceStorage($collection)->read($name);
-      $config->setData($data ?: []);
-      $config->save();
-    }
+
+    // Ensure the new services are used if config change causes a container
+    // rebuild.
+    $this->callAndReInjectIfNeeded(function () use ($config, $op, $collection, $name) {
+      if ($op == 'delete') {
+        $config->delete();
+      }
+      else {
+        $data = $this->storageComparer->getSourceStorage($collection)
+          ->read($name);
+        $config->setData($data ?: []);
+        $config->save();
+      }
+    });
     $this->setProcessedConfiguration($collection, $op, $name);
   }
 
@@ -1158,22 +1158,33 @@ class ConfigImporter {
   }
 
   /**
-   * Gets all the service dependencies from \Drupal.
+   * Executes a callable and re-injects services if the container was rebuilt.
    *
-   * Since the ConfigImporter handles module installation the kernel and the
-   * container can be rebuilt and altered during processing. It is necessary to
-   * keep the services used by the importer in sync.
+   * Operations like module and theme installs can trigger a container rebuild.
+   * This method detects when that happens and automatically refreshes the
+   * services used by this importer.
+   *
+   * @param callable $callable
+   *   The callable to execute.
    */
-  protected function reInjectMe() {
-    // When rebuilding the container,
-    // \Drupal\Core\DrupalKernel::initializeContainer() saves the hashes of the
-    // old container and passes them to the new one. So __sleep() will
-    // recognize the old services and then __wakeup() will restore them from
-    // the new container.
-    $this->__sleep();
-    $this->__wakeup();
-    $this->storageComparer->__sleep();
-    $this->storageComparer->__wakeup();
+  protected function callAndReInjectIfNeeded(callable $callable): void {
+    $container_id = spl_object_id(\Drupal::getContainer());
+    try {
+      $callable();
+    }
+    finally {
+      if ($container_id !== spl_object_id(\Drupal::getContainer())) {
+        // When rebuilding the container,
+        // \Drupal\Core\DrupalKernel::initializeContainer() saves the hashes of
+        // the old container and passes them to the new one. So __sleep() will
+        // recognize the old services and then __wakeup() will restore them from
+        // the new container.
+        $this->__sleep();
+        $this->__wakeup();
+        $this->storageComparer->__sleep();
+        $this->storageComparer->__wakeup();
+      }
+    }
   }
 
 }
