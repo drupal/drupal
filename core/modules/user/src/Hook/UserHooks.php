@@ -305,16 +305,6 @@ class UserHooks {
   }
 
   /**
-   * Implements hook_element_info_alter().
-   */
-  #[Hook('element_info_alter')]
-  public function elementInfoAlter(array &$types): void {
-    if (isset($types['password_confirm'])) {
-      $types['password_confirm']['#process'][] = 'user_form_process_password_confirm';
-    }
-  }
-
-  /**
    * Implements hook_modules_uninstalled().
    */
   #[Hook('modules_uninstalled')]

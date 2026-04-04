@@ -5,6 +5,7 @@ namespace Drupal\user\Hook;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ThemeSettingsProvider;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -24,8 +25,8 @@ class UserThemeHooks {
   public function __construct(
     protected AccountInterface $currentUser,
     protected ThemeSettingsProvider $themeSettingsProvider,
+    protected ConfigFactoryInterface $configFactory,
   ) {
-
   }
 
   /**
@@ -162,6 +163,62 @@ class UserThemeHooks {
           break;
       }
     }
+  }
+
+  /**
+   * Implements hook_element_info_alter().
+   */
+  #[Hook('element_info_alter')]
+  public function elementInfoAlter(array &$types): void {
+    if (isset($types['password_confirm'])) {
+      $types['password_confirm']['#process'][] = static::class . ':processPasswordConfirm';
+    }
+  }
+
+  /**
+   * Form element process handler for client-side password validation.
+   *
+   * This #process handler is automatically invoked for 'password_confirm' form
+   * elements to add the JavaScript and string translations for dynamic password
+   * validation.
+   *
+   * @param array $element
+   *   The element being processed.
+   *
+   * @return array
+   *   The processed element
+   */
+  public function processPasswordConfirm(array $element): array {
+    $password_settings = [
+      'confirmTitle' => $this->t('Passwords match:'),
+      'confirmSuccess' => $this->t('yes'),
+      'confirmFailure' => $this->t('no'),
+      'showStrengthIndicator' => FALSE,
+    ];
+
+    if ($this->configFactory->get('user.settings')->get('password_strength')) {
+      $password_settings['showStrengthIndicator'] = TRUE;
+      $password_settings += [
+        'strengthTitle' => $this->t('Password strength:'),
+        'hasWeaknesses' => $this->t('Recommendations to make your password stronger:'),
+        'tooShort' => $this->t('Make it at least 12 characters'),
+        'addLowerCase' => $this->t('Add lowercase letters'),
+        'addUpperCase' => $this->t('Add uppercase letters'),
+        'addNumbers' => $this->t('Add numbers'),
+        'addPunctuation' => $this->t('Add punctuation'),
+        'sameAsUsername' => $this->t('Make it different from your username'),
+        'weak' => $this->t('Weak'),
+        'fair' => $this->t('Fair'),
+        'good' => $this->t('Good'),
+        'strong' => $this->t('Strong'),
+        'username' => $this->currentUser->getAccountName(),
+      ];
+    }
+
+    $element['#attached']['library'][] = 'user/drupal.user';
+    $element['#attached']['drupalSettings']['password'] = $password_settings;
+
+    return $element;
   }
 
 }

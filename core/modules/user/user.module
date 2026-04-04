@@ -622,38 +622,16 @@ function _user_mail_notify($op, AccountInterface $account) {
  * This #process handler is automatically invoked for 'password_confirm' form
  * elements to add the JavaScript and string translations for dynamic password
  * validation.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   UserThemeHooks::processPasswordConfirm() instead.
+ *
+ * @see https://www.drupal.org/node/3582107
+ * @see Drupal\user\Hook\UserThemeHooks::processPasswordConfirm()
  */
 function user_form_process_password_confirm($element) {
-  $password_settings = [
-    'confirmTitle' => t('Passwords match:'),
-    'confirmSuccess' => t('yes'),
-    'confirmFailure' => t('no'),
-    'showStrengthIndicator' => FALSE,
-  ];
-
-  if (\Drupal::config('user.settings')->get('password_strength')) {
-    $password_settings['showStrengthIndicator'] = TRUE;
-    $password_settings += [
-      'strengthTitle' => t('Password strength:'),
-      'hasWeaknesses' => t('Recommendations to make your password stronger:'),
-      'tooShort' => t('Make it at least 12 characters'),
-      'addLowerCase' => t('Add lowercase letters'),
-      'addUpperCase' => t('Add uppercase letters'),
-      'addNumbers' => t('Add numbers'),
-      'addPunctuation' => t('Add punctuation'),
-      'sameAsUsername' => t('Make it different from your username'),
-      'weak' => t('Weak'),
-      'fair' => t('Fair'),
-      'good' => t('Good'),
-      'strong' => t('Strong'),
-      'username' => \Drupal::currentUser()->getAccountName(),
-    ];
-  }
-
-  $element['#attached']['library'][] = 'user/drupal.user';
-  $element['#attached']['drupalSettings']['password'] = $password_settings;
-
-  return $element;
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use UserThemeHooks::processPasswordConfirm() instead. See https://www.drupal.org/node/3582107', E_USER_DEPRECATED);
+  return \Drupal::service(UserThemeHooks::class)->processPasswordConfirm($element);
 }
 
 /**
