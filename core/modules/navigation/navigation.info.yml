@@ -1,5 +1,5 @@
 name: Navigation
-description: New administration navigation
+description: 'Provides a sidebar navigation for site administration.'
 package: Core
 version: VERSION
 configure: navigation.settings
