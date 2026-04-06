@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Functions to support testing procedural theme hooks.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Hook\Attribute\LegacyHook;
+
+/**
+ * Implements hook_procedural_alter().
+ */
+function procedural_hook_theme_procedural_alter(array &$args): void {
+  $args[] = 'Procedural theme hook executed.';
+}
+
+/**
+ * Implements hook_procedural_legacy_alter().
+ */
+#[LegacyHook]
+function procedural_hook_theme_procedural_legacy_alter(array &$args): void {
+  $args[] = 'Procedural theme hook did not execute.';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function procedural_hook_theme_preprocess_node(array &$variables): void {
+  $variables['title'] = 'Procedural Node Preprocess';
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function procedural_hook_theme_preprocess_node__article(array &$variables): void {
+  $variables['title'] = 'Procedural Article Node Preprocess';
+}
