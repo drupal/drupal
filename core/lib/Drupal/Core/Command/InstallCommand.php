@@ -187,10 +187,10 @@ class InstallCommand extends Command {
         ],
         'install_configure_form' => [
           'site_name' => $site_name,
-          'site_mail' => 'drupal@localhost',
+          'site_mail' => 'drupal@example.com',
           'account' => [
             'name' => 'admin',
-            'mail' => 'admin@localhost',
+            'mail' => 'admin@example.com',
             'pass' => [
               'pass1' => $password,
               'pass2' => $password,

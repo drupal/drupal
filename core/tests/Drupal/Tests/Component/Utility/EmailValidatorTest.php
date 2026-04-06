@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\EmailValidator;
-use Egulias\EmailValidator\Validation\RFCValidation;
+use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -29,6 +29,7 @@ class EmailValidatorTest extends TestCase {
     $this->assertTrue($validator->isValid('example@example.com'));
     $this->assertFalse($validator->isValid('example@example.com@'));
     $this->assertFalse($validator->isValid('example@example .com'));
+    $this->assertFalse($validator->isValid('example @example.com'));
   }
 
   /**
@@ -38,7 +39,7 @@ class EmailValidatorTest extends TestCase {
     $validator = new EmailValidator();
     $this->expectException(\BadMethodCallException::class);
     $this->expectExceptionMessage('Calling \Drupal\Component\Utility\EmailValidator::isValid() with the second argument is not supported. See https://www.drupal.org/node/2997196');
-    $validator->isValid('example@example.com', (new RFCValidation()));
+    $validator->isValid('example@example.com', (new NoRFCWarningsValidation()));
   }
 
 }

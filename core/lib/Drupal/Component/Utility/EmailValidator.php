@@ -4,7 +4,7 @@ namespace Drupal\Component\Utility;
 
 use Egulias\EmailValidator\EmailValidator as EmailValidatorUtility;
 use Egulias\EmailValidator\Validation\EmailValidation;
-use Egulias\EmailValidator\Validation\RFCValidation;
+use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 
 /**
  * Validates email addresses.
@@ -27,7 +27,7 @@ class EmailValidator extends EmailValidatorUtility implements EmailValidatorInte
     if ($email_validation) {
       throw new \BadMethodCallException('Calling \Drupal\Component\Utility\EmailValidator::isValid() with the second argument is not supported. See https://www.drupal.org/node/2997196');
     }
-    return parent::isValid($email, (new RFCValidation()));
+    return parent::isValid($email, (new NoRFCWarningsValidation()));
   }
 
 }
