@@ -33,9 +33,10 @@ trait BasicAuthResourceTestTrait {
   /**
    * {@inheritdoc}
    */
-  protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response) {
+  protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response): void {
     if ($method !== 'GET') {
-      return $this->assertResourceErrorResponse(401, 'No authentication credentials provided.', $response);
+      $this->assertResourceErrorResponse(401, 'No authentication credentials provided.', $response);
+      return;
     }
 
     $expected_page_cache_header_value = $method === 'GET' ? 'MISS' : FALSE;
@@ -58,7 +59,7 @@ trait BasicAuthResourceTestTrait {
   /**
    * {@inheritdoc}
    */
-  protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options) {
+  protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options): void {
   }
 
   /**
