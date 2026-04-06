@@ -1,0 +1,5 @@
+name: 'Procedural hook test'
+type: theme
+description: 'Test theme for procedural hooks.'
+version: VERSION
+base theme: false
