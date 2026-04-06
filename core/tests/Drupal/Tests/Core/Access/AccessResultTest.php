@@ -144,6 +144,31 @@ class AccessResultTest extends UnitTestCase {
   }
 
   /**
+   * Tests access neutral reason.
+   *
+   * @legacy-covers ::neutral
+   */
+  public function testAccessNeutralReason(): void {
+    $verify = function (AccessResult $access, $reason): void {
+      $this->assertInstanceOf(AccessResultReasonInterface::class, $access);
+      $this->assertSame($reason, $access->getReason());
+    };
+
+    $b = AccessResult::neutral();
+    $verify($b, '');
+
+    $reason = $this->getRandomGenerator()->string();
+    $b = AccessResult::neutral($reason);
+    $verify($b, $reason);
+
+    $b = AccessResult::forbiddenIf(FALSE, '', $reason);
+    $verify($b, $reason);
+
+    $b = AccessResult::allowedIf(FALSE, $reason);
+    $verify($b, $reason);
+  }
+
+  /**
    * Tests access conditionally allowed.
    *
    * @legacy-covers ::allowedIf
