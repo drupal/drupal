@@ -121,6 +121,19 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
       $this->pressSaveButton();
     }
     $this->waitForElementTextContains('.messages--warning', 'There are currently 5 items selected. The maximum number of items for the field is 2. Remove 3 items from the selection.');
+
+    // Assert that unchecked media items are disabled when the selection
+    // exceeds the allowed maximum. This verifies the fix for the case where
+    // uploading multiple files at once causes the selection to exceed the
+    // limit; previously items were only disabled when the selection count
+    // was exactly equal to the limit.
+    $checkboxes = $this->getCheckboxes();
+    foreach ($checkboxes as $checkbox) {
+      if (!$checkbox->isChecked()) {
+        $this->assertTrue($checkbox->hasAttribute('disabled'), 'Unchecked media items should be disabled when selection exceeds the limit.');
+      }
+    }
+
     // If the user tries to insert the selected items anyway, they should get
     // an error.
     $this->pressInsertSelected(NULL, FALSE);
@@ -132,6 +145,14 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
     $this->deselectMediaItem(3);
     $this->deselectMediaItem(4);
     $assert_session->elementNotExists('css', '.messages--error');
+    // After deselecting to exactly the limit (2 of 2), unchecked items
+    // should still be disabled since the selection is at the maximum.
+    $checkboxes = $this->getCheckboxes();
+    foreach ($checkboxes as $checkbox) {
+      if (!$checkbox->isChecked()) {
+        $this->assertTrue($checkbox->hasAttribute('disabled'), 'Unchecked media items should be disabled when selection is at the limit.');
+      }
+    }
     $this->pressInsertSelected('Added 2 media items.');
   }
 
