@@ -4,6 +4,7 @@ namespace Drupal\views\Element;
 
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\RenderElementBase;
+use Drupal\views\ContextualLinksHelper;
 use Drupal\views\Exception\ViewRenderElementException;
 use Drupal\views\Views;
 
@@ -84,12 +85,12 @@ class View extends RenderElementBase {
         }
 
         if (empty($view->display_handler->getPluginDefinition()['returns_response'])) {
-          // views_add_contextual_links() needs the following information in
-          // order to be attached to the view.
+          // \Drupal\views\ContextualLinksHelper::addLinks() needs the following
+          // information to be attached to the view.
           $element['#view_id'] = $view->storage->id();
           $element['#view_display_show_admin_links'] = $view->getShowAdminLinks();
           $element['#view_display_plugin_id'] = $view->display_handler->getPluginId();
-          views_add_contextual_links($element, 'view', $view->current_display);
+          \Drupal::service(ContextualLinksHelper::class)->addLinks($element, 'view', $view->current_display);
         }
       }
       if (empty($view->display_handler->getPluginDefinition()['returns_response'])) {

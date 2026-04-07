@@ -7,6 +7,7 @@
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\field\FieldStorageConfigInterface;
+use Drupal\views\ContextualLinksHelper;
 use Drupal\views\Hook\ViewsThemeHooks;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Entity\View;
@@ -74,84 +75,14 @@ use Drupal\views\Views;
  *       should be shown.
  *     - #view_display_plugin_id: The plugin ID of the display.
  *
- * @see \Drupal\views\Plugin\Block\ViewsBlock::addContextualLinks()
- * @see template_preprocess_views_view()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   Drupal\views\ContextualLinksHelper::addLinks() instead.
+ *
+ * @see https://www.drupal.org/node/3382344
  */
 function views_add_contextual_links(&$render_element, $location, $display_id, ?array $view_element = NULL): void {
-  if (!isset($view_element)) {
-    $view_element = $render_element;
-  }
-  $view_element['#cache_properties'] = ['view_id', 'view_display_show_admin_links', 'view_display_plugin_id'];
-  $view_id = $view_element['#view_id'];
-  $show_admin_links = $view_element['#view_display_show_admin_links'];
-  $display_plugin_id = $view_element['#view_display_plugin_id'];
-
-  // Do not do anything if the view is configured to hide its administrative
-  // links or if the Contextual Links module is not enabled.
-  if (\Drupal::moduleHandler()->moduleExists('contextual') && $show_admin_links) {
-    // Also do not do anything if the display plugin has not defined any
-    // contextual links that are intended to be displayed in the requested
-    // location.
-    $plugin = \Drupal::service('plugin.manager.views.display')->getDefinition($display_plugin_id);
-    // If contextual_links_locations are not set, provide a sane default. (To
-    // avoid displaying any contextual links at all, a display plugin can still
-    // set 'contextual_links_locations' to, e.g., {""}.)
-
-    if (!isset($plugin['contextual_links_locations'])) {
-      $plugin['contextual_links_locations'] = ['view'];
-    }
-    elseif ($plugin['contextual_links_locations'] == [] || $plugin['contextual_links_locations'] == ['']) {
-      $plugin['contextual_links_locations'] = [];
-    }
-    else {
-      $plugin += ['contextual_links_locations' => ['view']];
-    }
-
-    // On exposed_forms blocks contextual links should always be visible.
-    $plugin['contextual_links_locations'][] = 'exposed_filter';
-    $has_links = !empty($plugin['contextual links']) && !empty($plugin['contextual_links_locations']);
-    if ($has_links && in_array($location, $plugin['contextual_links_locations'])) {
-      foreach ($plugin['contextual links'] as $group => $link) {
-        $args = [];
-        $valid = TRUE;
-        if (!empty($link['route_parameters_names'])) {
-          $view_storage = \Drupal::entityTypeManager()
-            ->getStorage('view')
-            ->load($view_id);
-          foreach ($link['route_parameters_names'] as $parameter_name => $property) {
-            // If the plugin is trying to create an invalid contextual link
-            // (for example, "path/to/{$view->storage->property}", where
-            // $view->storage->{property} does not exist), we cannot construct
-            // the link, so we skip it.
-            if (!property_exists($view_storage, $property)) {
-              $valid = FALSE;
-              break;
-            }
-            else {
-              $args[$parameter_name] = $view_storage->get($property);
-            }
-          }
-        }
-        // If the link was valid, attach information about it to the renderable
-        // array.
-        if ($valid) {
-          $render_element['#views_contextual_links'] = TRUE;
-          $render_element['#contextual_links'][$group] = [
-            'route_parameters' => $args,
-            'metadata' => [
-              'location' => $location,
-              'name' => $view_id,
-              'display_id' => $display_id,
-            ],
-          ];
-          // If we're setting contextual links on a page, for a page view, for a
-          // user that may use contextual links, attach Views' contextual links
-          // JavaScript.
-          $render_element['#cache']['contexts'][] = 'user.permissions';
-        }
-      }
-    }
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use Drupal\views\ContextualLinksHelper::addLinks() instead. See https://www.drupal.org/node/3382344', E_USER_DEPRECATED);
+  \Drupal::service(ContextualLinksHelper::class)->addLinks($render_element, $location, $display_id, $view_element);
 }
 
 /**

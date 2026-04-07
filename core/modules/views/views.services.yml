@@ -137,3 +137,5 @@ services:
   Drupal\views\Plugin\views\query\CastSqlInterface: '@views.cast_sql'
   Drupal\views\ViewsConfigUpdater:
     autowire: true
+  Drupal\views\ContextualLinksHelper:
+    autowire: true
