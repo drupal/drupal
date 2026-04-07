@@ -319,8 +319,11 @@
         ) {
           $('#media-library-messages').empty();
         }
+        // Use >= instead of === to also disable items when selection EXCEEDS the limit
+        // (e.g., after uploading multiple images consecutively).
         if (
-          currentSelection.length === settings.media_library.selection_remaining
+          settings.media_library.selection_remaining > 0 &&
+          currentSelection.length >= settings.media_library.selection_remaining
         ) {
           disableItems($mediaItems.not(':checked'));
           enableItems($mediaItems.filter(':checked'));
