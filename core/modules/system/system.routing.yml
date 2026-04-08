@@ -285,10 +285,10 @@ system.modules_list_non_stable_confirm:
 system.theme_uninstall:
   path: '/admin/appearance/uninstall'
   defaults:
-    _controller: '\Drupal\system\Controller\ThemeController::uninstall'
+    _form: '\Drupal\system\Form\ThemeUninstallConfirmForm'
+    _title: 'Uninstall theme'
   requirements:
     _permission: 'administer themes'
-    _csrf_token: 'TRUE'
 
 system.theme_install:
   path: '/admin/appearance/install'

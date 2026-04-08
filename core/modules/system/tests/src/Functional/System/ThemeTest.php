@@ -524,8 +524,10 @@ class ThemeTest extends BrowserTestBase {
 
     // Uninstall each of the two themes starting with Olivero.
     $this->cssSelect('a[title="Uninstall Olivero theme"]')[0]->click();
+    $this->submitForm([], 'Uninstall');
     $this->assertSession()->responseContains('The <em class="placeholder">Olivero</em> theme has been uninstalled');
     $this->cssSelect('a[title="Uninstall Claro theme"]')[0]->click();
+    $this->submitForm([], 'Uninstall');
     $this->assertSession()->responseContains('The <em class="placeholder">Claro</em> theme has been uninstalled');
   }
 

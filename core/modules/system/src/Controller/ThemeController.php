@@ -59,39 +59,6 @@ class ThemeController extends ControllerBase {
   }
 
   /**
-   * Uninstalls a theme.
-   *
-   * @param string $theme
-   *   The theme name.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   Redirects back to the appearance admin page.
-   */
-  public function uninstall(#[MapQueryParameter] string $theme) {
-    $config = $this->config('system.theme');
-
-    // Get current list of themes.
-    $themes = $this->themeHandler->listInfo();
-
-    // Check if the specified theme is one recognized by the system.
-    if (!empty($themes[$theme])) {
-      // Do not uninstall the default or admin theme.
-      if ($theme === $config->get('default') || $theme === $config->get('admin')) {
-        $this->messenger()->addError($this->t('%theme is the default theme and cannot be uninstalled.', ['%theme' => $themes[$theme]->info['name']]));
-      }
-      else {
-        $this->themeInstaller->uninstall([$theme]);
-        $this->messenger()->addStatus($this->t('The %theme theme has been uninstalled.', ['%theme' => $themes[$theme]->info['name']]));
-      }
-    }
-    else {
-      $this->messenger()->addError($this->t('The %theme theme was not found.', ['%theme' => $theme]));
-    }
-
-    return $this->redirect('system.themes_page');
-  }
-
-  /**
    * Installs a theme.
    *
    * @param string $theme

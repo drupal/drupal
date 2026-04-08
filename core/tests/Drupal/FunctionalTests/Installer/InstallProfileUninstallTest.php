@@ -79,6 +79,7 @@ class InstallProfileUninstallTest extends BrowserTestBase {
     $this->assertSession()->fieldNotExists('uninstall[testing_config_import_module]');
     $this->drupalGet('admin/appearance');
     $this->clickLink("Uninstall Testing config import theme theme");
+    $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains("The Testing config import theme theme has been uninstalled.");
     $this->drupalGet('admin/modules/uninstall');
     $this->assertSession()->pageTextNotContains("The install profile 'Testing config import' is providing the following module(s): testing_config_import_module");
