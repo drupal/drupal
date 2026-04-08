@@ -1,0 +1,111 @@
+.draggable.field-plugin-settings-editing,
+.draggable.drag-previous.field-plugin-settings-editing {
+  background: var(--gin-bg-app);
+}
+
+.field-plugin-summary {
+  color: var(--gin-color-text-light);
+  font-size: var(--gin-font-size-xs);
+}
+
+/* Need to increase specificity */
+.field-option.field-option {
+  --thumb-size: 5rem;
+
+  align-items: baseline;
+  padding: 0;
+  border: 1px solid var(--gin-border-color);
+  border-radius: var(--gin-border-m);
+  background-color: transparent;
+  gap: var(--gin-spacing-m);
+
+  .field-option__thumb {
+    border-radius: 0;
+    background-color: var(--gin-bg-layer2);
+    border-start-start-radius: var(--gin-border-s);
+    border-end-start-radius: var(--gin-border-s);
+
+    .add-field-container & {
+      background-color: var(--gin-bg-layer2);
+    }
+  }
+
+  .field-option__icon {
+    filter: brightness(0);
+
+    .gin--dark-mode & {
+      filter: brightness(0) invert(1);
+    }
+  }
+
+  .field-option__words {
+    padding-block: var(--gin-spacing-s);
+
+    .field-option__label {
+      display: block;
+      margin-block-end: var(--gin-spacing-xxs);
+      font-weight: var(--gin-font-weight-semibold);
+    }
+  }
+
+  .field-option__item {
+    column-gap: 0;
+    padding-block: var(--gin-spacing-s);
+
+    .form-item__label {
+      margin-block-end: var(--gin-spacing-xxs);
+      font-weight: var(--gin-font-weight-semibold);
+    }
+  }
+
+  .field-option__description {
+    color: var(--gin-color-text-light);
+    font-size: var(--gin-font-size-xs);
+    line-height: 1.3;
+  }
+
+  .field-option-radio {
+    all: unset !important;
+  }
+
+  &.selected,
+  &:focus-within,
+  &:has(.field-option-radio:checked) {
+    background-color: var(--gin-bg-layer2);
+
+    .field-option__thumb {
+      background-color: var(--gin-color-primary);
+    }
+
+    .field-option__icon {
+      filter: brightness(0) invert(1);
+
+      .gin--dark-mode & {
+        filter: brightness(0);
+      }
+    }
+  }
+
+  &:focus-within,
+  &:focus-within:has(.field-option-radio:checked) {
+    .field-option__thumb {
+      background-color: var(--gin-color-primary-active);
+    }
+  }
+}
+
+.subfield-option {
+  border: 1px solid var(--gin-border-color);
+  border-radius: var(--gin-border-m);
+
+  .item-list {
+    margin-block-start: var(--gin-spacing-xs);
+    color: var(--gin-color-text-light);
+    font-size: var(--gin-font-size-xs);
+  }
+
+  &.selected,
+  &:focus-within {
+    background-color: var(--gin-bg-layer2);
+  }
+}

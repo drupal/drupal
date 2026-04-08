@@ -1,0 +1,8 @@
+.shepherd-element {
+  border-radius: var(--gin-border-m);
+}
+
+.joyride-content-wrapper .button,
+.button:not(:focus).shepherd-button {
+  box-shadow: none;
+}

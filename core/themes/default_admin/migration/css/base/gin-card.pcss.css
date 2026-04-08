@@ -1,0 +1,46 @@
+/* cspell:ignore xsmall */
+@import "media-queries.pcss.css";
+
+.card {
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--gin-border-color-layer2);
+  border-radius: var(--gin-border-m);
+  background: transparent;
+  box-shadow: none;
+
+  .gin--dark-mode & {
+    box-shadow: none;
+  }
+
+  .heading-f {
+    color: var(--gin-color-title);
+  }
+}
+
+.card-list {
+  margin-block-end: var(--gin-spacing-xl);
+}
+
+.card__image {
+  img {
+    border-radius: var(--gin-border-m) var(--gin-border-m) 0 0;
+
+    @media (--admin-xsmall) {
+      border-radius: var(--gin-border-m) 0 0 var(--gin-border-m);
+    }
+  }
+}
+
+.card__content-wrapper {
+  border-radius: 0 0 var(--gin-border-xs) var(--gin-border-xs);
+  background-color: var(--gin-bg-layer);
+
+  .gin--dark-mode & {
+    background-color: var(--gin-bg-layer2);
+  }
+
+  @media (--admin-xsmall) {
+    border-radius: 0 var(--gin-border-xs) var(--gin-border-xs) 0;
+  }
+}

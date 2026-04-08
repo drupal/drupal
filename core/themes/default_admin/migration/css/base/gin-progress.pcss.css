@@ -1,0 +1,23 @@
+.progress__bar {
+  border-color: var(--gin-color-primary);
+  background-color: var(--gin-color-primary);
+  box-shadow:
+    0 0.125em 0.25em var(--gin-color-primary-light),
+    1.25em 0.9375em 2em var(--gin-color-primary-light);
+}
+
+.progress__track {
+  padding: var(--gin-spacing-xs);
+  border-color: var(--gin-border-color);
+  background-color: var(--gin-bg-layer3);
+}
+
+.progress__description,
+.progress__percentage {
+  color: var(--gin-color-text);
+}
+
+/* Autocomplete z-index issue */
+.ui-autocomplete {
+  z-index: 2000;
+}

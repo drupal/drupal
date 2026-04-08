@@ -1,0 +1,16 @@
+/**
+ * Action link layout styles.
+ */
+.local-actions {
+  margin-inline-end: calc(var(--gin-spacing-xxs) * -1);
+  padding: 0;
+  list-style: none;
+  font-size: 0; /* Chrome fix. */
+  margin-block: var(--gin-spacing-s) var(--gin-spacing-xxs);
+}
+
+.local-actions__item {
+  display: inline-block;
+  margin-block: 0 var(--gin-spacing-xs);
+  margin-inline: var(--gin-spacing-xxs);
+}

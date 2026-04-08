@@ -1,0 +1,49 @@
+.modules-table-filter {
+  padding: 0;
+  border: 0 none;
+  box-shadow: none;
+}
+
+.package-listing {
+  margin-block-start: var(--gin-spacing-m);
+}
+
+.gin-details__summary {
+  padding-inline-start: 2.75rem;
+}
+
+.gin-details.gin-details--package-listing,
+.gin-details.module-list__module-details,
+.system-status-report .gin-details {
+  border: 1px solid var(--gin-border-color);
+  border-radius: var(--gin-border-m);
+}
+
+.gin-details__summary,
+.gin-details__summary.gin-details__summary--package-listing,
+.gin-details__summary.gin-details__summary--system-status-report {
+  color: var(--gin-color-text);
+  background-color: transparent;
+}
+
+.gin-details__wrapper,
+.gin-details__wrapper.gin-details__wrapper--package-listing,
+.gin-details__wrapper.gin-details__wrapper--system-status-report {
+  margin-block: var(--gin-spacing-m);
+  margin-inline: calc(var(--gin-spacing-l) - var(--gin-spacing-xxs));
+}
+
+.gin-details__wrapper--accordion,
+.gin-details__wrapper--accordion-item,
+.gin-details__wrapper--vertical-tabs-item {
+  margin: 0;
+}
+
+.gin-details__summary-summary {
+  opacity: 0.8;
+  color: var(--gin-color-text-light);
+}
+
+.module-list__module {
+  border-block-end: 1px solid var(--gin-border-color);
+}

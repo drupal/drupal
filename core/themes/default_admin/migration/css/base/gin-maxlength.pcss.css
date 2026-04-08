@@ -1,0 +1,6 @@
+.form-item .counter {
+  margin-block-start: var(--gin-spacing-xs);
+  color: var(--gin-color-text);
+  font-size: var(--gin-font-size-xs);
+  line-height: 1.3;
+}

@@ -1,0 +1,17 @@
+.block-help-block {
+  max-width: 1024px;
+  margin: 0;
+  margin-block-end: var(--gin-spacing-m);
+  font-size: var(--gin-font-size-s);
+
+  p {
+    /* @todo add this back after visual regression against Gin 5.x */
+    /* margin: 0; */
+    color: var(--gin-color-text-light);
+  }
+}
+
+#edit-help {
+  color: var(--gin-color-text-light);
+  font-size: var(--gin-font-size-s);
+}

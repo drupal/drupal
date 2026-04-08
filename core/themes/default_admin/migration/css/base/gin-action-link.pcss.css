@@ -1,0 +1,105 @@
+.action-link {
+  color: var(--gin-color-primary);
+  border-radius: var(--gin-border-s);
+  background: transparent;
+
+  &:hover {
+    color: var(--gin-color-primary-hover);
+    background: var(--gin-bg-item-hover);
+  }
+
+  &:focus {
+    color: var(--gin-color-primary-active);
+    background: var(--gin-color-primary-light-hover);
+  }
+
+  &.action-link--extrasmall {
+    font-size: var(--gin-font-size-xxs);
+  }
+
+  &::before {
+    background: var(--gin-color-primary) !important;
+    background-image: none;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+  }
+}
+
+.action-link--icon-plus:hover::before,
+.action-link--icon-ex:hover::before,
+.action-link--icon-checkmark:hover::before,
+.action-link--icon-show:hover::before,
+.action-link--icon-cog:hover::before,
+.action-link--icon-hide:hover::before,
+.action-link--icon-show::before,
+.action-link--icon-hide::before {
+  background-color: var(--gin-color-primary);
+  background-image: none;
+}
+
+.action-link--icon-plus::before {
+  mask-image: var(--admin-icon-add);
+}
+
+.action-link--icon-checkmark::before {
+  mask-image: var(--admin-icon-checkmark);
+}
+
+.action-link--icon-show::before {
+  mask-image: var(--admin-icon-show);
+}
+
+.action-link--icon-hide::before {
+  mask-image: var(--admin-icon-hide);
+}
+
+.action-link--icon-cog::before {
+  mask-image: var(--admin-icon-config);
+}
+
+.action-link--icon-ex::before {
+  mask-image: var(--admin-icon-remove);
+}
+
+.action-link--icon-key::before {
+  mask-image: var(--admin-icon-devel);
+}
+
+.action-link--icon-questionmark::before {
+  mask-image: var(--admin-icon-help);
+}
+
+.action-link--icon-trash.action-link--danger,
+.button.button--danger,
+a.button.button--danger {
+  min-height: 0;
+  color: var(--gin-color-danger);
+  box-shadow: 0 1px 2px var(--gin-color-danger-lightest);
+
+  &::before {
+    display: none;
+  }
+
+  &,
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: var(--gin-color-danger) !important;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: var(--gin-bg-layer);
+    background-color: var(--gin-color-danger);
+  }
+}
+
+/* Primary danger button */
+.button--primary.button--danger,
+a.button--primary.button--danger,
+#edit-submit.button.button--danger {
+  color: var(--gin-bg-layer);
+  background-color: var(--gin-color-danger);
+}

@@ -1,0 +1,82 @@
+@import "media-queries.pcss.css";
+
+.page-wrapper *:focus,
+.ui-dialog *:focus,
+.dropbutton .dropbutton__item > *:focus,
+.dropbutton .dropbutton__item > *:focus:hover,
+.dropbutton__items > .dropbutton__item:first-of-type > *:focus,
+.dropbutton__items > .dropbutton__item:first-of-type ~ .dropbutton__item > *:focus,
+.dropbutton__items > .dropbutton__item:first-of-type ~ .dropbutton__item > *:focus:hover,
+.form-boolean:focus:active,
+.form-boolean:focus:hover,
+.cke.cke_chrome.cke_focus,
+.horizontal-tabs ul.horizontal-tabs-list li.horizontal-tab-button a:focus,
+.form-element:focus,
+.form-element:hover:focus,
+.form-element.error:hover:focus,
+.form-actions .action-link:focus,
+.paragraphs-tabs-wrapper .field-multiple-table .draggable.drag,
+.layout-paragraphs-field .layout-paragraphs-actions input.layout-paragraphs-edit:focus,
+.layout-paragraphs-field .layout-paragraphs-actions input.layout-paragraphs-remove:focus,
+.ck .ck.ck-button:active,
+.ck .ck.ck-button:focus,
+.ck .ck.ck-button:active:focus,
+.toolbar-box .toolbar-handle:focus,
+.field-option:has(.field-option-radio:checked),
+.field-option:focus-within,
+.subfield-option:has(.field-option-radio:checked),
+.subfield-option:focus-within,
+#edit-submit.form-submit:focus,
+.toolbar-dropdown__menu .toolbar-dropdown__link:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 1px var(--gin-color-focus-border),
+    0 0 0 4px var(--gin-color-focus);
+}
+
+.admin-item__link:focus {
+  border-radius: calc(var(--gin-border-xs) / 2);
+}
+
+.gin-details:focus,
+.gin-details:focus:hover,
+.gin-details__summary:focus,
+.gin-details__summary:focus:hover {
+  box-shadow: none;
+}
+
+.gin-details__summary {
+  &::after {
+    box-shadow:
+      inset 0 0 0 1px var(--gin-color-focus-border),
+      inset 0 0 0 4px var(--gin-color-focus);
+  }
+}
+
+.tabs__link:focus {
+  border: 1px solid transparent;
+  box-shadow:
+    inset 0 0 0 1px var(--gin-color-focus-border),
+    inset 0 0 0 4px var(--gin-color-focus);
+}
+
+.vertical-tabs__menu-link:focus::after,
+.tabs__trigger:focus {
+  border: var(--gin-border-xs) solid var(--gin-color-focus);
+  box-shadow: none;
+}
+
+@media (--admin-small) {
+  .is-horizontal .tabs__link:focus,
+  .is-horizontal .tabs--primary .tabs__link:focus {
+    box-shadow:
+      0 0 0 1px var(--gin-color-focus-border),
+      0 0 0 4px var(--gin-color-focus);
+  }
+}
+
+.vertical-tabs__menu-link:focus,
+.vertical-tabs__menu-item:focus {
+  outline: 0;
+  box-shadow: none;
+}

@@ -1,0 +1,308 @@
+@import "media-queries.pcss.css";
+
+.gin-table-scroll-wrapper {
+  clear: both;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  margin-block-start: calc(var(--gin-spacing-xs) * -1);
+}
+
+table.gin--sticky-table-header {
+  position: sticky;
+  z-index: 97;
+  visibility: hidden;
+  overflow: hidden;
+  width: auto !important;
+  margin-block-start: calc(var(--gin-spacing-xs) * -1);
+  inset-block-start: calc(var(--gin-toolbar-y-offset) + var(--gin-height-sticky) - 1px);
+
+  tr {
+    display: block;
+    width: max-content;
+  }
+}
+
+.gin-horizontal-scroll-shadow {
+  background-color: var(--gin-bg-layer);
+  background-image: linear-gradient(to right, var(--gin-bg-layer), var(--gin-bg-layer)), linear-gradient(to right, var(--gin-bg-layer), var(--gin-bg-layer)), linear-gradient(to right, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0)), linear-gradient(to left, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0));
+  background-repeat: no-repeat;
+  background-attachment: local, local, scroll, scroll;
+  background-position:
+    left center,
+    right center,
+    left center,
+    right center;
+  background-size:
+    24px 100%,
+    24px 100%,
+    12px 100%,
+    12px 100%;
+
+  &:dir(rtl) {
+    background-image: linear-gradient(to left, var(--gin-bg-layer), var(--gin-bg-layer)), linear-gradient(to left, var(--gin-bg-layer), var(--gin-bg-layer)), linear-gradient(to left, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0)), linear-gradient(to right, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0));
+    background-position:
+      right center,
+      left center,
+      right center,
+      left center;
+  }
+}
+
+table.sticky-header {
+  inset-inline-start: auto !important;
+  min-width: 100%;
+  max-width: fit-content;
+  background: transparent;
+}
+
+table.position-sticky,
+table.sticky-header {
+  thead {
+    position: static;
+  }
+
+  &.--is-processed thead {
+    pointer-events: none;
+
+    tr {
+      border-color: transparent;
+
+      .sortable-heading.is-active > a::before {
+        display: none;
+      }
+    }
+  }
+}
+
+table {
+  thead {
+    border-radius: var(--gin-border-m);
+    background: transparent;
+
+    tr {
+      border-block-end: 2px solid var(--gin-border-color-table-header);
+
+      &:hover {
+        background: transparent;
+      }
+    }
+  }
+
+  th {
+    background: var(--gin-bg-layer);
+    font-size: var(--gin-font-size-s);
+    font-weight: var(--gin-font-weight-bold);
+
+    &,
+    .form-item__label {
+      color: var(--gin-color-title);
+    }
+
+    @media (--admin-medium) {
+      height: auto;
+      padding: var(--gin-spacing-m);
+    }
+  }
+
+  tbody {
+    tr {
+      border-block-end: 1px solid var(--gin-border-color-table);
+    }
+
+    td {
+      height: auto;
+      padding: var(--gin-spacing-density-m) var(--gin-spacing-m);
+    }
+  }
+
+  tr,
+  tr:focus-within,
+  .draggable-table.tabledrag-disabled tr {
+    color: var(--gin-color-text);
+    background-color: transparent;
+
+    &:hover {
+      color: var(--gin-color-text);
+      background: var(--gin-bg-item);
+    }
+
+    &.selected:hover {
+      background: transparent;
+    }
+  }
+
+  tr.selected {
+    .gin--dark-mode & {
+      border-color: rgb(255, 255, 255, 0.2);
+    }
+
+    td {
+      background-color: var(--gin-bg-item-hover);
+    }
+  }
+
+  td {
+    a {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+        text-decoration-style: var(--gin-link-decoration-style);
+      }
+    }
+
+    .group-label {
+      color: var(--gin-color-title);
+    }
+  }
+}
+
+.sortable-heading {
+  padding: var(--gin-spacing-xs) var(--gin-spacing-m);
+
+  > a::before {
+    inset-block-end: -2px;
+  }
+
+  > a::after {
+    background: var(--gin-color-text-light);
+    mask-image: var(--admin-icon-sort);
+    mask-repeat: no-repeat;
+    mask-position: center center;
+
+    @media (forced-colors: active) {
+      background: linktext;
+    }
+  }
+
+  &.is-active > a::before,
+  > a:hover::before {
+    width: 100%;
+    inset-inline-start: 0;
+  }
+
+  > a:hover::before {
+    border-block-end-width: 3px;
+  }
+
+  &.is-active > a {
+    &,
+    &:hover,
+    &:active {
+      color: var(--gin-color-primary-active);
+    }
+
+    &::before {
+      border-block-end: 0.1875rem solid var(--gin-color-primary-active);
+      background-color: var(--gin-bg-item);
+      border-start-start-radius: var(--gin-border-s);
+      border-start-end-radius: var(--gin-border-s);
+    }
+  }
+}
+
+.tablesort {
+  background-color: var(--gin-color-primary-active);
+  background-image: none;
+  mask-image: var(--admin-icon-sort);
+  mask-repeat: no-repeat;
+  mask-position: 0 50%;
+}
+
+.tablesort--asc {
+  mask-image: var(--admin-icon-sort-asc);
+
+  @media (forced-colors: active) {
+    background: linktext;
+  }
+}
+
+.tablesort--desc {
+  mask-image: var(--admin-icon-sort-desc);
+
+  @media (forced-colors: active) {
+    background: linktext;
+  }
+}
+
+.field-plugin-settings-edit-wrapper {
+  float: inline-end;
+
+  + a {
+    float: inline-start;
+  }
+}
+
+.region-title {
+  border-block-end: 2px solid var(--gin-color-text);
+}
+
+.field-multiple-table {
+  th {
+    padding-block: var(--gin-spacing-xs);
+    padding-inline: var(--gin-spacing-l) var(--gin-spacing-m);
+    border-block-end: 0;
+    background: transparent;
+
+    &.th__order {
+      padding: 0;
+      font-size: 0;
+    }
+  }
+
+  thead {
+    th {
+      background: var(--gin-bg-header);
+
+      &:first-of-type {
+        border-start-start-radius: var(--gin-border-m);
+        border-end-start-radius: var(--gin-border-m);
+      }
+    }
+
+    &:not(:has(th:last-of-type:not([style*="display: none"]))) th:nth-last-of-type(2),
+    th:last-of-type:not([style*="display: none"]) {
+      border-start-end-radius: var(--gin-border-m);
+      border-end-end-radius: var(--gin-border-m);
+    }
+
+    tr {
+      border-block-end: 0;
+    }
+
+    .field-label .label,
+    .form-item__label--multiple-value-form {
+      display: inline-block;
+      margin: 0;
+      padding: var(--gin-spacing-xs) 0;
+      letter-spacing: -0.025em;
+      color: var(--gin-color-primary-active);
+      font-size: var(--gin-font-size-l);
+      font-weight: var(--gin-font-weight-bold);
+      line-height: 1.33333em;
+    }
+  }
+
+  tr .form-item:not(:last-of-type) {
+    margin-block-end: var(--gin-spacing-m);
+  }
+
+  /* Fixes paragraphs extending beyond layout */
+  .ck.ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
+    flex-wrap: wrap;
+  }
+}
+
+.gin-layer-wrapper .views-table {
+  margin-block-start: 0;
+}
+
+table td.field-plugin-summary-cell {
+  vertical-align: middle;
+}
+
+table .views-field.views-field-operations {
+  text-align: end;
+}

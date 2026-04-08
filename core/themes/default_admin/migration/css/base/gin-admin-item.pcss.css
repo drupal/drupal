@@ -1,0 +1,100 @@
+.admin-list {
+  padding: var(--gin-spacing-s) 0;
+}
+
+.admin-item {
+  position: relative;
+  padding-block: var(--gin-spacing-density-s);
+  padding-inline: var(--gin-spacing-l) calc(var(--gin-spacing-xs) + var(--gin-spacing-xl));
+  margin: var(--gin-spacing-l) var(--gin-spacing-s);
+
+  &:not(:last-child) {
+    border-block-end: 0 none;
+
+    &::after {
+      position: absolute;
+      display: block;
+      width: calc(100% + var(--gin-spacing-l));
+      height: 1px;
+      content: "";
+      opacity: 0.75;
+      border-block-end: 1px solid var(--gin-border-color-table);
+      inset-inline-start: calc(var(--gin-spacing-s) * -1);
+      inset-block-end: calc(var(--gin-spacing-s) * -1);
+    }
+  }
+
+  &:first-child {
+    margin-block-start: 0;
+  }
+
+  &:last-child {
+    margin-block-end: 0;
+  }
+}
+
+.admin-item--panel {
+  margin-block: 0;
+  margin-inline: calc(var(--gin-spacing-l) * -1);
+}
+
+.admin-item__title {
+  font-size: var(--gin-font-size);
+  font-weight: var(--gin-font-weight-semibold);
+}
+
+.admin-item__description {
+  color: var(--gin-color-text-light);
+  font-size: var(--gin-font-size-s);
+}
+
+.admin-item {
+  .admin-item__link {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    text-indent: -999em;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+
+    &::before {
+      transform: translateY(-50%);
+      background-color: var(--gin-color-primary);
+      background-image: none;
+      inset-inline-end: var(--gin-spacing-m);
+      inset-inline-start: auto;
+      inset-block-start: 50%;
+      mask-image: var(--admin-icon-handle);
+      mask-size: 1em 1em;
+      mask-repeat: no-repeat;
+      mask-position: center center;
+
+      &:dir(rtl) {
+        transform: translateY(-50%) scaleX(-1);
+      }
+
+      @media (forced-colors: active) {
+        background-color: linktext;
+      }
+    }
+
+    &:hover,
+    &:focus {
+      border-radius: var(--gin-border-m);
+      background: var(--gin-color-primary-light);
+
+      ~ .admin-item__title,
+      ~ .admin-item__description {
+        color: var(--gin-color-primary);
+      }
+    }
+
+    &:focus {
+      box-shadow:
+        inset 0 0 0 1px var(--gin-color-focus-border),
+        inset 0 0 0 4px var(--gin-color-focus);
+    }
+  }
+}

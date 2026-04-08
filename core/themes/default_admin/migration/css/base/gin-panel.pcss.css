@@ -1,0 +1,34 @@
+.block-system > .node-confirm-form,
+.block-system > .confirmation {
+  padding-block-start: var(--gin-spacing-l);
+}
+
+.panel__title,
+.system-status-general-info__header,
+.system-status-report__requirements-group > h3,
+.system-themes-list__header {
+  margin-block-start: 0;
+  padding: var(--gin-spacing-m) var(--gin-spacing-l);
+  color: var(--gin-color-primary-active);
+  border: 0 none;
+  border-radius: var(--gin-border-m);
+  background: var(--gin-bg-header);
+  font-size: var(--gin-font-size-l);
+  font-weight: var(--gin-font-weight-bold);
+}
+
+.panel {
+  padding: 0;
+
+  .admin-list {
+    margin: var(--gin-spacing-s) 0;
+  }
+}
+
+.panel__title {
+  margin: var(--gin-spacing-s);
+}
+
+.panel__content {
+  padding: 0;
+}

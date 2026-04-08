@@ -1,0 +1,209 @@
+.messages {
+  position: relative;
+  margin-block-start: 0;
+  padding: var(--gin-spacing-m);
+  opacity: 1;
+  border: 2px solid transparent;
+  border-radius: var(--gin-border-l);
+
+  .gin--dark-mode & {
+    box-shadow: 0 6px 16px var(--gin-border-color-layer);
+  }
+
+  a {
+    &,
+    &:hover,
+    &:active {
+      color: #fff;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: opacity var(--gin-transition-fast);
+  }
+}
+
+.messages__title {
+  font-weight: var(--gin-font-weight-bold);
+}
+
+.messages__title,
+.messages__content {
+  margin-inline-start: 2.125rem;
+}
+
+.messages {
+  .messages__header {
+    position: relative;
+    margin-block-end: var(--gin-spacing-xs);
+    margin-inline-end: 1.5em;
+    background-image: none;
+
+    &::before {
+      position: absolute;
+      display: block;
+      width: 1.5rem;
+      height: 1.5rem;
+      content: "";
+      inset-block-start: 2px;
+      inset-inline-start: 0;
+
+      @media (forced-colors: active) {
+        background-color: linktext !important;
+      }
+    }
+  }
+
+  .button--dismiss {
+    position: absolute;
+    width: 29px;
+    height: 29px;
+    margin: var(--gin-spacing-s);
+    padding: 0;
+    text-indent: -99999px;
+    color: transparent;
+    border-color: transparent !important;
+    border-radius: var(--gin-border-m);
+    box-shadow: none;
+    inset-block-start: 0;
+    inset-inline-end: 0;
+
+    &:hover:not(:focus) {
+      color: transparent;
+      border-color: #fff !important;
+      background-color: transparent;
+    }
+
+    &:focus,
+    &:hover:focus {
+      .icon-close {
+        background-color: var(--gin-bg-app);
+      }
+    }
+
+    .icon-close {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      mask-image: var(--admin-icon-close);
+      mask-size: 16px 16px;
+      mask-repeat: no-repeat;
+      mask-position: center;
+
+      @media (forced-colors: active) {
+        background-color: buttonBorder;
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: var(--gin-transition);
+    }
+  }
+
+  &.messages--info {
+    color: var(--gin-color-info-light);
+    border-color: var(--gin-bg-info);
+    background: var(--gin-bg-info);
+
+    .messages__header {
+      background: none;
+
+      &::before {
+        background-color: var(--gin-color-info-light);
+        mask-image: var(--admin-icon-info);
+        mask-repeat: no-repeat;
+        mask-position: center left;
+
+        &:dir(rtl) {
+          mask-position: center right;
+        }
+      }
+    }
+
+    .button--dismiss {
+      .icon-close:link {
+        background-color: var(--gin-color-info-light);
+      }
+    }
+  }
+
+  &.messages--status {
+    color: var(--gin-color-green-light);
+    background: var(--gin-bg-green);
+
+    .messages__header {
+      &::before {
+        background-color: var(--gin-color-green-light);
+        mask-image: var(--admin-icon-status);
+        mask-repeat: no-repeat;
+        mask-position: center left;
+
+        &:dir(rtl) {
+          mask-position: center right;
+        }
+      }
+    }
+
+    .button--dismiss {
+      .icon-close:link {
+        background-color: var(--gin-color-green-light);
+      }
+    }
+  }
+
+  &.messages--warning {
+    color: var(--gin-color-warning-light);
+    background: var(--gin-bg-warning);
+
+    .messages__header {
+      &::before {
+        background-color: var(--gin-color-warning-light);
+        mask-image: var(--admin-icon-warning);
+        mask-repeat: no-repeat;
+        mask-position: center left;
+
+        &:dir(rtl) {
+          mask-position: center right;
+        }
+      }
+    }
+
+    .button--dismiss {
+      .icon-close:link {
+        background-color: var(--gin-color-warning-light);
+      }
+    }
+  }
+}
+
+.messages--error {
+  color: var(--gin-color-danger-light);
+  background: var(--gin-bg-danger);
+
+  .messages__header {
+    &::before {
+      background-color: var(--gin-color-danger-light);
+      mask-image: var(--admin-icon-error);
+      mask-repeat: no-repeat;
+      mask-position: center left;
+
+      &:dir(rtl) {
+        mask-position: center right;
+      }
+    }
+  }
+
+  .button--dismiss {
+    .icon-close:link {
+      background-color: var(--gin-color-danger-light);
+    }
+  }
+}
+
+.messages-list {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}

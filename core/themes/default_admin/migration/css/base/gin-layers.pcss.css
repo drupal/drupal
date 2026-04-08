@@ -1,0 +1,105 @@
+/* cspell:ignore imageapi */
+@import "media-queries.pcss.css";
+
+.page-content {
+  margin-block-start: 0;
+
+  > .help,
+  > .region-content,
+  > .region-highlighted {
+    @media (--admin-small) {
+      margin-block-start: var(--gin-spacing-l);
+    }
+  }
+}
+
+.gin-layer-wrapper,
+.gin-layer-wrapper-shadow,
+.block-system > form,
+.views-exposed-form.views-exposed-form,
+.views-edit-view,
+.views-preview-wrapper,
+.modules-tabs,
+#views-entity-list,
+.admin.my-workbench,
+.media-library-views-form,
+.user-admin-permissions,
+.field-config-form {
+  margin-block-start: 0;
+  border-radius: var(--gin-border-l);
+  box-shadow: var(--gin-shadow-l1);
+
+  .gin--dark-mode & {
+    box-shadow: 0 6px 16px var(--gin-border-color-layer);
+  }
+
+  .gin--high-contrast-mode & {
+    box-shadow: none;
+  }
+}
+
+.gin-layer-wrapper,
+.block-system-main-block > form,
+.views-exposed-form.views-exposed-form,
+.views-edit-view,
+.views-preview-wrapper,
+#views-entity-list,
+.admin.my-workbench,
+.media-library-views-form,
+.user-admin-permissions,
+.field-config-form {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--gin-spacing-s);
+  border: 1px solid var(--gin-border-color-layer);
+  background: var(--gin-bg-layer);
+
+  /* Remove extra spacing on top of form. */
+  > .form-wrapper:first-of-type .form-item,
+  .layout-region-node-main > .form-wrapper:first-of-type .form-item {
+    margin-block-start: 0;
+  }
+
+  @media (--admin-small) {
+    padding: var(--gin-spacing-l);
+  }
+}
+
+.field-config-form > .form-item:first-child {
+  margin-block-start: 0;
+}
+
+#system-clear-cache + #system-performance-settings,
+.gin-layer-wrapper + .imageapi-optimize-default-pipeline {
+  margin-block-start: var(--gin-spacing-l);
+}
+
+/* Unpublished node */
+.node--unpublished {
+  background-color: var(--gin-bg-unpublished);
+}
+
+/* Has table filter */
+.block-system-main-block > form:has(.table-filter) {
+  .table-filter {
+    margin-block-end: var(--gin-spacing-l);
+    padding: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+
+    .form-type--search {
+      margin-block: 0;
+    }
+
+    .winnow-input,
+    .table-filter-text {
+      width: 100%;
+    }
+
+    .table-filter-text {
+      margin-block-start: 0;
+      padding: var(--gin-spacing-m);
+    }
+  }
+}

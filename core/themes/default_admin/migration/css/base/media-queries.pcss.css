@@ -1,0 +1,15 @@
+/* cspell:ignore xsmall */
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+@custom-media --admin-tiny (min-width: 26.25em);
+@custom-media --admin-xsmall (min-width: 36.75em);
+@custom-media --admin-small (min-width: 48em);
+@custom-media --admin-medium (min-width: 61em);
+@custom-media --admin-large (min-width: 64em);
+@custom-media --admin-wide (min-width: 80em);
+
+/* Max-width variant (exclusive) */
+@custom-media --admin-to-tiny (max-width: 26.24em);

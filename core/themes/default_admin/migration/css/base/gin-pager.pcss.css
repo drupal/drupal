@@ -1,0 +1,51 @@
+.pager__link {
+  color: var(--gin-color-text);
+  background-color: transparent;
+}
+
+.pager__link.is-active,
+.pager__item--current {
+  color: var(--gin-bg-app);
+}
+
+.pager__link:hover,
+.pager__link.is-active:hover {
+  color: var(--gin-color-button-text);
+  background: var(--gin-color-primary-hover);
+}
+
+.pager__item--first .pager__link::before {
+  mask-image: var(--admin-icon-first);
+}
+
+.pager__item--previous .pager__link::before {
+  mask-image: var(--admin-icon-prev);
+}
+
+.pager__item--next .pager__link::after {
+  mask-image: var(--admin-icon-next);
+}
+
+.pager__item--last .pager__link::after {
+  mask-image: var(--admin-icon-last);
+}
+
+.pager__item--first .pager__link,
+.pager__item--previous .pager__link,
+.pager__item--next .pager__link,
+.pager__item--last .pager__link {
+  &::before,
+  &::after {
+    background: var(--gin-color-text-light);
+  }
+
+  &:hover::before,
+  &:hover::after {
+    background: var(--gin-bg-app);
+  }
+}
+
+.pager__link.is-active,
+.pager__item--current {
+  background-color: var(--gin-color-primary);
+}

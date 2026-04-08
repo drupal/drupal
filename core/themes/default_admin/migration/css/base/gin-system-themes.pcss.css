@@ -1,0 +1,9 @@
+.system-themes-list {
+  margin-block-end: var(--gin-spacing-l);
+}
+
+#system-themes-page {
+  hr {
+    display: none;
+  }
+}

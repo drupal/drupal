@@ -1,0 +1,31 @@
+/* Summary */
+details summary {
+  padding: var(--gin-spacing-m);
+  background-color: rgb(230, 228, 223, 0.2);
+}
+
+/* Claro form--inline fixes */
+.form--inline,
+[data-drupal-selector*="-bulk-form"],
+.layout-region-node-footer__content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding-block-start: var(--gin-spacing-m);
+
+  .form-item,
+  .form-actions {
+    margin-block: var(--gin-spacing-xs);
+    margin-inline: 0 var(--gin-spacing-xs);
+    align-self: flex-start;
+  }
+
+  .button,
+  .action-link {
+    margin-block: 0;
+  }
+
+  .field-add-more-submit {
+    margin-block-start: var(--gin-spacing-s);
+  }
+}

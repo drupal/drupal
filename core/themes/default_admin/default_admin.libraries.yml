@@ -42,7 +42,51 @@ global-styling:
       css/components/tabs.css: {}
     theme:
       css/theme/colors.css: {}
-      migration/css/base/gin.css: { minified: false }
+      migration/css/base/gin-icons.css: {}
+      migration/css/base/gin-body.css: {}
+      migration/css/base/gin-color-overrides.css: {}
+      migration/css/base/gin-views-unwrapped.css: {}
+      migration/css/base/gin-regions.css: {}
+      migration/css/base/gin-layers.css: {}
+      migration/css/base/gin-title.css: {}
+      migration/css/base/gin-extend.css: {}
+      migration/css/base/gin-claro-improvements.css: {}
+      migration/css/base/gin-views.css: {}
+      migration/css/base/gin-table.css: {}
+      migration/css/base/gin-tabledrag.css: {}
+      migration/css/base/gin-form.css: {}
+      migration/css/base/gin-button.css: {}
+      migration/css/base/gin-dropbutton.css: {}
+      migration/css/base/gin-action-link.css: {}
+      migration/css/base/gin-pager.css: {}
+      migration/css/base/gin-help.css: {}
+      migration/css/base/gin-system-report.css: {}
+      migration/css/base/gin-messages.css: {}
+      migration/css/base/gin-field-ui.css: {}
+      migration/css/base/gin-card.css: {}
+      migration/css/base/gin-elements.css: {}
+      migration/css/base/gin-admin-item.css: {}
+      migration/css/base/gin-focus.css: {}
+      migration/css/base/gin-system-modules.css: {}
+      migration/css/base/gin-system-diff.css: {}
+      migration/css/base/gin-update.css: {}
+      migration/css/base/gin-status-report.css: {}
+      migration/css/base/gin-divider.css: {}
+      migration/css/base/gin-progress.css: {}
+      migration/css/base/gin-insert.css: {}
+      migration/css/base/gin-system-themes.css: {}
+      migration/css/base/gin-panel.css: {}
+      migration/css/base/gin-performance.css: {}
+      migration/css/base/gin-blocks.css: {}
+      migration/css/base/gin-batch.css: {}
+      migration/css/base/gin-maxlength.css: {}
+      migration/css/base/gin-local-actions.css: {}
+      migration/css/base/gin-tour.css: {}
+      migration/css/base/gin-quotation.css: {}
+      migration/css/base/gin-image-preview.css: {}
+      migration/css/base/gin-permissions.css: {}
+      migration/css/base/gin-taxonomy.css: {}
+      migration/css/base/gin-toolbar-icons.css: {}
     layout:
       css/layout/breadcrumb.css: {}
       css/layout/local-actions.css: {}
