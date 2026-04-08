@@ -20,6 +20,12 @@ class TextFieldItemList extends FieldItemList {
         'default_value_input',
         $field_name,
       ]);
+
+      // Remove the 'add_more' button from the submitted values if it exists.
+      if (isset($submitted_values['add_more'])) {
+        unset($submitted_values['add_more']);
+      }
+
       foreach ($submitted_values as $delta => $value) {
         if (!in_array($value['format'], $allowed_formats, TRUE)) {
           $form_state->setErrorByName(
