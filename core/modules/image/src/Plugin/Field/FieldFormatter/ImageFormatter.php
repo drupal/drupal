@@ -15,6 +15,7 @@ use Drupal\image\Entity\ImageStyle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\image\ImageDerivativeUtilities;
 
 /**
  * Plugin implementation of the 'image' formatter.
@@ -28,56 +29,20 @@ use Drupal\Core\Cache\Cache;
 )]
 class ImageFormatter extends ImageFormatterBase {
 
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The image style entity storage.
-   *
-   * @var \Drupal\image\ImageStyleStorageInterface
-   */
-  protected $imageStyleStorage;
-
-  /**
-   * The file URL generator.
-   *
-   * @var \Drupal\Core\File\FileUrlGeneratorInterface
-   */
-  protected $fileUrlGenerator;
-
-  /**
-   * Constructs an ImageFormatter object.
-   *
-   * @param string $plugin_id
-   *   The plugin ID for the formatter.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The definition of the field to which the formatter is associated.
-   * @param array $settings
-   *   The formatter settings.
-   * @param string $label
-   *   The formatter label display setting.
-   * @param string $view_mode
-   *   The view mode.
-   * @param array $third_party_settings
-   *   Any third party settings.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
-   *   The image style storage.
-   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
-   *   The file URL generator.
-   */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, AccountInterface $current_user, EntityStorageInterface $image_style_storage, FileUrlGeneratorInterface $file_url_generator) {
+  public function __construct(
+    $plugin_id,
+    $plugin_definition,
+    FieldDefinitionInterface $field_definition,
+    array $settings,
+    $label,
+    $view_mode,
+    array $third_party_settings,
+    protected AccountInterface $currentUser,
+    protected EntityStorageInterface $imageStyleStorage,
+    protected FileUrlGeneratorInterface $fileUrlGenerator,
+    protected ImageDerivativeUtilities $imageDerivativeUtilities,
+  ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-    $this->currentUser = $current_user;
-    $this->imageStyleStorage = $image_style_storage;
-    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -94,7 +59,8 @@ class ImageFormatter extends ImageFormatterBase {
       $configuration['third_party_settings'],
       $container->get('current_user'),
       $container->get('entity_type.manager')->getStorage('image_style'),
-      $container->get('file_url_generator')
+      $container->get('file_url_generator'),
+      $container->get(ImageDerivativeUtilities::class)
     );
   }
 
@@ -117,7 +83,7 @@ class ImageFormatter extends ImageFormatterBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element = parent::settingsForm($form, $form_state);
 
-    $image_styles = image_style_options(FALSE);
+    $image_styles = $this->imageDerivativeUtilities->styleOptions(FALSE);
     $description_link = Link::fromTextAndUrl(
       $this->t('Configure Image Styles'),
       Url::fromRoute('entity.image_style.collection')
@@ -176,7 +142,7 @@ class ImageFormatter extends ImageFormatterBase {
   public function settingsSummary() {
     $summary = [];
 
-    $image_styles = image_style_options(FALSE);
+    $image_styles = $this->imageDerivativeUtilities->styleOptions(FALSE);
     // Unset possible 'No defined styles' option.
     unset($image_styles['']);
     // Styles could be lost because of enabled/disabled modules that defines

@@ -133,7 +133,7 @@ class ImageStyleDownloadController extends FileDownloadController {
     // The $target variable for a derivative of a style has
     // styles/<style_name>/... as structure, so we check if the $target variable
     // starts with styles/.
-    $token = $request->query->get(IMAGE_DERIVATIVE_TOKEN, '');
+    $token = $request->query->get(ImageStyleInterface::TOKEN, '');
     $token_is_valid = hash_equals($image_style->getPathToken($image_uri), $token)
       || hash_equals($image_style->getPathToken($scheme . '://' . $target), $token);
     if (!$this->config('image.settings')->get('allow_insecure_derivatives') || str_starts_with(ltrim($target, '\/'), 'styles/')) {

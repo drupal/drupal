@@ -4,6 +4,7 @@ namespace Drupal\image\Form;
 
 use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\image\ImageDerivativeUtilities;
 
 /**
  * Creates a form to delete an image style.
@@ -78,7 +79,7 @@ class ImageStyleDeleteForm extends EntityDeleteForm {
    */
   protected function getReplacementOptions() {
     if (!isset($this->replacementOptions)) {
-      $this->replacementOptions = array_diff_key(image_style_options(), [$this->getEntity()->id() => '']);
+      $this->replacementOptions = array_diff_key(\Drupal::service(ImageDerivativeUtilities::class)->styleOptions(), [$this->getEntity()->id() => '']);
     }
     return $this->replacementOptions;
   }

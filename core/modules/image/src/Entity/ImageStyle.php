@@ -235,7 +235,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
         $path = \Drupal::config('system.file')->get('default_scheme') . '://' . $path;
       }
       $original_uri = $stream_wrapper_manager->normalizeUri($path);
-      $token_query = [IMAGE_DERIVATIVE_TOKEN => $this->getPathToken($original_uri)];
+      $token_query = [ImageStyleInterface::TOKEN => $this->getPathToken($original_uri)];
     }
 
     if ($clean_urls === NULL) {

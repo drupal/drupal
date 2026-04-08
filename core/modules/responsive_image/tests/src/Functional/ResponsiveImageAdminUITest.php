@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\responsive_image\Functional;
 
+use Drupal\image\ImageDerivativeUtilities;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
@@ -95,7 +96,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
     ];
     $image_styles = array_merge(
       [ResponsiveImageStyleInterface::EMPTY_IMAGE, ResponsiveImageStyleInterface::ORIGINAL_IMAGE],
-      array_keys(image_style_options(FALSE))
+      array_keys(\Drupal::service(ImageDerivativeUtilities::class)->styleOptions(FALSE))
     );
     foreach ($cases as $case) {
       // Check if the radio buttons are present.

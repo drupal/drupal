@@ -10,6 +10,11 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface ImageStyleInterface extends ConfigEntityInterface {
 
   /**
+   * The name of the query parameter for image derivative tokens.
+   */
+  const TOKEN = 'itok';
+
+  /**
    * Returns the image style.
    *
    * @return string

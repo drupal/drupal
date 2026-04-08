@@ -8,6 +8,7 @@ use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageStyleInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
@@ -203,10 +204,10 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
       $this->assertStringContainsString('index.php/', $generate_url, 'When using non-clean URLS, the system path contains the script name.');
     }
     // Add some extra chars to the token.
-    $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
+    $this->drupalGet(str_replace(ImageStyleInterface::TOKEN . '=', ImageStyleInterface::TOKEN . '=Zo', $generate_url));
     $this->assertSession()->statusCodeEquals(404);
     // Change the parameter name so the token is missing.
-    $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrong_parameter=', $generate_url));
+    $this->drupalGet(str_replace(ImageStyleInterface::TOKEN . '=', 'wrong_parameter=', $generate_url));
     $this->assertSession()->statusCodeEquals(404);
 
     // Check that the generated URL is the same when we pass in a relative path
@@ -286,7 +287,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
 
       if ($clean_url) {
         // Add some extra chars to the token.
-        $this->drupalGet(str_replace(IMAGE_DERIVATIVE_TOKEN . '=', IMAGE_DERIVATIVE_TOKEN . '=Zo', $generate_url));
+        $this->drupalGet(str_replace(ImageStyleInterface::TOKEN . '=', ImageStyleInterface::TOKEN . '=Zo', $generate_url));
         $this->assertSession()->statusCodeEquals(200);
       }
     }
@@ -312,7 +313,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $generated_uri = $this->style->buildUri($original_uri);
     $this->assertFileDoesNotExist($generated_uri);
     $generate_url = $this->style->buildUrl($original_uri, $clean_url);
-    $this->assertStringNotContainsString(IMAGE_DERIVATIVE_TOKEN . '=', $generate_url, 'The security token does not appear in the image style URL.');
+    $this->assertStringNotContainsString(ImageStyleInterface::TOKEN . '=', $generate_url, 'The security token does not appear in the image style URL.');
     $this->drupalGet($generate_url);
     $this->assertSession()->statusCodeEquals(200);
 
@@ -325,7 +326,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $nested_url = $this->style->buildUrl($generated_uri, $clean_url);
     $matches_expected_url_format = (bool) preg_match('/styles\/' . $this->style->id() . '\/' . $scheme . '\/styles\/' . $this->style->id() . '\/' . $scheme . '/', $nested_url);
     $this->assertTrue($matches_expected_url_format, "URL for a derivative of an image style matches expected format.");
-    $nested_url_with_wrong_token = str_replace(IMAGE_DERIVATIVE_TOKEN . '=', 'wrong_parameter=', $nested_url);
+    $nested_url_with_wrong_token = str_replace(ImageStyleInterface::TOKEN . '=', 'wrong_parameter=', $nested_url);
     $this->drupalGet($nested_url_with_wrong_token);
     $this->assertSession()->statusCodeEquals(404);
     // Check that this restriction cannot be bypassed by adding extra slashes

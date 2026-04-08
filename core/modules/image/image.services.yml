@@ -15,3 +15,4 @@ services:
   logger.channel.image:
     parent: logger.channel_base
     arguments: ['image']
+  Drupal\image\ImageDerivativeUtilities: ~
