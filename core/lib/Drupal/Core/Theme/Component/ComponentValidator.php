@@ -81,6 +81,15 @@ class ComponentValidator {
     if (($schema['properties'] ?? NULL) === []) {
       $schema['properties'] = new \stdClass();
     }
+
+    // If a slot has an empty definition,
+    // force casting to object instead of array.
+    foreach ($definition['slots'] ?? [] as $slot_name => $slot) {
+      if ($slot === []) {
+        $definition['slots'][$slot_name] = new \stdClass();
+      }
+    }
+
     $classes_per_prop = $this->getClassProps($schema);
     $missing_class_errors = [];
     foreach ($classes_per_prop as $prop_name => $class_types) {
