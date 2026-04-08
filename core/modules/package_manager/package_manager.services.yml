@@ -1,5 +1,6 @@
 parameters:
   package_manager.skip_procedural_hook_scan: true
+  package_manager.allow_overwrite: ['|^/recipes/.|']
 
 services:
   _defaults:

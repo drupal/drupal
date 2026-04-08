@@ -8,6 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\PathLocator;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -21,6 +22,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * `path` property and are ignored by this validator. The Composer facade at
  * https://packages.drupal.org/8 currently uses the `metapackage` type for
  * submodules of Drupal projects.
+ *
+ * This validator can accept an optional list of regular expressions matching
+ * paths which are allowed to be overwritten. This is most useful when a recipe
+ * is installed, since recipes are normally removed from Composer's awareness by
+ * the drupal/core-recipe-unpack plugin and can therefore run afoul of this
+ * validator.
  *
  * @internal
  *   This is an internal part of Package Manager and may be changed or removed
@@ -36,6 +43,8 @@ final class OverwriteExistingPackagesValidator implements EventSubscriberInterfa
   public function __construct(
     private readonly PathLocator $pathLocator,
     private readonly ComposerInspector $composerInspector,
+    #[Autowire(param: 'package_manager.allow_overwrite')]
+    private readonly array $allowOverwrite = [],
   ) {}
 
   /**
@@ -57,6 +66,12 @@ final class OverwriteExistingPackagesValidator implements EventSubscriberInterfa
         continue;
       }
       $relative_path = str_replace($stage_dir, '', $package->path);
+
+      foreach ($this->allowOverwrite as $pattern) {
+        if (preg_match($pattern, $relative_path)) {
+          continue 2;
+        }
+      }
       if (is_dir($active_dir . DIRECTORY_SEPARATOR . $relative_path)) {
         $event->addError([
           $this->t('The new package @package will be installed in the directory @path, which already exists but is not managed by Composer.', [
