@@ -162,47 +162,68 @@ class CacheContextsManager {
    *   A representative subset of the given set of cache context tokens.
    */
   public function optimizeTokens(array $context_tokens) {
+    // A single token (or empty array) cannot be optimized.
+    if (count($context_tokens) <= 1) {
+      return $context_tokens;
+    }
+
+    // Use hash table for O(1) ancestor lookups instead of O(n) in_array().
+    $context_tokens_lookup = array_flip($context_tokens);
+
     $optimized_content_tokens = [];
     foreach ($context_tokens as $context_token) {
+      $has_period = str_contains($context_token, '.');
+      $has_colon = str_contains($context_token, ':');
 
-      // Extract the parameter if available.
-      $parameter = NULL;
-      $context_id = $context_token;
-      if (str_contains($context_token, ':')) {
-        [$context_id, $parameter] = explode(':', $context_token);
-      }
-
-      // Context tokens without:
-      // - a period means they don't have a parent
-      // - a colon means they're not a specific value of a cache context
+      // Context tokens without a period or colon have no parent,
       // hence no optimizations are possible.
-      if (!str_contains($context_token, '.') && !str_contains($context_token, ':')) {
+      if (!$has_period && !$has_colon) {
         $optimized_content_tokens[] = $context_token;
+        continue;
       }
-      // Check cacheability. If the context defines a max-age of 0, then it
-      // can not be optimized away. Pass the parameter along if we have one.
-      elseif ($this->getService($context_id)->getCacheableMetadata($parameter)->getCacheMaxAge() === 0) {
-        $optimized_content_tokens[] = $context_token;
-      }
-      // The context token has a period or a colon. Iterate over all ancestor
-      // cache contexts. If one exists, omit the context token.
-      else {
-        $ancestor_found = FALSE;
-        // Treat a colon like a period, that allows us to consider 'a' the
-        // ancestor of 'a:foo', without any additional code for the colon.
-        $ancestor = str_replace(':', '.', $context_token);
-        do {
-          $ancestor = substr($ancestor, 0, strrpos($ancestor, '.'));
-          if (in_array($ancestor, $context_tokens)) {
-            // An ancestor cache context is in $context_tokens, hence this cache
-            // context is implied.
-            $ancestor_found = TRUE;
-          }
 
-        } while (!$ancestor_found && str_contains($ancestor, '.'));
-        if (!$ancestor_found) {
+      // Check for ancestors first (cheap string operations) before calling
+      // getService() which is more expensive.
+      $ancestor_found = FALSE;
+
+      // Treat a colon like a period, that allows us to consider 'a' the
+      // ancestor of 'a:foo', without any additional code for the colon.
+      $ancestor = $has_colon ? str_replace(':', '.', $context_token) : $context_token;
+
+      do {
+        $ancestor = substr($ancestor, 0, strrpos($ancestor, '.'));
+        if (isset($context_tokens_lookup[$ancestor])) {
+          // An ancestor cache context is in $context_tokens, hence this cache
+          // context is implied.
+          $ancestor_found = TRUE;
+          break;
+        }
+      } while (str_contains($ancestor, '.'));
+
+      if ($ancestor_found) {
+        // Ancestor found. Check if this token can be optimized away by
+        // verifying its max-age is not 0.
+        // Note: We intentionally do NOT cache getCacheableMetadata() results
+        // because the metadata can change during a request (e.g., when user
+        // permissions or roles change). Caching could lead to incorrect
+        // optimization decisions.
+        $parameter = NULL;
+        $context_id = $context_token;
+        if ($has_colon) {
+          [$context_id, $parameter] = explode(':', $context_token, 2);
+        }
+
+        // If max-age is 0, the token cannot be optimized away.
+        $max_age = $this->getService($context_id)
+          ->getCacheableMetadata($parameter)
+          ->getCacheMaxAge();
+        if ($max_age === 0) {
           $optimized_content_tokens[] = $context_token;
         }
+      }
+      else {
+        // No ancestor exists, keep this token.
+        $optimized_content_tokens[] = $context_token;
       }
     }
     return $optimized_content_tokens;
