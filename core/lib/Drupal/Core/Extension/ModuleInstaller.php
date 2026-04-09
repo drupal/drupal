@@ -150,7 +150,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
     }
     if ($enable_dependencies) {
-      $module_list = $module_list ? array_combine($module_list, $module_list) : [];
+      $module_list = array_combine($module_list, $module_list);
       if ($missing_modules = array_diff_key($module_list, $module_data)) {
         // One or more of the given modules doesn't exist.
         throw new MissingDependencyException(sprintf('Unable to install modules %s due to missing modules %s.', implode(', ', $module_list), implode(', ', $missing_modules)));
