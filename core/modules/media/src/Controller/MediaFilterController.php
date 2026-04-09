@@ -3,13 +3,12 @@
 namespace Drupal\media\Controller;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\ContentEntityStorageInterface;
+use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\filter\FilterFormatInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -23,55 +22,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   subject to change in minor releases. This class should not be
  *   instantiated or extended by external code.
  */
-class MediaFilterController implements ContainerInjectionInterface {
+class MediaFilterController extends ControllerBase {
 
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The media storage.
-   *
-   * @var \Drupal\Core\Entity\ContentEntityStorageInterface
-   */
-  protected $mediaStorage;
-
-  /**
-   * The entity repository.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * Constructs an MediaFilterController instance.
-   *
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer service.
-   * @param \Drupal\Core\Entity\ContentEntityStorageInterface $media_storage
-   *   The media storage.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
-   *   The entity repository.
-   */
-  public function __construct(RendererInterface $renderer, ContentEntityStorageInterface $media_storage, EntityRepositoryInterface $entity_repository) {
-    $this->renderer = $renderer;
-    $this->mediaStorage = $media_storage;
-    $this->entityRepository = $entity_repository;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('renderer'),
-      $container->get('entity_type.manager')->getStorage('media'),
-      $container->get('entity.repository')
-    );
-  }
+  public function __construct(
+    protected RendererInterface $renderer,
+    protected EntityRepositoryInterface $entityRepository,
+    protected CsrfTokenGenerator $csrfToken,
+  ) {}
 
   /**
    * Returns a HTML response containing a preview of the text after filtering.
@@ -95,7 +52,7 @@ class MediaFilterController implements ContainerInjectionInterface {
    * @see \Drupal\editor\EditorController::getUntransformedText
    */
   public function preview(Request $request, FilterFormatInterface $filter_format) {
-    self::checkCsrf($request, \Drupal::currentUser());
+    self::checkCsrf($request, $this->currentUser(), $this->csrfToken);
 
     $text = $request->query->get('text');
     $uuid = $request->query->get('uuid');
@@ -152,7 +109,7 @@ class MediaFilterController implements ContainerInjectionInterface {
    *
    * @todo Refactor this to an access checker.
    */
-  private static function checkCsrf(Request $request, AccountInterface $account) {
+  private static function checkCsrf(Request $request, AccountInterface $account, CsrfTokenGenerator $csrf_token) {
     $header = 'X-Drupal-MediaPreview-CSRF-Token';
 
     if (!$request->headers->has($header)) {
@@ -165,7 +122,7 @@ class MediaFilterController implements ContainerInjectionInterface {
     }
     // For authenticated users, validate the token value.
     $token = $request->headers->get($header);
-    if (!\Drupal::csrfToken()->validate($token, $header)) {
+    if (!$csrf_token->validate($token, $header)) {
       throw new AccessDeniedHttpException();
     }
   }

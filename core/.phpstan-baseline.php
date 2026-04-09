@@ -20822,12 +20822,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media/src/Controller/MediaFilterController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media\\\\Controller\\\\MediaFilterController\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/src/Controller/MediaFilterController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media\\\\Controller\\\\OEmbedIframeController\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
