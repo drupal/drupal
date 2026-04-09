@@ -290,18 +290,6 @@ class TemporaryQueryGuard {
         $cacheability->addCacheTags($entity_type->getListCacheTags());
         break;
 
-      case 'shortcut':
-        // Unless the user can administer shortcuts, allow access only to the
-        // user's currently displayed shortcut set.
-        // @see \Drupal\shortcut\ShortcutAccessControlHandler::checkAccess()
-        if (!$current_user->hasPermission('administer shortcuts')) {
-          $shortcut_set_storage = \Drupal::entityTypeManager()->getStorage('shortcut_set');
-          $specific_condition = new EntityCondition('shortcut_set', $shortcut_set_storage->getDisplayedToUser($current_user)->id());
-          $cacheability->addCacheContexts(['user']);
-          $cacheability->addCacheTags($entity_type->getListCacheTags());
-        }
-        break;
-
       case 'user':
         // Disallow querying values of the anonymous user.
         // @see \Drupal\user\UserAccessControlHandler::checkAccess()

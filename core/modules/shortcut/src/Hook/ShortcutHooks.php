@@ -2,11 +2,17 @@
 
 namespace Drupal\shortcut\Hook;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\jsonapi\JsonApiFilter;
 
 /**
  * Hook implementations for shortcut.
@@ -135,6 +141,60 @@ class ShortcutHooks {
   public function userDelete(EntityInterface $entity): void {
     // Clean up shortcut set mapping of removed user account.
     \Drupal::entityTypeManager()->getStorage('shortcut_set')->unassignUser($entity);
+  }
+
+  /**
+   * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'shortcut'.
+   */
+  #[Hook('jsonapi_shortcut_filter_access')]
+  public function jsonapiShortcutFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
+    // @see \Drupal\shortcut\ShortcutAccessControlHandler::checkAccess()
+    // queryShortcutAccessAlter() narrows results to only shortcuts in the
+    // user's currently displayed shortcut set for non-administrators.
+    return [
+      JsonApiFilter::AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'administer shortcuts')->orIf(AccessResult::allowedIfHasPermissions($account, [
+        'access shortcuts',
+        'customize shortcut links',
+      ]))->addCacheContexts(['user']),
+    ];
+  }
+
+  /**
+   * Implements hook_query_TAG_alter() for 'shortcut_access'.
+   *
+   * Unless the user can administer shortcuts, restricts queries to only return
+   * shortcuts from the user's currently displayed shortcut set.
+   *
+   * @see \Drupal\shortcut\ShortcutAccessControlHandler::checkAccess()
+   */
+  #[Hook('query_shortcut_access_alter')]
+  public function queryShortcutAccessAlter(AlterableInterface $query): void {
+    $account = $query->getMetaData('account') ?: \Drupal::currentUser();
+
+    // Administrators can access all shortcuts.
+    if ($account->hasPermission('administer shortcuts')) {
+      return;
+    }
+
+    // Non-administrators can only access shortcuts in their displayed set.
+    $shortcut_set = \Drupal::entityTypeManager()
+      ->getStorage('shortcut_set')
+      ->getDisplayedToUser($account);
+
+    $tables = $query->getTables();
+    $base_table = $query->getMetaData('base_table');
+    if (!$base_table) {
+      foreach ($tables as $table_info) {
+        if (!$table_info instanceof SelectInterface && $table_info['table'] === 'shortcut_field_data') {
+          $base_table = $table_info['alias'];
+          break;
+        }
+      }
+    }
+
+    if ($base_table) {
+      $query->condition("$base_table.shortcut_set", $shortcut_set->id());
+    }
   }
 
 }

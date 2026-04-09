@@ -213,23 +213,6 @@ class JsonapiHooks {
   }
 
   /**
-   * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'shortcut'.
-   */
-  #[Hook('jsonapi_shortcut_filter_access')]
-  public function jsonapiShortcutFilterAccess(EntityTypeInterface $entity_type, AccountInterface $account): array {
-    // @see \Drupal\shortcut\ShortcutAccessControlHandler::checkAccess()
-    // \Drupal\jsonapi\Access\TemporaryQueryGuard adds the condition for
-    // "shortcut_set = $shortcut_set_storage->getDisplayedToUser($current_user)"
-    // so this does not have to.
-    return [
-      JsonApiFilter::AMONG_ALL => AccessResult::allowedIfHasPermission($account, 'administer shortcuts')->orIf(AccessResult::allowedIfHasPermissions($account, [
-        'access shortcuts',
-        'customize shortcut links',
-      ])),
-    ];
-  }
-
-  /**
    * Implements hook_jsonapi_ENTITY_TYPE_filter_access() for 'taxonomy_term'.
    */
   #[Hook('jsonapi_taxonomy_term_filter_access')]
