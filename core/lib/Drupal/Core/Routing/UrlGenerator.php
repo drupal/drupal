@@ -197,16 +197,7 @@ class UrlGenerator implements UrlGeneratorInterface {
     // gap.
     $optional = TRUE;
     // The structure of the tokens array varies according to the compiled route.
-    // Examples:
-    // @code
-    // [
-    //  [0 => 'text', 1 => '/add-link-inline'],
-    //  [0 => 'variable', 1 => '/', 2 => '[^/]++', 3 => 'shortcut_set'],
-    //  [0 => 'text', 1 => '/admin/config/user-interface/shortcut/manage'],
-    // ]
-    // @endcode
-    // This is the structure for the "shortcut.link_add_inline" route.
-    //
+    // Example:
     // @code
     // [
     //   [ 0 => 'text', 1 => '/admin/config' ]

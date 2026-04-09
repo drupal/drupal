@@ -27,8 +27,8 @@ use Symfony\Component\HttpFoundation\Request;
  *   '%new_path' => $helper->newPath(),
  *   '%change_record' => $change_record,
  *  ];
- * $this->logger->warning('A user was redirected from %old_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
- * $message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
+ * $this->logger->warning('A user was redirected from %old_path. This redirect will be removed in a future version of Drupal. Update links and bookmarks to use %new_path. See %change_record for more information.', $params);
+ * $message = $this->t('You have been redirected from %old_path. Update links and bookmarks to use %new_path.', $params);
  * $this->messenger()->addWarning($message);
  * return $helper->redirect();
  * @endcode
