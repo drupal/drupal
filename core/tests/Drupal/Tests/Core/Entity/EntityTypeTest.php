@@ -8,11 +8,13 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Exception\EntityTypeIdLengthException;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests Drupal\Core\Entity\EntityType.
@@ -276,6 +278,47 @@ class EntityTypeTest extends UnitTestCase {
     $this->expectException('Drupal\Core\Entity\Exception\EntityTypeIdLengthException');
     $this->expectExceptionMessage($message);
     $this->setUpEntityType(['id' => $id]);
+  }
+
+  /**
+   * Tests maxlength validation of ID when it is a derivative.
+   *
+   * Bundle class plugin IDs have derivative form of {entity type ID}:{bundle},
+   * and both the entity type ID and the bundle can be up to 32 characters. As
+   * long as each is 32 or less, the combined ID is valid.
+   *
+   * @param bool $invalid_entity_type
+   *   Whether the entity type ID is too long.
+   * @param bool $invalid_bundle
+   *   Whether the bundle is too long.
+   */
+  #[TestWith([TRUE, TRUE])]
+  #[TestWith([TRUE, FALSE])]
+  #[TestWith([FALSE, TRUE])]
+  #[TestWith([FALSE, FALSE])]
+  public function testDerivativeIdMaxlength(bool $invalid_entity_type, bool $invalid_bundle): void {
+    $entity_type_id = $invalid_entity_type ? $this->randomMachineName(EntityTypeInterface::ID_MAX_LENGTH + 1) : $this->randomMachineName(EntityTypeInterface::ID_MAX_LENGTH);
+    $bundle = $invalid_bundle ? $this->randomMachineName(EntityTypeInterface::BUNDLE_MAX_LENGTH + 1) : $this->randomMachineName(EntityTypeInterface::BUNDLE_MAX_LENGTH);
+
+    try {
+      $t = NULL;
+      $entity_type = $this->setUpEntityType(['id' => "$entity_type_id:$bundle"]);
+    }
+    catch (\Throwable $t) {
+      $entity_type = NULL;
+    }
+    if ($invalid_bundle) {
+      $this->assertInstanceOf(EntityTypeIdLengthException::class, $t);
+      $this->assertSame('Attempt to create an entity type bundle class with an ID longer than ' . EntityTypeInterface::ID_MAX_LENGTH . " characters: $bundle.", $t->getMessage());
+    }
+    elseif ($invalid_entity_type) {
+      $this->assertInstanceOf(EntityTypeIdLengthException::class, $t);
+      $this->assertSame('Attempt to create an entity type with an ID longer than ' . EntityTypeInterface::ID_MAX_LENGTH . " characters: $entity_type_id.", $t->getMessage());
+    }
+    else {
+      $this->assertInstanceOf(EntityTypeInterface::class, $entity_type);
+    }
+
   }
 
   /**

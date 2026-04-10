@@ -117,7 +117,31 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
           elseif (!isset($this->bundleInfo[$type])) {
             $this->bundleInfo[$type][$type]['label'] = $entity_type->getLabel();
           }
+
+          // Add bundle information provided by entity type plugin discovery
+          // using the Drupal\Core\Entity\Attribute\Bundle attribute.
+          $attribute_entity_type_bundle_info = $entity_type->get('entity_type_bundle_info');
+          if ($attribute_entity_type_bundle_info === NULL) {
+            continue;
+          }
+          foreach ($attribute_entity_type_bundle_info as $bundle => $info) {
+            if ($bundle_entity_type && !isset($this->bundleInfo[$type][$bundle])) {
+              // If the entity type has a bundle entity type, do not allow
+              // bundle definitions to be created by attributes.
+              continue;
+            }
+            $this->bundleInfo[$type][$bundle]['class'] = $info['class'];
+            $additional_bundle_info = array_filter([
+              'label' => $info['label'],
+              'translatable' => $info['translatable'],
+            ], fn($property) => $property !== NULL);
+            $this->bundleInfo[$type][$bundle] = $additional_bundle_info + $this->bundleInfo[$type][$bundle];
+
+            // Make sure the bundle has a label.
+            $this->bundleInfo[$type][$bundle]['label'] ??= $bundle;
+          }
         }
+
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
         $this->cacheSet("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, [
           'entity_types',

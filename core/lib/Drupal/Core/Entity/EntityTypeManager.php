@@ -4,6 +4,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Entity\Exception\InvalidLinkTemplateException;
@@ -114,11 +115,39 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    */
   protected function findDefinitions() {
     $definitions = $this->getDiscovery()->getDefinitions();
+    $bundle_class_bundle_info = [];
+    $definitions = array_filter($definitions, function (EntityTypeInterface $definition, string $id) use (&$bundle_class_bundle_info) {
+      // Derivatives are bundle class definitions and not actual entity types.
+      if (str_contains($id, PluginBase::DERIVATIVE_SEPARATOR)) {
+        $bundle_info = $definition->get('entity_type_bundle_info');
+        if ($bundle_info !== NULL) {
+          // Normalize the class string.
+          $this->processDefinition($definition, $id);
+          [$entity_type_id, $bundle] = explode(PluginBase::DERIVATIVE_SEPARATOR, $id);
+          $bundle_class_bundle_info[$entity_type_id][$bundle] = [
+            'class' => $definition->getClass(),
+            'label' => $definition->getLabel(),
+            'translatable' => $bundle_info[$bundle]['translatable'],
+          ];
+        }
+        return FALSE;
+      }
+
+      return TRUE;
+    }, ARRAY_FILTER_USE_BOTH);
     $this->moduleHandler->invokeAllWith('entity_type_build', function (callable $hook, string $module) use (&$definitions) {
       $hook($definitions);
     });
     foreach ($definitions as $plugin_id => $definition) {
       $this->processDefinition($definition, $plugin_id);
+    }
+    foreach ($bundle_class_bundle_info as $entity_type_id => $bundle_data) {
+      if (!isset($definitions[$entity_type_id])) {
+        continue;
+      }
+      $entity_type_bundle_info = $definitions[$entity_type_id]->get('entity_type_bundle_info') ?? [];
+      $entity_type_bundle_info += $bundle_data;
+      $definitions[$entity_type_id]->set('entity_type_bundle_info', $entity_type_bundle_info);
     }
     $this->alterDefinitions($definitions);
 
@@ -129,6 +158,9 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    * {@inheritdoc}
    */
   public function getDefinition($entity_type_id, $exception_on_invalid = TRUE) {
+    if (str_contains($entity_type_id, PluginBase::DERIVATIVE_SEPARATOR)) {
+      throw new \LogicException('Bundle entity types are not supported directly.');
+    }
     if (($entity_type = parent::getDefinition($entity_type_id, FALSE)) && class_exists($entity_type->getClass())) {
       return $entity_type;
     }

@@ -872,6 +872,9 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
 /**
  * Describe the bundles for entity types.
  *
+ * Bundles can also be defined with the \Drupal\Core\Entity\Attribute\Bundle
+ * attribute applied to a bundle class.
+ *
  * @return array
  *   An associative array of all entity bundles, keyed by the entity
  *   type name, and then the bundle name, with the following keys:
@@ -886,6 +889,7 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
  *
  * @see \Drupal\Core\Entity\EntityTypeBundleInfo::getBundleInfo()
  * @see hook_entity_bundle_info_alter()
+ * @see \Drupal\Core\Entity\Attribute\Bundle
  */
 function hook_entity_bundle_info(): array {
   $bundles['user']['user']['label'] = t('User');

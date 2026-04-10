@@ -4,17 +4,24 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\Exception\AmbiguousBundleClassException;
 use Drupal\Core\Entity\Exception\BundleClassInheritanceException;
 use Drupal\Core\Entity\Exception\MissingBundleClassException;
+use Drupal\Core\Extension\ModuleInstallerInterface;
+use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
+use Drupal\entity_test_attribute_bundle_class\Entity\EntityTestBundleClassOverrideA;
+use Drupal\entity_test_attribute_bundle_class\Entity\EntityTestBundleClassOverrideB;
+use Drupal\entity_test_attribute_bundle_class\Entity\EntityTestWithBundleTypeNewBundle;
 use Drupal\entity_test_bundle_class\Entity\EntityTestAmbiguousBundleClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestBundleClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestUserClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestVariant;
 use Drupal\entity_test_bundle_class\Entity\SharedEntityTestBundleClassA;
 use Drupal\entity_test_bundle_class\Entity\SharedEntityTestBundleClassB;
+use Drupal\entity_test_attribute_bundle_class\Entity\Subdir\EntityTestSubdirBundleClass;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -37,6 +44,13 @@ class BundleClassTest extends EntityKernelTestBase {
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $storage;
+
+  /**
+   * Controls whether ::entityBundleInfoAlter() will alter bundle information.
+   *
+   * @var bool
+   */
+  protected bool $alterAttributeBundleInfo = FALSE;
 
   /**
    * {@inheritdoc}
@@ -295,6 +309,123 @@ class BundleClassTest extends EntityKernelTestBase {
     $this->container->get('state')->set('entity_test_bundle_class_override_base_class', TRUE);
     $this->entityTypeManager->clearCachedDefinitions();
     $this->assertEquals(EntityTestVariant::class, $this->entityTypeManager->getStorage('entity_test')->getEntityClass());
+  }
+
+  /**
+   * Tests bundle class discovery via attributes.
+   */
+  public function testBundleClassAttributeDiscovery(): void {
+    $this->installEntitySchema('entity_test_with_bundle');
+    // Confirm bundle entity type classes are not entity type definitions.
+    \Drupal::service(ModuleInstallerInterface::class)->install(['entity_test_attribute_bundle_class']);
+    $definitions = \Drupal::entityTypeManager()->getDefinitions();
+    $this->assertArrayHasKey('entity_test', $definitions);
+    $this->assertArrayNotHasKey('entity_test:bundle_class_a', $definitions);
+    $this->assertArrayNotHasKey('entity_test:bundle_class_b', $definitions);
+    $this->assertArrayNotHasKey('entity_test:subdir_bundle_class', $definitions);
+    $this->assertArrayNotHasKey('entity_test_with_bundle:new_bundle', $definitions);
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test');
+    $bundle_info_service = \Drupal::service(EntityTypeBundleInfoInterface::class);
+    $bundle_info = $bundle_info_service->getAllBundleInfo();
+
+    // Test bundle class info where all properties are overridden by the
+    // attribute properties.
+    $this->assertSame('Bundle class A label set by attribute', $bundle_info['entity_test']['bundle_class_a']['label']->getUntranslatedString());
+    $this->assertFalse($bundle_info['entity_test']['bundle_class_a']['translatable']);
+    $entity = $storage->create(['type' => 'bundle_class_a']);
+    $this->assertInstanceOf(EntityTestBundleClassOverrideA::class, $entity);
+
+    // Test bundle class info where all only the class is overridden by
+    // attribute properties.
+    $this->assertSame('Bundle class B', $bundle_info['entity_test']['bundle_class_b']['label']);
+    $this->assertTrue($bundle_info['entity_test']['bundle_class_b']['translatable']);
+    $entity = $storage->create(['type' => 'bundle_class_b']);
+    $this->assertInstanceOf(EntityTestBundleClassOverrideB::class, $entity);
+
+    // Confirm that attribute discovery of bundle classes works in
+    // subdirectories of {module}/src/Entity. Attribute discovery of bundle
+    // classes directly in the {module}/src/Entity directories are already
+    // tested by other methods in this test class.
+    $this->assertSame('subdir_bundle_class', $bundle_info['entity_test']['subdir_bundle_class']['label']);
+    $this->assertArrayNotHasKey('translatable', $bundle_info['entity_test']['subdir_bundle_class']);
+    $entity = $storage->create(['type' => 'subdir_bundle_class']);
+    $this->assertInstanceOf(EntityTestSubdirBundleClass::class, $entity);
+
+    // There have been no bundle entities created for entity_test_with_bundle,
+    // so there should be no bundle class info for the entity type.
+    $this->assertArrayNotHasKey('entity_test_with_bundle', $bundle_info);
+
+    // Confirm bundle classes are not accessible as entity type definitions.
+    $bundle_plugin_ids = [
+      'entity_test:bundle_class_a',
+      'entity_test:bundle_class_b',
+      'entity_test:subdir_bundle_class',
+      'entity_test_with_bundle:new_bundle',
+    ];
+    foreach ($bundle_plugin_ids as $id) {
+      try {
+        $throwable = NULL;
+        $bundle_entity_type = \Drupal::entityTypeManager()->getDefinition($id);
+        $this->assertNull($bundle_entity_type);
+      }
+      catch (\Throwable $throwable) {
+      }
+      $this->assertInstanceOf(\LogicException::class, $throwable);
+      $this->assertSame('Bundle entity types are not supported directly.', $throwable->getMessage());
+    }
+
+    // Activate the entity_bundle_info_alter hook implementation in this class
+    // to confirm the alter hook can change bundle info provided by attributes.
+    $this->alterAttributeBundleInfo = TRUE;
+    $bundle_info_service->clearCachedBundles();
+    $bundle_info = $bundle_info_service->getAllBundleInfo();
+    $this->assertSame('Overridden bundle class to SharedEntityTestBundleClassA', $bundle_info['entity_test']['subdir_bundle_class']['label']);
+    $this->assertTrue($bundle_info['entity_test']['subdir_bundle_class']['translatable']);
+    $entity = $storage->create(['type' => 'subdir_bundle_class']);
+    $this->assertInstanceOf(SharedEntityTestBundleClassA::class, $entity);
+
+    $this->assertSame('Overridden bundle class to SharedEntityTestBundleClassB', $bundle_info['entity_test']['bundle_class_b']['label']);
+    $this->assertTrue($bundle_info['entity_test']['bundle_class_b']['translatable']);
+    $entity = $storage->create(['type' => 'bundle_class_b']);
+    $this->assertInstanceOf(SharedEntityTestBundleClassB::class, $entity);
+
+    // Create the bundle entity for entity_test_with_bundle, and confirm the
+    // bundle class defined by attributes is set.
+    $entity_test_with_bundle_bundle_type = \Drupal::entityTypeManager()
+      ->getDefinition('entity_test_with_bundle')
+      ->getBundleEntityType();
+    $bundle_entity = \Drupal::entityTypeManager()->getStorage($entity_test_with_bundle_bundle_type)
+      ->create(['id' => 'new_bundle']);
+    $bundle_entity->save();
+    $bundle_info = $bundle_info_service->getAllBundleInfo();
+    $this->assertSame('A new bundle for an entity type with a bundle entity type', $bundle_info['entity_test_with_bundle']['new_bundle']['label']->getUntranslatedString());
+    $this->assertFalse($bundle_info['entity_test_with_bundle']['new_bundle']['translatable']);
+    $entity = \Drupal::entityTypeManager()->getStorage('entity_test_with_bundle')
+      ->create(['type' => 'new_bundle']);
+    $this->assertInstanceOf(EntityTestWithBundleTypeNewBundle::class, $entity);
+  }
+
+  /**
+   * Implements hook_entity_bundle_info_alter().
+   */
+  #[Hook('entity_bundle_info_alter')]
+  public function entityBundleInfoAlter(array &$bundles): void {
+    if (!$this->alterAttributeBundleInfo) {
+      return;
+    }
+
+    // The alter hooks runs after the bundle info provided by attributes is
+    // added, so override bundle information here so that it can be tested.
+    if (isset($bundles['entity_test']['subdir_bundle_class'])) {
+      $bundles['entity_test']['subdir_bundle_class']['class'] = SharedEntityTestBundleClassA::class;
+      $bundles['entity_test']['subdir_bundle_class']['label'] = 'Overridden bundle class to SharedEntityTestBundleClassA';
+      $bundles['entity_test']['subdir_bundle_class']['translatable'] = TRUE;
+    }
+
+    if (isset($bundles['entity_test']['bundle_class_b'])) {
+      $bundles['entity_test']['bundle_class_b']['class'] = SharedEntityTestBundleClassB::class;
+      $bundles['entity_test']['bundle_class_b']['label'] = 'Overridden bundle class to SharedEntityTestBundleClassB';
+    }
   }
 
 }
