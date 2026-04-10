@@ -69,7 +69,7 @@ class FilterHooks {
    *
    * Formats an image DOM element that has an invalid source.
    *
-   * @see _filter_html_image_secure_process()
+   * @see \Drupal\filter\Plugin\Filter\FilterHtmlImageSecure::process()
    */
   #[Hook('filter_secure_image_alter')]
   public function filterSecureImageAlter(&$image): void {

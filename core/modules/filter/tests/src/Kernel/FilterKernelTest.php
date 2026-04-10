@@ -11,6 +11,8 @@ use Drupal\Core\Template\TwigThemeEngine;
 use Drupal\editor\EditorXssFilter\Standard;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\FilterPluginCollection;
+use Drupal\filter\Plugin\Filter\FilterAutoP;
+use Drupal\filter\Plugin\Filter\FilterUrl;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
@@ -495,8 +497,12 @@ class FilterKernelTest extends KernelTestBase {
     // Very long string hitting PCRE limits.
     $limit = max((int) ini_get('pcre.backtrack_limit'), (int) ini_get('pcre.recursion_limit'));
     $source = $this->randomMachineName($limit);
-    $result = _filter_autop($source);
-    $this->assertEquals($result, '<p>' . $source . "</p>\n", 'Line break filter can process very long strings.');
+
+    $plugin = \Drupal::service('plugin.manager.filter')->createInstance('filter_autop');
+    assert($plugin instanceof FilterAutoP);
+
+    $result = $plugin->process($source, 'en');
+    $this->assertEquals($result->getProcessedText(), '<p>' . $source . "</p>\n", 'Line break filter can process very long strings.');
   }
 
   /**
@@ -527,13 +533,15 @@ class FilterKernelTest extends KernelTestBase {
 <div>Test two</div>
 
 <!-- END CUSTOM TEMPLATE OUTPUT from 'container.html.twig' -->", $render);
-    $result = _filter_autop($render);
+    $plugin = \Drupal::service('plugin.manager.filter')->createInstance('filter_autop');
+    assert($plugin instanceof FilterAutoP);
+    $result = $plugin->process($render, 'en');
 
     // After auto-p is applied, the theme debug should no longer have
     // line breaks but the true line breaks should still.
     $this->assertSame("<!-- THEME DEBUG --><!-- THEME HOOK: 'container' --><!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'container.html.twig' --><div>Test two</div>
 
-<!-- END CUSTOM TEMPLATE OUTPUT from 'container.html.twig' -->", $result);
+<!-- END CUSTOM TEMPLATE OUTPUT from 'container.html.twig' -->", $result->getProcessedText());
   }
 
   /**
@@ -781,9 +789,11 @@ class FilterKernelTest extends KernelTestBase {
         'http://www.toolong' => FALSE,
         '<a href="mailto:me@me.tv">me@me.tv</a>' => TRUE,
       ],
-      // Absolute URL protocols.
-      // The list to test is found in the beginning of _filter_url() at
-      // $protocols = \Drupal::getContainer()->getParameter('filter_protocols').
+      // Absolute URL protocols. The list to test is found at the beginning of
+      // \Drupal\filter\Plugin\Filter\FilterUrl::process() at
+      // @code
+      // $protocols = $this->container->getParameter('filter_protocols').
+      // @endcode
       'https://example.com,
       ftp://ftp.example.com,
       news://example.net,
@@ -1040,25 +1050,32 @@ class FilterKernelTest extends KernelTestBase {
     ]);
     $path = __DIR__ . '/../..';
 
+    $plugin = \Drupal::service('plugin.manager.filter')->createInstance('filter_url', [
+      'settings' => ['filter_url_length' => 72],
+    ]);
+    assert($plugin instanceof FilterUrl);
+
     $input = file_get_contents($path . '/filter.url-input.txt');
     $expected = file_get_contents($path . '/filter.url-output.txt');
-    $result = _filter_url($input, $filter);
-    $this->assertSame($expected, $result, 'Complex HTML document was correctly processed.');
+    $result = $plugin->process($input, 'en');
+    $this->assertSame($expected, $result->getProcessedText(), 'Complex HTML document was correctly processed.');
 
     $pcre_backtrack_limit = ini_get('pcre.backtrack_limit');
     // Setting this limit to the smallest possible value should cause PCRE
-    // errors and break the various preg_* functions used by _filter_url().
+    // errors and break the various preg_* functions used by
+    // \Drupal\filter\Plugin\Filter\FilterUrl::process().
     ini_set('pcre.backtrack_limit', 1);
 
-    // If PCRE errors occur, _filter_url() should return the exact same text.
+    // If PCRE errors occur, Drupal\filter\Plugin\Filter\FilterUrl::process()
+    // should return the exact same text.
     // Case of a small and simple HTML document.
     $input = $expected = '<p>www.test.com</p>';
-    $result = _filter_url($input, $filter);
-    $this->assertSame($expected, $result, 'Simple HTML document was left intact when PCRE errors occurred.');
+    $result = $plugin->process($input, 'en');
+    $this->assertSame($expected, $result->getProcessedText(), 'Simple HTML document was left intact when PCRE errors occurred.');
     // Case of a complex HTML document.
     $input = $expected = file_get_contents($path . '/filter.url-input.txt');
-    $result = _filter_url($input, $filter);
-    $this->assertSame($expected, $result, 'Complex HTML document was left intact when PCRE errors occurred.');
+    $result = $plugin->process($input, 'en');
+    $this->assertSame($expected, $result->getProcessedText(), 'Complex HTML document was left intact when PCRE errors occurred.');
 
     // Setting limit back to default.
     ini_set('pcre.backtrack_limit', $pcre_backtrack_limit);
