@@ -2,8 +2,15 @@
 
 namespace Drupal\Component\Utility;
 
+@trigger_error('The ' . __NAMESPACE__ . '\ToStringTrait is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Implement the __toString() method directly, exception handling is no longer required. See https://www.drupal.org/node/3548961', E_USER_DEPRECATED);
+
 /**
  * Wraps __toString in a trait to avoid some fatal errors.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Implement
+ *   the __toString() method directly, exception handling is no longer required.
+ *
+ * @see https://www.drupal.org/node/3548961
  */
 trait ToStringTrait {
 

@@ -3,7 +3,6 @@
 namespace Drupal\Core\StringTranslation;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Component\Utility\ToStringTrait;
 
 /**
  * Provides translatable markup class.
@@ -19,8 +18,6 @@ use Drupal\Component\Utility\ToStringTrait;
  * @see \Drupal\Core\Annotation\Translation
  */
 class TranslatableMarkup extends FormattableMarkup {
-
-  use ToStringTrait;
 
   /**
    * The translated markup without placeholder replacements.
@@ -226,6 +223,16 @@ class TranslatableMarkup extends FormattableMarkup {
    */
   public function count(): int {
     return mb_strlen($this->render());
+  }
+
+  /**
+   * Returns the string representation of this object.
+   *
+   * @return string
+   *   The string representation.
+   */
+  public function __toString(): string {
+    return (string) $this->render();
   }
 
 }
