@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\node\Kernel;
+namespace Drupal\Tests\search\Kernel\node;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests node search integration.
  */
-#[Group('node')]
+#[Group('search')]
 #[RunTestsInSeparateProcesses]
 class NodeSearchTest extends KernelTestBase {
 

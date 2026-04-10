@@ -2,20 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\views\Functional;
+namespace Drupal\Tests\search\Functional\views;
 
 use Drupal\node\NodeInterface;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\Tests\views\Functional\ViewTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests search integration filters with multilingual nodes.
  */
-#[Group('views')]
+#[Group('search')]
 #[RunTestsInSeparateProcesses]
-class SearchMultilingualTest extends ViewTestBase {
+class ViewsMultilingualTest extends ViewTestBase {
 
   use CronRunTrait;
   use LanguageTestTrait;
