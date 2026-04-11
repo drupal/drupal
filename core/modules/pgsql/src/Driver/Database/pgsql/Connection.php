@@ -86,6 +86,12 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * @see ::addSavepoint()
    * @see ::releaseSavepoint()
    * @see ::rollbackSavepoint()
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+   *   TransactionManager to start a transaction then call ::commitOrRelease()
+   *   or ::rollback() on it.
+   *
+   * @see https://www.drupal.org/node/3524461
    */
   protected array $savepoints = [];
 
@@ -223,26 +229,26 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     // - Currently in a transaction.
     // - A 'mimic_implicit_commit' does not exist already.
     // - The query is not a savepoint query.
-    $wrap_with_savepoint = $this->inTransaction() &&
+    if (
+      $this->inTransaction() &&
       !$this->transactionManager()->has('mimic_implicit_commit') &&
       !(is_string($query) && (
         stripos($query, 'ROLLBACK TO SAVEPOINT ') === 0 ||
         stripos($query, 'RELEASE SAVEPOINT ') === 0 ||
         stripos($query, 'SAVEPOINT ') === 0
-      )
-    );
-    if ($wrap_with_savepoint) {
+      ))
+    ) {
       // Create a savepoint so we can rollback a failed query. This is so we can
       // mimic MySQL and SQLite transactions which don't fail if a single query
       // fails. This is important for tables that are created on demand. For
       // example, \Drupal\Core\Cache\DatabaseBackend.
-      $this->addSavepoint();
+      $savepoint = $this->startTransaction('mimic_implicit_commit');
       try {
         $return = parent::query($query, $args, $options);
-        $this->releaseSavepoint();
+        $savepoint->commitOrRelease();
       }
       catch (\Exception $e) {
-        $this->rollbackSavepoint();
+        $savepoint->rollback();
         throw $e;
       }
     }
@@ -387,8 +393,15 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * @param string $savepoint_name
    *   A string representing the savepoint name. By default,
    *   "mimic_implicit_commit" is used.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+   *   TransactionManager to start a transaction then call ::commitOrRelease()
+   *   or ::rollback() on it.
+   *
+   * @see https://www.drupal.org/node/3524461
    */
   public function addSavepoint($savepoint_name = 'mimic_implicit_commit') {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use TransactionManager to start a transaction then call ::commitOrRelease() or ::rollback() on it. See https://www.drupal.org/node/3524461', E_USER_DEPRECATED);
     if ($this->inTransaction()) {
       $this->savepoints[$savepoint_name] = $this->startTransaction($savepoint_name);
     }
@@ -400,8 +413,15 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * @param string $savepoint_name
    *   A string representing the savepoint name. By default,
    *   "mimic_implicit_commit" is used.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+   *   TransactionManager to start a transaction then call ::commitOrRelease()
+   *   or ::rollback() on it.
+   *
+   * @see https://www.drupal.org/node/3524461
    */
   public function releaseSavepoint($savepoint_name = 'mimic_implicit_commit') {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use TransactionManager to start a transaction then call ::commitOrRelease() or ::rollback() on it. See https://www.drupal.org/node/3524461', E_USER_DEPRECATED);
     if ($this->inTransaction() && $this->transactionManager()->has($savepoint_name)) {
       unset($this->savepoints[$savepoint_name]);
     }
@@ -413,8 +433,15 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * @param string $savepoint_name
    *   A string representing the savepoint name. By default,
    *   "mimic_implicit_commit" is used.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+   *   TransactionManager to start a transaction then call ::commitOrRelease()
+   *   or ::rollback() on it.
+   *
+   * @see https://www.drupal.org/node/3524461
    */
   public function rollbackSavepoint($savepoint_name = 'mimic_implicit_commit') {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use TransactionManager to start a transaction then call ::commitOrRelease() or ::rollback() on it. See https://www.drupal.org/node/3524461', E_USER_DEPRECATED);
     if ($this->inTransaction() && $this->transactionManager()->has($savepoint_name)) {
       $this->savepoints[$savepoint_name]->rollBack();
       unset($this->savepoints[$savepoint_name]);

@@ -143,15 +143,21 @@ class Select extends QuerySelect {
    * {@inheritdoc}
    */
   public function execute() {
-    $this->connection->addSavepoint();
+    if ($this->connection->inTransaction()) {
+      $savepoint = $this->connection->startTransaction('mimic_implicit_commit');
+    }
     try {
       $result = parent::execute();
     }
     catch (\Exception $e) {
-      $this->connection->rollbackSavepoint();
+      if (isset($savepoint)) {
+        $savepoint->rollback();
+      }
       throw $e;
     }
-    $this->connection->releaseSavepoint();
+    if (isset($savepoint)) {
+      $savepoint->commitOrRelease();
+    }
 
     return $result;
   }

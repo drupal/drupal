@@ -147,7 +147,10 @@ class Schema extends DatabaseSchema {
         'blob_fields' => [],
         'sequences' => [],
       ];
-      $this->connection->addSavepoint();
+
+      if ($this->connection->inTransaction()) {
+        $savepoint = $this->connection->startTransaction('mimic_implicit_commit');
+      }
 
       try {
         // The bytea columns and sequences for a table can be found in
@@ -171,10 +174,14 @@ EOD;
         ]);
       }
       catch (\Exception $e) {
-        $this->connection->rollbackSavepoint();
+        if (isset($savepoint)) {
+          $savepoint->rollback();
+        }
         throw $e;
       }
-      $this->connection->releaseSavepoint();
+      if (isset($savepoint)) {
+        $savepoint->commitOrRelease();
+      }
 
       // If the table information does not yet exist in the PostgreSQL
       // metadata, then return the default table information here, so that it
@@ -260,7 +267,9 @@ EOD;
     $schema = $prefixInfo['schema'];
     $table_name = $prefixInfo['table'];
 
-    $this->connection->addSavepoint();
+    if ($this->connection->inTransaction()) {
+      $savepoint = $this->connection->startTransaction('mimic_implicit_commit');
+    }
 
     try {
       $checks = $this->connection->query("SELECT conname FROM pg_class cl INNER JOIN pg_constraint co ON co.conrelid = cl.oid INNER JOIN pg_attribute attr ON attr.attrelid = cl.oid AND attr.attnum = ANY (co.conkey) INNER JOIN pg_namespace ns ON cl.relnamespace = ns.oid WHERE co.contype = :constraint_type AND ns.nspname = :schema AND cl.relname = :table AND attr.attname = :column", [
@@ -271,11 +280,15 @@ EOD;
       ]);
     }
     catch (\Exception $e) {
-      $this->connection->rollbackSavepoint();
+      if (isset($savepoint)) {
+        $savepoint->rollback();
+      }
       throw $e;
     }
 
-    $this->connection->releaseSavepoint();
+    if (isset($savepoint)) {
+      $savepoint->commitOrRelease();
+    }
 
     $field_information = $checks->fetchCol();
 
