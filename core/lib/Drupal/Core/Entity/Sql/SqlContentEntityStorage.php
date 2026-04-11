@@ -8,6 +8,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\Statement\FetchAs;
+use Drupal\Core\Database\TransactionOutOfOrderException;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageBase;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
@@ -764,13 +765,19 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     try {
       $transaction = $this->database->startTransaction();
       parent::delete($entities);
+      $transaction->commitOrRelease();
 
       // Ignore replica server temporarily.
       \Drupal::service('database.replica_kill_switch')->trigger();
     }
     catch (\Exception $e) {
       if (isset($transaction)) {
-        $transaction->rollBack();
+        try {
+          $transaction->rollBack();
+        }
+        catch (TransactionOutOfOrderException $rollbackException) {
+          Error::logException(\Drupal::logger($this->entityTypeId), $rollbackException);
+        }
       }
       Error::logException(\Drupal::logger($this->entityTypeId), $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
@@ -815,6 +822,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     try {
       $transaction = $this->database->startTransaction();
       $return = parent::save($entity);
+      $transaction->commitOrRelease();
 
       // Ignore replica server temporarily.
       \Drupal::service('database.replica_kill_switch')->trigger();
@@ -822,7 +830,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
     catch (\Exception $e) {
       if (isset($transaction)) {
-        $transaction->rollBack();
+        try {
+          $transaction->rollBack();
+        }
+        catch (TransactionOutOfOrderException $rollbackException) {
+          Error::logException(\Drupal::logger($this->entityTypeId), $rollbackException);
+        }
       }
       Error::logException(\Drupal::logger($this->entityTypeId), $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
@@ -866,12 +879,19 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // Insert the entity data in the dedicated tables.
       $this->saveToDedicatedTables($entity, FALSE, []);
 
+      $transaction->commitOrRelease();
+
       // Ignore replica server temporarily.
       \Drupal::service('database.replica_kill_switch')->trigger();
     }
     catch (\Exception $e) {
       if (isset($transaction)) {
-        $transaction->rollBack();
+        try {
+          $transaction->rollBack();
+        }
+        catch (TransactionOutOfOrderException $rollbackException) {
+          Error::logException(\Drupal::logger($this->entityTypeId), $rollbackException);
+        }
       }
       Error::logException(\Drupal::logger($this->entityTypeId), $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);

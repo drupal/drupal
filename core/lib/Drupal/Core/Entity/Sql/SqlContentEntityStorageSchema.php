@@ -789,6 +789,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
             ->from($this->getSelectQueryForFieldStorageDeletion($revision_table, $shared_table_field_columns, $dedicated_table_field_columns, $field_table_name))
             ->execute();
         }
+
+        if (isset($transaction)) {
+          $transaction->commitOrRelease();
+        }
       }
       catch (\Exception $e) {
         if ($this->database->supportsTransactionalDDL()) {
@@ -1742,6 +1746,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         // to a dedicated table schema, hence we should use the proper API.
         $this->performFieldSchemaOperation('delete', $original);
         $this->performFieldSchemaOperation('create', $storage_definition);
+
+        if (isset($transaction)) {
+          $transaction->commitOrRelease();
+        }
       }
       catch (\Exception $e) {
         if ($this->database->supportsTransactionalDDL()) {
@@ -1836,6 +1844,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         // to a schema table schema, hence we should use the proper API.
         $this->performFieldSchemaOperation('delete', $original);
         $this->performFieldSchemaOperation('create', $storage_definition);
+
+        if (isset($transaction)) {
+          $transaction->commitOrRelease();
+        }
       }
       catch (\Exception $e) {
         if ($this->database->supportsTransactionalDDL()) {

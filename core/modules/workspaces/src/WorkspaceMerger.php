@@ -68,6 +68,7 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
           }
         }
       }
+      $transaction->commitOrRelease();
     }
     catch (\Exception $e) {
       if (isset($transaction)) {
