@@ -173,24 +173,22 @@ class FieldViewsDataProvider {
       ];
     }
 
-    if ($data_table) {
-      if ($translation_join_type === 'language_bundle') {
-        $data[$table_alias]['table']['join'][$data_table]['join_id'] = 'field_or_language_join';
-        $data[$table_alias]['table']['join'][$data_table]['extra'][] = [
-          'left_field' => 'langcode',
-          'field' => 'langcode',
-        ];
-        $data[$table_alias]['table']['join'][$data_table]['extra'][] = [
-          'field' => 'bundle',
-          'value' => $untranslatable_config_bundles,
-        ];
-      }
-      elseif ($translation_join_type === 'language') {
-        $data[$table_alias]['table']['join'][$data_table]['extra'][] = [
-          'left_field' => 'langcode',
-          'field' => 'langcode',
-        ];
-      }
+    if ($translation_join_type === 'language_bundle') {
+      $data[$table_alias]['table']['join'][$data_table]['join_id'] = 'field_or_language_join';
+      $data[$table_alias]['table']['join'][$data_table]['extra'][] = [
+        'left_field' => 'langcode',
+        'field' => 'langcode',
+      ];
+      $data[$table_alias]['table']['join'][$data_table]['extra'][] = [
+        'field' => 'bundle',
+        'value' => $untranslatable_config_bundles,
+      ];
+    }
+    elseif ($translation_join_type === 'language' && $data_table) {
+      $data[$table_alias]['table']['join'][$data_table]['extra'][] = [
+        'left_field' => 'langcode',
+        'field' => 'langcode',
+      ];
     }
 
     if ($supports_revisions) {
