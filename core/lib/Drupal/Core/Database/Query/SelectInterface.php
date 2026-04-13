@@ -104,6 +104,18 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   public function &getTables();
 
   /**
+   * Retrieves the query's range.
+   *
+   * @return array{start: int, length: ?int}|null
+   *   A reference to the range specification for this query. This is either
+   *   NULL if no range was set on this query yet; or an associative array with
+   *   the following two keys:
+   *   - start: The first record from the result set to return.
+   *   - length: The number of records to return from the result set.
+   */
+  public function &getRange(): ?array;
+
+  /**
    * Returns a reference to the union queries for this query.
    *
    * This includes queries for UNION, UNION ALL, and UNION DISTINCT.

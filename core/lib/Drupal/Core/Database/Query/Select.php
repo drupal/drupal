@@ -87,7 +87,7 @@ class Select extends Query implements SelectInterface {
   /**
    * The range limiters for this query.
    *
-   * @var array
+   * @var array|null
    */
   protected $range;
 
@@ -412,6 +412,13 @@ class Select extends Query implements SelectInterface {
    */
   public function &getTables() {
     return $this->tables;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function &getRange(): ?array {
+    return $this->range;
   }
 
   /**

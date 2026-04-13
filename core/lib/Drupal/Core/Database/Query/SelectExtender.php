@@ -270,6 +270,13 @@ class SelectExtender implements SelectInterface {
   /**
    * {@inheritdoc}
    */
+  public function &getRange(): ?array {
+    return $this->query->getRange();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function &getUnion() {
     return $this->query->getUnion();
   }
