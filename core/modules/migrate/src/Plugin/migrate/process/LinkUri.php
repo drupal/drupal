@@ -1,10 +1,11 @@
 <?php
 
-namespace Drupal\menu_link_content\Plugin\migrate\process;
+namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
@@ -12,11 +13,6 @@ use Drupal\migrate\Row;
 
 /**
  * Generates an internal URI from the source value.
- *
- * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
- * \Drupal\migrate\Plugin\migrate\process\LinkUri instead.
- *
- * @see https://www.drupal.org/node/3572239
  *
  * Converts the source path value to an 'entity:', 'internal:' or 'base:' URI.
  *
@@ -43,34 +39,19 @@ use Drupal\migrate\Row;
  * 'link_path' property is 'node/12', the uri property value of link will be
  * 'entity:node/12'.
  */
+#[MigrateProcess('link_uri')]
 class LinkUri extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
-  /**
-   * The entity type manager, used to fetch entity link templates.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Constructs a LinkUri object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin ID for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager, used to fetch entity link templates.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
-    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\migrate\Plugin\migrate\process\LinkUri instead. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
     $configuration += [
       'validate_route' => TRUE,
     ];
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -81,13 +62,13 @@ class LinkUri extends ProcessPluginBase implements ContainerFactoryPluginInterfa
     $path = ltrim($value, '/');
 
     if (parse_url($path, PHP_URL_SCHEME) === NULL) {
-      if ($path == '<front>') {
+      if ($path === '<front>') {
         $path = '';
       }
-      elseif (empty($path) || in_array($path, ['<nolink>', '<none>'])) {
+      elseif (empty($path) || in_array($path, ['<nolink>', '<none>'], TRUE)) {
         return 'route:<nolink>';
       }
-      elseif ($path == '<button>') {
+      elseif ($path === '<button>') {
         return 'route:<button>';
       }
       $path = 'internal:/' . $path;
@@ -97,9 +78,9 @@ class LinkUri extends ProcessPluginBase implements ContainerFactoryPluginInterfa
       // @see \Drupal\Core\Url::fromEntityUri()
       $url = Url::fromUri($path);
       if ($url->isRouted()) {
-        $route_name = $url->getRouteName();
-        foreach (array_keys($this->entityTypeManager->getDefinitions()) as $entity_type_id) {
-          if ($route_name == "entity.$entity_type_id.canonical" && isset($url->getRouteParameters()[$entity_type_id])) {
+        if (preg_match('/^entity\.(.*)\.canonical$/', $url->getRouteName(), $matches)) {
+          $entity_type_id = $matches[1];
+          if (isset($url->getRouteParameters()[$entity_type_id], $this->entityTypeManager->getDefinitions()[$entity_type_id])) {
             return "entity:$entity_type_id/" . $url->getRouteParameters()[$entity_type_id];
           }
         }
@@ -108,12 +89,10 @@ class LinkUri extends ProcessPluginBase implements ContainerFactoryPluginInterfa
         // If the URL is not routed, we might want to get something back to do
         // other processing. If this is the case, the "validate_route"
         // configuration option can be set to FALSE to return the URI.
-        if (!$this->configuration['validate_route']) {
-          return $url->getUri();
-        }
-        else {
+        if ($this->configuration['validate_route']) {
           throw new MigrateException(sprintf('The path "%s" failed validation.', $path));
         }
+        return $url->getUri();
       }
     }
     return $path;

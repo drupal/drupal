@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\menu_link_content\Kernel\Plugin\migrate\process;
+namespace Drupal\Tests\migrate\Kernel\process;
 
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\menu_link_content\Plugin\migrate\process\LinkUri;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\Plugin\migrate\process\LinkUri;
 use Drupal\migrate\Row;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests \Drupal\menu_link_content\Plugin\migrate\process\LinkUri.
+ * Tests \Drupal\migrate\Plugin\migrate\process\LinkUri.
  */
 #[CoversClass(LinkUri::class)]
 #[Group('menu_link_content')]

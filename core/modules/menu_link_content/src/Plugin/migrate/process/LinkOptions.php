@@ -2,13 +2,17 @@
 
 namespace Drupal\menu_link_content\Plugin\migrate\process;
 
-use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
  * Converts links options.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ * \Drupal\migrate\Plugin\migrate\process\LinkOptions instead.
+ *
+ * @see https://www.drupal.org/node/3572239
  *
  * Examples:
  *
@@ -21,11 +25,12 @@ use Drupal\migrate\Row;
  *
  * This will convert the query options of the link.
  */
-#[MigrateProcess(
-  id: "link_options",
-  handle_multiples: TRUE,
-)]
 class LinkOptions extends ProcessPluginBase {
+
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\migrate\Plugin\migrate\process\LinkOptions instead. See https://www.drupal.org/node/3533560', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
 
   /**
    * {@inheritdoc}
