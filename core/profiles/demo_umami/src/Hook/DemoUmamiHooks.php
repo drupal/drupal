@@ -2,7 +2,6 @@
 
 namespace Drupal\demo_umami\Hook;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
@@ -19,23 +18,10 @@ class DemoUmamiHooks {
 
   use StringTranslationTrait;
 
-  /**
-   * DemoUmamiHooks constructor.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler.
-   * @param \Drupal\Core\Session\AccountInterface $currentUser
-   *   The current user.
-   * @param \Drupal\Core\Routing\AdminContext $adminContext
-   *   The admin context.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The entity type manager.
-   */
   public function __construct(
     protected ModuleHandlerInterface $moduleHandler,
     protected AccountInterface $currentUser,
     protected AdminContext $adminContext,
-    protected EntityTypeManagerInterface $entityTypeManager,
   ) {
   }
 
@@ -69,7 +55,7 @@ class DemoUmamiHooks {
   #[Hook('form_install_configure_form_alter')]
   public function formInstallConfigureFormAlter(&$form, FormStateInterface $form_state): void {
     $form['site_information']['site_name']['#default_value'] = 'Umami Food Magazine';
-    $form['#submit'][] = [$this, 'installConfigureSubmit'];
+    $form['#submit'][] = [static::class, 'installConfigureSubmit'];
   }
 
   /**
@@ -79,10 +65,12 @@ class DemoUmamiHooks {
    *   Form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current form state.
+   *
+   * @internal
    */
-  public function installConfigureSubmit(array $form, FormStateInterface $form_state): void {
+  public static function installConfigureSubmit(array $form, FormStateInterface $form_state): void {
     $password = $form_state->getValue('account')['pass'];
-    $this->setUserPasswords($password);
+    static::setUserPasswords($password);
   }
 
   /**
@@ -124,9 +112,16 @@ class DemoUmamiHooks {
 
   /**
    * Sets the password of admin to be the password for all users.
+   *
+   * @internal
    */
-  public function setUserPasswords(#[\SensitiveParameter] $admin_password): void {
-    $user_storage = $this->entityTypeManager->getStorage('user');
+  public static function setUserPasswords(#[\SensitiveParameter] $admin_password): void {
+    // This method and `installConfigureSubmit()` are static, because these
+    // methods can run after a container rebuild has occurred in
+    // Drupal\Core\Installer\Form\SiteConfigureForm::submitForm(). After the
+    // container rebuild, the entity type manager needs to be instantiated from
+    // the new container object, and it can not be injected as a class property.
+    $user_storage = \Drupal::entityTypeManager()->getStorage('user');
     // Collect the IDs of all users with roles editor or author.
     $ids = $user_storage->getQuery()
       ->accessCheck(FALSE)

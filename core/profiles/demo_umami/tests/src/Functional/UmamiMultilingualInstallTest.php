@@ -27,9 +27,24 @@ class UmamiMultilingualInstallTest extends InstallerTestBase {
   protected $langcode = 'es';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function installParameters(): array {
+    $parameters = parent::installParameters();
+
+    // Set 'enable_update_status_module' flag to test that
+    // SiteConfigureForm::submitForm() handles the container rebuild correctly after
+    // the Update Status module is installed.
+    $parameters['forms']['install_configure_form']['enable_update_status_module'] = TRUE;
+    return $parameters;
+  }
+
+  /**
    * Ensures that Umami can be installed with Spanish as the default language.
    */
   public function testUmami(): void {
+    // First, confirm the update module was installed per install parameters.
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('update'));
     $this->drupalGet('');
     // cSpell:disable-next-line
     $this->assertSession()->pageTextContains('Crema catalana');
