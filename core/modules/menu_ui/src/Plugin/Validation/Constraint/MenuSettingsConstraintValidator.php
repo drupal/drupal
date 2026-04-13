@@ -2,20 +2,35 @@
 
 namespace Drupal\menu_ui\Plugin\Validation\Constraint;
 
+use Drupal\Core\DependencyInjection\AutowireTrait;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\menu_ui\MenuUiUtility;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
  * Constraint validator for changing the menu settings in pending revisions.
  */
-class MenuSettingsConstraintValidator extends ConstraintValidator {
+class MenuSettingsConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
+
+  use AutowireTrait;
+
+  /**
+   * Constructs a new MenuSettingsConstraintValidator.
+   *
+   * @param \Drupal\menu_ui\MenuUiUtility $menuUiUtility
+   *   The menu UI utility service.
+   */
+  public function __construct(
+    protected MenuUiUtility $menuUiUtility,
+  ) {}
 
   /**
    * {@inheritdoc}
    */
   public function validate($entity, Constraint $constraint): void {
     if (isset($entity) && !$entity->isNew() && !$entity->isDefaultRevision()) {
-      $defaults = menu_ui_get_menu_link_defaults($entity);
+      $defaults = $this->menuUiUtility->getMenuLinkDefaults($entity);
 
       // If the menu UI entity builder is not present and the menu property has
       // not been set, do not attempt to validate the menu settings since they

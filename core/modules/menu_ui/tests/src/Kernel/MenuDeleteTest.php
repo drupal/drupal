@@ -52,7 +52,7 @@ class MenuDeleteTest extends KernelTestBase {
     $this->assertEquals($settings['available_menus'], $content_type->getThirdPartySetting('menu_ui', 'available_menus'));
     $this->assertEquals($settings['parent'], $content_type->getThirdPartySetting('menu_ui', 'parent'));
 
-    $hooks = new MenuUiHooks(\Drupal::entityTypeManager());
+    $hooks = \Drupal::service(MenuUiHooks::class);
     $hooks->menuDelete($menu);
 
     $content_type = NodeType::load('test_type');

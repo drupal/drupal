@@ -73,7 +73,7 @@ class MenuBlockTest extends KernelTestBase {
     ]);
 
     // Test when user does have "administer menu" permission.
-    $menuUiEntityOperation = new MenuUiHooks(\Drupal::entityTypeManager());
+    $menuUiEntityOperation = \Drupal::service(MenuUiHooks::class);
     $this->assertEquals([
       'menu-edit' => [
         'title' => 'Edit menu',

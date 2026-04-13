@@ -5,7 +5,8 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\menu_ui\Hook\MenuUiHooks;
+use Drupal\menu_ui\MenuUiUtility;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
 
@@ -16,59 +17,15 @@ use Drupal\node\NodeInterface;
  *   Node entity.
  * @param array $values
  *   Values for the menu link.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\menu_ui\MenuUiUtility::menuUiNodeSave() instead.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function _menu_ui_node_save(NodeInterface $node, array $values): void {
-  /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
-  if (!empty($values['entity_id'])) {
-    $entity = \Drupal::service('entity.repository')->getActive('menu_link_content', $values['entity_id']);
-    if ($entity->isTranslatable() && $node->isTranslatable()) {
-      if (!$entity->hasTranslation($node->language()->getId())) {
-        $entity = $entity->addTranslation($node->language()->getId(), $entity->toArray());
-      }
-      else {
-        $entity = $entity->getTranslation($node->language()->getId());
-      }
-    }
-    else {
-      // Ensure the entity matches the node language.
-      $entity = $entity->getUntranslated();
-      $entity->set($entity->getEntityType()->getKey('langcode'), $node->language()->getId());
-    }
-  }
-  else {
-    // Create a new menu_link_content entity.
-    $entity = MenuLinkContent::create([
-      'link' => ['uri' => 'entity:node/' . $node->id()],
-      'langcode' => $node->language()->getId(),
-    ]);
-    $entity->enabled->value = 1;
-  }
-  $entity->title->value = trim($values['title']);
-  $entity->description->value = trim($values['description']);
-  $entity->menu_name->value = $values['menu_name'];
-  $entity->parent->value = $values['parent'];
-  $entity->weight->value = $values['weight'] ?? 0;
-  if ($entity->isNew()) {
-    // @todo The menu link doesn't need to be changed in a workspace context.
-    //   Fix this in https://www.drupal.org/project/drupal/issues/3511204.
-    if (!$node->isDefaultRevision() && $node->hasLinkTemplate('latest-version')) {
-      // If a new menu link is created while saving the node as a pending draft
-      // (non-default revision), store it as a link to the latest version.
-      // That ensures that there is a regular, valid link target that is
-      // only visible to users with permission to view the latest version.
-      $entity->get('link')->uri = 'internal:/node/' . $node->id() . '/latest';
-    }
-  }
-  else {
-    $entity->isDefaultRevision($node->isDefaultRevision());
-    if (!$entity->isDefaultRevision()) {
-      $entity->setNewRevision(TRUE);
-    }
-    elseif ($entity->get('link')->uri !== 'entity:node/' . $node->id()) {
-      $entity->get('link')->uri = 'entity:node/' . $node->id();
-    }
-  }
-  $entity->save();
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use MenuUiUtility::menuUiNodeSave() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
+  \Drupal::service(MenuUiUtility::class)->menuUiNodeSave($node, $values);
 }
 
 /**
@@ -79,147 +36,65 @@ function _menu_ui_node_save(NodeInterface $node, array $values): void {
  *
  * @return array
  *   An array that contains default values for the menu link form.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\menu_ui\MenuUiUtility::getMenuLinkDefaults() instead.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function menu_ui_get_menu_link_defaults(NodeInterface $node) {
-  // Prepare the definition for the edit form.
-  /** @var \Drupal\node\NodeTypeInterface $node_type */
-  $node_type = $node->type->entity;
-  $menu_name = strtok($node_type->getThirdPartySetting('menu_ui', 'parent', 'main:'), ':');
-  $defaults = FALSE;
-  if ($node->id()) {
-    $id = FALSE;
-    // Give priority to the default menu.
-    $type_menus = $node_type->getThirdPartySetting('menu_ui', 'available_menus', ['main']);
-    // An existing menu link either points to the canonical or the latest path,
-    // in case of a new menu link that was creating while saving as a pending
-    // draft.
-    $uri_candidates = ['entity:node/' . $node->id(), 'internal:/node/' . $node->id() . '/latest'];
-
-    if (in_array($menu_name, $type_menus)) {
-      $query = \Drupal::entityQuery('menu_link_content')
-        ->accessCheck(TRUE)
-        ->condition('link.uri', $uri_candidates, 'IN')
-        ->condition('menu_name', $menu_name)
-        ->sort('id', 'ASC')
-        ->range(0, 1);
-      $result = $query->execute();
-
-      $id = (!empty($result)) ? reset($result) : FALSE;
-    }
-    // Check all allowed menus if a link does not exist in the default menu.
-    if (!$id && !empty($type_menus)) {
-      $query = \Drupal::entityQuery('menu_link_content')
-        ->accessCheck(TRUE)
-        ->condition('link.uri', $uri_candidates, 'IN')
-        ->condition('menu_name', array_values($type_menus), 'IN')
-        ->sort('id', 'ASC')
-        ->range(0, 1);
-      $result = $query->execute();
-
-      $id = (!empty($result)) ? reset($result) : FALSE;
-    }
-    if ($id) {
-      $menu_link = \Drupal::service('entity.repository')->getActive('menu_link_content', $id);
-      $defaults = [
-        'entity_id' => $menu_link->id(),
-        'id' => $menu_link->getPluginId(),
-        'title' => $menu_link->getTitle(),
-        'title_max_length' => $menu_link->getFieldDefinitions()['title']->getSetting('max_length'),
-        'description' => $menu_link->getDescription(),
-        'description_max_length' => $menu_link->getFieldDefinitions()['description']->getSetting('max_length'),
-        'menu_name' => $menu_link->getMenuName(),
-        'parent' => $menu_link->getParentId(),
-        'weight' => $menu_link->getWeight(),
-      ];
-    }
-  }
-
-  if (!$defaults) {
-    // Get the default max_length of a menu link title from the base field
-    // definition.
-    $field_definitions = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions('menu_link_content');
-    $max_length = $field_definitions['title']->getSetting('max_length');
-    $description_max_length = $field_definitions['description']->getSetting('max_length');
-    $defaults = [
-      'entity_id' => 0,
-      'id' => '',
-      'title' => '',
-      'title_max_length' => $max_length,
-      'description' => '',
-      'description_max_length' => $description_max_length,
-      'menu_name' => $menu_name,
-      'parent' => '',
-      'weight' => 0,
-    ];
-  }
-  return $defaults;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use MenuUiUtility::getMenuLinkDefaults() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
+  return \Drupal::service(MenuUiUtility::class)->getMenuLinkDefaults($node);
 }
 
 /**
  * Entity form builder to add the menu information to the node.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\menu_ui\Hooks\MenuUiHooks::nodeBuilder() instead.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function menu_ui_node_builder($entity_type, NodeInterface $entity, &$form, FormStateInterface $form_state): void {
-  $entity->menu = $form_state->getValue('menu');
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use MenuUiHooks::nodeBuilder() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
+  \Drupal::service(MenuUiHooks::class)->nodeBuilder($entity_type, $entity, $form, $form_state);
 }
 
 /**
  * Form submission handler for menu item field on the node form.
  *
- * @see menu_ui_form_node_form_alter()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\menu_ui\Hooks\MenuUiHooks::formNodeFormSubmit() instead.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function menu_ui_form_node_form_submit($form, FormStateInterface $form_state): void {
-  $node = $form_state->getFormObject()->getEntity();
-  if (!$form_state->isValueEmpty('menu')) {
-    $values = $form_state->getValue('menu');
-    if (empty($values['enabled'])) {
-      if ($values['entity_id']) {
-        $entity = \Drupal::service('entity.repository')->getActive('menu_link_content', $values['entity_id']);
-        $entity->delete();
-      }
-    }
-    else {
-      // In case the menu title was left empty, fall back to the node title.
-      if (empty(trim($values['title']))) {
-        $values['title'] = $node->label();
-      }
-      // Decompose the selected menu parent option into 'menu_name' and
-      // 'parent', if the form used the default parent selection widget.
-      if (!empty($values['menu_parent'])) {
-        [$menu_name, $parent] = explode(':', $values['menu_parent'], 2);
-        $values['menu_name'] = $menu_name;
-        $values['parent'] = $parent;
-      }
-      _menu_ui_node_save($node, $values);
-    }
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use MenuUiHooks::formNodeFormSubmit() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
+  \Drupal::service(MenuUiHooks::class)->formNodeFormSubmit($form, $form_state);
 }
 
 /**
  * Validate handler for forms with menu options.
  *
- * @see menu_ui_form_node_type_form_alter()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\menu_ui\Hooks\MenuUiHooks::formNodeTypeFormValidate() instead.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_state): void {
-  $available_menus = array_filter($form_state->getValue('menu_options'));
-  // If there is at least one menu allowed, the selected item should be in
-  // one of them.
-  if (count($available_menus)) {
-    $menu_item_id_parts = explode(':', $form_state->getValue('menu_parent'));
-    if (!in_array($menu_item_id_parts[0], $available_menus)) {
-      $form_state->setErrorByName('menu_parent', t('The selected menu link is not under one of the selected menus.'));
-    }
-  }
-  else {
-    $form_state->setValue('menu_parent', '');
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use MenuUiHooks::formNodeTypeFormValidate() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
+  \Drupal::service(MenuUiHooks::class)->formNodeTypeFormValidate($form, $form_state);
 }
 
 /**
  * Entity builder for the node type form with menu options.
  *
- * @see menu_ui_form_node_type_form_alter()
+ * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+ *   \Drupal\menu_ui\Hooks\MenuUiHooks::formNodeTypeFormBuilder() instead.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state): void {
-  $type->setThirdPartySetting('menu_ui', 'available_menus', array_values(array_filter($form_state->getValue('menu_options'))));
-  $type->setThirdPartySetting('menu_ui', 'parent', $form_state->getValue('menu_parent'));
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use MenuUiHooks::formNodeTypeFormBuilder() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
+  \Drupal::service(MenuUiHooks::class)->formNodeTypeFormBuilder($entity_type, $type, $form, $form_state);
 }
