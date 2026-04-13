@@ -44,6 +44,10 @@ class NodeAccessGrantsCacheContext extends UserCacheContextBase implements Calcu
    * {@inheritdoc}
    */
   public function getContext($operation = NULL) {
+    // If there are no grants at all, then always return all.
+    if (!\Drupal::moduleHandler()->hasImplementations('node_grants')) {
+      return 'all';
+    }
     // If the current user either can bypass node access then we don't need to
     // determine the exact node grants for the current user.
     if ($this->user->hasPermission('bypass node access')) {
