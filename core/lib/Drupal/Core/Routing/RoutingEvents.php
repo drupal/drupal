@@ -10,6 +10,23 @@ final class RoutingEvents {
   /**
    * Name of the event fired during route collection to allow new routes.
    *
+   * This event is used to add new routes based static information like YAML
+   * files and PHP attributes. The event listener method receives a
+   * \Drupal\Core\Routing\RouteBuildEvent instance.
+   *
+   * @Event
+   *
+   * @see \Drupal\Core\Routing\RouteBuildEvent
+   * @see \Drupal\Core\EventSubscriber\EntityRouteProviderSubscriber
+   * @see \Drupal\Core\Routing\RouteBuilder::rebuild()
+   *
+   * @var string
+   */
+  const STATIC = 'routing.static';
+
+  /**
+   * Name of the event fired during route collection to allow new routes.
+   *
    * This event is used to add new routes based upon existing routes, giving
    * modules the opportunity to dynamically generate additional routes. The
    * event listener method receives a \Drupal\Core\Routing\RouteBuildEvent

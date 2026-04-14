@@ -3,7 +3,7 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Access\CheckProviderInterface;
-use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Discovery\YamlDiscovery;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
@@ -11,12 +11,17 @@ use Drupal\Core\DestructableInterface;
 use Drupal\Component\EventDispatcher\Event;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
 
 /**
  * Managing class for rebuilding the router table.
+ *
+ * Deprecated service properties:
+ *
+ * @property \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
+ * @property \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
  */
 class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
+  use DeprecatedServicePropertyTrait;
 
   /**
    * The dumper to which we should send collected routes.
@@ -38,20 +43,6 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
    * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected $dispatcher;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The controller resolver.
-   *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
-   */
-  protected $controllerResolver;
 
   /**
    * The route collection during the rebuild.
@@ -82,27 +73,29 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
   protected $checkProvider;
 
   /**
-   * Constructs the RouteBuilder using the passed MatcherDumperInterface.
+   * Deprecated service properties.
    *
-   * @param \Drupal\Core\Routing\MatcherDumperInterface $dumper
-   *   The matcher dumper used to store the route information.
-   * @param \Drupal\Core\Lock\LockBackendInterface $lock
-   *   The lock backend.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $dispatcher
-   *   The event dispatcher to notify of routes.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
-   *   The controller resolver.
-   * @param \Drupal\Core\Access\CheckProviderInterface $check_provider
-   *   The check provider.
+   * @var string[]
    */
-  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler, ControllerResolverInterface $controller_resolver, CheckProviderInterface $check_provider) {
+  protected array $deprecatedProperties = [
+    'controllerResolver' => 'controller_resolver',
+    'moduleHandler' => 'module_handler',
+  ];
+
+  /**
+   * Constructs the RouteBuilder using the passed MatcherDumperInterface.
+   */
+  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, CheckProviderInterface|ModuleHandlerInterface $check_provider) {
     $this->dumper = $dumper;
     $this->lock = $lock;
     $this->dispatcher = $dispatcher;
-    $this->moduleHandler = $module_handler;
-    $this->controllerResolver = $controller_resolver;
+    if ($check_provider instanceof ModuleHandlerInterface && count(func_get_args()) === 6) {
+      $check_provider = func_get_arg(5);
+      @trigger_error('Calling ' . __METHOD__ . '() with the module handler and controller resolver services is deprecated in drupal:11.4.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3324751', E_USER_DEPRECATED);
+    }
+    if (!$check_provider instanceof CheckProviderInterface) {
+      throw new \InvalidArgumentException();
+    }
     $this->checkProvider = $check_provider;
   }
 
@@ -130,74 +123,19 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
     }
 
     $this->building = TRUE;
-
     $collection = new RouteCollection();
-    foreach ($this->getRouteDefinitions() as $routes) {
-      // The top-level 'routes_callback' is a list of methods in controller
-      // syntax, see \Drupal\Core\Controller\ControllerResolver. These methods
-      // should return a set of \Symfony\Component\Routing\Route objects, either
-      // in an associative array keyed by the route name, which will be iterated
-      // over and added to the collection for this provider, or as a new
-      // \Symfony\Component\Routing\RouteCollection object, which will be added
-      // to the collection.
-      if (isset($routes['route_callbacks'])) {
-        foreach ($routes['route_callbacks'] as $route_callback) {
-          $callback = $this->controllerResolver->getControllerFromDefinition($route_callback);
-          if ($callback_routes = call_user_func($callback)) {
-            // If a RouteCollection is returned, add the whole collection.
-            if ($callback_routes instanceof RouteCollection) {
-              $collection->addCollection($callback_routes);
-            }
-            // Otherwise, add each Route object individually.
-            else {
-              foreach ($callback_routes as $name => $callback_route) {
-                $collection->add($name, $callback_route);
-              }
-            }
-          }
-        }
-        unset($routes['route_callbacks']);
-      }
-      foreach ($routes as $name => $route_info) {
-        if (isset($route_info['alias'])) {
-          $alias = $collection->addAlias($name, $route_info['alias']);
-          $deprecation = $route_info['deprecated'] ?? NULL;
-          if (isset($deprecation)) {
-            $alias->setDeprecated(
-              $deprecation['package'],
-              $deprecation['version'],
-              $deprecation['message'] ?? ''
-            );
-          }
-          continue;
-        }
-        $route_info += [
-          'defaults' => [],
-          'requirements' => [],
-          'options' => [],
-          'host' => NULL,
-          'schemes' => [],
-          'methods' => [],
-          'condition' => '',
-        ];
-        // Ensure routes default to using Drupal's route compiler instead of
-        // Symfony's.
-        $route_info['options'] += [
-          'compiler_class' => RouteCompiler::class,
-        ];
 
-        $route = new Route($route_info['path'], $route_info['defaults'], $route_info['requirements'], $route_info['options'], $route_info['host'], $route_info['schemes'], $route_info['methods'], $route_info['condition']);
-        $collection->add($name, $route);
-      }
-    }
+    // STATIC is supposed to be used to add new routes based static information
+    // like routing.yml files or PHP attributes.
+    $this->dispatcher->dispatch(new RouteBuildEvent($collection), RoutingEvents::STATIC);
 
     // DYNAMIC is supposed to be used to add new routes based upon all the
     // static defined ones.
     $this->dispatcher->dispatch(new RouteBuildEvent($collection), RoutingEvents::DYNAMIC);
 
     // ALTER is the final step to alter all the existing routes. We cannot stop
-    // people from adding new routes here, but we define two separate steps to
-    // make it clear.
+    // people from adding new routes here, but we define it as a separate step
+    // to make it clear.
     $this->dispatcher->dispatch(new RouteBuildEvent($collection), RoutingEvents::ALTER);
 
     $this->checkProvider->setChecks($collection);
@@ -239,8 +177,14 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
    *
    * @return array
    *   The defined routes, keyed by provider.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. This code
+   *   has moved to \Drupal\Core\Routing\YamlRouteDiscovery.
+   *
+   * @see https://www.drupal.org/node/3324758
    */
   protected function getRouteDefinitions() {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. This code has moved to \Drupal\Core\Routing\YamlRouteDiscovery. See https://www.drupal.org/node/3324758', E_USER_DEPRECATED);
     // Always instantiate a new YamlDiscovery object so that we always search on
     // the up-to-date list of modules.
     $discovery = new YamlDiscovery('routing', $this->moduleHandler->getModuleDirectories());
