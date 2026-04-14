@@ -77,6 +77,15 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
 
   /**
    * {@inheritdoc}
+   */
+  public function destruct(): void {
+    // Because this cache is not additive, it stores exactly the same thing
+    // every time, there is no need to acquire a lock before writing.
+    $this->updateCache(FALSE);
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * @see ::getActiveTrailIds()
    */
