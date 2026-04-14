@@ -178,9 +178,6 @@ abstract class ExtensionList {
       // early installer.
     }
 
-    // @todo In the long run it would be great to add the reset, but the early
-    //   installer fails due to that. https://www.drupal.org/node/2719315 could
-    //   help to resolve with that.
     return $this;
   }
 

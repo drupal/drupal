@@ -250,13 +250,6 @@ function drupal_install_system($install_state): void {
     $request->setSession($kernel->getContainer()->get('session'));
   }
 
-  // Before having installed the system module and being able to do a module
-  // rebuild, prime the \Drupal\Core\Extension\ModuleExtensionList static cache
-  // with the module's location.
-  // @todo Try to install system as any other module, see
-  //   https://www.drupal.org/node/2719315.
-  \Drupal::service('extension.list.module')->setPathname('system', 'core/modules/system/system.info.yml');
-
   // Install base system configuration.
   \Drupal::service('config.installer')->installDefaultConfig('core', 'core');
 

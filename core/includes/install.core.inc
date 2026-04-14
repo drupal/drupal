@@ -474,12 +474,6 @@ function install_begin_request($class_loader, &$install_state): void {
     }
   }
 
-  // Before having installed the system module and being able to do a module
-  // rebuild, prime the module list static cache with the system module's
-  // location.
-  // @todo Remove as part of https://www.drupal.org/node/2186491
-  $module_list->setPathname('system', 'core/modules/system/system.info.yml');
-
   // Use the language from profile configuration if available.
   if (!empty($install_state['config_install_path']) && $install_state['config']['system.site']) {
     $install_state['parameters']['langcode'] = $install_state['config']['system.site']['default_langcode'];
