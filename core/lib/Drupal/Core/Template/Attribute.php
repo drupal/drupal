@@ -326,6 +326,9 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
     $return = '';
     /** @var \Drupal\Core\Template\AttributeValueBase $value */
     foreach ($this->storage as $value) {
+      if (!$value instanceof AttributeValueBase) {
+        throw new \RuntimeException(sprintf('Unexpected type for $value (%s).', get_debug_type($value)));
+      }
       $rendered = $value->render();
       if ($rendered) {
         $return .= ' ' . $rendered;
