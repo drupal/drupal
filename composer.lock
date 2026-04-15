@@ -364,7 +364,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "11.3.6",
+            "version": "11.3.7",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -534,7 +534,7 @@
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "11.3.6",
+            "version": "11.3.7",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/Scaffold",
@@ -576,7 +576,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "11.3.6",
+            "version": "11.3.7",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -609,7 +609,7 @@
         },
         {
             "name": "drupal/core-recipe-unpack",
-            "version": "11.3.6",
+            "version": "11.3.7",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/RecipeUnpack",
@@ -645,7 +645,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "11.3.6",
+            "version": "11.3.7",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
