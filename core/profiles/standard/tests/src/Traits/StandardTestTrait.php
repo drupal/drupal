@@ -217,12 +217,6 @@ trait StandardTestTrait {
     // Verify that full node page is cached by Dynamic Page Cache.
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
 
-    $url = Url::fromRoute('entity.user.canonical', ['user' => 1]);
-    $this->drupalGet($url);
-    $this->drupalGet($url);
-    // Verify that user profile page is cached by Dynamic Page Cache.
-    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
-
     // Make sure the editorial workflow is installed after enabling the
     // content_moderation module.
     \Drupal::service('module_installer')->install(['content_moderation']);

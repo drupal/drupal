@@ -296,6 +296,8 @@ class FileUploadTest extends ResourceTestBase {
       FALSE,
       ['4xx-response', 'http_response'],
       ['url.query_args', 'url.site', 'user.permissions'],
+      NULL,
+      'UNCACHEABLE (403)',
     );
 
     $this->setUpAuthorization('GET');

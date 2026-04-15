@@ -538,20 +538,21 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 406 because despite unauthorized, ?_format can not be omitted.
     $url->setOption('query', []);
     $response = $this->request('GET', $url, $request_options);
-    if ($has_canonical_url) {
-      $this->assertSame(403, $response->getStatusCode());
-      $dynamic_cache = str_starts_with($response->getHeader('X-Drupal-Cache-Max-Age')[0], '0')
-        || !empty(array_intersect(
-          ['user', 'session'],
-          explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]))) ? 'UNCACHEABLE (poor cacheability)' : 'MISS';
-      $this->assertSame([$dynamic_cache], $response->getHeader('X-Drupal-Dynamic-Cache'));
-    }
-    else {
-      $this->assertSame(406, $response->getStatusCode());
-      $this->assertSame(['UNCACHEABLE (poor cacheability)'], $response->getHeader('X-Drupal-Dynamic-Cache'));
-    }
+    $expected_response_status_code = $has_canonical_url ? 403 : 406;
+    $this->assertSame($expected_response_status_code, $response->getStatusCode());
     $this->assertSame(['text/html; charset=utf-8'], $response->getHeader('Content-Type'));
+    $this->assertSame(["UNCACHEABLE ($expected_response_status_code, sub-request: MISS)"], $response->getHeader('X-Drupal-Dynamic-Cache'));
     $this->assertSame(static::$auth ? ['UNCACHEABLE (request policy)'] : ['MISS'], $response->getHeader('X-Drupal-Cache'));
+
+    // DX: Repeating the request yields a cache hit (either in Page Cache or for
+    // Dynamic Page Cache sub-request).
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertSame($expected_response_status_code, $response->getStatusCode());
+    $this->assertSame(['text/html; charset=utf-8'], $response->getHeader('Content-Type'));
+    $dynamic_page_sub_request_status = static::$auth ? 'HIT' : 'MISS';
+    $this->assertSame(["UNCACHEABLE ($expected_response_status_code, sub-request: $dynamic_page_sub_request_status)"], $response->getHeader('X-Drupal-Dynamic-Cache'));
+    $this->assertSame(static::$auth ? ['UNCACHEABLE (request policy)'] : ['HIT'], $response->getHeader('X-Drupal-Cache'));
+
     // DX: 403 because unauthorized.
     $url->setOption('query', ['_format' => static::$format]);
     $response = $this->request('GET', $url, $request_options);

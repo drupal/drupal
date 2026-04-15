@@ -401,7 +401,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertSame($expected_dynamic_page_cache_header_value, $response->getHeader('X-Drupal-Dynamic-Cache')[0]);
     }
     elseif ($response->hasHeader('X-Drupal-Dynamic-Cache')) {
-      $this->assertMatchesRegularExpression('#^UNCACHEABLE \(((no|poor) cacheability|(request|response) policy)\)$#', $response->getHeader('X-Drupal-Dynamic-Cache')[0]);
+      $this->assertMatchesRegularExpression('#^UNCACHEABLE \(((no|poor) cacheability|(request|response) policy|\d{3}(, sub-request: (HIT|MISS))?)\)$#', $response->getHeader('X-Drupal-Dynamic-Cache')[0]);
     }
   }
 

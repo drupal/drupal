@@ -162,6 +162,26 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
       return;
     }
 
+    // Don't cache the response if Dynamic Page Cache's request subscriber did
+    // not fire, because that means it is impossible to have a Dynamic Page
+    // Cache hit. This can happen when the main request is for example a 403 or
+    // 404, in which case a subrequest is performed by the router. In that case,
+    // it is the subrequest's response that is cached by Dynamic Page Cache,
+    // because the routing happens in a request subscriber earlier than Dynamic
+    // Page Cache's and immediately sets a response, i.e. the one returned by
+    // the subrequest, and thus causes Dynamic Page Cache's request subscriber
+    // to not fire for the main request.
+    // @see \Drupal\Core\Routing\AccessAwareRouter::checkAccess()
+    // @see \Drupal\Core\EventSubscriber\DefaultExceptionHtmlSubscriber::on403()
+    $request = $event->getRequest();
+    if (!isset($this->requestPolicyResults[$request])) {
+      $sub_request_status = $response->headers->has(self::HEADER)
+        ? ', sub-request: ' . $response->headers->get(self::HEADER)
+        : '';
+      $response->headers->set(self::HEADER, "UNCACHEABLE ({$response->getStatusCode()}$sub_request_status)");
+      return;
+    }
+
     // Dynamic Page Cache only works with cacheable responses. It does not work
     // with plain Response objects. (Dynamic Page Cache needs to be able to
     // access and modify the cacheability metadata associated with the
@@ -180,22 +200,6 @@ class DynamicPageCacheSubscriber implements EventSubscriberInterface {
     if (!$this->shouldCacheResponse($response)) {
       // The response is uncacheable, mark it as such.
       $response->headers->set(self::HEADER, 'UNCACHEABLE (poor cacheability)');
-      return;
-    }
-
-    // Don't cache the response if Dynamic Page Cache's request subscriber did
-    // not fire, because that means it is impossible to have a Dynamic Page
-    // Cache hit. This can happen when the master request is for example a 403
-    // or 404, in which case a subrequest is performed by the router. In that
-    // case, it is the subrequest's response that is cached by Dynamic Page
-    // Cache, because the routing happens in a request subscriber earlier than
-    // Dynamic Page Cache's and immediately sets a response, i.e. the one
-    // returned by the subrequest, and thus causes Dynamic Page Cache's request
-    // subscriber to not fire for the master request.
-    // @see \Drupal\Core\Routing\AccessAwareRouter::checkAccess()
-    // @see \Drupal\Core\EventSubscriber\DefaultExceptionHtmlSubscriber::on403()
-    $request = $event->getRequest();
-    if (!isset($this->requestPolicyResults[$request])) {
       return;
     }
 
