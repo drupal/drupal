@@ -233,7 +233,7 @@ class EntityLinkSuggestionsController extends ControllerBase {
       'entity_type_id' => $entity->getEntityTypeId(),
       'entity_uuid' => $entity->uuid(),
       'group' => $this->computeGroup($entity),
-      'label' => $entity->label(),
+      'label' => Html::escape($entity->label() ?? ''),
       // Use the canonical URI as a valid fallback for the href. The
       // text_format filter will transform this to the final URL (e.g., alias).
       'path' => $entity->toUrl('canonical')->toString(),
