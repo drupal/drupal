@@ -2557,6 +2557,33 @@ class ViewExecutable {
    * Magic method implementation to unserialize the view executable.
    */
   public function __wakeup(): void {
+    $reflection = new \ReflectionClass($this);
+    $defaults = $reflection->getDefaultProperties();
+    foreach ($reflection->getProperties() as $property) {
+      $name = $property->getName();
+      if ($name === 'serializationData') {
+        $expected_keys = [
+          'args',
+          'current_display',
+          'current_page',
+          'dom_id',
+          'executed',
+          'exposed_data',
+          'exposed_input',
+          'exposed_raw_input',
+          'storage',
+        ];
+        $actual_keys = array_keys($this->serializationData);
+        sort($actual_keys);
+        if ($actual_keys !== $expected_keys) {
+          throw new \RuntimeException(sprintf('Unexpected keys in %s::$%s.', __CLASS__, $name));
+        }
+      }
+      elseif (array_key_exists($name, $defaults) && $this->$name !== $defaults[$name]) {
+        throw new \RuntimeException(sprintf('Deserialization of %s::$%s is not allowed.', __CLASS__, $name));
+      }
+    }
+
     // There are cases, like in testing where we don't have a container
     // available.
     if (\Drupal::hasContainer() && !empty($this->serializationData)) {
