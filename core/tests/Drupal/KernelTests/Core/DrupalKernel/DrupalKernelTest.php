@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\DrupalKernel;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Core\Config\ConfigInstallerInterface;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\TestWith;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -277,7 +279,9 @@ class DrupalKernelTest extends KernelTestBase {
   /**
    * Tests reset container.
    */
-  public function testResetContainer(): void {
+  #[TestWith([TRUE])]
+  #[TestWith([FALSE])]
+  public function testResetContainer(bool $config_installer_syncing): void {
     $modules_enabled = [
       'system' => 'system',
       'user' => 'user',
@@ -301,6 +305,10 @@ class DrupalKernelTest extends KernelTestBase {
     $container->get('messenger')->addMessage('Test reset', 'Container reset');
     $this->assertSame(['Test reset'], $container->get('messenger')->messagesByType('Container reset'));
 
+    // Ensure config installer isSyncing status is maintained through a
+    // container reset.
+    \Drupal::service(ConfigInstallerInterface::class)->setSyncing($config_installer_syncing);
+
     // Ensure persisted services are persisted.
     $request_stack = $container->get('request_stack');
 
@@ -317,6 +325,10 @@ class DrupalKernelTest extends KernelTestBase {
 
     // Ensure messages are maintained through a container reset.
     $this->assertSame(['Test reset'], $container->get('messenger')->messagesByType('Container reset'));
+
+    // Ensure config installer isSyncing status is maintained through a
+    // container reset.
+    $this->assertSame($config_installer_syncing, \Drupal::service(ConfigInstallerInterface::class)->isSyncing());
 
     // Ensure persisted services are persisted.
     $this->assertSame($request_stack, $container->get('request_stack'));
