@@ -1337,9 +1337,20 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     $all_messages = $this->container->get('messenger')->all();
 
+    // Track the config installer syncing flag for when multiple modules are
+    // installed and container is reset.
+    $config_is_syncing = $this->container->get('config.installer')->isSyncing();
+    $source_storage = $this->container->get('config.installer')->getSourceStorage();
     $persist = $this->getServicesToPersist($this->container);
     $this->container->reset();
     $this->persistServices($this->container, $persist);
+    // Restore syncing flag to new container.
+    if ($config_is_syncing) {
+      $this->container->get('config.installer')->setSyncing(TRUE);
+      if ($source_storage) {
+        $this->container->get('config.installer')->setSourceStorage($source_storage);
+      }
+    }
 
     $this->container->set('kernel', $this);
 
