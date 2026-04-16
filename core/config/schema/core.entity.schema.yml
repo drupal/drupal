@@ -331,6 +331,15 @@ field.formatter.settings.string:
     link_to_entity:
       type: boolean
       label: 'Link to the entity'
+    link_rel:
+      type: string
+      label: 'Link destination'
+      constraints:
+        Choice:
+          choices:
+            - canonical
+            - edit-form
+      requiredKey: false
 
 field.formatter.settings.language:
   type: field.formatter.settings.string
