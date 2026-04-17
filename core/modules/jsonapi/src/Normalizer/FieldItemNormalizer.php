@@ -52,12 +52,23 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
   }
 
   /**
-   * {@inheritdoc}
+   * Normalizes data into a set of arrays/scalars.
    *
    * This normalizer leaves JSON:API normalizer land and enters the land of
    * Drupal core's serialization system. That system was never designed with
    * cacheability in mind, and hence bubbles cacheability out of band. This must
    * catch it, and pass it to the value object that JSON:API uses.
+   *
+   * @param \Drupal\Core\Field\FieldItemInterface $object
+   *   Data to normalize.
+   * @param string|null $format
+   *   Format the normalization result will be encoded as.
+   * @param array<string, mixed> $context
+   *   Context options for the normalizer.
+   *
+   * @return array|string|int|float|bool|\ArrayObject<mixed, mixed>|null
+   *   \ArrayObject is used to make sure an empty object is encoded as an
+   *   object not an array.
    */
   public function doNormalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof FieldItemInterface);

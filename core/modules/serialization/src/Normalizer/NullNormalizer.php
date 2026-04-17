@@ -29,10 +29,20 @@ class NullNormalizer extends NormalizerBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Normalizes data into a set of arrays/scalars.
+   *
+   * @param object $object
+   *   Data to normalize.
+   * @param string|null $format
+   *   Format the normalization result will be encoded as.
+   * @param array<string, mixed> $context
+   *   Context options for the normalizer.
+   *
+   * @return null
+   *   The normalized data.
    */
   #[JsonSchema(['type' => 'null'])]
-  public function doNormalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
+  public function doNormalize($object, $format = NULL, array $context = []): NULL {
     return NULL;
   }
 

@@ -16,9 +16,19 @@ use Drupal\Core\TypedData\ListInterface;
 class ListNormalizer extends NormalizerBase {
 
   /**
-   * {@inheritdoc}
+   * Normalizes data into a set of arrays/scalars.
+   *
+   * @param object $object
+   *   Data to normalize.
+   * @param string|null $format
+   *   Format the normalization result will be encoded as.
+   * @param array<string, mixed> $context
+   *   Context options for the normalizer.
+   *
+   * @return array
+   *   The normalized data.
    */
-  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
+  public function normalize($object, $format = NULL, array $context = []): array {
     $attributes = [];
     foreach ($object as $fieldItem) {
       $attributes[] = $this->serializer->normalize($fieldItem, $format, $context);

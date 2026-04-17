@@ -14,9 +14,19 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 class StringNormalizer extends FieldItemNormalizer implements DenormalizerInterface {
 
   /**
-   * {@inheritdoc}
+   * Normalizes data into a set of arrays/scalars.
+   *
+   * @param mixed $object
+   *   Data to normalize.
+   * @param string|null $format
+   *   Format the normalization result will be encoded as.
+   * @param array<string, mixed> $context
+   *   Context options for the normalizer.
+   *
+   * @return array
+   *   Normalized data.
    */
-  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
+  public function normalize($object, $format = NULL, array $context = []): array {
     $data = parent::normalize($object, $format, $context);
     $data['value'] = str_replace('super', 'NOT', $data['value']);
     return $data;

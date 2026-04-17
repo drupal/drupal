@@ -19,9 +19,19 @@ use Drupal\Core\TypedData\Plugin\DataType\Timestamp;
 class TimestampItemNormalizer extends FieldItemNormalizer {
 
   /**
-   * {@inheritdoc}
+   * Normalizes data into a set of arrays/scalars.
+   *
+   * @param object $object
+   *   Data to normalize.
+   * @param string|null $format
+   *   Format the normalization result will be encoded as.
+   * @param array<string, mixed> $context
+   *   Context options for the normalizer.
+   *
+   * @return array
+   *   The normalized data.
    */
-  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
+  public function normalize($object, $format = NULL, array $context = []): array {
     return parent::normalize($object, $format, $context) + [
       // 'format' is not a property on Timestamp objects. This is present to
       // assist consumers of this data.

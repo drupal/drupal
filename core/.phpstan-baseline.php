@@ -17824,38 +17824,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/src/JsonapiServiceProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\DataNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/DataNormalizer.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$entity in isset\\(\\) always exists and is not nullable\\.$#',
 	'identifier' => 'isset.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/EntityAccessDeniedHttpExceptionNormalizer.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\EntityDenormalizerBase\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/EntityDenormalizerBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\EntityReferenceFieldNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/EntityReferenceFieldNormalizer.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\FieldItemNormalizer\\:\\:checkForSerializedStrings\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/FieldItemNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\FieldItemNormalizer\\:\\:doNormalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/FieldItemNormalizer.php',
 ];
@@ -17866,82 +17842,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/FieldItemNormalizer.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\FieldItemNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/FieldItemNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\FieldNormalizer\\:\\:doNormalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/FieldNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\FieldNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/FieldNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\HttpExceptionNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/HttpExceptionNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\JsonApiDocumentTopLevelNormalizer\\:\\:doNormalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/JsonApiDocumentTopLevelNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\JsonApiDocumentTopLevelNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/JsonApiDocumentTopLevelNormalizer.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\JsonApiDocumentTopLevelNormalizer\\:\\:validateRequestBody\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/JsonApiDocumentTopLevelNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\LinkCollectionNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/LinkCollectionNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\RelationshipNormalizer\\:\\:doNormalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/RelationshipNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\RelationshipNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/RelationshipNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\ResourceIdentifierNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/ResourceIdentifierNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\ResourceObjectNormalizer\\:\\:doNormalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/ResourceObjectNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Normalizer\\\\ResourceObjectNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Normalizer/ResourceObjectNormalizer.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jsonapi\\\\ParamConverter\\\\EntityUuidConverter\\:\\:setLanguageManager\\(\\) has no return type specified\\.$#',
@@ -18040,34 +17944,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/src/Routing/Routes.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi\\\\Serializer\\\\Serializer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Serializer/Serializer.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jsonapi\\\\Serializer\\\\Serializer\\:\\:setFallbackNormalizer\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/src/Serializer/Serializer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi_test_data_type\\\\Normalizer\\\\StringNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/modules/jsonapi_test_data_type/src/Normalizer/StringNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi_test_data_type\\\\Normalizer\\\\TraversableObjectNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/modules/jsonapi_test_data_type/src/Normalizer/TraversableObjectNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi_test_field_type\\\\Normalizer\\\\StringNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/modules/jsonapi_test_field_type/src/Normalizer/StringNormalizer.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jsonapi_test_resource_type_building\\\\EventSubscriber\\\\ResourceTypeBuildEventSubscriber\\:\\:aliasResourceTypeFields\\(\\) has no return type specified\\.$#',
@@ -27030,42 +26910,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/serialization/src/EventSubscriber/UserRouteAlterSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\ComplexDataNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/ComplexDataNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\ConfigEntityNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/ConfigEntityNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\ContentEntityNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/ContentEntityNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\DateTimeIso8601Normalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/DateTimeIso8601Normalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\DateTimeNormalizer\\:\\:doNormalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/DateTimeNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\DateTimeNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/DateTimeNormalizer.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\serialization\\\\Normalizer\\\\EntityNormalizer\\:\\:getCustomSerializedPropertyNames\\(\\)\\.$#',
 	'identifier' => 'method.notFound',
 	'count' => 1,
@@ -27076,12 +26920,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/serialization/src/Normalizer/EntityNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\EntityReferenceFieldItemNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/EntityReferenceFieldItemNormalizer.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\EntityReferenceFieldItemNormalizer\\:\\:normalizeRootReferenceValue\\(\\) has no return type specified\\.$#',
@@ -27102,40 +26940,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/serialization/src/Normalizer/FieldItemNormalizer.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\ListNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/ListNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\MarkupNormalizer\\:\\:doNormalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/MarkupNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\MarkupNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/MarkupNormalizer.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\NormalizerBase\\:\\:addCacheableDependency\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/serialization/src/Normalizer/NormalizerBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\NullNormalizer\\:\\:doNormalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/NullNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\NullNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/NullNormalizer.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\PrimitiveDataNormalizer\\:\\:checkForSerializedStrings\\(\\) has no return type specified\\.$#',
@@ -27144,70 +26952,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/serialization/src/Normalizer/PrimitiveDataNormalizer.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\PrimitiveDataNormalizer\\:\\:doNormalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/PrimitiveDataNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\PrimitiveDataNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/PrimitiveDataNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\TimestampItemNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/TimestampItemNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\TimestampNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/TimestampNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\TypedDataNormalizer\\:\\:doNormalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/TypedDataNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization\\\\Normalizer\\\\TypedDataNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/Normalizer/TypedDataNormalizer.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\serialization\\\\SerializationServiceProvider\\:\\:register\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/serialization/src/SerializationServiceProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_normalization_test\\\\Normalization\\\\TextItemSillyNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/tests/modules/field_normalization_test/src/Normalization/TextItemSillyNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\test_datatype_boolean_emoji_normalizer\\\\Normalizer\\\\BooleanNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/tests/modules/test_datatype_boolean_emoji_normalizer/src/Normalizer/BooleanNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\test_fieldtype_boolean_emoji_normalizer\\\\Normalizer\\\\BooleanItemNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/tests/modules/test_fieldtype_boolean_emoji_normalizer/src/Normalizer/BooleanItemNormalizer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\serialization_test\\\\SerializationTestNormalizer\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/tests/serialization_test/src/SerializationTestNormalizer.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\serialization\\\\Kernel\\\\MapDataNormalizerTest\\:\\:buildExampleTypedData\\(\\) has no return type specified\\.$#',
@@ -27238,12 +26986,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/serialization/tests/src/Unit/Normalizer/DateTimeNormalizerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\serialization\\\\Unit\\\\Normalizer\\\\TestNormalizerBase\\:\\:normalize\\(\\) return type with generic class ArrayObject does not specify its types\\: TKey, TValue$#',
-	'identifier' => 'missingType.generics',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/tests/src/Unit/Normalizer/NormalizerBaseTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\serialization\\\\Unit\\\\Normalizer\\\\PrimitiveDataNormalizerTest\\:\\:dataProviderPrimitiveData\\(\\) has no return type specified\\.$#',

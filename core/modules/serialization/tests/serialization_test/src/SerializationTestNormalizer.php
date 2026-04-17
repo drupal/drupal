@@ -19,9 +19,19 @@ class SerializationTestNormalizer implements NormalizerInterface {
   protected static $format = 'serialization_test';
 
   /**
-   * {@inheritdoc}
+   * Normalizes data into a set of arrays/scalars.
+   *
+   * @param object $object
+   *   Data to normalize.
+   * @param string|null $format
+   *   Format the normalization result will be encoded as.
+   * @param array<string, mixed> $context
+   *   Context options for the normalizer.
+   *
+   * @return array
+   *   The normalized data.
    */
-  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
+  public function normalize($object, $format = NULL, array $context = []): array {
     $normalized = (array) $object;
     // Add identifying value that can be used to verify that the expected
     // normalizer was invoked.
