@@ -289,7 +289,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function getLastAccessedTime() {
-    return (int) $this->getFieldValue('access', 'value');
+    return $this->getFieldValue('access', 'value');
   }
 
   /**

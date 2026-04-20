@@ -125,22 +125,4 @@ class UserEntityTest extends KernelTestBase {
     $this->assertEquals('password', $user->password);
   }
 
-  /**
-   * Tests that ::getLastAccessedTime() returns an integer for a loaded user.
-   *
-   * @legacy-covers ::getLastAccessedTime
-   */
-  public function testGetLastAccessedTime(): void {
-    $access = 100;
-    /** @var \Drupal\user\Entity\User $user */
-    $user = User::create([
-      'name' => $this->randomMachineName(),
-      'access' => $access,
-    ]);
-    $id = $user->save();
-
-    $loaded_user = User::load($id);
-    $this->assertSame($access, $loaded_user->getLastAccessedTime());
-  }
-
 }

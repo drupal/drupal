@@ -27,7 +27,7 @@ class UserSession implements AccountInterface {
   /**
    * The Unix timestamp when the user last accessed the site.
    *
-   * @var int
+   * @var string
    */
   protected $access;
 
@@ -194,7 +194,7 @@ class UserSession implements AccountInterface {
    * {@inheritdoc}
    */
   public function getLastAccessedTime() {
-    return (int) $this->access;
+    return $this->access;
   }
 
   /**
