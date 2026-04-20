@@ -1,0 +1,23 @@
+/**
+ * @file
+ * Revision history styles.
+ */
+
+.revision-current {
+  background-color: transparent;
+
+  td:first-of-type {
+    position: relative;
+
+    &::before {
+      position: absolute;
+      display: block;
+      width: 1px;
+      height: 100%;
+      content: "";
+      border-inline-start: 6px solid var(--gin-color-green);
+      inset-block-start: 0;
+      inset-inline-start: 0;
+    }
+  }
+}

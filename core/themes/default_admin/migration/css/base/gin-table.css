@@ -9,7 +9,6 @@
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
   margin-block-start: calc(var(--gin-spacing-xs) * -1);
 }
 table.gin--sticky-table-header {

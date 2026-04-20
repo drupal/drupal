@@ -1,0 +1,170 @@
+/**
+ * @file
+ * Navigation top bar layout styles.
+ */
+
+/* cspell:ignore xxxs */
+:root {
+  --drupal-displace-offset-top: 64px;
+  --admin-toolbar-top-bar-height: 64px;
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]).gin--navigation-top-bar {
+  height: auto;
+  min-height: 64px;
+  opacity: 0.95;
+  border-block-end: 1px solid var(--gin-border-color-layer);
+  background: var(--gin-bg-layer);
+  box-shadow: none;
+  padding-inline: calc(var(--admin-toolbar-sidebar-width) + var(--space-m)) var(--space-m);
+  padding-block: var(--space-xxxs);
+
+  .gin--high-contrast-mode & {
+    background: var(--gin-bg-layer);
+    backdrop-filter: none;
+  }
+
+  &--offset {
+    margin-top: calc(64px + var(--space-s));
+  }
+
+  &:has(.top-bar__tools:not(:empty), .top-bar__context:not(:empty), .top-bar__actions:not(:empty)) {
+    display: flex;
+  }
+
+  .top-bar__burger {
+    align-self: center;
+  }
+
+  .top-bar__context {
+    gap: var(--space-xs);
+  }
+
+  .top-bar__actions,
+  .local-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .local-actions,
+  .local-actions__item,
+  .form-actions,
+  .gin-sticky-form-actions {
+    width: auto;
+    margin: 0;
+  }
+
+  .toolbar-title {
+    color: var(--gin-color-text);
+  }
+
+  .toolbar-title__icon path {
+    fill: var(--gin-color-text);
+  }
+
+  .toolbar-button {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    font-variation-settings: normal;
+  }
+
+  .toolbar-dropdown__menu {
+    box-sizing: border-box;
+    padding: var(--space-xs);
+    border-radius: var(--gin-border-l);
+    background-color: var(--gin-bg-layer3);
+    box-shadow: var(--gin-shadow-l2);
+    gap: 0;
+
+    .toolbar-dropdown__link {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 240px;
+      margin: 0 !important;
+      padding: var(--space-s);
+      text-align: start;
+      text-decoration: none;
+      border: 0 !important;
+      border-radius: var(--gin-border-s);
+      box-shadow: none;
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      line-height: 1;
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: var(--gin-color-button-text);
+        outline: none;
+        background-color: var(--gin-color-primary);
+
+        &::before {
+          background-color: var(--gin-bg-layer) !important;
+        }
+      }
+    }
+
+    .toolbar-dropdown__item + .toolbar-dropdown__item {
+      border: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: opacity var(--gin-transition-fast);
+    }
+  }
+
+  button,
+  input[type="submit"],
+  .action-link--icon-trash.action-link--danger,
+  .button.button--danger,
+  a.button.button--danger,
+  .local-actions__item a {
+    text-decoration: none;
+    box-shadow: none;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    padding-block: calc(var(--space-xs) - var(--space-xxxs));
+    padding-inline: var(--space-s);
+    margin-block: 0;
+  }
+
+  .action-link--icon-trash.action-link--danger,
+  .button.button--danger,
+  a.button.button--danger {
+    padding-block: calc(var(--space-xs) - 0.5px);
+  }
+
+  @supports (backdrop-filter: blur()) {
+    opacity: 0.999;
+    /* stylelint-disable-next-line color-function-notation */
+    background: rgb(from var(--layer-background) r g b/ 0.8);
+    backdrop-filter: blur(12px);
+  }
+}
+
+body:has(.gin--navigation-top-bar .gin-sticky-form-actions) :where(#gin_sidebar) {
+  inset-block-start: 64px !important;
+  height: calc(100% - 64px) !important;
+}
+
+:where(.gin--edit-form) .gin-sticky-form-actions {
+  gap: var(--space-xs);
+
+  .button {
+    margin-inline-end: 0;
+
+    &:dir(rtl) {
+      margin-inline-start: 0;
+    }
+  }
+}
+
+:where(.gin--edit-form) .gin-sticky-form-actions [data-drupal-selector="edit-delete"] {
+  display: none;
+}
+
+#block-gin-page-title {
+  margin-block: var(--space-xxs) var(--space-s);
+}

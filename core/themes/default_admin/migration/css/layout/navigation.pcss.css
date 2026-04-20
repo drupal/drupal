@@ -1,0 +1,388 @@
+/**
+ * @file
+ * Navigation layout overrides for the admin toolbar.
+ */
+
+/* cspell:ignore navigationcreate, toolsextra, xxxs */
+
+@import "../base/media-queries.pcss.css";
+
+:root {
+  --gin-toolbar-height: 48px;
+  --gin-toolbar-secondary-height: 48px;
+  --gin-scroll-offset: 72px;
+  --gin-toolbar-y-offset: var(--gin-toolbar-height);
+  --gin-toolbar-x-offset: 0px;
+  --gin-sticky-offset: 0px;
+  --gin-icon-size-toolbar: 20px;
+
+  @media (--admin-medium) {
+    --gin-toolbar-height: 0px;
+    --gin-toolbar-secondary-height: 52px;
+    --gin-toolbar-x-offset: var(--drupal-displace-offset-left, 64px);
+    --gin-scroll-offset: 130px;
+    --gin-sticky-offset: var(--gin-height-sticky);
+  }
+}
+
+html.admin-toolbar-expanded {
+  @media (--admin-medium) {
+    --gin-toolbar-x-offset: var(--drupal-displace-offset-left, 264px);
+  }
+}
+
+body.gin--navigation {
+  --admin-toolbar-sidebar-width: 4rem;
+}
+
+[data-admin-toolbar="expanded"] body.gin--navigation {
+  --admin-toolbar-sidebar-width: 16.5rem;
+
+  @media (--admin-toolbar-tablet) {
+    --admin-toolbar-sidebar-width: calc(16.5 * var(--admin-toolbar-rem));
+  }
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) {
+  --admin-toolbar-font-family: var(--gin-font);
+  --admin-toolbar-color-white: var(--gin-bg-layer);
+  --admin-toolbar-color-gray-050: var(--gin-bg-layer2);
+  --admin-toolbar-color-gray-100: var(--gin-border-color-layer);
+  --admin-toolbar-color-gray-200: var(--gin-border-color-layer2);
+  --admin-toolbar-color-gray-800: var(--gin-color-text);
+  --admin-toolbar-color-gray-990: var(--gin-color-primary-active);
+}
+
+:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) {
+  &.admin-toolbar-control-bar {
+    background-color: var(--admin-toolbar-color-white);
+  }
+
+  .toolbar-menu__link {
+    color: var(--gin-color-text);
+    font-weight: var(--font-weight-semibold);
+    font-variation-settings: unset;
+    &:hover::before {
+      inline-size: var(--space-xxs);
+    }
+
+    &,
+    &:hover,
+    &:active {
+      outline: none;
+      box-shadow: none;
+    }
+
+    &:hover {
+      color: var(--gin-color-primary);
+      background-color: var(--gin-bg-item-hover);
+    }
+
+    &:active,
+    &:focus,
+    &:hover:focus {
+      color: var(--gin-color-primary-hover);
+      background-color: var(--gin-color-primary-light);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow:
+        inset 0 0 0 1px var(--gin-color-focus-border),
+        inset 0 0 0 3px var(--gin-color-focus);
+    }
+  }
+
+  &.admin-toolbar {
+    top: 0;
+    height: 100%;
+
+    .toolbar-button {
+      min-height: unset;
+      padding-inline: 10px;
+      padding-block: calc(var(--space-xs) + 1px);
+      margin-block-end: var(--space-xxxs);
+      color: var(--gin-color-text);
+      font-weight: var(--font-weight-semibold);
+      font-variation-settings: unset;
+
+      &,
+      &:hover,
+      &:active {
+        outline: none;
+        box-shadow: none;
+      }
+
+      &:hover {
+        color: var(--gin-color-primary);
+        background-color: var(--gin-bg-item-hover);
+      }
+
+      &:active,
+      &:focus,
+      &:hover:focus {
+        color: var(--gin-color-primary-hover);
+        background-color: var(--gin-color-primary-light);
+      }
+    }
+
+    .toolbar-button--primary {
+      color: var(--gin-color-button-text) !important;
+    }
+  }
+
+  .admin-toolbar__header {
+    padding-block-start: var(--space-xs);
+
+    @media (--admin-large) {
+      padding-block-start: 0;
+    }
+  }
+
+  .admin-toolbar__content {
+    margin-block-start: calc(var(--space-xxs) * -1);
+    padding: var(--admin-toolbar-sidebar-header) var(--space-s) var(--space-s) var(--space-s);
+
+    @media (--admin-large) {
+      margin-block-start: 0;
+      padding: var(--space-s);
+    }
+  }
+
+  .admin-toolbar__footer {
+    padding: var(--space-s);
+  }
+
+  .admin-toolbar__footer,
+  .admin-toolbar__content .toolbar-block:nth-last-child(n + 2)::after {
+    border-block-start-color: var(--gin-border-color-secondary);
+  }
+
+  .admin-toolbar__logo {
+    border-radius: 10px;
+    line-height: 0;
+
+    svg rect {
+      fill: var(--gin-color-primary);
+    }
+
+    svg path {
+      fill: var(--gin-bg-app);
+    }
+
+    &:hover svg rect {
+      fill: var(--gin-color-primary-hover);
+    }
+
+    &:active svg rect,
+    &:focus svg rect {
+      fill: var(--gin-color-primary-active);
+    }
+  }
+
+  #navigation-link-navigationcreate {
+    margin-block-start: var(--space-xxs);
+
+    &:first-child {
+      margin-block-end: var(--admin-toolbar-space-8);
+
+      &::after {
+        display: block;
+        margin-block-start: var(--admin-toolbar-space-12);
+        content: "";
+        border-block-end: 1px solid var(--gin-border-color-secondary);
+      }
+    }
+  }
+
+  .toolbar-block__list {
+    gap: 0;
+  }
+
+  &.gin--navigation-top-bar .toolbar-button.toolbar-button {
+    min-height: auto;
+    padding: var(--space-xs) var(--space-s);
+    border: 0 none;
+    border-radius: var(--gin-border-m);
+    outline: none;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: var(--gin-transition);
+    }
+  }
+
+  &.gin--navigation-top-bar .toolbar-button.toolbar-button--primary {
+    --toolbar-button-color: var(--gin-color-button-text);
+    --toolbar-button-bg: var(--gin-color-primary);
+    --toolbar-button-hover-color: var(--gin-color-button-text);
+    --toolbar-button-hover-bg: var(--gin-color-primary-hover);
+    --toolbar-button-focus-color: var(--gin-color-button-text);
+    --toolbar-button-focus-bg: var(--gin-color-primary-active);
+    --toolbar-button-icon-size: var(--font-size-s);
+
+    box-shadow: 0.1em 0.25em 0.5em var(--gin-color-primary-light);
+
+    &:dir(rtl) {
+      box-shadow: -0.1em 0.25em 0.5em var(--gin-color-primary-light);
+    }
+  }
+
+  &.gin--navigation-top-bar .toolbar-button.toolbar-button--icon--dots {
+    display: block;
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+    cursor: pointer;
+    color: var(--gin-color-text);
+    border-radius: var(--gin-border-m);
+    background: transparent;
+    margin-inline: calc(var(--space-xxs) * -1);
+
+    &:hover,
+    &:focus {
+      background: var(--gin-color-primary-light);
+
+      &::before {
+        background: var(--gin-color-primary);
+      }
+    }
+
+    &[aria-expanded="true"],
+    &.is-active {
+      background-color: var(--gin-color-primary-light-hover);
+
+      &::before {
+        background-color: var(--gin-color-primary-active);
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: background var(--gin-transition-fast);
+    }
+  }
+
+  .toolbar-button--large {
+    font-weight: var(--font-weight-bold);
+  }
+
+  *:focus,
+  &.gin--navigation-top-bar .button:focus,
+  &.gin--navigation-top-bar .local-actions__item *:focus,
+  &.gin--navigation-top-bar .toolbar-button.toolbar-button:focus,
+  .local-actions__item *:focus,
+  .admin-toolbar__logo:focus,
+  .toolbar-button.toolbar-button:focus,
+  .admin-toolbar__expand-button:focus {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .toolbar-button.current {
+    background-color: var(--gin-bg-item-hover);
+
+    &:hover {
+      background-color: var(--gin-color-primary-light);
+    }
+
+    &:active,
+    &:focus,
+    &:hover:focus {
+      background-color: var(--gin-color-primary-light);
+    }
+
+    &.is-active {
+      color: var(--gin-color-primary);
+      background-color: var(--gin-color-primary-light);
+
+      &::before {
+        color: var(--gin-color-primary) !important;
+      }
+    }
+  }
+
+  .toolbar-button:has(+ .toolbar-popover__wrapper .is-active) {
+    color: var(--gin-color-primary);
+    background-color: var(--gin-color-primary-light);
+
+    &::before {
+      color: var(--gin-color-primary) !important;
+    }
+  }
+
+  .toolbar-button__icon {
+    margin: -1px;
+    color: var(--gin-icon-color);
+    stroke-width: 0.03125rem;
+    stroke: currentColor;
+    inline-size: 22px;
+    block-size: 22px;
+  }
+
+  .toolbar-button--icon--announcements-feed-announcement .toolbar-button__icon path:not(:first-of-type) {
+    stroke-width: 1.325rem;
+  }
+
+  .toolbar-button--icon--dots path {
+    stroke-width: 0.5rem;
+  }
+
+  .admin-toolbar__expand-button {
+    margin-block-start: calc(var(--space-xs) * -1);
+
+    &,
+    &:hover {
+      color: var(--gin-color-text-light);
+      border-color: var(--gin-border-color);
+    }
+  }
+
+  .toolbar-popover--expanded {
+    background-color: transparent;
+
+    > .toolbar-button {
+      background-color: var(--gin-bg-item-hover);
+    }
+  }
+
+  .gin--dark-mode .toolbar-popover__wrapper {
+    border-inline-start: 2px solid var(--gin-border-color-secondary);
+  }
+
+  .admin-toolbar__tooltip {
+    color: #fff;
+    background-color: var(--gin-tooltip-bg);
+    font-size: var(--font-size-xs);
+  }
+
+  .toolbar-block__list-item[id*="navigation-link-admin-toolbar-toolsextra-links"] {
+    display: none;
+  }
+
+  #toolbar-item-shortcuts,
+  #toolbar-item-announcement {
+    display: none;
+  }
+
+  .gin-secondary-toolbar {
+    .toolbar-id--toolbar-icon-user {
+      display: none !important;
+    }
+
+    .toolbar-menu {
+      gap: 0;
+    }
+
+    .toolbar-menu__trigger {
+      display: none;
+    }
+
+    .toolbar-tray .menu-item + .menu-item {
+      border-inline-start: none;
+    }
+  }
+
+  .toolbar-loading #toolbar-item-shortcuts-tray,
+  .toolbar-loading #toolbar-item-shortcuts {
+    visibility: hidden;
+  }
+}

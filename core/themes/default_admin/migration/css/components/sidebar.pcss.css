@@ -1,0 +1,189 @@
+/**
+ * @file
+ * Sidebar panel and controls.
+ */
+
+@import "../base/media-queries.pcss.css";
+
+#gin-sidebar-draggable {
+  position: absolute;
+  z-index: 104;
+  display: block;
+  width: 2px;
+  height: 100%;
+  padding: 0;
+  cursor: ew-resize;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+
+  &:hover {
+    background-color: var(--gin-border-color-table);
+  }
+
+  &:active {
+    background-color: var(--gin-border-color);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: var(--gin-transition-fast);
+  }
+}
+
+.layout-region--secondary {
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--gin-transition-fast);
+  }
+
+  @media (--admin-to-medium) {
+    --gin-sidebar-width: var(--gin-sidebar-small-width);
+  }
+
+  @media (--admin-to-large) {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+body[data-meta-sidebar="closed"] {
+  --gin-sidebar-offset: 0px;
+
+  .layout-region--secondary {
+    visibility: hidden;
+    transform: translateX(var(--gin-sidebar-width));
+
+    &:dir(rtl) {
+      transform: translateX(calc(var(--gin-sidebar-width) * -1));
+    }
+  }
+}
+
+body[data-meta-sidebar="open"] {
+  .layout-region--secondary {
+    @media (--admin-to-large) {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close,
+.meta-sidebar__close {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: var(--gin-border-m);
+  background: transparent;
+
+  &::before {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    content: "";
+    background-color: var(--gin-icon-color);
+    mask-repeat: no-repeat;
+    mask-position: center center;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: var(--gin-color-primary-light);
+
+    &::before {
+      background-color: var(--gin-color-primary);
+    }
+  }
+
+  &.is-active {
+    background-color: var(--gin-color-primary-light-hover);
+
+    &::before {
+      background-color: var(--gin-color-primary-active);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background var(--gin-transition-fast);
+  }
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__trigger,
+.meta-sidebar__trigger {
+  display: block;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: var(--gin-border-m);
+  background: transparent;
+
+  &::before {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    content: "";
+    border-radius: 50%;
+    background-color: var(--gin-icon-color);
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-image: url("../../media/icons/general/sidebar.svg");
+    mask-size: var(--gin-icon-size-sidebar-toggle) var(--gin-icon-size-sidebar-toggle);
+  }
+
+  &:hover,
+  &:focus,
+  &.is-active,
+  &.is-active:hover {
+    background-color: var(--gin-color-primary-light);
+
+    &::before {
+      background-color: var(--gin-color-primary);
+    }
+  }
+
+  &.is-active {
+    background-color: var(--gin-bg-item-hover);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background var(--gin-transition-fast);
+  }
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__close,
+.meta-sidebar__close {
+  position: absolute;
+  z-index: 104;
+  inset-block-start: 18px;
+  inset-inline-end: var(--space-m);
+
+  &::before {
+    mask-image: url("../../media/icons/general/close.svg");
+    mask-size: 16px 16px;
+  }
+
+  @media (--admin-large) {
+    display: none;
+  }
+}
+
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__overlay,
+.meta-sidebar__overlay {
+  position: fixed;
+  z-index: 102;
+  visibility: hidden;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background: var(--gin-bg-layer2);
+  inset-block-start: 0;
+  inset-inline-start: 0;
+
+  @media (--admin-large) {
+    display: none;
+  }
+}
+
+body[data-meta-sidebar="open"] :is(#extra-specificity-hack, [data-drupal-admin-styles]) .meta-sidebar__overlay,
+body[data-meta-sidebar="open"] .meta-sidebar__overlay {
+  visibility: visible;
+  opacity: 0.9;
+}

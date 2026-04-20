@@ -34,10 +34,6 @@ h3 {
   background: var(--gin-color-primary-light-hover);
 }
 
-::-moz-selection {
-  background: var(--gin-color-primary-light-hover);
-}
-
 a {
   overflow-wrap: break-word;
   word-wrap: break-word;

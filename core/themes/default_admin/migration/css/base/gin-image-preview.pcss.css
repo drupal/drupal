@@ -8,9 +8,5 @@
       var(--gin-pattern-square) var(--gin-pattern-square),
       0 0;
     background-size: calc(var(--gin-pattern-square) * 2) calc(var(--gin-pattern-square) * 2);
-
-    @media screen and (-ms-high-contrast: active) {
-      background: none;
-    }
   }
 }

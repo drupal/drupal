@@ -67,7 +67,7 @@
       background-color: var(--gin-color-text-light);
     }
 
-    @supports (-webkit-mask-image: url()) and (mask-composite: source-over) {
+    @supports (mask-composite: source-over) {
       background-color: var(--gin-color-text-light);
     }
   }

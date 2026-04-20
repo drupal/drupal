@@ -4,12 +4,20 @@
  * Processed by postcss/postcss-custom-media.
  */
 
-@custom-media --admin-tiny (min-width: 26.25em);
-@custom-media --admin-xsmall (min-width: 36.75em);
-@custom-media --admin-small (min-width: 48em);
-@custom-media --admin-medium (min-width: 61em);
-@custom-media --admin-large (min-width: 64em);
-@custom-media --admin-wide (min-width: 80em);
+@custom-media --admin-compact (min-width: 36em); /* 576px */
+@custom-media --admin-tiny (min-width: 26.25em); /* 420px */
+@custom-media --admin-xsmall (min-width: 36.75em); /* 588px */
+@custom-media --admin-small (min-width: 48em); /* 768px */
+@custom-media --admin-medium (min-width: 61em); /* 976px */
+@custom-media --admin-large (min-width: 64em); /* 1024px */
+@custom-media --admin-wide (min-width: 80em); /* 1280px */
+@custom-media --admin-wider (min-width: 85em); /* 1360px */
+@custom-media --admin-widest (min-width: 90em); /* 1440px */
+@custom-media --admin-max (min-width: 108.125em); /* 1730px */
 
-/* Max-width variant (exclusive) */
+/* Max-width variants (exclusive) */
 @custom-media --admin-to-tiny (max-width: 26.24em);
+@custom-media --admin-to-small (max-width: 47.99em);
+@custom-media --admin-to-medium (max-width: 60.99em);
+@custom-media --admin-to-large (max-width: 63.99em);
+@custom-media --admin-to-wide (max-width: 79.99em);

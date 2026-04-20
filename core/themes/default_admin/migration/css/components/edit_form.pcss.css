@@ -1,0 +1,301 @@
+/**
+ * @file
+ * Edit form layout and sidebar styles.
+ */
+
+@import "../base/media-queries.pcss.css";
+
+.gin--edit-form {
+  .dialog-off-canvas-main-canvas {
+    @media (--admin-large) and (prefers-reduced-motion: no-preference) {
+      transition: padding-inline-start var(--gin-transition-fast);
+    }
+  }
+
+  &.js-off-canvas-dialog-open {
+    .layout-region.layout-region--secondary {
+      @media (--admin-large) {
+        visibility: hidden;
+        opacity: 0;
+      }
+    }
+    @media (--admin-large) {
+      padding-inline-end: 0;
+    }
+  }
+
+  .tabs [data-drupal-link-system-path*="/delete"] {
+    display: none;
+  }
+
+  .gin-secondary-toolbar .toolbar-secondary .toolbar-bar .contextual-toolbar-tab {
+    display: none;
+  }
+
+  .layout-node-form {
+    display: block;
+    overflow: inherit;
+  }
+
+  .layout-region--main,
+  .layout-region--secondary .layout-region-node-footer {
+    float: none;
+  }
+
+  .layout-region--main,
+  .layout-region-node-footer {
+    width: 100%;
+    padding-inline-end: 0;
+
+    @media (--admin-large) {
+      flex-basis: 40%;
+      flex-grow: 1;
+      flex-shrink: 1;
+      min-width: 0;
+    }
+  }
+
+  .page-wrapper__node-edit-form {
+    .region-sticky #edit-actions {
+      @media (--admin-to-large) {
+        width: 100%;
+      }
+    }
+
+    .region-sticky #edit-gin-actions {
+      @media (--admin-to-large) {
+        flex-grow: 1;
+      }
+    }
+
+    .block-page-title-block {
+      .page-title {
+        @media (--admin-large) {
+          overflow: hidden;
+          width: auto;
+          margin: 0;
+        }
+      }
+      @media (--admin-max) {
+        width: 100%;
+      }
+    }
+
+    .block-local-tasks-block,
+    .block-system-main-block,
+    .messages-list,
+    .node-form,
+    .node-confirm-form,
+    .admin-list,
+    .help {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 1280px;
+      margin-inline: auto;
+    }
+
+    .layout-region--secondary {
+      position: fixed;
+      z-index: 103;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: var(--gin-sidebar-width);
+      min-width: var(--gin-sidebar-min-width);
+      max-width: var(--gin-sidebar-max-width);
+      height: calc(100% - var(--gin-toolbar-y-offset));
+      margin: 0;
+      border-inline-start: 1px solid var(--gin-border-color-layer);
+      background: var(--gin-bg-layer);
+      inset-block-start: var(--gin-toolbar-y-offset);
+      inset-inline-end: 0;
+
+      .gin--dark-mode & {
+        box-shadow: 0 0 4px rgb(0, 0, 0, 0.1);
+      }
+
+      .gin-sidebar .form-actions {
+        margin: 0;
+
+        .action-link {
+          margin-block-start: var(--space-xs);
+          margin-block-end: 0;
+        }
+      }
+
+      .field--name-revision-log,
+      .field--name-revision-log-message {
+        margin-block-start: var(--space-s);
+      }
+
+      .accordion {
+        border: 0 none;
+        background: none;
+        box-shadow: none;
+      }
+
+      .entity-meta__header {
+        padding: var(--space-m) 1.5rem;
+        color: var(--gin-color-text);
+        border: 0 none;
+        background-color: var(--gin-bg-layer);
+
+        .form-type--item,
+        .form-item__label {
+          font-size: var(--font-size-s);
+        }
+
+        .form-item {
+          margin-block: var(--space-xxs);
+        }
+
+        @media (--admin-to-medium) {
+          padding-block-start: calc(var(--space-l) - var(--space-xxs));
+          padding-inline-end: var(--space-l);
+        }
+      }
+
+      .entity-meta__title {
+        color: var(--gin-color-title);
+        text-shadow: none;
+        font-weight: var(--font-weight-semibold);
+      }
+
+      .entity-meta__revision {
+        margin-block-start: var(--space-m);
+      }
+
+      .entity-meta__last-saved,
+      .entity-meta__author {
+        margin-block: var(--space-xxs);
+      }
+
+      .entity-meta__last-saved,
+      .entity-meta__last-saved .form-item__label,
+      .entity-meta__author,
+      .entity-meta__author .form-item__label {
+        font-size: var(--font-size-s);
+      }
+
+      .entity-meta > .accordion > .accordion__item,
+      .entity-meta > .accordion__item {
+        border-radius: 0;
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: all var(--gin-transition-fast);
+      }
+    }
+  }
+
+  .revision-current {
+    background-color: var(--gin-color-primary-light-active);
+  }
+
+  .field--name-title .form-element {
+    width: 100%;
+    letter-spacing: -0.025em;
+    font-size: var(--gin-font-size-h3);
+    font-weight: 475;
+    line-height: normal;
+    padding-block: var(--space-s);
+  }
+  @media (--admin-large) {
+    padding-inline-end: var(--gin-sidebar-offset);
+  }
+}
+
+/* Sidebar accordion items — broken out to limit nesting depth. */
+.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item {
+  margin: 0;
+  border: 0 none;
+  border-block-end: 1px solid var(--gin-border-color-layer);
+  border-radius: 0;
+
+  .gin--dark-mode & {
+    border-color: var(--gin-border-color);
+  }
+
+  > .gin-details__summary {
+    display: block;
+    padding-inline-start: 3rem;
+    font-size: var(--font-size-s);
+
+    .details-title {
+      position: static;
+      padding-inline-start: 0;
+    }
+
+    &::before {
+      inset-block-start: var(--gin-spacing-density-xl, var(--space-xl));
+      inset-inline-start: 1.5rem;
+    }
+
+    &:focus::after {
+      border-radius: 6px;
+    }
+  }
+
+  .gin-details__content {
+    margin-inline: 1.5rem;
+
+    .gin-details__wrapper {
+      margin: var(--space-l);
+    }
+  }
+
+  .redirect-table__path {
+    width: 47%;
+  }
+
+  .form-type--entity-autocomplete .gin-autocomplete {
+    width: 100%;
+  }
+
+  .form-datetime-wrapper {
+    .form-items-inline {
+      display: flex;
+      flex-wrap: wrap;
+
+      @media (--admin-tiny) {
+        flex-wrap: nowrap;
+      }
+
+      @media (--admin-large) and (--admin-to-wide) {
+        flex-wrap: wrap;
+      }
+    }
+
+    .form-type--date {
+      display: block;
+      flex-basis: 100%;
+      flex-grow: 1;
+
+      &:first-of-type {
+        @media (--admin-tiny) {
+          margin-inline-end: var(--space-xs);
+        }
+
+        @media (--admin-large) and (--admin-to-wide) {
+          margin-inline-end: 0;
+        }
+      }
+
+      &:nth-of-type(2) {
+        flex-basis: 134px;
+      }
+
+      .form-element {
+        width: 100%;
+        min-width: 0;
+      }
+
+      @media (--admin-tiny) {
+        flex-basis: 50%;
+      }
+
+      @media (--admin-large) and (--admin-to-wide) {
+        flex-basis: 100%;
+      }
+    }
+  }
+}
