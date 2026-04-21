@@ -323,17 +323,17 @@ YAML;
     $this->assertSame('Another test content type', NodeType::load('another_test')?->label());
 
     $operations = RecipeRunner::toBatchOperations($recipe);
+    $this->assertSame('triggerEvent', $operations[2][0][1]);
+    $this->assertSame('Install node with config', $operations[2][1][0]->name);
+    $this->assertStringEndsWith('core/tests/fixtures/recipes/install_node_with_config', $operations[2][1][0]->path);
+
+    $this->assertSame('triggerEvent', $operations[5][0][1]);
+    $this->assertSame('Recipe include', $operations[5][1][0]->name);
+    $this->assertStringEndsWith('core/tests/fixtures/recipes/recipe_include', $operations[5][1][0]->path);
+
     $this->assertSame('triggerEvent', $operations[7][0][1]);
-    $this->assertSame('Install node with config', $operations[7][1][0]->name);
-    $this->assertStringEndsWith('core/tests/fixtures/recipes/install_node_with_config', $operations[7][1][0]->path);
-
-    $this->assertSame('triggerEvent', $operations[10][0][1]);
-    $this->assertSame('Recipe include', $operations[10][1][0]->name);
-    $this->assertStringEndsWith('core/tests/fixtures/recipes/recipe_include', $operations[10][1][0]->path);
-
-    $this->assertSame('triggerEvent', $operations[12][0][1]);
-    $this->assertSame('Recipe include', $operations[12][1][0]->name);
-    $this->assertSame($this->siteDirectory . '/recipes/recipe_include', $operations[12][1][0]->path);
+    $this->assertSame('Recipe include', $operations[7][1][0]->name);
+    $this->assertSame($this->siteDirectory . '/recipes/recipe_include', $operations[7][1][0]->path);
   }
 
 }
