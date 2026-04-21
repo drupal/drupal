@@ -4,6 +4,7 @@ namespace Drupal\block\Hook;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\system\Entity\Menu;
@@ -20,6 +21,9 @@ use Drupal\Core\Installer\InstallerKernel;
 class BlockHooks {
 
   use StringTranslationTrait;
+
+  public function __construct(protected ThemeHandlerInterface $themeHandler) {
+  }
 
   /**
    * Implements hook_help().
@@ -180,9 +184,9 @@ class BlockHooks {
    */
   #[Hook('rebuild')]
   public function rebuild(): void {
-    foreach (\Drupal::service('theme_handler')->listInfo() as $theme => $data) {
-      if ($data->status) {
-        $regions = system_region_list($theme);
+    foreach ($this->themeHandler->listInfo() as $theme => $theme_extension) {
+      if ($theme_extension->status) {
+        $regions = $theme_extension->listAllRegions();
         /** @var \Drupal\block\BlockInterface[] $blocks */
         $blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(['theme' => $theme]);
         foreach ($blocks as $block_id => $block) {
@@ -195,7 +199,7 @@ class BlockHooks {
                   '%region' => $block->getRegion(),
                 ]));
             }
-            $block->setRegion(system_default_region($theme))->disable()->save();
+            $block->setRegion($theme_extension->getDefaultRegion())->disable()->save();
           }
         }
       }
@@ -293,8 +297,9 @@ class BlockHooks {
     $has_blocks = $storage->loadByProperties(['theme' => $theme]);
     if (!$has_blocks) {
       $default_theme = \Drupal::configFactory()->get('system.theme')->get('default');
+      $theme_extension = $this->themeHandler->getTheme($theme);
       // Apply only to new theme's visible regions.
-      $regions = system_region_list($theme, REGIONS_VISIBLE);
+      $regions = $theme_extension->listVisibleRegions();
       $default_theme_blocks = $storage->loadByProperties(['theme' => $default_theme]);
       $block_repository = \Drupal::service('block.repository');
       foreach ($default_theme_blocks as $default_theme_block_id => $default_theme_block) {
@@ -309,7 +314,7 @@ class BlockHooks {
         // If the region isn't supported by the theme, assign the block to the
         // theme's default region.
         if (!isset($regions[$block->getRegion()])) {
-          $block->setRegion(system_default_region($theme));
+          $block->setRegion($theme_extension->getDefaultRegion());
         }
         $block->save();
       }

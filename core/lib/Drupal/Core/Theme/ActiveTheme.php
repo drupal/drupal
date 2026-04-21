@@ -216,7 +216,8 @@ class ActiveTheme {
    * @return string[]
    *   The list of region machine names supported by the theme.
    *
-   * @see system_region_list()
+   * @see \Drupal\Core\Extension\Theme::listAllRegions()
+   * @see \Drupal\Core\Extension\Theme::listVisibleRegions()
    */
   public function getRegions() {
     return array_keys($this->regions);

@@ -71,7 +71,7 @@ class BlockController extends ControllerBase {
     ];
 
     // Show descriptions in each visible page region, nothing else.
-    $visible_regions = $this->getVisibleRegionNames($theme);
+    $visible_regions = $this->themeHandler->getTheme($theme)->listVisibleRegions();
     foreach (array_keys($visible_regions) as $region) {
       $page[$region]['block_description'] = [
         '#type' => 'inline_template',
@@ -105,9 +105,15 @@ class BlockController extends ControllerBase {
    *
    * @return array
    *   An array of human-readable region names keyed by machine name.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+   *   $this->themeHandler->getTheme()->listVisibleRegions() instead.
+   *
+   * @see https://www.drupal.org/node/3015925
    */
   protected function getVisibleRegionNames($theme) {
-    return system_region_list($theme, REGIONS_VISIBLE);
+    @trigger_error(__CLASS__ . '::getVisibleRegionNames() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use $this->themeHandler->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925', E_USER_DEPRECATED);
+    return $this->themeHandler->getTheme($theme)->listVisibleRegions();
   }
 
 }

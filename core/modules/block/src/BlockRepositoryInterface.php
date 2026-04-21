@@ -10,14 +10,20 @@ interface BlockRepositoryInterface {
   /**
    * Return only visible regions.
    *
-   * @see system_region_list()
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Instead,
+   *   use \Drupal\Core\Extension\Theme::listVisibleRegions().
+   *
+   * @see https://www.drupal.org/node/3015925
    */
   const REGIONS_VISIBLE = 'visible';
 
   /**
    * Return all regions.
    *
-   * @see system_region_list()
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Instead,
+   *   use \Drupal\Core\Extension\Theme::listAllRegions().
+   *
+   * @see https://www.drupal.org/node/3015925
    */
   const REGIONS_ALL = 'all';
 

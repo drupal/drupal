@@ -56,7 +56,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
       'd7_custom_block',
       'd7_block',
     ]);
-    $blockRebuild = new BlockHooks();
+    $blockRebuild = \Drupal::service(BlockHooks::class);
     $blockRebuild->rebuild();
   }
 

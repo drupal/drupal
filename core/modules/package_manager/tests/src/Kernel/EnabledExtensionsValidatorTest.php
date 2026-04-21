@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\package_manager\Kernel;
 
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\Theme;
 use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\PathLocator;
@@ -125,7 +126,8 @@ class EnabledExtensionsValidatorTest extends PackageManagerKernelTestBase {
       if ($extension->getType() === 'theme') {
         /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
         $theme_handler = $this->container->get('theme_handler');
-        $theme_handler->addTheme($extension);
+        $theme = new Theme($project_root, $extension->getPathname(), ['base theme' => FALSE], $extension->getExtensionFilename());
+        $theme_handler->addTheme($theme);
         $this->assertArrayHasKey($extension_name, $theme_handler->listInfo());
       }
       else {

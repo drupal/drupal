@@ -311,15 +311,29 @@ abstract class ExtensionList {
     $extensions = $this->doScanExtensions();
 
     // Read info files for each extension.
-    foreach ($extensions as $extension) {
+    foreach ($extensions as $name => $extension) {
       $extension->info = $this->createExtensionInfo($extension);
-
+      $extension = $this->subClassExtension($extension);
+      $extensions[$name] = $extension;
       // Invoke hook_system_info_alter() to give installed modules a chance to
       // modify the data in the .info.yml files if necessary.
       $this->moduleHandler->alter('system_info', $extension->info, $extension, $this->type);
     }
 
     return $extensions;
+  }
+
+  /**
+   * Allows subclasses to convert the extension into a specific subclass.
+   *
+   * @param \Drupal\Core\Extension\Extension $extension
+   *   The extension.
+   *
+   * @return \Drupal\Core\Extension\Extension
+   *   Either the unchanged Extension object or a subclass of Extension.
+   */
+  protected function subClassExtension(Extension $extension): Extension {
+    return $extension;
   }
 
   /**

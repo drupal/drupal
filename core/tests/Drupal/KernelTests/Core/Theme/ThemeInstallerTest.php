@@ -436,7 +436,7 @@ class ThemeInstallerTest extends KernelTestBase {
     // @see https://www.drupal.org/node/2228093
     $info = \Drupal::service('extension.list.theme')->getExtensionInfo($name);
     $this->assertTrue(isset($info['regions']['test_region']));
-    $regions = system_region_list($name);
+    $regions = $this->themeHandler()->getTheme($name)->listAllRegions();
     $this->assertTrue(isset($regions['test_region']));
     $theme_list = \Drupal::service('theme_handler')->listInfo();
     $this->assertTrue(isset($theme_list[$name]->info['regions']['test_region']));
@@ -452,7 +452,7 @@ class ThemeInstallerTest extends KernelTestBase {
     // @see https://www.drupal.org/node/2228093
     $info = \Drupal::service('extension.list.theme')->getExtensionInfo($name);
     $this->assertFalse(isset($info['regions']['test_region']));
-    $regions = system_region_list($name);
+    $regions = $this->themeHandler()->getTheme($name)->listAllRegions();
     $this->assertFalse(isset($regions['test_region']));
     $theme_list = \Drupal::service('theme_handler')->listInfo();
     $this->assertFalse(isset($theme_list[$name]->info['regions']['test_region']));

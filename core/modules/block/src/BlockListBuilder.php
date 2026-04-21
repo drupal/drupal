@@ -9,6 +9,7 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -61,25 +62,23 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   protected $messenger;
 
   /**
-   * Constructs a new BlockListBuilder object.
+   * The theme handler interface.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The entity storage class.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
-   *   The theme manager.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
-   *   The form builder.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger service.
+   * @var \Drupal\Core\Extension\ThemeHandlerInterface
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, MessengerInterface $messenger) {
+  protected ThemeHandlerInterface $themeHandler;
+
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, MessengerInterface $messenger, ?ThemeHandlerInterface $theme_handler = NULL) {
     parent::__construct($entity_type, $storage);
 
     $this->themeManager = $theme_manager;
     $this->formBuilder = $form_builder;
     $this->messenger = $messenger;
+    if (!$theme_handler instanceof ThemeHandlerInterface) {
+      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $theme_handler argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3015925', E_USER_DEPRECATED);
+      $theme_handler = \Drupal::service(ThemeHandlerInterface::class);
+    }
+    $this->themeHandler = $theme_handler;
     $this->limit = FALSE;
   }
 
@@ -92,7 +91,8 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
       $container->get('theme.manager'),
       $container->get('form_builder'),
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('theme_handler')
     );
   }
 
@@ -199,7 +199,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     }
 
     // Loop over each region and build blocks.
-    $regions = $this->systemRegionList($this->getThemeName(), REGIONS_VISIBLE);
+    $regions = $this->themeHandler->getTheme($this->getThemeName())->listVisibleRegions();
     foreach ($regions as $region => $title) {
       $form['#tabledrag'][] = [
         'action' => 'match',
@@ -400,9 +400,17 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
 
   /**
    * Wraps system_region_list().
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+   *   $this->themeHandler->getTheme()->listAllRegions() or
+   *   $this->themeHandler->getTheme()->listVisibleRegions() instead.
+   *
+   * @see https://www.drupal.org/node/3015925
    */
+  // @phpstan-ignore-next-line
   protected function systemRegionList($theme, $show = REGIONS_ALL) {
-    return system_region_list($theme, $show);
+    @trigger_error(__CLASS__ . '::systemRegionList() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use $this->themeHandler->getTheme()->listAllRegions() or $this->themeHandler->getTheme()->listVisibleRegions() instead. See https://www.drupal.org/node/3015925', E_USER_DEPRECATED);
+    return $show === 'all' ? $this->themeHandler->getTheme($theme)->listAllRegions() : $this->themeHandler->getTheme($theme)->listVisibleRegions();
   }
 
 }

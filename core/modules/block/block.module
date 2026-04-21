@@ -5,6 +5,7 @@
  */
 
 use Drupal\block\Hook\BlockHooks;
+use Drupal\Core\Extension\ThemeHandlerInterface;
 
 /**
  * Assigns an initial, default set of blocks for a theme.
@@ -29,8 +30,9 @@ function block_theme_initialize($theme): void {
   $has_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(['theme' => $theme]);
   if (!$has_blocks) {
     $default_theme = \Drupal::config('system.theme')->get('default');
+    $theme_extension = \Drupal::service(ThemeHandlerInterface::class)->getTheme($theme);
     // Apply only to new theme's visible regions.
-    $regions = system_region_list($theme, REGIONS_VISIBLE);
+    $regions = $theme_extension->listVisibleRegions();
     $default_theme_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties(['theme' => $default_theme]);
     foreach ($default_theme_blocks as $default_theme_block_id => $default_theme_block) {
       if (str_starts_with($default_theme_block_id, $default_theme . '_')) {
@@ -44,7 +46,7 @@ function block_theme_initialize($theme): void {
       // If the region isn't supported by the theme, assign the block to the
       // theme's default region.
       if (!isset($regions[$block->getRegion()])) {
-        $block->setRegion(system_default_region($theme));
+        $block->setRegion($theme_extension->getDefaultRegion());
       }
       $block->save();
     }
