@@ -22,8 +22,8 @@
       extra_classes: 'top-bar__burger',
     } only %}
     <div class="top-bar__tools">
-      {% if gin_breadcrumbs %}
-        {{ gin_breadcrumbs }}
+      {% if default_admin_breadcrumbs %}
+        {{ default_admin_breadcrumbs }}
       {% endif %}
 
       {% if local_tasks %}
@@ -36,14 +36,14 @@
       {{- context -}}
     </div>
     <div class="top-bar__actions">
-      {% if gin_local_actions %}
+      {% if default_admin_local_actions %}
         <ul class="local-actions">
-          {{ gin_local_actions }}
+          {{ default_admin_local_actions }}
         </ul>
       {% endif %}
 
-      {% if gin_form_actions %}
-        {{ gin_form_actions }}
+      {% if default_admin_form_actions %}
+        {{ default_admin_form_actions }}
       {% endif %}
 
       {{- actions -}}

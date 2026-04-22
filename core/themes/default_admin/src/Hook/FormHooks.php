@@ -639,7 +639,7 @@ class FormHooks {
     // sticky action container for the top bar.
     if (isset($form['actions']) && (self::useStickyActionButtons($is_content_form) || $is_content_form)) {
       // Sticky action container.
-      $form['gin_sticky_actions'] = [
+      $form['default_admin_sticky_actions'] = [
         '#type' => 'container',
         '#weight' => -1,
         '#multilingual' => TRUE,
@@ -665,7 +665,7 @@ class FormHooks {
       $form['#attributes']['class'][] = 'gin--has-sticky-form-actions';
 
       // Assign status to gin_actions.
-      $form['gin_sticky_actions']['status'] = [
+      $form['default_admin_sticky_actions']['status'] = [
         '#type' => 'container',
         '#weight' => -1,
         '#multilingual' => TRUE,
@@ -688,7 +688,7 @@ class FormHooks {
       }
 
       // Helper item to move focus to sticky header.
-      $form['gin_move_focus_to_sticky_bar'] = [
+      $form['default_admin_move_focus_to_sticky_bar'] = [
         '#markup' => '<a href="#" class="visually-hidden" role="button" gin-move-focus-to-sticky-bar>Moves focus to sticky header actions</a>',
         '#weight' => 999,
       ];
@@ -719,14 +719,14 @@ class FormHooks {
 
     // Add sidebar toggle.
     $hide_panel = $this->t('Hide sidebar panel');
-    $form['gin_sticky_actions']['gin_sidebar_toggle'] = [
-      '#markup' => '<a href="#toggle-sidebar" class="meta-sidebar__trigger trigger" role="button" title="' . $hide_panel . '" aria-controls="gin_sidebar"><span class="visually-hidden">' . $hide_panel . '</span></a>',
+    $form['default_admin_sticky_actions']['default_admin_sidebar_toggle'] = [
+      '#markup' => '<a href="#toggle-sidebar" class="meta-sidebar__trigger trigger" role="button" title="' . $hide_panel . '" aria-controls="default_admin_sidebar"><span class="visually-hidden">' . $hide_panel . '</span></a>',
       '#weight' => 1000,
     ];
     $form['#attached']['library'][] = 'default_admin/sidebar';
 
-    // Create gin_sidebar group.
-    $form['gin_sidebar'] = [
+    // Create default_admin_sidebar group.
+    $form['default_admin_sidebar'] = [
       '#group' => 'meta',
       '#type' => 'container',
       '#weight' => 99,
@@ -738,15 +738,15 @@ class FormHooks {
       ],
     ];
     // Copy footer over.
-    $form['gin_sidebar']['footer'] = ($form['footer']) ?? [];
+    $form['default_admin_sidebar']['footer'] = ($form['footer']) ?? [];
 
     // Sidebar close button.
     $close_sidebar_translation = $this->t('Close sidebar panel');
-    $form['gin_sidebar']['gin_sidebar_close'] = [
+    $form['default_admin_sidebar']['default_admin_sidebar_close'] = [
       '#markup' => '<a href="#close-sidebar" class="meta-sidebar__close trigger" role="button" title="' . $close_sidebar_translation . '"><span class="visually-hidden">' . $close_sidebar_translation . '</span></a>',
     ];
 
-    $form['gin_sidebar_overlay'] = [
+    $form['default_admin_sidebar_overlay'] = [
       '#markup' => '<div class="meta-sidebar__overlay trigger"></div>',
     ];
 
@@ -816,7 +816,7 @@ class FormHooks {
 
         $navigation_enabled = \Drupal::service('module_handler')->moduleExists('navigation');
         if ($navigation_enabled) {
-          $form['gin_sticky_actions']['actions'][$key] = $button;
+          $form['default_admin_sticky_actions']['actions'][$key] = $button;
         }
 
         // The media_type_add_form form is a special case.
@@ -831,14 +831,14 @@ class FormHooks {
 
           // Add the button to the form actions array.
           if (!empty($button['#gin_action_item']) || $navigation_enabled || in_array($key, $includes, TRUE)) {
-            $form['gin_sticky_actions']['actions'][$key] = $button;
+            $form['default_admin_sticky_actions']['actions'][$key] = $button;
           }
         }
       }
     }
 
-    Helper::formActions($form['gin_sticky_actions'] ?? NULL);
-    unset($form['gin_sticky_actions']);
+    Helper::formActions($form['default_admin_sticky_actions'] ?? NULL);
+    unset($form['default_admin_sticky_actions']);
 
     return $form;
   }

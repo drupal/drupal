@@ -1024,12 +1024,12 @@ final class PreprocessHooks implements TrustedCallbackInterface {
     // Get form actions.
     if ($form_actions = Helper::formActions()) {
       if ($this->moduleHandler->moduleExists('navigation')) {
-        $variables['gin_form_actions'] = '';
+        $variables['default_admin_form_actions'] = '';
       }
       else {
-        $variables['gin_form_actions'] = $form_actions;
+        $variables['default_admin_form_actions'] = $form_actions;
       }
-      $variables['gin_form_actions_class'] = 'gin-sticky-form-actions--preprocessed';
+      $variables['default_admin_form_actions_class'] = 'gin-sticky-form-actions--preprocessed';
     }
   }
 
@@ -1311,20 +1311,20 @@ final class PreprocessHooks implements TrustedCallbackInterface {
     // Get local actions.
     $plugin_block = $this->blockManager->createInstance('local_actions_block', []);
     $block_content = $plugin_block->build();
-    $variables['gin_local_actions'] = $this->renderer->render($block_content);
+    $variables['default_admin_local_actions'] = $this->renderer->render($block_content);
     $variables['#attached']['library'][] = 'default_admin/top_bar';
 
     // Get form actions.
     if ($form_actions = Helper::formActions()) {
-      $variables['gin_form_actions'] = $form_actions;
-      $variables['gin_form_actions_class'] = 'gin-sticky-form-actions--preprocessed';
+      $variables['default_admin_form_actions'] = $form_actions;
+      $variables['default_admin_form_actions_class'] = 'gin-sticky-form-actions--preprocessed';
       $variables['#attached']['library'][] = 'default_admin/top_bar';
     }
 
     // Get breadcrumb.
     $plugin_block = $this->blockManager->createInstance('system_breadcrumb_block', []);
     $block_content = $plugin_block->build();
-    $variables['gin_breadcrumbs'] = $this->renderer->render($block_content);
+    $variables['default_admin_breadcrumbs'] = $this->renderer->render($block_content);
     $variables['#attached']['library'][] = 'default_admin/top_bar';
   }
 

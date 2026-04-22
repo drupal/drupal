@@ -144,7 +144,7 @@
   }
 }
 
-body:has(.gin--navigation-top-bar .gin-sticky-form-actions) :where(#gin_sidebar) {
+body:has(.gin--navigation-top-bar .gin-sticky-form-actions) :where(#default_admin_sidebar) {
   inset-block-start: 64px !important;
   height: calc(100% - 64px) !important;
 }

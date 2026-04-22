@@ -43,14 +43,14 @@
 {% set local_actions_block = active_admin_theme ~ '_local_actions' %}
 
 {% if active_navigation %}
-  <header class="region gin--navigation-top-bar--offset {{ gin_form_actions_class }}">
+  <header class="region gin--navigation-top-bar--offset {{ default_admin_form_actions_class }}">
     <div class="layout-container region-sticky__items">
       <div class="region-sticky__items__inner">
         {{ page.header[page_title_block] }}
         {% if not active_navigation %}
           {{ page.content[local_actions_block] }}
         {% endif %}
-        {{ gin_form_actions }}
+        {{ default_admin_form_actions }}
       </div>
     </div>
   </header>
@@ -80,14 +80,14 @@
 
   <div class="region-sticky-watcher"></div>
 
-  <header class="region region-sticky {{ gin_form_actions_class }}">
+  <header class="region region-sticky {{ default_admin_form_actions_class }}">
     <div class="layout-container region-sticky__items">
       <div class="region-sticky__items__inner">
         {{ page.header[page_title_block] }}
         {% if not active_navigation %}
           {{ page.content[local_actions_block] }}
         {% endif %}
-        {{ gin_form_actions }}
+        {{ default_admin_form_actions }}
       </div>
     </div>
   </header>
