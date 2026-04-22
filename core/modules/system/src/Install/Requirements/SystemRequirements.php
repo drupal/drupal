@@ -412,7 +412,10 @@ class SystemRequirements implements InstallRequirementsInterface {
         \Drupal::service('file_system')->prepareDirectory($config_sync_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
       }
       if (!is_dir($config_sync_directory)) {
-        $description = t('An automated attempt to create the directory %directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', ['%directory' => $config_sync_directory, ':handbook_url' => 'https://www.drupal.org/server-permissions']);
+        $description = t('An automated attempt to create the directory %directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually or ensure that the installer has the permissions to create it automatically. For more information, see INSTALL.txt or the <a href=":handbook_url">online handbook</a>.', [
+          '%directory' => $config_sync_directory,
+          ':handbook_url' => 'https://www.drupal.org/server-permissions',
+        ]);
         $requirements['config sync directory'] = [
           'title' => t('Configuration sync directory'),
           'description' => $description,

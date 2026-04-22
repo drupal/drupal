@@ -139,7 +139,10 @@ class EventSubscriber implements EventSubscriberInterface {
     $events[ConfigEvents::SAVE][] = ['onConfigSave', 40];
     $events[ConfigEvents::DELETE][] = ['onConfigDelete', 40];
     $events[ConfigEvents::IMPORT_VALIDATE] = ['onConfigImporterValidate'];
-    $events[ConfigEvents::IMPORT_MISSING_CONTENT] = [['onConfigImporterMissingContentOne'], ['onConfigImporterMissingContentTwo', -100]];
+    $events[ConfigEvents::IMPORT_MISSING_CONTENT] = [
+      ['onConfigImporterMissingContentOne'],
+      ['onConfigImporterMissingContentTwo', -100],
+    ];
     return $events;
   }
 

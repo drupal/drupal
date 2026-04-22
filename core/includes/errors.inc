@@ -167,7 +167,12 @@ function _drupal_log_error($error, $fatal = FALSE): void {
       // Provide the PHP backtrace and exception to logger implementations. Add
       // 'severity_level' to the context to maintain BC and allow logging
       // implementations to use it.
-      \Drupal::logger('php')->log($severity, '%type: @message in %function (line %line of %file) @backtrace_string.', $error + ['backtrace' => $backtrace, 'exception' => $exception, 'severity_level' => $severity]);
+      \Drupal::logger('php')
+        ->log($severity, '%type: @message in %function (line %line of %file) @backtrace_string.', $error + [
+          'backtrace' => $backtrace,
+          'exception' => $exception,
+          'severity_level' => $severity,
+        ]);
     }
     catch (\Throwable) {
       // We can't log, for example because the database connection is not

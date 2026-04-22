@@ -73,7 +73,12 @@ trait ValidationTestTrait {
     }
     $subject = str_replace(
       ['<PROJECT_ROOT>', '<VENDOR_DIR>', '<STAGE_ROOT>', '<STAGE_ROOT_PARENT>'],
-      [$path_locator->getProjectRoot(), $path_locator->getVendorDirectory(), $path_locator->getStagingRoot(), dirname($path_locator->getStagingRoot())],
+      [
+        $path_locator->getProjectRoot(),
+        $path_locator->getVendorDirectory(),
+        $path_locator->getStagingRoot(),
+        dirname($path_locator->getStagingRoot()),
+      ],
       $subject
     );
     if ($stage_dir) {

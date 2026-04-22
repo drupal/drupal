@@ -293,7 +293,10 @@ class FieldViewsDataProvider {
             'title' => $label_name,
             'help' => $this->t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
           ];
-          $also_known[] = $this->t('@group (historical data): @field', ['@group' => $group_name, '@field' => $label_name]);
+          $also_known[] = $this->t('@group (historical data): @field', [
+            '@group' => $group_name,
+            '@field' => $label_name,
+          ]);
         }
       }
       if ($aliases) {
@@ -400,7 +403,11 @@ class FieldViewsDataProvider {
               $alias_title = $this->t('@label (@name)', ['@label' => $label_name, '@name' => $field_name]);
             }
             else {
-              $alias_title = $this->t('@label (@name:@column)', ['@label' => $label_name, '@name' => $field_name, '@column' => $column]);
+              $alias_title = $this->t('@label (@name:@column)', [
+                '@label' => $label_name,
+                '@name' => $field_name,
+                '@column' => $column,
+              ]);
             }
             $aliases[] = [
               'group' => $group_name,

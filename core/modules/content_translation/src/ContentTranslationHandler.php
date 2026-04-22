@@ -302,7 +302,11 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       $title = $this->entityFormTitle($entity);
       // When editing the original values display just the entity label.
       if ($is_translation) {
-        $t_args = ['%language' => $languages[$form_langcode]->getName(), '%title' => $entity->label(), '@title' => $title];
+        $t_args = [
+          '%language' => $languages[$form_langcode]->getName(),
+          '%title' => $entity->label(),
+          '@title' => $title,
+        ];
         $title = $new_translation ? $this->t('Create %language translation of %title', $t_args) : $this->t('@title [%language translation]', $t_args);
       }
       $form['#title'] = $title;
@@ -616,7 +620,24 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // Elements which can have a #title attribute according to FAPI Reference.
     if (!isset($suffix)) {
       $suffix = ' <span class="translation-entity-all-languages">(' . $this->t('all languages') . ')</span>';
-      $fapi_title_elements = array_flip(['checkbox', 'checkboxes', 'date', 'details', 'fieldset', 'file', 'item', 'password', 'password_confirm', 'radio', 'radios', 'select', 'text_format', 'textarea', 'textfield', 'weight']);
+      $fapi_title_elements = array_flip([
+        'checkbox',
+        'checkboxes',
+        'date',
+        'details',
+        'fieldset',
+        'file',
+        'item',
+        'password',
+        'password_confirm',
+        'radio',
+        'radios',
+        'select',
+        'text_format',
+        'textarea',
+        'textfield',
+        'weight',
+      ]);
     }
 
     // Update #title attribute for all elements that are allowed to have a

@@ -149,13 +149,21 @@ class VocabularyForm extends BundleEntityFormBase {
     switch ($status) {
       case SAVED_NEW:
         $this->messenger()->addStatus($this->t('Created new vocabulary %name.', ['%name' => $vocabulary->label()]));
-        $this->logger('taxonomy')->notice('Created new vocabulary %name.', ['%name' => $vocabulary->label(), 'link' => $edit_link]);
+        $this->logger('taxonomy')
+          ->notice('Created new vocabulary %name.', [
+            '%name' => $vocabulary->label(),
+            'link' => $edit_link,
+          ]);
         $form_state->setRedirectUrl($vocabulary->toUrl('overview-form'));
         break;
 
       case SAVED_UPDATED:
         $this->messenger()->addStatus($this->t('Updated vocabulary %name.', ['%name' => $vocabulary->label()]));
-        $this->logger('taxonomy')->notice('Updated vocabulary %name.', ['%name' => $vocabulary->label(), 'link' => $edit_link]);
+        $this->logger('taxonomy')
+          ->notice('Updated vocabulary %name.', [
+            '%name' => $vocabulary->label(),
+            'link' => $edit_link,
+          ]);
         $form_state->setRedirectUrl($vocabulary->toUrl('collection'));
         break;
     }

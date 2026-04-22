@@ -325,7 +325,15 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file', $auto_f
 
   // Verify file permissions.
   if (isset($mask)) {
-    $masks = [FILE_EXIST, FILE_READABLE, FILE_WRITABLE, FILE_EXECUTABLE, FILE_NOT_READABLE, FILE_NOT_WRITABLE, FILE_NOT_EXECUTABLE];
+    $masks = [
+      FILE_EXIST,
+      FILE_READABLE,
+      FILE_WRITABLE,
+      FILE_EXECUTABLE,
+      FILE_NOT_READABLE,
+      FILE_NOT_WRITABLE,
+      FILE_NOT_EXECUTABLE,
+    ];
     foreach ($masks as $current_mask) {
       if ($mask & $current_mask) {
         switch ($current_mask) {
@@ -706,7 +714,11 @@ function drupal_check_module($module) {
       if (isset($requirement['severity']) && $requirement['severity'] === RequirementSeverity::Error) {
         $message = $requirement['description'];
         if (isset($requirement['value']) && $requirement['value']) {
-          $message = t('@requirements_message (Currently using @item version @version)', ['@requirements_message' => $requirement['description'], '@item' => $requirement['title'], '@version' => $requirement['value']]);
+          $message = t('@requirements_message (Currently using @item version @version)', [
+            '@requirements_message' => $requirement['description'],
+            '@item' => $requirement['title'],
+            '@version' => $requirement['value'],
+          ]);
         }
         \Drupal::messenger()->addError($message);
       }

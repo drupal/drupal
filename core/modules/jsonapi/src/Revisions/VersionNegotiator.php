@@ -90,7 +90,11 @@ class VersionNegotiator {
    * @throws \Drupal\Core\Http\Exception\CacheableNotFoundHttpException
    */
   protected static function throwNotFoundHttpException(EntityInterface $entity, $resource_version_identifier) {
-    $cacheability = CacheableMetadata::createFromObject($entity)->addCacheContexts(['url.path', 'url.query_args:' . ResourceVersionRouteEnhancer::RESOURCE_VERSION_QUERY_PARAMETER]);
+    $cacheability = CacheableMetadata::createFromObject($entity)
+      ->addCacheContexts([
+        'url.path',
+        'url.query_args:' . ResourceVersionRouteEnhancer::RESOURCE_VERSION_QUERY_PARAMETER,
+      ]);
     $reason = sprintf('The requested version, identified by `%s`, could not be found.', $resource_version_identifier);
     throw new CacheableNotFoundHttpException($cacheability, $reason);
   }

@@ -462,7 +462,13 @@ function _batch_finished() {
       $operations = $queue->getAllItems();
       $callable_resolver = \Drupal::service(CallableResolver::class);
       $callable = $callable_resolver->getCallableFromDefinition($batch_set['finished']);
-      $batch_set_result = $callable(...array_merge([$batch_set['success'], $batch_set['results'], $operations, \Drupal::service('date.formatter')->formatInterval((int) ($batch_set['elapsed'] / 1000))]));
+      $batch_set_result = $callable(
+        $batch_set['success'],
+        $batch_set['results'],
+        $operations,
+        \Drupal::service('date.formatter')
+          ->formatInterval((int) ($batch_set['elapsed'] / 1000)),
+      );
       // If a batch 'finished' callback requested a redirect after the batch
       // is complete, save that for later use. If more than one batch set
       // returned a redirect, the last one is used.

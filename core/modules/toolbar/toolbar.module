@@ -62,7 +62,8 @@ function toolbar_menu_navigation_links(array $tree) {
 
     $element->options['attributes']['id'] = 'toolbar-link-' . $id;
     $element->options['attributes']['class'][] = 'toolbar-icon';
-    $element->options['attributes']['class'][] = 'toolbar-icon-' . strtolower(str_replace(['.', ' ', '_'], ['-', '-', '-'], $definition['id']));
+    $element->options['attributes']['class'][] =
+      'toolbar-icon-' . strtolower(str_replace(['.', ' ', '_'], ['-', '-', '-'], $definition['id']));
     $element->options['attributes']['title'] = $link->getDescription();
   }
   return $tree;

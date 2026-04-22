@@ -345,7 +345,10 @@ class SystemAdminThemePreprocess {
           if (substr_count($theme->info['php'], '.') < 2) {
             $theme->info['php'] .= '.*';
           }
-          $current_theme['incompatible'] = $this->t('This theme requires PHP version @php_required and is incompatible with PHP version @php_version.', ['@php_required' => $theme->info['php'], '@php_version' => phpversion()]);
+          $current_theme['incompatible'] = $this->t('This theme requires PHP version @php_required and is incompatible with PHP version @php_version.', [
+            '@php_required' => $theme->info['php'],
+            '@php_version' => phpversion(),
+          ]);
         }
         elseif (!empty($theme->incompatible_base)) {
           $current_theme['incompatible'] = $this->t('This theme requires the base theme @base_theme to operate correctly.', ['@base_theme' => $theme->info['base theme']]);

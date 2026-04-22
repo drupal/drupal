@@ -678,7 +678,10 @@ class ViewUI implements ViewEntityInterface {
                 $query_string = strtr($query['query'], $query['args']);
                 $queries[] = [
                   '#prefix' => "\n",
-                  '#markup' => $this->t('[@time ms] @query', ['@time' => round($query['time'] * 100000, 1) / 100000.0, '@query' => $query_string]),
+                  '#markup' => $this->t('[@time ms] @query', [
+                    '@time' => round($query['time'] * 100000, 1) / 100000.0,
+                    '@query' => $query_string,
+                  ]),
                 ];
               }
 

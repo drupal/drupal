@@ -59,9 +59,16 @@ class MediaForm extends ContentEntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $saved = parent::save($form, $form_state);
-    $context = ['@type' => $this->entity->bundle(), '%label' => $this->entity->label(), 'link' => $this->entity->toLink($this->t('View'))->toString()];
+    $context = [
+      '@type' => $this->entity->bundle(),
+      '%label' => $this->entity->label(),
+      'link' => $this->entity->toLink($this->t('View'))->toString(),
+    ];
     $logger = $this->logger('media');
-    $t_args = ['@type' => $this->entity->bundle->entity->label(), '%label' => $this->entity->toLink($this->entity->label())->toString()];
+    $t_args = [
+      '@type' => $this->entity->bundle->entity->label(),
+      '%label' => $this->entity->toLink($this->entity->label())->toString(),
+    ];
 
     if ($saved === SAVED_NEW) {
       $logger->info('@type: added %label.', $context);

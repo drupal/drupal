@@ -16,7 +16,11 @@ class FileServiceProvider implements ServiceModifierInterface {
    */
   public function alter(ContainerBuilder $container) {
     if ($container->has('http_middleware.negotiation') && is_a($container->getDefinition('http_middleware.negotiation')->getClass(), NegotiationMiddleware::class, TRUE)) {
-      $container->getDefinition('http_middleware.negotiation')->addMethodCall('registerFormat', ['bin', ['application/octet-stream']]);
+      $container->getDefinition('http_middleware.negotiation')
+        ->addMethodCall('registerFormat', [
+          'bin',
+          ['application/octet-stream'],
+        ]);
     }
   }
 

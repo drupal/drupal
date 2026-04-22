@@ -151,6 +151,7 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
       $breakpoint_b = $breakpoints[$b['breakpoint_id']] ?? NULL;
       $first = ((float) mb_substr($a['multiplier'], 0, -1)) * 100;
       $second = ((float) mb_substr($b['multiplier'], 0, -1)) * 100;
+      // phpcs:ignore Drupal.Arrays.Array.LongLineDeclaration
       return [$breakpoint_b ? $breakpoint_b->getWeight() : 0, $first] <=> [$breakpoint_a ? $breakpoint_a->getWeight() : 0, $second];
     });
   }

@@ -157,7 +157,11 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
     }
     $config = $this->entityTypeManager->getStorage('language_content_settings')->load($entity_type_id . '.' . $bundle);
     if ($config == NULL) {
-      $config = $this->entityTypeManager->getStorage('language_content_settings')->create(['target_entity_type_id' => $entity_type_id, 'target_bundle' => $bundle]);
+      $config = $this->entityTypeManager->getStorage('language_content_settings')
+        ->create([
+          'target_entity_type_id' => $entity_type_id,
+          'target_bundle' => $bundle,
+        ]);
     }
     return $config;
   }

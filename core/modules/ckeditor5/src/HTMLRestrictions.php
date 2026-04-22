@@ -843,8 +843,10 @@ final class HTMLRestrictions {
       if (!(is_array($this->elements[$tag]) && is_array($other->elements[$tag]))) {
         continue;
       }
-      $other_wildcard_attributes = array_filter(array_keys($other->elements[$tag]), [__CLASS__, 'isWildcardAttributeName']);
-      $this_wildcard_attributes = array_filter(array_keys($this->elements[$tag]), [__CLASS__, 'isWildcardAttributeName']);
+      $other_wildcard_attributes = array_filter(
+        array_keys($other->elements[$tag]), [__CLASS__, 'isWildcardAttributeName']);
+      $this_wildcard_attributes = array_filter(
+        array_keys($this->elements[$tag]), [__CLASS__, 'isWildcardAttributeName']);
 
       // If the same wildcard attribute restrictions are present in both or
       // neither, no adjustment necessary: the intersection is already correct.

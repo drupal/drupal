@@ -52,7 +52,12 @@ function node_title_list(StatementInterface $result, $title = NULL) {
     $num_rows = TRUE;
   }
 
-  return $num_rows ? ['#theme' => 'item_list__node', '#items' => $items, '#title' => $title, '#cache' => ['tags' => Cache::mergeTags(['node_list'], Cache::buildTags('node', $nids))]] : FALSE;
+  return $num_rows ? [
+    '#theme' => 'item_list__node',
+    '#items' => $items,
+    '#title' => $title,
+    '#cache' => ['tags' => Cache::mergeTags(['node_list'], Cache::buildTags('node', $nids))],
+  ] : FALSE;
 }
 
 /**

@@ -108,7 +108,10 @@ class FieldUiTable extends Table {
 
     // Determine rendering order from the tree structure.
     foreach ($regions as $region_name => $region) {
-      $elements['#regions'][$region_name]['rows_order'] = array_reduce($trees[$region_name], [static::class, 'reduceOrder']);
+      $elements['#regions'][$region_name]['rows_order'] = array_reduce(
+        $trees[$region_name],
+        [static::class, 'reduceOrder'],
+      );
     }
 
     $elements['#attached']['drupalSettings']['fieldUIRowsData'] = $js_settings;

@@ -155,7 +155,12 @@ function update_manager_archive_extract($file, $directory) {
 function update_manager_archive_verify($project, $archive_file, $directory) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
 
-  return \Drupal::moduleHandler()->invokeAllDeprecated('There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', 'verify_update_archive', [$project, $archive_file, $directory]);
+  return \Drupal::moduleHandler()
+    ->invokeAllDeprecated('There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', 'verify_update_archive', [
+      $project,
+      $archive_file,
+      $directory,
+    ]);
 }
 
 /**
@@ -234,7 +239,10 @@ function update_manager_batch_project_get($project, $url, &$context): void {
 
   // Actually try to download the file.
   if (!($local_cache = update_manager_file_get($url))) {
-    $context['results']['errors'][$project] = t('Failed to download %project from %url', ['%project' => $project, '%url' => $url]);
+    $context['results']['errors'][$project] = t('Failed to download %project from %url', [
+      '%project' => $project,
+      '%url' => $url,
+    ]);
     return;
   }
 
