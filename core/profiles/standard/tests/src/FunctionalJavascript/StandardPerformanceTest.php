@@ -237,7 +237,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['config:user.role.anonymous'],
       ],
       'StylesheetCount' => 1,
-      'StylesheetBytes' => 1500,
+      'StylesheetBytes' => 1000,
     ];
     $this->assertMetrics($expected, $performance_data);
 
