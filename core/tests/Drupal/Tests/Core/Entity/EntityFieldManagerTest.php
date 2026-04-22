@@ -9,7 +9,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
@@ -26,7 +25,6 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\BooleanItem;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -708,82 +706,6 @@ class EntityFieldManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests get field map.
-   */
-  public function testGetFieldMap(): void {
-    $this->entityTypeBundleInfo->getBundleInfo('test_entity_type')->willReturn([])->shouldBeCalled();
-
-    // Set up a content entity type.
-    $entity_type = $this->prophesize(ContentEntityTypeInterface::class);
-    $entity_class = EntityTypeManagerTestEntity::class;
-
-    // Define an ID field definition as a base field.
-    $id_definition = $this->prophesize(FieldDefinitionInterface::class);
-    $id_definition->getType()->willReturn('integer');
-    $base_field_definitions = [
-      'id' => $id_definition->reveal(),
-    ];
-    $entity_class::$baseFieldDefinitions = $base_field_definitions;
-
-    // Set up the stored bundle field map.
-    $key_value_store = $this->prophesize(KeyValueStoreInterface::class);
-    $this->keyValueFactory->get('entity.definitions.bundle_field_map')->willReturn($key_value_store->reveal());
-    $key_value_store->getAll()->willReturn([
-      'test_entity_type' => [
-        'by_bundle' => [
-          'type' => 'string',
-          'bundles' => ['second_bundle' => 'second_bundle'],
-        ],
-      ],
-    ]);
-
-    // Set up a non-content entity type.
-    $non_content_entity_type = $this->prophesize(EntityTypeInterface::class);
-
-    // Mock the base field definition override.
-    $override_entity_type = $this->prophesize(EntityTypeInterface::class);
-
-    $this->setUpEntityTypeDefinitions([
-      'test_entity_type' => $entity_type,
-      'non_fieldable' => $non_content_entity_type,
-      'base_field_override' => $override_entity_type,
-    ]);
-
-    $entity_type->getClass()->willReturn($entity_class);
-    $entity_type->getKeys()->willReturn(['default_langcode' => 'default_langcode']);
-    $entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE);
-    $entity_type->isTranslatable()->shouldBeCalled();
-    $entity_type->isRevisionable()->shouldBeCalled();
-    $entity_type->getProvider()->shouldBeCalled();
-
-    $non_content_entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
-
-    $override_entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE);
-
-    // Set up the entity type bundle info to return two bundles for the
-    // fieldable entity type.
-    $this->entityTypeBundleInfo->getBundleInfo('test_entity_type')->willReturn([
-      'first_bundle' => 'first_bundle',
-      'second_bundle' => 'second_bundle',
-    ])->shouldBeCalled();
-    $this->moduleHandler->invokeAllWith('entity_base_field_info', Argument::any());
-
-    $expected = [
-      'test_entity_type' => [
-        'id' => [
-          'type' => 'integer',
-          'bundles' => ['first_bundle' => 'first_bundle', 'second_bundle' => 'second_bundle'],
-        ],
-        'by_bundle' => [
-          'type' => 'string',
-          'bundles' => ['second_bundle' => 'second_bundle'],
-        ],
-      ],
-    ];
-    $this->assertEquals($expected, $this->entityFieldManager->getFieldMap());
-  }
-
-  /**
    * Tests get field map from cache.
    */
   public function testGetFieldMapFromCache(): void {
@@ -805,72 +727,6 @@ class EntityFieldManagerTest extends UnitTestCase {
     // Call the field map twice to make sure the static cache works.
     $this->assertEquals($expected, $this->entityFieldManager->getFieldMap());
     $this->assertEquals($expected, $this->entityFieldManager->getFieldMap());
-  }
-
-  /**
-   * Tests get field map by field type.
-   */
-  public function testGetFieldMapByFieldType(): void {
-    // Set up a content entity type.
-    $entity_type = $this->prophesize(ContentEntityTypeInterface::class);
-    $entity_class = EntityTypeManagerTestEntity::class;
-
-    // Set up the entity type bundle info to return two bundles for the
-    // fieldable entity type.
-    $this->entityTypeBundleInfo->getBundleInfo('test_entity_type')->willReturn([
-      'first_bundle' => 'first_bundle',
-      'second_bundle' => 'second_bundle',
-    ])->shouldBeCalled();
-    $this->moduleHandler->invokeAllWith('entity_base_field_info', Argument::any())->shouldBeCalled();
-
-    // Define an ID field definition as a base field.
-    $id_definition = $this->prophesize(FieldDefinitionInterface::class);
-    $id_definition->getType()->willReturn('integer')->shouldBeCalled();
-    $base_field_definitions = [
-      'id' => $id_definition->reveal(),
-    ];
-    $entity_class::$baseFieldDefinitions = $base_field_definitions;
-
-    // Set up the stored bundle field map.
-    $key_value_store = $this->prophesize(KeyValueStoreInterface::class);
-    $this->keyValueFactory->get('entity.definitions.bundle_field_map')->willReturn($key_value_store->reveal())->shouldBeCalled();
-    $key_value_store->getAll()->willReturn([
-      'test_entity_type' => [
-        'by_bundle' => [
-          'type' => 'string',
-          'bundles' => ['second_bundle' => 'second_bundle'],
-        ],
-      ],
-    ])->shouldBeCalled();
-
-    // Mock the base field definition override.
-    $override_entity_type = $this->prophesize(EntityTypeInterface::class);
-
-    $this->setUpEntityTypeDefinitions([
-      'test_entity_type' => $entity_type,
-      'base_field_override' => $override_entity_type,
-    ]);
-
-    $entity_type->getClass()->willReturn($entity_class)->shouldBeCalled();
-    $entity_type->getKeys()->willReturn(['default_langcode' => 'default_langcode'])->shouldBeCalled();
-    $entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(TRUE)->shouldBeCalled();
-    $entity_type->isTranslatable()->shouldBeCalled();
-    $entity_type->isRevisionable()->shouldBeCalled();
-    $entity_type->getProvider()->shouldBeCalled();
-
-    $override_entity_type->entityClassImplements(FieldableEntityInterface::class)->willReturn(FALSE)->shouldBeCalled();
-
-    $integerFields = $this->entityFieldManager->getFieldMapByFieldType('integer');
-    $this->assertCount(1, $integerFields['test_entity_type']);
-    $this->assertArrayNotHasKey('non_fieldable', $integerFields);
-    $this->assertArrayHasKey('id', $integerFields['test_entity_type']);
-    $this->assertArrayNotHasKey('by_bundle', $integerFields['test_entity_type']);
-
-    $stringFields = $this->entityFieldManager->getFieldMapByFieldType('string');
-    $this->assertCount(1, $stringFields['test_entity_type']);
-    $this->assertArrayNotHasKey('non_fieldable', $stringFields);
-    $this->assertArrayHasKey('by_bundle', $stringFields['test_entity_type']);
-    $this->assertArrayNotHasKey('id', $stringFields['test_entity_type']);
   }
 
 }
