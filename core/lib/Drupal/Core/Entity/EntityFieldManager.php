@@ -565,30 +565,15 @@ class EntityFieldManager implements EntityFieldManagerInterface, PreWarmableInte
                 'bundles' => array_combine($bundles, $bundles),
               ];
             }
-          }
-        }
-
-        // In the second step, the per-bundle fields are added, based on the
-        // persistent bundle field map stored in a key value collection. This
-        // data is managed in the
-        // FieldDefinitionListener::onFieldDefinitionCreate() and
-        // FieldDefinitionListener::onFieldDefinitionDelete() methods.
-        // Rebuilding this information in the same way as base fields would not
-        // scale, as the time to query would grow exponentially with more fields
-        // and bundles. A cache would be deleted during cache clears, which is
-        // the only time it is needed, so a key value collection is used.
-        $bundle_field_maps = $this->keyValueFactory->get('entity.definitions.bundle_field_map')->getAll();
-        foreach ($bundle_field_maps as $entity_type_id => $bundle_field_map) {
-          foreach ($bundle_field_map as $field_name => $map_entry) {
-            if (!isset($this->fieldMap[$entity_type_id][$field_name])) {
-              $this->fieldMap[$entity_type_id][$field_name] = $map_entry;
-            }
-            else {
-              $this->fieldMap[$entity_type_id][$field_name]['bundles'] += $map_entry['bundles'];
+            foreach ($bundles as $bundle) {
+              $fields = $this->getFieldDefinitions($entity_type_id, $bundle);
+              foreach ($fields as $field_name => $field_definition) {
+                $this->fieldMap[$entity_type_id][$field_name]['type'] = $field_definition->getType();
+                $this->fieldMap[$entity_type_id][$field_name]['bundles'][$bundle] = $bundle;
+              }
             }
           }
         }
-
         $this->cacheSet($cid, $this->fieldMap, Cache::PERMANENT, ['entity_types', 'entity_field_info']);
       }
     }

@@ -182,7 +182,7 @@ class FieldApiDataTest extends ViewsKernelTestBase {
     // selected by EntityFieldManagerInterface::getFieldLabels().
     $this->assertEquals('GiraffeB&quot; label (field_string)', $data[$current_table][$field_storage_string->getName() . '_value']['title']);
     $this->assertInstanceOf(MarkupInterface::class, $data[$current_table][$field_storage_string->getName()]['help']);
-    $this->assertEquals('Appears in: page, article, news. Also known as: Content: GiraffeA&quot; label', $data[$current_table][$field_storage_string->getName()]['help']);
+    $this->assertEquals('Appears in: article, page, news. Also known as: Content: GiraffeA&quot; label', $data[$current_table][$field_storage_string->getName()]['help']);
   }
 
   /**

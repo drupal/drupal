@@ -139,6 +139,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     ];
     $this->assertSettings('comment', 'comment_article', TRUE, $edit);
     $entity_field_manager = \Drupal::service('entity_field.manager');
+    $entity_field_manager->clearCachedFieldDefinitions();
     $definition = $entity_field_manager->getFieldDefinitions('comment', 'comment_article')['comment_body'];
     $this->assertTrue($definition->isTranslatable(), 'Article comment body is translatable.');
     $definition = $entity_field_manager->getFieldDefinitions('comment', 'comment_article')['subject'];
