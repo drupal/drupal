@@ -73,6 +73,18 @@ class ThemeInstallController extends ControllerBase {
   private function installTheme($theme, $default_or_admin): array {
     assert(in_array($default_or_admin, ['default', 'admin']), 'The $default_or_admin parameter must be `default` or `admin`');
     $config = $this->configFactory->getEditable('system.theme');
+
+    // The ThemeAccess event listener is constructed alongside all access checks
+    // prior to this method being called, and is injected into classes which
+    // indirectly call this method. This means that the list of themes in the
+    // container is not available to the access check when determining the
+    // active theme immediately after installing a theme and setting it as the
+    // admin theme. This issue only happens when installing a theme and
+    // attempting to render via that theme during the same request, so
+    // work around it by triggering theme negotiation prior to installing
+    // the new theme.
+    $route_match = \Drupal::routeMatch();
+    \Drupal::service('theme.manager')->getActiveTheme($route_match);
     $this->themeInstaller->install([$theme]);
     $config->set($default_or_admin, $theme)->save();
     return [
