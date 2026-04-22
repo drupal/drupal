@@ -562,12 +562,6 @@ abstract class BrowserTestBase extends TestCase {
     // Clear the static cache so that subsequent cache invalidations will work
     // as expected.
     $this->container->get('cache_tags.invalidator')->resetChecksums();
-
-    // Explicitly call register() again on the container registered in \Drupal.
-    // @todo This should already be called through
-    //   DrupalKernel::prepareLegacyRequest() -> DrupalKernel::boot() but that
-    //   appears to be calling a different container.
-    $this->container->get('stream_wrapper_manager')->register();
   }
 
   /**
