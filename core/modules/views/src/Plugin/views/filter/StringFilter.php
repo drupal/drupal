@@ -330,6 +330,17 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function acceptExposedInput($input) {
+    $result = parent::acceptExposedInput($input);
+    if ($result && is_string($this->value)) {
+      $this->value = trim($this->value);
+    }
+    return $result;
+  }
+
+  /**
    * Add this filter to the query.
    *
    * Due to the nature of fapi, the value and the operator have an unintended
