@@ -134,7 +134,6 @@ class AssetResolverTest extends UnitTestCase {
             'core/misc/llama.css' => ['data' => 'core/misc/llama.css'],
           ],
         'js' => [],
-        'fonts' => [],
         'license' => '',
       ],
       'piggy/css' => [
@@ -144,12 +143,6 @@ class AssetResolverTest extends UnitTestCase {
             'core/misc/piggy.css' => ['data' => 'core/misc/piggy.css'],
           ],
         'js' => [],
-        'fonts' => [
-          'fonts/font.woff2' => [
-            'data' => 'fonts/font.woff2',
-            'preload' => TRUE,
-          ],
-        ],
         'license' => '',
       ],
       'core/ckeditor5' => [
@@ -272,34 +265,6 @@ class AssetResolverTest extends UnitTestCase {
         (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['core/drupal', 'core/jquery'])->setSettings(['currentTime' => $time]),
         2,
         4,
-      ],
-    ];
-  }
-
-  /**
-   * Tests get font assets.
-   */
-  #[DataProvider('providerAttachedFontAssets')]
-  public function testGetFontAssets($libraries, $expected): void {
-    $assets = (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries($libraries);
-    $fonts = $this->assetResolver->getFontAssets($assets, $this->english);
-    $this->assertSame($expected, $fonts);
-  }
-
-  public static function providerAttachedFontAssets(): array {
-    return [
-      [
-        ['piggy/css'],
-        [
-          [
-            'data' => 'fonts/font.woff2',
-            'preload' => TRUE,
-          ],
-        ],
-      ],
-      [
-        ['llama/css'],
-        [],
       ],
     ];
   }

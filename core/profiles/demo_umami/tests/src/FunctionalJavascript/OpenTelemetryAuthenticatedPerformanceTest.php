@@ -61,12 +61,12 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 3,
-      'CacheGetCount' => 34,
+      'CacheGetCount' => 33,
       'CacheGetCountByBin' => [
         'config' => 12,
         'bootstrap' => 7,
         'discovery' => 5,
-        'data' => 6,
+        'data' => 5,
         'dynamic_page_cache' => 2,
         'render' => 2,
       ],
@@ -127,19 +127,19 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 280,
-      'CacheGetCount' => 267,
+      'CacheGetCount' => 266,
       'CacheGetCountByBin' => [
         'config' => 62,
         'bootstrap' => 16,
         'discovery' => 84,
-        'data' => 19,
+        'data' => 18,
         'entity' => 24,
         'dynamic_page_cache' => 1,
         'default' => 21,
         'render' => 18,
         'menu' => 22,
       ],
-      'CacheSetCount' => 266,
+      'CacheSetCount' => 265,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 28,

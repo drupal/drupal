@@ -11,7 +11,6 @@ use Drupal\Core\Asset\AssetCollectionRendererInterface;
 use Drupal\Core\Asset\AssetResolverInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\AttachmentsResponseProcessorInterface;
@@ -164,8 +163,7 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
       $this->prophesize(RequestStack::class)->reveal(),
       $this->prophesize(RendererInterface::class)->reveal(),
       $this->prophesize(ModuleHandlerInterface::class)->reveal(),
-      $this->prophesize(LanguageManagerInterface::class)->reveal(),
-      $this->prophesize(FileUrlGeneratorInterface::class)->reveal()
+      $this->prophesize(LanguageManagerInterface::class)->reveal()
     );
   }
 

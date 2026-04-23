@@ -157,7 +157,7 @@ class LibraryDiscoveryParser {
       if (!isset($library['js']) && !isset($library['css']) && !isset($library['drupalSettings']) && !isset($library['dependencies'])) {
         throw new IncompleteLibraryDefinitionException(sprintf("Incomplete library definition for definition '%s' in extension '%s'", $id, $extension));
       }
-      $library += ['dependencies' => [], 'js' => [], 'css' => [], 'fonts' => []];
+      $library += ['dependencies' => [], 'js' => [], 'css' => []];
 
       if (isset($library['header']) && !is_bool($library['header'])) {
         throw new \LogicException(sprintf("The 'header' key in the library definition '%s' in extension '%s' is invalid: it must be a boolean.", $id, $extension));
@@ -188,7 +188,7 @@ class LibraryDiscoveryParser {
         ];
       }
 
-      foreach (['js', 'css', 'fonts'] as $type) {
+      foreach (['js', 'css'] as $type) {
         // Prepare (flatten) the SMACSS-categorized definitions.
         // @todo After Asset(ic) changes, retain the definitions as-is and
         //   properly resolve dependencies for all (css) libraries per category,
