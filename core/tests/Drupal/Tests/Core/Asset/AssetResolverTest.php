@@ -281,7 +281,7 @@ class AssetResolverTest extends UnitTestCase {
    */
   #[DataProvider('providerAttachedFontAssets')]
   public function testGetFontAssets($libraries, $expected): void {
-    $assets = new AttachedAssets()->setAlreadyLoadedLibraries([])->setLibraries($libraries);
+    $assets = (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries($libraries);
     $fonts = $this->assetResolver->getFontAssets($assets, $this->english);
     $this->assertSame($expected, $fonts);
   }
