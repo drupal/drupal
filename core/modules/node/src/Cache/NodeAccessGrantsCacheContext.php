@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Context\CalculatedCacheContextInterface;
 use Drupal\Core\Cache\Context\UserCacheContextBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeGrantsHelper;
 
 /**
  * Defines the node access view cache context service.
@@ -22,15 +23,26 @@ use Drupal\Core\Session\AccountInterface;
  */
 class NodeAccessGrantsCacheContext extends UserCacheContextBase implements CalculatedCacheContextInterface {
 
+  /**
+   * The node grants helper service.
+   */
+  protected NodeGrantsHelper $nodeGrantsHelper;
+
   public function __construct(
     AccountInterface $user,
     protected ?EntityTypeManagerInterface $entityTypeManager = NULL,
+    ?NodeGrantsHelper $nodeGrantsHelper = NULL,
   ) {
     parent::__construct($user);
     if (!$entityTypeManager) {
       @trigger_error('Calling NodeAccessGrantsCacheContext::__construct() without the $entityTypeManager argument is deprecated in drupal:11.3.0 and the $entityTypeManager argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3038909', E_USER_DEPRECATED);
       $this->entityTypeManager = \Drupal::entityTypeManager();
     }
+    if (!$nodeGrantsHelper) {
+      @trigger_error('Calling NodeAccessGrantsCacheContext::__construct() without the $nodeGrantsHelper argument is deprecated in drupal:11.4.0 and the $nodeGrantsHelper argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3578055', E_USER_DEPRECATED);
+      $nodeGrantsHelper = \Drupal::service(NodeGrantsHelper::class);
+    }
+    $this->nodeGrantsHelper = $nodeGrantsHelper;
   }
 
   /**
@@ -87,7 +99,7 @@ class NodeAccessGrantsCacheContext extends UserCacheContextBase implements Calcu
       return 'view.all';
     }
 
-    $grants = node_access_grants($operation, $this->user);
+    $grants = $this->nodeGrantsHelper->nodeAccessGrants($operation, $this->user);
     $grants_context_parts = [];
     foreach ($grants as $realm => $gids) {
       $grants_context_parts[] = $realm . ':' . implode(',', $gids);

@@ -17,6 +17,9 @@ services:
     autoconfigure: true
   node.route_subscriber:
     class: Drupal\node\Routing\RouteSubscriber
+  Drupal\node\NodeGrantsHelper:
+    class: Drupal\node\NodeGrantsHelper
+    autowire: true
   node.grant_storage:
     class: Drupal\node\NodeGrantDatabaseStorage
     autowire: true
@@ -38,7 +41,7 @@ services:
       - { name: paramconverter }
   cache_context.user.node_grants:
     class: Drupal\node\Cache\NodeAccessGrantsCacheContext
-    arguments: ['@current_user', '@entity_type.manager']
+    arguments: ['@current_user', '@entity_type.manager', '@Drupal\node\NodeGrantsHelper']
     tags:
       - { name: cache.context }
   node.node_route_context:

@@ -16,6 +16,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\Hook\NodeThemeHooks;
+use Drupal\node\NodeGrantsHelper;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 
@@ -303,14 +304,16 @@ function template_preprocess_node(&$variables): void {
  * @return array
  *   An associative array in which the keys are realms, and the values are
  *   arrays of grants for those realms.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *    \Drupal::service('Drupal\node\NodeGrantsHelper')->nodeAccessGrants()
+ *    instead.
+ *
+ * @see https://www.drupal.org/node/3578055
  */
 function node_access_grants($operation, AccountInterface $account) {
-  // Fetch node access grants from other modules.
-  $grants = \Drupal::moduleHandler()->invokeAll('node_grants', [$account, $operation]);
-  // Allow modules to alter the assigned grants.
-  \Drupal::moduleHandler()->alter('node_grants', $grants, $account, $operation);
-
-  return array_merge(['all' => [0]], $grants);
+  @trigger_error('node_access_grants() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use  \Drupal::service(\'Drupal\node\NodeGrantsHelper\')->nodeAccessGrants(). See https://www.drupal.org/node/3578055', E_USER_DEPRECATED);
+  return \Drupal::service(NodeGrantsHelper::class)->nodeAccessGrants($operation, $account);
 }
 
 /**
