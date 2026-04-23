@@ -1,5 +1,14 @@
 global-styling:
   version: VERSION
+  fonts:
+    fonts/metropolis/Metropolis-Regular.woff2:
+      preload: true
+    fonts/metropolis/Metropolis-SemiBold.woff2:
+      preload: true
+    fonts/metropolis/Metropolis-Bold.woff2:
+      preload: true
+    fonts/lora/lora-v14-latin-regular.woff2:
+      preload: true
   css:
     base:
       css/base/fonts.css: {}
