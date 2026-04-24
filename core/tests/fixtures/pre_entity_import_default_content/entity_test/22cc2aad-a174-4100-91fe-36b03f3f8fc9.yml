@@ -1,11 +1,11 @@
 _meta:
   version: '1.0'
   entity_type: entity_test
-  uuid: fedcba98-7654-3210-fedc-ba9876543210
+  uuid: 22cc2aad-a174-4100-91fe-36b03f3f8fc9
   bundle: entity_test
   default_langcode: en
   depends:
-    01234567-89ab-cdef-0123-456789abcdef: entity_test
+    2ab4da9f-7132-4578-99ac-3ee46ce8ce09: entity_test
 default:
   name:
     -

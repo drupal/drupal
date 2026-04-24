@@ -2,7 +2,7 @@
 _meta:
   version: '1.0'
   entity_type: entity_test
-  uuid: abcdef01-2345-6789-abcd-ef0123456789
+  uuid: ec561a81-64f4-4fc4-88fa-6798de6c6f27
   bundle: entity_test
   default_langcode: en
 default:

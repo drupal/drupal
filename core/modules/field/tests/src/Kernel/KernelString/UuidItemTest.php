@@ -31,4 +31,16 @@ class UuidItemTest extends FieldKernelTestBase {
     $this->assertTrue(Uuid::isValid($uuid_field->value));
   }
 
+  /**
+   * Tests that UUID item values must be valid UUIDs.
+   */
+  public function testInvalidUuid(): void {
+    $entity = EntityTest::create([
+      'uuid' => 'not a valid uuid',
+    ]);
+    $violation = $entity->validate()->get(0);
+    $this->assertSame('This is not a valid UUID.', (string) $violation->getMessage());
+    $this->assertSame('uuid.0.value', $violation->getPropertyPath());
+  }
+
 }

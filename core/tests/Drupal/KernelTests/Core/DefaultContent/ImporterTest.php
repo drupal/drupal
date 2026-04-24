@@ -79,7 +79,7 @@ class ImporterTest extends KernelTestBase implements EventSubscriberInterface {
   public function onPreEntityImport(PreEntityImportEvent $event): void {
     self::assertSame('entity_test', $event->metadata['entity_type']);
 
-    if ($event->metadata['uuid'] === '01234567-89ab-cdef-0123-456789abcdef') {
+    if ($event->metadata['uuid'] === '2ab4da9f-7132-4578-99ac-3ee46ce8ce09') {
       $event->data['default']['name'] = [
         ['value' => 'Changed name'],
       ];
@@ -99,7 +99,7 @@ class ImporterTest extends KernelTestBase implements EventSubscriberInterface {
     self::assertTrue($this->wasSyncing);
 
     $entity = $this->container->get(EntityRepositoryInterface::class)
-      ->loadEntityByUuid('entity_test', '01234567-89ab-cdef-0123-456789abcdef');
+      ->loadEntityByUuid('entity_test', '2ab4da9f-7132-4578-99ac-3ee46ce8ce09');
     self::assertSame('Changed name', $entity?->label());
   }
 

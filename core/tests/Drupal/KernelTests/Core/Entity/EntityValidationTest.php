@@ -173,8 +173,9 @@ class EntityValidationTest extends EntityKernelTestBase {
     $test_entity = clone $entity;
     $test_entity->uuid->value = $this->randomString(129);
     $violations = $test_entity->validate();
-    $this->assertEquals(1, $violations->count(), 'Validation failed.');
-    $this->assertEquals('UUID: may not be longer than 128 characters.', $violations[0]->getMessage());
+    $this->assertEquals(2, $violations->count(), 'Validation failed.');
+    $this->assertEquals('This is not a valid UUID.', $violations[0]->getMessage());
+    $this->assertEquals('UUID: may not be longer than 128 characters.', $violations[1]->getMessage());
 
     $test_entity = clone $entity;
     $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
