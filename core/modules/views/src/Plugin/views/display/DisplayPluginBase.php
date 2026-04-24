@@ -21,12 +21,14 @@ use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Views;
+use Drupal\views\ViewsFormHelperTrait;
 
 /**
  * Base class for views display plugins.
  */
 abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInterface, DependentPluginInterface {
   use PluginDependencyTrait;
+  use ViewsFormHelperTrait;
 
   /**
    * The top object of a view.
@@ -1384,7 +1386,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     parent::buildOptionsForm($form, $form_state);
     $section = $form_state->get('section');
     if ($this->defaultableSections($section)) {
-      views_ui_standard_display_dropdown($form, $form_state, $section);
+      $this->standardDisplayDropdown($form, $form_state, $section);
     }
     $form['#title'] = $this->display['display_title'] . ': ';
 

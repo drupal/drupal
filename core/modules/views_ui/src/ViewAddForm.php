@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Drupal\views\Plugin\views\wizard\WizardException;
 use Drupal\views\Plugin\ViewsPluginManager;
+use Drupal\views\ViewsFormAjaxHelperTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
@@ -15,6 +16,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
  * @internal
  */
 class ViewAddForm extends ViewFormBase {
+
+  use ViewsFormAjaxHelperTrait;
 
   /**
    * The wizard plugin manager.
@@ -142,7 +145,7 @@ class ViewAddForm extends ViewFormBase {
     $show_form['wizard_key']['#default_value'] = WizardPluginBase::getSelected($form_state, ['show', 'wizard_key'], $default_value, $show_form['wizard_key']);
     // Changing this dropdown updates the entire content of $form['displays']
     // via AJAX.
-    views_ui_add_ajax_trigger($show_form, 'wizard_key', ['displays']);
+    $this->addAjaxTrigger($show_form, 'wizard_key', ['displays']);
 
     // Build the rest of the form based on the currently selected wizard plugin.
     $wizard_key = $show_form['wizard_key']['#default_value'];

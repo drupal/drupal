@@ -17,6 +17,7 @@ use Drupal\views\Ajax\ReplaceTitleCommand;
 use Drupal\views\Ajax\ShowButtonsCommand;
 use Drupal\views\Ajax\TriggerPreviewCommand;
 use Drupal\views\ViewEntityInterface;
+use Drupal\views\ViewsFormHelperTrait;
 use Drupal\views_ui\Ajax\SetFormCommand;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -24,6 +25,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * Provides a base class for Views UI AJAX forms.
  */
 abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
+
+  use ViewsFormHelperTrait;
 
   /**
    * The ID of the item this form is manipulating.
@@ -90,9 +93,6 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     $view = $form_state->get('view');
     $form_key = $form_state->get('form_key');
 
-    // @todo Remove the need for this.
-    \Drupal::moduleHandler()->loadInclude('views_ui', 'inc', 'admin');
-
     // Reset the cache of IDs. Drupal rather aggressively prevents ID
     // duplication but this causes it to remember IDs that are no longer even
     // being used.
@@ -149,7 +149,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
       $form_class = get_class($form_state->getFormObject());
 
       $form_state->setUserInput([]);
-      $form_url = views_ui_build_form_url($form_state);
+      $form_url = $this->buildFormUrl($form_state);
       if (!$form_state->get('ajax')) {
         return new RedirectResponse($form_url->setAbsolute()->toString());
       }

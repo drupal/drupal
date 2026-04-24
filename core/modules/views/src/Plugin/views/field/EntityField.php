@@ -30,6 +30,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\DependentWithRemovalPluginInterface;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
+use Drupal\views\ViewsFormHelperTrait;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
@@ -42,6 +43,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
 
   use FieldAPIHandlerTrait;
   use PluginDependencyTrait;
+  use ViewsFormHelperTrait;
 
   /**
    * An array to store field renderable arrays for use by renderItems().
@@ -506,7 +508,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       '#options' => $formatters,
       '#default_value' => $this->options['type'],
       '#ajax' => [
-        'url' => views_ui_build_form_url($form_state),
+        'url' => $this->buildFormUrl($form_state),
       ],
       '#submit' => [[$this, 'submitTemporaryForm']],
       '#executes_submit_callback' => TRUE,

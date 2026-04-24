@@ -19,6 +19,7 @@ use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Entity\View;
 use Drupal\views\ViewEntityInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Drupal\views\ViewsFormHelperTrait;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,6 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ViewUI implements ViewEntityInterface {
 
   use StringTranslationTrait;
+  use ViewsFormHelperTrait;
 
   /**
    * Indicates if a view is currently being edited.
@@ -330,7 +332,10 @@ class ViewUI implements ViewEntityInterface {
       // button labels.
       if (isset($names)) {
         $form['actions']['submit']['#values'] = $names;
-        $form['actions']['submit']['#process'] = array_merge(['views_ui_form_button_was_clicked'], \Drupal::service('element_info')->getInfoProperty($form['actions']['submit']['#type'], '#process', []));
+        $form['actions']['submit']['#process'] = [
+          [static::class, 'formButtonWasClicked'],
+          ...\Drupal::service('element_info')->getInfoProperty($form['actions']['submit']['#type'], '#process', []),
+        ];
       }
       // If a validation handler exists for the form, assign it to this button.
       $form['actions']['submit']['#validate'][] = [$form_state->getFormObject(), 'validateForm'];

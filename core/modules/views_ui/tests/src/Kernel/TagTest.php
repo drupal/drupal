@@ -28,8 +28,6 @@ class TagTest extends ViewsKernelTestBase {
    * Tests the ViewsUIController::autocompleteTag() function.
    */
   public function testViewsUiAutocompleteTag(): void {
-    \Drupal::moduleHandler()->loadInclude('views_ui', 'inc', 'admin');
-
     // Save 15 views with a tag.
     $tags = [];
     for ($i = 0; $i < 16; $i++) {

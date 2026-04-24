@@ -56,7 +56,7 @@ class RearrangeFilter extends ViewsFormBase {
     if ($display->defaultableSections($types[$type]['plural'])) {
       $section = $types[$type]['plural'];
       $form_state->set('section', $section);
-      views_ui_standard_display_dropdown($form, $form_state, $section);
+      $this->standardDisplayDropdown($form, $form_state, $section);
     }
 
     if (!empty($view->form_cache)) {
