@@ -3,7 +3,7 @@
 namespace Drupal\comment\Plugin\Field\FieldFormatter;
 
 use Drupal\comment\CommentingStatus;
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\comment\FormLocation;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFormBuilderInterface;
@@ -167,7 +167,8 @@ class CommentDefaultFormatter extends FormatterBase {
 
       // Append comment form if the comments are open and the form is set to
       // display below the entity. Do not show the form for the print view mode.
-      if ($status == CommentingStatus::Open && $comment_settings['form_location'] == CommentItemInterface::FORM_BELOW && $this->viewMode != 'print') {
+      $form_location = FormLocation::tryFrom($comment_settings['form_location']);
+      if ($status == CommentingStatus::Open && $form_location == FormLocation::Below && $this->viewMode != 'print') {
         // Only show the add comment form if the user has permission.
         $elements['#cache']['contexts'][] = 'user.roles';
         if ($this->currentUser->hasPermission('post comments')) {

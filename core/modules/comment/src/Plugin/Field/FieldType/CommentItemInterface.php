@@ -39,11 +39,21 @@ interface CommentItemInterface {
 
   /**
    * Comment form should be displayed on a separate page.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0.
+   * Use \Drupal\comment\FormLocation::SeparatePage instead.
+   *
+   * @see https://www.drupal.org/node/3550055
    */
   const FORM_SEPARATE_PAGE = 0;
 
   /**
    * Comment form should be shown below post or list of comments.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0.
+   * Use \Drupal\comment\FormLocation::Below instead.
+   *
+   * @see https://www.drupal.org/node/3550055
    */
   const FORM_BELOW = 1;
 

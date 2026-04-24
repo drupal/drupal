@@ -2,7 +2,6 @@
 
 namespace Drupal\comment;
 
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -163,7 +162,7 @@ class CommentManager implements CommentManagerInterface {
     if ($this->authenticatedCanPostComments) {
       // We cannot use the redirect.destination service here because these links
       // sometimes appear on /node and taxonomy listing pages.
-      if ($entity->get($field_name)->getFieldDefinition()->getSetting('form_location') == CommentItemInterface::FORM_SEPARATE_PAGE) {
+      if ($entity->get($field_name)->getFieldDefinition()->getSetting('form_location') == FormLocation::SeparatePage->value) {
         $comment_reply_parameters = [
           'entity_type' => $entity->getEntityTypeId(),
           'entity' => $entity->id(),
