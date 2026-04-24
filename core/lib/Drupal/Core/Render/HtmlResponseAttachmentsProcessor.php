@@ -9,6 +9,7 @@ use Drupal\Core\Asset\AssetResolverInterface;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -40,26 +41,6 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    */
   protected $config;
 
-  /**
-   * Constructs a HtmlResponseAttachmentsProcessor object.
-   *
-   * @param \Drupal\Core\Asset\AssetResolverInterface $assetResolver
-   *   An asset resolver.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   A config factory for retrieving required config objects.
-   * @param \Drupal\Core\Asset\AssetCollectionRendererInterface $cssCollectionRenderer
-   *   The CSS asset collection renderer.
-   * @param \Drupal\Core\Asset\AssetCollectionRendererInterface $jsCollectionRenderer
-   *   The JS asset collection renderer.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
-   *   The language manager.
-   */
   public function __construct(
     protected AssetResolverInterface $assetResolver,
     ConfigFactoryInterface $config_factory,
@@ -69,7 +50,12 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     protected RendererInterface $renderer,
     protected ModuleHandlerInterface $moduleHandler,
     protected LanguageManagerInterface $languageManager,
+    protected ?FileUrlGeneratorInterface $fileUrlGenerator = NULL,
   ) {
+    if (!isset($fileUrlGenerator)) {
+      $this->fileUrlGenerator = \Drupal::service('file_url_generator');
+      @trigger_error('Constructing HtmlResponseAttachmentsProcessor without a file url generator is deprecated in drupal:11.4.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3366561', E_USER_DEPRECATED);
+    }
     $this->config = $config_factory->get('system.performance');
   }
 
@@ -138,6 +124,25 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       // list the final, processed attachments.
       $attached['library'] = $assets->getLibraries();
       $attached['drupalSettings'] = $assets->getSettings();
+
+      // Collect fonts from libraries, and if they include fonts to preload, add
+      // them to #attached['html_head_link'].
+      $fonts = $this->assetResolver->getFontAssets($assets, $this->languageManager->getCurrentLanguage());
+      foreach ($fonts as $font) {
+        if ($font['preload']) {
+          $extension = pathinfo($font['data'], PATHINFO_EXTENSION);
+          $attached['html_head_link'][] = [
+            [
+              'href' => $this->fileUrlGenerator->generate($font['data'])->toString(),
+              'rel' => 'preload',
+              'as' => 'font',
+              'type' => 'font/' . $extension,
+              'crossorigin' => 'anonymous',
+            ],
+            FALSE,
+          ];
+        }
+      }
 
       // Since we can only replace content in the HTML head section if there's a
       // placeholder for it, we can safely avoid processing the render array if

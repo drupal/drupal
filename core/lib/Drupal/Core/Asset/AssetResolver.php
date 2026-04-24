@@ -183,6 +183,42 @@ class AssetResolver implements AssetResolverInterface {
   /**
    * {@inheritdoc}
    */
+  public function getFontAssets(AttachedAssetsInterface $assets, ?LanguageInterface $language = NULL): array {
+    if (!$assets->getLibraries()) {
+      return [];
+    }
+    // Get the complete list of libraries to load including dependencies.
+    $libraries_to_load = $this->getLibrariesToLoad($assets, 'fonts');
+
+    if (!$libraries_to_load) {
+      return [];
+    }
+    if (!isset($language)) {
+      $language = $this->languageManager->getCurrentLanguage();
+    }
+    // Add the active theme name to the cache key since active themes may
+    // implement hook_library_info_alter().
+    $active_theme = $this->themeManager->getActiveTheme()->getName();
+    $cid = 'fonts:' . $active_theme . ':' . $language->getId() . Crypt::hashBase64(serialize($libraries_to_load));
+    if ($cached = $this->cache->get($cid)) {
+      return $cached->data;
+    }
+    $fonts = [];
+    foreach ($libraries_to_load as $library) {
+      [$extension, $name] = explode('/', $library, 2);
+      $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
+      foreach ($definition['fonts'] as $font) {
+        $fonts[] = $font;
+      }
+    }
+    $this->cache->set($cid, $fonts, CacheBackendInterface::CACHE_PERMANENT, ['library_info']);
+
+    return $fonts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCssAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL) {
     if (!$assets->getLibraries()) {
       return [];

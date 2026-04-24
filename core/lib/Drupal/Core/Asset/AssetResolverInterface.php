@@ -87,4 +87,17 @@ interface AssetResolverInterface {
    */
   public function getJsAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL);
 
+  /**
+   * Returns the fonts for the current response's libraries.
+   *
+   * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
+   *   The assets attached to the current response.
+   * @param \Drupal\Core\Language\LanguageInterface $language
+   *   (optional) The interface language the assets will be rendered with.
+   *
+   * @return array
+   *   An array of font assets.
+   */
+  public function getFontAssets(AttachedAssetsInterface $assets, ?LanguageInterface $language = NULL): array;
+
 }

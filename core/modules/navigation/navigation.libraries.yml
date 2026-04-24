@@ -17,6 +17,9 @@ internal.navigation:
       css/components/admin-toolbar-control-bar.css: {}
       css/components/toolbar-menu.css: {}
       css/components/toolbar-block.css: {}
+  fonts:
+    assets/fonts/inter-var.woff2:
+      preload: true
   dependencies:
     - core/drupal.displace
     - core/once
