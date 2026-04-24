@@ -14,6 +14,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\StreamWrapper\TranslationsStream;
+use Drupal\locale\File\LocaleFileManager;
 
 /**
  * Hook implementations for locale.
@@ -128,7 +129,7 @@ class LocaleHooks {
     \Drupal::service('locale.storage')->deleteTranslations(['language' => $language->id()]);
     // Remove interface translation files.
     \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.bulk');
-    locale_translate_delete_translation_files([], [$language->id()]);
+    \Drupal::service(LocaleFileManager::class)->deleteTranslationFiles([], [$language->id()]);
     // Remove translated configuration objects.
     \Drupal::service('locale.config_manager')->deleteLanguageTranslations($language->id());
     // Changing the language settings impacts the interface:

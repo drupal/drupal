@@ -4,17 +4,11 @@
  * @file
  */
 
-use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\Exception\InvalidStreamWrapperException;
-use Drupal\Core\File\FileExists;
 use Drupal\Core\Url;
+use Drupal\locale\File\LocaleFile;
+use Drupal\locale\File\LocaleFileManager;
+use Drupal\locale\File\RemoteFileStatus;
 use Drupal\locale\LocaleSource;
-use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\RequestException;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\UriInterface;
 
 /**
  * Load the common translation API.
@@ -52,7 +46,7 @@ function locale_translation_batch_version_check(string $project, string $langcod
 
   \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
   locale_translation_status_delete_projects([$project]);
-  locale_translate_delete_translation_files([$project]);
+  \Drupal::service(LocaleFileManager::class)->deleteTranslationFiles([$project]);
 
   $context['message'] = t('Checked version of %project.', ['%project' => $project]);
 }
@@ -104,12 +98,13 @@ function locale_translation_batch_status_check($project, $langcode, array $optio
       }
     }
 
-    if (!$failure && $result = locale_translation_http_check($remote_file->uri)) {
+    $remoteFileInfo = \Drupal::service(LocaleFileManager::class)->checkRemoteFileStatus($remote_file->uri);
+    if (!$failure && $remoteFileInfo->status !== RemoteFileStatus::Error) {
       // Update the file object with the result data. In case of a redirect we
       // store the resulting uri.
-      if (isset($result['last_modified'])) {
-        $remote_file->uri = $result['location'] ?? $remote_file->uri;
-        $remote_file->timestamp = $result['last_modified'];
+      if ($remoteFileInfo->lastModified) {
+        $remote_file->uri = $remoteFileInfo->location ?? $remote_file->uri;
+        $remote_file->timestamp = $remoteFileInfo->lastModified;
         locale_translation_status_save($source->name, $source->langcode, LOCALE_TRANSLATION_REMOTE, $remote_file);
       }
       // @todo What to do with when the file is not found (404)? To prevent
@@ -194,7 +189,7 @@ function locale_translation_batch_fetch_download($project, $langcode, &$context)
   if (isset($sources[$project][$langcode])) {
     $source = $sources[$project][$langcode];
     if (isset($source->type) && $source->type == LOCALE_TRANSLATION_REMOTE) {
-      if ($file = locale_translation_download_source($source->files[LOCALE_TRANSLATION_REMOTE], 'translations://')) {
+      if ($file = \Drupal::service(LocaleFileManager::class)->downloadTranslationSource($source->files[LOCALE_TRANSLATION_REMOTE], 'translations://')) {
         $context['message'] = t('Downloaded %langcode translation for %project.', [
           '%langcode' => $langcode,
           '%project' => $source->project,
@@ -302,53 +297,30 @@ function locale_translation_batch_fetch_finished($success, $results): void {
  *   - (optional) location: The location of the translation file. Is only set
  *     when a redirect (301) has occurred.
  *   TRUE if the file is not found. FALSE if a fault occurred.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleFileManager::class)checkRemoteFileStatus($uri)
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3577675
  */
 function locale_translation_http_check($uri) {
-  $logger = \Drupal::logger('locale');
-  try {
-    $actual_uri = NULL;
-    $response = \Drupal::service('http_client_factory')->fromOptions([
-      'allow_redirects' => [
-        'on_redirect' => function (RequestInterface $request, ResponseInterface $response, UriInterface $request_uri) use (&$actual_uri) {
-          $actual_uri = (string) $request_uri;
-        },
-      ],
-    ])->head($uri);
-    $result = [];
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleFileManager::class)->checkRemoteFileStatus($uri) instead. See https://www.drupal.org/node/3577675', E_USER_DEPRECATED);
+  $remoteFileInfo = \Drupal::service(LocaleFileManager::class)->checkRemoteFileStatus($uri);
 
-    // Return the effective URL if it differs from the requested.
-    if ($actual_uri && $actual_uri !== $uri) {
-      $result['location'] = $actual_uri;
-    }
-
-    $result['last_modified'] = $response->hasHeader('Last-Modified') ? strtotime($response->getHeaderLine('Last-Modified')) : 0;
-    return $result;
-  }
-  catch (RequestException $e) {
-    // Handle 4xx and 5xx http responses.
-    if ($response = $e->getResponse()) {
-      if ($response->getStatusCode() == 404) {
-        // File not found occurs when a translation file is not yet available
-        // at the translation server. But also if a custom module or custom
-        // theme does not define the location of a translation file. By default
-        // the file is checked at the translation server, but it will not be
-        // found there.
-        $logger->notice('Translation file not found: @uri.', ['@uri' => $uri]);
-        return TRUE;
-      }
-      $logger->notice('HTTP request to @url failed with error: @error.', [
-        '@url' => $uri,
-        '@error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase(),
-      ]);
-    }
-  }
-  // We need to handle ConnectException separately because in Guzzle 7 it
-  // doesn't have a getResponse() method, so the above will fatal.
-  catch (ConnectException $e) {
-    $logger->notice('HTTP request to @url failed with error: @error.', ['@url' => $uri, '@error' => $e->getMessage()]);
+  if ($remoteFileInfo->status === RemoteFileStatus::Error) {
+    return FALSE;
   }
 
-  return FALSE;
+  if ($remoteFileInfo->status === RemoteFileStatus::Missing) {
+    return TRUE;
+  }
+
+  $result['last_modified'] = $remoteFileInfo->lastModified;
+  if ($remoteFileInfo->location) {
+    $result['location'] = $remoteFileInfo->location;
+  }
+  return $result;
 }
 
 /**
@@ -367,29 +339,16 @@ function locale_translation_http_check($uri) {
  *
  * @return object|false
  *   File object if download was successful. FALSE on failure.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleFileManager::class)
+ *   ->downloadTranslationSource($source_file, $directory) instead.
+ *
+ * @see https://www.drupal.org/node/3577675
  */
 function locale_translation_download_source($source_file, $directory = 'temporary://') {
-  try {
-    $data = (string) \Drupal::httpClient()->get($source_file->uri)->getBody();
-    /** @var \Drupal\Core\File\FileSystemInterface $fileSystem */
-    $fileSystem = \Drupal::service('file_system');
-    $filename = basename($source_file->uri);
-    if ($uri = $fileSystem->saveData($data, $directory . $filename, FileExists::Replace)) {
-      $file = clone($source_file);
-      $file->type = LOCALE_TRANSLATION_LOCAL;
-      $file->uri = $uri;
-      $file->directory = $directory;
-      $file->timestamp = filemtime($uri);
-      $file->hash = hash_file(LocaleSource::LOCAL_FILE_HASH_ALGO, $uri);
-      return $file;
-    }
-  }
-  catch (ClientExceptionInterface $exception) {
-    \Drupal::messenger()->addError(t('Failed to fetch file due to error "%error"', ['%error' => $exception->getMessage()]));
-  }
-  catch (FileException | InvalidStreamWrapperException $e) {
-    \Drupal::messenger()->addError(t('Failed to save file due to error "%error"', ['%error' => $e->getMessage()]));
-  }
-  \Drupal::logger('locale')->error('Unable to download translation file @uri.', ['@uri' => $source_file->uri]);
-  return FALSE;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleFileManager::class)->downloadTranslationSource($source_file, $directory) instead. See https://www.drupal.org/node/3577675', E_USER_DEPRECATED);
+  $hash = hash_file(LocaleSource::LOCAL_FILE_HASH_ALGO, $source_file->uri);
+  $locale_file = new LocaleFile($source_file->filename, $source_file->uri, $hash);
+  return \Drupal::service(LocaleFileManager::class)->downloadTranslationSource($locale_file, $directory);
 }

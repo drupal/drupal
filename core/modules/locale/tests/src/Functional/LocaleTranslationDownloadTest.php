@@ -6,6 +6,9 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\locale\File\LocaleFile;
+use Drupal\locale\File\LocaleFileManager;
+use Drupal\locale\LocaleSource;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -59,13 +62,14 @@ class LocaleTranslationDownloadTest extends LocaleUpdateBase {
       'contrib_module_one-8.x-1.1.de._po' => '__old_content__',
     ], $this->translationsStream);
 
+    $filepath = PublicStream::basePath() . '/remote/all/contrib_module_one/contrib_module_one-8.x-1.1.de._po';
+    $filename = basename($filepath);
     $url = \Drupal::service('url_generator')->generateFromRoute('<front>', [], ['absolute' => TRUE]);
-    $uri = $url . PublicStream::basePath() . '/remote/all/contrib_module_one/contrib_module_one-8.x-1.1.de._po';
-    $source_file = (object) [
-      'uri' => $uri,
-    ];
+    $uri = $url . $filepath;
 
-    $result = locale_translation_download_source($source_file, 'translations://');
+    $hash = hash_file(LocaleSource::LOCAL_FILE_HASH_ALGO, $uri);
+    $source_file = new LocaleFile($filename, $uri, $hash);
+    $result = \Drupal::service(LocaleFileManager::class)->downloadTranslationSource($source_file, 'translations://');
 
     $this->assertEquals('translations://contrib_module_one-8.x-1.1.de._po', $result->uri);
     $this->assertFileDoesNotExist('translations://contrib_module_one-8.x-1.1.de_0._po');

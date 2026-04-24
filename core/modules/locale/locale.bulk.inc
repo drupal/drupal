@@ -5,13 +5,13 @@
  */
 
 use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\locale\Gettext;
+use Drupal\locale\File\LocaleFile;
+use Drupal\locale\File\LocaleFileManager;
 use Drupal\locale\LocaleSource;
-use Drupal\locale\StreamWrapper\TranslationsStream;
 
 /**
  * Get interface translation files present in the translations directory.
@@ -25,34 +25,17 @@ use Drupal\locale\StreamWrapper\TranslationsStream;
  *
  * @return array
  *   An array of interface translation files keyed by their URI.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleFileManager::class)
+ *   ->getInterfaceTranslationFiles($projects, $langcodes) instead.
+ *
+ * @see https://www.drupal.org/node/3577675
  */
 function locale_translate_get_interface_translation_files(array $projects = [], array $langcodes = []): array {
   \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
-  $files = [];
-  $projects = $projects ?: array_keys(\Drupal::service('locale.project')->getProjects());
-  $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
-
-  // Scan the translations directory for files matching a name pattern
-  // containing a project name and language code: {project}.{langcode}.po or
-  // {project}-{version}.{langcode}.po.
-  // Only files of known projects and languages will be returned.
-  $directory = TranslationsStream::basePath();
-  $result = [];
-  if (is_dir($directory)) {
-    $result = \Drupal::service('file_system')->scanDirectory($directory, '![a-z_]+(\-[0-9a-z\.\-\+]+|)\.[^\./]+\.po$!', ['recurse' => FALSE]);
-  }
-
-  foreach ($result as $file) {
-    // Update the file object with project name and version from the file name.
-    $file = locale_translate_file_attach_properties($file);
-    if (in_array($file->project, $projects)) {
-      if (in_array($file->langcode, $langcodes)) {
-        $files[$file->uri] = $file;
-      }
-    }
-  }
-
-  return $files;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleFileManager::class)->getInterfaceTranslationFiles($projects, $langcodes) instead. See https://www.drupal.org/node/3577675', E_USER_DEPRECATED);
+  return \Drupal::service(LocaleFileManager::class)->getInterfaceTranslationFiles($projects, $langcodes);
 }
 
 /**
@@ -385,14 +368,16 @@ function locale_translate_batch_finished($success, array $results): void {
  *
  * @return object
  *   An object representing the file.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   LocaleFile instead.
+ *
+ * @see https://www.drupal.org/node/3577675
  */
 function locale_translate_file_create($filepath) {
-  $file = new stdClass();
-  $file->filename = basename($filepath);
-  $file->uri = $filepath;
-  $file->timestamp = filemtime($file->uri);
-  $file->hash = hash_file(LocaleSource::LOCAL_FILE_HASH_ALGO, $file->uri);
-  return $file;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use LocaleFile instead. See https://www.drupal.org/node/3577675', E_USER_DEPRECATED);
+  $hash = hash_file(LocaleSource::LOCAL_FILE_HASH_ALGO, $filepath);
+  return new LocaleFile($filepath, basename($filepath), $hash, filemtime($filepath));
 }
 
 /**
@@ -411,43 +396,24 @@ function locale_translate_file_create($filepath) {
  *
  * @return object
  *   Modified file object.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   LocaleFile::createFromPath($filename, $uri, $langCodeOverride) instead.
+ *
+ * @see https://www.drupal.org/node/3577675
  */
 function locale_translate_file_attach_properties($file, array $options = []) {
-  // If $file is a file entity, convert it to a stdClass.
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use LocaleFile::createFromPath($filename, $uri, $langCodeOverride) instead. See https://www.drupal.org/node/3577675', E_USER_DEPRECATED);
   if ($file instanceof FileInterface) {
-    $file = (object) [
-      'filename' => $file->getFilename(),
-      'uri' => $file->getFileUri(),
-    ];
-  }
-
-  // Extract project, version and language code from the file name. Supported:
-  // "{project}-{version}.{langcode}.po", "{prefix}.{langcode}.po" or
-  // "{langcode}.po".
-  preg_match('!
-    (                       # project OR project and version OR empty (group 1)
-      ([a-z_]+)             # project name (group 2)
-      \.                    # .
-      |                     # OR
-      ([a-z_]+)             # project name (group 3)
-      \-                    # -
-      ([0-9a-z\.\-\+]+)     # version (group 4)
-      \.                    # .
-      |                     # OR
-    )                       # (empty)
-    ([^\./]+)               # language code (group 5)
-    \.                      # .
-    po                      # po extension
-    $!x', $file->filename, $matches);
-  if (isset($matches[5])) {
-    $file->project = $matches[2] . $matches[3];
-    $file->version = $matches[4];
-    $file->langcode = $options['langcode'] ?? $matches[5];
+    $uri = $file->getFileUri();
+    $filename = $file->getFilename();
   }
   else {
-    $file->langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+    $uri = $file->uri;
+    $filename = $file->filename;
+    $options['langcode'] = LanguageInterface::LANGCODE_NOT_SPECIFIED;
   }
-  return $file;
+  return LocaleFile::createFromPath($filename, $uri, $options['langcode']);
 }
 
 /**
@@ -463,23 +429,16 @@ function locale_translate_file_attach_properties($file, array $options = []) {
  * @return bool
  *   TRUE if files are removed successfully. FALSE if one or more files could
  *   not be deleted.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleFileManager::class)
+ *   ->deleteTranslationFiles($projects, $langcodes) instead.
+ *
+ * @see https://www.drupal.org/node/3577675
  */
 function locale_translate_delete_translation_files(array $projects = [], array $langcodes = []) {
-  $fail = FALSE;
-  locale_translation_file_history_delete($projects, $langcodes);
-
-  // Delete all translation files from the translations directory.
-  if ($files = locale_translate_get_interface_translation_files($projects, $langcodes)) {
-    foreach ($files as $file) {
-      try {
-        \Drupal::service('file_system')->delete($file->uri);
-      }
-      catch (FileException) {
-        $fail = TRUE;
-      }
-    }
-  }
-  return !$fail;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleFileManager::class)->deleteTranslationFiles($projects, $langcodes) instead. See https://www.drupal.org/node/3577675', E_USER_DEPRECATED);
+  return !\Drupal::service(LocaleFileManager::class)->deleteTranslationFiles($projects, $langcodes);
 }
 
 /**

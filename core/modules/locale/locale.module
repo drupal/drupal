@@ -20,6 +20,7 @@ use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleEvent;
 use Drupal\locale\LocaleEvents;
 use Drupal\locale\LocaleFetch;
+use Drupal\locale\File\LocaleFileManager;
 use Drupal\locale\LocaleSource;
 
 /**
@@ -289,7 +290,7 @@ function locale_system_remove($components): void {
       locale_translation_file_history_delete($list);
 
       // Remove translation files.
-      locale_translate_delete_translation_files($list, []);
+      \Drupal::service(LocaleFileManager::class)->deleteTranslationFiles($list, []);
 
       // Remove translatable projects.
       // Follow-up issue https://www.drupal.org/node/1842362 to replace the

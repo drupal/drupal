@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\locale\LocaleDefaultOptions;
+use Drupal\locale\File\LocaleFile;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -187,7 +188,7 @@ class ImportForm extends FormBase {
       'customized' => $form_state->getValue('customized') ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED,
     ]);
     $this->moduleHandler->loadInclude('locale', 'bulk.inc');
-    $file = locale_translate_file_attach_properties($this->file, $options);
+    $file = LocaleFile::createFromPath($this->file->getFilename(), $this->file->getFileUri(), $options['langcode']);
     $batch = locale_translate_batch_build([$file->uri => $file], $options);
     batch_set($batch);
 
