@@ -7,7 +7,7 @@ name: Title
 # Status can be: "experimental", "stable", "deprecated", "obsolete".
 status: experimental
 
-# Schema for the props. We support www.json-schema.org. Learn more about the
+# Schema for the props. We support https://json-schema.org/. Learn more about the
 # syntax there.
 props:
   type: object
