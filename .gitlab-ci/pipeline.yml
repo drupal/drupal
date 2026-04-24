@@ -146,6 +146,10 @@ variables:
     TESTSUITE: PHPUnit-Build
     KUBERNETES_CPU_REQUEST: "8"
     CONCURRENCY: "5"
+    # No parallel for this job, setup manually the env variables that need to
+    # be passed to run-tests.sh command line options.
+    CI_NODE_INDEX: 1
+    CI_NODE_TOTAL: 1
   services:
     - <<: *with-database
 
