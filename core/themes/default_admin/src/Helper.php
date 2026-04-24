@@ -272,8 +272,8 @@ final class Helper {
     if ($form_id) {
       // Forms to exclude.
       // If media library widget, don't use new content edit form.
-      // gin_preprocess_html is not triggered here, so checking the form id is
-      // enough.
+      // \Drupal\default_admin\Hook\PreprocessHooks::preprocessHtml() is not
+      // triggered here, so checking the form ID is enough.
       $form_ids_to_ignore = [
         'media_library_add_form_',
         'views_form_media_library_widget_',

@@ -8,13 +8,13 @@
  *   - label: Block content type label
  *   - add_link: \Drupal\Core\Link link instance to create an entity of this
  *     block content type. This is a GeneratedLink originally and is switched by
- *     gin_preprocess_block_content_add_list().
+ *     \Drupal\default_admin\Hook\PreprocessHooks::preprocessBlockContentAddList().
  *   - description: A description of this custom block type.
  *
  * @todo Revisit after https://www.drupal.org/node/3026221 has been solved.
  *
  * @see template_preprocess_block_content_add_list()
- * @see gin_preprocess_block_content_add_list()
+ * @see \Drupal\default_admin\Hook\PreprocessHooks::preprocessBlockContentAddList()
  */
  #}
 {% extends '@default_admin/admin/entity-add-list.html.twig' %}

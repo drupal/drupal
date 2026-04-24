@@ -751,7 +751,7 @@ class FormHooks {
     ];
 
     // Specify necessary node form theme and library.
-    // @see gin_form_node_form_alter
+    // @see \Drupal\default_admin\Hook\FormHooks::formNodeFormAlter()
     $form['#theme'] = ['node_edit_form'];
     // Attach libraries.
     $form['#attached']['library'][] = 'default_admin/node-form';
