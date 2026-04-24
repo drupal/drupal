@@ -6,7 +6,6 @@ dependencies:
   module:
     - comment
     - filter
-    - search
     - system
 id: anonymous
 label: 'Anonymous user'
@@ -15,5 +14,4 @@ is_admin: false
 permissions:
   - 'access comments'
   - 'access content'
-  - 'search content'
   - 'use text format restricted_html'

@@ -9,7 +9,6 @@ install:
   - image
   - node
   - path
-  - search
   - taxonomy
   - nightwatch_theme_install_utility
 themes:
