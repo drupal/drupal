@@ -100,3 +100,24 @@
 .views-field-node-bulk-form .form-item {
   margin: 0;
 }
+
+/**
+ * Responsive table cells.
+ */
+th.priority-medium,
+td.priority-medium {
+  display: none;
+
+  @media screen and (--md) {
+    display: table-cell;
+  }
+}
+
+th.priority-low,
+td.priority-low {
+  display: none;
+
+  @media screen and (--lg) {
+    display: table-cell;
+  }
+}

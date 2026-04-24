@@ -113,3 +113,24 @@
 [dir="rtl"] .button--icon-back::before {
   transform: rotate(-45deg);
 }
+
+/* Trigger button for core's responsive tables API. */
+
+button.link {
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-text-primary-medium);
+  border: 0;
+  background: transparent;
+  font-size: 1em;
+
+  &:hover {
+    color: var(--color--primary-50);
+  }
+
+  &:focus {
+    outline: solid 2px currentColor;
+    outline-offset: 2px;
+  }
+}
