@@ -18,6 +18,7 @@ class Upsert extends QueryUpsert {
 
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
+    $insert_fields = array_combine($insert_fields, $insert_fields);
     $insert_fields = array_map(function ($field) {
       return $this->connection->escapeField($field);
     }, $insert_fields);
@@ -27,8 +28,10 @@ class Upsert extends QueryUpsert {
     $values = $this->getInsertPlaceholderFragment($this->insertValues, $this->defaultFields);
     $query .= implode(', ', $values);
 
-    // Updating the unique / primary key is not necessary.
-    unset($insert_fields[$this->key]);
+    // Updating the unique / primary key fields is not necessary.
+    foreach ($this->key as $key) {
+      unset($insert_fields[$key]);
+    }
 
     $update = [];
     foreach ($insert_fields as $field) {

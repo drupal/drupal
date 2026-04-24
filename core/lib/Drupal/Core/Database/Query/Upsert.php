@@ -7,19 +7,18 @@ use Drupal\Core\Database\Connection;
 /**
  * General class for an abstracted "Upsert" (UPDATE or INSERT) query operation.
  *
- * This class can only be used with a table with a single unique index.
- * Often, this will be the primary key. On such a table this class works like
- * Insert except the rows will be set to the desired values even if the key
- * existed before.
+ * This class works like Insert except the rows will be set to the desired
+ * values even if the key existed before. It supports both single-field and
+ * composite (multi-field) unique or primary key constraints.
  */
 abstract class Upsert extends Query implements \Countable {
 
   use InsertTrait;
 
   /**
-   * The unique or primary key of the table.
+   * The unique or primary key column(s) of the table.
    *
-   * @var string
+   * @var string[]
    */
   protected $key;
 
@@ -39,15 +38,15 @@ abstract class Upsert extends Query implements \Countable {
   }
 
   /**
-   * Sets the unique / primary key field to be used as condition for this query.
+   * Sets the unique / primary key field(s) to be used as condition.
    *
-   * @param string $field
-   *   The name of the field to set.
+   * @param string|string[] $field
+   *   The name of the field, or an array of field names for a composite key.
    *
    * @return $this
    */
-  public function key($field) {
-    $this->key = $field;
+  public function key(string|array $field) {
+    $this->key = (array) $field;
 
     return $this;
   }
