@@ -267,8 +267,14 @@ function system_authorized_batch_process() {
  *   The form element containing the name of the directory to check.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There
+ *   is no replacement.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function system_check_directory($form_element, FormStateInterface $form_state) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   $directory = $form_element['#value'];
   if (strlen($directory) == 0) {
     return $form_element;
@@ -352,8 +358,14 @@ function system_region_list($theme, $show = REGIONS_ALL): array {
  * \Drupal\system\Controller\SystemController::themesPage().
  *
  * @see \Drupal\Core\Extension\Extension::sortByName()
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There
+ *   is no replacement.
+ *
+ * @see https://www.drupal.org/node/3566774
  */
 function system_sort_themes($a, $b) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   if ($a->is_default) {
     return -1;
   }

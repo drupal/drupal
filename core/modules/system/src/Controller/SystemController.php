@@ -384,7 +384,17 @@ class SystemController extends ControllerBase {
       $theme_group_titles['uninstalled'] = $this->formatPlural(count($theme_groups['uninstalled']), 'Uninstalled theme', 'Uninstalled themes');
     }
 
-    uasort($theme_groups['installed'], 'system_sort_themes');
+    $sortThemes = static function ($a, $b) {
+      if ($a->is_default) {
+        return -1;
+      }
+      if ($b->is_default) {
+        return 1;
+      }
+      return strcasecmp($a->info['name'], $b->info['name']);
+    };
+
+    uasort($theme_groups['installed'], $sortThemes);
     $this->moduleHandler()->alter('system_themes_page', $theme_groups);
 
     $build = [];
