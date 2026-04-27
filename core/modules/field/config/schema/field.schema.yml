@@ -51,6 +51,8 @@ field.storage.*.*:
     indexes:
       type: sequence
       label: 'Indexes'
+      constraints:
+        FieldStorageIndexes: ~
       sequence:
         type: sequence
         label: 'Indexes'
