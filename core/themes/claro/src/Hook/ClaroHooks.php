@@ -28,7 +28,7 @@ class ClaroHooks {
    * Implements hook_theme_suggestions_HOOK_alter() for form_element.
    */
   #[Hook('theme_suggestions_form_element_alter')]
-  public function themeSuggestionsFormElementAlter(&$suggestions, $variables): void {
+  public function themeSuggestionsFormElementAlter(array &$suggestions, array $variables): void {
     if (!empty($variables['element']['#type'])) {
       $suggestions[] = 'form_element__' . $variables['element']['#type'];
     }
@@ -38,7 +38,7 @@ class ClaroHooks {
    * Implements hook_theme_suggestions_HOOK_alter() for details.
    */
   #[Hook('theme_suggestions_details_alter')]
-  public function themeSuggestionsDetailsAlter(&$suggestions, $variables): void {
+  public function themeSuggestionsDetailsAlter(array &$suggestions, array $variables): void {
     if (!empty($variables['element']['#vertical_tab_item'])) {
       $suggestions[] = 'details__vertical_tabs';
     }
@@ -85,7 +85,8 @@ class ClaroHooks {
    * invoked.
    */
   #[Hook('preprocess_menu_local_tasks')]
-  public function preprocessMenuLocalTasks(&$variables): void {
+  public function preprocessMenuLocalTasks(array &$variables): void {
+
     if (!empty($variables['primary'])) {
       $variables['primary']['#attached'] = [
         'library' => [
@@ -112,7 +113,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for menu-local-task templates.
    */
   #[Hook('preprocess_menu_local_task')]
-  public function preprocessMenuLocalTask(&$variables): void {
+  public function preprocessMenuLocalTask(array &$variables): void {
     $variables['link']['#options']['attributes']['class'][] = 'tabs__link';
     $variables['link']['#options']['attributes']['class'][] = 'js-tabs-link';
     // Ensure is-active class is set when the tab is active. The generic active
@@ -130,7 +131,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for menu-local-task Views UI templates.
    */
   #[Hook('preprocess_menu_local_task__views_ui')]
-  public function preprocessMenuLocalTaskViewsUi(&$variables): void {
+  public function preprocessMenuLocalTaskViewsUi(array &$variables): void {
     // Remove 'tabs__link' without adding a new class because it couldn't be
     // used reliably.
     // @see https://www.drupal.org/node/3051605
@@ -146,7 +147,7 @@ class ClaroHooks {
    * Makes node_add_list variables compatible with entity_add_list.
    */
   #[Hook('preprocess_node_add_list')]
-  public function preprocessNodeAddList(&$variables): void {
+  public function preprocessNodeAddList(array &$variables): void {
     if (!empty($variables['content'])) {
       /** @var \Drupal\node\NodeTypeInterface $type */
       foreach ($variables['content'] as $type) {
@@ -175,7 +176,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for entity_add_list.
    */
   #[Hook('preprocess_entity_add_list')]
-  public function preprocessEntityAddList(&$variables): void {
+  public function preprocessEntityAddList(array &$variables): void {
     // Remove description if empty.
     foreach ($variables['bundles'] as $type_id => $values) {
       if (isset($values['description']['#markup']) && empty($values['description']['#markup'])) {
@@ -190,7 +191,7 @@ class ClaroHooks {
    * Disables contextual links for all blocks except for layout builder blocks.
    */
   #[Hook('preprocess_block')]
-  public function preprocessBlock(&$variables): void {
+  public function preprocessBlock(array &$variables): void {
     if (isset($variables['title_suffix']['contextual_links']) && !isset($variables['elements']['#contextual_links']['layout_builder_block'])) {
       unset($variables['title_suffix']['contextual_links']);
       unset($variables['elements']['#contextual_links']);
@@ -204,7 +205,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for admin_block.
    */
   #[Hook('preprocess_admin_block')]
-  public function preprocessAdminBlock(&$variables): void {
+  public function preprocessAdminBlock(array &$variables): void {
     if (!empty($variables['block']['content'])) {
       $variables['block']['content']['#attributes']['class'][] = 'admin-list--panel';
     }
@@ -214,7 +215,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for admin_block_content.
    */
   #[Hook('preprocess_admin_block_content')]
-  public function preprocessAdminBlockContent(&$variables): void {
+  public function preprocessAdminBlockContent(array &$variables): void {
     foreach ($variables['content'] as &$item) {
       $link_attributes = $item['url']->getOption('attributes') ?: [];
       $link_attributes['class'][] = 'admin-item__link';
@@ -243,7 +244,7 @@ class ClaroHooks {
    * Implements hook_element_info_alter().
    */
   #[Hook('element_info_alter')]
-  public function elementInfoAlter(&$type): void {
+  public function elementInfoAlter(array &$type): void {
     // Add a pre-render function that handles the sidebar of the node form.
     // @todo Refactor when https://www.drupal.org/node/3056089 is in.
     if (isset($type['container'])) {
@@ -303,7 +304,7 @@ class ClaroHooks {
    * Implements hook_theme_registry_alter().
    */
   #[Hook('theme_registry_alter')]
-  public function themeRegistryAlter(&$theme_registry): void {
+  public function themeRegistryAlter(array &$theme_registry): void {
     if (!empty($theme_registry['admin_block_content'])) {
       $theme_registry['admin_block_content']['variables']['attributes'] = [];
     }
@@ -317,7 +318,7 @@ class ClaroHooks {
    * Implements hook_preprocess_install_page().
    */
   #[Hook('preprocess_install_page')]
-  public function preprocessInstallPage(&$variables): void {
+  public function preprocessInstallPage(array &$variables): void {
     // Claro has custom styling for the install page.
     $variables['#attached']['library'][] = 'claro/install-page';
   }
@@ -326,7 +327,7 @@ class ClaroHooks {
    * Implements hook_preprocess_maintenance_page().
    */
   #[Hook('preprocess_maintenance_page')]
-  public function preprocessMaintenancePage(&$variables): void {
+  public function preprocessMaintenancePage(array &$variables): void {
     // Claro has custom styling for the maintenance page.
     $variables['#attached']['library'][] = 'claro/maintenance-page';
   }
@@ -335,7 +336,7 @@ class ClaroHooks {
    * Implements hook_theme_suggestions_maintenance_page_alter().
    */
   #[Hook('theme_suggestions_maintenance_page_alter')]
-  public function themeSuggestionsMaintenancePageAlter(&$suggestions): void {
+  public function themeSuggestionsMaintenancePageAlter(array &$suggestions): void {
     try {
       $is_front = \Drupal::service('path.matcher')->isFrontPage();
     }
@@ -358,7 +359,7 @@ class ClaroHooks {
    * @todo Revisit when https://www.drupal.org/node/3056089 is in.
    */
   #[Hook('preprocess_details')]
-  public function preprocessDetails(&$variables): void {
+  public function preprocessDetails(array &$variables): void {
     $element = $variables['element'];
     if (!empty($element['#accordion_item'])) {
       // Details should appear as an accordion item.
@@ -387,7 +388,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for links.
    */
   #[Hook('preprocess_links')]
-  public function preprocessLinks(&$variables): void {
+  public function preprocessLinks(array &$variables): void {
     foreach ($variables['links'] as $links_item) {
       if (!empty($links_item['link']) && !empty($links_item['link']['#url']) && $links_item['link']['#url'] instanceof Url) {
         if ($links_item['link']['#url']->isRouted()) {
@@ -431,7 +432,7 @@ class ClaroHooks {
    * Changes vertical tabs to container.
    */
   #[Hook('form_node_form_alter')]
-  public function formNodeFormAlter(&$form, FormStateInterface $form_state): void {
+  public function formNodeFormAlter(array &$form, FormStateInterface $form_state): void {
     $form['#theme'] = [
       'node_edit_form',
     ];
@@ -452,7 +453,7 @@ class ClaroHooks {
    * different 'details' sections.
    */
   #[Hook('form_menu_link_content_form_alter')]
-  public function formMenuLinkContentFormAlter(&$form, FormStateInterface $form_state): void {
+  public function formMenuLinkContentFormAlter(array &$form, FormStateInterface $form_state): void {
     $form['#theme'] = [
       'menu_link_form',
     ];
@@ -516,7 +517,7 @@ class ClaroHooks {
    * 'details' sections.
    */
   #[Hook('form_menu_link_edit_alter')]
-  public function formMenuLinkEditAlter(&$form, FormStateInterface $form_state): void {
+  public function formMenuLinkEditAlter(array &$form, FormStateInterface $form_state): void {
     $this->formMenuLinkContentFormAlter($form, $form_state);
   }
 
@@ -524,7 +525,7 @@ class ClaroHooks {
    * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\media\MediaForm.
    */
   #[Hook('form_media_form_alter')]
-  public function formMediaFormAlter(&$form, FormStateInterface $form_state): void {
+  public function formMediaFormAlter(array &$form, FormStateInterface $form_state): void {
     // Only attach CSS from core if this form comes from Media core, and not
     // from the contrib Media Entity 1.x branch.
     if (\Drupal::moduleHandler()->moduleExists('media') && $form_state->getFormObject() instanceof MediaForm) {
@@ -540,7 +541,7 @@ class ClaroHooks {
    * Implements hook_views_ui_display_top_alter().
    */
   #[Hook('views_ui_display_top_alter')]
-  public function viewsUiDisplayTopAlter(&$element): void {
+  public function viewsUiDisplayTopAlter(array &$element): void {
     // @todo Remove this after https://www.drupal.org/node/3051605 has been
     //   solved.
     $element['tabs']['#prefix'] = preg_replace('/(class="(.+\s)?)tabs(\s.+"|")/', '$1views-tabs$3', $element['tabs']['#prefix']);
@@ -587,7 +588,7 @@ class ClaroHooks {
    * Implements hook_views_ui_display_tab_alter().
    */
   #[Hook('views_ui_display_tab_alter')]
-  public function viewsUiDisplayTabAlter(&$element): void {
+  public function viewsUiDisplayTabAlter(array &$element): void {
     // We process the dropbutton-like element on views edit form's
     // display settings top section.
     //
@@ -646,7 +647,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for views_exposed_form.
    */
   #[Hook('preprocess_views_exposed_form')]
-  public function preprocessViewsExposedForm(&$variables): void {
+  public function preprocessViewsExposedForm(array &$variables): void {
     $form = &$variables['form'];
     // Add BEM classes for items in the form.
     // Sorted keys.
@@ -680,7 +681,7 @@ class ClaroHooks {
    * Implements hook_form_FORM_ID_alter() for views_exposed_form.
    */
   #[Hook('form_views_exposed_form_alter')]
-  public function formViewsExposedFormAlter(&$form, FormStateInterface $form_state): void {
+  public function formViewsExposedFormAlter(array &$form, FormStateInterface $form_state): void {
     $view = $form_state->getStorage()['view'];
     $view_title = $view->getTitle();
     // Add a label so screen readers can identify the purpose of the exposed
@@ -694,7 +695,7 @@ class ClaroHooks {
    * Implements hook_form_FORM_ID_alter() for the system_modules form.
    */
   #[Hook('form_system_modules_alter')]
-  public function formSystemModulesAlter(&$form, FormStateInterface $form_state): void {
+  public function formSystemModulesAlter(array &$form, FormStateInterface $form_state): void {
     if (isset($form['filters'])) {
       $form['filters']['#attributes']['class'][] = 'modules-table-filter';
       if (isset($form['filters']['text'])) {
@@ -731,7 +732,7 @@ class ClaroHooks {
    * Implements hook_preprocess_form_element().
    */
   #[Hook('preprocess_form_element')]
-  public function preprocessFormElement(&$variables): void {
+  public function preprocessFormElement(array &$variables): void {
     if (!empty($variables['element']['#errors'])) {
       $variables['label']['#attributes']['class'][] = 'has-error';
     }
@@ -747,7 +748,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for input.
    */
   #[Hook('preprocess_input')]
-  public function preprocessInput(&$variables): void {
+  public function preprocessInput(array &$variables): void {
     if (!empty($variables['element']['#title_display']) && $variables['element']['#title_display'] === 'attribute' && !empty((string) $variables['element']['#title'])) {
       $variables['attributes']['title'] = (string) $variables['element']['#title'];
     }
@@ -790,7 +791,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for select.
    */
   #[Hook('preprocess_select')]
-  public function preprocessSelect(&$variables): void {
+  public function preprocessSelect(array &$variables): void {
     if (!empty($variables['element']['#title_display']) && $variables['element']['#title_display'] === 'attribute' && !empty((string) $variables['element']['#title'])) {
       $variables['attributes']['title'] = (string) $variables['element']['#title'];
     }
@@ -805,7 +806,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for datetime_wrapper.
    */
   #[Hook('preprocess_datetime_wrapper')]
-  public function preprocessDatetimeWrapper(&$variables): void {
+  public function preprocessDatetimeWrapper(array &$variables): void {
     if (!empty($variables['element']['#errors'])) {
       $variables['title_attributes']['class'][] = 'has-error';
     }
@@ -821,7 +822,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for fieldset.
    */
   #[Hook('preprocess_fieldset')]
-  public function preprocessFieldset(&$variables): void {
+  public function preprocessFieldset(array &$variables): void {
     $element = $variables['element'];
     $composite_types = [
       'checkboxes',
@@ -853,7 +854,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for field_multiple_value_form.
    */
   #[Hook('preprocess_field_multiple_value_form')]
-  public function preprocessFieldMultipleValueForm(&$variables): void {
+  public function preprocessFieldMultipleValueForm(array &$variables): void {
     // Make disabled available for the template.
     $variables['disabled'] = !empty($variables['element']['#disabled']);
     if ($variables['multiple']) {
@@ -895,7 +896,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for form_element__password_confirm.
    */
   #[Hook('preprocess_form_element__password_confirm')]
-  public function preprocessFormElementPasswordConfirm(&$variables): void {
+  public function preprocessFormElementPasswordConfirm(array &$variables): void {
     // Add CSS classes needed for theming the password confirm widget.
     $variables['attributes']['class'][] = 'password-confirm';
     $variables['attributes']['class'][] = 'is-initial';
@@ -907,7 +908,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for form_element__password.
    */
   #[Hook('preprocess_form_element__password')]
-  public function preprocessFormElementPassword(&$variables): void {
+  public function preprocessFormElementPassword(array &$variables): void {
     if (!empty($variables['element']['#array_parents']) && in_array('pass1', $variables['element']['#array_parents'], TRUE)) {
       // This is the main password form element.
       $variables['attributes']['class'][] = 'password-confirm__password';
@@ -922,7 +923,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for filter_tips.
    */
   #[Hook('preprocess_filter_tips')]
-  public function preprocessFilterTips(&$variables): void {
+  public function preprocessFilterTips(array &$variables): void {
     $variables['#attached']['library'][] = 'filter/drupal.filter';
   }
 
@@ -930,7 +931,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for table.
    */
   #[Hook('preprocess_table')]
-  public function preprocessTable(&$variables): void {
+  public function preprocessTable(array &$variables): void {
     // Adding table sort indicator CSS class for inactive sort link.
     // @todo Revisit after https://www.drupal.org/node/3025726 or
     //   https://www.drupal.org/node/1973418 is in.
@@ -972,7 +973,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for field_ui_table.
    */
   #[Hook('preprocess_field_ui_table')]
-  public function preprocessFieldUiTable(&$variables): void {
+  public function preprocessFieldUiTable(array &$variables): void {
     $this->preprocessTable($variables);
   }
 
@@ -983,7 +984,7 @@ class ClaroHooks {
    *   https://www.drupal.org/node/1973418 is in.
    */
   #[Hook('preprocess_views_view_table')]
-  public function preprocessViewsViewTable(&$variables): void {
+  public function preprocessViewsViewTable(array &$variables): void {
     if (!empty($variables['header'])) {
       foreach ($variables['header'] as &$header_cell) {
         if (!empty($header_cell['url'])) {
@@ -1001,7 +1002,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for links__dropbutton.
    */
   #[Hook('preprocess_links__dropbutton')]
-  public function preprocessLinksDropbutton(&$variables): void {
+  public function preprocessLinksDropbutton(array &$variables): void {
     // Add the right CSS class for the dropbutton list that helps reducing FOUC.
     if (!empty($variables['links'])) {
       $variables['attributes']['class'][] = count($variables['links']) > 1 ? 'dropbutton--multiple' : 'dropbutton--single';
@@ -1015,7 +1016,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for views_ui_display_tab_bucket.
    */
   #[Hook('preprocess_views_ui_display_tab_bucket')]
-  public function preprocessViewsUiDisplayTabBucket(&$variables): void {
+  public function preprocessViewsUiDisplayTabBucket(array &$variables): void {
     // Instead of re-styling Views UI dropbuttons with module-specific CSS
     // styles, change dropbutton variants to the extra small version.
     // @todo Revisit after https://www.drupal.org/node/3057581 is added.
@@ -1028,7 +1029,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for status_messages.
    */
   #[Hook('preprocess_status_messages')]
-  public function preprocessStatusMessages(&$variables): void {
+  public function preprocessStatusMessages(array &$variables): void {
     $variables['title_ids'] = [];
     foreach ($variables['message_list'] as $message_type => $messages) {
       $variables['title_ids'][$message_type] = Html::getUniqueId("message-{$message_type}-title");
@@ -1039,7 +1040,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for system_themes_page.
    */
   #[Hook('preprocess_system_themes_page')]
-  public function preprocessSystemThemesPage(&$variables): void {
+  public function preprocessSystemThemesPage(array &$variables): void {
     if (!empty($variables['theme_groups'])) {
       foreach ($variables['theme_groups'] as &$theme_group) {
         if (!empty($theme_group['themes'])) {
@@ -1069,7 +1070,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for links__action_links.
    */
   #[Hook('preprocess_links__action_links')]
-  public function preprocessLinksActionLinks(&$variables): void {
+  public function preprocessLinksActionLinks(array &$variables): void {
     $variables['attributes']['class'][] = 'action-links';
     foreach ($variables['links'] as $delta => $link_item) {
       $variables['links'][$delta]['attributes']->addClass('action-links__item');
@@ -1080,7 +1081,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for file_managed_file.
    */
   #[Hook('preprocess_file_managed_file')]
-  public function preprocessFileManagedFile(&$variables): void {
+  public function preprocessFileManagedFile(array &$variables): void {
     // Produce the same renderable element structure as image widget has.
     $child_keys = Element::children($variables['element']);
     foreach ($child_keys as $child_key) {
@@ -1093,7 +1094,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for file_widget_multiple.
    */
   #[Hook('preprocess_file_widget_multiple')]
-  public function preprocessFileWidgetMultiple(&$variables): void {
+  public function preprocessFileWidgetMultiple(array &$variables): void {
     $has_upload = FALSE;
     if (isset($variables['table']['#type']) && $variables['table']['#type'] === 'table') {
       // Add a variant class for the table.
@@ -1164,7 +1165,7 @@ class ClaroHooks {
    * Implements hook_preprocess_HOOK() for image_widget.
    */
   #[Hook('preprocess_image_widget')]
-  public function preprocessImageWidget(&$variables): void {
+  public function preprocessImageWidget(array &$variables): void {
     // This prevents image widget templates from rendering preview container
     // HTML to users that do not have permission to access these previews.
     // @todo Revisit in https://drupal.org/node/953034
@@ -1532,7 +1533,7 @@ class ClaroHooks {
    * Implements hook_form_FORM_ID_alter() for the user_admin_permissions form.
    */
   #[Hook('form_user_admin_permissions_alter')]
-  public function formUserAdminPermissionsAlter(&$form, FormStateInterface $form_state): void {
+  public function formUserAdminPermissionsAlter(array &$form, FormStateInterface $form_state): void {
     if (isset($form['filters'])) {
       $form['filters']['#attributes']['class'][] = 'permissions-table-filter';
       if (isset($form['filters']['text'])) {
@@ -1559,7 +1560,7 @@ class ClaroHooks {
    * @todo Remove when https://www.drupal.org/node/3016343 is fixed.
    */
   #[Hook('preprocess_text_format_wrapper')]
-  public function preprocessTextFormatWrapper(&$variables): void {
+  public function preprocessTextFormatWrapper(array &$variables): void {
     $description_attributes = [];
     if (!empty($variables['attributes']['id'])) {
       $description_attributes['id'] = $variables['attributes']['aria-describedby'] = $variables['attributes']['id'];

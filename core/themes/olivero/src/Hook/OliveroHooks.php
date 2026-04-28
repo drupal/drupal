@@ -22,7 +22,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for page-title.
    */
   #[Hook('preprocess_page_title')]
-  public function preprocessPageTitle(&$variables): void {
+  public function preprocessPageTitle(array &$variables): void {
     // Since the title and the shortcut link are both block level elements,
     // positioning them next to each other is much simpler with a wrapper div.
     if (!empty($variables['title_suffix']['add_or_remove_shortcut']) && $variables['title']) {
@@ -50,7 +50,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for maintenance-page.
    */
   #[Hook('preprocess_maintenance_page')]
-  public function preprocessMaintenancePage(&$variables): void {
+  public function preprocessMaintenancePage(array &$variables): void {
     // By default, site_name is set to Drupal if no db connection is available
     // or during site installation. Setting site_name to an empty string makes
     // the site and update pages look cleaner.
@@ -66,7 +66,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for node.
    */
   #[Hook('preprocess_node')]
-  public function preprocessNode(&$variables): void {
+  public function preprocessNode(array &$variables): void {
     // Remove the "Add new comment" link on teasers or when the comment form is
     // displayed on the page.
     if ($variables['view_mode'] === 'teaser' || !empty($variables['content']['comments']['comment_form'])) {
@@ -88,7 +88,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for block.
    */
   #[Hook('preprocess_block')]
-  public function preprocessBlock(&$variables): void {
+  public function preprocessBlock(array &$variables): void {
     if (!empty($variables['elements']['#id'])) {
       /** @var \Drupal\block\BlockInterface $block */
       $block = \Drupal::entityTypeManager()->getStorage('block')->load($variables['elements']['#id']);
@@ -132,7 +132,7 @@ class OliveroHooks {
    * Implements hook_theme_suggestions_HOOK_alter() for menu.
    */
   #[Hook('theme_suggestions_menu_alter')]
-  public function themeSuggestionsMenuAlter(&$suggestions, array $variables): void {
+  public function themeSuggestionsMenuAlter(array &$suggestions, array $variables): void {
     if (isset($variables['attributes']['region'])) {
       $suggestions[] = 'menu__' . $variables['attributes']['region'];
     }
@@ -142,7 +142,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for menu.
    */
   #[Hook('preprocess_menu')]
-  public function preprocessMenu(&$variables): void {
+  public function preprocessMenu(array &$variables): void {
     if (isset($variables['attributes']['region'])) {
       if ($variables['attributes']['region'] === 'sidebar') {
         $variables['attributes']['class'][] = 'menu--sidebar';
@@ -165,7 +165,7 @@ class OliveroHooks {
    * Implements hook_form_alter() for adding classes and placeholder text to the search forms.
    */
   #[Hook('form_alter')]
-  public function formAlter(&$form, FormStateInterface $form_state, $form_id): void {
+  public function formAlter(array &$form, FormStateInterface $form_state, $form_id): void {
     if (isset($form['actions']['submit']) && count($form['actions']) <= 2) {
       $form['actions']['submit']['#attributes']['class'][] = 'button--primary';
     }
@@ -189,7 +189,7 @@ class OliveroHooks {
    * Implements hook_theme_suggestions_HOOK_alter() for block().
    */
   #[Hook('theme_suggestions_block_alter')]
-  public function themeSuggestionsBlockAlter(&$suggestions, array $variables): void {
+  public function themeSuggestionsBlockAlter(array &$suggestions, array $variables): void {
     if (!empty($variables['elements']['#id'])) {
       /** @var \Drupal\block\BlockInterface $block */
       $block = \Drupal::entityTypeManager()->getStorage('block')->load($variables['elements']['#id']);
@@ -207,7 +207,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for menu-local-tasks.
    */
   #[Hook('preprocess_menu_local_tasks')]
-  public function preprocessMenuLocalTasks(&$variables): void {
+  public function preprocessMenuLocalTasks(array &$variables): void {
     foreach (Element::children($variables['primary']) as $key) {
       $variables['primary'][$key]['#level'] = 'primary';
     }
@@ -220,7 +220,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for form-element.
    */
   #[Hook('preprocess_form_element')]
-  public function preprocessFormElement(&$variables): void {
+  public function preprocessFormElement(array &$variables): void {
     if (in_array($variables['element']['#type'] ?? FALSE, [
       'checkbox',
       'radio',
@@ -239,7 +239,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for form-element-label.
    */
   #[Hook('preprocess_form_element_label')]
-  public function preprocessFormElementLabel(&$variables): void {
+  public function preprocessFormElementLabel(array &$variables): void {
     $variables['attributes']['class'][] = 'form-item__label';
   }
 
@@ -247,7 +247,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for input.
    */
   #[Hook('preprocess_input')]
-  public function preprocessInput(&$variables): void {
+  public function preprocessInput(array &$variables): void {
     if (!empty($variables['element']['#title_display']) && $variables['element']['#title_display'] === 'attribute' && !empty((string) $variables['element']['#title'])) {
       $variables['attributes']['title'] = (string) $variables['element']['#title'];
     }
@@ -293,7 +293,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for textarea.
    */
   #[Hook('preprocess_textarea')]
-  public function preprocessTextarea(&$variables): void {
+  public function preprocessTextarea(array &$variables): void {
     $variables['attributes']['class'][] = 'form-element';
     $variables['attributes']['class'][] = 'form-element--type-textarea';
     $variables['attributes']['class'][] = 'form-element--api-textarea';
@@ -303,7 +303,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for select.
    */
   #[Hook('preprocess_select')]
-  public function preprocessSelect(&$variables): void {
+  public function preprocessSelect(array &$variables): void {
     $variables['attributes']['class'][] = 'form-element';
     $variables['attributes']['class'][] = $variables['element']['#multiple'] ? 'form-element--type-select-multiple' : 'form-element--type-select';
   }
@@ -312,7 +312,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for checkboxes.
    */
   #[Hook('preprocess_checkboxes')]
-  public function preprocessCheckboxes(&$variables): void {
+  public function preprocessCheckboxes(array &$variables): void {
     $variables['attributes']['class'][] = 'form-boolean-group';
   }
 
@@ -320,7 +320,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for radios.
    */
   #[Hook('preprocess_radios')]
-  public function preprocessRadios(&$variables): void {
+  public function preprocessRadios(array &$variables): void {
     $variables['attributes']['class'][] = 'form-boolean-group';
   }
 
@@ -328,7 +328,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for field.
    */
   #[Hook('preprocess_field')]
-  public function preprocessField(&$variables): void {
+  public function preprocessField(array &$variables): void {
     $rich_field_types = [
       'text_with_summary',
       'text',
@@ -347,7 +347,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for field-multiple-value-form.
    */
   #[Hook('preprocess_field_multiple_value_form')]
-  public function preprocessFieldMultipleValueForm(&$variables): void {
+  public function preprocessFieldMultipleValueForm(array &$variables): void {
     // Make disabled available for the template.
     $variables['disabled'] = !empty($variables['element']['#disabled']);
     if (!empty($variables['multiple'])) {
@@ -408,7 +408,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for menu-local-task.
    */
   #[Hook('preprocess_menu_local_task')]
-  public function preprocessMenuLocalTask(&$variables): void {
+  public function preprocessMenuLocalTask(array &$variables): void {
     $variables['link']['#options']['attributes']['class'][] = 'tabs__link';
     $variables['link']['#options']['attributes']['class'][] = 'js-tabs-link';
     // Ensure is-active class is set when the tab is active. The generic active
@@ -426,7 +426,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for fieldset.
    */
   #[Hook('preprocess_fieldset')]
-  public function preprocessFieldset(&$variables): void {
+  public function preprocessFieldset(array &$variables): void {
     $element = $variables['element'];
     $composite_types = [
       'checkboxes',
@@ -458,7 +458,7 @@ class OliveroHooks {
    * Implements hook_theme_suggestions_HOOK_alter().
    */
   #[Hook('theme_suggestions_user_alter')]
-  public function themeSuggestionsUserAlter(&$suggestions, $variables): void {
+  public function themeSuggestionsUserAlter(array &$suggestions, array $variables): void {
     $suggestions[] = 'user__' . $variables['elements']['#view_mode'];
   }
 
@@ -466,7 +466,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK().
    */
   #[Hook('preprocess_field__node__created')]
-  public function preprocessFieldNodeCreated(&$variables): void {
+  public function preprocessFieldNodeCreated(array &$variables): void {
     foreach (Element::children($variables['items']) as $item) {
       unset($variables['items'][$item]['content']['#prefix']);
     }
@@ -476,7 +476,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for setting classes.
    */
   #[Hook('preprocess_filter_caption')]
-  public function preprocessFilterCaption(&$variables): void {
+  public function preprocessFilterCaption(array &$variables): void {
     $variables['classes'] = isset($variables['classes']) && !empty($variables['classes']) ? $variables['classes'] . ' caption' : 'caption';
   }
 
@@ -484,7 +484,7 @@ class OliveroHooks {
    * Implements hook_form_FORM_ID_alter() for node_preview_form_select.
    */
   #[Hook('form_node_preview_form_select_alter')]
-  public function formNodePreviewFormSelectAlter(&$form, FormStateInterface $form_state, $form_id): void {
+  public function formNodePreviewFormSelectAlter(array &$form, FormStateInterface $form_state, $form_id): void {
     $form['backlink']['#options']['attributes']['class'][] = 'button';
     $form['backlink']['#options']['attributes']['class'][] = 'button--small';
     $form['backlink']['#options']['attributes']['class'][] = 'button--icon-back';
@@ -496,7 +496,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for comment.
    */
   #[Hook('preprocess_comment')]
-  public function preprocessComment(&$variables): void {
+  public function preprocessComment(array &$variables): void {
     // Getting the node creation time stamp from the comment object.
     $date = $variables['comment']->getCreatedTime();
     // Formatting "created" as "X days ago".
@@ -509,7 +509,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for field--comment.
    */
   #[Hook('preprocess_field__comment')]
-  public function preprocessFieldComment(&$variables): void {
+  public function preprocessFieldComment(array &$variables): void {
     // Add a comment_count.
     $variables['comment_count'] = count(array_filter($variables['comments'], 'is_numeric', ARRAY_FILTER_USE_KEY));
     // Add user.compact to field-comment if profile's avatar of current user
@@ -527,7 +527,7 @@ class OliveroHooks {
    * Implements hook_element_info_alter().
    */
   #[Hook('element_info_alter')]
-  public function elementInfoAlter(&$info): void {
+  public function elementInfoAlter(array &$info): void {
     if (array_key_exists('text_format', $info)) {
       $info['text_format']['#pre_render'][] = [
         OliveroPreRender::class,
@@ -548,7 +548,7 @@ class OliveroHooks {
    * @todo Remove when https://www.drupal.org/node/3016343 is fixed.
    */
   #[Hook('preprocess_text_format_wrapper')]
-  public function preprocessTextFormatWrapper(&$variables): void {
+  public function preprocessTextFormatWrapper(array &$variables): void {
     $description_attributes = [];
     if (!empty($variables['attributes']['id'])) {
       $description_attributes['id'] = $variables['attributes']['aria-describedby'] = $variables['attributes']['id'];
@@ -561,7 +561,7 @@ class OliveroHooks {
    * Implements hook_preprocess_search_result().
    */
   #[Hook('preprocess_search_result')]
-  public function preprocessSearchResult(&$variables): void {
+  public function preprocessSearchResult(array &$variables): void {
     // Apply custom date formatter to "date" field.
     if (!empty($variables['result']['date'])) {
       $variables['info_date'] = \Drupal::service('date.formatter')->format($variables['result']['node']->getCreatedTime(), 'olivero_medium');
@@ -572,7 +572,7 @@ class OliveroHooks {
    * Implements hook_preprocess_item_list__search_results().
    */
   #[Hook('preprocess_item_list__search_results')]
-  public function preprocessItemListSearchResults(&$variables): void {
+  public function preprocessItemListSearchResults(array &$variables): void {
     if (isset($variables['empty'])) {
       $variables['empty']['#attributes']['class'][] = 'empty-search-results-text';
       $variables['empty']['#attached']['library'][] = 'olivero/search-results';
@@ -583,7 +583,7 @@ class OliveroHooks {
    * Implements hook_preprocess_links__comment().
    */
   #[Hook('preprocess_links__comment')]
-  public function preprocessLinksComment(&$variables): void {
+  public function preprocessLinksComment(array &$variables): void {
     foreach ($variables['links'] as &$link) {
       $link['link']['#options']['attributes']['class'][] = 'comment__links-link';
     }
@@ -593,7 +593,7 @@ class OliveroHooks {
    * Implements hook_preprocess_table().
    */
   #[Hook('preprocess_table')]
-  public function preprocessTable(&$variables): void {
+  public function preprocessTable(array &$variables): void {
     // Mark the whole table and the first cells if rows are draggable.
     if (!empty($variables['rows'])) {
       $draggable_row_found = FALSE;
@@ -614,7 +614,7 @@ class OliveroHooks {
    * Implements hook_preprocess_HOOK() for views-view-table.
    */
   #[Hook('preprocess_views_view_table')]
-  public function preprocessViewsViewTable(&$variables): void {
+  public function preprocessViewsViewTable(array &$variables): void {
     $variables['#attached']['library'][] = 'olivero/olivero.table';
   }
 
@@ -622,7 +622,7 @@ class OliveroHooks {
    * Implements hook_form_FORM_ID_alter() for views_exposed_form.
    */
   #[Hook('form_views_exposed_form_alter')]
-  public function formViewsExposedFormAlter(&$form): void {
+  public function formViewsExposedFormAlter(array &$form): void {
     $form['#attributes']['class'][] = 'form--inline';
   }
 
