@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Cache;
 
-use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Site\Settings;
 use Psr\Container\ContainerInterface;
 
@@ -68,12 +67,8 @@ class ChainedFastBackendFactory implements CacheFactoryInterface {
 
     $this->consistentServiceName = $consistent_service_name;
 
-    // Do not use the fast chained backend during installation. In those cases,
-    // we expect many cache invalidations and writes, the fast chained cache
-    // backend performs badly in such a scenario.
-    if (!InstallerKernel::installationAttempted()) {
-      $this->fastServiceName = $fast_service_name;
-    }
+    $this->fastServiceName = $fast_service_name;
+
   }
 
   /**
