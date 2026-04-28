@@ -1375,8 +1375,8 @@ services:
     arguments: ['@main_content_renderer.ajax', '@current_route_match', '@callable_resolver']
   Drupal\Core\Form\FormAjaxResponseBuilderInterface: '@form_ajax_response_builder'
   router_listener:
-    class: Symfony\Component\HttpKernel\EventListener\RouterListener
-    arguments: ['@router', '@request_stack', '@router.request_context', NULL]
+    class: Drupal\Core\Http\EventListener\RouterListener
+    arguments: ['@router', '@request_stack', '@router.request_context']
   options_request_listener:
     class: Drupal\Core\EventSubscriber\OptionsRequestSubscriber
     arguments: ['@router.route_provider']

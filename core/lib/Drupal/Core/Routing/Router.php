@@ -2,8 +2,10 @@
 
 namespace Drupal\Core\Routing;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Routing\Exception\CacheableResourceNotFoundException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -111,7 +113,16 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   public function matchRequest(Request $request): array {
     $collection = $this->getInitialRouteCollection($request);
     if ($collection->count() === 0) {
-      throw new ResourceNotFoundException(sprintf('No routes found for "%s".', $this->currentPath->getPath()));
+      // Allow caching the empty route lookup. Note that even though this result
+      // inherently depends on the path we do not bubble any cache contexts
+      // because:
+      // 1. This is outside the scope of Dynamic Page Cache since we have not
+      //    actually resolved a route
+      // 2. Page Cache does not use cache contexts (and caches per URL anyway)
+      throw new CacheableResourceNotFoundException(
+        new CacheableMetadata(),
+        sprintf('No routes found for "%s".', $this->currentPath->getPath()),
+      );
     }
     $collection = $this->applyRouteFilters($collection, $request);
     $collection = $this->applyFitOrder($collection);
