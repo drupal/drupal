@@ -54,6 +54,8 @@ class ChainedFastBackendTest extends UnitTestCase {
       ->willReturn($timestamp_item);
     $consistent_cache->expects($this->never())
       ->method('getMultiple');
+    $consistent_cache->expects($this->never())
+      ->method('set');
 
     $fast_cache = new MemoryBackend(new Time());
     $fast_cache->set('foo', 'baz');
@@ -231,6 +233,56 @@ class ChainedFastBackendTest extends UnitTestCase {
     $fast_cache->expects($this->once())
       ->method('set')
       ->with($cache_item->cid, $cache_item->data, $cache_item->expire);
+
+    $chained_fast_backend = new ChainedFastBackend(
+      $consistent_cache,
+      $fast_cache,
+      'foo'
+    );
+    $this->assertEquals('baz', $chained_fast_backend->get('foo')->data);
+  }
+
+  /**
+   * Tests last_write_timestamp missing from the consistent backend.
+   */
+  public function testLastWriteTimestampMissing(): void {
+    $timestamp_cid = ChainedFastBackend::LAST_WRITE_TIMESTAMP_PREFIX . 'cache_foo';
+    $cache_item = (object) [
+      'cid' => 'foo',
+      'data' => 'baz',
+      'created' => time(),
+      'expire' => time() + 3600,
+      'tags' => ['tag'],
+    ];
+
+    $consistent_cache = $this->createMock(CacheBackendInterface::class);
+    $fast_cache = $this->createMock(CacheBackendInterface::class);
+
+    // Simulate the last_write_timestamp being unset on the consistent backend.
+    $consistent_cache->expects($this->once())
+      ->method('get')
+      ->with($timestamp_cid)
+      ->willReturn(NULL);
+
+    // Because the last_write_timestamp was missing, it will be newly set on the
+    // consistent backend.
+    $consistent_cache->expects($this->once())
+      ->method('set')
+      ->with($timestamp_cid);
+
+    $consistent_cache->expects($this->once())
+      ->method('getMultiple')
+      ->with([$cache_item->cid])
+      ->willReturn([$cache_item->cid => $cache_item]);
+
+    // We should not get a call for the cache item on the fast backend but
+    // because the last_write_timestamp is now in place, the item from the
+    // consistent backend should be written back.
+    $fast_cache->expects($this->never())
+      ->method('getMultiple');
+    $fast_cache->expects($this->once())
+      ->method('set')
+      ->with($cache_item->cid);
 
     $chained_fast_backend = new ChainedFastBackend(
       $consistent_cache,

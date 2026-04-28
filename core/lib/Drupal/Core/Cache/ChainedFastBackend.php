@@ -121,6 +121,14 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
     // from there.
     $last_write_timestamp = $this->getLastWriteTimestamp();
 
+    // If the last write timestamp is not set, set it with a fresh value so that
+    // items written to the fast backend from this point onwards are treated as
+    // valid immediately. This avoids having to wait for an explicit cache set
+    // before the fast backend can be used.
+    if ($last_write_timestamp === 0) {
+      $this->markAsOutdated();
+    }
+
     // Don't bother to either read from or write to the fast backend if the last
     // write timestamp is in the future - it is always set with an additional
     // grace period for this reason. This reduces the likelihood of a cache
