@@ -33,7 +33,7 @@ class CsrfExceptionSubscriber extends HttpExceptionSubscriberBase {
     $request = $event->getRequest();
     $routeMatch = RouteMatch::createFromRequest($request);
     $route = $routeMatch->getRouteObject();
-    if (!$route->hasRequirement('_csrf_token') || empty($route->getOption('_csrf_confirm_form_route'))) {
+    if (is_null($route) || !$route->hasRequirement('_csrf_token') || empty($route->getOption('_csrf_confirm_form_route'))) {
       return;
     }
     $event->setResponse(new RedirectResponse(Url::fromRoute($route->getOption('_csrf_confirm_form_route'))->toString()));
