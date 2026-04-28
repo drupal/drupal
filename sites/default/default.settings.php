@@ -708,6 +708,24 @@ $settings['update_free_access'] = FALSE;
 # $config['user.settings']['anonymous'] = 'Visitor';
 
 /**
+ * Enable HTML5 form validation.
+ *
+ * Drupal 12 will disable HTML5 form validation by default due to issues with
+ * usability and accessibility.  Setting this to TRUE will allow user agents to
+ * continue performing client-side HTML5 validation. This prevents Drupal's
+ * Form API (FAPI) validation from executing, so FAPI validation error messages
+ * may not be displayed including those for required elements.
+ *
+ * Setting this to FALSE will cause HTML5 validation to be disabled on all
+ * forms. Only Drupal's server-side validation will be executed.
+ *
+ * This setting will be removed in Drupal 13.
+ *
+ * @see https://www.drupal.org/node/3537128
+ */
+# $settings['enable_html5_validation'] = TRUE;
+
+/**
  * Load services definition file.
  */
 $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';

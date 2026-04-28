@@ -5,6 +5,7 @@ namespace Drupal\Core\Form;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElementBase;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -32,6 +33,11 @@ class FormPreprocess {
     Element::setAttributes($element, ['method', 'id']);
     if (empty($element['#attributes']['accept-charset'])) {
       $element['#attributes']['accept-charset'] = "UTF-8";
+    }
+    if (!Settings::get('enable_html5_validation', TRUE)) {
+      // Prevent client-side HTML5 validation for usability and accessibility.
+      // @see https://www.drupal.org/node/3537128
+      $element['#attributes']['novalidate'] = TRUE;
     }
     $variables['attributes'] = $element['#attributes'];
     $variables['children'] = $element['#children'];
