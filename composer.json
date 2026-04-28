@@ -136,7 +136,9 @@
             "Drupal\\Composer\\Composer::generateComponentPackages"
         ],
         "phpcs": "phpcs --standard=core/phpcs.xml.dist --parallel=\"$( (nproc || sysctl -n hw.logicalcpu || echo 4) 2>/dev/null)\" --",
-        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --parallel=\"$( (nproc || sysctl -n hw.logicalcpu || echo 4) 2>/dev/null)\" --"
+        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --parallel=\"$( (nproc || sysctl -n hw.logicalcpu || echo 4) 2>/dev/null)\" --",
+        "phpstan": "phpstan analyze --memory-limit=-1 --configuration=core/phpstan.neon.dist --",
+        "phpstan-baseline": "phpstan analyze --memory-limit=-1 --configuration=core/phpstan.neon.dist --generate-baseline=core/.phpstan-baseline.php"
     },
     "repositories": [
         {
