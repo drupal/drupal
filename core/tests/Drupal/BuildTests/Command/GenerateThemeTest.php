@@ -47,6 +47,110 @@ class GenerateThemeTest extends QuickStartTestBase {
   }
 
   /**
+   * Tests generating theme from a simple named Starterkit enabled theme.
+   */
+  public function testSimpleStarterkitTheme(): void {
+    $starterkit_theme_path_relative = 'themes/simple';
+    $starterkit_theme_path_absolute = $this->getWorkspaceDirectory() . '/' . $starterkit_theme_path_relative;
+    mkdir($starterkit_theme_path_absolute);
+    file_put_contents($starterkit_theme_path_absolute . '/simple.info.yml', Yaml::encode([
+      'name' => 'Simple',
+      'type' => 'theme',
+      'base theme' => FALSE,
+      'core_version_requirement' => '*',
+    ]));
+    file_put_contents($starterkit_theme_path_absolute . '/simple.starterkit.yml', Yaml::encode([
+      'ignore' => ['/simple.starterkit.yml'],
+      'no_edit' => [],
+      'no_rename' => [],
+      'info' => [
+        'version' => '1.0.0',
+      ],
+    ]));
+    mkdir($starterkit_theme_path_absolute . '/src');
+    file_put_contents($starterkit_theme_path_absolute . '/src/SimpleUtility.php', <<<PHP
+<?php
+
+namespace Drupal\simple;
+
+final class SimpleUtility {
+
+  public const MACHINE_NAME = 'simple';
+  public const MACHINE_CLASS_NAME = 'Simple';
+
+}
+PHP);
+    file_put_contents($starterkit_theme_path_absolute . '/simple.theme', <<<PHP
+<?php
+
+/**
+ * @file
+ * Drupal theme functions for Simple.
+ */
+
+function simple_preprocess_html(array &\$variables): void {
+  \$variables['#attached']['drupalSettings']['simple'] = 'simple';
+}
+PHP);
+    $fixture = <<<FIXTURE
+#@starterkit:machine_name
+simple
+#@starterkit:label
+A Simple Theme
+#@starterkit:machine_class_name
+Simple
+#@starterkit:label_class_name
+Simple
+FIXTURE;
+    file_put_contents($starterkit_theme_path_absolute . '/README.md', $fixture);
+
+    $this->assertFileExists($starterkit_theme_path_absolute . '/simple.info.yml');
+    $this->assertThemeExists($starterkit_theme_path_relative);
+
+    $tester = $this->runCommand([
+      'machine-name' => 'simple_theme',
+      '--name' => 'My Simple Theme',
+      '--description' => 'Custom theme generated from a Simple Starterkit theme',
+      '--starterkit' => 'simple',
+    ]);
+
+    $tester->assertCommandIsSuccessful();
+    $theme_path_relative = 'themes/simple_theme';
+    $this->assertThemeExists($theme_path_relative);
+
+    $info = $this->assertThemeExists($theme_path_relative);
+    self::assertEquals('My Simple Theme', $info['name']);
+    $readme_file = $this->getWorkspaceDirectory() . "/$theme_path_relative/README.md";
+    $this->assertFileExists($readme_file);
+    $fixture = <<<FIXTURE
+#@starterkit:machine_name
+simple_theme
+#@starterkit:label
+My Simple Theme
+#@starterkit:machine_class_name
+SimpleTheme
+#@starterkit:label_class_name
+SimpleTheme
+FIXTURE;
+    $this->assertSame($fixture, file_get_contents($readme_file));
+
+    // The .theme file should be renamed and contain updated machine and label
+    // values.
+    $dot_theme_path = $this->getWorkspaceDirectory() . "/$theme_path_relative/simple_theme.theme";
+    $this->assertFileExists($dot_theme_path);
+    $dot_theme_contents = file_get_contents($dot_theme_path);
+    self::assertStringContainsString("\$variables['#attached']['drupalSettings']['simple_theme']", $dot_theme_contents);
+    // Ensure content replacements respect the namespace and class fragments.
+    $utility_file = $this->getWorkspaceDirectory() . "/$theme_path_relative/src/SimpleThemeUtility.php";
+    $this->assertFileExists($utility_file);
+    $utility_contents = file_get_contents($utility_file);
+    self::assertStringContainsString('namespace Drupal\\simple_theme;', $utility_contents);
+    self::assertStringContainsString('class SimpleThemeUtility', $utility_contents);
+    self::assertStringContainsString("public const MACHINE_NAME = 'simple_theme'", $utility_contents);
+    self::assertStringContainsString("public const MACHINE_CLASS_NAME = 'SimpleTheme'", $utility_contents);
+  }
+
+  /**
    * Generates PHP process to generate a theme from core's starterkit theme.
    *
    * @return \Symfony\Component\Process\Process
@@ -478,13 +582,13 @@ SH;
       ],
     ]);
     $fixture = <<<FIXTURE
-# machine_name
+#@starterkit:machine_name
 starterkit_theme
-# label
+#@starterkit:label
 Starterkit theme
-# machine_class_name
+#@starterkit:machine_class_name
 StarterkitTheme
-# label_class_name
+#@starterkit:label_class_name
 StarterkitTheme
 FIXTURE;
 
@@ -523,13 +627,13 @@ PHP);
     self::assertEquals($fixture, file_get_contents($theme_path_absolute . '/no_edit_fixture.txt'));
     self::assertFileExists($theme_path_absolute . '/edit_fixture.txt');
     self::assertEquals(<<<EDITED
-# machine_name
+#@starterkit:machine_name
 test_custom_theme
-# label
+#@starterkit:label
 Test custom starterkit theme
-# machine_class_name
+#@starterkit:machine_class_name
 TestCustomTheme
-# label_class_name
+#@starterkit:label_class_name
 TestCustomTheme
 EDITED, file_get_contents($theme_path_absolute . '/edit_fixture.txt'));
 
