@@ -620,8 +620,17 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   hook_module_implements_alter().
    */
   protected function reOrderModulesForAlter(array $modules, string $hook): array {
-    // Order by module order first.
-    $modules = array_intersect(array_keys($this->moduleList), $modules);
+    // Order by module order first, this preserves expected order for alter
+    // hooks implemented on behalf of other modules. The module that hooks
+    // implementations in kernel test classes are grouped by is 'core'. Since
+    // 'core' is not actually a module, add 'core' as a key to the module list,
+    // so core implementations are not filtered out. 'Core' is added last to
+    // match how kernel test hooks are added last by KernelTestCompilerPass.
+    // @todo Determine whether 'core' should still be ordered last by default
+    //   when any service, including in the Drupal\Core namespace, can have
+    //   hook implementations.
+    // @see https://www.drupal.org/i/3481903.
+    $modules = array_intersect(array_keys($this->moduleList + ['core' => '']), $modules);
     // Alter expects the module list to be in the keys.
     $implementations = array_fill_keys($modules, FALSE);
     // Let modules adjust the order solely based on the primary hook. This
