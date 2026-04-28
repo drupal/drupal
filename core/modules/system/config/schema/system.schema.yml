@@ -208,6 +208,11 @@ system.performance:
           type: boolean
           label: 'Aggregate CSS files'
         gzip:
+          # @see Drupal\Core\Asset\AssetDumper::dumpToUri()
+          type: boolean
+          label: 'Compress CSS files'
+          deprecated: "The 'gzip' config schema is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use the 'compress' config schema instead. See https://www.drupal.org/node/3526344."
+        compress:
           type: boolean
           label: 'Compress CSS files'
     fast_404:
@@ -234,6 +239,11 @@ system.performance:
           type: boolean
           label: 'JavaScript preprocess'
         gzip:
+          # @see Drupal\Core\Asset\AssetDumper::dumpToUri()
+          type: boolean
+          label: 'Compress JavaScript files'
+          deprecated: "The 'gzip' config schema is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use the 'compress' config schema instead. See https://www.drupal.org/node/3526344."
+        compress:
           type: boolean
           label: 'Compress JavaScript files.'
 
