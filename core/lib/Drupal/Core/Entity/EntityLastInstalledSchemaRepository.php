@@ -88,7 +88,25 @@ class EntityLastInstalledSchemaRepository implements EntityLastInstalledSchemaRe
     }, $keys);
 
     $this->entityTypeDefinitions = array_combine($keys, $entity_type_definitions);
-    $this->cacheBackend->set('entity_type_definitions.installed', $this->entityTypeDefinitions, Cache::PERMANENT);
+
+    // Also populate the static and persistent cache for the field storage
+    // definitions to avoid a separate key/value lookup when all definitions are
+    // looked up first.
+    $items = [
+      'entity_type_definitions.installed' => [
+        'data' => $this->entityTypeDefinitions,
+        'expires' => Cache::PERMANENT,
+      ],
+    ];
+    foreach ($keys as $key) {
+      $this->entityFieldStorageDefinitions[$key] = $all_definitions[$key . '.field_storage_definitions'] ?? [];
+      $items[$key . '.field_storage_definitions.installed'] = [
+        'data' => $this->entityFieldStorageDefinitions[$key],
+        'expires' => Cache::PERMANENT,
+      ];
+    }
+
+    $this->cacheBackend->setMultiple($items);
     return $this->entityTypeDefinitions;
   }
 
