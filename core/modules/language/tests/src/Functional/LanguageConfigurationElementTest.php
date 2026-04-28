@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
@@ -98,7 +99,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the language_get_default_langcode() returns the correct values.
+   * Tests that default langcode is correctly returned.
    */
   public function testDefaultLangcode(): void {
     // Add some custom languages.
@@ -109,28 +110,22 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       ])->save();
     }
 
-    // Ensure the bundles under test exist, to avoid config validation errors.
+    // Ensure the bundle under test exist, to avoid config validation errors.
     EntityTestHelper::createBundle('custom_bundle');
-    EntityTestHelper::createBundle('some_bundle');
 
     // Fixed language.
     ContentLanguageSettings::loadByEntityTypeBundle('entity_test', 'custom_bundle')
       ->setLanguageAlterable(TRUE)
       ->setDefaultLangcode('bb')
       ->save();
-
-    $langcode = language_get_default_langcode('entity_test', 'custom_bundle');
-    $this->assertEquals('bb', $langcode);
+    $this->assertSame('bb', $this->getDefaultLangcode());
 
     // Current interface.
     ContentLanguageSettings::loadByEntityTypeBundle('entity_test', 'custom_bundle')
-      ->setLanguageAlterable(TRUE)
       ->setDefaultLangcode('current_interface')
       ->save();
-
-    $langcode = language_get_default_langcode('entity_test', 'custom_bundle');
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-    $this->assertEquals($langcode, $language_interface->getId());
+    $this->assertSame($language_interface->getId(), $this->getDefaultLangcode());
 
     // Site's default.
     $old_default = \Drupal::languageManager()->getDefaultLanguage();
@@ -140,11 +135,9 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
 
     $this->config('system.site')->set('default_langcode', 'cc')->save();
     ContentLanguageSettings::loadByEntityTypeBundle('entity_test', 'custom_bundle')
-      ->setLanguageAlterable(TRUE)
       ->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT)
       ->save();
-    $langcode = language_get_default_langcode('entity_test', 'custom_bundle');
-    $this->assertEquals('cc', $langcode);
+    $this->assertSame('cc', $this->getDefaultLangcode());
 
     // Ensure the language entity default value is correct.
     $configurable_language = ConfigurableLanguage::load($old_default->getId());
@@ -155,22 +148,14 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     // directly.
     $this->assertTrue($configurable_language->isDefault(), 'The cc language entity is flagged as the default language.');
 
-    // Check the default value of a language field when authors preferred option
-    // is selected.
-    // First create a user, then assign a langcode.
-    $some_user = $this->drupalCreateUser();
-    $some_user->preferred_langcode = 'bb';
-    $some_user->save();
+    // Check the default value of a language field when the author's preferred
+    // option is selected. First, create a user with a preferred language.
+    $some_user = $this->createUser(values: ['preferred_langcode' => 'bb']);
     $this->drupalLogin($some_user);
-    ContentLanguageSettings::create([
-      'target_entity_type_id' => 'entity_test',
-      'target_bundle' => 'some_bundle',
-    ])->setLanguageAlterable(TRUE)
+    ContentLanguageSettings::loadByEntityTypeBundle('entity_test', 'custom_bundle')
       ->setDefaultLangcode('authors_default')
       ->save();
-
-    $this->drupalGet('language-tests/language_configuration_element_test');
-    $this->assertTrue($this->assertSession()->optionExists('edit-langcode', 'bb')->isSelected());
+    $this->assertSame('bb', $this->getDefaultLangcode());
   }
 
   /**
@@ -280,6 +265,17 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     $this->assertEquals('current_interface', $configuration->getDefaultLangcode(), 'The default language configuration has been kept on the updated Country vocabulary.');
     $this->assertTrue($configuration->isLanguageAlterable(), 'The alterable language configuration has been kept on the updated Country vocabulary.');
     $this->assertEquals($uuid, $configuration->uuid(), 'The language configuration uuid has been kept on the updated Country vocabulary.');
+  }
+
+  /**
+   * Returns the default language code for a given entity type and bundle.
+   *
+   * @return string
+   *   The default language code.
+   */
+  protected function getDefaultLangcode(): string {
+    // Create a dummy entity to easily access the langcode field default value.
+    return EntityTest::create(['type' => 'custom_bundle'])->get('langcode')->value;
   }
 
 }

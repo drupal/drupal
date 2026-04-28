@@ -6,6 +6,7 @@ namespace Drupal\language_elements_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\language\Element\LanguageConfiguration;
 use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
@@ -41,7 +42,7 @@ class LanguageConfigurationElement extends FormBase {
       '#type' => 'submit',
       '#value' => 'Save',
     ];
-    $form['#submit'][] = 'language_configuration_element_submit';
+    $form['#submit'][] = LanguageConfiguration::class . '::submit';
     return $form;
   }
 

@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\language\Element\LanguageConfiguration;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -150,7 +151,7 @@ class CommentTypeForm extends EntityForm {
         '#default_value' => $language_configuration,
       ];
 
-      $form['#submit'][] = 'language_configuration_element_submit';
+      $form['#submit'][] = LanguageConfiguration::class . '::submit';
     }
 
     $form['actions'] = ['#type' => 'actions'];

@@ -95,8 +95,8 @@ class ConfigSubscriber implements EventSubscriberInterface {
         $this->languageManager->reset();
 
         // Directly update language negotiation settings instead of calling
-        // language_negotiation_url_prefixes_update() to ensure that the code
-        // obeys the hook_update_N() restrictions.
+        // \Drupal\language\Entity\ConfigurableLanguage::updateUrlPrefixes()
+        // to ensure that the code obeys the hook_update_N() restrictions.
         $negotiation_config = $this->configFactory->getEditable('language.negotiation');
         $negotiation_changed = FALSE;
         $url_prefixes = $negotiation_config->get('url.prefixes');

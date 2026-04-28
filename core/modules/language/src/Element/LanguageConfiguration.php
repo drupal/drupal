@@ -2,11 +2,13 @@
 
 namespace Drupal\language\Element;
 
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element\FormElementBase;
+use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
  * Defines an element for language configuration for a single field.
@@ -72,14 +74,50 @@ class LanguageConfiguration extends FormElementBase {
       // @todo Form API: Allow form widgets/sections to declare #submit
       //   handlers.
       $submit_name = isset($form['actions']['save_continue']) ? 'save_continue' : 'submit';
-      if (isset($form['actions'][$submit_name]['#submit']) && array_search('language_configuration_element_submit', $form['actions'][$submit_name]['#submit']) === FALSE) {
-        $form['actions'][$submit_name]['#submit'][] = 'language_configuration_element_submit';
+      $callback = static::class . '::submit';
+      if (isset($form['actions'][$submit_name]['#submit']) && array_search($callback, $form['actions'][$submit_name]['#submit']) === FALSE) {
+        $form['actions'][$submit_name]['#submit'][] = $callback;
       }
-      elseif (array_search('language_configuration_element_submit', $form['#submit']) === FALSE) {
-        $form['#submit'][] = 'language_configuration_element_submit';
+      elseif (array_search($callback, $form['#submit']) === FALSE) {
+        $form['#submit'][] = $callback;
       }
     }
     return $element;
+  }
+
+  /**
+   * Submit handler for the forms that have a language_configuration element.
+   *
+   * @param array $form
+   *   The form render array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state instance.
+   */
+  public static function submit(array &$form, FormStateInterface $form_state): void {
+    // Iterate through all the language_configuration elements and save their
+    // values. In case we are editing a bundle, we must check the new bundle
+    // name, because, e.g., hook_ENTITY_update has been fired before.
+    if ($language = $form_state->get('language')) {
+      foreach ($language as $element_name => $values) {
+        $entity_type_id = $values['entity_type'];
+        $bundle = $values['bundle'];
+        $form_object = $form_state->getFormObject();
+        if ($form_object instanceof EntityFormInterface) {
+          $entity = $form_object->getEntity();
+          if ($entity->getEntityType()->getBundleOf()) {
+            $bundle = $entity->id();
+            $language[$element_name]['bundle'] = $bundle;
+          }
+        }
+        $config = ContentLanguageSettings::loadByEntityTypeBundle($entity_type_id, $bundle);
+        $config->setDefaultLangcode($form_state->getValue([$element_name, 'langcode']));
+        $config->setLanguageAlterable($form_state->getValue([$element_name, 'language_alterable']));
+        $config->save();
+
+        // Set the form_state language with the updated bundle.
+        $form_state->set('language', $language);
+      }
+    }
   }
 
   /**

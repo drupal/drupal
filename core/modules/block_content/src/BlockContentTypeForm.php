@@ -6,6 +6,7 @@ use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\language\Element\LanguageConfiguration;
 use Drupal\language\Entity\ContentLanguageSettings;
 
 /**
@@ -80,7 +81,7 @@ class BlockContentTypeForm extends BundleEntityFormBase {
         '#default_value' => $language_configuration,
       ];
 
-      $form['#submit'][] = 'language_configuration_element_submit';
+      $form['#submit'][] = LanguageConfiguration::class . '::submit';
     }
 
     $form['actions'] = ['#type' => 'actions'];

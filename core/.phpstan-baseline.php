@@ -18824,12 +18824,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/language/tests/language_elements_test/src/Form/LanguageConfigurationElement.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\language_elements_test\\\\Form\\\\LanguageConfigurationElementTest\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/tests/language_elements_test/src/Form/LanguageConfigurationElementTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\language_test\\\\Controller\\\\LanguageTestController\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
