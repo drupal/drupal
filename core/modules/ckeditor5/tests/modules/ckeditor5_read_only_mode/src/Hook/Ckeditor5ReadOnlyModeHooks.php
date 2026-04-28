@@ -19,6 +19,17 @@ class Ckeditor5ReadOnlyModeHooks {
   public function formNodePageFormAlter(array &$form, FormStateInterface $form_state, string $form_id) : void {
     $form['body']['#disabled'] = \Drupal::state()->get('ckeditor5_read_only_mode_body_enabled', FALSE);
     $form['field_second_ckeditor5_field']['#disabled'] = \Drupal::state()->get('ckeditor5_read_only_mode_second_ckeditor5_field_enabled', FALSE);
+    $form['field_ckeditor5_disable']['#states'] = [
+      'disabled' => [
+        ':input[name="field_ckeditor5_toggle[value]"]' => ['checked' => TRUE],
+      ],
+    ];
+    $form['field_ckeditor5_enable']['#disabled'] = TRUE;
+    $form['field_ckeditor5_enable']['#states'] = [
+      'enabled' => [
+        ':input[name="field_ckeditor5_toggle[value]"]' => ['checked' => TRUE],
+      ],
+    ];
   }
 
 }

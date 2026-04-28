@@ -428,9 +428,18 @@
           }
 
           // If the textarea is disabled, enable CKEditor's read-only mode.
-          if (element.hasAttribute('disabled')) {
-            editor.enableReadOnlyMode('ckeditor5_disabled');
-          }
+          const readOnlyIfDisabled = () => {
+            if (element.disabled) {
+              editor.enableReadOnlyMode('ckeditor5_disabled');
+            } else {
+              editor.disableReadOnlyMode('ckeditor5_disabled');
+            }
+          };
+          const disabledMutationObserver = new MutationObserver(() => {
+            readOnlyIfDisabled();
+          });
+          disabledMutationObserver.observe(element, { attributes: true });
+          readOnlyIfDisabled();
 
           // Integrate CKEditor 5 viewport offset with Drupal displace.
           // @see \Drupal\Tests\ckeditor5\FunctionalJavascript\CKEditor5ToolbarTest
