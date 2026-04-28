@@ -614,6 +614,12 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       $recursion_keys[] = spl_object_id($entity);
     }
 
+    // Ensure that recursion keys are not leaking between Fibers.
+    if ($fiber = \Fiber::getCurrent()) {
+      $recursion_keys[] = 'fiber_id';
+      $recursion_keys[] = spl_object_id($fiber);
+    }
+
     if ($entity instanceof TranslatableDataInterface) {
       $recursion_keys[] = $entity->language()->getId();
     }
