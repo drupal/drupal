@@ -148,22 +148,55 @@ class GenerateTheme extends Command {
       'old' => self::namePatterns($starterkit->getName(), $starterkit->info['name']),
       'new' => self::namePatterns($destination_theme, $theme_label),
     ];
+
+    // Generate unique placeholders for each pattern key in $patterns['old'] so
+    // we can perform a two-pass replacement without collisions. This avoids
+    // cases where a replacement introduces text that matches another pattern
+    // (or where short labels like "Simple" overlap with class-name fragments),
+    // which would otherwise cause accidental double replacements.
+    $placeholders = [];
+    foreach (array_keys($patterns['old']) as $key) {
+      $placeholders[$key] = '__' . strtoupper($key) . '__';
+    }
+
     $filesToEdit = self::createFilesFinder($tmpDir)
       ->contains(array_values($patterns['old']))
       ->notPath($starterkit_config['no_edit']);
     foreach ($filesToEdit as $file) {
       $contents = file_get_contents($file->getRealPath());
-      $contents = str_replace($patterns['old'], $patterns['new'], $contents);
+      // Step 1: Replace old patterns with placeholders in content.
+      $contents = str_replace($patterns['old'], $placeholders, $contents);
+      // Step 2: Replace placeholders with new patterns in content.
+      $contents = str_replace($placeholders, $patterns['new'], $contents);
+
+      // Normalize comment marker driven replacements. When the source theme
+      // uses very short labels (for example "Simple") the generic
+      // replacements above can map the text to the wrong placeholder because
+      // both the label and class name fragments share the same literal value.
+      // Unique, explicit marker lines make the intent unambiguous, so update
+      // those lines after the generic pass.
+      $markerReplacements = [
+        '#@starterkit:machine_name' => $patterns['new']['machine_name'],
+        '#@starterkit:label' => $patterns['new']['label'],
+        '#@starterkit:machine_class_name' => $patterns['new']['machine_name_pascal'],
+        '#@starterkit:label_class_name' => $patterns['new']['machine_name_pascal'],
+      ];
+      foreach ($markerReplacements as $marker => $replacement) {
+        $pattern = '/(^\s*' . preg_quote($marker, '/') . '\s*\R)([^\r\n]*)/m';
+        $contents = preg_replace($pattern, '$1' . $replacement, $contents);
+      }
       file_put_contents($file->getRealPath(), $contents);
     }
 
+    // Step 3: Repeat for file renaming.
     $filesToRename = self::createFilesFinder($tmpDir)
       ->name(array_map(static fn (string $pattern) => "*$pattern*", array_values($patterns['old'])))
       ->notPath($starterkit_config['no_rename']);
     foreach ($filesToRename as $file) {
       $filepath_segments = explode('/', $file->getRealPath());
       $filename = array_pop($filepath_segments);
-      $filename = str_replace($patterns['old'], $patterns['new'], $filename);
+      $filename = str_replace($patterns['old'], $placeholders, $filename);
+      $filename = str_replace($placeholders, $patterns['new'], $filename);
       $filepath_segments[] = $filename;
       $filesystem->rename($file->getRealPath(), implode('/', $filepath_segments));
     }
