@@ -1279,10 +1279,13 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     // Ensure that the following properties are actually cloned by
     // overwriting the original references with ones pointing to copies of
     // them: enforceIsNew, newRevision, loadedRevisionId, fields, entityKeys,
-    // translatableEntityKeys, values, isDefaultRevision and
-    // enforceRevisionTranslationAffected.
+    // translatableEntityKeys, values, isDefaultRevision,
+    // enforceRevisionTranslationAffected and originalEntity.
     $enforce_is_new = $this->enforceIsNew;
     $this->enforceIsNew = &$enforce_is_new;
+
+    $originalEntity = $this->originalEntity;
+    $this->originalEntity = &$originalEntity;
 
     $new_revision = $this->newRevision;
     $this->newRevision = &$new_revision;
