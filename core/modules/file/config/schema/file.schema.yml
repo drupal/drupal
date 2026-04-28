@@ -151,6 +151,14 @@ field.formatter.settings.file_video:
       constraints:
         Range:
           min: 1
+    poster:
+      type: machine_name
+      label: 'Poster'
+      requiredKey: false
+    poster_image_style:
+      type: machine_name
+      label: 'Poster image style'
+      requiredKey: false
 
 field.formatter.settings.file_default:
   type: mapping
