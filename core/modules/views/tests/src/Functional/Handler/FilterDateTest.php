@@ -361,4 +361,75 @@ class FilterDateTest extends ViewTestBase {
     $this->assertSession()->fieldExists('created');
   }
 
+  /**
+   * Tests an exposed date filter with an offset default value.
+   *
+   * Verify that results are filtered on page load without requiring form
+   * submission.
+   */
+  public function testExposedOffsetDefaultAppliedOnPageLoad(): void {
+    $this->drupalLogin($this->drupalCreateUser(['administer views']));
+
+    // Expose the filter with operator > and default offset "now".
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
+    $this->submitForm([], 'Expose filter');
+    $edit = [
+      'options[operator]' => '>',
+      'options[value][type]' => 'offset',
+      'options[value][value]' => 'now',
+    ];
+    $this->submitForm($edit, 'Apply');
+
+    // Add a page display and save.
+    $this->drupalGet('admin/structure/views/view/test_filter_date_between/edit');
+    $this->submitForm([], 'Add Page');
+    $this->drupalGet('admin/structure/views/nojs/display/test_filter_date_between/page_1/path');
+    $this->submitForm(['path' => 'exposed-offset-default'], 'Apply');
+    $this->submitForm([], 'Save');
+
+    // On page load (no form submission), only the future node should appear.
+    $this->drupalGet('exposed-offset-default');
+    $results = $this->cssSelect('.view-content .field-content');
+    $this->assertCount(1, $results);
+    $this->assertEquals($this->nodes[3]->id(), $results[0]->getText());
+  }
+
+  /**
+   * Tests an exposed date filter with offset default value (between operator).
+   *
+   * Verify that results are filtered on page load without requiring form
+   * submission.
+   */
+  public function testExposedOffsetBetweenDefaultAppliedOnPageLoad(): void {
+    $this->drupalLogin($this->drupalCreateUser(['administer views']));
+
+    // Expose the filter with operator "between" and offset defaults.
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
+    $this->submitForm([], 'Expose filter');
+    $edit = [
+      'options[operator]' => 'between',
+      'options[value][type]' => 'offset',
+      'options[value][min]' => 'now',
+      'options[value][max]' => '+2 days',
+    ];
+    $this->submitForm($edit, 'Apply');
+
+    // Add a page display and save.
+    $this->drupalGet('admin/structure/views/view/test_filter_date_between/edit');
+    $this->submitForm([], 'Add Page');
+    $this->drupalGet('admin/structure/views/nojs/display/test_filter_date_between/page_1/path');
+    $this->submitForm(['path' => 'exposed-offset-between-default'], 'Apply');
+    $this->submitForm([], 'Save');
+
+    // Add a node beyond the max offset (+2 days) to verify it is excluded.
+    $this->nodes[] = $this->drupalCreateNode(['created' => time() + (86400 * 3)]);
+
+    // On page load (no form submission), only the node within [now, +2 days]
+    // should appear; the node beyond +2 days must be excluded.
+    $this->drupalGet('exposed-offset-between-default');
+    $results = $this->cssSelect('.view-content .field-content');
+    $this->assertCount(1, $results);
+    $this->assertEquals($this->nodes[3]->id(), $results[0]->getText());
+  }
+
 }
