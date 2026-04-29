@@ -1,6 +1,0 @@
-services:
-  help_test_twig.extension:
-    class: Drupal\help_topics_twig_tester\HelpTestTwigExtension
-    arguments: []
-    tags:
-      - { name: twig.extension, priority: 500 }

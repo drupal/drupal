@@ -2,59 +2,99 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Functional;
+namespace Drupal\Tests\help\Kernel;
 
 use Drupal\Component\FrontMatter\FrontMatter;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ExtensionLifecycle;
+use Drupal\Core\Template\TwigNodeTrans;
 use Drupal\help\HelpTopicDiscovery;
-use Drupal\help_topics_twig_tester\HelpTestTwigNodeVisitor;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\ExpectationFailedException;
+use Symfony\Component\DependencyInjection\Definition;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Node;
+use Twig\Node\PrintNode;
+use Twig\Node\SetNode;
+use Twig\Node\TextNode;
+use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
  * Verifies that all core Help topics can be rendered and comply with standards.
  */
 #[Group('help')]
-#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
-class HelpTopicsSyntaxTest extends BrowserTestBase {
+class HelpTopicsSyntaxTest extends KernelTestBase implements NodeVisitorInterface {
+
+  /**
+   * Delimiter placed around single translated chunks.
+   */
+  public const string DELIMITER = 'Not Likely To Be Inside A Template';
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
-    'help',
-    'help_topics_twig_tester',
+    'system',
+    'user',
+    'file',
+    'language',
     'locale',
+    'help',
   ];
+
+  /**
+   * The special processing choice for topic rendering.
+   */
+  protected ?string $manner;
+
+  /**
+   * The number of chunks that were processed.
+   */
+  protected int $maxChunk;
+
+  /**
+   * A specific chunk number to return.
+   */
+  protected int $returnChunk;
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  public function register(ContainerBuilder $container): void {
+    parent::register($container);
+
+    // Add a twig extension that registers this test class as a node visitor.
+    $extension = new class($this) extends AbstractExtension {
+
+      public function __construct(protected readonly NodeVisitorInterface $nodeVisitor) {}
+
+      /**
+       * {@inheritdoc}
+       */
+      public function getNodeVisitors(): array {
+        return [$this->nodeVisitor];
+      }
+
+    };
+    $definition = new Definition(get_class($extension));
+    $definition->addTag('twig.extension', ['priority' => 500]);
+    $definition->addArgument($this);
+    $container->setDefinition('help_test_twig.extension', $definition);
+  }
 
   /**
    * Tests that all Core help topics can be rendered and have good syntax.
    */
   public function testHelpTopics(): void {
-    $this->drupalLogin($this->createUser([
-      'administer modules',
-      'access help pages',
-    ]));
-
-    // Enable all modules and themes, so that all routes mentioned in topics
-    // will be defined.
-    $module_directories = $this->listDirectories('module');
-    $modules_to_install = array_keys($module_directories);
-    \Drupal::service('module_installer')->install($modules_to_install);
-    $theme_directories = $this->listDirectories('theme');
-    \Drupal::service('theme_installer')->install(array_keys($theme_directories));
-
-    $directories = $module_directories + $theme_directories +
-      $this->listDirectories('profile');
+    $directories = $this->listDirectories('module');
+    $directories += $this->listDirectories('theme');
+    $directories += $this->listDirectories('profile');
     $directories['core'] = \Drupal::root() . '/core/help_topics';
     $directories['bad_help_topics'] = \Drupal::service('extension.list.module')->getPath('help_topics_test') . '/bad_help_topics/syntax/';
 
@@ -97,22 +137,10 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    *   ID of the topic to verify.
    * @param array $definitions
    *   Array of all topic definitions, keyed by ID.
-   * @param int $response
-   *   Expected response from visiting the page for the topic.
    */
-  protected function verifyTopic($id, $definitions, $response = 200): void {
+  protected function verifyTopic(string $id, array|\ArrayAccess $definitions): void {
     $definition = $definitions[$id];
-    HelpTestTwigNodeVisitor::setStateValue('manner', 0);
-
-    // Visit the URL for the topic.
-    $this->drupalGet('admin/help/topic/' . $id);
-
-    // Verify the title and response.
-    $session = $this->assertSession();
-    $session->statusCodeEquals($response);
-    if ($response == 200) {
-      $session->titleEquals($definition['label'] . ' | Drupal');
-    }
+    $this->manner = NULL;
 
     // Verify that all the related topics exist. Also check to see if any of
     // them are top-level (we will need that in the next section).
@@ -140,23 +168,22 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $text = $this->renderHelpTopic($template_text, 'bare_body');
     $this->assertNotEmpty($text, 'Topic ' . $id . ' contains some text outside of front matter');
     $this->validateHtml($text, $id);
-    $max_chunk_num = HelpTestTwigNodeVisitor::getState()['max_chunk'];
-    $this->assertTrue($max_chunk_num >= 0, 'Topic ' . $id . ' has at least one translated chunk');
+    $this->assertGreaterThanOrEqual(0, $this->maxChunk, 'Topic ' . $id . ' has at least one translated chunk');
 
     // Verify that each chunk of the translated text is locale-safe and
     // valid HTML.
     $chunk_num = 0;
     $number_checked = 0;
-    while ($chunk_num <= $max_chunk_num) {
+    while ($chunk_num <= $this->maxChunk) {
       $chunk_str = $id . ' section ' . $chunk_num;
 
       // Render the topic, asking for just one chunk, and extract the chunk.
       // Note that some chunks may not actually get rendered, if they are inside
       // set statements, because we skip rendering variable output.
-      HelpTestTwigNodeVisitor::setStateValue('return_chunk', $chunk_num);
+      $this->returnChunk = $chunk_num;
       $text = $this->renderHelpTopic($template_text, 'translated_chunk');
       $matches = [];
-      $matched = preg_match('|' . HelpTestTwigNodeVisitor::DELIMITER . '(.*)' . HelpTestTwigNodeVisitor::DELIMITER . '|', $text, $matches);
+      $matched = preg_match('|' . self::DELIMITER . '(.*)' . self::DELIMITER . '|', $text, $matches);
       if ($matched) {
         $number_checked++;
         $text = $matches[1];
@@ -168,7 +195,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
       }
       $chunk_num++;
     }
-    $this->assertTrue($number_checked > 0, 'Tested at least one translated chunk in ' . $id);
+    $this->assertGreaterThan(0, $number_checked, 'Tested at least one translated chunk in ' . $id);
 
     // Validate the HTML in the body with the translated text replaced by a
     // dummy string, to verify that HTML syntax is not partly in and partly out
@@ -233,12 +260,12 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    * @param array $definitions
    *   Array of all topic definitions, keyed by ID.
    */
-  protected function verifyBadTopic($id, $definitions): void {
+  protected function verifyBadTopic(string $id, array $definitions): void {
     $bad_topic_type = substr($id, 16);
     // Topics should fail verifyTopic() in specific ways.
     $found_error = FALSE;
     try {
-      $this->verifyTopic($id, $definitions, 404);
+      $this->verifyTopic($id, $definitions);
     }
     catch (ExpectationFailedException | AssertionFailedError $e) {
       $found_error = TRUE;
@@ -337,10 +364,9 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    *   The rendered topic.
    */
   protected function renderHelpTopic(string $content, string $manner): string {
-    // Set up the special state variables for rendering.
-    HelpTestTwigNodeVisitor::setStateValue('manner', $manner);
-    HelpTestTwigNodeVisitor::setStateValue('max_chunk', -1);
-    HelpTestTwigNodeVisitor::setStateValue('chunk_count', -1);
+    // Set up the special variables for rendering.
+    $this->manner = $manner;
+    $this->maxChunk = -1;
 
     // Add a random comment to the end, to thwart caching, and render. We need
     // the HelpTestTwigNodeVisitor class to hit it each time we render.
@@ -349,6 +375,109 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
       '#template' => $content . "\n{# " . rand() . " #}",
     ];
     return (string) \Drupal::service('renderer')->renderInIsolation($build);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function enterNode(Node $node, Environment $env): Node {
+    return $node;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function leaveNode(Node $node, Environment $env): ?Node {
+    if (!$this->manner) {
+      return $node;
+    }
+
+    // For all special processing, we want to remove variables, set statements,
+    // and assorted Twig expression calls (if, do, etc.).
+    if ($node instanceof SetNode || $node instanceof PrintNode ||
+      $node instanceof AbstractExpression) {
+      return NULL;
+    }
+
+    if ($node instanceof TwigNodeTrans) {
+      // Count the number of translated chunks.
+      $this->maxChunk++;
+
+      if ($this->manner == 'remove_translated') {
+        // Remove all translated text.
+        return NULL;
+      }
+      elseif ($this->manner == 'replace_translated') {
+        // Replace with a dummy string.
+        $node = new TextNode('dummy', 0);
+      }
+      elseif ($this->manner == 'translated_chunk') {
+        // Return the text only if it's the next chunk we're supposed to return.
+        // Add a wrapper, because non-translated nodes will still be returned.
+        if ($this->maxChunk == $this->returnChunk) {
+          return new TextNode(static::DELIMITER . $this->extractText($node) . static::DELIMITER, 0);
+        }
+        else {
+          return NULL;
+        }
+      }
+    }
+
+    if ($this->manner == 'remove_translated' && $node instanceof TextNode) {
+      // For this processing, we also want to remove all HTML tags and
+      // whitespace from TextNodes.
+      $text = $node->getAttribute('data');
+      $text = strip_tags($text);
+      $text = preg_replace('|\s+|', '', $text);
+      return new TextNode($text, 0);
+    }
+
+    return $node;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPriority(): int {
+    return -100;
+  }
+
+  /**
+   * Extracts the text from a translated text object.
+   *
+   * @param \Drupal\Core\Template\TwigNodeTrans $node
+   *   Translated text node.
+   *
+   * @return string
+   *   Text in the node.
+   */
+  protected function extractText(TwigNodeTrans $node): string {
+    // Extract the singular/body and optional plural text from the
+    // TwigNodeTrans object.
+    $bodies = $node->getNode('body');
+    if (!count($bodies)) {
+      $bodies = [$bodies];
+    }
+    if ($node->hasNode('plural')) {
+      $plural = $node->getNode('plural');
+      if (!count($plural)) {
+        $bodies[] = $plural;
+      }
+      else {
+        foreach ($plural as $item) {
+          $bodies[] = $item;
+        }
+      }
+    }
+
+    // Extract the text from each component of the singular/plural strings.
+    $text = '';
+    foreach ($bodies as $body) {
+      if ($body->hasAttribute('data')) {
+        $text .= $body->getAttribute('data');
+      }
+    }
+    return trim($text);
   }
 
 }
