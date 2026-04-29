@@ -68,7 +68,7 @@ class BasicAuthTest extends BrowserTestBase {
     // Ensure that the user is prompted to authenticate if they are not yet
     // authenticated and the route only allows basic auth.
     $this->drupalGet($url);
-    $this->assertSession()->responseHeaderEquals('WWW-Authenticate', 'Basic realm="' . \Drupal::config('system.site')->get('name') . '"');
+    $this->assertSession()->responseHeaderEquals('WWW-Authenticate', 'Basic realm="' . $this->config('system.site')->get('name') . '"');
     $this->assertSession()->statusCodeEquals(401);
 
     // Ensure that a route without basic auth defined doesn't prompt for auth.
