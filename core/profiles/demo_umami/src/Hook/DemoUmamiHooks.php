@@ -164,12 +164,13 @@ class DemoUmamiHooks {
       '#theme' => 'navigation__messages',
       '#message_list' => [
         [
-          '#theme' => 'navigation__message',
-          '#content' => [
-            '#markup' => $this->t('This site is intended for demonstration purposes.'),
+          '#type' => 'component',
+          '#component' => 'navigation:message',
+          '#props' => [
+            'type' => 'warning',
+            'url' => $url,
+            'content' => (string) $this->t('This site is intended for demonstration purposes.'),
           ],
-          '#url' => $url,
-          '#type' => 'warning',
         ],
       ],
     ];

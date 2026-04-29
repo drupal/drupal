@@ -1,0 +1,32 @@
+# This is so your IDE knows about the syntax for fixes and autocomplete.
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+
+# The human readable name.
+name: Message
+
+# Status can be: "experimental", "stable", "deprecated", "obsolete".
+status: experimental
+
+# Schema for the props. We support www.json-schema.org. Learn more about the
+# syntax there.
+props:
+  # Props are always an object with keys. Each key is a variable in your
+  # component template.
+  type: object
+
+  properties:
+    type:
+      type: string
+      title: Message Type
+      default: status
+      enum:
+        - error
+        - status
+        - warning
+    url:
+      type: string
+      title: Message URL
+      format: iri-reference
+    content:
+      type: string
+      title: Message Content

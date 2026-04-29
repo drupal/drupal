@@ -41,14 +41,6 @@ class NavigationThemeHooks {
         'message_list' => NULL,
       ],
     ];
-    $items['navigation__message'] = [
-      'variables' => [
-        'attributes' => [],
-        'url' => NULL,
-        'content' => NULL,
-        'type' => 'status',
-      ],
-    ];
     return $items;
   }
 

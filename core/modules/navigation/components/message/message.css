@@ -12,7 +12,6 @@
     z-index: 1;
     display: flex;
     align-items: start;
-    cursor: pointer;
     text-align: start;
     -webkit-text-decoration: none;
     text-decoration: none;
@@ -27,6 +26,10 @@
     padding-block: calc(0.75 * var(--admin-toolbar-rem));
     font-variation-settings: "wght" 700;
     gap: calc(0.5 * var(--admin-toolbar-rem));
+  }
+
+  .toolbar-message[href] {
+    cursor: pointer;
   }
 
   .toolbar-message__icon {
