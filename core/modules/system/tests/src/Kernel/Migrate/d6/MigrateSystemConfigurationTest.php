@@ -82,7 +82,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       'css' => [
         'preprocess' => FALSE,
         // Gzip is not handled by the migration.
-        'gzip' => TRUE,
+        'compress' => TRUE,
       ],
       // fast_404 is not handled by the migration.
       'fast_404' => [
@@ -94,7 +94,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       'js' => [
         'preprocess' => FALSE,
         // Gzip is not handled by the migration.
-        'gzip' => TRUE,
+        'compress' => TRUE,
       ],
     ],
     'system.site' => [
