@@ -4,6 +4,8 @@ namespace Drupal\field;
 
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
+use Drupal\Core\Field\FieldPurger;
+use Drupal\Core\Site\Settings;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -39,7 +41,7 @@ class ConfigImporterFieldPurger {
         $field_storage->delete();
       }
     }
-    field_purge_batch($context['sandbox']['field']['purge_batch_size'], $field_storage->getUniqueStorageIdentifier());
+    \Drupal::service(FieldPurger::class)->purgeBatch($context['sandbox']['field']['purge_batch_size'], $field_storage->getUniqueStorageIdentifier());
     $context['sandbox']['field']['current_progress']++;
     $fields_to_delete_count = count(static::getFieldStoragesToPurge($context['sandbox']['field']['extensions'], $config_importer->getUnprocessedConfiguration('delete')));
     if ($fields_to_delete_count == 0) {
@@ -63,7 +65,11 @@ class ConfigImporterFieldPurger {
    *   The config importer.
    */
   protected static function initializeSandbox(array &$context, ConfigImporter $config_importer) {
-    $context['sandbox']['field']['purge_batch_size'] = \Drupal::config('field.settings')->get('purge_batch_size');
+    if (!($config_purge_batch_size = \Drupal::config('field.field_settings')->get('purge_batch_size'))) {
+      $config_purge_batch_size = Settings::get('field_purge_batch_size', 50);
+    }
+
+    $context['sandbox']['field']['purge_batch_size'] = $config_purge_batch_size;
     // Save the future list of installed extensions to limit the amount of times
     // the configuration is read from disk.
     $context['sandbox']['field']['extensions'] = $config_importer->getStorageComparer()->getSourceStorage()->read('core.extension');
@@ -81,8 +87,9 @@ class ConfigImporterFieldPurger {
         $context['sandbox']['field']['steps_to_delete'] += $how_many_steps;
       }
     }
-    // Each field possibly needs one last field_purge_batch() call to remove the
-    // last field and the field storage itself.
+    // Each field possibly needs one last
+    // \Drupal\Core\Field\FieldPurger::purgeBatch() call to remove
+    // the last field and the field storage itself.
     $context['sandbox']['field']['steps_to_delete'] += count($fields);
 
     $context['sandbox']['field']['current_progress'] = 0;

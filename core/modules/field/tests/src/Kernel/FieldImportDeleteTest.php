@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Kernel;
 
+use Drupal\Core\Field\FieldPurger;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
@@ -113,15 +114,15 @@ class FieldImportDeleteTest extends FieldKernelTestBase {
     $this->assertSame([], $active->listAll($field_config_name_2b));
 
     // Check that only the first storage definition is preserved in state.
-    $deleted_storages = \Drupal::state()->get('field.storage.deleted', []);
-    $this->assertTrue(isset($deleted_storages[$field_storage_uuid]));
-    $this->assertFalse(isset($deleted_storages[$field_storage_uuid_2]));
+    $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
+    $this->assertTrue(isset($deleted_storage_definitions[$field_storage_uuid]));
+    $this->assertFalse(isset($deleted_storage_definitions[$field_storage_uuid_2]));
 
     // Purge field data, and check that the storage definition has been
     // completely removed once the data is purged.
-    field_purge_batch(10);
-    $deleted_storages = \Drupal::state()->get('field.storage.deleted', []);
-    $this->assertEmpty($deleted_storages, 'Fields are deleted');
+    \Drupal::service(FieldPurger::class)->purgeBatch(10);
+    $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
+    $this->assertTrue(empty($deleted_storage_definitions), 'Fields are deleted');
   }
 
 }

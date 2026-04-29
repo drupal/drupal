@@ -3,6 +3,7 @@
 field.settings:
   type: config_object
   label: 'Field settings'
+  deprecated: "The 'field.settings' config is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the field_purge_batch_size setting instead. See https://www.drupal.org/node/3494023."
   constraints:
     FullyValidatable: ~
   mapping:

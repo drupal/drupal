@@ -6,10 +6,10 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldPurger;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\field_ui\FieldUI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for removing a field from a bundle.
@@ -18,18 +18,24 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class FieldConfigDeleteForm extends EntityDeleteForm {
 
-  public function __construct(protected EntityTypeBundleInfoInterface $entityTypeBundleInfo, EntityTypeManagerInterface $entityTypeManager) {
-    $this->entityTypeManager = $entityTypeManager;
-  }
-
   /**
-   * {@inheritdoc}
+   * The field purger service.
    */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.bundle.info'),
-      $container->get('entity_type.manager'),
-    );
+  protected FieldPurger $fieldPurger;
+
+  public function __construct(
+    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+    EntityTypeManagerInterface $entityTypeManager,
+    ?FieldPurger $fieldPurger = NULL,
+  ) {
+    $this->entityTypeManager = $entityTypeManager;
+    if (!$fieldPurger instanceof FieldPurger) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $fieldPurger argument is deprecated in drupal:11.4.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3494023', E_USER_DEPRECATED);
+      $this->fieldPurger = \Drupal::service(FieldPurger::class);
+    }
+    else {
+      $this->fieldPurger = $fieldPurger;
+    }
   }
 
   /**
@@ -114,13 +120,14 @@ class FieldConfigDeleteForm extends EntityDeleteForm {
 
     $form_state->setRedirectUrl($this->getCancelUrl());
 
-    // Fields are purged on cron. However field module prevents disabling
+    // Fields are purged on cron. However, the field module prevents disabling
     // modules when field types they provided are used in a field until it is
     // fully purged. In the case that a field has minimal or no content, a
-    // single call to field_purge_batch() will remove it from the system. Call
-    // this with a low batch limit to avoid administrators having to wait for
-    // cron runs when removing fields that meet this criteria.
-    field_purge_batch(10);
+    // single call to \Drupal\Core\Field\FieldPurger::purgeBatch() will remove
+    // it from the system. Call this with a low batch limit to  avoid
+    // administrators having to wait for cron runs when removing fields that
+    // meet this criteria.
+    $this->fieldPurger->purgeBatch(10);
   }
 
 }

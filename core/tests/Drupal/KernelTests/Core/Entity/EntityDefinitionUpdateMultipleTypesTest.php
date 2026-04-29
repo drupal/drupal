@@ -14,6 +14,7 @@ use Drupal\Core\Entity\EntityTypeEvents;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldException;
+use Drupal\Core\Field\FieldPurger;
 use Drupal\Core\Field\FieldStorageDefinitionEvents;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -533,7 +534,7 @@ class EntityDefinitionUpdateMultipleTypesTest extends EntityKernelTestBase {
 
     // Purge field data, and check that the storage definition has been
     // completely removed once the data is purged.
-    field_purge_batch(10);
+    \Drupal::service(FieldPurger::class)->purgeBatch(10);
     $deleted_field_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldDefinitions();
     $this->assertEmpty($deleted_field_definitions, 'The bundle field has been deleted.');
     $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();

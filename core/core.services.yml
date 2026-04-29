@@ -800,6 +800,8 @@ services:
     class: Drupal\Core\Field\DeletedFieldsRepository
     arguments: ['@state']
   Drupal\Core\Field\DeletedFieldsRepositoryInterface: '@entity_field.deleted_fields_repository'
+  Drupal\Core\Field\FieldPurger:
+    autowire: true
   field_storage_definition.listener:
     class: Drupal\Core\Field\FieldStorageDefinitionListener
     arguments: ['@entity_type.manager', '@event_dispatcher', '@entity.last_installed_schema.repository', '@entity_field.manager', '@entity_field.deleted_fields_repository']

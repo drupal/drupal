@@ -19,6 +19,7 @@ use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Field\FieldPurger;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -344,6 +345,12 @@ class SystemHooks {
       $fetcher = \Drupal::service('system.sa_fetcher');
       $fetcher->getSecurityAdvisories();
     }
+
+    // Do a pass of purging on deleted entity field data, if any exists.
+    if (!$config_purge_batch_size = \Drupal::config('field.field_settings')->get('purge_batch_size')) {
+      $config_purge_batch_size = Settings::get('field_purge_batch_size', 50);
+    }
+    \Drupal::service(FieldPurger::class)->purgeBatch($config_purge_batch_size);
   }
 
   /**

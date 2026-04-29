@@ -106,9 +106,9 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
 
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('telephone'));
     $this->assertNull(\Drupal::service('entity.repository')->loadEntityByUuid('field_storage_config', $field_storage->uuid()), 'The test field has been deleted by the configuration synchronization');
-    $deleted_storages = \Drupal::state()->get('field.storage.deleted', []);
-    $this->assertFalse(isset($deleted_storages[$field_storage->uuid()]), 'Telephone field has been completed removed from the system.');
-    $this->assertTrue(isset($deleted_storages[$unrelated_field_storage->uuid()]), 'Unrelated field not purged by configuration synchronization.');
+    $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
+    $this->assertFalse(isset($deleted_storage_definitions[$field_storage->uuid()]), 'Telephone field has been completed removed from the system.');
+    $this->assertTrue(isset($deleted_storage_definitions[$unrelated_field_storage->uuid()]), 'Unrelated field not purged by configuration synchronization.');
   }
 
   /**
@@ -154,8 +154,8 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     unset($core_extension['module']['telephone']);
     $sync->write('core.extension', $core_extension);
 
-    $deleted_storages = \Drupal::state()->get('field.storage.deleted', []);
-    $this->assertTrue(isset($deleted_storages[$field_storage_uuid]), 'Field has been deleted and needs purging before configuration synchronization.');
+    $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
+    $this->assertTrue(isset($deleted_storage_definitions[$field_storage_uuid]), 'Field has been deleted and needs purging before configuration synchronization.');
 
     $steps = $this->configImporter()->initialize();
     $this->assertSame(['\\Drupal\\field\\ConfigImporterFieldPurger', 'process'], $steps[0], 'The additional process configuration synchronization step has been added.');
@@ -164,9 +164,8 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     // Telephone module.
     $this->configImporter()->import();
 
-    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('telephone'));
-    $deleted_storages = \Drupal::state()->get('field.storage.deleted', []);
-    $this->assertFalse(isset($deleted_storages[$field_storage_uuid]), 'Field has been completed removed from the system.');
+    $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
+    $this->assertFalse(isset($deleted_storage_definitions[$field_storage_uuid]), 'Field has been completed removed from the system.');
   }
 
 }

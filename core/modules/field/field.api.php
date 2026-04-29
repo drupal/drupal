@@ -409,10 +409,10 @@ function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mo
 /**
  * Acts when a field storage definition is being purged.
  *
- * In field_purge_field_storage(), after the storage definition has been removed
- * from the system, the entity storage has purged stored field data, and the
- * field definitions cache has been cleared, this hook is invoked on all modules
- * to allow them to respond to the field storage being purged.
+ * In FieldPurger::purgeFieldStorageDefinition(), after the storage definition
+ * has been removed from the system, the entity storage has purged stored field
+ * data, and the field definitions cache has been cleared, this hook is invoked
+ * on all modules to allow them to respond to the field storage being purged.
  *
  * @param \Drupal\field\Entity\FieldStorageConfig $field_storage
  *   The field storage being purged.

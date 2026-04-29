@@ -218,7 +218,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
     parent::preDelete($storage, $fields);
 
     // Keep the field definitions in the deleted fields repository so we can use
-    // them later during field_purge_batch().
+    // them later during the field purge process.
     /** @var \Drupal\field\FieldConfigInterface $field */
     foreach ($fields as $field) {
       // Only mark a field for purging if there is data. Otherwise, just remove
