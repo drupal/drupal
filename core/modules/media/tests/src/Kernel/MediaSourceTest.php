@@ -216,6 +216,27 @@ class MediaSourceTest extends MediaKernelTestBase {
     $this->assertSame('Snowball', $media_source->getMetadata($media, $attribute_name), 'Value of the metadata attribute is not correct.');
     $media->save();
     $this->assertSame('Snowball', $media->get($field_name)->value, 'Metadata attribute was not mapped to the field.');
+
+    // Test that we only overwrite existing field values if the source changed
+    // from a non-empty value to another non-empty value.
+    $media = Media::create([
+      'bundle' => $this->testMediaType->id(),
+      // Force an empty source field.
+      'field_media_test' => NULL,
+      $field_name => 'Some pre-existing value',
+    ]);
+    $media->save();
+    // After first save, the entity has the pre-existing value in the mapped
+    // field.
+    $this->assertSame('Some pre-existing value', $media->get($field_name)->value);
+    \Drupal::state()->set('media_source_test_attributes', [
+      $attribute_name => ['title' => 'Attribute to map', 'value' => 'Snowball'],
+    ]);
+    // Change the source field value from NULL to something different.
+    $media->set('field_media_test', 'some_new_value');
+    $media->save();
+    // Verify the pre-existing value was not overwritten.
+    $this->assertSame('Some pre-existing value', $media->get($field_name)->value);
   }
 
   /**
