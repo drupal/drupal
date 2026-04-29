@@ -172,6 +172,13 @@ class Date extends NumericFilter {
       // When the operator is either <, <=, =, !=, >=, > or regular_expression
       // the input contains only one value.
       if ($this->value['value'] == '') {
+        // If the filter was not submitted but has a default offset value,
+        // apply it so backends receive a resolved date.
+        if (!empty($this->options['value']['value']) && $this->options['value']['type'] === 'offset') {
+          $this->value['value'] = $this->options['value']['value'];
+          $this->value['type'] = 'offset';
+          return TRUE;
+        }
         return FALSE;
       }
     }
@@ -179,6 +186,14 @@ class Date extends NumericFilter {
       // When the operator is either between or not between the input contains
       // two values.
       if ($this->value['min'] == '' || $this->value['max'] == '') {
+        // If the filter was not submitted but has default offset values,
+        // apply them so backends receive resolved dates.
+        if ((!empty($this->options['value']['min']) || !empty($this->options['value']['max'])) && $this->options['value']['type'] === 'offset') {
+          $this->value['min'] = $this->options['value']['min'];
+          $this->value['max'] = $this->options['value']['max'];
+          $this->value['type'] = 'offset';
+          return TRUE;
+        }
         return FALSE;
       }
     }
