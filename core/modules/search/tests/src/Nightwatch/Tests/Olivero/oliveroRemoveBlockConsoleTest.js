@@ -4,24 +4,24 @@ module.exports = {
     browser
       .drupalInstall({
         setupFile:
-          'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
+          'core/modules/search/tests/src/Nightwatch/Tests/Olivero/TestSiteOliveroInstallTestScript.php',
         installProfile: 'minimal',
       })
       .drupalLoginAsAdmin(() => {
         browser
           .drupalRelativeURL('/admin/structure/block')
 
-          // Disable main menu block.
+          // Disable narrow search form block.
           .click(
-            '[data-drupal-selector="edit-blocks-olivero-main-menu-operations"] .dropbutton-toggle button',
+            '[data-drupal-selector="edit-blocks-olivero-search-form-narrow-operations"] .dropbutton-toggle button',
           )
-          .click('[href*="olivero_main_menu/disable"]')
+          .click('[href*="olivero_search_form_narrow/disable"]')
 
-          // Disable user account menu block.
+          // Disable wide search form block.
           .click(
-            '[data-drupal-selector="edit-blocks-olivero-account-menu-operations"] .dropbutton-toggle button',
+            '[data-drupal-selector="edit-blocks-olivero-search-form-wide-operations"] .dropbutton-toggle button',
           )
-          .click('[href*="olivero_account_menu/disable"]');
+          .click('[href*="olivero_search_form_wide/disable"]');
       });
   },
   after(browser) {

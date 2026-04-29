@@ -12,7 +12,7 @@ module.exports = {
     browser
       .drupalInstall({
         setupFile:
-          'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
+          'core/modules/search/tests/src/Nightwatch/Tests/Olivero/TestSiteOliveroInstallTestScript.php',
         installProfile: 'minimal',
       })
       // Create user that can search.
