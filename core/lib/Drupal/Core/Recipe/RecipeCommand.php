@@ -7,8 +7,8 @@ namespace Drupal\Core\Recipe;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Command\BootableCommandTrait;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
-use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
+use Drupal\Core\Config\ConfigImporterFactory;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerAwareInterface;
@@ -168,20 +168,7 @@ final class RecipeCommand extends Command {
     $storage_comparer = new StorageComparer($checkpoint_storage, $container->get('config.storage'));
     $storage_comparer->reset();
 
-    $config_importer = new ConfigImporter(
-      $storage_comparer,
-      $container->get('event_dispatcher'),
-      $container->get('config.manager'),
-      $container->get('lock'),
-      $container->get('config.typed'),
-      $container->get('module_handler'),
-      $container->get('module_installer'),
-      $container->get('theme_handler'),
-      $container->get('string_translation'),
-      $container->get('extension.list.module'),
-      $container->get('extension.list.theme'),
-    );
-    $config_importer->import();
+    $container->get(ConfigImporterFactory::class)->get($storage_comparer)->import();
   }
 
 }
