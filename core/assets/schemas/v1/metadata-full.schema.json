@@ -40,6 +40,28 @@
               "items": {
                 "type": "string"
               }
+            },
+            "expected": {
+              "type": "array",
+              "title": "Expected components",
+              "description": "List of components / component tags that are expected to be put into this slot.",
+              "items": {
+                "type": "string",
+                "title": "Expected component item",
+                "description": "A component ID or tag."
+              }
+            },
+            "minItems": {
+              "type": "integer",
+              "minimum": 0,
+              "title": "Minimum number of items",
+              "description": "The minimum number of items a slot should accommodate"
+            },
+            "maxItems": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Maximum number of items",
+              "description": "The maximum number of items a slot should accommodate"
             }
           }
         }
@@ -190,6 +212,14 @@
     },
     "variants": {
       "$ref": "metadata.schema.json#/$defs/variantDefinition"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "A list of tags to apply to this component",
+      "items": {
+        "type": "string"
+      }
     },
     "template": {
       "type": "string",
