@@ -22,6 +22,7 @@ use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
+use Drupal\node\NodeAccessRebuild;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -156,7 +157,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   public function testGetNodeCollectionWithHookNodeGrantsImplementationsFromIssue2984964(): void {
     // Set up data model.
     $this->assertTrue($this->container->get('module_installer')->install(['node_access_test'], TRUE), 'Installed modules.');
-    node_access_rebuild();
+    \Drupal::service(NodeAccessRebuild::class)->rebuild();
     $this->rebuildAll();
 
     // Create data.

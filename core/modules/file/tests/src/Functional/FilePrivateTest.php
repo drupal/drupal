@@ -8,6 +8,7 @@ use Drupal\file\Entity\File;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\user\RoleInterface;
+use Drupal\node\NodeAccessRebuild;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -36,7 +37,7 @@ class FilePrivateTest extends FileFieldTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->addPrivateField(NodeType::load('article'));
-    node_access_rebuild();
+    \Drupal::service(NodeAccessRebuild::class)->rebuild();
     \Drupal::state()->set('node_access_test.private', TRUE);
     // This test expects unused managed files to be marked as a temporary file.
     $this->config('file.settings')

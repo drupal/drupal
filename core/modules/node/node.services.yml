@@ -54,3 +54,5 @@ services:
     autowire: true
   Drupal\node\NodeBulkUpdate:
     autowire: true
+  Drupal\node\NodeAccessRebuild:
+    autowire: true

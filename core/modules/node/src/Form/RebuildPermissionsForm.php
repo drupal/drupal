@@ -5,6 +5,7 @@ namespace Drupal\node\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\node\NodeAccessRebuild;
 
 /**
  * Form for rebuilding permissions.
@@ -12,6 +13,11 @@ use Drupal\Core\Url;
  * @internal
  */
 class RebuildPermissionsForm extends ConfirmFormBase {
+
+  public function __construct(
+    protected readonly NodeAccessRebuild $nodeAccessRebuild,
+  ) {
+  }
 
   /**
    * {@inheritdoc}
@@ -52,7 +58,7 @@ class RebuildPermissionsForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    node_access_rebuild(TRUE);
+    $this->nodeAccessRebuild->rebuild(TRUE);
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
 

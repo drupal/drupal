@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel;
 
+use Drupal\node\NodeAccessRebuild;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -161,29 +162,29 @@ class NodeAccessTest extends NodeAccessTestBase {
   }
 
   /**
-   * Tests that multiple calls to node_access_rebuild only result in one batch.
+   * Tests that multiple calls to node access rebuild only result in one batch.
    */
   public function testDuplicateBatchRebuild(): void {
     $this->enableModules(['node_access_test']);
     $batch = batch_get();
     $this->assertEmpty($batch);
-    node_access_rebuild(TRUE);
+    \Drupal::service(NodeAccessRebuild::class)->rebuild(TRUE);
     $batch = batch_get();
     $this->assertCount(1, $batch['sets']);
-    node_access_rebuild(TRUE);
+    \Drupal::service(NodeAccessRebuild::class)->rebuild(TRUE);
     $batch = batch_get();
     $this->assertCount(1, $batch['sets']);
   }
 
   /**
-   * Tests node_access_needs_rebuild is set when node_access_rebuild is called.
+   * Tests rebuild flag is set when NodeAccessRebuild::rebuild() is called.
    */
   public function testNodeAccessRebuildNeedsRebuild(): void {
-    $this->assertFalse(node_access_needs_rebuild());
+    $this->assertFalse(\Drupal::service(NodeAccessRebuild::class)->needsRebuild());
     $this->enableModules(['node_access_test']);
     // Call as batch so rebuild is not run immediately.
-    node_access_rebuild(TRUE);
-    $this->assertTrue(node_access_needs_rebuild());
+    \Drupal::service(NodeAccessRebuild::class)->rebuild(TRUE);
+    $this->assertTrue(\Drupal::service(NodeAccessRebuild::class)->needsRebuild());
   }
 
   /**

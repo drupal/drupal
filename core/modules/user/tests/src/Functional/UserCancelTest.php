@@ -13,6 +13,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\user\Entity\User;
+use Drupal\node\NodeAccessRebuild;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -282,7 +283,7 @@ class UserCancelTest extends BrowserTestBase {
     \Drupal::service('module_installer')->install(['node_access_test', 'user_form_test']);
 
     // Setup node access.
-    node_access_rebuild();
+    \Drupal::service(NodeAccessRebuild::class)->rebuild();
     $this->addPrivateField(NodeType::load('page'));
     \Drupal::state()->set('node_access_test.private', TRUE);
 
@@ -640,7 +641,7 @@ class UserCancelTest extends BrowserTestBase {
 
     \Drupal::service('module_installer')->install(['node_access_test']);
     // Rebuild node access.
-    node_access_rebuild();
+    \Drupal::service(NodeAccessRebuild::class)->rebuild();
 
     $account = $this->drupalCreateUser(['access content']);
     $node = $this->drupalCreateNode(['type' => 'page', 'uid' => $account->id()]);

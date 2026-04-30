@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\node\NodeAccessRebuild;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -39,7 +40,7 @@ class NodeAccessLanguageFallbackTest extends NodeTestBase {
 
     // After enabling a node access module, the {node_access} table has to be
     // rebuilt.
-    node_access_rebuild();
+    \Drupal::service(NodeAccessRebuild::class)->rebuild();
 
     // Add Hungarian, Catalan, and Afrikaans.
     ConfigurableLanguage::createFromLangcode('hu')->save();
