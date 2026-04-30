@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - search
+    - search_help
     - system
   theme:
     - claro

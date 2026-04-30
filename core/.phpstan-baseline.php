@@ -16852,18 +16852,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/filter/tests/src/Kernel/TextFormatElementFormTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\help\\\\HelpSectionManager\\:\\:clearCachedDefinitions\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/src/HelpSectionManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\help\\\\HelpSectionManager\\:\\:setSearchManager\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/src/HelpSectionManager.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\help\\\\HelpTopicPluginBase\\:\\:getProvider\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -16874,48 +16862,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/help/src/HelpTopicTwigLoader.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\help\\\\Plugin\\\\Search\\\\HelpSearch\\:\\:indexClear\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/src/Plugin/Search/HelpSearch.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\help\\\\Plugin\\\\Search\\\\HelpSearch\\:\\:markForReindex\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/src/Plugin/Search/HelpSearch.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\help\\\\Plugin\\\\Search\\\\HelpSearch\\:\\:removeItemsFromIndex\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/src/Plugin/Search/HelpSearch.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\help\\\\Plugin\\\\Search\\\\HelpSearch\\:\\:updateIndex\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/src/Plugin/Search/HelpSearch.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\help\\\\Plugin\\\\Search\\\\HelpSearch\\:\\:updateIndexState\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/src/Plugin/Search/HelpSearch.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\help\\\\Plugin\\\\Search\\\\HelpSearch\\:\\:updateTopicList\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/src/Plugin/Search/HelpSearch.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\help\\\\Functional\\\\HelpTopicSearchTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/tests/src/Functional/HelpTopicSearchTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\help\\\\Functional\\\\HelpTopicTest\\:\\:assertBreadcrumb\\(\\) has no return type specified\\.$#',
@@ -26346,6 +26292,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/rest/tests/src/Unit/EventSubscriber/ResourceResponseSubscriberTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\search_help\\\\Functional\\\\HelpTopicSearchTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/search/modules/search_help/tests/src/Functional/HelpTopicSearchTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$working_to might not be defined\\.$#',

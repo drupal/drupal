@@ -1,0 +1,8 @@
+name: Search help
+type: module
+description: 'Provides a search plugin for searching site help.'
+package: Core
+version: VERSION
+dependencies:
+  - drupal:help
+  - drupal:search

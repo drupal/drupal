@@ -7,8 +7,6 @@ services:
   plugin.manager.help_section:
     class: Drupal\help\HelpSectionManager
     parent: default_plugin_manager
-    calls:
-      - [setSearchManager, ['@?plugin.manager.search']]
     tags:
       - { name: plugin_manager_cache_clear }
   help.breadcrumb:

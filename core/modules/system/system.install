@@ -166,3 +166,18 @@ function system_update_11300(): TranslatableMarkup|null {
   }
   return NULL;
 }
+
+/**
+ * Install Help Search module if the Search and Help modules are installed.
+ */
+function system_update_11400(): void {
+  // This needs to be a system update so it runs before other updates in order
+  // to get the new help_search plugin in place as early as possible.
+  $module_handler = \Drupal::moduleHandler();
+  if ($module_handler->moduleExists('help')) {
+    \Drupal::database()->schema()->dropTable('help_search_items');
+    if (\Drupal::moduleHandler()->moduleExists('search')) {
+      \Drupal::service('module_installer')->install(['search_help']);
+    }
+  }
+}

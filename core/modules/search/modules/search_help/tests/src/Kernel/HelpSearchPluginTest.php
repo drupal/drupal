@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Kernel;
+namespace Drupal\Tests\search_help\Kernel;
 
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests search plugin behaviors.
  *
- * @see \Drupal\help\Plugin\Search\HelpSearch
+ * @see \Drupal\search_help\Plugin\Search\SearchHelpSearch
  */
 #[Group('help')]
 #[RunTestsInSeparateProcesses]
@@ -22,7 +22,7 @@ class HelpSearchPluginTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['help', 'search'];
+  protected static $modules = ['help', 'search', 'search_help'];
 
   /**
    * Tests search plugin annotation and interfaces.
@@ -30,7 +30,7 @@ class HelpSearchPluginTest extends KernelTestBase {
   public function testAnnotation(): void {
     /** @var \Drupal\search\SearchPluginManager $manager */
     $manager = \Drupal::service('plugin.manager.search');
-    /** @var \Drupal\help\Plugin\Search\HelpSearch $plugin */
+    /** @var \Drupal\search_help\Plugin\Search\SearchHelpSearch $plugin */
     $plugin = $manager->createInstance('help_search');
     $this->assertInstanceOf(AccessibleInterface::class, $plugin);
     $this->assertInstanceOf(SearchIndexingInterface::class, $plugin);

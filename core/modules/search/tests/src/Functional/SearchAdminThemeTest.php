@@ -26,6 +26,7 @@ class SearchAdminThemeTest extends BrowserTestBase {
     'help',
     'node',
     'search',
+    'search_help',
     'search_extra_type',
     'user',
   ];
@@ -81,6 +82,7 @@ class SearchAdminThemeTest extends BrowserTestBase {
     $page_ids = [
       'node_search' => FALSE,
       'dummy_search_type' => TRUE,
+      // The help_search plugin is provided by the search_help sub-module.
       'help_search' => TRUE,
       'user_search' => FALSE,
     ];
