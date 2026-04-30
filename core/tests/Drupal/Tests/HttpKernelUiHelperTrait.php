@@ -9,6 +9,7 @@ use Behat\Mink\Driver\DriverInterface;
 use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
 use Behat\Mink\Session;
+use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\HttpKernelBrowser;
 
 /**
@@ -42,21 +43,42 @@ trait HttpKernelUiHelperTrait {
    *
    * Requests are sent to the HTTP kernel.
    *
-   * @param string $path
-   *   The Drupal path to load into Mink controlled browser. (Note that the
-   *   Symfony browser's functionality of paths relative to the previous request
-   *   is not available, because an initial '/' is assumed if not present.)
+   * @param \Drupal\Core\Url|string $path
+   *   The Drupal path to load into Mink controlled browser, as a string or a
+   *   Url object. (Note that the Symfony browser's functionality of paths
+   *   relative to the previous request is not available, because an initial '/'
+   *   is assumed if not present.)
+   * @param array $options
+   *   (optional) Options to be forwarded to the URL generator. The 'absolute'
+   *   option is not supported.
+   * @param string[] $headers
+   *   An array containing additional HTTP request headers, the array keys are
+   *   the header names and the array values the header values. This is useful
+   *   to set for example the "Accept-Language" header for requesting the page
+   *   in a different language. Note that Mink's BrowserKitDriver normalizes
+   *   header names to uppercase, while Symfony's HTTP classes normalize to
+   *   lower case, which may cause a header to not be found with certain APIs.
    *
    * @return string
    *   The retrieved HTML string.
    *
    * @see \Drupal\Tests\BrowserTestBase::getHttpClient()
    */
-  protected function drupalGet($path): string {
+  protected function drupalGet($path, array $options = [], array $headers = []): string {
     $session = $this->getSession();
 
-    if (!str_starts_with($path, '/')) {
+    if (is_string($path) && !str_starts_with($path, '/')) {
       $path = '/' . $path;
+    }
+
+    if (is_object($path) || $options) {
+      $path = $this->buildUrl($path, $options);
+    }
+
+    foreach ($headers as $header_name => $header_value) {
+      assert(is_string($header_name));
+
+      $session->setRequestHeader($header_name, $header_value);
     }
 
     $session->visit($path);
@@ -95,6 +117,34 @@ trait HttpKernelUiHelperTrait {
     // Use static::drupalGet() rather than the click() method on the element,
     // because that will not produce HTML debug output.
     $this->drupalGet($links[$index]->getAttribute('href'));
+  }
+
+  /**
+   * Builds a URL from a system path or a URL object.
+   *
+   * @param string|\Drupal\Core\Url $path
+   *   A system path or a URL object.
+   * @param array $options
+   *   Options to be passed to Url::fromUri(). If $path is a Url object, any
+   *   options it has will take priority over this parameter.
+   *
+   * @return string
+   *   A URL string.
+   */
+  protected function buildUrl(Url|string $path, array $options = []): string {
+    assert(empty($options['absolute']), 'Absolute URLs are not usable with drupalGet().');
+
+    if ($path instanceof Url) {
+      if ($options) {
+        $url_options = $path->getOptions();
+        $options = $url_options + $options;
+        $path->setOptions($options);
+      }
+      return $path->toString();
+    }
+
+    $uri = $path === '<front>' ? 'base:/' : 'base:/' . $path;
+    return Url::fromUri($uri, $options)->toString();
   }
 
   /**

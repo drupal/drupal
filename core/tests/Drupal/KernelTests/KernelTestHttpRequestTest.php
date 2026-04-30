@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests;
 
+use Drupal\Core\Url;
 use Drupal\Tests\HttpKernelUiHelperTrait;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
@@ -44,6 +45,40 @@ class KernelTestHttpRequestTest extends KernelTestBase {
     $this->drupalGet('/system-test/main-content-handling');
     $this->assertEquals(Response::HTTP_OK, $this->getSession()->getStatusCode());
     $this->assertSession()->pageTextContains('Content to test main content fallback');
+
+    // Test drupalGet() with Url options.
+    $this->drupalGet('/system-test/set-header', [
+      'query' => [
+        'name' => 'meaning',
+        'value' => '42',
+      ],
+    ]);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('The following header was set: meaning: 42');
+
+    // Test drupalGet() with a URL object.
+    $url = Url::fromRoute('system_test.main_content_handling');
+    $this->drupalGet($url);
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Test drupalGet() with a URL object with options.
+    $url = Url::fromRoute('system_test.set_header', [], [
+      'query' => [
+        'name' => 'meaning',
+        'value' => '42',
+      ],
+    ]);
+    $this->drupalGet($url);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('The following header was set: meaning: 42');
+
+    // Test that setting headers with drupalGet() works.
+    $this->drupalGet('system-test/header', [], [
+      'Test-Header' => 'header value',
+    ]);
+    // We can't use WebAssert::responseHeaderExists() because of how header
+    // names are normalized by Mink and Symfony.
+    $this->assertEquals('header value', $this->getSession()->getResponseHeader('Test-Header'));
   }
 
   /**
