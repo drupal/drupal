@@ -65,6 +65,11 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return string
    *   The name of the original entity type class.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+   *   getDecoratedClasses() instead.
+   *
+   * @see https://www.drupal.org/node/3557464
    */
   public function getOriginalClass();
 
