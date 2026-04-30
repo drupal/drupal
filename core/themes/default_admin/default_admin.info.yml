@@ -1,8 +1,8 @@
 name: Default Admin
 type: theme
 base theme: false
-description: Default Admin theme with a strong focus on improving the editorial experience. Learn more about <a href="https://www.drupal.org/docs/contributed-themes/gin-admin-theme/specific-settings-within-gin" target="_blank">the available settings</a> and <a href="https://www.drupal.org/docs/contributed-themes/gin-admin-theme/custom-theming" target="_blank">how to customize the theme</a>.
-alt text: Screenshot of Default Admin, Drupal administration theme.
+description: A clean, accessible and powerful Drupal administration theme with a strong focus on improving the editorial experience.
+alt text: Screenshot of Default Admin, the Drupal administration theme.
 package: Core
 version: VERSION
 lifecycle: experimental

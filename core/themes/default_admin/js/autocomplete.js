@@ -3,8 +3,6 @@
  * Claro's enhancement for autocomplete form element.
  */
 
-// cspell:ignore is-autocompleting
-
 (($, Drupal, once) => {
   Drupal.behaviors.claroAutoCompete = {
     attach(context) {
