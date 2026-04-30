@@ -27,3 +27,4 @@ services:
   rest.resource.entity.post_route.subscriber:
     class: \Drupal\rest\EventSubscriber\EntityResourcePostRouteSubscriber
     arguments: ['@entity_type.manager']
+  Drupal\rest\EventSubscriber\DeprecatedUserRoutesSubscriber: ~

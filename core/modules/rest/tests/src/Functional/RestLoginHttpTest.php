@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\user\Functional;
+namespace Drupal\Tests\rest\Functional;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Flood\DatabaseBackend;
 use Drupal\Core\Test\AssertMailTrait;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
+use Drupal\rest\Controller\RestAuthenticationController;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\user\Controller\UserAuthenticationController;
 use GuzzleHttp\Cookie\CookieJar;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -22,10 +22,9 @@ use Symfony\Component\Serializer\Serializer;
 /**
  * Tests login and password reset via direct HTTP.
  */
-#[Group('user')]
-#[IgnoreDeprecations]
+#[Group('rest')]
 #[RunTestsInSeparateProcesses]
-class UserLoginHttpTest extends BrowserTestBase {
+class RestLoginHttpTest extends BrowserTestBase {
 
   use AssertMailTrait {
     getMails as drupalGetMails;
@@ -34,7 +33,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['dblog'];
+  protected static $modules = ['dblog', 'rest'];
 
   /**
    * {@inheritdoc}
@@ -68,9 +67,9 @@ class UserLoginHttpTest extends BrowserTestBase {
   /**
    * Executes a login HTTP request for a given serialization format.
    *
-   * @param string $name
+   * @param string|null $name
    *   The username.
-   * @param string $pass
+   * @param string|null $pass
    *   The user password.
    * @param string $format
    *   The format to use to make the request.
@@ -79,7 +78,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    *   The HTTP response.
    */
   protected function loginRequest($name, $pass, $format = 'json'): ResponseInterface {
-    $user_login_url = Url::fromRoute('user.login.http')
+    $user_login_url = Url::fromRoute('rest.login')
       ->setRouteParameter('_format', $format)
       ->setAbsolute();
 
@@ -105,10 +104,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   /**
    * Tests user session life cycle.
    */
-  #[IgnoreDeprecations]
   public function testLogin(): void {
-    $this->expectUserDeprecationMessage('Drupal\user\Controller\UserAuthenticationController is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\rest\Controller\RestAuthenticationController instead. See https://www.drupal.org/node/3552724');
-
     // Without the serialization module only JSON is supported.
     $this->doTestLogin('json');
 
@@ -137,7 +133,7 @@ class UserLoginHttpTest extends BrowserTestBase {
 
     $login_status_url = $this->getLoginStatusUrlString($format);
     $response = $client->get($login_status_url);
-    $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_OUT);
+    $this->assertHttpResponse($response, 200, RestAuthenticationController::LOGGED_OUT);
 
     // Flooded.
     $this->config('user.flood')
@@ -202,13 +198,13 @@ class UserLoginHttpTest extends BrowserTestBase {
     $this->assertSame(['message' => 'This route can only be accessed by anonymous users.'], $this->serializer->decode((string) $response->getBody(), $format));
 
     $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
-    $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_IN);
+    $this->assertHttpResponse($response, 200, RestAuthenticationController::LOGGED_IN);
 
     $response = $this->logoutRequest($format, $logout_token);
     $this->assertEquals(204, $response->getStatusCode());
 
     $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
-    $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_OUT);
+    $this->assertHttpResponse($response, 200, RestAuthenticationController::LOGGED_OUT);
 
     $this->resetFlood();
   }
@@ -225,7 +221,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    *   The HTTP response.
    */
   protected function passwordRequest(array $request_body, $format = 'json'): ResponseInterface {
-    $password_reset_url = Url::fromRoute('user.pass.http')
+    $password_reset_url = Url::fromRoute('rest.pass')
       ->setRouteParameter('_format', $format)
       ->setAbsolute();
 
@@ -244,10 +240,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   /**
    * Tests user password reset.
    */
-  #[IgnoreDeprecations]
   public function testPasswordReset(): void {
-    $this->expectUserDeprecationMessage('Drupal\user\Controller\UserAuthenticationController is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\rest\Controller\RestAuthenticationController instead. See https://www.drupal.org/node/3552724');
-
     // Create a user account.
     $account = $this->drupalCreateUser();
 
@@ -279,7 +272,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @return mixed
    *   The value for the key.
    */
-  protected function getResultValue(ResponseInterface $response, $key, $format) {
+  protected function getResultValue(ResponseInterface $response, string $key, string $format): mixed {
     $decoded = $this->serializer->decode((string) $response->getBody(), $format);
     if (is_array($decoded)) {
       return $decoded[$key];
@@ -345,8 +338,6 @@ class UserLoginHttpTest extends BrowserTestBase {
    *   The expected status code.
    * @param string $expected_body
    *   The expected response body.
-   *
-   * @internal
    */
   protected function assertHttpResponse(ResponseInterface $response, int $expected_code, string $expected_body): void {
     $this->assertEquals($expected_code, $response->getStatusCode());
@@ -364,8 +355,6 @@ class UserLoginHttpTest extends BrowserTestBase {
    *   The expected message encoded in response.
    * @param string $format
    *   The format that the response is encoded in.
-   *
-   * @internal
    */
   protected function assertHttpResponseWithMessage(ResponseInterface $response, int $expected_code, string $expected_message, string $format = 'json'): void {
     $this->assertEquals($expected_code, $response->getStatusCode());
@@ -452,10 +441,10 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The HTTP response.
    */
-  protected function logoutRequest($format = 'json', $logout_token = ''): ResponseInterface {
+  protected function logoutRequest(string $format = 'json', string $logout_token = ''): ResponseInterface {
     /** @var \GuzzleHttp\Client $client */
     $client = $this->container->get('http_client');
-    $user_logout_url = Url::fromRoute('user.logout.http')
+    $user_logout_url = Url::fromRoute('rest.logout')
       ->setRouteParameter('_format', $format)
       ->setAbsolute();
     if ($logout_token) {
@@ -497,7 +486,7 @@ class UserLoginHttpTest extends BrowserTestBase {
 
     // Ensure still logged in.
     $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
-    $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_IN);
+    $this->assertHttpResponse($response, 200, RestAuthenticationController::LOGGED_IN);
 
     // Try with an incorrect token.
     $response = $this->logoutRequest($format, 'not-the-correct-token');
@@ -505,7 +494,7 @@ class UserLoginHttpTest extends BrowserTestBase {
 
     // Ensure still logged in.
     $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
-    $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_IN);
+    $this->assertHttpResponse($response, 200, RestAuthenticationController::LOGGED_IN);
 
     // Try a logout request with correct token.
     $response = $this->logoutRequest($format, $logout_token);
@@ -513,7 +502,7 @@ class UserLoginHttpTest extends BrowserTestBase {
 
     // Ensure actually logged out.
     $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
-    $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_OUT);
+    $this->assertHttpResponse($response, 200, RestAuthenticationController::LOGGED_OUT);
   }
 
   /**
@@ -526,7 +515,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    *   The URL string.
    */
   protected function getLoginStatusUrlString($format = 'json') {
-    $user_login_status_url = Url::fromRoute('user.login_status.http');
+    $user_login_status_url = Url::fromRoute('rest.login_status');
     $user_login_status_url->setRouteParameter('_format', $format);
     $user_login_status_url->setAbsolute();
     return $user_login_status_url->toString();
@@ -563,7 +552,7 @@ class UserLoginHttpTest extends BrowserTestBase {
     ];
     $logged = Database::getConnection()->select('watchdog')
       ->fields('watchdog', ['variables'])
-      ->condition('type', 'user')
+      ->condition('type', 'rest')
       ->condition('message', 'Unable to send password reset email for blocked or not yet activated user %identifier.')
       ->orderBy('wid', 'DESC')
       ->range(0, 1)
@@ -581,7 +570,7 @@ class UserLoginHttpTest extends BrowserTestBase {
 
     $logged = Database::getConnection()->select('watchdog')
       ->fields('watchdog', ['variables'])
-      ->condition('type', 'user')
+      ->condition('type', 'rest')
       ->condition('message', 'Unable to send password reset email for blocked or not yet activated user %identifier.')
       ->orderBy('wid', 'DESC')
       ->range(0, 1)
@@ -616,6 +605,56 @@ class UserLoginHttpTest extends BrowserTestBase {
     $this->drupalGet($resetURL);
     $this->submitForm([], 'Log in');
     $this->assertSession()->pageTextContains('You have used a one-time login link. You can set your new password now.');
+  }
+
+  /**
+   * Tests that DeprecatedUserRoutesSubscriber correctly alters the controller.
+   */
+  #[DataProvider('providerDeprecatedUserRoutesSubscriber')]
+  public function testDeprecatedUserRoutesSubscriber(string $routeName, string $userController, string $restController): void {
+    $this->assertEquals(
+      $restController,
+      \Drupal::service('router.route_provider')
+        ->getRouteByName($routeName)
+        ->getDefault('_controller')
+    );
+
+    $this->container->get('module_installer')->uninstall(['rest']);
+    $this->rebuildAll();
+
+    $this->assertEquals(
+      $userController,
+      \Drupal::service('router.route_provider')
+        ->getRouteByName($routeName)
+        ->getDefault('_controller')
+    );
+  }
+
+  /**
+   * @return \Generator
+   *   Test scenarios.
+   */
+  public static function providerDeprecatedUserRoutesSubscriber(): \Generator {
+    yield [
+      'user.login_status.http',
+      '\Drupal\user\Controller\UserAuthenticationController::loginStatus',
+      '\Drupal\rest\Controller\RestAuthenticationController::loginStatus',
+    ];
+    yield [
+      'user.pass.http',
+      '\Drupal\user\Controller\UserAuthenticationController::resetPassword',
+      '\Drupal\rest\Controller\RestAuthenticationController::resetPassword',
+    ];
+    yield [
+      'user.login.http',
+      '\Drupal\user\Controller\UserAuthenticationController::login',
+      '\Drupal\rest\Controller\RestAuthenticationController::login',
+    ];
+    yield [
+      'user.logout.http',
+      '\Drupal\user\Controller\UserAuthenticationController::logout',
+      '\Drupal\rest\Controller\RestAuthenticationController::logout',
+    ];
   }
 
 }

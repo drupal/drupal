@@ -147,6 +147,10 @@ user.pass.http:
   requirements:
     _access: 'TRUE'
     _format: 'json'
+  deprecated:
+    package: 'drupal/core'
+    version: '11.4.0'
+    message: 'The route "user.pass.http" is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use "rest.pass" route instead. See https://www.drupal.org/node/3552724'
 
 user.page:
   path: '/user'
@@ -182,6 +186,10 @@ user.login.http:
   requirements:
     _user_is_logged_in: 'FALSE'
     _format: 'json'
+  deprecated:
+    package: 'drupal/core'
+    version: '11.4.0'
+    message: 'The route "user.login.http" is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use "rest.login" route instead. See https://www.drupal.org/node/3552724'
 
 user.login_status.http:
   path: '/user/login_status'
@@ -191,6 +199,10 @@ user.login_status.http:
   requirements:
     _access: 'TRUE'
     _format: 'json'
+  deprecated:
+    package: 'drupal/core'
+    version: '11.4.0'
+    message: 'The route "user.login_status.http" is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use "rest.login_status" route instead. See https://www.drupal.org/node/3552724'
 
 user.logout.http:
   path: '/user/logout'
@@ -201,6 +213,10 @@ user.logout.http:
     _user_is_logged_in: 'TRUE'
     _format: 'json'
     _csrf_token: 'TRUE'
+  deprecated:
+    package: 'drupal/core'
+    version: '11.4.0'
+    message: 'The route "user.logout.http" is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use "rest.logout" route instead. See https://www.drupal.org/node/3552724'
 
 user.cancel_confirm:
   path: '/user/{user}/cancel/confirm/{timestamp}/{hashed_pass}'

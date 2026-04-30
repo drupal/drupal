@@ -274,7 +274,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
       RequestOptions::HEADERS => [],
       RequestOptions::BODY => $this->serializer->encode($request_body, 'json'),
     ];
-    $response = $this->request('POST', Url::fromRoute('user.login.http')->setRouteParameter('_format', 'json'), $request_options);
+    $response = $this->request('POST', Url::fromRoute('rest.login')->setRouteParameter('_format', 'json'), $request_options);
     $this->assertSame(200, $response->getStatusCode());
   }
 

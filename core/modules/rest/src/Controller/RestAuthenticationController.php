@@ -1,33 +1,28 @@
 <?php
 
-namespace Drupal\user\Controller;
+namespace Drupal\rest\Controller;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\user\UserAuthenticationInterface;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserFloodControlInterface;
 use Drupal\user\UserInterface;
-use Drupal\user\UserStorageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
 
 /**
  * Provides controllers for login, login status and logout via HTTP requests.
- *
- * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
- * \Drupal\rest\Controller\RestAuthenticationController instead.
- * @see https://www.drupal.org/node/3552724
  */
-class UserAuthenticationController extends ControllerBase implements ContainerInjectionInterface {
+class RestAuthenticationController extends ControllerBase implements ContainerInjectionInterface {
 
   /**
    * String sent in responses, to describe the user as being logged in.
@@ -44,119 +39,52 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
   const LOGGED_OUT = '0';
 
   /**
-   * The user flood control service.
-   *
-   * @var \Drupal\user\UserFloodControl
-   */
-  protected $userFloodControl;
-
-  /**
-   * The user storage.
-   *
-   * @var \Drupal\user\UserStorageInterface
-   */
-  protected $userStorage;
-
-  /**
-   * The CSRF token generator.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfToken;
-
-  /**
-   * The user authentication.
-   *
-   * @var \Drupal\user\UserAuthInterface|\Drupal\user\UserAuthenticationInterface
-   */
-  protected $userAuth;
-
-  /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The serializer.
-   *
-   * @var \Symfony\Component\Serializer\Serializer
-   */
-  protected $serializer;
-
-  /**
-   * The available serialization formats.
-   *
-   * @var array
-   */
-  protected $serializerFormats = [];
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * Constructs a new UserAuthenticationController object.
-   *
-   * @param \Drupal\user\UserFloodControlInterface $user_flood_control
+   * @param \Drupal\user\UserFloodControlInterface $userFloodControl
    *   The user flood control service.
-   * @param \Drupal\user\UserStorageInterface $user_storage
-   *   The user storage.
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrfToken
    *   The CSRF token generator.
-   * @param \Drupal\user\UserAuthenticationInterface|\Drupal\user\UserAuthInterface $user_auth
+   * @param \Drupal\user\UserAuthenticationInterface|\Drupal\user\UserAuthInterface $userAuth
    *   The user authentication.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
    * @param \Symfony\Component\Serializer\Serializer $serializer
    *   The serializer.
-   * @param array $serializer_formats
+   * @param array $serializerFormats
    *   The available serialization formats.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */
-  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, CsrfTokenGenerator $csrf_token, UserAuthenticationInterface|UserAuthInterface $user_auth, RouteProviderInterface $route_provider, Serializer $serializer, array $serializer_formats, LoggerInterface $logger) {
-    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\rest\Controller\RestAuthenticationController instead. See https://www.drupal.org/node/3552724', E_USER_DEPRECATED);
-    $this->userFloodControl = $user_flood_control;
-    $this->userStorage = $user_storage;
-    $this->csrfToken = $csrf_token;
-    if (!$user_auth instanceof UserAuthenticationInterface) {
-      @trigger_error('The $user_auth parameter implementing UserAuthInterface is deprecated in drupal:10.3.0 and will be removed in drupal:12.0.0. Implement UserAuthenticationInterface instead. See https://www.drupal.org/node/3411040');
+  public function __construct(
+    protected UserFloodControlInterface $userFloodControl,
+    EntityTypeManagerInterface $entity_type_manager,
+    protected CsrfTokenGenerator $csrfToken,
+    protected UserAuthenticationInterface|UserAuthInterface $userAuth,
+    protected RouteProviderInterface $routeProvider,
+    protected Serializer $serializer,
+    protected array $serializerFormats,
+    protected LoggerInterface $logger,
+  ) {
+    $this->entityTypeManager = $entity_type_manager;
+    if (!$userAuth instanceof UserAuthenticationInterface) {
+      @trigger_error('The $userAuth parameter implementing UserAuthInterface is deprecated in drupal:10.3.0 and will be removed in drupal:12.0.0. Implement UserAuthenticationInterface instead. See https://www.drupal.org/node/3411040');
     }
-    $this->userAuth = $user_auth;
-    $this->serializer = $serializer;
-    $this->serializerFormats = $serializer_formats;
-    $this->routeProvider = $route_provider;
-    $this->logger = $logger;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    if ($container->hasParameter('serializer.formats') && $container->has('serializer')) {
-      $serializer = $container->get('serializer');
-      $formats = $container->getParameter('serializer.formats');
-    }
-    else {
-      $formats = ['json'];
-      $encoders = [new JsonEncoder()];
-      $serializer = new Serializer([], $encoders);
-    }
-
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('user.flood_control'),
-      $container->get('entity_type.manager')->getStorage('user'),
+      $container->get('entity_type.manager'),
       $container->get('csrf_token'),
       $container->get('user.auth'),
       $container->get('router.route_provider'),
-      $serializer,
-      $formats,
-      $container->get('logger.factory')->get('user')
+      $container->get('serializer'),
+      $container->getParameter('serializer.formats'),
+      $container->get('logger.factory')->get('rest')
     );
   }
 
@@ -169,7 +97,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @return \Symfony\Component\HttpFoundation\Response
    *   A response which contains the ID and CSRF token.
    */
-  public function login(Request $request) {
+  public function login(Request $request): Response {
     $format = $this->getRequestFormat($request);
 
     $content = $request->getContent();
@@ -193,7 +121,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       $account = $this->userAuth->lookupAccount($credentials['name']);
     }
     else {
-      $accounts = $this->userStorage->loadByProperties(['name' => $credentials['name']]);
+      $accounts = $this->entityTypeManager->getStorage('user')->loadByProperties(['name' => $credentials['name']]);
       if ($accounts) {
         $account = reset($accounts);
       }
@@ -226,7 +154,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
         }
         $response_data['csrf_token'] = $this->csrfToken->get('rest');
 
-        $logout_route = $this->routeProvider->getRouteByName('user.logout.http');
+        $logout_route = $this->routeProvider->getRouteByName('rest.logout');
         // Trim '/' off path to match \Drupal\Core\Access\CsrfAccessCheck.
         $logout_path = ltrim($logout_route->getPath(), '/');
         $response_data['logout_token'] = $this->csrfToken->get($logout_path);
@@ -254,7 +182,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
    */
-  public function resetPassword(Request $request) {
+  public function resetPassword(Request $request): Response {
     $format = $this->getRequestFormat($request);
 
     $content = $request->getContent();
@@ -267,13 +195,14 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
 
     // Load by name if provided.
     $identifier = '';
+    $users = [];
     if (isset($credentials['name'])) {
       $identifier = $credentials['name'];
-      $users = $this->userStorage->loadByProperties(['name' => trim($identifier)]);
+      $users = $this->entityTypeManager->getStorage('user')->loadByProperties(['name' => trim($identifier)]);
     }
     elseif (isset($credentials['mail'])) {
       $identifier = $credentials['mail'];
-      $users = $this->userStorage->loadByProperties(['mail' => trim($identifier)]);
+      $users = $this->entityTypeManager->getStorage('user')->loadByProperties(['mail' => trim($identifier)]);
     }
 
     /** @var \Drupal\user\UserInterface $account */
@@ -308,30 +237,12 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
   }
 
   /**
-   * Verifies if the user is blocked.
-   *
-   * @param string $name
-   *   The username.
-   *
-   * @return bool
-   *   TRUE if the user is blocked, otherwise FALSE.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There
-   * is no replacement.
-   * @see https://www.drupal.org/node/3427209
-   */
-  protected function userIsBlocked($name) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3427209', E_USER_DEPRECATED);
-    return user_is_blocked($name);
-  }
-
-  /**
    * Finalizes the user login.
    *
    * @param \Drupal\user\UserInterface $user
    *   The user.
    */
-  protected function userLoginFinalize(UserInterface $user) {
+  protected function userLoginFinalize(UserInterface $user): void {
     user_login_finalize($user);
   }
 
@@ -341,7 +252,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
    */
-  public function logout() {
+  public function logout(): Response {
     $this->userLogout();
     return new Response(NULL, 204);
   }
@@ -349,7 +260,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
   /**
    * Logs the user out.
    */
-  protected function userLogout() {
+  protected function userLogout(): void {
     user_logout();
   }
 
@@ -359,7 +270,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response.
    */
-  public function loginStatus() {
+  public function loginStatus(): Response {
     if ($this->currentUser()->isAuthenticated()) {
       $response = new Response(self::LOGGED_IN);
     }
@@ -379,10 +290,10 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @return string
    *   The format of the request.
    */
-  protected function getRequestFormat(Request $request) {
+  protected function getRequestFormat(Request $request): string {
     $format = $request->getRequestFormat();
     if (!in_array($format, $this->serializerFormats)) {
-      throw new BadRequestHttpException("Unrecognized format.");
+      throw new BadRequestHttpException("Unrecognized format: $format.");
     }
     return $format;
   }
@@ -395,7 +306,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @param string $username
    *   The user name sent for login credentials.
    */
-  protected function floodControl(Request $request, $username) {
+  protected function floodControl(Request $request, string $username): void {
     $flood_config = $this->config('user.flood');
     if (!$this->userFloodControl->isAllowed('user.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
       throw new AccessDeniedHttpException('Access is blocked because of IP based flood prevention.', NULL, Response::HTTP_TOO_MANY_REQUESTS);
@@ -427,9 +338,9 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @return string
    *   The login identifier or if the user does not exist an empty string.
    */
-  protected function getLoginFloodIdentifier(Request $request, $username) {
+  protected function getLoginFloodIdentifier(Request $request, string $username): string {
     $flood_config = $this->config('user.flood');
-    $accounts = $this->userStorage->loadByProperties(['name' => $username, 'status' => 1]);
+    $accounts = $this->entityTypeManager->getStorage('user')->loadByProperties(['name' => $username, 'status' => 1]);
     if ($account = reset($accounts)) {
       if ($flood_config->get('uid_only')) {
         // Register flood events based on the uid only, so they apply for any

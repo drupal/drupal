@@ -1,0 +1,36 @@
+rest.pass:
+  path: '/user/password'
+  defaults:
+    _controller: \Drupal\rest\Controller\RestAuthenticationController::resetPassword
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+    _format: 'json'
+
+rest.login:
+  path: '/user/login'
+  defaults:
+    _controller: \Drupal\rest\Controller\RestAuthenticationController::login
+  methods: [POST]
+  requirements:
+    _user_is_logged_in: 'FALSE'
+    _format: 'json'
+
+rest.login_status:
+  path: '/user/login_status'
+  defaults:
+    _controller: \Drupal\rest\Controller\RestAuthenticationController::loginStatus
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+    _format: 'json'
+
+rest.logout:
+  path: '/user/logout'
+  defaults:
+    _controller: \Drupal\rest\Controller\RestAuthenticationController::logout
+  methods: [POST]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+    _format: 'json'
+    _csrf_token: 'TRUE'

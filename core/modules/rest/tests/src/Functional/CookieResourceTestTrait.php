@@ -55,7 +55,7 @@ trait CookieResourceTestTrait {
    * {@inheritdoc}
    */
   protected function initAuthentication(): void {
-    $user_login_url = Url::fromRoute('user.login.http')
+    $user_login_url = Url::fromRoute('rest.login')
       ->setRouteParameter('_format', static::$format);
 
     $request_body = [
