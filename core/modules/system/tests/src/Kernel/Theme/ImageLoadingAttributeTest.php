@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\Theme;
+namespace Drupal\Tests\system\Kernel\Theme;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,17 +13,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Theme')]
 #[RunTestsInSeparateProcesses]
-class ImageLoadingAttributeTest extends BrowserTestBase {
+class ImageLoadingAttributeTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['image_lazy_load_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['system', 'image_lazy_load_test'];
 
   /**
    * Tests that loading attribute is enabled for images.

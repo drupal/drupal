@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\ServiceProvider;
+namespace Drupal\Tests\system\Kernel\ServiceProvider;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,17 +13,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('ServiceProvider')]
 #[RunTestsInSeparateProcesses]
-class ServiceProviderWebTest extends BrowserTestBase {
+class ServiceProviderWebTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['file', 'service_provider_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['file', 'service_provider_test', 'system'];
 
   /**
    * Tests that module service providers get registered to the DIC.

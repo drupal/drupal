@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\Render;
+namespace Drupal\Tests\system\Kernel\Render;
 
 use Drupal\Core\Url;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -14,17 +14,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Render')]
 #[RunTestsInSeparateProcesses]
-class RenderArrayNonHtmlSubscriberTest extends BrowserTestBase {
+class RenderArrayNonHtmlSubscriberTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = ['render_array_non_html_subscriber_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * Tests handling of responses by events subscriber.

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\System;
+namespace Drupal\Tests\system\Kernel\System;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('system')]
 #[RunTestsInSeparateProcesses]
-class DefaultMobileMetaTagsTest extends BrowserTestBase {
+class DefaultMobileMetaTagsTest extends KernelTestBase {
 
   /**
    * Array of default meta tags to insert into the page.
@@ -25,7 +25,7 @@ class DefaultMobileMetaTagsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['system'];
 
   /**
    * {@inheritdoc}

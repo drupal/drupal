@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\System;
+namespace Drupal\Tests\system\Kernel\System;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,12 +13,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('system')]
 #[RunTestsInSeparateProcesses]
-class AdminMetaTagTest extends BrowserTestBase {
+class AdminMetaTagTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['system'];
 
   /**
    * Verify that the meta tag HTML is generated correctly.

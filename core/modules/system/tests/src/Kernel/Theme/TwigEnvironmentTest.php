@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\Theme;
+namespace Drupal\Tests\system\Kernel\Theme;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,17 +13,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Theme')]
 #[RunTestsInSeparateProcesses]
-class TwigEnvironmentTest extends BrowserTestBase {
+class TwigEnvironmentTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = ['twig_theme_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * Tests template class loading with Twig embed.

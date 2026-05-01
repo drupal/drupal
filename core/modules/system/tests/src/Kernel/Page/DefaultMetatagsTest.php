@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\Page;
+namespace Drupal\Tests\system\Kernel\Page;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,12 +13,20 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Page')]
 #[RunTestsInSeparateProcesses]
-class DefaultMetatagsTest extends BrowserTestBase {
+class DefaultMetatagsTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['system'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installConfig(['system']);
+  }
 
   /**
    * Tests meta tags.
@@ -29,7 +37,7 @@ class DefaultMetatagsTest extends BrowserTestBase {
     $this->assertSession()->elementsCount('xpath', '//meta[@charset="utf-8"]', 1);
 
     // Ensure that the charset one is the first metatag.
-    $result = $this->xpath('//meta');
+    $result = $this->getSession()->getPage()->findAll('xpath', '//meta');
     $this->assertEquals('utf-8', (string) $result[0]->getAttribute('charset'));
 
     // Ensure that the icon is on the page.

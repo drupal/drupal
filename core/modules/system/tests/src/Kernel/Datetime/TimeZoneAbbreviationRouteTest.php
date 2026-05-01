@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\Datetime;
+namespace Drupal\Tests\system\Kernel\Datetime;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -15,17 +15,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Datetime')]
 #[RunTestsInSeparateProcesses]
-class TimeZoneAbbreviationRouteTest extends BrowserTestBase {
+class TimeZoneAbbreviationRouteTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = ['system'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * Test that the AJAX Timezone Callback can deal with various formats.

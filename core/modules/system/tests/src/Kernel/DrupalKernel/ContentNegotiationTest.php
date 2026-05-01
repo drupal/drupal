@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\DrupalKernel;
+namespace Drupal\Tests\system\Kernel\DrupalKernel;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -14,12 +14,20 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('DrupalKernel')]
 #[RunTestsInSeparateProcesses]
-class ContentNegotiationTest extends BrowserTestBase {
+class ContentNegotiationTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['system', 'user'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installConfig(['system']);
+  }
 
   /**
    * Verifies HTML responses for bogus Accept headers.
