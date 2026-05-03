@@ -8,11 +8,12 @@
  * - description: The description text for the section.
  * - links: Links to display in the section.
  * - empty: Text to display if there are no links.
+ * - plugin_id: The help section plugin ID.
  *
  * @ingroup themeable
  */
 #}
-<h2>{{ title }}</h2>
+<h2 id="{{ plugin_id|clean_id }}">{{ title }}</h2>
 <p>{{ description }}</p>
 {% if links %}
   <ul>

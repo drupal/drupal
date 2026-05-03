@@ -72,6 +72,7 @@ class HelpController extends ControllerBase {
       $plugin = $this->helpManager->createInstance($plugin_id);
       $this_output = [
         '#theme' => 'help_section',
+        '#plugin_id' => $plugin_id,
         '#title' => $plugin->getTitle(),
         '#description' => $plugin->getDescription(),
         '#empty' => $this->t('There is currently nothing in this section.'),

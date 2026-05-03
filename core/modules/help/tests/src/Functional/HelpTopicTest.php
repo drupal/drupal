@@ -110,7 +110,7 @@ class HelpTopicTest extends BrowserTestBase {
 
     // Verify that help topics text appears on admin/help, and cache tags.
     $this->drupalGet('admin/help');
-    $session->responseContains('<h2>Topics</h2>');
+    $session->responseContains('<h2 id="help-topics">Topics</h2>');
     $session->pageTextContains('Topics can be provided by modules or themes');
     $session->responseHeaderContains('X-Drupal-Cache-Tags', 'core.extension');
 

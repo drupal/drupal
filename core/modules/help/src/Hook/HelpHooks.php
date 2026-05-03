@@ -84,7 +84,9 @@ class HelpHooks {
         return ['#markup' => $output];
 
       case 'help.help_topic':
-        $help_home = Url::fromRoute('help.main')->toString();
+        $help_home = Url::fromRoute('help.main')
+          ->setOption('fragment', 'help-topics')
+          ->toString();
         return '<p>' . $this->t('See the <a href=":help_page">Help page</a> for more topics.', [':help_page' => $help_home]) . '</p>';
     }
     return NULL;
@@ -98,6 +100,7 @@ class HelpHooks {
     return [
       'help_section' => [
         'variables' => [
+          'plugin_id' => NULL,
           'title' => NULL,
           'description' => NULL,
           'links' => NULL,
