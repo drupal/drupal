@@ -1,5 +1,8 @@
 global-styling:
   version: VERSION
+  fonts:
+    font/inter.woff2:
+      preload: true
   css:
     base:
       css/base/accents.css: {}
