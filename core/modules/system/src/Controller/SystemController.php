@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Controller;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ExtensionLifecycle;
@@ -16,6 +17,7 @@ use Drupal\Core\Theme\ThemeAccessCheck;
 use Drupal\Core\Url;
 use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\Cookie;
 
 /**
  * Returns responses for System routes.
@@ -81,6 +83,8 @@ class SystemController extends ControllerBase {
    *   The module extension list.
    * @param \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list
    *   The theme extension list.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
   public function __construct(
     SystemManager $systemManager,
@@ -90,6 +94,7 @@ class SystemController extends ControllerBase {
     MenuLinkTreeInterface $menu_link_tree,
     ModuleExtensionList $module_extension_list,
     ThemeExtensionList $theme_extension_list,
+    readonly protected TimeInterface $time,
   ) {
     $this->systemManager = $systemManager;
     $this->themeAccess = $theme_access;
@@ -176,8 +181,14 @@ class SystemController extends ControllerBase {
    *   A redirect response to the front page.
    */
   public function compactPage($mode) {
-    user_cookie_save(['admin_compact_mode' => ($mode == 'on')]);
-    return $this->redirect('<front>');
+    $response = $this->redirect('<front>');
+    if ($mode === 'on') {
+      $response->headers->setCookie(new Cookie('Drupal.visitor.admin_compact_mode', '1', $this->time->getRequestTime() + 31536000));
+    }
+    else {
+      $response->headers->clearCookie('Drupal.visitor.admin_compact_mode');
+    }
+    return $response;
   }
 
   /**

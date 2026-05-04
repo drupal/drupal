@@ -645,8 +645,14 @@ function user_form_process_password_confirm($element) {
  *
  * @param array $values
  *   An array of key/value pairs to be saved into a cookie.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3581570
  */
 function user_cookie_save(array $values): void {
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3581570', E_USER_DEPRECATED);
   $request_time = \Drupal::time()->getRequestTime();
   foreach ($values as $field => $value) {
     // Set cookie for 365 days.
@@ -659,8 +665,14 @@ function user_cookie_save(array $values): void {
  *
  * @param string $cookie_name
  *   A cookie name such as 'homepage'.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3581570
  */
 function user_cookie_delete($cookie_name): void {
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3581570', E_USER_DEPRECATED);
   setrawcookie('Drupal.visitor.' . $cookie_name, '', \Drupal::time()->getRequestTime() - 3600, '/');
 }
 
