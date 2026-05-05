@@ -471,6 +471,7 @@ provides more information on their responsibilities.
 Accessibility
 - Mike Gifford 'mgifford' https://www.drupal.org/u/mgifford
 - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
+- Kent Richards 'kentr' https://www.drupal.org/u/kentr
 
 Documentation
 - ?
