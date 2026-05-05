@@ -49,6 +49,7 @@ class ViewsViewsHooks {
       'help' => $this->t('Displays the actual position of the view result'),
       'field' => [
         'id' => 'counter',
+        'click sortable' => FALSE,
       ],
     ];
     $data['views']['area'] = [
