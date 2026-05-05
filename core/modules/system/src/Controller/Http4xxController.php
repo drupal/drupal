@@ -17,6 +17,12 @@ class Http4xxController extends ControllerBase {
    * @return array
    *   A render array containing the message to display for 4xx errors.
    */
+  #[Route(
+    path: '/system/4xx',
+    name: 'system.4xx',
+    requirements: ['_access' => 'TRUE'],
+    defaults: ['_title' => new TranslatableMarkup('Client error')],
+  )]
   public function on4xx() {
     return [
       '#markup' => $this->t('A client error happened'),
@@ -47,6 +53,12 @@ class Http4xxController extends ControllerBase {
    * @return array
    *   A render array containing the message to display for 403 pages.
    */
+  #[Route(
+    path: '/system/403',
+    name: 'system.403',
+    requirements: ['_access' => 'TRUE'],
+    defaults: ['_title' => new TranslatableMarkup('Access denied')],
+  )]
   public function on403() {
     return [
       '#markup' => $this->t('You are not authorized to access this page.'),
@@ -59,6 +71,12 @@ class Http4xxController extends ControllerBase {
    * @return array
    *   A render array containing the message to display for 404 pages.
    */
+  #[Route(
+    path: '/system/404',
+    name: 'system.404',
+    requirements: ['_access' => 'TRUE'],
+    defaults: ['_title' => new TranslatableMarkup('Page not found')],
+  )]
   public function on404() {
     return [
       '#markup' => $this->t('The requested page could not be found.'),

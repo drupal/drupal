@@ -6,12 +6,14 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\system\Form\ThemeExperimentalConfirmForm;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Controller for theme handling.
@@ -68,6 +70,14 @@ class ThemeController extends ControllerBase {
    *   Redirects back to the appearance admin page or the confirmation form
    *   if an experimental theme will be installed.
    */
+  #[Route(
+    path: '/admin/appearance/install',
+    name: 'system.theme_install',
+    requirements: [
+      '_permission' => 'administer themes',
+      '_csrf_token' => 'TRUE',
+    ],
+  )]
   public function install(#[MapQueryParameter] string $theme) {
     // Display confirmation form in case of experimental theme.
     if ($this->willInstallExperimentalTheme($theme)) {
@@ -142,6 +152,17 @@ class ThemeController extends ControllerBase {
    *   Redirects back to the appearance admin page or the confirmation form
    *   if an experimental theme will be installed.
    */
+  #[Route(
+    path: '/admin/appearance/default',
+    name: 'system.theme_set_default',
+    requirements: [
+      '_permission' => 'administer themes',
+      '_csrf_token' => 'TRUE',
+    ],
+    defaults: [
+      '_title' => new TranslatableMarkup('Set as default theme'),
+    ],
+  )]
   public function setDefaultTheme(#[MapQueryParameter] string $theme) {
     $config = $this->configFactory->getEditable('system.theme');
 

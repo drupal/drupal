@@ -13,11 +13,13 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\ThemeAccessCheck;
 use Drupal\Core\Url;
 use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Returns responses for System routes.
@@ -116,6 +118,15 @@ class SystemController extends ControllerBase {
    * @return array
    *   A renderable array of the administration overview page.
    */
+  #[Route(
+    path: '/admin/config',
+    name: 'system.admin_config',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: [
+      'link_id' => 'system.admin_config',
+      '_title' => new TranslatableMarkup('Configuration'),
+    ],
+  )]
   public function overview($link_id) {
     // Check for status report errors.
     if ($this->currentUser()->hasPermission('administer site configuration') && $this->systemManager->checkRequirements()) {
@@ -180,6 +191,12 @@ class SystemController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response to the front page.
    */
+  #[Route(
+    path: '/admin/compact/{mode}',
+    name: 'system.admin_compact_page',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['mode' => 'off'],
+  )]
   public function compactPage($mode) {
     $response = $this->redirect('<front>');
     if ($mode === 'on') {
@@ -194,6 +211,84 @@ class SystemController extends ControllerBase {
   /**
    * Provides a single block from the administration menu as a page.
    */
+  #[Route(
+    path: '/admin',
+    name: 'system.admin',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('Administration')],
+  )]
+  #[Route(
+    path: '/admin/structure',
+    name: 'system.admin_structure',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('Structure')],
+  )]
+  #[Route(
+    path: '/admin/reports',
+    name: 'system.admin_reports',
+    requirements: ['_permission' => 'access site reports'],
+    defaults: ['_title' => new TranslatableMarkup('Reports')],
+  )]
+  #[Route(
+    path: '/admin/config/media',
+    name: 'system.admin_config_media',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('Media')],
+  )]
+  #[Route(
+    path: '/admin/config/services',
+    name: 'system.admin_config_services',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('Web services')],
+  )]
+  #[Route(
+    path: '/admin/config/development',
+    name: 'system.admin_config_development',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('Development')],
+  )]
+  #[Route(
+    path: '/admin/config/regional',
+    name: 'system.admin_config_regional',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('Region and language')],
+  )]
+  #[Route(
+    path: '/admin/config/search',
+    name: 'system.admin_config_search',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('Search and metadata')],
+  )]
+  #[Route(
+    path: '/admin/config/system',
+    name: 'system.admin_config_system',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('System')],
+  )]
+  #[Route(
+    path: '/admin/config/user-interface',
+    name: 'system.admin_config_ui',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('User interface')],
+  )]
+  #[Route(
+    path: '/admin/config/workflow',
+    name: 'system.admin_config_workflow',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('Workflow')],
+  )]
+  #[Route(
+    path: '/admin/config/content',
+    name: 'system.admin_config_content',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('Content authoring')],
+  )]
+  #[Route(
+    path: '/admin/content',
+    name: 'system.admin_content',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('Content')],
+  )]
   public function systemAdminMenuBlockPage() {
     return $this->systemManager->getBlockContents();
   }
@@ -206,6 +301,12 @@ class SystemController extends ControllerBase {
    *
    * @todo Move into ThemeController.
    */
+  #[Route(
+    path: '/admin/appearance',
+    name: 'system.themes_page',
+    requirements: ['_permission' => 'administer themes'],
+    defaults: ['_title' => new TranslatableMarkup('Appearance')],
+  )]
   public function themesPage() {
     $config = $this->config('system.theme');
     // Get all available themes.

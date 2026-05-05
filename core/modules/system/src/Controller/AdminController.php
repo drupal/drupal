@@ -4,8 +4,10 @@ namespace Drupal\system\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\system\ModuleAdminLinksHelper;
 use Drupal\user\ModulePermissionsLinkHelper;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Controller for admin section.
@@ -28,6 +30,12 @@ class AdminController extends ControllerBase {
    * @return array
    *   A render array containing the listing.
    */
+  #[Route(
+    path: '/admin/index',
+    name: 'system.admin_index',
+    requirements: ['_permission' => 'access administration pages'],
+    defaults: ['_title' => new TranslatableMarkup('Administration')],
+  )]
   public function index() {
     $extensions = array_intersect_key($this->moduleExtensionList->getList(), $this->moduleHandler()->getModuleList());
 
