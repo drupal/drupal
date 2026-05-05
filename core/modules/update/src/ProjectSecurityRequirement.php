@@ -9,7 +9,7 @@ use Drupal\Core\Url;
 /**
  * Class for generating a project's security requirement.
  *
- * @see update_requirements()
+ * @see Drupal\update\Hook\UpdateRequirements::runtime()
  *
  * @internal
  *   This class implements logic to determine security coverage for Drupal core

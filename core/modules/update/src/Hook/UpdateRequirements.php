@@ -39,12 +39,11 @@ class UpdateRequirements {
    * attribute, which is an integer constant to indicate why the given status
    * is being returned (UPDATE_NOT_SECURE, UPDATE_NOT_CURRENT, or
    * UPDATE_UNKNOWN). This is used for generating the appropriate email
-   * notification messages during update_cron(), and might be useful for other
-   * modules that invoke update_runtime_requirements() to find out if the site
-   * is up to date or not.
+   * notification messages during cron runs, and might be useful for other
+   * modules to find out if the site is up to date or not.
    *
    * @see _update_message_text()
-   * @see _update_cron_notify()
+   * @see \Drupal\update\Hook\UpdateCronHooks::notify()
    * @see \Drupal\update\UpdateManagerInterface
    */
   #[Hook('runtime_requirements')]
@@ -100,7 +99,7 @@ class UpdateRequirements {
    *   An array to be included in the nested $requirements array.
    *
    * @see hook_requirements()
-   * @see update_requirements()
+   * @see Drupal\update\Hook\UpdateRequirements::runtime()
    * @see update_calculate_project_data()
    */
   protected function requirementCheck($project, $type): array {
