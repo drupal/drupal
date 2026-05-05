@@ -29,6 +29,7 @@ class HookCollectorKeyValueWritePass implements CompilerPassInterface {
       $themeHookData = $container->getParameter('.theme_hook_data');
       $hookData = array_merge($hookData, $themeHookData);
       $hookData['preprocess_for_suggestions'] = array_merge($hookData['preprocess_for_suggestions'], $hookData['theme_preprocess_for_suggestions']);
+      unset($hookData['theme_preprocess_for_suggestions']);
     }
     $keyvalue = $container->get('keyvalue')->get('hook_data');
     assert($keyvalue instanceof KeyValueStoreInterface);
