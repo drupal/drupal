@@ -51,7 +51,11 @@ class EntityRouteHelper {
    *   TRUE if the content entity route condition is met, FALSE otherwise.
    */
   public function isContentEntityRoute(): bool {
-    return array_key_exists($this->routeMatch->getRouteObject()->getPath(), $this->getContentEntityPaths());
+    $route = $this->routeMatch->getRouteObject();
+    if (!$route) {
+      return FALSE;
+    }
+    return array_key_exists($route->getPath(), $this->getContentEntityPaths());
   }
 
   public function getContentEntityFromRoute(): ?ContentEntityInterface {
