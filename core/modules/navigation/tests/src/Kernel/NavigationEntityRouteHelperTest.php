@@ -29,13 +29,17 @@ class NavigationEntityRouteHelperTest extends KernelTestBase {
   ];
 
   /**
-   * Tests getContentEntityFromRoute() method when the route does not exist.
+   * Tests entity route helper when the route does not exist.
+   *
+   * @see \Drupal\navigation\EntityRouteHelper::getContentEntityFromRoute
+   * @see \Drupal\navigation\EntityRouteHelper::isContentEntityFromRoute
    */
-  public function testGetContentEntityFromRouteWithNonExistentRoute(): void {
+  public function testContentEntityFromRouteWithNonExistentRoute(): void {
     $request = Request::create('/does-not-exist');
     $response = $this->container->get('http_kernel')->handle($request);
     $this->assertEquals(404, $response->getStatusCode());
     $this->assertNull($this->container->get('navigation.entity_route_helper')->getContentEntityFromRoute());
+    $this->assertFalse($this->container->get('navigation.entity_route_helper')->isContentEntityRoute());
   }
 
 }
