@@ -32,7 +32,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/drupal-11.3.0.filled.standard.php.gz';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/drupal-8.update-test-schema-enabled.php';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/drupal-8.update-test-semver-update-n-enabled.php';
-    $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/install-mysqli.php';
   }
 
   /**
