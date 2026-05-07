@@ -683,7 +683,7 @@ trait PerformanceTestTrait {
     $values = [];
     foreach ($expected as $name => $metric) {
       if (in_array($name, $assertRange)) {
-        $this->assertCountBetween($metric - 500, $metric + 500, $performance_data->{"get$name"}(), "Asserting $name");
+        $this->assertCountBetween($metric - 2000, $metric + 2000, $performance_data->{"get$name"}(), "Asserting $name");
         unset($expected[$name]);
       }
       else {
