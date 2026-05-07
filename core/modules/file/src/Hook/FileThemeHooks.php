@@ -261,7 +261,7 @@ class FileThemeHooks {
       $operations_elements = [];
       foreach (Element::children($widget) as $key) {
         if (isset($widget[$key]['#type']) && $widget[$key]['#type'] == 'submit') {
-          hide($widget[$key]);
+          $widget[$key]['#printed'] = TRUE;
           $operations_elements[] = &$widget[$key];
         }
       }
@@ -269,9 +269,9 @@ class FileThemeHooks {
       // Delay rendering of the "Display" option and the weight selector, so
       // that each can be rendered later in its own column.
       if ($element['#display_field']) {
-        hide($widget['display']);
+        $widget['display']['#printed'] = TRUE;
       }
-      hide($widget['_weight']);
+      $widget['_weight']['#printed'] = TRUE;
       $widget['_weight']['#attributes']['class'] = [$weight_class];
 
       // Render everything else together in a column, without the normal
@@ -293,9 +293,10 @@ class FileThemeHooks {
       ];
 
       // Show the buttons that had previously been marked as hidden in this
-      // preprocess function. We use show() to undo the earlier hide().
+      // preprocess function. We use ['#printed'] = FALSE to undo the earlier
+      // ['#printed'] = TRUE.
       foreach (Element::children($operations_elements) as $key) {
-        show($operations_elements[$key]);
+        $operations_elements[$key]['#printed'] = FALSE;
       }
       $row[] = [
         'data' => $operations_elements,
