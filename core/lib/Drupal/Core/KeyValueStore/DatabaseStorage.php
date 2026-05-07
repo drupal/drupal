@@ -160,6 +160,20 @@ class DatabaseStorage extends StorageBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function setMultiple(array $data): void {
+    $transaction = $this->connection->startTransaction();
+    try {
+      parent::setMultiple($data);
+      $transaction->commitOrRelease();
+    }
+    catch (\Exception) {
+      $transaction->rollback();
+    }
+  }
+
+  /**
    * Saves a value for a given key if it does not exist yet.
    *
    * This will be called by setIfNotExists() within a try block.
