@@ -162,7 +162,7 @@ class SystemAdminThemePreprocess {
       foreach ($theme->info['dependencies'] as $dependency) {
         if (isset($form[$dependency])) {
           // Add themes to the module's required by list.
-          $form[$dependency]['#required_by'][] = $theme->status ? $this->t('@theme', ['@theme (theme)' => $theme->info['name']]) : $this->t('@theme (theme) (<span class="admin-disabled">disabled</span>)', ['@theme' => $theme->info['name']]);
+          $form[$dependency]['#required_by'][] = $theme->status ? $this->t('@theme (theme)', ['@theme' => $theme->info['name']]) : $this->t('@theme (theme) (<span class="admin-disabled">disabled</span>)', ['@theme' => $theme->info['name']]);
         }
       }
     }
