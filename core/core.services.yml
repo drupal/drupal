@@ -1516,14 +1516,11 @@ services:
     class: Drupal\Core\EventSubscriber\EnforcedFormResponseSubscriber
   route_processor_manager:
     class: Drupal\Core\RouteProcessor\RouteProcessorManager
-    tags:
-      - { name: service_collector, tag: route_processor_outbound, call: addOutbound }
+    autowire: true
   Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface: '@route_processor_manager'
   path_processor_manager:
     class: Drupal\Core\PathProcessor\PathProcessorManager
-    tags:
-      - { name: service_collector, tag: path_processor_inbound, call: addInbound }
-      - { name: service_collector, tag: path_processor_outbound, call: addOutbound }
+    autowire: true
   Drupal\Core\PathProcessor\InboundPathProcessorInterface: '@path_processor_manager'
   Drupal\Core\PathProcessor\OutboundPathProcessorInterface: '@path_processor_manager'
   path_processor_decode:

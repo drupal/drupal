@@ -8924,24 +8924,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Path/Plugin/Validation/Constraint/ValidPathConstraintValidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\PathProcessor\\\\PathProcessorManager\\:\\:addInbound\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/PathProcessor/PathProcessorManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\PathProcessor\\\\PathProcessorManager\\:\\:addOutbound\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/PathProcessor/PathProcessorManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\PathProcessor\\\\PathProcessorManager\\:\\:sortProcessors\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/PathProcessor/PathProcessorManager.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Plugin\\\\CachedDiscoveryClearer\\:\\:addCachedDiscovery\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -9650,19 +9632,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/RouteProcessor/RouteProcessorCurrent.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\RouteProcessor\\\\RouteProcessorManager\\:\\:addOutbound\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/RouteProcessor/RouteProcessorManager.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\RouteProcessor\\\\RouteProcessorManager\\:\\:processOutbound\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/RouteProcessor/RouteProcessorManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\RouteProcessor\\\\RouteProcessorManager\\:\\:sortProcessors\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/RouteProcessor/RouteProcessorManager.php',

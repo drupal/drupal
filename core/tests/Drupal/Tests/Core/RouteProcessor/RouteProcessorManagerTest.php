@@ -20,22 +20,6 @@ use Symfony\Component\Routing\Route;
 class RouteProcessorManagerTest extends UnitTestCase {
 
   /**
-   * The route processor manager.
-   *
-   * @var \Drupal\Core\RouteProcessor\RouteProcessorManager
-   */
-  protected $processorManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    $this->processorManager = new RouteProcessorManager();
-  }
-
-  /**
    * Tests the Route process manager functionality.
    */
   public function testRouteProcessorManager(): void {
@@ -43,19 +27,14 @@ class RouteProcessorManagerTest extends UnitTestCase {
     $parameters = ['test' => 'test'];
     $route_name = 'test_name';
 
-    $processors = [
-      10 => $this->getMockProcessor($route_name, $route, $parameters),
-      5 => $this->getMockProcessor($route_name, $route, $parameters),
-      0 => $this->getMockProcessor($route_name, $route, $parameters),
-    ];
-
-    // Add the processors in reverse order.
-    foreach ($processors as $priority => $processor) {
-      $this->processorManager->addOutbound($processor, $priority);
-    }
+    $processorManager = new RouteProcessorManager([
+      $this->getMockProcessor($route_name, $route, $parameters),
+      $this->getMockProcessor($route_name, $route, $parameters),
+      $this->getMockProcessor($route_name, $route, $parameters),
+    ]);
 
     $bubbleable_metadata = new BubbleableMetadata();
-    $this->processorManager->processOutbound($route_name, $route, $parameters, $bubbleable_metadata);
+    $processorManager->processOutbound($route_name, $route, $parameters, $bubbleable_metadata);
     // Default cacheability is: permanently cacheable, no cache tags/contexts.
     $this->assertEquals((new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT), $bubbleable_metadata);
   }

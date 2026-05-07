@@ -167,8 +167,7 @@ class UrlGeneratorTest extends UnitTestCase {
     $this->context->fromRequestStack($this->requestStack);
 
     $processor = new AliasPathProcessor($this->aliasManager);
-    $processor_manager = new PathProcessorManager();
-    $processor_manager->addOutbound($processor, 1000);
+    $processor_manager = new PathProcessorManager([], [$processor]);
     $this->processorManager = $processor_manager;
 
     $this->routeProcessorManager = $this->getMockBuilder('Drupal\Core\RouteProcessor\RouteProcessorManager')
@@ -541,7 +540,15 @@ class UrlGeneratorTest extends UnitTestCase {
         $options['fragment'] = 'foo';
         return $path;
       });
-    $this->processorManager->addOutbound($path_processor);
+
+    $alias_processor = new AliasPathProcessor($this->aliasManager);
+    $processor_manager = new PathProcessorManager([], [$alias_processor, $path_processor]);
+
+    $this->generator = new UrlGenerator($this->provider, $processor_manager, $this->routeProcessorManager, $this->requestStack, [
+      'http',
+      'https',
+    ]);
+    $this->generator->setContext($this->context);
 
     $options = [];
     $this->assertGenerateFromRoute('test_2', ['Lassie' => 5], $options, '/goodbye/cruel/world?zoo=5#foo', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
@@ -596,7 +603,13 @@ class UrlGeneratorTest extends UnitTestCase {
         return $path;
       });
 
-    $this->processorManager->addOutbound($path_processor);
+    $this->processorManager = new PathProcessorManager([], [
+      $this->processorManager,
+      $path_processor,
+    ]);
+
+    $this->generator = new UrlGenerator($this->provider, $this->processorManager, $this->routeProcessorManager, $this->requestStack);
+    $this->generator->setContext($this->context);
 
     $options = [];
     $this->assertGenerateFromRoute('test_1', ['node' => 1], $options, '/hello/world?node=1', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
