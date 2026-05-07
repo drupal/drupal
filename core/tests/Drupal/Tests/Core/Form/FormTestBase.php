@@ -193,7 +193,6 @@ abstract class FormTestBase extends UnitTestCase {
       $this->redirectResponseSubscriber,
       $this->callableResolver,
     );
-    $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
 
     $this->formBuilder = new FormBuilder($this->formValidator, $this->formSubmitter, $this->formCache, $this->moduleHandler, $this->eventDispatcher, $this->requestStack, $this->classResolver, $this->elementInfo, $this->themeManager, $this->csrfToken, $this->callableResolver);
   }

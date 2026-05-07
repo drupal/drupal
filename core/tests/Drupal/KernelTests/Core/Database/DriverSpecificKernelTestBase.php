@@ -30,7 +30,6 @@ abstract class DriverSpecificKernelTestBase extends KernelTestBase {
     // Find the current SUT database driver from the connection info. If that
     // is not the one the test requires, skip before test database
     // initialization so to save cycles.
-    $this->root = static::getDrupalRoot();
     chdir($this->root);
     $connectionInfo = $this->getDatabaseConnectionInfo();
     $test_class_parts = explode('\\', get_class($this));
