@@ -415,6 +415,26 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
+   * Normalizes response headers before HEAD vs GET equality assertion.
+   *
+   * Authentication providers that don't persist a session between requests
+   * (e.g. basic_auth) cause a fresh CSRF token seed to be generated for each
+   * request, so HEAD and GET produce different token values in any URL that
+   * carries `?token=`. The URL structure and link relations are still the
+   * same. Override this hook to neutralize such legitimately-varying values
+   * for the comparison.
+   *
+   * @param array $headers
+   *   Response headers as returned by Guzzle.
+   *
+   * @return array
+   *   The headers, with provider-specific normalization applied.
+   */
+  protected function normalizeHeadersForGetHeadComparison(array $headers): array {
+    return $headers;
+  }
+
+  /**
    * Tests all CRUD operations in a single test method.
    */
   public function testCrud(): void {
@@ -689,8 +709,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       }
       return $headers;
     };
-    $get_headers = $header_cleaner($get_headers);
-    $head_headers = $header_cleaner($head_headers);
+    $get_headers = $this->normalizeHeadersForGetHeadComparison($header_cleaner($get_headers));
+    $head_headers = $this->normalizeHeadersForGetHeadComparison($header_cleaner($head_headers));
     $this->assertSame($get_headers, $head_headers);
 
     $this->resourceConfigStorage->load(static::$resourceConfigId)->disable()->save();

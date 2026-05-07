@@ -92,4 +92,13 @@ abstract class ViewResourceTestBase extends ConfigEntityResourceTestBase {
     return [];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedCacheContexts() {
+    // 'session' is bubbled by URL generation for CSRF-protected routes
+    // referenced in the response normalization.
+    return array_merge(['session'], parent::getExpectedCacheContexts());
+  }
+
 }

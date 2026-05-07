@@ -62,4 +62,25 @@ trait BasicAuthResourceTestTrait {
   protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options): void {
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * Stateless authentication via basic_auth does not persist a session between
+   * requests, so the CSRF token seed in the session metadata bag is regenerated
+   * on every request. Any URL carrying a `?token=` (e.g. admin operation links
+   * surfaced as Link headers) therefore legitimately differs between the HEAD
+   * and GET request the test base issues for the same resource. Replace the
+   * token value with a placeholder so the comparison still asserts URL
+   * structure and link relations exactly.
+   */
+  protected function normalizeHeadersForGetHeadComparison(array $headers): array {
+    if (isset($headers['Link'])) {
+      $headers['Link'] = array_map(
+        fn ($value) => preg_replace('/(\?|&)token=[^&>]+/', '$1token=NORMALIZED', $value),
+        $headers['Link']
+      );
+    }
+    return $headers;
+  }
+
 }
