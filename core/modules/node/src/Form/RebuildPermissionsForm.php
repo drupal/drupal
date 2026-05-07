@@ -15,7 +15,7 @@ use Drupal\node\NodeAccessRebuild;
 class RebuildPermissionsForm extends ConfirmFormBase {
 
   public function __construct(
-    protected readonly NodeAccessRebuild $nodeAccessRebuild,
+    protected NodeAccessRebuild $nodeAccessRebuild,
   ) {
   }
 
