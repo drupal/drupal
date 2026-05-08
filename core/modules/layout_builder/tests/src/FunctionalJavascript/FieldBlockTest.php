@@ -7,6 +7,7 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Plugin\Block\FieldBlock;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -33,7 +34,6 @@ class FieldBlockTest extends WebDriverTestBase {
     'user',
     // See \Drupal\layout_builder_field_block_test\Plugin\Block\FieldBlock.
     'layout_builder_field_block_test',
-    'layout_builder_expose_all_field_blocks',
   ];
 
   /**
@@ -46,6 +46,19 @@ class FieldBlockTest extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    // Enable Layout Builder for the user entity type.
+    $display = LayoutBuilderEntityViewDisplay::load('user.user.default');
+    if (!$display) {
+      $display = LayoutBuilderEntityViewDisplay::create([
+        'targetEntityType' => 'user',
+        'bundle' => 'user',
+        'mode' => 'default',
+      ]);
+    }
+    $display->enableLayoutBuilder()
+      ->setOverridable(FALSE)
+      ->save();
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_date',

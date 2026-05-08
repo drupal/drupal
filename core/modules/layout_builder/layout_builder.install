@@ -49,3 +49,12 @@ function layout_builder_schema(): array {
 function layout_builder_update_last_removed(): int {
   return 8602;
 }
+
+/**
+ * Uninstall the layout_builder_expose_all_field_blocks module.
+ */
+function layout_builder_update_12001(): void {
+  if (\Drupal::moduleHandler()->moduleExists('layout_builder_expose_all_field_blocks')) {
+    \Drupal::service('module_installer')->uninstall(['layout_builder_expose_all_field_blocks']);
+  }
+}

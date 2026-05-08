@@ -168,12 +168,6 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
   protected function getFieldMap(): array {
     $field_map = $this->entityFieldManager->getFieldMap();
 
-    // If all fields are exposed as field blocks, just return the field map
-    // without any further processing.
-    if ($this->moduleHandler->moduleExists('layout_builder_expose_all_field_blocks')) {
-      return $field_map;
-    }
-
     // Load all entity view displays which are using Layout Builder.
     /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface[] $displays */
     $displays = $this->entityViewDisplayStorage->loadByProperties([

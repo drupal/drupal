@@ -5,5 +5,5 @@ package: Core
 version: VERSION
 dependencies:
   - drupal:layout_builder
-lifecycle: deprecated
+lifecycle: obsolete
 lifecycle_link: "https://www.drupal.org/node/3223395#s-layout-builder-expose-all-field-blocks"

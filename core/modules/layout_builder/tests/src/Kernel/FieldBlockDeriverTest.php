@@ -26,16 +26,15 @@ class FieldBlockDeriverTest extends EntityKernelTestBase {
   ];
 
   /**
-   * Tests that field block derivers respect expose_all_field_blocks config.
+   * Tests that field block derivers only expose fields for Layout Builder enabled bundles.
    *
-   * When expose_all_field_blocks is disabled (the default setting), only
-   * bundles that have layout builder enabled will expose their fields as
+   * Only bundles that have layout builder enabled will expose their fields as
    * field blocks.
    */
   public function testFieldBlockDerivers(): void {
     $plugins = $this->getBlockPluginIds();
-    // Setting is disabled and entity_test bundles do not have layout builder
-    // configured.
+    // Entity_test bundles do not have layout builder configured, so no field
+    // blocks should be available for any entity types.
     $this->assertNotContains('field_block:user:user:name', $plugins);
     $this->assertNotContains('extra_field_block:user:user:member_for', $plugins);
     $this->assertNotContains('field_block:entity_test:entity_test:id', $plugins);
@@ -58,12 +57,6 @@ class FieldBlockDeriverTest extends EntityKernelTestBase {
     $this->assertContains('field_block:entity_test:entity_test:id', $plugins);
     $this->assertNotContains('field_block:user:user:name', $plugins);
     $this->assertNotContains('extra_field_block:user:user:member_for', $plugins);
-
-    // Exposing all field blocks adds them for the user entity type.
-    \Drupal::service('module_installer')->install(['layout_builder_expose_all_field_blocks']);
-    $plugins = $this->getBlockPluginIds();
-    $this->assertContains('field_block:user:user:name', $plugins);
-    $this->assertContains('extra_field_block:user:user:member_for', $plugins);
   }
 
   /**

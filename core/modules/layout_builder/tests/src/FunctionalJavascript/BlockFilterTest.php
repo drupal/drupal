@@ -27,7 +27,6 @@ class BlockFilterTest extends WebDriverTestBase {
     'node',
     'datetime',
     'layout_builder',
-    'layout_builder_expose_all_field_blocks',
     'user',
   ];
 
