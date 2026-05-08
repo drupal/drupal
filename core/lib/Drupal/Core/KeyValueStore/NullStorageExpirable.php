@@ -59,6 +59,13 @@ class NullStorageExpirable implements KeyValueStoreExpirableInterface {
   /**
    * {@inheritdoc}
    */
+  public function getAllKeys(): iterable {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function set($key, $value) {}
 
   /**

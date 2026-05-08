@@ -62,6 +62,14 @@ interface KeyValueStoreInterface {
   public function getAll();
 
   /**
+   * Retrieves all keys in the collection.
+   *
+   * @return iterable<string>
+   *   A list of all keys present in the collection.
+   */
+  public function getAllKeys(): iterable;
+
+  /**
    * Saves a value for a given key.
    *
    * @param string $key

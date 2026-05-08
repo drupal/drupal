@@ -99,6 +99,25 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getAllKeys(): iterable {
+    try {
+      $values = $this->connection->query(
+        'SELECT [name] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [expire] > :now',
+        [
+          ':collection' => $this->collection,
+          ':now' => $this->time->getRequestTime(),
+        ])->fetchCol();
+      return $values;
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
+    return [];
+  }
+
+  /**
    * Saves a value for a given key with a time to live.
    *
    * This will be called by setWithExpire() within a try block.

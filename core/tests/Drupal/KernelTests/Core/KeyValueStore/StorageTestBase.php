@@ -109,10 +109,13 @@ abstract class StorageTestBase extends KernelTestBase {
 
     // Not using assertSame(), since the order is not defined for getAll().
     $this->assertEquals($values, $stores[0]->getAll());
+    // Not using assertEquals(), since the keys are not sorted.
+    $this->assertEqualsCanonicalizing(array_keys($values), $stores[0]->getAllKeys());
 
     // Verify that all items in the other collection are different.
     $result = $stores[1]->getAll();
     $this->assertEquals(['foo' => $this->objects[5]], $result);
+    $this->assertEquals(['foo'], $stores[1]->getAllKeys());
 
     // Verify that multiple items can be deleted.
     $stores[0]->deleteMultiple(array_keys($values));
