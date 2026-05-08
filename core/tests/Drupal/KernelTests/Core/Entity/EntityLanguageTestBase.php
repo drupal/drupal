@@ -130,7 +130,7 @@ abstract class EntityLanguageTestBase extends EntityKernelTestBase {
    * @param string $bundle
    *   The bundle of the entity.
    */
-  protected function toggleFieldTranslatability($entity_type, $bundle) {
+  protected function toggleFieldTranslatability($entity_type, $bundle): void {
     $fields = [$this->fieldName, $this->untranslatableFieldName];
     foreach ($fields as $field_name) {
       $field = FieldConfig::loadByName($entity_type, $bundle, $field_name);

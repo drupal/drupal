@@ -30,7 +30,7 @@ class BlockRebuildTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $configSchemaCheckerExclusions = [
+  protected static array $configSchemaCheckerExclusions = [
     // These blocks are intentionally put into invalid regions, so they will
     // violate config schema.
     // @see ::testRebuildInvalidBlocks()

@@ -42,7 +42,7 @@ class ConfigActionValidationTest extends KernelTestBase {
    * This test requires that we save invalid config, so we can test that it gets
    * validated after applying a recipe.
    */
-  protected $strictConfigSchema = FALSE;
+  protected bool $strictConfigSchema = FALSE;
 
   /**
  * Tests config actions are validated.

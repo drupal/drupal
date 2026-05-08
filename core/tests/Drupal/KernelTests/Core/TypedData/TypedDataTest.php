@@ -62,7 +62,7 @@ class TypedDataTest extends KernelTestBase {
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
-  protected function createTypedData($definition, $value = NULL, $name = NULL) {
+  protected function createTypedData($definition, $value = NULL, $name = NULL): TypedDataInterface {
     if (is_array($definition)) {
       $definition = DataDefinition::create($definition['type']);
     }
@@ -433,6 +433,7 @@ class TypedDataTest extends KernelTestBase {
     $this->assertSame([], $clone->getValue());
 
     // Test dealing with NULL items.
+    /** @var \Drupal\Core\TypedData\ListInterface $typed_data */
     $typed_data[] = NULL;
     $this->assertTrue($typed_data->isEmpty());
     $this->assertCount(1, $typed_data);

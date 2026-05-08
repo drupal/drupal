@@ -62,7 +62,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
   /**
    * The previous untranslatable field value.
    *
-   * @var string[]
+   * @var array<string,?string>
    */
   protected $previousUntranslatableFieldValue;
 

@@ -25,7 +25,7 @@ class ConfigValidationTest extends KernelTestBase {
    * This test depends on us being able to create invalid config, so we can
    * ensure that validatable config is validated by the recipe runner.
    */
-  protected $strictConfigSchema = FALSE;
+  protected bool $strictConfigSchema = FALSE;
 
   /**
    * Creates a recipe with invalid config data in a particular file.

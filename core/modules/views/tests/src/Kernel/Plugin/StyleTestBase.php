@@ -13,13 +13,6 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 abstract class StyleTestBase extends ViewsKernelTestBase {
 
   /**
-   * Stores the SimpleXML representation of the output.
-   *
-   * @var \SimpleXMLElement
-   */
-  protected $elements;
-
-  /**
    * Stores a view output in the elements.
    */
   public function storeViewPreview($output): void {

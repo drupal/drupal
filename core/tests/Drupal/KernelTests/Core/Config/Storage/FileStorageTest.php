@@ -43,7 +43,7 @@ class FileStorageTest extends ConfigStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function read($name) {
+  protected function read($name): array|object {
     $data = file_get_contents($this->storage->getFilePath($name));
     return Yaml::decode($data);
   }

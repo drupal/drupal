@@ -18,13 +18,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class OverriddenConfigImportTest extends KernelTestBase {
 
   /**
-   * Config Importer object used for testing.
-   *
-   * @var \Drupal\Core\Config\ConfigImporter
-   */
-  protected $configImporter;
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = ['system', 'language'];

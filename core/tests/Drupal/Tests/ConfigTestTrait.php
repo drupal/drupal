@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
+use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterFactory;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Config\StorageCopyTrait;
@@ -22,7 +23,7 @@ trait ConfigTestTrait {
    * @return \Drupal\Core\Config\ConfigImporter
    *   The config importer object.
    */
-  protected function configImporter() {
+  protected function configImporter(): ConfigImporter {
     if (!$this->configImporter) {
       // Set up the ConfigImporter object for testing.
       $storage_comparer = new StorageComparer(
@@ -43,7 +44,7 @@ trait ConfigTestTrait {
    * @param \Drupal\Core\Config\StorageInterface $target_storage
    *   The target config storage service.
    */
-  protected function copyConfig(StorageInterface $source_storage, StorageInterface $target_storage) {
+  protected function copyConfig(StorageInterface $source_storage, StorageInterface $target_storage): void {
     static::replaceStorageContents($source_storage, $target_storage);
   }
 

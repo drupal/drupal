@@ -56,8 +56,8 @@ class RouteProvider implements PreloadableRouteProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function preLoadRoutes($names) {
-    return $this->lazyLoadItself()->preLoadRoutes($names);
+  public function preLoadRoutes($names): void {
+    $this->lazyLoadItself()->preLoadRoutes($names);
   }
 
   /**
@@ -70,7 +70,7 @@ class RouteProvider implements PreloadableRouteProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCandidateOutlines(array $parts) {
+  public function getCandidateOutlines(array $parts): array {
     return $this->lazyLoadItself()->getCandidateOutlines($parts);
   }
 
@@ -84,7 +84,7 @@ class RouteProvider implements PreloadableRouteProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function routeProviderRouteCompare(array $a, array $b) {
+  public function routeProviderRouteCompare(array $a, array $b): int {
     return $this->lazyLoadItself()->routeProviderRouteCompare($a, $b);
   }
 
@@ -98,8 +98,8 @@ class RouteProvider implements PreloadableRouteProviderInterface {
   /**
    * {@inheritdoc}
    */
-  public function reset() {
-    return $this->lazyLoadItself()->reset();
+  public function reset(): void {
+    $this->lazyLoadItself()->reset();
   }
 
   /**

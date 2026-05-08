@@ -226,7 +226,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     $this->assertEquals([], $another_storage->listAll());
     $another_storage->write($name, $new_data);
     $this->assertTrue($result);
-    $this->assertSame($new_data, $another_storage->read($name));
+    $this->assertEquals($new_data, $another_storage->read($name));
     $this->assertEquals([$name], $another_storage->listAll());
     $this->assertTrue($another_storage->exists($name));
 
@@ -234,7 +234,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     $alt_storage = $this->storage->createCollection('alternate');
     $alt_storage->write($name, $new_data);
     $this->assertTrue($result);
-    $this->assertSame($new_data, $alt_storage->read($name));
+    $this->assertEquals($new_data, $alt_storage->read($name));
 
     // Switch back to the collection-less mode and check the data still exists
     // add has not been touched.
@@ -255,7 +255,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     $this->assertEquals([], $parent_storage->listAll());
     $parent_storage->write($name, $new_data);
     $this->assertTrue($result);
-    $this->assertSame($new_data, $parent_storage->read($name));
+    $this->assertEquals($new_data, $parent_storage->read($name));
     $this->assertEquals([$name], $parent_storage->listAll());
     $this->assertTrue($parent_storage->exists($name));
     $this->assertSame(['collection', 'collection.sub.another', 'collection.sub.new'], $this->storage->getAllCollectionNames());
@@ -281,21 +281,21 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
   /**
    * Reads configuration data from the storage.
    */
-  abstract protected function read($name);
+  abstract protected function read($name): array|object;
 
   /**
    * Inserts configuration data in the storage.
    */
-  abstract protected function insert($name, $data);
+  abstract protected function insert($name, $data): void;
 
   /**
    * Updates configuration data in the storage.
    */
-  abstract protected function update($name, $data);
+  abstract protected function update($name, $data): void;
 
   /**
    * Deletes configuration data from the storage.
    */
-  abstract protected function delete($name);
+  abstract protected function delete($name): void;
 
 }

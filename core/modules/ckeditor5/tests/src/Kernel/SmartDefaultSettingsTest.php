@@ -42,11 +42,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
    *
    * The updated Text Format & Text Editors are explicitly checked.
    *
-   * @var bool
-   *
    * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
    */
-  protected $strictConfigSchema = FALSE;
+  protected bool $strictConfigSchema = FALSE;
 
   /**
    * The manager for "CKEditor 5 plugin" plugins.

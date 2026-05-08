@@ -46,6 +46,7 @@ class ApcuBackendTest extends GenericCacheBackendUnitTestBase {
     $key = $backend->getApcuKey('TEST8');
 
     $iterator = new \APCUIterator('/^' . $key . '/');
+    $found = FALSE;
     foreach ($iterator as $item) {
       $this->assertEquals(0, $item['ttl']);
       $found = TRUE;

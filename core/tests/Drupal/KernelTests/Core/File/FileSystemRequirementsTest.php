@@ -23,7 +23,7 @@ class FileSystemRequirementsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $strictConfigSchema = FALSE;
+  protected bool $strictConfigSchema = FALSE;
 
   /**
    * {@inheritdoc}

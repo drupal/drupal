@@ -38,8 +38,9 @@ class GdToolkitPngImageManipulationTest extends GdToolkitImageManipulationTestBa
   public function testIncorrectIccpSrgbProfile(string $image_uri): void {
     $warning_detected = FALSE;
     // @see https://github.com/sebastianbergmann/phpunit/issues/5062
-    $error_handler = static function () use (&$warning_detected): void {
+    $error_handler = static function () use (&$warning_detected): bool {
       $warning_detected = TRUE;
+      return TRUE;
     };
     // $error_level is intentionally set to 0. It's required for PHP '@'
     // suppression not to trigger Drupal error handler. In that case native

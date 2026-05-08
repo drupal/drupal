@@ -53,7 +53,7 @@ class CachedStorageTest extends ConfigStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function read($name) {
+  protected function read($name): array|object {
     $data = $this->cache->get($name);
     // Cache misses fall through to the underlying storage.
     return $data ? $data->data : $this->fileStorage->read($name);

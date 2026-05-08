@@ -223,7 +223,7 @@ abstract class StorageTestBase extends KernelTestBase {
    * @see \Drupal\system\Tests\KeyValueStore\DatabaseStorageExpirable
    * @see \Drupal\Core\KeyValueStore\DatabaseStorageExpirable::garbageCollection()
    */
-  protected function createStorage() {
+  protected function createStorage(): array {
     $stores = [];
     foreach ($this->collections as $i => $collection) {
       $stores[$i] = $this->container->get($this->factory)->get($collection);

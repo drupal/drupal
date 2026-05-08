@@ -22,13 +22,6 @@ class ConfigImportRecreateTest extends KernelTestBase {
   use ContentTypeCreationTrait;
 
   /**
-   * Config Importer object used for testing.
-   *
-   * @var \Drupal\Core\Config\ConfigImporter
-   */
-  protected $configImporter;
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = ['system', 'field', 'text', 'user', 'node'];

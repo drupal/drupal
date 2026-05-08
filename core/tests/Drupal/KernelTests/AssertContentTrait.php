@@ -17,17 +17,13 @@ trait AssertContentTrait {
 
   /**
    * The current raw content.
-   *
-   * @var string
    */
-  protected $content;
+  protected string $content;
 
   /**
    * The plain-text content of raw $content (text nodes).
-   *
-   * @var string
    */
-  protected $plainTextContent;
+  protected ?string $plainTextContent;
 
   /**
    * The drupalSettings value from the current raw $content.
@@ -36,19 +32,17 @@ trait AssertContentTrait {
    *
    * @var array
    */
-  protected $drupalSettings;
+  protected array $drupalSettings;
 
   /**
    * The XML structure parsed from the current raw $content.
-   *
-   * @var \SimpleXMLElement
    */
-  protected $elements;
+  protected ?\SimpleXMLElement $elements;
 
   /**
    * Gets the current raw content.
    */
-  protected function getRawContent() {
+  protected function getRawContent(): string {
     return $this->content;
   }
 
@@ -58,7 +52,7 @@ trait AssertContentTrait {
    * @param string|\Stringable $content
    *   The raw content to set.
    */
-  protected function setRawContent($content) {
+  protected function setRawContent(string|\Stringable $content): void {
     $this->content = (string) $content;
     $this->plainTextContent = NULL;
     $this->elements = NULL;
@@ -71,7 +65,7 @@ trait AssertContentTrait {
   /**
    * Retrieves the plain-text content from the current raw content.
    */
-  protected function getTextContent() {
+  protected function getTextContent(): string {
     if (!isset($this->plainTextContent)) {
       $raw_content = $this->getRawContent();
       // Strip everything between the HEAD tags.
@@ -91,7 +85,7 @@ trait AssertContentTrait {
    * and when you want to use e.g. assertText() but ignore potential white-space
    * caused by HTML output templates.
    */
-  protected function removeWhiteSpace() {
+  protected function removeWhiteSpace(): void {
     $this->content = preg_replace('@>\s+<@', '><', $this->content);
     $this->plainTextContent = NULL;
     $this->elements = NULL;
@@ -102,7 +96,7 @@ trait AssertContentTrait {
    *
    * Variable drupalSettings refers to the drupalSettings JavaScript variable.
    */
-  protected function getDrupalSettings() {
+  protected function getDrupalSettings(): array {
     return $this->drupalSettings;
   }
 
@@ -111,7 +105,7 @@ trait AssertContentTrait {
    *
    * Variable drupalSettings refers to the drupalSettings JavaScript variable.
    */
-  protected function setDrupalSettings($settings) {
+  protected function setDrupalSettings(array $settings): void {
     $this->drupalSettings = $settings;
   }
 
@@ -155,7 +149,7 @@ trait AssertContentTrait {
    * @return string
    *   An XPath query with arguments replaced.
    */
-  protected function buildXPathQuery($xpath, array $args = []) {
+  protected function buildXPathQuery(string $xpath, array $args = []): string {
     // Replace placeholders.
     foreach ($args as $placeholder => $value) {
       // Cast MarkupInterface objects to string.
@@ -207,7 +201,7 @@ trait AssertContentTrait {
    *
    * @see http://php.net/manual/function.simplexml-element-xpath.php
    */
-  protected function xpath($xpath, array $arguments = []) {
+  protected function xpath(string $xpath, array $arguments = []): array|false {
     if ($this->parse()) {
       $xpath = $this->buildXPathQuery($xpath, $arguments);
       $result = $this->elements->xpath($xpath);
@@ -231,7 +225,7 @@ trait AssertContentTrait {
    *   The return value of the XPath search performed after converting the CSS
    *   selector to an XPath selector.
    */
-  protected function cssSelect(string $selector) {
+  protected function cssSelect(string $selector): array {
     return $this->xpath((new CssSelectorConverter())->toXPath($selector));
   }
 
@@ -530,7 +524,7 @@ trait AssertContentTrait {
    *   \Drupal\Component\Render\FormattableMarkup unless you cast the object to
    *   a string. If left blank, a default message will be displayed.
    */
-  protected function assertTitle($title, $message = '') {
+  protected function assertTitle($title, $message = ''): void {
     // Don't use xpath as it messes with HTML escaping.
     preg_match('@<title>(.*)</title>@', $this->getRawContent(), $matches);
     if (isset($matches[1])) {
@@ -561,7 +555,7 @@ trait AssertContentTrait {
    *   \Drupal\Component\Render\FormattableMarkup unless you cast the object to
    *   a string. If left blank, a default message will be displayed.
    */
-  protected function assertThemeOutput(string $callback, array $variables = [], $expected = '', $message = '') {
+  protected function assertThemeOutput(string $callback, array $variables = [], $expected = '', $message = ''): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
@@ -667,7 +661,7 @@ trait AssertContentTrait {
    * @return bool
    *   The selected value or FALSE.
    */
-  protected function getSelectedItem(\SimpleXMLElement $element) {
+  protected function getSelectedItem(\SimpleXMLElement $element): bool {
     foreach ($element->children() as $item) {
       if (isset($item['selected'])) {
         return $item['value'];
@@ -742,7 +736,7 @@ trait AssertContentTrait {
    * @return string
    *   XPath for specified values.
    */
-  protected function constructFieldXpath(string $attribute, $value) {
+  protected function constructFieldXpath(string $attribute, string $value): string {
     $xpath = '//textarea[@' . $attribute . '=:value]|//input[@' . $attribute . '=:value]|//select[@' . $attribute . '=:value]';
     return $this->buildXPathQuery($xpath, [':value' => $value]);
   }

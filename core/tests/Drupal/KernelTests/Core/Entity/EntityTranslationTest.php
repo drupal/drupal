@@ -961,6 +961,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // langcodes are in the deleted languages list.
     $actual = \Drupal::state()->get('entity_test.delete.translatable_test_field');
     $expected_translatable = ['l1', 'l2'];
+    /** @var list<string> $actual */
     sort($actual);
     sort($expected_translatable);
     $this->assertEquals($expected_translatable, $actual);
@@ -974,6 +975,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $actual = \Drupal::state()->get('entity_test.delete.translatable_test_field');
     $expected_translatable[] = 'en';
     $expected_translatable[] = 'l0';
+    /** @var list<string> $actual */
     sort($actual);
     sort($expected_translatable);
     $this->assertEquals($expected_translatable, $actual);
@@ -982,6 +984,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // default langcode.
     $actual = \Drupal::state()->get('entity_test.delete.untranslatable_test_field');
     $expected_untranslatable = ['en'];
+    /** @var list<string> $actual */
     sort($actual);
     sort($expected_untranslatable);
     $this->assertEquals($expected_untranslatable, $actual);

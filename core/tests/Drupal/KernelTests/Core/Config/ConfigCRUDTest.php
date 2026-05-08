@@ -25,11 +25,9 @@ class ConfigCRUDTest extends KernelTestBase {
   /**
    * Exempt from strict schema checking.
    *
-   * @var bool
-   *
    * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
    */
-  protected $strictConfigSchema = FALSE;
+  protected bool $strictConfigSchema = FALSE;
 
   /**
    * Tests CRUD operations.

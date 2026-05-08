@@ -30,7 +30,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function read($name): mixed {
+  protected function read($name): array|object {
     $data = Database::getConnection()->select('config', 'c')->fields('c', ['data'])->condition('name', $name)->execute()->fetchField();
     return unserialize($data);
   }

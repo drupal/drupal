@@ -4,7 +4,7 @@ namespace Drupal\locale;
 
 use Drupal\Core\Config\ExtensionInstallStorage;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\language\ConfigurableLanguageManagerInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
  * Provides access to default configuration for locale integration.
@@ -31,7 +31,7 @@ class LocaleDefaultConfigStorage {
   /**
    * The language manager.
    *
-   * @var \Drupal\language\ConfigurableLanguageManagerInterface
+   * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
 
@@ -54,12 +54,12 @@ class LocaleDefaultConfigStorage {
    *
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The storage object to use for reading configuration data.
-   * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    * @param string $install_profile
    *   The current installation profile.
    */
-  public function __construct(StorageInterface $config_storage, ConfigurableLanguageManagerInterface $language_manager, $install_profile) {
+  public function __construct(StorageInterface $config_storage, LanguageManagerInterface $language_manager, $install_profile) {
     $this->configStorage = $config_storage;
     $this->languageManager = $language_manager;
 

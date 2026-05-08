@@ -33,7 +33,7 @@ class TypedConfigTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $configSchemaCheckerExclusions = ['config_test.validation'];
+  protected static array $configSchemaCheckerExclusions = ['config_test.validation'];
 
   /**
    * {@inheritdoc}

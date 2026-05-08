@@ -22,11 +22,9 @@ class FieldMissingTypeTest extends EntityKernelTestBase {
   /**
    * Set to FALSE because we are hacking a field storage to use a fake type.
    *
-   * @var bool
-   *
    * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
    */
-  protected $strictConfigSchema = FALSE;
+  protected bool $strictConfigSchema = FALSE;
 
   /**
    * The field name.

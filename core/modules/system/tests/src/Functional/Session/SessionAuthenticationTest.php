@@ -65,7 +65,7 @@ class SessionAuthenticationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(401);
 
     // We should be able to access the route with basic authentication.
-    $this->basicAuthGet($protected_url, $this->user->getAccountName(), $this->user->passRaw);
+    $this->basicAuthGet($protected_url, $this->user->getAccountName(), (string) $this->user->passRaw);
     $this->assertSession()->statusCodeEquals(200);
 
     // Check that the correct user is logged in.
@@ -90,12 +90,12 @@ class SessionAuthenticationTest extends BrowserTestBase {
   public function testBasicAuthSession(): void {
     // Set a session value on a request through basic auth.
     $test_value = 'alpaca';
-    $response = $this->basicAuthGet('session-test/set-session/' . $test_value, $this->user->getAccountName(), $this->user->pass_raw);
+    $response = $this->basicAuthGet('session-test/set-session/' . $test_value, $this->user->getAccountName(), (string) $this->user->pass_raw);
     $this->assertSessionData($response, $test_value);
     $this->assertSession()->statusCodeEquals(200);
 
     // Test that on a subsequent request the session value is still present.
-    $response = $this->basicAuthGet('session-test/get-session', $this->user->getAccountName(), $this->user->pass_raw);
+    $response = $this->basicAuthGet('session-test/get-session', $this->user->getAccountName(), (string) $this->user->pass_raw);
     $this->assertSessionData($response, $test_value);
     $this->assertSession()->statusCodeEquals(200);
   }
@@ -131,7 +131,7 @@ class SessionAuthenticationTest extends BrowserTestBase {
     // If we authenticate with a third party authentication system then no
     // session cookie should be set, the third party system is responsible for
     // sustaining the session.
-    $this->basicAuthGet($no_cookie_url, $this->user->getAccountName(), $this->user->passRaw);
+    $this->basicAuthGet($no_cookie_url, $this->user->getAccountName(), (string) $this->user->passRaw);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertEmpty($this->getSessionCookies());
     // Mink stores some information in the session that breaks the next check if

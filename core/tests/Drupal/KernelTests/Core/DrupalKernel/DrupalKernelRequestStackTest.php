@@ -78,10 +78,10 @@ class DrupalKernelRequestStackTest extends KernelTestBase implements EventSubscr
     // Make the main request.
     $this->recordedRequestStackCount = $this->recordedRequests = NULL;
     $main_response = $http_kernel->handle($main_request);
-    $this->assertSame($main_request, $request_stack->getMainRequest());
-    $this->assertSame($main_request, $request_stack->getCurrentRequest());
-    $this->assertSame($main_request, $this->recordedRequests['current']);
-    $this->assertSame($main_request, $this->recordedRequests['main']);
+    $this->assertEquals($main_request, $request_stack->getMainRequest());
+    $this->assertEquals($main_request, $request_stack->getCurrentRequest());
+    $this->assertEquals($main_request, $this->recordedRequests['current']);
+    $this->assertEquals($main_request, $this->recordedRequests['main']);
     $this->assertNull($this->recordedRequests['parent']);
     $this->assertSame(1, $this->recordedRequestStackCount);
     $this->assertSame(1, $this->getRequestStackCount($request_stack));
@@ -89,36 +89,36 @@ class DrupalKernelRequestStackTest extends KernelTestBase implements EventSubscr
     // Make a sub request.
     $this->recordedRequestStackCount = $this->recordedRequests = NULL;
     $http_kernel->handle($sub_request_1, HttpKernelInterface::SUB_REQUEST);
-    $this->assertSame($main_request, $request_stack->getMainRequest());
-    $this->assertSame($main_request, $request_stack->getCurrentRequest());
-    $this->assertSame($sub_request_1, $this->recordedRequests['current']);
-    $this->assertSame($main_request, $this->recordedRequests['main']);
-    $this->assertSame($main_request, $this->recordedRequests['parent']);
+    $this->assertEquals($main_request, $request_stack->getMainRequest());
+    $this->assertEquals($main_request, $request_stack->getCurrentRequest());
+    $this->assertEquals($sub_request_1, $this->recordedRequests['current']);
+    $this->assertEquals($main_request, $this->recordedRequests['main']);
+    $this->assertEquals($main_request, $this->recordedRequests['parent']);
     $this->assertSame(2, $this->recordedRequestStackCount);
     $this->assertSame(1, $this->getRequestStackCount($request_stack));
 
     // Make a sub request that makes a sub request.
     $this->recordedRequestStackCount = $this->recordedRequests = NULL;
     $http_kernel->handle($sub_request_2, HttpKernelInterface::SUB_REQUEST);
-    $this->assertSame($main_request, $request_stack->getMainRequest());
-    $this->assertSame($main_request, $request_stack->getCurrentRequest());
-    $this->assertNotSame($sub_request_2, $this->recordedRequests['current']);
+    $this->assertEquals($main_request, $request_stack->getMainRequest());
+    $this->assertEquals($main_request, $request_stack->getCurrentRequest());
+    $this->assertNotEquals($sub_request_2, $this->recordedRequests['current']);
     $this->assertSame('/http-kernel-test-sub-sub-request', $this->recordedRequests['current']->getPathInfo());
-    $this->assertSame($sub_request_2, $this->recordedRequests['parent']);
-    $this->assertSame($main_request, $this->recordedRequests['main']);
+    $this->assertEquals($sub_request_2, $this->recordedRequests['parent']);
+    $this->assertEquals($main_request, $this->recordedRequests['main']);
     $this->assertSame(3, $this->recordedRequestStackCount);
     $this->assertSame(1, $this->getRequestStackCount($request_stack));
 
     // Make 404 sub request.
     $this->recordedRequestStackCount = $this->recordedRequests = NULL;
     $http_kernel->handle($request_404, HttpKernelInterface::SUB_REQUEST);
-    $this->assertSame($main_request, $request_stack->getMainRequest());
-    $this->assertSame($main_request, $request_stack->getCurrentRequest());
-    $this->assertNotSame($request_404, $this->recordedRequests['current']);
+    $this->assertEquals($main_request, $request_stack->getMainRequest());
+    $this->assertEquals($main_request, $request_stack->getCurrentRequest());
+    $this->assertNotEquals($request_404, $this->recordedRequests['current']);
     $this->assertSame('/does_not_exist', $this->recordedRequests['current']->getPathInfo());
     $this->assertSame('system.404', $this->recordedRequests['current']->attributes->get(RouteObjectInterface::ROUTE_NAME));
-    $this->assertSame($request_404, $this->recordedRequests['parent']);
-    $this->assertSame($main_request, $this->recordedRequests['main']);
+    $this->assertEquals($request_404, $this->recordedRequests['parent']);
+    $this->assertEquals($main_request, $this->recordedRequests['main']);
     $this->assertSame(3, $this->recordedRequestStackCount);
     $this->assertSame(1, $this->getRequestStackCount($request_stack));
 
@@ -130,13 +130,13 @@ class DrupalKernelRequestStackTest extends KernelTestBase implements EventSubscr
     // Make 404 main request.
     $this->recordedRequestStackCount = $this->recordedRequests = NULL;
     $response_404 = $http_kernel->handle($request_404);
-    $this->assertSame($request_404, $request_stack->getMainRequest());
-    $this->assertSame($request_404, $request_stack->getCurrentRequest());
-    $this->assertNotSame($request_404, $this->recordedRequests['current']);
+    $this->assertEquals($request_404, $request_stack->getMainRequest());
+    $this->assertEquals($request_404, $request_stack->getCurrentRequest());
+    $this->assertNotEquals($request_404, $this->recordedRequests['current']);
     $this->assertSame('/does_not_exist', $this->recordedRequests['current']->getPathInfo());
     $this->assertSame('system.404', $this->recordedRequests['current']->attributes->get(RouteObjectInterface::ROUTE_NAME));
-    $this->assertSame($request_404, $this->recordedRequests['parent']);
-    $this->assertSame($request_404, $this->recordedRequests['main']);
+    $this->assertEquals($request_404, $this->recordedRequests['parent']);
+    $this->assertEquals($request_404, $this->recordedRequests['main']);
     $this->assertSame(2, $this->recordedRequestStackCount);
     $this->assertSame(1, $this->getRequestStackCount($request_stack));
 

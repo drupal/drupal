@@ -20,11 +20,9 @@ class ConfigFileContentTest extends KernelTestBase {
   /**
    * Exempt from strict schema checking.
    *
-   * @var bool
-   *
    * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
    */
-  protected $strictConfigSchema = FALSE;
+  protected bool $strictConfigSchema = FALSE;
 
   /**
    * Tests setting, writing, and reading of a configuration setting.

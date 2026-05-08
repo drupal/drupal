@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 
 /**
@@ -14,15 +15,15 @@ abstract class TemporaryQueryTestBase extends DriverSpecificDatabaseTestBase {
   /**
    * Returns the connection.
    */
-  public function getConnection() {
+  public function getConnection(): Connection {
     return Database::getConnection();
   }
 
   /**
    * Returns the number of rows of a table.
    */
-  public function countTableRows($table_name) {
-    return Database::getConnection()->select($table_name)->countQuery()->execute()->fetchField();
+  public function countTableRows($table_name): int {
+    return (int) Database::getConnection()->select($table_name)->countQuery()->execute()->fetchField();
   }
 
   /**

@@ -22,7 +22,7 @@ class KernelTestBaseDatabaseDriverModuleTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getDatabaseConnectionInfo() {
+  protected function getDatabaseConnectionInfo(): array {
     // If the test is run with argument SIMPLETEST_DB then use it.
     $db_url = getenv('SIMPLETEST_DB');
     if (empty($db_url)) {
@@ -50,7 +50,7 @@ class KernelTestBaseDatabaseDriverModuleTest extends KernelTestBase {
       foreach ($connection_info as $target => $value) {
         // Replace the table prefix definition to ensure that no table of the
         // test runner leak into the test.
-        $connection_info[$target]['prefix'] = $this->databasePrefix;
+        $connection_info[$target]['prefix'] = $this->databasePrefix ?? '';
       }
     }
     return $connection_info;

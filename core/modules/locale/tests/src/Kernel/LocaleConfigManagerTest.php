@@ -32,10 +32,8 @@ class LocaleConfigManagerTest extends KernelTestBase {
 
   /**
    * This test creates simple config on the fly breaking schema checking.
-   *
-   * @var bool
    */
-  protected $strictConfigSchema = FALSE;
+  protected bool $strictConfigSchema = FALSE;
 
   /**
    * Tests hasTranslation().

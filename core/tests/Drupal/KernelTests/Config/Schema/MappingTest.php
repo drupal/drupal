@@ -29,7 +29,7 @@ class MappingTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $configSchemaCheckerExclusions = [
+  protected static array $configSchemaCheckerExclusions = [
     'config_schema_deprecated_test.settings',
   ];
 

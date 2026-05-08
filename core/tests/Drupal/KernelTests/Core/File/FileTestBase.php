@@ -66,7 +66,7 @@ abstract class FileTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpFilesystem() {
+  protected function setUpFilesystem(): void {
     $public_file_directory = $this->siteDirectory . '/files';
     $private_file_directory = $this->siteDirectory . '/private';
 

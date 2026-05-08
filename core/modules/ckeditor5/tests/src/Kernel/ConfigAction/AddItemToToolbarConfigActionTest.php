@@ -41,7 +41,7 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $configSchemaCheckerExclusions = [
+  protected static array $configSchemaCheckerExclusions = [
     // This test must be allowed to save invalid config, we can confirm that
     // any invalid stuff is validated by the config actions system.
     'editor.editor.filter_test',

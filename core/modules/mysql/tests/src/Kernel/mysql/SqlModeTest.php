@@ -28,7 +28,7 @@ class SqlModeTest extends DriverSpecificDatabaseTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getDatabaseConnectionInfo() {
+  protected function getDatabaseConnectionInfo(): array {
     $info = parent::getDatabaseConnectionInfo();
 
     // This runs during setUp(), so is not yet skipped for non MySQL databases.

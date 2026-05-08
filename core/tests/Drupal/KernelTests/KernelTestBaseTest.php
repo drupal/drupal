@@ -18,6 +18,8 @@ use Psr\Http\Client\ClientExceptionInterface;
 
 /**
  * Tests Drupal\KernelTests\KernelTestBase.
+ *
+ * @final
  */
 #[CoversClass(KernelTestBase::class)]
 #[Group('PHPUnit')]
@@ -146,18 +148,20 @@ class KernelTestBaseTest extends KernelTestBase {
    *
    * @see ::testSubsequentContainerIsolation()
    */
+  #[DoesNotPerformAssertions]
   public function testContainerIsolation(): void {
     $this->enableModules(['system', 'user']);
-    $this->assertNull($this->installConfig('user'));
+    $this->installConfig('user');
   }
 
   /**
    * Tests whether the fixture can re-install modules and configuration.
    */
   #[Depends('testContainerIsolation')]
+  #[DoesNotPerformAssertions]
   public function testSubsequentContainerIsolation(): void {
     $this->enableModules(['system', 'user']);
-    $this->assertNull($this->installConfig('user'));
+    $this->installConfig('user');
   }
 
   /**

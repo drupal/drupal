@@ -34,6 +34,7 @@ abstract class DriverSpecificKernelTestBase extends KernelTestBase {
     $connectionInfo = $this->getDatabaseConnectionInfo();
     $test_class_parts = explode('\\', get_class($this));
     $expected_provider = $test_class_parts[2] ?? '';
+    $expected_driver = NULL;
     for ($i = 3; $i < count($test_class_parts); $i++) {
       if ($test_class_parts[$i] === 'Kernel') {
         $expected_driver = $test_class_parts[$i + 1] ?? '';
