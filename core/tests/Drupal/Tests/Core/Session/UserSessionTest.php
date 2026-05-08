@@ -114,4 +114,17 @@ class UserSessionTest extends UnitTestCase {
     $this->assertEquals('bar', $user->foo);
   }
 
+  /**
+   * Tests that ::getLastAccessedTime() returns an integer.
+   *
+   * @legacy-covers ::getLastAccessedTime
+   */
+  public function testGetLastAccessedTime(): void {
+    $user = new UserSession([
+      'access' => '1234567890',
+    ]);
+
+    $this->assertSame(1234567890, $user->getLastAccessedTime());
+  }
+
 }
