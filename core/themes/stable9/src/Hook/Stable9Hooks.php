@@ -2,6 +2,7 @@
 
 namespace Drupal\stable9\Hook;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
@@ -12,6 +13,25 @@ class Stable9Hooks {
    * @file
    * Functions to support theming in the Stable9 theme.
    */
+
+  /**
+   * Implements hook_preprocess_block().
+   *
+   * Copies block content attributes to the block wrapper for backward
+   * compatibility.
+   */
+  #[Hook('preprocess_block')]
+  public function preprocessBlock(&$variables): void {
+    if (isset($variables['content']['#attributes'])) {
+      if (isset($variables['attributes'])) {
+        $variables['attributes'] = NestedArray::mergeDeep($variables['attributes'], $variables['content']['#attributes']);
+      }
+      else {
+        $variables['attributes'] = $variables['content']['#attributes'];
+      }
+      unset($variables['content']['#attributes']);
+    }
+  }
 
   /**
    * Implements hook_preprocess_item_list__search_results().

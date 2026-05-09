@@ -234,11 +234,13 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
       // #contextual_links is information about the *entire* block. Therefore,
       // we must move these properties from $content and merge them into the
       // top-level element.
-      foreach (['#attributes', '#contextual_links'] as $property) {
-        if (isset($content[$property])) {
-          $build[$property] += $content[$property];
-          unset($content[$property]);
-        }
+      if (isset($content['#contextual_links'])) {
+        $build['#contextual_links'] += $content['#contextual_links'];
+        unset($content['#contextual_links']);
+      }
+      if (isset($content['#wrapper_attributes'])) {
+        $build['#attributes'] += $content['#wrapper_attributes'];
+        unset($content['#wrapper_attributes']);
       }
       $build['content'] = $content;
     }
