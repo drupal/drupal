@@ -54,6 +54,7 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
     $expected_cache_tags = array_merge([
       'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
       'config:block_list',
+      'config:system.cron',
       'config:navigation.settings',
       'config:navigation.block_layout',
       'config:shortcut.set.default',

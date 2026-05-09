@@ -64,6 +64,16 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
         fn () => ToConfig::NoOp,
       ),
     ];
+    $form['favorites']['motivation'] = [
+      '#type' => 'text_format',
+      '#title' => 'Motivation',
+      '#format' => $this->config('form_test.object')->get('motivation.format'),
+      '#config_target' => new ConfigTarget(
+        'form_test.object',
+        'motivation',
+        fromConfig: fn (?array $value = NULL): string => $value['value'] ?? ''
+      ),
+    ];
     $form['could_not_live_without'] = [
       '#weight' => 10,
       '#type' => 'textfield',

@@ -84,8 +84,12 @@ class ConfigTargetTest extends UnitTestCase {
       ],
     ];
 
+    $config = $this->prophesize(Config::class);
+    $config->getCacheTags()->willReturn([]);
+    $config_factory = $this->prophesize(ConfigFactoryInterface::class);
+    $config_factory->getEditable('system.site')->willReturn($config->reveal());
     $test_form = new class(
-      $this->prophesize(ConfigFactoryInterface::class)->reveal(),
+      $config_factory->reveal(),
       $this->prophesize(TypedConfigManagerInterface::class)->reveal(),
     ) extends ConfigFormBase {
       use RedundantEditableConfigNamesTrait;
