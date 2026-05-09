@@ -25,6 +25,14 @@ class DrupalDebugClassLoaderTest extends TestCase {
   /**
    * {@inheritdoc}
    */
+  public static function setUpBeforeClass(): void {
+    // Load fixture classes.
+    require_once __DIR__ . '/../../../../fixtures/TestTools/drupal_debug_classloader_test_classes.php';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->loader = new DrupalDebugClassLoader(function (): void {});
@@ -57,114 +65,5 @@ class DrupalDebugClassLoaderTest extends TestCase {
     $deprecations = $this->loader->checkAnnotations(new \ReflectionClass($class), $class);
     return array_values(array_filter($deprecations, fn($d): bool => str_contains($d, 'might add')));
   }
-
-}
-
-namespace Drupal\drupal_debug_test_core;
-
-/**
- * Fixture: parent class with @return annotations but no native return types.
- */
-class ParentWithReturn {
-
-  /**
-   * @return string
-   *   A test string.
-   */
-  public function testMethod() {
-    return 'test';
-  }
-
-  /**
-   * @return int
-   *   A test integer.
-   */
-  public function anotherMethod() {
-    return 42;
-  }
-
-}
-
-/**
- * Fixture: child in the same module as the parent.
- */
-class SameModuleChild extends ParentWithReturn {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testMethod() {
-    return 'same module';
-  }
-
-}
-
-namespace Drupal\drupal_debug_test_other;
-
-use Drupal\drupal_debug_test_core\ParentWithReturn;
-
-/**
- * Fixture: cross-module child without native return type.
- */
-class ChildWithoutReturnType extends ParentWithReturn {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testMethod() {
-    return 'overridden';
-  }
-
-}
-
-/**
- * Fixture: cross-module child with native return type.
- */
-class ChildWithNativeReturnType extends ParentWithReturn {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testMethod(): string {
-    return 'overridden';
-  }
-
-}
-
-/**
- * Fixture: cross-module child with own @return annotation.
- */
-class ChildWithReturnAnnotation extends ParentWithReturn {
-
-  /**
-   * @return string
-   *   A test string.
-   */
-  public function testMethod() {
-    return 'overridden';
-  }
-
-}
-
-/**
- * Fixture: cross-module child with deprecated method.
- */
-class ChildWithDeprecatedMethod extends ParentWithReturn {
-
-  /**
-   * @deprecated in drupal:11.0.0 and is removed from drupal:12.0.0.
-   *   Use something else instead.
-   * @see https://www.drupal.org/node/9999999
-   */
-  public function testMethod() {
-    return 'overridden';
-  }
-
-}
-
-/**
- * Fixture: cross-module child that does not override the method.
- */
-class ChildWithoutOverride extends ParentWithReturn {
 
 }
