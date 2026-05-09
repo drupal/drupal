@@ -36,6 +36,8 @@ class LinkSeparateFormatter extends LinkFormatter {
 
   /**
    * {@inheritdoc}
+   *
+   * @phpstan-param \Drupal\Core\Field\FieldItemListInterface<\Drupal\link\LinkItemInterface> $items
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $element = [];

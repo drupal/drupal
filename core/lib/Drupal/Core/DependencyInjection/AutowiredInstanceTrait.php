@@ -82,7 +82,7 @@ trait AutowiredInstanceTrait {
         continue;
       }
 
-      if ($parameter->allowsNull()) {
+      if ($parameter->getType()?->allowsNull() || $parameter->getType() === NULL) {
         $args[] = NULL;
         continue;
       }
