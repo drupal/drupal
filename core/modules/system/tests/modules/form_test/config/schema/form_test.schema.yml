@@ -25,3 +25,6 @@ form_test.object:
           choices:
             - fruits
             - vegetables
+    motivation:
+      type: text_format
+      label: 'Motivation'

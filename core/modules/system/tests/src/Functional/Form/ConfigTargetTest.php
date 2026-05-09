@@ -18,7 +18,7 @@ class ConfigTargetTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['form_test'];
+  protected static $modules = ['form_test', 'filter_test'];
 
   /**
    * {@inheritdoc}
@@ -55,6 +55,9 @@ class ConfigTargetTest extends BrowserTestBase {
    * Tests #config_target where there is not a 1:1 property to element.
    */
   public function testNested(): void {
+    // Ensure there are more than one format to choose from.
+    $this->config('filter.settings')->set('always_show_fallback_choice', TRUE)->save();
+
     $most_favorite_fruit = 'Apple';
     $second_favorite_fruit = 'Kiwi';
     $nemesis_vegetable = 'Cauliflower';
@@ -106,6 +109,10 @@ class ConfigTargetTest extends BrowserTestBase {
       ],
       'favorite_vegetable' => 'Potato',
       'nemesis_vegetable' => '',
+      'motivation' => [
+        'value' => '',
+        'format' => 'filter_test',
+      ],
     ], $this->config('form_test.object')->getRawData());
 
     // Now enter a nemesis vegetable too.
@@ -124,6 +131,8 @@ class ConfigTargetTest extends BrowserTestBase {
     $page->fillField('Second choice', $second_favorite_fruit);
     $page->fillField('Nemesis', $nemesis_vegetable);
     $page->fillField('I could not live without', 'fruits');
+    $page->fillField('Motivation', 'fruit is life');
+    $page->selectFieldOption('favorites[motivation][format]', 'plain_text');
     $page->pressButton('Save configuration');
     $assert_session->statusMessageContains('The configuration options have been saved.', 'status');
 
@@ -136,14 +145,24 @@ class ConfigTargetTest extends BrowserTestBase {
       'favorite_vegetable' => 'Potato',
       'nemesis_vegetable' => $nemesis_vegetable,
       'could_not_live_without' => 'fruits',
+      'motivation' => [
+        'value' => 'fruit is life',
+        'format' => 'plain_text',
+      ],
     ], $this->config('form_test.object')->getRawData());
 
     // Remove the nemesis vegetable; this should cause the deletion of the
     // `could_not_live_without` property path in the Config object.
     $this->drupalGet('/form-test/nested-config-target');
+
+    // Ensure the text field has the correct default value.
+    $this->assertSession()->fieldValueEquals('Motivation', 'fruit is life');
+    $this->assertSession()->fieldValueEquals('favorites[motivation][format]', 'plain_text');
+
     $page->fillField('First choice', $most_favorite_fruit);
     $page->fillField('Second choice', $second_favorite_fruit);
     $page->fillField('Nemesis', '');
+    $page->fillField('Motivation', '');
     $page->pressButton('Save configuration');
     $assert_session->statusMessageContains('The configuration options have been saved.', 'status');
 
@@ -155,6 +174,10 @@ class ConfigTargetTest extends BrowserTestBase {
       ],
       'favorite_vegetable' => 'Potato',
       'nemesis_vegetable' => '',
+      'motivation' => [
+        'value' => '',
+        'format' => 'plain_text',
+      ],
     ], $this->config('form_test.object')->getRawData());
   }
 
