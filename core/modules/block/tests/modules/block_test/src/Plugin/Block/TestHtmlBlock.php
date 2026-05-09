@@ -24,6 +24,7 @@ class TestHtmlBlock extends BlockBase {
     return [
       '#attributes' => \Drupal::keyvalue('block_test')->get('attributes'),
       '#children' => \Drupal::keyValue('block_test')->get('content'),
+      '#wrapper_attributes' => \Drupal::keyvalue('block_test')->get('wrapper_attributes'),
     ];
   }
 

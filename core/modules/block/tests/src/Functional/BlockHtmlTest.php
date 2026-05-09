@@ -37,7 +37,7 @@ class BlockHtmlTest extends BrowserTestBase {
     ]));
 
     // Enable the test_html block, to test HTML ID and attributes.
-    \Drupal::keyValue('block_test')->set('attributes', ['data-custom-attribute' => 'foo']);
+    \Drupal::keyValue('block_test')->set('wrapper_attributes', ['data-custom-attribute' => 'foo']);
     \Drupal::keyValue('block_test')->set('content', $this->randomMachineName());
     $this->drupalPlaceBlock('test_html', ['id' => 'test_html_block']);
 
