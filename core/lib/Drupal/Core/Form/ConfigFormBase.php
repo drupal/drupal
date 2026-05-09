@@ -3,6 +3,8 @@
 namespace Drupal\Core\Form;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
@@ -147,7 +149,21 @@ abstract class ConfigFormBase extends FormBase {
     // rebuilding the form.
     $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, []);
 
-    return $this->doStoreConfigMap($element, $form_state);
+    $element = $this->doStoreConfigMap($element, $form_state);
+
+    // Use the map to set the cacheability metadata on the form.
+    $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
+    $tags = [];
+    foreach (array_merge(array_keys($map), $this->getEditableConfigNames()) as $config_name) {
+      $tags = Cache::mergeTags(
+        $tags,
+        $this->configFactory()->getEditable($config_name)->getCacheTags()
+      );
+    }
+    if (!empty($tags)) {
+      CacheableMetadata::createFromRenderArray($element)->addCacheTags($tags)->applyTo($element);
+    }
+    return $element;
   }
 
   /**
