@@ -12062,18 +12062,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/config_translation/tests/src/Functional/ConfigTranslationUiTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\content_moderation\\\\ContentPreprocess\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/src/ContentPreprocess.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\content_moderation\\\\ContentPreprocess\\:\\:preprocessNode\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/src/ContentPreprocess.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\content_moderation\\\\Entity\\\\ContentModerationState\\:\\:updateOrCreateFromEntity\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
