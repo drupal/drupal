@@ -13392,18 +13392,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/contact/tests/src/Unit/MailHandlerTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\content_moderation\\\\ContentPreprocess\\:\\:create\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/src/ContentPreprocess.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\content_moderation\\\\ContentPreprocess\\:\\:preprocessNode\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/src/ContentPreprocess.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\content_moderation\\\\Entity\\\\ContentModerationState\\:\\:updateOrCreateFromEntity\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -13828,12 +13816,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Unit/ContentModerationRouteSubscriberTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Unit\\\\ContentPreprocessTest\\:\\:routeNodeProvider\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Unit/ContentPreprocessTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Unit\\\\LatestRevisionCheckTest\\:\\:accessSituationProvider\\(\\) has no return type specified\\.$#',
