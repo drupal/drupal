@@ -122,6 +122,7 @@ class ManageGitIgnoreTest extends TestCase {
 /.gitattributes
 /.ht.router.php
 /autoload.php
+/autoload_runtime.php
 /index.php
 /robots.txt
 /update.php

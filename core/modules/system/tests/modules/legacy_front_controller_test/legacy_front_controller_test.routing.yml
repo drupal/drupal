@@ -1,0 +1,6 @@
+legacy_front_controller_test.home:
+  path: '/test'
+  defaults:
+    _controller: '\Drupal\legacy_front_controller_test\Controller\TestController::helloWorld'
+  requirements:
+    _access: 'TRUE'

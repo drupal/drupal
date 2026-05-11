@@ -15,12 +15,15 @@ if (PHP_SAPI !== 'cli') {
   return;
 }
 
-// Bootstrap.
-$autoloader = require __DIR__ . '/../../autoload.php';
-$request = Request::createFromGlobals();
-Settings::initialize(dirname(__DIR__, 2), DrupalKernel::findSitePath($request), $autoloader);
-DrupalKernel::createFromRequest($request, $autoloader, 'prod')->boot();
+require_once __DIR__ . '/../../autoload_runtime.php';
 
-// Run the database dump command.
-$application = new DbDumpApplication();
-$application->run();
+return static function () {
+  // Bootstrap.
+  $autoloader = require __DIR__ . '/../../autoload.php';
+  $request = Request::createFromGlobals();
+  Settings::initialize(dirname(__DIR__, 2), DrupalKernel::findSitePath($request), $autoloader);
+  DrupalKernel::createFromRequest($request, $autoloader, 'prod')->boot();
+
+  // Run the database dump command.
+  return new DbDumpApplication();
+};

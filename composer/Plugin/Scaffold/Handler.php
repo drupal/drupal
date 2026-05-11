@@ -172,6 +172,11 @@ class Handler {
     if (!GenerateAutoloadReferenceFile::autoloadFileCommitted($this->io, $this->rootPackageName(), $web_root)) {
       $scaffold_results[] = GenerateAutoloadReferenceFile::generateAutoload($this->io, $this->rootPackageName(), $web_root, $this->getVendorPath());
     }
+    // The same is done for the autoload_runtime file that loads the Symfony
+    // runtime.
+    if (!GenerateAutoloadRuntimeReferenceFile::autoloadRuntimeFileCommitted($this->io, $this->rootPackageName(), $web_root)) {
+      $scaffold_results[] = GenerateAutoloadRuntimeReferenceFile::generateAutoloadRuntime($this->io, $this->rootPackageName(), $web_root, $this->getVendorPath());
+    }
 
     // Add the managed scaffold files to .gitignore if applicable.
     $gitIgnoreManager = new ManageGitIgnore($this->io, getcwd());

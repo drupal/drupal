@@ -19,16 +19,20 @@ if (PHP_SAPI !== 'cli') {
   return;
 }
 
-$classloader = require_once __DIR__ . '/../../autoload.php';
+require_once __DIR__ . '/../../autoload_runtime.php';
 
-$application = new Application('drupal', \Drupal::VERSION);
+return static function () {
+  $classloader = require __DIR__ . '/../../autoload.php';
 
-$application->addCommand(new QuickStartCommand());
-$application->addCommand(new InstallCommand($classloader));
-$application->addCommand(new ServerCommand($classloader));
-$application->addCommand(new GenerateTheme());
-$application->addCommand(new RecipeCommand($classloader));
-$application->addCommand(new RecipeInfoCommand($classloader));
-$application->addCommand(new ContentExportCommand($classloader));
+  $application = new Application('drupal', \Drupal::VERSION);
 
-$application->run();
+  $application->addCommand(new QuickStartCommand());
+  $application->addCommand(new InstallCommand($classloader));
+  $application->addCommand(new ServerCommand($classloader));
+  $application->addCommand(new GenerateTheme());
+  $application->addCommand(new RecipeCommand($classloader));
+  $application->addCommand(new RecipeInfoCommand($classloader));
+  $application->addCommand(new ContentExportCommand($classloader));
+
+  return $application;
+};

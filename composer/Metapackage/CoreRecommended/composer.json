@@ -52,6 +52,7 @@
         "symfony/process": "~v8.0.5",
         "symfony/psr-http-message-bridge": "~v8.0.4",
         "symfony/routing": "~v8.0.6",
+        "symfony/runtime": "~v8.0.8",
         "symfony/serializer": "~v8.0.6",
         "symfony/service-contracts": "~v3.6.1",
         "symfony/string": "~v8.0.6",

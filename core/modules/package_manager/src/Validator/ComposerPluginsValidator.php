@@ -82,6 +82,7 @@ final class ComposerPluginsValidator implements EventSubscriberInterface {
     'drupal/core-project-message' => '*',
     'phpstan/extension-installer' => '^1.1',
     PhpTufValidator::PLUGIN_NAME => '^1',
+    'symfony/runtime' => '*',
   ];
 
   /**
