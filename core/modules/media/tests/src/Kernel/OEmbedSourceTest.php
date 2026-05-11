@@ -132,7 +132,7 @@ class OEmbedSourceTest extends MediaKernelTestBase {
     // The source plugin will try to fetch the remote thumbnail, so mock the
     // HTTP client to ensure that request returns a response with some valid
     // image data.
-    $data = Utils::tryFopen($this->getDrupalRoot() . '/core/misc/druplicon.png', 'r');
+    $data = Utils::tryFopen($this->root . '/core/misc/druplicon.png', 'r');
     $response = new Response(200, $thumbnail_headers, Utils::streamFor($data));
     $handler = new MockHandler([$response]);
     $client = new Client([

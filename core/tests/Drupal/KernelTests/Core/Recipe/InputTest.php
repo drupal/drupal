@@ -63,7 +63,7 @@ class InputTest extends KernelTestBase {
       ->set('uuid', $this->container->get(UuidInterface::class)->generate())
       ->save();
 
-    $this->recipe = Recipe::createFromDirectory($this->getDrupalRoot() . '/core/tests/fixtures/recipes/input_test');
+    $this->recipe = Recipe::createFromDirectory($this->root . '/core/tests/fixtures/recipes/input_test');
   }
 
   /**

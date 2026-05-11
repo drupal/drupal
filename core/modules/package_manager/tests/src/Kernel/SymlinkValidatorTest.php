@@ -46,7 +46,7 @@ class SymlinkValidatorTest extends PackageManagerKernelTestBase {
 
     // Switch back to the Drupal root to ensure that the check isn't affected
     // by which directory we happen to be in.
-    chdir($this->getDrupalRoot());
+    chdir($this->root);
     $this->assertStatusCheckResults([]);
   }
 
@@ -159,7 +159,7 @@ class SymlinkValidatorTest extends PackageManagerKernelTestBase {
 
     // Switch back to the Drupal root to ensure that the check isn't affected
     // by which directory we happen to be in.
-    chdir($this->getDrupalRoot());
+    chdir($this->root);
     $this->assertStatusCheckResults([]);
   }
 

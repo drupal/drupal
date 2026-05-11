@@ -123,7 +123,7 @@ class RecipeCommandTest extends BrowserTestBase {
   }
 
   public function testPassInput(): void {
-    $dir = $this->getDrupalRoot() . '/core/tests/fixtures/recipes/input_test';
+    $dir = $this->root . '/core/tests/fixtures/recipes/input_test';
     $this->applyRecipe($dir, options: [
       '--input=input_test.owner=Test Owner',
     ]);
@@ -131,7 +131,7 @@ class RecipeCommandTest extends BrowserTestBase {
   }
 
   public function testPassInvalidInput(): void {
-    $dir = $this->getDrupalRoot() . '/core/tests/fixtures/recipes/input_test';
+    $dir = $this->root . '/core/tests/fixtures/recipes/input_test';
     $process = $this->applyRecipe($dir, 1, options: [
       '--input=input_test.owner=hack',
     ]);
@@ -140,12 +140,12 @@ class RecipeCommandTest extends BrowserTestBase {
 
   public function testDefaultInputValueFromConfig(): void {
     // Test that default values are used when no input is provided
-    $this->applyRecipe($this->getDrupalRoot() . '/core/tests/fixtures/recipes/input_test');
+    $this->applyRecipe($this->root . '/core/tests/fixtures/recipes/input_test');
     $this->assertSame("Dries Buytaert's Turf", $this->config('system.site')->get('name'));
   }
 
   public function testListInputs(): void {
-    $root = $this->getDrupalRoot();
+    $root = $this->root;
 
     $output = $this->applyRecipe($root . '/core/tests/fixtures/recipes/input_test', command: 'recipe:info')->getOutput();
     $this->assertStringContainsString('input_test.owner', $output);
