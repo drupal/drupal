@@ -41,7 +41,8 @@
   "minimum-stability": "stable",
   "config": {
     "allow-plugins": {
-      "drupal/core-composer-scaffold": false
+      "drupal/core-composer-scaffold": false,
+      "symfony/runtime": false
     }
   }
 }

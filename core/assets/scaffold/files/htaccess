@@ -140,6 +140,7 @@ AddType image/webp .webp
   RewriteCond %{REQUEST_URI} !/core/[^/]*\.php$
   # Allow access to test-specific PHP files:
   RewriteCond %{REQUEST_URI} !/core/modules/system/tests/https?\.php
+  RewriteCond %{REQUEST_URI} !/core/modules/system/tests/modules/legacy_front_controller_test/test_index.php
   # Deny access to any other PHP files that do not match the rules above.
   # Specifically, disallow autoload.php from being served directly.
   RewriteRule "^(.+/.*|autoload)\.php($|/)" - [F]

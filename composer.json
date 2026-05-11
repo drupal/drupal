@@ -71,6 +71,7 @@
             "drupal/core-vendor-hardening": true,
             "php-http/discovery": true,
             "phpstan/extension-installer": true,
+            "symfony/runtime": true,
             "tbachert/spi": false
         }
     },

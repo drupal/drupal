@@ -1,0 +1,5 @@
+name: 'Legacy Front Controller test'
+type: module
+description: 'Support module for legacy front controller testing.'
+package: Testing
+version: VERSION
