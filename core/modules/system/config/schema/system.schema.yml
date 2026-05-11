@@ -490,11 +490,18 @@ condition.plugin.request_path:
 
 condition.plugin.response_status:
   type: condition.plugin
+  constraints:
+    FullyValidatable: ~
   mapping:
     status_codes:
       type: sequence
       sequence:
         type: integer
+        constraints:
+          # @see \Drupal\system\Plugin\Condition\ResponseStatus::buildConfigurationForm()
+          Choice:
+            # HTTP 200 OK, HTTP 403 FORBIDDEN, HTTP 404 NOT FOUND.
+            choices: [200, 403, 404]
 
 system.feature_flags:
   type: config_object
