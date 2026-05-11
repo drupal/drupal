@@ -56,7 +56,6 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
       'block_view',
       'config:block.block.title',
       'config:block_list',
-      'config:system.cron',
       'config:navigation.settings',
       'config:navigation.block_layout',
       'config:shortcut.set.default',
