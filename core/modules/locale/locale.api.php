@@ -111,7 +111,7 @@
  * @param array $projects
  *   Project data as returned by \Drupal\update\UpdateManager::getProjects().
  *
- * @see locale_translation_project_list()
+ * @see \Drupal\locale\LocaleProjectRepository::getProjectList()
  * @ingroup interface_translation_properties
  */
 function hook_locale_translation_projects_alter(&$projects) {

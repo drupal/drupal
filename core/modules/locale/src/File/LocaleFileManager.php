@@ -11,7 +11,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\locale\LocaleProjectStorageInterface;
+use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleSource;
 use Drupal\locale\StreamWrapper\TranslationsStream;
 use GuzzleHttp\ClientInterface;
@@ -29,7 +29,7 @@ class LocaleFileManager {
   use StringTranslationTrait;
 
   public function __construct(
-    protected readonly LocaleProjectStorageInterface $localeProjectStorage,
+    protected readonly LocaleProjectRepository $localeProjectRepository,
     protected readonly FileSystemInterface $fileSystem,
     protected readonly ClientFactory $clientFactory,
     protected readonly ClientInterface $httpClient,
@@ -53,7 +53,7 @@ class LocaleFileManager {
   public function getInterfaceTranslationFiles(array $projects = [], array $langcodes = []): array {
     \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
     $files = [];
-    $projects = $projects ?: array_keys($this->localeProjectStorage->getProjects());
+    $projects = $projects ?: array_keys($this->localeProjectRepository->getAll());
     $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
     // Scan the translations directory for files matching a name pattern

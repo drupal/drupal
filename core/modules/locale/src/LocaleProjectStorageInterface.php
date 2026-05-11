@@ -4,6 +4,11 @@ namespace Drupal\locale;
 
 /**
  * Defines the locale project storage interface.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ * \Drupal\locale\LocaleProjectRepository instead.
+ *
+ * @see https://www.drupal.org/node/3037033
  */
 interface LocaleProjectStorageInterface {
 

@@ -7,6 +7,7 @@ namespace Drupal\Tests\locale\Functional;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\locale\LocaleProjectRepository;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -31,7 +32,6 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   protected function setUp(): void {
     parent::setUp();
     $module_handler = \Drupal::moduleHandler();
-    $module_handler->loadInclude('locale', 'inc', 'locale.compare');
     $module_handler->loadInclude('locale', 'inc', 'locale.fetch');
     $admin_user = $this->drupalCreateUser([
       'administer modules',
@@ -355,7 +355,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Check if the file data is removed from the database.
     $history = locale_translation_get_file_history();
     $this->assertFalse(isset($history['locale_test_translate']), 'Project removed from the file history');
-    $projects = \Drupal::service('locale.project')->getProjects();
+    $projects = \Drupal::service(LocaleProjectRepository::class)->getAll();
     $this->assertFalse(isset($projects['locale_test_translate']), 'Project removed from the project list');
   }
 

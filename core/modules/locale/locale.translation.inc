@@ -9,6 +9,7 @@
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
+use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleSource;
 
 /**
@@ -69,29 +70,31 @@ const LOCALE_TRANSLATION_SOURCE_COMPARE_GT = 1;
  * @return array
  *   Array of project data for translation update.
  *
- * @see locale_translation_build_projects()
+ * @see Drupal\locale\LocaleProjectRepository::buildProjects()
  *
  * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
- *   \Drupal::service('locale.project')->getProjects($project_names) instead.
+ *   \Drupal::service(LocaleProjectRepository::class)
+ *     ->getAll() or \Drupal::service(LocaleProjectRepository::class)
+ *     ->getMultiple($project_names)instead.
  *
  * @see https://www.drupal.org/node/3569330
  */
 function locale_translation_get_projects(array $project_names = []) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service("locale.project")->getProjects($project_names) instead. See https://www.drupal.org/node/3569330', E_USER_DEPRECATED);
-  return \Drupal::service('locale.project')->getProjects($project_names);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleProjectRepository::class)->getAll() or \Drupal::service(LocaleProjectRepository::class)->getMultiple($project_names) instead. See https://www.drupal.org/node/3569330', E_USER_DEPRECATED);
+  return \Drupal::service(LocaleProjectRepository::class)->getMultiple($project_names);
 }
 
 /**
  * Clears the projects cache.
  *
  * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
- *   \Drupal::service('locale.project')->resetCache() instead.
+ *   \Drupal::service('cache.memory')->delete('locale_get_projects') instead.
  *
  * @see https://www.drupal.org/node/3569330
  */
 function locale_translation_clear_cache_projects(): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'locale.project\')->resetCache() instead. See https://www.drupal.org/node/3569330', E_USER_DEPRECATED);
-  \Drupal::service('locale.project')->resetCache();
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service("cache.memory")->delete("locale_get_projects") instead. See https://www.drupal.org/node/3569330', E_USER_DEPRECATED);
+  \Drupal::service('cache.memory')->delete('locale_get_projects');
 }
 
 /**
@@ -139,6 +142,9 @@ function locale_translation_load_sources(?array $projects = NULL, ?array $langco
  */
 function locale_translation_build_sources(array $projects = [], array $langcodes = []): array {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleSource::class)->buildSources($projects, $langcodes) instead. See https://www.drupal.org/node/3569330', E_USER_DEPRECATED);
+  if (empty($projects)) {
+    $projects = array_keys(\Drupal::service(LocaleProjectRepository::class)->getAll());
+  }
   return \Drupal::service(LocaleSource::class)->buildSources($projects, $langcodes);
 }
 
@@ -271,7 +277,7 @@ function locale_cron_fill_queue(): void {
   // Determine which project+language should be updated.
   $request_time = \Drupal::time()->getRequestTime();
   $last = $request_time - $config->get('translation.update_interval_days') * 3600 * 24;
-  $projects = \Drupal::service('locale.project')->getAll();
+  $projects = \Drupal::service(LocaleProjectRepository::class)->getAll();
   $projects = array_filter($projects, function ($project) {
     return $project['status'] == 1;
   });

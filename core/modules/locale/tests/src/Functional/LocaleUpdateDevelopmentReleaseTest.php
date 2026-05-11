@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\locale\Functional;
 
+use Drupal\locale\LocaleProjectRepository;
 use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,6 +15,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('language')]
 #[RunTestsInSeparateProcesses]
+#[CoversMethod(LocaleProjectRepository::class, 'buildProjects')]
 class LocaleUpdateDevelopmentReleaseTest extends BrowserTestBase {
 
   /**
@@ -30,7 +33,7 @@ class LocaleUpdateDevelopmentReleaseTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
+
     $admin_user = $this->drupalCreateUser([
       'administer modules',
       'administer languages',
@@ -44,11 +47,9 @@ class LocaleUpdateDevelopmentReleaseTest extends BrowserTestBase {
 
   /**
    * Tests locale update development release.
-   *
-   * @legacy-covers ::\locale_translation_build_projects
    */
   public function testLocaleUpdateDevelopmentRelease(): void {
-    $projects = locale_translation_build_projects();
+    $projects = \Drupal::service(LocaleProjectRepository::class)->buildProjects();
     $this->assertEquals('8.0.x', $projects['drupal']->info['version'], 'The branch of the core dev release.');
     $this->assertEquals('12.x-10.x', $projects['contrib']->info['version'], 'The branch of the contrib module dev release.');
   }

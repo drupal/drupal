@@ -14,7 +14,7 @@ class LocaleFetch {
   use StringTranslationTrait;
 
   public function __construct(
-    protected readonly LocaleProjectStorageInterface $projectStorage,
+    protected readonly LocaleProjectRepository $localeProjectRepository,
     protected readonly ModuleExtensionList $moduleExtensionList,
   ) {}
 
@@ -34,7 +34,7 @@ class LocaleFetch {
    */
   public function batchUpdateBuild(array $projects = [], array $langcodes = [], array $options = []): array {
     \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
-    $projects = $projects ?: array_keys($this->projectStorage->getProjects());
+    $projects = $projects ?: array_keys($this->localeProjectRepository->getAll());
     $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
     $status_options = $options;
     $status_options['finish_feedback'] = FALSE;
@@ -70,7 +70,7 @@ class LocaleFetch {
    *   Batch definition array.
    */
   public function batchFetchBuild(array $projects = [], array $langcodes = [], array $options = []): array {
-    $projects = $projects ?: array_keys($this->projectStorage->getProjects());
+    $projects = $projects ?: array_keys($this->localeProjectRepository->getAll());
     $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
     $batch_builder = (new BatchBuilder())

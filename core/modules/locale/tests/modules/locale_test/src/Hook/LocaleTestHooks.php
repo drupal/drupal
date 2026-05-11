@@ -27,8 +27,9 @@ class LocaleTestHooks {
   public function systemInfoAlter(&$info, Extension $file, $type): void {
     // Only modify the system info if required. By default the locale_test
     // modules are hidden and have a project specified. To test the module
-    // detection process by locale_project_list() the test modules should mimic
-    // a custom module. I.e. be non-hidden.
+    // detection process by
+    // \Drupal\locale\LocaleProjectRepository::getProjectList() the test modules
+    // should mimic a custom module. I.e. be non-hidden.
     if (\Drupal::state()->get('locale.test_system_info_alter')) {
       if ($file->getName() == 'locale_test' || $file->getName() == 'locale_test_translate') {
         // Don't hide the module.
