@@ -40,6 +40,9 @@ use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\File\LocaleFileManager;
+use Drupal\locale\LocaleProjectChecker;
+use Drupal\locale\LocaleProjectRepository;
+use Drupal\locale\LocaleTranslatableProject;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -1842,18 +1845,18 @@ function _install_prepare_import($langcodes, $server_pattern): void {
         // Picking the first file does not necessarily result in the right file.
         // So we check if at least the major version number is available.
         if ($info['major']) {
-          $core = $info['major'] . '.x';
-          $data = [
-            'name' => 'drupal',
-            'project_type' => 'module',
-            'core' => $core,
-            'version' => $version,
-            'server_pattern' => $server_pattern,
-            'status' => 1,
-          ];
-          \Drupal::service('locale.project')->set($data['name'], $data);
+          $project = new LocaleTranslatableProject(
+            name: 'drupal',
+            type: 'module',
+            core: $info['major'] . '.x',
+            version: $version,
+            server_pattern: $server_pattern,
+            langcode: $langcode,
+            status: TRUE,
+          );
+          \Drupal::service(LocaleProjectRepository::class)->set($project);
           $module_handler->loadInclude('locale', 'inc', 'locale.compare');
-          locale_translation_check_projects_local(['drupal'], [$langcode]);
+          \Drupal::service(LocaleProjectChecker::class)->checkLocalProjects(['drupal'], [$langcode]);
         }
       }
     }
@@ -1880,7 +1883,7 @@ function install_finish_translations(&$install_state): array {
   // Build a fresh list of installed projects. When more projects than core are
   // installed, their translations will be downloaded (if required) and imported
   // using a batch.
-  $projects = locale_translation_build_projects();
+  $projects = \Drupal::service(LocaleProjectRepository::class)->buildProjects();
   $languages = \Drupal::languageManager()->getLanguages();
   $batches = [];
   if (count($projects) > 1) {
@@ -1988,7 +1991,7 @@ function install_check_translations($langcode, $server_pattern): array {
   $version = \Drupal::VERSION;
   // For dev releases, remove the '-dev' part and trust the translation server
   // to fall back to the latest stable release for that branch.
-  // @see locale_translation_build_projects()
+  // @see \Drupal\locale\LocaleProjectRepository::buildProjects()
   if (preg_match("/^(\d+\.\d+\.).*-dev$/", $version, $matches)) {
     // Example match: 8.0.0-dev => 8.0.x (Drupal core)
     $version = $matches[1] . 'x';

@@ -428,10 +428,14 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
 function drupal_static_reset($name = NULL): void {
   switch ($name) {
     case 'locale_translation_get_projects':
-      @trigger_error('Calling drupal_static_reset() with "locale_translation_get_projects" as argument is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'locale.project\')->resetCache() instead. See https://www.drupal.org/node/3569330', E_USER_DEPRECATED);
-      if (\Drupal::hasService('locale.project')) {
-        \Drupal::service('locale.project')->resetCache();
+      @trigger_error('Calling drupal_static_reset() with "locale_translation_get_projects" as argument is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service("cache.memory")->delete("locale_get_projects") instead. See https://www.drupal.org/node/3569330', E_USER_DEPRECATED);
+      if (\Drupal::hasService('cache.memory')) {
+        \Drupal::service('cache.memory')->delete('locale_get_projects');
       }
+      break;
+
+    case 'locale_translation_project_list':
+      @trigger_error("Using drupal_static_reset() with 'locale_translation_project_list' as argument is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. See https://www.drupal.org/node/3037033", E_USER_DEPRECATED);
       break;
 
     case 'filter_formats':

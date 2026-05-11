@@ -6,6 +6,11 @@ use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 
 /**
  * Provides the locale project storage system using a key value store.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ * \Drupal\locale\LocaleProjectRepository instead.
+ *
+ * @see https://www.drupal.org/node/3037033
  */
 class LocaleProjectStorage implements LocaleProjectStorageInterface {
 
@@ -47,6 +52,7 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
   public function __construct(
     KeyValueFactoryInterface $key_value_factory,
   ) {
+    @trigger_error('The ' . __CLASS__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Instead, use \Drupal\locale\LocaleProjectRepository. See https://www.drupal.org/node/3037033', E_USER_DEPRECATED);
     $this->keyValueStore = $key_value_factory->get('locale.project');
   }
 

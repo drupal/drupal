@@ -8,6 +8,7 @@ use Drupal\Core\Url;
 use Drupal\locale\File\LocaleFile;
 use Drupal\locale\File\LocaleFileManager;
 use Drupal\locale\File\RemoteFileStatus;
+use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleSource;
 
 /**
@@ -29,7 +30,7 @@ use Drupal\locale\LocaleSource;
  *   The batch context.
  */
 function locale_translation_batch_version_check(string $project, string $langcode, array|\ArrayAccess &$context): void {
-  $locale_project = \Drupal::service('locale.project')->get($project);
+  $locale_project = \Drupal::service(LocaleProjectRepository::class)->getMultiple([$project])[$project] ?? [];
 
   if (empty($locale_project)) {
     return;
@@ -40,7 +41,7 @@ function locale_translation_batch_version_check(string $project, string $langcod
     return;
   }
 
-  if ($locale_project['version'] == $status[$langcode]->version) {
+  if ($locale_project->version == $status[$langcode]->version) {
     return;
   }
 

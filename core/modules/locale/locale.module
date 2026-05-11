@@ -20,6 +20,7 @@ use Drupal\locale\LocaleEvent;
 use Drupal\locale\LocaleEvents;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\File\LocaleFileManager;
+use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleSource;
 
 /**
@@ -229,7 +230,7 @@ function locale_system_update(array $components): void {
       // Update the list of translatable projects and start the import batch.
       // Only when new projects are added the update batch will be triggered.
       // Not each enabled module will introduce a new project. E.g. sub modules.
-      $projects = array_keys(locale_translation_build_projects());
+      $projects = array_keys(\Drupal::service(LocaleProjectRepository::class)->buildProjects());
       if ($list = array_intersect($list, $projects)) {
         $module_handler->loadInclude('locale', 'inc', 'locale.fetch');
         // Get translation status of the projects, download and update
@@ -273,7 +274,7 @@ function locale_system_remove($components): void {
     // Only when projects are removed, the translation files and records will be
     // deleted. Not each disabled module will remove a project, e.g., sub
     // modules.
-    $projects = array_keys(\Drupal::service('locale.project')->getProjects());
+    $projects = array_keys(\Drupal::service(LocaleProjectRepository::class)->getAll());
     if ($list = array_intersect($list, $projects)) {
       locale_translation_file_history_delete($list);
 
@@ -281,9 +282,7 @@ function locale_system_remove($components): void {
       \Drupal::service(LocaleFileManager::class)->deleteTranslationFiles($list, []);
 
       // Remove translatable projects.
-      // Follow-up issue https://www.drupal.org/node/1842362 to replace the
-      // {locale_project} table. Then change this to a function call.
-      \Drupal::service('locale.project')->deleteMultiple($list);
+      \Drupal::service(LocaleProjectRepository::class)->deleteMultiple($list);
 
       // Clear the translation status.
       locale_translation_status_delete_projects($list);
@@ -464,23 +463,23 @@ function locale_translation_get_file_history() {
 /**
  * Updates the {locale_file} table.
  *
- * @param object $file
- *   Object representing the file just imported.
+ * @param object $source
+ *   Object representing the project just imported.
  *
  * @return int
  *   FALSE on failure. Otherwise SAVED_NEW or SAVED_UPDATED.
  */
-function locale_translation_update_file_history($file) {
+function locale_translation_update_file_history($source) {
   $status = \Drupal::database()->merge('locale_file')
     ->keys([
-      'project' => $file->project,
-      'langcode' => $file->langcode,
+      'project' => $source->project,
+      'langcode' => $source->langcode,
     ])
     ->fields([
-      'version' => $file->version,
-      'timestamp' => $file->timestamp,
-      'hash' => $file->hash ?? '',
-      'last_checked' => $file->last_checked,
+      'version' => $source->version,
+      'timestamp' => $source->timestamp,
+      'hash' => $source->hash,
+      'last_checked' => $source->last_checked,
     ])
     ->execute();
   // The file history has changed, flush the static cache now.
@@ -517,7 +516,7 @@ function locale_translation_file_history_delete($projects = [], $langcodes = [])
 function locale_translation_get_status($projects = NULL, $langcodes = NULL): array {
   $result = [];
   $status = \Drupal::keyValue('locale.translation_status')->getAll();
-  $projects = $projects ?: array_keys(\Drupal::service('locale.project')->getProjects());
+  $projects = $projects ?: array_keys(\Drupal::service(LocaleProjectRepository::class)->getAll());
   $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
   // Get the translation status of each project-language combination. If no
@@ -554,7 +553,7 @@ function locale_translation_status_save($project, $langcode, $type, $data): void
   // Load the translation status or build it if not already available.
   $status = locale_translation_get_status([$project]);
   if (empty($status)) {
-    $projects = \Drupal::service('locale.project')->getProjects([$project]);
+    $projects = \Drupal::service(LocaleProjectRepository::class)->getMultiple([$project]);
     if (isset($projects[$project])) {
       $status[$project][$langcode] = \Drupal::service(LocaleSource::class)->sourceBuild($projects[$project], $langcode);
     }

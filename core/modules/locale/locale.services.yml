@@ -21,6 +21,7 @@ services:
   Drupal\locale\StringStorageInterface: '@locale.storage'
   locale.project:
     class: Drupal\locale\LocaleProjectStorage
+    deprecated: The "%service_id%" service is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the 'Drupal\locale\LocaleProjectRepository' service instead.See https://www.drupal.org/node/3037033
   Drupal\locale\LocaleProjectStorageInterface: '@locale.project'
   locale.plural.formula:
     class: Drupal\locale\PluralFormula
@@ -42,3 +43,5 @@ services:
   Drupal\locale\LocaleSource: ~
   Drupal\locale\LocaleFetch: ~
   Drupal\locale\File\LocaleFileManager: ~
+  Drupal\locale\LocaleProjectRepository: ~
+  Drupal\locale\LocaleProjectChecker: ~

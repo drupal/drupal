@@ -136,8 +136,6 @@ class Drupal {
 
   /**
    * Default location of gettext file on the translation server.
-   *
-   * @see locale_translation_default_translation_server()
    */
   const TRANSLATION_DEFAULT_SERVER_PATTERN = 'https://ftp.drupal.org/files/translations/%core/%project/%project-%version.%language.po';
 

@@ -10,6 +10,7 @@ use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
 use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
+use Drupal\locale\LocaleProjectRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -174,12 +175,12 @@ class TranslationStatusForm extends FormBase {
   protected function prepareUpdateData(array $status) {
     $updates = [];
 
-    // @todo Calling locale_translation_build_projects() is an expensive way to
-    //   get a module name. In follow-up issue
-    //   https://www.drupal.org/node/1842362 the project name will be stored to
-    //   display use, like here.
+    // @todo Calling
+    // \Drupal\locale\LocaleProjectRepository::buildProjects() is an
+    // expensive way to get a module name. Explore optimizing this process.
+    // @see https://www.drupal.org/node/3589049
     $this->moduleHandler->loadInclude('locale', 'compare.inc');
-    $project_data = locale_translation_build_projects();
+    $project_data = \Drupal::service(LocaleProjectRepository::class)->buildProjects();
 
     foreach ($status as $project) {
       foreach ($project as $langcode => $project_info) {

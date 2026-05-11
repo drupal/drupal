@@ -18,7 +18,7 @@ class LocaleSource {
   public const string LOCAL_FILE_HASH_ALGO = 'xxh128';
 
   public function __construct(
-    protected readonly LocaleProjectStorageInterface $projectStorage,
+    protected readonly LocaleProjectRepository $localeProjectRepository,
     protected readonly FileSystemInterface $fileSystem,
     protected readonly ConfigFactoryInterface $configFactory,
   ) {}
@@ -38,7 +38,7 @@ class LocaleSource {
    */
   public function loadSources(?array $projects = NULL, ?array $langcodes = NULL): array {
     $sources = [];
-    $projects = $projects ?: array_keys($this->projectStorage->getProjects());
+    $projects = $projects ?: array_keys($this->localeProjectRepository->getAll());
     $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
     // Load source data from locale_translation_status cache.
@@ -66,9 +66,9 @@ class LocaleSource {
    *
    * @see sourceBuild()
    */
-  public function buildSources(array $projects = [], array $langcodes = []): array {
+  public function buildSources(array $projects, array $langcodes = []): array {
     $sources = [];
-    $projects = $this->projectStorage->getProjects($projects);
+    $projects = $this->localeProjectRepository->getMultiple($projects);
     $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
     foreach ($projects as $project) {
@@ -126,7 +126,7 @@ class LocaleSource {
   /**
    * Builds abstract translation source.
    *
-   * @param object $project
+   * @param \Drupal\locale\LocaleTranslatableProject $project
    *   Project object.
    * @param string $langcode
    *   Language code.
@@ -165,13 +165,12 @@ class LocaleSource {
    *   - "timestamp": Timestamp of the file.
    *   - "keep": TRUE to keep the downloaded file.
    */
-  public function sourceBuild($project, $langcode, $filename = NULL) {
+  public function sourceBuild(LocaleTranslatableProject $project, string $langcode, ?string $filename = NULL) {
     // Follow-up issue: https://www.drupal.org/node/1842380.
-    // Convert $source object to a TranslatableProject class and use a typed
-    // class for $source-file.
+    // Convert $source object to a LocaleTranslationSource class.
 
     // Create a source object with data of the project object.
-    $source = clone $project;
+    $source = (object) $project->toArray();
     $source->project = $project->name;
     $source->langcode = $langcode;
     $source->type = '';
@@ -249,7 +248,7 @@ class LocaleSource {
       '%project' => $project->name,
       '%version' => $project->version,
       '%core' => $project->core,
-      '%language' => $project->langcode ?? '%language',
+      '%language' => $project->langcode,
     ];
     return strtr($template, $variables);
   }
