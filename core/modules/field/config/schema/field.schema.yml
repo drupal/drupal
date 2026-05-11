@@ -46,6 +46,10 @@ field.storage.*.*:
     cardinality:
       type: integer
       label: 'Maximum number of values users can enter'
+      constraints:
+        NoFieldItemsExistWithHigherCardinality:
+          entityType: '%parent.entity_type'
+          fieldName: '%parent.field_name'
     translatable:
       type: boolean
       label: 'Translatable'
