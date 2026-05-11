@@ -4,6 +4,7 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
@@ -1871,17 +1872,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if (mb_strlen($value) > $alter['max_length']) {
       $value = mb_substr($value, 0, $alter['max_length']);
       if (!empty($alter['word_boundary'])) {
-        $regex = "(.*)\b.+";
-        if (function_exists('mb_ereg')) {
-          mb_regex_encoding('UTF-8');
-          $found = mb_ereg($regex, $value, $matches);
-        }
-        else {
-          $found = preg_match("/$regex/us", $value, $matches);
-        }
-        if ($found) {
-          $value = $matches[1];
-        }
+        $regex = '(.*)(?=[' . Unicode::PREG_CLASS_WORD_BOUNDARY . ']).+';
+        $found = preg_match("/$regex/us", $value, $matches);
+        $value = $found ? $matches[1] : '';
       }
       // Remove scraps of HTML entities from the end of a strings.
       $value = rtrim(preg_replace('/(?:<(?!.+>)|&(?!.+;)).*$/us', '', $value));
