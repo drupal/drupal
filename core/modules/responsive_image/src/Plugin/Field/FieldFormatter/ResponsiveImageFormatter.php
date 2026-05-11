@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
@@ -30,64 +31,31 @@ use Drupal\Core\Utility\LinkGeneratorInterface;
 class ResponsiveImageFormatter extends ImageFormatterBase {
 
   /**
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * The file url generator.
    */
-  protected $responsiveImageStyleStorage;
+  protected FileUrlGeneratorInterface $fileUrlGenerator;
 
-  /**
-   * The image style entity storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $imageStyleStorage;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The link generator.
-   *
-   * @var \Drupal\Core\Utility\LinkGeneratorInterface
-   */
-  protected $linkGenerator;
-
-  /**
-   * Constructs a ResponsiveImageFormatter object.
-   *
-   * @param string $plugin_id
-   *   The plugin ID for the formatter.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The definition of the field to which the formatter is associated.
-   * @param array $settings
-   *   The formatter settings.
-   * @param string $label
-   *   The formatter label display setting.
-   * @param string $view_mode
-   *   The view mode.
-   * @param array $third_party_settings
-   *   Any third party settings.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $responsive_image_style_storage
-   *   The responsive image style storage.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
-   *   The image style storage.
-   * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
-   *   The link generator service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
-   */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityStorageInterface $responsive_image_style_storage, EntityStorageInterface $image_style_storage, LinkGeneratorInterface $link_generator, AccountInterface $current_user) {
+  public function __construct(
+    $plugin_id,
+    $plugin_definition,
+    FieldDefinitionInterface $field_definition,
+    array $settings,
+    $label,
+    $view_mode,
+    array $third_party_settings,
+    protected EntityStorageInterface $responsiveImageStyleStorage,
+    protected EntityStorageInterface $imageStyleStorage,
+    protected LinkGeneratorInterface $linkGenerator,
+    protected AccountInterface $currentUser,
+    ?FileUrlGeneratorInterface $fileUrlGenerator = NULL,
+  ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
 
-    $this->responsiveImageStyleStorage = $responsive_image_style_storage;
-    $this->imageStyleStorage = $image_style_storage;
-    $this->linkGenerator = $link_generator;
-    $this->currentUser = $current_user;
+    if (!$fileUrlGenerator) {
+      @trigger_error('Calling ResponsiveImageFormatter::__construct() without the $fileUrlGenerator argument is deprecated in drupal:11.4.0 and the $fileUrlGenerator argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3291487', E_USER_DEPRECATED);
+      $fileUrlGenerator = \Drupal::service('file_url_generator');
+    }
+    $this->fileUrlGenerator = $fileUrlGenerator;
   }
 
   /**
@@ -105,7 +73,8 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       $container->get('entity_type.manager')->getStorage('responsive_image_style'),
       $container->get('entity_type.manager')->getStorage('image_style'),
       $container->get('link_generator'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('file_url_generator')
     );
   }
 
@@ -262,7 +231,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
       assert($file instanceof FileInterface);
       // Link the <picture> element to the original file.
       if (isset($link_file)) {
-        $url = $file->createFileUrl();
+        $url = $this->fileUrlGenerator->generate($file->getFileUri());
       }
       // Extract field item attributes for the theme function, and unset them
       // from the $item so that the field template does not re-render them.
