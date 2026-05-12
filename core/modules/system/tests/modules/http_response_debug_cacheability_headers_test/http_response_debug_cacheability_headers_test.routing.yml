@@ -1,0 +1,15 @@
+http_response_debug_cacheability_headers_test.test_cache_contexts_headers:
+  path: '/test-cache-contexts-headers'
+  defaults:
+    _title: 'Test debug cache contexts headers'
+    _controller: Drupal\http_response_debug_cacheability_headers_test\Controller\TestResponseController::testCacheContextsHeaders
+  requirements:
+    _access: 'TRUE'
+
+http_response_debug_cacheability_headers_test.test_cache_tags_headers:
+  path: '/test-cache-tags-headers'
+  defaults:
+    _title: 'Test debug cache tags headers'
+    _controller: Drupal\http_response_debug_cacheability_headers_test\Controller\TestResponseController::testCacheTagsHeaders
+  requirements:
+    _access: 'TRUE'
