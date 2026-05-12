@@ -33,4 +33,11 @@ class LruCacheGenericTest extends GenericCacheBackendUnitTestBase {
     return $backend;
   }
 
+  /**
+   * The LRU memory cache removes items when invalidateTags is called.
+   */
+  public function testInvalidateTags(): void {
+    $this->markTestSkipped();
+  }
+
 }
