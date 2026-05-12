@@ -165,7 +165,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
     $response->headers = new ResponseHeaderBag();
 
     // Set cache tags, context, max-age.
-    $cacheData = new CacheableMetadata()
+    $cacheData = (new CacheableMetadata())
       ->setCacheTags(['tag1', 'tag2'])
       ->setCacheContexts(['context1', 'context2'])
       ->setCacheMaxAge(123);
@@ -219,7 +219,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
     $this->cacheContextsManager->method('optimizeTokens')
       ->willReturn($contexts);
 
-    $cacheData = new CacheableMetadata()
+    $cacheData = (new CacheableMetadata())
       ->setCacheTags($tags);
 
     $response->method('getCacheableMetadata')
