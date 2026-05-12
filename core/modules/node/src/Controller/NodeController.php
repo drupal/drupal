@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\Controller\EntityViewController;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
@@ -110,7 +111,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    *   An array suitable for \Drupal\Core\Render\RendererInterface::render().
    */
   public function revisionShow(NodeInterface $node_revision) {
-    $node_view_controller = new NodeViewController($this->entityTypeManager(), $this->renderer, $this->currentUser(), $this->entityRepository);
+    $node_view_controller = new EntityViewController($this->entityTypeManager(), $this->renderer);
     $page = $node_view_controller->view($node_revision);
     unset($page['nodes'][$node_revision->id()]['#cache']);
     return $page;

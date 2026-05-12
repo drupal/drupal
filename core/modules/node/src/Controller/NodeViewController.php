@@ -12,6 +12,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a controller to render a single node.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\Core\Entity\Controller\EntityViewController instead.
+ *
+ * @see https://www.drupal.org/node/3589636
  */
 class NodeViewController extends EntityViewController {
 
@@ -42,6 +47,7 @@ class NodeViewController extends EntityViewController {
    *   The entity repository.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer, AccountInterface $current_user, EntityRepositoryInterface $entity_repository) {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\Core\Entity\Controller\EntityViewController instead. See https://www.drupal.org/node/3589636', E_USER_DEPRECATED);
     parent::__construct($entity_type_manager, $renderer);
     $this->currentUser = $current_user;
     $this->entityRepository = $entity_repository;
