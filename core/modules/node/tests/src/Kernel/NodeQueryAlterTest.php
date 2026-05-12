@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\node\Functional;
+namespace Drupal\Tests\node\Kernel;
 
 use Drupal\Core\Database\Database;
-use Drupal\user\Entity\User;
 use Drupal\node\NodeAccessRebuild;
+use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -15,7 +15,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('node')]
 #[RunTestsInSeparateProcesses]
-class NodeQueryAlterTest extends NodeTestBase {
+class NodeQueryAlterTest extends NodeAccessTestBase {
 
   /**
    * {@inheritdoc}
@@ -23,30 +23,19 @@ class NodeQueryAlterTest extends NodeTestBase {
   protected static $modules = ['node_access_test'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * User with permission to view content.
-   *
-   * @var \Drupal\user\Entity\User|false
    */
-  protected $accessUser;
+  protected UserInterface $accessUser;
 
   /**
    * User without permission to view content.
-   *
-   * @var \Drupal\user\Entity\User|false
    */
-  protected $noAccessUser;
+  protected UserInterface $noAccessUser;
 
   /**
    * User without permission to view content.
-   *
-   * @var \Drupal\user\Entity\User
    */
-  protected User $noAccessUser2;
+  protected UserInterface $noAccessUser2;
 
   /**
    * {@inheritdoc}
@@ -207,7 +196,7 @@ class NodeQueryAlterTest extends NodeTestBase {
     // \Drupal\node\NodeGrantDatabaseStorage::checkAllGrants() is
     // properly checking the specified $account instead of the current user, we
     // will log in as noAccessUser2.
-    $this->drupalLogin($this->noAccessUser2);
+    \Drupal::currentUser()->setAccount($this->noAccessUser2);
     \Drupal::state()->set('node_access_test.no_access_uid', $this->noAccessUser->id());
     \Drupal::service('node.view_all_nodes_memory_cache')->deleteAll();
 
