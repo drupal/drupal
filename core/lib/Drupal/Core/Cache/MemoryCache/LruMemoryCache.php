@@ -113,14 +113,13 @@ class LruMemoryCache extends MemoryCache {
    * {@inheritdoc}
    */
   public function invalidateTags(array $tags): void {
-    $items = [];
+    // Remove items when tags are invalidated so that memory is freed
+    // immediately.
     foreach ($this->cache as $cid => $item) {
       if (array_intersect($tags, $item->tags)) {
-        parent::invalidate($cid);
-        $items[$cid] = $this->cache[$cid];
+        unset($this->cache[$cid]);
       }
     }
-    $this->moveItemsToLeastRecentlyUsed($items);
   }
 
   /**
