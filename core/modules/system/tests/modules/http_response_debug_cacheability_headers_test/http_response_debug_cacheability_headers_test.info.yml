@@ -1,0 +1,5 @@
+name: 'Test HTTP response debug cacheability headers'
+type: module
+description: 'Provides routes for testing HTTP response debug cacheability headers'
+package: Testing
+version: VERSION
