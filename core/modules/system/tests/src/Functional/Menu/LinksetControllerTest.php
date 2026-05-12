@@ -299,6 +299,12 @@ final class LinksetControllerTest extends LinksetControllerTestBase {
       'config:system.menu.account',
       'http_response',
     ]);
+    // The account menu surfaces the CSRF-protected /user/logout URL for
+    // authenticated users; URL generation bubbles the 'session' cache context
+    // so the response can vary by session. The response header lists contexts
+    // alphabetically — re-set them in that order so optimizeTokens() yields a
+    // matching expectation.
+    $expected_cacheability->setCacheContexts(['session', 'user.roles:authenticated']);
     // Authenticated requests do not use the page cache, so a "HIT" or "MISS"
     // isn't expected either.
     $this->assertDrupalResponseCacheability(FALSE, $expected_cacheability, $response);

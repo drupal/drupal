@@ -7,6 +7,8 @@ namespace Drupal\Tests\Core\Access;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Access\RouteProcessorCsrf;
+use Drupal\Core\Cache\Context\CacheContextsManager;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -61,6 +63,14 @@ class RouteProcessorCsrfTest extends UnitTestCase {
       ->willReturn($request);
 
     $this->processor = new RouteProcessorCsrf($this->csrfToken, $this->requestStack);
+
+    // Add a cache_contexts_manager so BubbleableMetadata::addCacheContexts()
+    // can validate the bubbled 'session' context.
+    $cache_contexts_manager = $this->createStub(CacheContextsManager::class);
+    $cache_contexts_manager->method('assertValidTokens')->willReturn(TRUE);
+    $container = new ContainerBuilder();
+    $container->set('cache_contexts_manager', $cache_contexts_manager);
+    \Drupal::setContainer($container);
   }
 
   /**
@@ -171,8 +181,12 @@ class RouteProcessorCsrfTest extends UnitTestCase {
     // regardless of whether cache metadata is present.
     $this->processor->processOutbound('test', $route, $parameters);
     $this->assertEquals('real_token_value', $parameters['token']);
-    $this->processor->processOutbound('test', $route, $parameters, new BubbleableMetadata());
+    $bubbleable_metadata = new BubbleableMetadata();
+    $this->processor->processOutbound('test', $route, $parameters, $bubbleable_metadata);
     $this->assertEquals('real_token_value', $parameters['token']);
+    // The session cache context must be bubbled so responses carrying the
+    // URL aren't cached across users sharing other contexts (e.g. role).
+    $this->assertEquals(['session'], $bubbleable_metadata->getCacheContexts());
   }
 
 }
