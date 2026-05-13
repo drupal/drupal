@@ -27,7 +27,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function getPrefixes() {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     return self::getActualClassLoader()->getPrefixes();
   }
 
@@ -35,7 +35,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function getPrefixesPsr4() {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     return self::getActualClassLoader()->getPrefixesPsr4();
   }
 
@@ -43,7 +43,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function getFallbackDirs() {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     return self::getActualClassLoader()->getFallbackDirs();
   }
 
@@ -51,7 +51,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function getFallbackDirsPsr4() {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     return self::getActualClassLoader()->getFallbackDirsPsr4();
   }
 
@@ -59,7 +59,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function getClassMap() {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     return self::getActualClassLoader()->getClassMap();
   }
 
@@ -67,7 +67,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function addClassMap(array $classMap) {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     self::getActualClassLoader()->addClassMap($classMap);
   }
 
@@ -75,7 +75,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function add($prefix, $paths, $prepend = FALSE) {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     self::getActualClassLoader()->add($prefix, $paths, $prepend);
   }
 
@@ -83,7 +83,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function addPsr4($prefix, $paths, $prepend = FALSE) {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     self::getActualClassLoader()->addPsr4($prefix, $paths, $prepend);
   }
 
@@ -91,7 +91,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function set($prefix, $paths) {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     self::getActualClassLoader()->set($prefix, $paths);
   }
 
@@ -99,7 +99,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function setPsr4($prefix, $paths) {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     self::getActualClassLoader()->setPsr4($prefix, $paths);
   }
 
@@ -107,7 +107,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function setUseIncludePath($useIncludePath) {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     self::getActualClassLoader()->setUseIncludePath($useIncludePath);
   }
 
@@ -115,7 +115,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function getUseIncludePath() {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     return self::getActualClassLoader()->getUseIncludePath();
   }
 
@@ -123,7 +123,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function setClassMapAuthoritative($classMapAuthoritative) {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     self::getActualClassLoader()->setClassMapAuthoritative($classMapAuthoritative);
   }
 
@@ -131,7 +131,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function isClassMapAuthoritative() {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     return self::getActualClassLoader()->isClassMapAuthoritative();
   }
 
@@ -139,7 +139,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function setApcuPrefix($apcuPrefix) {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     self::getActualClassLoader()->setApcuPrefix($apcuPrefix);
   }
 
@@ -147,7 +147,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function getApcuPrefix() {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     return self::getActualClassLoader()->getApcuPrefix();
   }
 
@@ -155,7 +155,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function register($prepend = FALSE) {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     self::getActualClassLoader()->register($prepend);
   }
 
@@ -163,7 +163,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function unregister() {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     self::getActualClassLoader()->unregister();
   }
 
@@ -171,7 +171,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function loadClass($class) {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     return self::getActualClassLoader()->loadClass($class);
   }
 
@@ -179,7 +179,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public function findFile($class) {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     return self::getActualClassLoader()->findFile($class);
   }
 
@@ -187,7 +187,7 @@ class DeprecatedAutoloadAccess extends ClassLoader {
    * {@inheritdoc}
    */
   public static function getRegisteredLoaders() {
-    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.3.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
+    @trigger_error('Accessing the \'autoloader\' through Drupal\'s provided global is deprecated in drupal:11.4.0 and will be unsupported in drupal:12.0.0. Load the vendor/autoload.php file or provide the global yourself instead. See https://www.drupal.org/node/3576336', E_USER_DEPRECATED);
     return static::getActualClassLoader()::getRegisteredLoaders();
   }
 
