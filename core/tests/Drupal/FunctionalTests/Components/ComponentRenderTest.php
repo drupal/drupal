@@ -36,6 +36,7 @@ class ComponentRenderTest extends BrowserTestBase {
     \Drupal::state()->set('sdc_test_component', $build);
     $output = $this->drupalGet('sdc-test-component');
     $this->assertStringContainsString('another-stylesheet.css', $output);
+    $this->assertStringContainsString('test-component-font.woff2', $output);
     // Since libraryOverrides is taking control of CSS, and it's not listing
     // lib-overrides.css, then it should not be there. Even if it's the CSS
     // that usually gets auto-attached.

@@ -398,8 +398,8 @@ class ComponentPluginManager extends DefaultPluginManager implements Categorizin
   /**
    * Changes the library paths, so they can be used by the library system.
    *
-   * We need this so we can let users apply overrides to JS and CSS files with
-   * paths relative to the component.
+   * We need this so we can let users apply overrides to JS, CSS, fonts files
+   * with paths relative to the component.
    *
    * @param array $overrides
    *   The library overrides as provided by the component author.
@@ -410,11 +410,12 @@ class ComponentPluginManager extends DefaultPluginManager implements Categorizin
    *   The overrides with the fixed paths.
    */
   private function translateLibraryPaths(array $overrides, string $component_directory): array {
-    // We only alter the keys of the CSS and JS entries.
+    // We only alter the keys of the CSS, JS and fonts entries.
     $altered_overrides = $overrides;
-    unset($altered_overrides['css'], $altered_overrides['js']);
+    unset($altered_overrides['css'], $altered_overrides['js'], $altered_overrides['fonts']);
     $css = $overrides['css'] ?? [];
     $js = $overrides['js'] ?? [];
+    $fonts = $overrides['fonts'] ?? [];
     foreach ($css as $dir => $css_info) {
       foreach ($css_info as $filename => $options) {
         if (!UrlHelper::isExternal($filename)) {
@@ -435,6 +436,16 @@ class ComponentPluginManager extends DefaultPluginManager implements Categorizin
       }
       else {
         $altered_overrides['js'][$filename] = $options;
+      }
+    }
+    foreach ($fonts as $filename => $options) {
+      if (!UrlHelper::isExternal($filename)) {
+        $absolute_filename = sprintf('%s%s%s', $component_directory, DIRECTORY_SEPARATOR, $filename);
+        $altered_filename = $this->makePathRelativeToLibraryRoot($absolute_filename);
+        $altered_overrides['fonts'][$altered_filename] = $options;
+      }
+      else {
+        $altered_overrides['fonts'][$filename] = $options;
       }
     }
     return $altered_overrides;
