@@ -12,3 +12,6 @@ libraryOverrides:
   js:
     lib-overrides.js: { attributes: { defer: true, bar: foo } }
     https://drupal.org/fake-dependency/index.min.js: {}
+  fonts:
+    test-component-font.woff2:
+      preload: true
