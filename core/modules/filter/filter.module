@@ -205,11 +205,17 @@ function filter_fallback_format() {
  * @return \Drupal\Component\Render\MarkupInterface
  *   The filtered text.
  *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no
+ *   direct replacement. It's recommended to always return a renderable array
+ *   without flattening as markup to pass the cacheability metadata.
+ *
+ * @see https://www.drupal.org/node/3588040
  * @see \Drupal\filter\Plugin\FilterInterface::process()
  *
  * @ingroup sanitization
  */
 function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to_skip = []) {
+  @trigger_error(__FUNCTION__ . "() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no direct replacement. It's recommended to always return a renderable array without flattening as markup to pass the cacheability metadata. See https://www.drupal.org/node/3588040", E_USER_DEPRECATED);
   $build = [
     '#type' => 'processed_text',
     '#text' => $text,
