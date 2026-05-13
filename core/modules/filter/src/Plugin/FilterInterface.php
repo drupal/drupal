@@ -34,7 +34,6 @@ use Drupal\Core\Form\FormStateInterface;
  * convert smileys into images, etc.
  *
  * @see \Drupal\filter\Plugin\FilterInterface::process()
- * @see check_markup()
  *
  * Typically, only text processing is applied, but in more advanced use cases,
  * filters may also:

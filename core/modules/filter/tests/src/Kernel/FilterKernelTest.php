@@ -547,11 +547,6 @@ class FilterKernelTest extends KernelTestBase {
   /**
    * Tests filter settings, defaults, access restrictions and similar.
    *
-   * @todo This is for functions like filter_filter and check_markup, whose
-   *   functionality is not completely focused on filtering. Some ideas:
-   *   restricting formats according to user permissions, proper cache
-   *   handling, defaults -- allowed tags/attributes/protocols.
-   *
    * @todo It is possible to add script, iframe etc. to allowed tags, but this
    *   makes HTML filter completely ineffective.
    *

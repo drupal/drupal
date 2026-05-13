@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\filter\FilterFormatRepositoryInterface;
+use Drupal\Tests\filter\Traits\ProcessedTextTestTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
@@ -18,6 +19,8 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('views')]
 #[RunTestsInSeparateProcesses]
 class AreaTextTest extends ViewsKernelTestBase {
+
+  use ProcessedTextTestTrait;
 
   /**
    * {@inheritdoc}
@@ -72,14 +75,14 @@ class AreaTextTest extends ViewsKernelTestBase {
 
     $view->display_handler->handlers['header']['area']->options['content']['format'] = \Drupal::service(FilterFormatRepositoryInterface::class)->getDefaultFormat()->id();
     $build = $view->display_handler->handlers['header']['area']->render();
-    $this->assertEquals(check_markup($string), $renderer->renderRoot($build), 'Existent format should return something');
+    $this->assertEquals($this->processText($string), $renderer->renderInIsolation($build), 'Existent format should return something');
 
     // Empty results, and it shouldn't be displayed .
     $this->assertEquals([], $view->display_handler->handlers['header']['area']->render(TRUE), 'No result should lead to no header');
     // Empty results, and it should be displayed.
     $view->display_handler->handlers['header']['area']->options['empty'] = TRUE;
     $build = $view->display_handler->handlers['header']['area']->render(TRUE);
-    $this->assertEquals(check_markup($string), $renderer->renderRoot($build), 'No result, but empty enabled lead to a full header');
+    $this->assertEquals($this->processText($string), $renderer->renderInIsolation($build), 'No result, but empty enabled lead to a full header');
   }
 
 }

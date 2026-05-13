@@ -145,8 +145,7 @@ class NodeTokensHooks {
                   $output = \Drupal::service(TextSummary::class)->generate($output, $item->format, $length);
                 }
               }
-              // "processed" returns a \Drupal\Component\Render\MarkupInterface
-              // via check_markup().
+              // "processed" returns a \Drupal\Component\Render\MarkupInterface.
               $replacements[$original] = $output;
             }
             break;
