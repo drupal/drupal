@@ -8,8 +8,12 @@ use Drupal\Core\EventSubscriber\PsrResponseSubscriber;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
+use Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -59,9 +63,60 @@ class PsrResponseSubscriberTest extends UnitTestCase {
    * @legacy-covers ::onKernelView
    */
   public function testConvertsControllerResult(): void {
-    $event = $this->createEvent($this->createMock('Psr\Http\Message\ResponseInterface'));
+    $body = $this->createStub(StreamInterface::class);
+    $body->method('isSeekable')->willReturn(TRUE);
+    $psr_response = $this->createStub(ResponseInterface::class);
+    $psr_response->method('getBody')->willReturn($body);
+
+    $event = $this->createEvent($psr_response);
     $this->psrResponseSubscriber->onKernelView($event);
     $this->assertInstanceOf(Response::class, $event->getResponse());
+  }
+
+  /**
+   * Tests that a seekable body results in a non-streamed response.
+   *
+   * @legacy-covers ::onKernelView
+   */
+  public function testConvertsSeekableBodyWithoutStreaming(): void {
+    $body = $this->createStub(StreamInterface::class);
+    $body->method('isSeekable')->willReturn(TRUE);
+    $psr_response = $this->createStub(ResponseInterface::class);
+    $psr_response->method('getBody')->willReturn($body);
+
+    $factory = $this->createMock(HttpFoundationFactoryInterface::class);
+    $factory->expects($this->once())
+      ->method('createResponse')
+      ->with($psr_response, FALSE)
+      ->willReturn($this->createStub(Response::class));
+
+    $subscriber = new PsrResponseSubscriber($factory);
+    $event = $this->createEvent($psr_response);
+    $subscriber->onKernelView($event);
+    $this->assertInstanceOf(Response::class, $event->getResponse());
+  }
+
+  /**
+   * Tests that a non-seekable body results in a streamed response.
+   *
+   * @legacy-covers ::onKernelView
+   */
+  public function testConvertsNonSeekableBodyWithStreaming(): void {
+    $body = $this->createStub(StreamInterface::class);
+    $body->method('isSeekable')->willReturn(FALSE);
+    $psr_response = $this->createStub(ResponseInterface::class);
+    $psr_response->method('getBody')->willReturn($body);
+
+    $factory = $this->createMock(HttpFoundationFactoryInterface::class);
+    $factory->expects($this->once())
+      ->method('createResponse')
+      ->with($psr_response, TRUE)
+      ->willReturn($this->createStub(StreamedResponse::class));
+
+    $subscriber = new PsrResponseSubscriber($factory);
+    $event = $this->createEvent($psr_response);
+    $subscriber->onKernelView($event);
+    $this->assertInstanceOf(StreamedResponse::class, $event->getResponse());
   }
 
   /**
