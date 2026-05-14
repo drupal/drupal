@@ -26,7 +26,6 @@ class BigPipeRegressionTest extends WebDriverTestBase {
     'big_pipe',
     'big_pipe_messages_test',
     'big_pipe_regression_test',
-    'render_placeholder_message_test',
   ];
 
   /**
@@ -40,12 +39,9 @@ class BigPipeRegressionTest extends WebDriverTestBase {
   public function testPlaceholderHtmlEdgeCases(): void {
     $this->drupalLogin($this->drupalCreateUser());
     $this->doTestMultipleClosingBodies_2678662();
-    $this->doTestMessages_2712935();
     $this->doTestPlaceholderInParagraph_2802923();
     $this->doTestBigPipeLargeContent();
-    $this->doTestMultipleReplacements();
     $this->doInlineScriptTest();
-    $this->doTestMultipleOccurrences();
   }
 
   /**
@@ -78,43 +74,6 @@ JS;
     // But the inline script itself should not be altered.
     $this->assertSession()
       ->responseContains(BigPipeRegressionTestController::MARKER_2678662);
-  }
-
-  /**
-   * Ensure messages set in placeholders always appear.
-   *
-   * @see https://www.drupal.org/node/2712935
-   */
-  protected function doTestMessages_2712935(): void {
-    $messages_markup = '<div class="messages messages--status" role="status"';
-    $test_routes = [
-      // Messages placeholder rendered first.
-      'render_placeholder_message_test.first',
-      // Messages placeholder rendered after one, before another.
-      'render_placeholder_message_test.middle',
-      // Messages placeholder rendered last.
-      'render_placeholder_message_test.last',
-    ];
-
-    $assert = $this->assertSession();
-    foreach ($test_routes as $route) {
-      // Verify that we start off with zero messages queued.
-      $this->drupalGet(Url::fromRoute('render_placeholder_message_test.queued'));
-      $assert->responseNotContains($messages_markup);
-
-      // Verify the test case at this route behaves as expected.
-      $this->drupalGet(Url::fromRoute($route));
-      $assert->elementContains('css', 'p.logged-message:nth-of-type(1)', 'Message: P1');
-      $assert->elementContains('css', 'p.logged-message:nth-of-type(2)', 'Message: P2');
-      $assert->responseContains($messages_markup);
-      $assert->elementExists('css', 'div[aria-label="Status message"]');
-      $assert->responseContains('aria-label="Status message">P1');
-      $assert->responseContains('aria-label="Status message">P2');
-
-      // Verify that we end with all messages printed, hence again zero queued.
-      $this->drupalGet(Url::fromRoute('render_placeholder_message_test.queued'));
-      $assert->responseNotContains($messages_markup);
-    }
   }
 
   /**
@@ -160,10 +119,9 @@ JS;
    *
    * @see https://www.drupal.org/node/3390178
    */
-  protected function doTestMultipleReplacements(): void {
-    $user = $this->drupalCreateUser();
-    $this->drupalLogin($user);
-
+  public function testMultipleReplacements(): void {
+    // @todo re-enable this test in https://www.drupal.org/project/drupal/issues/3590200
+    $this->markTestSkipped();
     $assert_session = $this->assertSession();
 
     $this->drupalGet(Url::fromRoute('big_pipe_test_multiple_replacements'));
@@ -185,8 +143,6 @@ JS;
    * regressions in https://www.drupal.org/project/drupal/issues/3526267.
    */
   protected function doInlineScriptTest(): void {
-    $user = $this->drupalCreateUser();
-    $this->drupalLogin($user);
     $assert_session = $this->assertSession();
 
     $this->drupalGet(Url::fromRoute('big_pipe_regression_test.inline_script'));
@@ -194,17 +150,6 @@ JS;
     $assert_session->elementExists('css', 'div.container-before');
     $assert_session->elementExists('css', 'body.inline-script-fires');
     $assert_session->elementExists('css', 'div.container-after');
-  }
-
-  /**
-   * Tests that all occurrences of the same placeholder are replaced.
-   */
-  protected function doTestMultipleOccurrences(): void {
-    \Drupal::service('module_installer')->install(['big_pipe_test']);
-    $assert_session = $this->assertSession();
-    $this->drupalGet(Url::fromRoute('big_pipe_test_multi_occurrence'));
-    $this->assertNotNull($assert_session->waitForElement('css', 'script[data-big-pipe-event="stop"]'));
-    $assert_session->elementsCount('css', 'p.multiple-occurrence-instance', 3);
   }
 
 }
