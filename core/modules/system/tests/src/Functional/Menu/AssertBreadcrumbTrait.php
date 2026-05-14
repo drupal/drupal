@@ -112,13 +112,7 @@ trait AssertBreadcrumbTrait {
    */
   protected function getBreadcrumbParts(): array {
     $parts = [];
-    $xpath = '//nav[@aria-labelledby="system-breadcrumb"]//ol/li/a';
-    if (method_exists($this, 'getNodeElementsByXpath')) {
-      $elements = $this->getNodeElementsByXpath('//nav[@aria-labelledby="system-breadcrumb"]//ol/li/a');
-    }
-    else {
-      $elements = $this->xpath($xpath);
-    }
+    $elements = $this->xpath('//nav[@aria-labelledby="system-breadcrumb"]//ol/li/a');
     if (!empty($elements)) {
       foreach ($elements as $element) {
         $parts[] = [

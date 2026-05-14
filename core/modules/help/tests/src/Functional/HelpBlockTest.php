@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Kernel;
+namespace Drupal\Tests\help\Functional;
 
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\block\Traits\BlockCreationTrait;
-use Drupal\Tests\HttpKernelUiHelperTrait;
+use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -15,10 +13,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('help')]
 #[RunTestsInSeparateProcesses]
-class HelpBlockTest extends KernelTestBase {
-
-  use HttpKernelUiHelperTrait;
-  use BlockCreationTrait;
+class HelpBlockTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
@@ -28,9 +23,12 @@ class HelpBlockTest extends KernelTestBase {
     'help_page_test',
     'block',
     'more_help_page_test',
-    'system',
-    'user',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * The help block instance.
@@ -44,9 +42,6 @@ class HelpBlockTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installEntitySchema('block');
-    $this->container->get('theme_installer')->install(['stark']);
-    $this->config('system.theme')->set('default', 'stark')->save();
     $this->helpBlock = $this->placeBlock('help_block');
   }
 

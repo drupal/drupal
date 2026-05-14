@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Kernel;
+namespace Drupal\Tests\help\Functional;
 
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -20,13 +20,18 @@ class HelpPageReverseOrderTest extends HelpPageOrderTest {
   protected static $modules = ['more_help_page_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Strings to search for on admin/help, in order.
    *
    * These are reversed, due to the alter hook.
    *
    * @var string[]
    */
-  protected array $stringOrder = [
+  protected $stringOrder = [
     'This description should appear',
     'Module overviews are provided',
   ];

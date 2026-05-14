@@ -2,13 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Kernel;
+namespace Drupal\Tests\help\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\block\Traits\BlockCreationTrait;
-use Drupal\Tests\HttpKernelUiHelperTrait;
-use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -17,11 +13,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('help')]
 #[RunTestsInSeparateProcesses]
-class HelpTest extends KernelTestBase {
-
-  use BlockCreationTrait;
-  use HttpKernelUiHelperTrait;
-  use UserCreationTrait;
+class HelpTest extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -33,17 +25,18 @@ class HelpTest extends KernelTestBase {
    * @var array
    */
   protected static $modules = [
-    'block',
     'block_content',
     'breakpoint',
     'editor',
-    'filter',
     'help',
     'help_page_test',
     'help_test',
-    'system',
-    'user',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'claro';
 
   /**
    * The admin user that will be created.
@@ -64,25 +57,14 @@ class HelpTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installEntitySchema('block');
-    $this->installEntitySchema('block_content');
-    $this->installEntitySchema('user');
 
     // Create users.
-    $this->adminUser = $this->createUser([
+    $this->adminUser = $this->drupalCreateUser([
       'access help pages',
       'view the administration theme',
       'administer permissions',
     ]);
-    $this->anyUser = $this->createUser();
-
-    $this->installConfig('system');
-    $this->config('system.site')->set('name', 'Drupal')->save();
-
-    $this->container->get('theme_installer')->install(['stark']);
-    $this->config('system.theme')->set('default', 'stark')->save();
-    $this->placeBlock('page_title_block');
-    $this->placeBlock('help_block');
+    $this->anyUser = $this->drupalCreateUser([]);
   }
 
   /**
@@ -91,18 +73,18 @@ class HelpTest extends KernelTestBase {
   public function testHelp(): void {
     // Log in the root user to ensure as many admin links appear as possible on
     // the module overview pages.
-    $this->setCurrentUser($this->createUser([
+    $this->drupalLogin($this->drupalCreateUser([
       'access help pages',
       'access administration pages',
     ]));
     $this->verifyHelp();
 
     // Log in the regular user.
-    $this->setCurrentUser($this->anyUser);
+    $this->drupalLogin($this->anyUser);
     $this->verifyHelp(403);
 
     // Verify that introductory help text exists, goes for 100% module coverage.
-    $this->setCurrentUser($this->adminUser);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/help');
     $this->assertSession()->responseContains('For more information, refer to the help listed on this page or to the <a href="https://www.drupal.org/documentation">online documentation</a> and <a href="https://www.drupal.org/support">support</a> pages at <a href="https://www.drupal.org">drupal.org</a>.');
 
@@ -117,10 +99,7 @@ class HelpTest extends KernelTestBase {
 
     // Make sure links are properly added for modules implementing hook_help().
     foreach ($this->getModuleList() as $module => $name) {
-      $this->assertSession()->linkExists($name, 0, new FormattableMarkup('Link properly added to @name (admin/help/@module)', [
-        '@module' => $module,
-        '@name' => $name,
-      ]));
+      $this->assertSession()->linkExists($name, 0, "Link properly added to $name (admin/help/$module)");
     }
 
     // Ensure a module which does not provide a module overview page is handled
@@ -168,7 +147,7 @@ class HelpTest extends KernelTestBase {
       $this->assertSession()->statusCodeEquals($response);
       if ($response == 200) {
         $this->assertSession()->titleEquals("$name | Drupal");
-        $this->assertSession()->elementTextEquals('css', 'h1', $name);
+        $this->assertEquals($name, $this->cssSelect('h1.page-title')[0]->getText(), "$module heading was displayed");
         $info = $module_list->getExtensionInfo($module);
         $admin_tasks = \Drupal::service('system.module_admin_links_helper')->getModuleAdminLinks($module);
         if ($module_permissions_link = \Drupal::service('user.module_permissions_link_helper')->getModulePermissionsLink($module, $info['name'])) {

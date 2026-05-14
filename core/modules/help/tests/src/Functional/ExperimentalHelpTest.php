@@ -2,12 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Kernel;
+namespace Drupal\Tests\help\Functional;
 
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\HttpKernelUiHelperTrait;
-use Drupal\Tests\user\Traits\UserCreationTrait;
-use Drupal\user\UserInterface;
+use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -16,10 +13,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('help')]
 #[RunTestsInSeparateProcesses]
-class ExperimentalHelpTest extends KernelTestBase {
-
-  use HttpKernelUiHelperTrait;
-  use UserCreationTrait;
+class ExperimentalHelpTest extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -33,29 +27,33 @@ class ExperimentalHelpTest extends KernelTestBase {
     'help',
     'experimental_module_test',
     'help_page_test',
-    'user',
-    'system',
   ];
 
   /**
-   * The admin user.
+   * {@inheritdoc}
    */
-  protected UserInterface $adminUser;
+  protected $defaultTheme = 'stark';
+
+  /**
+   * The admin user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installEntitySchema('user');
-    $this->adminUser = $this->createUser(['access help pages']);
-    $this->setCurrentUser($this->adminUser);
+    $this->adminUser = $this->drupalCreateUser(['access help pages']);
   }
 
   /**
    * Verifies that a warning message is displayed for experimental modules.
    */
   public function testExperimentalHelp(): void {
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/help/experimental_module_test');
     $this->assertSession()->statusMessageContains('This module is experimental.', 'warning');
 
