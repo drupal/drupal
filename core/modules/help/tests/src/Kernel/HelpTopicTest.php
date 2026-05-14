@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Functional;
+namespace Drupal\Tests\help\Kernel;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
+use Drupal\Tests\HttpKernelUiHelperTrait;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -14,8 +18,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('help')]
 #[RunTestsInSeparateProcesses]
-class HelpTopicTest extends BrowserTestBase {
+class HelpTopicTest extends KernelTestBase {
+
   use AssertBreadcrumbTrait;
+  use BlockCreationTrait;
+  use HttpKernelUiHelperTrait;
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -24,12 +32,10 @@ class HelpTopicTest extends BrowserTestBase {
     'help_topics_test',
     'help',
     'block',
+    'user',
+    'system',
+    'path_alias',
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * The admin user that will be created.
@@ -55,12 +61,28 @@ class HelpTopicTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  public function register(ContainerBuilder $container): void {
+    parent::register($container);
+    $container->setParameter('http.response.debug_cacheability_headers', TRUE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installEntitySchema('path_alias');
+    $this->installEntitySchema('user');
+    $this->installSchema('user', ['users_data']);
+
+    $this->installConfig('system');
+    $this->config('system.site')->set('name', 'Drupal')->save();
+
     // These tests rely on some markup from the 'stark' theme and we test theme
     // provided help topics.
-    \Drupal::service('theme_installer')->install(['help_topics_test_theme']);
+    \Drupal::service('theme_installer')->install(['help_topics_test_theme', 'stark']);
+    $this->config('system.theme')->set('default', 'stark')->save();
 
     // Place various blocks.
     $settings = [
@@ -90,7 +112,7 @@ class HelpTopicTest extends BrowserTestBase {
       'administer site configuration',
     ]);
 
-    $this->anyUser = $this->createUser([]);
+    $this->anyUser = $this->createUser();
   }
 
   /**
@@ -100,16 +122,16 @@ class HelpTopicTest extends BrowserTestBase {
     $session = $this->assertSession();
 
     // Log in the regular user.
-    $this->drupalLogin($this->anyUser);
+    $this->setCurrentUser($this->anyUser);
     $this->verifyHelp(403);
 
     // Log in the admin user.
-    $this->drupalLogin($this->adminUser);
+    $this->setCurrentUser($this->adminUser);
     $this->verifyHelp();
     $this->verifyBreadCrumb();
 
     // Verify that help topics text appears on admin/help, and cache tags.
-    $this->drupalGet('admin/help');
+    $this->drupalGet('/admin/help');
     $session->responseContains('<h2 id="help-topics">Topics</h2>');
     $session->pageTextContains('Topics can be provided by modules or themes');
     $session->responseHeaderContains('X-Drupal-Cache-Tags', 'core.extension');
@@ -187,7 +209,7 @@ class HelpTopicTest extends BrowserTestBase {
    */
   public function testHelpLinks(): void {
     $session = $this->assertSession();
-    $this->drupalLogin($this->adminUser);
+    $this->setCurrentUser($this->adminUser);
 
     // Verify links on the test top-level page.
     $page = 'admin/help/topic/help_topics_test.test';
@@ -238,7 +260,7 @@ class HelpTopicTest extends BrowserTestBase {
 
     // Verify that the "no test" user, who should not be able to access
     // the 'valid link' URL, sees it as not a link.
-    $this->drupalLogin($this->noTestUser);
+    $this->setCurrentUser($this->noTestUser);
     $this->drupalGet('admin/help/topic/help_topics_test.test_urls');
     $session->pageTextContains('valid link');
     $session->linkNotExists('valid link');
@@ -281,7 +303,7 @@ class HelpTopicTest extends BrowserTestBase {
       'admin' => 'Administration',
       'admin/help' => 'Help',
     ];
-    $this->assertBreadcrumb('admin/help/topic/help_topics_test.test', $trail);
+    $this->assertBreadcrumb('/admin/help/topic/help_topics_test.test', $trail);
     // Ensure we are on the expected help topic page.
     $this->assertSession()->pageTextContains('Also there should be a related topic link below to the Help module topic page and the linked topic.');
 
@@ -292,7 +314,7 @@ class HelpTopicTest extends BrowserTestBase {
       'admin/config' => 'Configuration',
       'admin/config/system' => 'System',
     ];
-    $this->assertBreadcrumb('admin/config/system/site-information', $trail);
+    $this->assertBreadcrumb('/admin/config/system/site-information', $trail);
   }
 
 }

@@ -92,6 +92,12 @@ trait HttpKernelUiHelperTrait {
       $this->htmlOutput($html_output);
     }
 
+    // If $this->content exists, set it for the benefit of all the methods in
+    // \Drupal\KernelTests\AssertContentTrait.
+    if (property_exists($this, 'content')) {
+      $this->content = $out;
+    }
+
     return $out;
   }
 
