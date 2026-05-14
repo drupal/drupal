@@ -13,6 +13,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Tests the file media source.
  */
 #[Group('media')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class MediaSourceFileTest extends MediaSourceTestBase {
 

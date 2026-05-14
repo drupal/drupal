@@ -20,6 +20,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @internal
  */
 #[Group('package_manager')]
+#[Group('#slow')]
 #[CoversClass(DiskSpaceValidator::class)]
 #[RunTestsInSeparateProcesses]
 class DiskSpaceValidatorTest extends PackageManagerKernelTestBase {

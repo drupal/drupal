@@ -20,6 +20,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[CoversClass(EntityDefinitionUpdateManager::class)]
 #[Group('Entity')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class EntityDefinitionUpdateProviderTest extends EntityKernelTestBase {
 

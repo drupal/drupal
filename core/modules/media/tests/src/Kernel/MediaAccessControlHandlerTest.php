@@ -19,6 +19,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[CoversClass(MediaAccessControlHandler::class)]
 #[Group('media')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class MediaAccessControlHandlerTest extends MediaKernelTestBase {
 
