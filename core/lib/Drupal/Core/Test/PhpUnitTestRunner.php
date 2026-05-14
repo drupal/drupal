@@ -138,8 +138,10 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     }
 
     // If not passed, add full PHPUnit run output since individual test cases
-    // messages may not give full clarity (deprecations, warnings, etc.).
-    if ($status > TestStatus::PASS) {
+    // messages may not give full clarity (deprecations, warnings, etc.). Also,
+    // PHPUnit returns success in case no tests are executed in the CLI, so
+    // treat that as an error here.
+    if ($status > TestStatus::PASS || $phpunit_results === []) {
       $message = $out;
       if (!empty($error)) {
         $message .= "\nERROR:\n";
@@ -160,7 +162,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     }
 
     $this->processPhpUnitResults($test_run, $phpunit_results);
-    $summaries = $this->summarizeResults($phpunit_results);
+    $summaries = $this->summarizeResults($test_class, $phpunit_results);
 
     return [
       'status' => $status,
@@ -325,6 +327,8 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
   /**
    * Tallies test results per test class.
    *
+   * @param class-string $test_class
+   *   The tested class name.
    * @param string[][] $results
    *   Array of results in the {simpletest} schema. Can be the return value of
    *   PhpUnitTestRunner::execute().
@@ -334,25 +338,22 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *
    * @internal
    */
-  public function summarizeResults(array $results): array {
+  public function summarizeResults(string $test_class, array $results): array {
     $summaries = [];
+    $summaries[$test_class] = [
+      '#pass' => 0,
+      '#fail' => 0,
+      '#error' => 0,
+      '#skipped' => 0,
+      '#cli_fail' => 0,
+      '#exception' => 0,
+      '#debug' => 0,
+      '#time' => 0,
+      '#exit_code' => 0,
+    ];
+
     foreach ($results as $result) {
-      if (!isset($summaries[$result['test_class']])) {
-        $summaries[$result['test_class']] = [
-          '#pass' => 0,
-          '#fail' => 0,
-          '#error' => 0,
-          '#skipped' => 0,
-          '#cli_fail' => 0,
-          '#exception' => 0,
-          '#debug' => 0,
-          '#time' => 0,
-          '#exit_code' => 0,
-        ];
-      }
-
       $summaries[$result['test_class']]['#time'] += $result['time'];
-
       switch ($result['status']) {
         case 'pass':
           $summaries[$result['test_class']]['#pass']++;
