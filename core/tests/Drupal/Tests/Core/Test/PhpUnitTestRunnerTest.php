@@ -106,48 +106,53 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $this->assertStringEndsWith('phpunit-23.xml', $runner->xmlLogFilePath(23));
   }
 
-  public static function providerTestSummarizeResults(): array {
-    return [
+  public static function providerTestSummarizeResults(): \Generator {
+    yield 'pass' => [
+      static::class,
       [
         [
-          [
-            'test_class' => static::class,
-            'status' => 'pass',
-            'time' => 0.010001,
-          ],
+          'test_class' => static::class,
+          'status' => 'pass',
+          'time' => 0.010001,
         ],
-        '#pass',
       ],
+      '#pass',
+    ];
+
+    yield 'fail' => [
+      static::class,
       [
         [
-          [
-            'test_class' => static::class,
-            'status' => 'fail',
-            'time' => 0.010002,
-          ],
+          'test_class' => static::class,
+          'status' => 'fail',
+          'time' => 0.010002,
         ],
-        '#fail',
       ],
+      '#fail',
+    ];
+
+    yield 'exception' => [
+      static::class,
       [
         [
-          [
-            'test_class' => static::class,
-            'status' => 'exception',
-            'time' => 0.010003,
-          ],
+          'test_class' => static::class,
+          'status' => 'exception',
+          'time' => 0.010003,
         ],
-        '#exception',
       ],
+      '#exception',
+    ];
+
+    yield 'debug' => [
+      static::class,
       [
         [
-          [
-            'test_class' => static::class,
-            'status' => 'debug',
-            'time' => 0.010004,
-          ],
+          'test_class' => static::class,
+          'status' => 'debug',
+          'time' => 0.010004,
         ],
-        '#debug',
       ],
+      '#debug',
     ];
   }
 
@@ -155,9 +160,9 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
    * Tests summarize results.
    */
   #[DataProvider('providerTestSummarizeResults')]
-  public function testSummarizeResults(array $results, string $has_status): void {
+  public function testSummarizeResults(string $test_class, array $results, string $has_status): void {
     $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
-    $summary = $runner->summarizeResults($results);
+    $summary = $runner->summarizeResults($test_class, $results);
 
     $this->assertArrayHasKey(static::class, $summary);
     $this->assertEquals(1, $summary[static::class][$has_status]);
