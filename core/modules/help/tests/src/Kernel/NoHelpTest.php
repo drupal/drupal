@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Functional;
+namespace Drupal\Tests\help\Kernel;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\HttpKernelUiHelperTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,7 +15,10 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('help')]
 #[RunTestsInSeparateProcesses]
-class NoHelpTest extends BrowserTestBase {
+class NoHelpTest extends KernelTestBase {
+
+  use HttpKernelUiHelperTrait;
+  use UserCreationTrait;
 
   /**
    * Modules to install.
@@ -22,12 +27,7 @@ class NoHelpTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['help', 'menu_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['help', 'menu_test', 'user', 'system'];
 
   /**
    * The user who will be created.
@@ -41,15 +41,15 @@ class NoHelpTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(['access help pages']);
+    $this->installEntitySchema('user');
+    $this->adminUser = $this->createUser(['access help pages']);
+    $this->setCurrentUser($this->adminUser);
   }
 
   /**
    * Ensures modules not implementing help do not appear on admin/help.
    */
   public function testMainPageNoHelp(): void {
-    $this->drupalLogin($this->adminUser);
-
     $this->drupalGet('admin/help');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Module overviews are provided by modules');

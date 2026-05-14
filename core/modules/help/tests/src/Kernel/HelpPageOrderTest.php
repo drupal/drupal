@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Functional;
+namespace Drupal\Tests\help\Kernel;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\HttpKernelUiHelperTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,24 +15,22 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('help')]
 #[RunTestsInSeparateProcesses]
-class HelpPageOrderTest extends BrowserTestBase {
+class HelpPageOrderTest extends KernelTestBase {
+
+  use HttpKernelUiHelperTrait;
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['help', 'help_page_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['help', 'help_page_test', 'system', 'user'];
 
   /**
    * Strings to search for on admin/help, in order.
    *
    * @var string[]
    */
-  protected $stringOrder = [
+  protected array $stringOrder = [
     'Module overviews are provided',
     'This description should appear',
   ];
@@ -40,14 +40,13 @@ class HelpPageOrderTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('user');
 
     // Create and log in user.
-    $account = $this->drupalCreateUser([
+    $account = $this->createUser([
       'access help pages',
-      'view the administration theme',
-      'administer permissions',
     ]);
-    $this->drupalLogin($account);
+    $this->setCurrentUser($account);
   }
 
   /**
