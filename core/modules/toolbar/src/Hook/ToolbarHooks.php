@@ -2,6 +2,8 @@
 
 namespace Drupal\toolbar\Hook;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\toolbar\Controller\ToolbarController;
 use Drupal\Core\Url;
@@ -14,6 +16,20 @@ use Drupal\Core\Hook\Attribute\Hook;
 class ToolbarHooks {
 
   use StringTranslationTrait;
+
+  /**
+   * ToolbarHooks constructor.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
+   *   The current user.
+   */
+  public function __construct(
+    protected ModuleHandlerInterface $moduleHandler,
+    protected AccountInterface $currentUser,
+  ) {
+  }
 
   /**
    * Implements hook_help().
@@ -43,9 +59,14 @@ class ToolbarHooks {
    */
   #[Hook('page_top')]
   public function pageTop(array &$page_top): void {
+    // If navigation is enabled and the user has access to it, don't add the
+    // toolbar.
+    if ($this->currentUser->hasPermission('access navigation') && $this->moduleHandler->moduleExists('navigation')) {
+      return;
+    }
     $page_top['toolbar'] = [
       '#type' => 'toolbar',
-      '#access' => \Drupal::currentUser()->hasPermission('access toolbar'),
+      '#access' => $this->currentUser->hasPermission('access toolbar'),
       '#cache' => [
         'keys' => [
           'toolbar',
