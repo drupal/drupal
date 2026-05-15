@@ -137,6 +137,11 @@ services:
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
+  cache_context.exception_status_code:
+    class: Drupal\Core\Cache\Context\ExceptionStatusCodeCacheContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context }
   cache_context.url:
     class: Drupal\Core\Cache\Context\UrlCacheContext
     arguments: ['@request_stack']
