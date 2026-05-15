@@ -266,7 +266,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   protected function setUpTranslation($config_name, $key, $source, $translation, $langcode, $is_active = FALSE): void {
     // Create source and translation strings for the configuration value and add
     // the configuration name as a location. This would be performed by
-    // locale_translate_batch_import() invoking
+    // \Drupal\locale\LocaleImportBatch::batchImport() invoking
     // LocaleConfigManager::updateConfigTranslations() normally.
     $this->localeConfigManager->reset();
     $this->localeConfigManager

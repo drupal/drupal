@@ -56,3 +56,10 @@ services:
     autowire: true
   Drupal\locale\LocaleProjectChecker:
     autowire: true
+  Drupal\locale\LocaleConfigBatch:
+    autowire: true
+  Drupal\locale\LocaleImportBatch:
+    autowire: true
+  logger.channel.locale:
+    parent: logger.channel_base
+    arguments: ['locale']

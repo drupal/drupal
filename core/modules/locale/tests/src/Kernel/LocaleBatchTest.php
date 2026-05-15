@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\locale\LocaleFetch;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -42,7 +43,7 @@ class LocaleBatchTest extends KernelTestBase {
       ->execute();
 
     $context = [];
-    locale_translation_batch_fetch_import('drupal', 'en', [], $context);
+    \Drupal::service(LocaleFetch::class)->batchImport('drupal', 'en', [], $context);
     $this->assertEquals(1, $context['finished']);
     $this->assertEquals('Ignoring already imported translation for drupal.', $context['message']);
   }
@@ -72,7 +73,12 @@ class LocaleBatchTest extends KernelTestBase {
     \Drupal::keyValue('locale.translation_status')->setMultiple(['test_module' => ['en' => $source]]);
 
     $context = ['results' => []];
-    locale_translation_batch_status_check('test_module', 'en', ['use_remote' => TRUE, 'finish_feedback' => TRUE], $context);
+    \Drupal::service(LocaleFetch::class)->batchStatusCheck(
+      'test_module',
+      'en',
+      ['use_remote' => TRUE, 'finish_feedback' => TRUE],
+      $context
+    );
 
     // Should be marked as failed (skipped) for English default pattern.
     $this->assertContains('test_module', $context['results']['failed_files']);
@@ -103,7 +109,12 @@ class LocaleBatchTest extends KernelTestBase {
     \Drupal::keyValue('locale.translation_status')->setMultiple(['test_module' => ['de' => $source]]);
 
     $context = ['results' => []];
-    locale_translation_batch_status_check('test_module', 'de', ['use_remote' => TRUE, 'finish_feedback' => TRUE], $context);
+    \Drupal::service(LocaleFetch::class)->batchStatusCheck(
+      'test_module',
+      'de',
+      ['use_remote' => TRUE, 'finish_feedback' => TRUE],
+      $context
+    );
 
     $this->assertContains('test_module', $context['results']['files']);
     $this->assertCount(0, $context['results']['failed_files'] ?? []);
