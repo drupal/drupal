@@ -40,6 +40,7 @@ use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\File\LocaleFileManager;
+use Drupal\locale\LocaleConfigBatch;
 use Drupal\locale\LocaleProjectChecker;
 use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleTranslatableProject;
@@ -1798,12 +1799,12 @@ function install_import_translations(&$install_state) {
     foreach ($languages as $language) {
       if (locale_translation_use_remote_source()) {
         $batch_builder->addOperation(
-          'locale_translation_batch_fetch_download',
+          LocaleFetch::class . ':batchDownload',
           ['drupal', $language->getId()],
         );
       }
       $batch_builder->addOperation(
-        'locale_translation_batch_fetch_import',
+        LocaleFetch::class . ':batchImport',
         ['drupal', $language->getId(), []],
       );
     }
@@ -1812,7 +1813,7 @@ function install_import_translations(&$install_state) {
       ->setTitle(t('Updating translations.'))
       ->setProgressMessage('')
       ->setErrorMessage(t('Error importing translation files'))
-      ->setFinishCallback('locale_translation_batch_fetch_finished');
+      ->setFinishCallback(LocaleFetch::class . ':batchFinished');
     return $batch_builder->toArray();
   }
 }
@@ -1888,7 +1889,7 @@ function install_finish_translations(&$install_state): array {
   $batches = [];
   if (count($projects) > 1) {
     $options = LocaleDefaultOptions::updateOptions();
-    if ($batch = \Drupal::service(LocaleFetch::class)->batchUpdateBuild([], array_keys($languages), $options)) {
+    if ($batch = \Drupal::service(LocaleFetch::class)->buildUpdateBatch([], array_keys($languages), $options)) {
       $batches[] = $batch;
     }
   }
@@ -1900,7 +1901,7 @@ function install_finish_translations(&$install_state): array {
   }
 
   // Creates configuration translations.
-  $batches[] = locale_config_batch_update_components([], array_keys($languages), [], TRUE);
+  $batches[] = \Drupal::service(LocaleConfigBatch::class)->buildBatch([], array_keys($languages), [], TRUE);
   return $batches;
 }
 

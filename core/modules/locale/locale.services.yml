@@ -45,3 +45,8 @@ services:
   Drupal\locale\File\LocaleFileManager: ~
   Drupal\locale\LocaleProjectRepository: ~
   Drupal\locale\LocaleProjectChecker: ~
+  Drupal\locale\LocaleConfigBatch: ~
+  Drupal\locale\LocaleImportBatch: ~
+  logger.channel.locale:
+    parent: logger.channel_base
+    arguments: ['locale']
