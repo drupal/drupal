@@ -151,7 +151,7 @@ class RecipeCommandTest extends BrowserTestBase {
     $this->assertStringContainsString('input_test.owner', $output);
     $this->assertStringContainsString('The name of the site owner.', $output);
 
-    $output = $this->applyRecipe($root . '/core/recipes/page_content_type', command: 'recipe:info')->getOutput();
+    $output = $this->applyRecipe($root . '/core/recipes/basic_block_type', command: 'recipe:info')->getOutput();
     $this->assertStringContainsString('This recipe does not accept any input.', $output);
   }
 

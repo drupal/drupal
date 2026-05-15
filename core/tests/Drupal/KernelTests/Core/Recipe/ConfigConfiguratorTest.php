@@ -13,7 +13,7 @@ use Drupal\Core\Recipe\RecipePreExistingConfigException;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\node\Entity\NodeType;
+use Drupal\block_content\Entity\BlockContentType;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -68,7 +68,7 @@ class ConfigConfiguratorTest extends KernelTestBase {
   #[TestWith([FALSE])]
   #[TestWith([[]])]
   public function testExistingConfigIsIgnoredInLenientMode(array|false $strict_value): void {
-    $recipe = Recipe::createFromDirectory('core/recipes/page_content_type');
+    $recipe = Recipe::createFromDirectory('core/recipes/basic_block_type');
     $this->assertNotEmpty($recipe->config->getConfigStorage()->listAll());
     RecipeRunner::processRecipe($recipe);
 
@@ -89,29 +89,29 @@ class ConfigConfiguratorTest extends KernelTestBase {
    * Tests with strict mode on part of the configuration.
    */
   public function testSelectiveStrictness(): void {
-    $recipe = Recipe::createFromDirectory('core/recipes/page_content_type');
+    $recipe = Recipe::createFromDirectory('core/recipes/basic_block_type');
     RecipeRunner::processRecipe($recipe);
 
-    $node_type = NodeType::load('page');
-    $original_description = $node_type->getDescription();
-    $node_type->set('description', 'And now for something completely different.')
+    $block_type = BlockContentType::load('basic');
+    $original_description = $block_type->getDescription();
+    $block_type->set('description', 'And now for something completely different.')
       ->save();
 
     $form_display = $this->container->get(EntityDisplayRepositoryInterface::class)
-      ->getFormDisplay('node', 'page');
+      ->getFormDisplay('block_content', 'basic');
     $this->assertFalse($form_display->isNew());
-    $this->assertIsArray($form_display->getComponent('uid'));
-    $form_display->removeComponent('uid')->save();
+    $this->assertIsArray($form_display->getComponent('body'));
+    $form_display->removeComponent('body')->save();
 
     // Delete something that the recipe provides, so we can be sure it is
     // recreated if it's not in the strict list.
-    EntityViewDisplay::load('node.page.teaser')->delete();
+    EntityViewDisplay::load('block_content.basic.default')->delete();
 
-    // Clone the recipe into the virtual file system, and opt only the node
+    // Clone the recipe into the virtual file system, and opt only the block
     // type into strict mode.
     $clone_dir = $this->cloneRecipe($recipe->path);
     $this->alterRecipe($clone_dir, function (array $data): array {
-      $data['config']['strict'] = ['node.type.page'];
+      $data['config']['strict'] = ['block_content.type.basic'];
       return $data;
     });
     // If we try to instantiate this recipe, we should an exception.
@@ -120,13 +120,13 @@ class ConfigConfiguratorTest extends KernelTestBase {
       $this->fail('Expected an exception but none was thrown.');
     }
     catch (RecipePreExistingConfigException $e) {
-      $this->assertSame("The configuration 'node.type.page' exists already and does not match the recipe's configuration", $e->getMessage());
+      $this->assertSame("The configuration 'block_content.type.basic' exists already and does not match the recipe's configuration", $e->getMessage());
     }
 
-    // If we restore the node type's original description, we should no longer
+    // If we restore the block type's original description, we should no longer
     // get an error if we try to instantiate the altered recipe, even though the
     // form display is still different from what's in the recipe.
-    NodeType::load('page')
+    BlockContentType::load('basic')
       ->set('description', $original_description)
       ->save();
 
@@ -135,22 +135,22 @@ class ConfigConfiguratorTest extends KernelTestBase {
 
     // Make certain that our change to the form display is still there.
     $component = $this->container->get(EntityDisplayRepositoryInterface::class)
-      ->getFormDisplay('node', 'page')
-      ->getComponent('uid');
+      ->getFormDisplay('block_content', 'basic')
+      ->getComponent('body');
     $this->assertNull($component);
 
     // The thing we deleted should have been recreated.
-    $this->assertInstanceOf(EntityViewDisplay::class, EntityViewDisplay::load('node.page.teaser'));
+    $this->assertInstanceOf(EntityViewDisplay::class, EntityViewDisplay::load('block_content.basic.default'));
   }
 
   /**
    * Tests strict mode.
    */
   public function testFullStrictness(): void {
-    $recipe = Recipe::createFromDirectory('core/recipes/page_content_type');
+    $recipe = Recipe::createFromDirectory('core/recipes/basic_block_type');
     RecipeRunner::processRecipe($recipe);
 
-    NodeType::load('page')
+    BlockContentType::load('basic')
       ->set('description', 'And now for something completely different.')
       ->save();
 
@@ -163,7 +163,7 @@ class ConfigConfiguratorTest extends KernelTestBase {
     });
     // If we try to instantiate this recipe, we should an exception.
     $this->expectException(RecipePreExistingConfigException::class);
-    $this->expectExceptionMessage("The configuration 'node.type.page' exists already and does not match the recipe's configuration");
+    $this->expectExceptionMessage("The configuration 'block_content.type.basic' exists already and does not match the recipe's configuration");
     Recipe::createFromDirectory($clone_dir);
   }
 

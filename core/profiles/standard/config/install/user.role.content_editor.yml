@@ -2,8 +2,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - node.type.article
-    - node.type.page
     - taxonomy.vocabulary.tags
   module:
     - comment
@@ -25,18 +23,10 @@ permissions:
   - 'access files overview'
   - 'access navigation'
   - 'administer url aliases'
-  - 'create article content'
-  - 'create page content'
   - 'create terms in tags'
   - 'create url aliases'
-  - 'delete article revisions'
-  - 'delete own article content'
   - 'delete own files'
-  - 'delete own page content'
-  - 'delete page revisions'
-  - 'edit own article content'
   - 'edit own comments'
-  - 'edit own page content'
   - 'edit terms in tags'
   - 'revert all revisions'
   - 'view all revisions'

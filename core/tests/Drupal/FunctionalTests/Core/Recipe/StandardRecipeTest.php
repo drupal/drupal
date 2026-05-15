@@ -127,13 +127,49 @@ class StandardRecipeTest extends StandardTest {
     $comparer = $this->configImporter()->getStorageComparer();
     $expected_list = $comparer->getEmptyChangelist();
     $expected_list['create'] = [
+      'comment.settings',
+      'comment.type.comment',
+      'core.entity_view_mode.comment.full',
+      'image.style.wide',
+      'core.entity_view_mode.node.teaser',
       'core.entity_view_mode.node.search_result',
       'core.entity_view_mode.node.search_index',
+      'core.entity_view_mode.node.rss',
+      'core.entity_view_mode.node.full',
+      'system.action.comment_delete_action',
+      'system.action.comment_publish_action',
+      'system.action.comment_save_action',
+      'system.action.comment_unpublish_action',
+      'system.action.node_delete_action',
+      'system.action.node_make_sticky_action',
+      'system.action.node_make_unsticky_action',
+      'system.action.node_promote_action',
+      'system.action.node_publish_action',
+      'system.action.node_save_action',
+      'system.action.node_unpromote_action',
+      'system.action.node_unpublish_action',
+      'system.action.taxonomy_term_unpublish_action',
+      'system.action.taxonomy_term_publish_action',
+      'core.entity_view_mode.taxonomy_term.full',
+      'taxonomy.settings',
+      'taxonomy.vocabulary.tags',
+      'field.storage.comment.comment_body',
+      'field.field.comment.comment.comment_body',
+      'core.entity_view_display.comment.comment.default',
+      'core.entity_form_display.comment.comment.default',
+      'views.view.comment',
+      'views.view.comments_recent',
+      'views.view.taxonomy_term',
     ];
     // We expect core.extension to be different because standard is no longer
     // installed.
     $expected_list['update'] = [
       'core.extension',
+      'user.role.anonymous',
+      'user.role.authenticated',
+      'user.role.content_editor',
+      'views.view.archive',
+      'views.view.frontpage',
     ];
     $this->assertSame($expected_list, $comparer->getChangelist());
 

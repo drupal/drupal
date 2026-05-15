@@ -2,10 +2,10 @@ name: Default content base
 description: Sets up the fields and configuration needed to import the `default_content` fixture.
 type: Testing
 recipes:
-  - core/recipes/article_tags
+  - core/tests/fixtures/recipes/article_tags
   - core/recipes/basic_block_type
   - core/recipes/image_media_type
-  - core/recipes/page_content_type
+  - core/tests/fixtures/recipes/page_content_type
   - core/recipes/editorial_workflow
 install:
   - content_translation
