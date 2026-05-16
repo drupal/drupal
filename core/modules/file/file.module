@@ -453,8 +453,14 @@ function template_preprocess_file_upload_help(&$variables): void {
  *   entity_id and the value is an entity referencing this file.
  *
  * @ingroup file
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(\Drupal\file\FileReferenceResolver::class) instead.
+ *
+ * @see https://www.drupal.org/node/3573884
  */
 function file_get_file_references(FileInterface $file, ?FieldDefinitionInterface $field = NULL, $age = EntityStorageInterface::FIELD_LOAD_REVISION, $field_type = 'file') {
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\Drupal\file\FileReferenceResolver::class)->getReferences($file) instead. See https://www.drupal.org/node/3573884', E_USER_DEPRECATED);
   $references = &drupal_static(__FUNCTION__, []);
   $field_columns = &drupal_static(__FUNCTION__ . ':field_columns', []);
 
@@ -530,8 +536,14 @@ function file_get_file_references(FileInterface $file, ?FieldDefinitionInterface
  * @return bool
  *   The field column if the field references {file_managed}.fid, typically
  *   fid, FALSE if it does not.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3573884
  */
 function file_field_find_file_reference_column(FieldDefinitionInterface $field) {
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3573884', E_USER_DEPRECATED);
   $schema = $field->getFieldStorageDefinition()->getSchema();
   foreach ($schema['foreign keys'] as $data) {
     if ($data['table'] == 'file_managed') {

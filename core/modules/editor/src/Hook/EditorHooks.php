@@ -272,8 +272,8 @@ class EditorHooks {
   /**
    * Implements hook_file_download().
    *
-   * @see file_file_download()
-   * @see file_get_file_references()
+   * @see \Drupal\file\Hook\FileDownloadHook
+   * @see \Drupal\file\FileReferenceResolver::getReferences()
    */
   #[Hook('file_download')]
   public function fileDownload($uri): array|int|null {
@@ -300,7 +300,7 @@ class EditorHooks {
     // Editor.module MUST NOT call $file->access() here (like
     // file_file_download() does) as checking the 'download' access to a file
     // entity would end up in FileAccessControlHandler->checkAccess() and
-    // ->getFileReferences(), which calls file_get_file_references(). This
+    // \Drupal\file\FileReferenceResolver::getReferences(). This
     // latter one would allow downloading files only handled by the file.module,
     // which is exactly not the case right here. So instead we must check if the
     // current user is allowed to view any of the entities that reference the

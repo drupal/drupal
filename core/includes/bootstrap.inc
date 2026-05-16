@@ -446,6 +446,13 @@ function drupal_static_reset($name = NULL): void {
     case 'filter_formats':
       @trigger_error("Using drupal_static_reset() with 'filter_formats' as argument is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. No replacement is provided. See https://www.drupal.org/node/3035368", E_USER_DEPRECATED);
       break;
+
+    case 'file_get_file_references':
+    case 'file_get_file_references:field_columns':
+      @trigger_error("Calling drupal_static_reset() with \"$name\" as argument is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service('cache.memory')->invalidateTags(['file_references']) instead. See https://www.drupal.org/node/3573884", E_USER_DEPRECATED);
+      \Drupal::service('cache.memory')->invalidateTags(['file_references']);
+      break;
+
   }
   drupal_static($name, NULL, TRUE);
 }

@@ -168,6 +168,85 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalGet($file_url);
     $this->assertSession()->statusCodeEquals(403);
 
+    // Test that a file only referenced in an old revision is still accessible.
+    $account = $this->drupalCreateUser(['view all revisions']);
+    $this->drupalLogin($account);
+    $old_file = $this->getTestFile('text');
+    $nid = $this->uploadNodeFile($old_file, $field_name, $type_name, TRUE, ['private' => TRUE]);
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);
+    \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
+    $node = $node_storage->load($nid);
+    $node_old_revision_file = File::load($node->{$field_name}->target_id);
+    $access = $node_old_revision_file->access('download', $account, TRUE);
+    $this->assertTrue($access->isAllowed(), 'Confirmed that a file referenced in the last node revision is accessible.');
+
+    // View files from old revisions if the user has the 'view all revisions'
+    // permission.
+    $account = $this->drupalCreateUser(['view all revisions']);
+    $this->drupalLogin($account);
+    $old_file = $this->getTestFile('text');
+    $new_file = $this->getTestFile('text');
+    $nid = $this->uploadNodeFile($old_file, $field_name, $type_name, TRUE, ['private' => TRUE]);
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);
+    \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
+    $node = $node_storage->load($nid);
+    // Create a new revision with a new file.
+    $this->replaceNodeFile($new_file, $field_name, $nid, 3);
+    $node_old_revision_file = File::load($node->{$field_name}->target_id);
+    // Ensure the old file can still be downloaded.
+    $access = $node_old_revision_file->access('download', $account, TRUE);
+    $this->assertTrue($access->isAllowed(), 'Confirmed that a file referenced in an old node revision is accessible if user has role view all revisions.');
+
+    // Test that a file only referenced in an old revision is restricted if the
+    // user does not have the 'view all revisions' permission.
+    $account = $this->drupalCreateUser();
+    $this->drupalLogin($account);
+    $test_file_access = $this->getTestFile('text');
+    $nid = $this->uploadNodeFile($test_file_access, $field_name, $type_name, TRUE, ['private' => TRUE]);
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);
+    \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
+    $node = $node_storage->load($nid);
+    $node_old_revision_file = File::load($node->{$field_name}->target_id);
+    $access = $node_old_revision_file->access('download', $account, TRUE);
+    $this->assertTrue($access->isAllowed(), 'Confirmed that a file from last node revision is accessible for users with view permission');
+
+    $account = $this->drupalCreateUser();
+    $this->drupalLogin($account);
+    $test_file_access = $this->getTestFile('text');
+    $nid = $this->uploadNodeFile($test_file_access, $field_name, $type_name, TRUE, ['private' => TRUE]);
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);
+    \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
+    $node = $node_storage->load($nid);
+    // Create a new revision with a new file.
+    $test_file_no_access = $this->getTestFile('text');
+    $node_old_revision_file = File::load($node->{$field_name}->target_id);
+    $this->replaceNodeFile($test_file_no_access, $field_name, $nid, 10);
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);
+    \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
+    // Ensure access is denied.
+    $access = $node_old_revision_file->access('download', $account, TRUE);
+    $this->assertFalse($access->isAllowed(), 'Confirmed that access is denied for the file from an old revision without view all revisions permission.');
+
+    // Test that files related to both a published and later un-published
+    // revision of the same entity are still accessible to a public user.
+    $account = $this->drupalCreateUser(['bypass node access', 'administer nodes']);
+    $this->drupalLogin($account);
+    $test_file_multiple_revisions = $this->getTestFile('text');
+    $nid = $this->uploadNodeFile($test_file_multiple_revisions, $field_name, $type_name);
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);
+    \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
+    $node = $node_storage->load($nid);
+    $node_file_multiple_revisions = File::load($node->{$field_name}->target_id);
+
+    // Save a new non-published revision, otherwise identical
+    $node->setNewRevision(TRUE);
+    $node->isDefaultRevision(FALSE);
+    $node->setUnpublished();
+    $node->save();
+    // Check access as an anonymous user.
+    $this->drupalLogout();
+    $this->assertTrue($node_file_multiple_revisions->access('download'), 'File is accessible to an anonymous user when referenced by a published and later un-published revision of the same entity.');
+
     // As an anonymous user, create a permanent file, then remove all
     // references to the file (so that it becomes temporary again) and confirm
     // that only the session that uploaded it may view it.
