@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -29,20 +30,31 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
           return AccessResult::allowedIfHasPermission($account, 'access content');
         }
       }
-      elseif ($references = $this->getFileReferences($entity)) {
-        foreach ($references as $field_name => $entity_map) {
-          foreach ($entity_map as $referencing_entities) {
-            /** @var \Drupal\Core\Entity\EntityInterface $referencing_entity */
-            foreach ($referencing_entities as $referencing_entity) {
-              $entity_and_field_access = $referencing_entity->access('view', $account, TRUE)->andIf($referencing_entity->$field_name->access('view', $account, TRUE));
-              if ($entity_and_field_access->isAllowed()) {
-                return $entity_and_field_access;
-              }
-            }
+      $has_references = FALSE;
+      $resolver = \Drupal::service(FileReferenceResolver::class);
+      foreach ($resolver->getReferences($entity) as $usage) {
+        $has_references = TRUE;
+        $referencing_entity = $resolver->loadEntityFromUsage($usage);
+
+        // Either check view or revision access depending on this being a
+        // default revision or not.
+        if ($referencing_entity instanceof RevisionableInterface && !$referencing_entity->isDefaultRevision()) {
+          $entity_and_field_access = $referencing_entity->access('view revision', $account, TRUE);
+        }
+        else {
+          $entity_and_field_access = $referencing_entity->access('view', $account, TRUE);
+        }
+
+        // If access to that entity is allowed, check field access as well,
+        // if access is still allowed, return this result.
+        if ($entity_and_field_access->isAllowed()) {
+          $entity_and_field_access = $entity_and_field_access->andIf($referencing_entity->get($usage->fieldName)->access('view', $account, TRUE));
+          if ($entity_and_field_access->isAllowed()) {
+            return $entity_and_field_access;
           }
         }
       }
-      elseif ($entity->getOwnerId() == $account->id()) {
+      if (!$has_references && $entity->getOwnerId() == $account->id()) {
         // This case handles new nodes, or detached files. The user who uploaded
         // the file can access it even if it's not yet used.
         if ($account->isAnonymous()) {
@@ -91,9 +103,13 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
    *   A multidimensional array. The keys are field_name, entity_type,
    *   entity_id and the value is an entity referencing this file.
    *
-   * @see file_get_file_references()
+   * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+   *   \Drupal::service(\Drupal\file\FileReferenceResolver::class) instead.
+   *
+   * @see https://www.drupal.org/node/3573884
    */
   protected function getFileReferences(FileInterface $file) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\Drupal\file\FileReferenceResolver::class) instead. See https://www.drupal.org/node/3573884', E_USER_DEPRECATED);
     return file_get_file_references($file, NULL, EntityStorageInterface::FIELD_LOAD_REVISION, NULL);
   }
 
