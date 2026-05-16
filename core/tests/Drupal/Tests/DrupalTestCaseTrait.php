@@ -1,6 +1,4 @@
 <?php
-// @todo remove the ignore directive once PHPCS will support hooked properties.
-// phpcs:ignoreFile
 
 declare(strict_types=1);
 
@@ -10,6 +8,7 @@ use Drupal\TestTools\ErrorHandler\BootstrapErrorHandler;
 use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
 use Drupal\TestTools\Extension\Dump\DebugDump;
 use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\BeforeClass;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -23,13 +22,22 @@ trait DrupalTestCaseTrait {
   /**
    * The Drupal root directory.
    */
-  protected string $root {
-    get {
-      if (!isset($this->root)) {
-        $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
-      }
-      return $this->root;
+  protected string $root;
+
+  /**
+   * Ensure that the $root property is set initially.
+   *
+   * This is run with a high priority since other test setup code that runs in
+   * #[Before] hooks or setUp() requires access to $root.
+   *
+   * @internal
+   */
+  #[Before(100)]
+  final protected function setUpRoot(): void {
+    if (isset($this->root)) {
+      throw new \LogicException("setUpRoot should be called exactly once by PHPUnit's Before test hook and root overrides should happen after.");
     }
+    $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
   }
 
   /**
