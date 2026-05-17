@@ -6,11 +6,11 @@
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Url;
 use Drupal\file\FileInterface;
-use Drupal\locale\Gettext;
 use Drupal\locale\File\LocaleFile;
 use Drupal\locale\File\LocaleFileManager;
+use Drupal\locale\LocaleConfigBatch;
+use Drupal\locale\LocaleImportBatch;
 use Drupal\locale\LocaleSource;
 
 /**
@@ -58,34 +58,16 @@ function locale_translate_get_interface_translation_files(array $projects = [], 
  *
  * @return array|bool
  *   A batch structure or FALSE if $files was empty.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleImportBatch::class)->buildBatch()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3589759
  */
 function locale_translate_batch_build(array $files, array $options) {
-  $options += [
-    'overwrite_options' => [],
-    'customized' => LOCALE_NOT_CUSTOMIZED,
-    'finish_feedback' => TRUE,
-  ];
-  if (count($files)) {
-    $batch_builder = (new BatchBuilder())
-      ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.bulk.inc')
-      ->setTitle(t('Importing interface translations'))
-      ->setErrorMessage(t('Error importing interface translations'));
-    foreach ($files as $file) {
-      // We call locale_translate_batch_import for every batch operation.
-      $batch_builder->addOperation('locale_translate_batch_import', [$file, $options]);
-    }
-    // Save the translation status of all files.
-    $batch_builder->addOperation('locale_translate_batch_import_save', []);
-
-    // Add a final step to refresh JavaScript and configuration strings.
-    $batch_builder->addOperation('locale_translate_batch_refresh', []);
-
-    if ($options['finish_feedback']) {
-      $batch_builder->setFinishCallback('locale_translate_batch_finished');
-    }
-    return $batch_builder->toArray();
-  }
-  return FALSE;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleImportBatch::class)->buildBatch(). See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
+  return \Drupal::service(LocaleImportBatch::class)->buildBatch($files, $options);
 }
 
 /**
@@ -111,86 +93,20 @@ function locale_translate_batch_build(array $files, array $options) {
  *     be sanitized text.
  * @param array|\ArrayAccess $context
  *   Contains a list of files imported.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleImportBatch::class)->batchImport()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3589759
  */
 function locale_translate_batch_import($file, array $options, &$context): void {
-  // Merge the default values in the $options array.
-  $options += [
-    'overwrite_options' => [],
-    'customized' => LOCALE_NOT_CUSTOMIZED,
-  ];
-
-  if (isset($file->langcode) && $file->langcode != LanguageInterface::LANGCODE_NOT_SPECIFIED) {
-
-    try {
-      if (empty($context['sandbox'])) {
-        $context['sandbox']['parse_state'] = [
-          'filesize' => filesize(\Drupal::service('file_system')->realpath($file->uri)),
-          'chunk_size' => 200,
-          'seek' => 0,
-        ];
-      }
-      // Update the seek and the number of items in the $options array.
-      $options['seek'] = $context['sandbox']['parse_state']['seek'];
-      $options['items'] = $context['sandbox']['parse_state']['chunk_size'];
-      $report = Gettext::fileToDatabase($file, $options);
-      // If not yet finished with reading, mark progress based on size and
-      // position.
-      if ($report['seek'] < filesize($file->uri)) {
-
-        $context['sandbox']['parse_state']['seek'] = $report['seek'];
-        // Maximize the progress bar at 95% before completion, the batch API
-        // could trigger the end of the operation before file reading is done,
-        // because of floating point inaccuracies. See
-        // https://www.drupal.org/node/1089472.
-        $context['finished'] = min(0.95, $report['seek'] / filesize($file->uri));
-        if (isset($options['message'])) {
-          $context['message'] = t('@message (@percent%).', [
-            '@message' => $options['message'],
-            '@percent' => (int) ($context['finished'] * 100),
-          ]);
-        }
-        else {
-          $context['message'] = t('Importing translation file: %filename (@percent%).', [
-            '%filename' => $file->filename,
-            '@percent' => (int) ($context['finished'] * 100),
-          ]);
-        }
-      }
-      else {
-        // We are finished here.
-        $context['finished'] = 1;
-
-        // Store the file data for processing by the next batch operation.
-        $file->timestamp = filemtime($file->uri);
-        $context['results']['files'][$file->uri] = $file;
-        $context['results']['languages'][$file->uri] = $file->langcode;
-      }
-
-      // Add the reported values to the statistics for this file.
-      // Each import iteration reports statistics in an array. The results of
-      // each iteration are added and merged here and stored per file.
-      if (!isset($context['results']['stats']) || !isset($context['results']['stats'][$file->uri])) {
-        $context['results']['stats'][$file->uri] = [];
-      }
-      foreach ($report as $key => $value) {
-        if (is_numeric($report[$key])) {
-          if (!isset($context['results']['stats'][$file->uri][$key])) {
-            $context['results']['stats'][$file->uri][$key] = 0;
-          }
-          $context['results']['stats'][$file->uri][$key] += $report[$key];
-        }
-        elseif (is_array($value)) {
-          $context['results']['stats'][$file->uri] += [$key => []];
-          $context['results']['stats'][$file->uri][$key] = array_merge($context['results']['stats'][$file->uri][$key], $value);
-        }
-      }
-    }
-    catch (Exception) {
-      // Import failed. Store the data of the failing file.
-      $context['results']['failed_files'][] = $file;
-      \Drupal::logger('locale')->notice('Unable to import translations file: @file', ['@file' => $file->uri]);
-    }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleImportBatch::class)->batchImport(). See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
+  if (!($file instanceof LocaleFile)) {
+    $hash = hash_file(LocaleSource::LOCAL_FILE_HASH_ALGO, $file->uri);
+    $file = new LocaleFile($file->filename, $file->uri, $hash);
   }
+  \Drupal::service(LocaleImportBatch::class)->batchImport($file, $options, $context);
 }
 
 /**
@@ -200,23 +116,16 @@ function locale_translate_batch_import($file, array $options, &$context): void {
  *
  * @param array|\ArrayAccess $context
  *   Contains a list of imported files.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleImportBatch::class)->batchSave()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3589759
  */
 function locale_translate_batch_import_save($context): void {
-  if (isset($context['results']['files'])) {
-    $request_time = \Drupal::time()->getRequestTime();
-    foreach ($context['results']['files'] as $file) {
-      // Update the file history if both project and version are known. This
-      // table is used by the automated translation update function which tracks
-      // translation status of module and themes in the system. Other
-      // translation files are not tracked and are therefore not stored in this
-      // table.
-      if ($file->project && $file->version) {
-        $file->last_checked = $request_time;
-        locale_translation_update_file_history($file);
-      }
-    }
-    $context['message'] = t('Translations imported.');
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleImportBatch::class)->batchSave(). See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
+  \Drupal::service(LocaleImportBatch::class)->batchSave($context);
 }
 
 /**
@@ -226,63 +135,16 @@ function locale_translate_batch_import_save($context): void {
  *
  * @param array|\ArrayAccess $context
  *   Contains a list of strings updated and information about the progress.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleImportBatch::class)->batchRefresh()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3589759
  */
 function locale_translate_batch_refresh(&$context): void {
-  if (!isset($context['sandbox']['refresh'])) {
-    $strings = $langcodes = [];
-    if (isset($context['results']['stats'])) {
-      // Get list of unique string identifiers and language codes updated.
-      $langcodes = array_unique(array_values($context['results']['languages']));
-      foreach ($context['results']['stats'] as $report) {
-        $strings[] = $report['strings'];
-      }
-      $strings = array_merge(...$strings);
-    }
-    if ($strings) {
-      // Initialize multi-step string refresh.
-      $context['message'] = t('Updating translations for JavaScript and default configuration.');
-      $context['sandbox']['refresh']['strings'] = array_unique($strings);
-      $context['sandbox']['refresh']['languages'] = $langcodes;
-      $context['sandbox']['refresh']['names'] = [];
-      $context['results']['stats']['config'] = 0;
-      $context['sandbox']['refresh']['count'] = count($strings);
-
-      // We will update strings on later steps.
-      $context['finished'] = 0;
-    }
-    else {
-      $context['finished'] = 1;
-    }
-  }
-  elseif ($name = array_shift($context['sandbox']['refresh']['names'])) {
-    // Refresh all languages for one object at a time.
-    $count = \Drupal::service('locale.config_manager')
-      ->updateConfigTranslations([$name], $context['sandbox']['refresh']['languages']);
-    $context['results']['stats']['config'] += $count;
-    // Inherit finished information from the "parent" string lookup step so
-    // visual display of status will make sense.
-    $context['finished'] = $context['sandbox']['refresh']['names_finished'];
-    $context['message'] = t('Updating default configuration (@percent%).', ['@percent' => (int) ($context['finished'] * 100)]);
-  }
-  elseif (!empty($context['sandbox']['refresh']['strings'])) {
-    // Not perfect but will give some indication of progress.
-    $context['finished'] = 1 - count($context['sandbox']['refresh']['strings']) / $context['sandbox']['refresh']['count'];
-    // Pending strings, refresh 100 at a time, get next pack.
-    $next = array_slice($context['sandbox']['refresh']['strings'], 0, 100);
-    array_splice($context['sandbox']['refresh']['strings'], 0, count($next));
-    // Clear cache and force refresh of JavaScript translations.
-    _locale_refresh_translations($context['sandbox']['refresh']['languages'], $next);
-    // Check whether we need to refresh configuration objects.
-    if ($names = \Drupal::service('locale.config_manager')
-      ->getStringNames($next)) {
-      $context['sandbox']['refresh']['names_finished'] = $context['finished'];
-      $context['sandbox']['refresh']['names'] = $names;
-    }
-  }
-  else {
-    $context['message'] = t('Updated default configuration.');
-    $context['finished'] = 1;
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleImportBatch::class)->batchRefresh(). See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
+  \Drupal::service(LocaleImportBatch::class)->batchRefresh($context);
 }
 
 /**
@@ -294,70 +156,16 @@ function locale_translate_batch_refresh(&$context): void {
  *   TRUE if batch successfully completed.
  * @param array $results
  *   Batch results.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleImportBatch::class)->batchFinished()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3589759
  */
 function locale_translate_batch_finished($success, array $results): void {
-  $logger = \Drupal::logger('locale');
-  if ($success) {
-    $additions = $updates = $deletes = $skips = 0;
-    if (isset($results['failed_files'])) {
-      if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access site reports')) {
-        $message = \Drupal::translation()->formatPlural(count($results['failed_files']), 'One translation file could not be imported. <a href=":url">See the log</a> for details.', '@count translation files could not be imported. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
-      }
-      else {
-        $message = \Drupal::translation()->formatPlural(count($results['failed_files']), 'One translation file could not be imported. See the log for details.', '@count translation files could not be imported. See the log for details.');
-      }
-      \Drupal::messenger()->addError($message);
-    }
-    if (isset($results['files'])) {
-      $skipped_files = [];
-      // If there are no results and/or no stats (eg. coping with an empty .po
-      // file), simply do nothing.
-      if ($results && isset($results['stats'])) {
-        foreach ($results['stats'] as $filepath => $report) {
-          if ($filepath === 'config') {
-            // Ignore the config entry. It is processed in
-            // locale_config_batch_finished() below.
-            continue;
-          }
-          $additions += $report['additions'];
-          $updates += $report['updates'];
-          $deletes += $report['deletes'];
-          $skips += $report['skips'];
-          if ($report['skips'] > 0) {
-            $skipped_files[] = $filepath;
-          }
-        }
-      }
-      \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural(count($results['files']),
-        'One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
-        '@count translation files imported. %number translations were added, %update translations were updated and %delete translations were removed.',
-        ['%number' => $additions, '%update' => $updates, '%delete' => $deletes]
-      ));
-      $logger->notice('Translations imported: %number added, %update updated, %delete removed.', [
-        '%number' => $additions,
-        '%update' => $updates,
-        '%delete' => $deletes,
-      ]);
-
-      if ($skips) {
-        if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access site reports')) {
-          $message = \Drupal::translation()->formatPlural($skips, 'One translation string was skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
-        }
-        else {
-          $message = \Drupal::translation()->formatPlural($skips, 'One translation string was skipped because of disallowed or malformed HTML. See the log for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.');
-        }
-        \Drupal::messenger()->addWarning($message);
-        $logger->warning('@count disallowed HTML string(s) in files: @files.', [
-          '@count' => $skips,
-          '@files' => implode(',', $skipped_files),
-        ]);
-      }
-    }
-  }
-  // Add messages for configuration too.
-  if (isset($results['stats']['config'])) {
-    locale_config_batch_finished($success, $results);
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleImportBatch::class)->batchFinished(). See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
+  \Drupal::service(LocaleImportBatch::class)->batchFinished($success, $results);
 }
 
 /**
@@ -459,14 +267,16 @@ function locale_translate_delete_translation_files(array $projects = [], array $
  *
  * @return array
  *   The batch definition.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleConfigBatch::class)->buildBatch()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3589759
  */
 function locale_config_batch_update_components(array $options, array $langcodes = [], array $components = [], bool $update_default_config_langcodes = FALSE) {
-  $langcodes = $langcodes ?: array_keys(\Drupal::languageManager()->getLanguages());
-  if ($langcodes && $names = \Drupal::service('locale.config_manager')->getComponentNames($components)) {
-    // If the component list is empty we need to ensure that all configuration
-    // in the default collection is using the site's default langcode.
-    return locale_config_batch_build($names, $langcodes, $options, $update_default_config_langcodes);
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleConfigBatch::class)->buildBatch(). See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
+  return \Drupal::service(LocaleConfigBatch::class)->buildBatch($options, $langcodes, $components, $update_default_config_langcodes);
 }
 
 /**
@@ -487,18 +297,24 @@ function locale_config_batch_update_components(array $options, array $langcodes 
  * @return array
  *   The batch definition.
  *
- * @see locale_config_batch_update_config_translations()
+ * @see \Drupal\locale\LocaleConfigBatch::batchUpdateConfigTranslations()
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleConfigBatch::class)->buildBatch()
+ *   instead the arguments have changed.
+ *
+ * @see https://www.drupal.org/node/3589759
  */
 function locale_config_batch_build(array $names, array $langcodes, array $options = [], bool $update_default_config_langcodes = FALSE) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleConfigBatch::class)->buildBatch() instead, the arguments have changed. See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
   $options += ['finish_feedback' => TRUE];
   $batch_builder = (new BatchBuilder())
-    ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.bulk.inc')
     ->setTitle(t('Updating configuration translations'))
     ->setInitMessage(t('Starting configuration update'))
     ->setErrorMessage(t('Error updating configuration translations'));
 
   if ($update_default_config_langcodes && \Drupal::languageManager()->getDefaultLanguage()->getId() !== 'en') {
-    $batch_builder->addOperation('locale_config_batch_update_default_config_langcodes');
+    $batch_builder->addOperation(LocaleConfigBatch::class . ':batchUpdateDefaultConfigLangcodes');
   }
 
   // Chunking the array of names into batches of 20 for better performance.
@@ -509,11 +325,11 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
     // it is very expensive to initialize the \Drupal::config() object on each
     // request. We batch a small number of configuration object upgrades
     // together to improve the overall performance of the process.
-    $batch_builder->addOperation('locale_config_batch_update_config_translations', [$chunk, $langcodes]);
+    $batch_builder->addOperation(LocaleConfigBatch::class . ':batchUpdateConfigTranslations', [$chunk, $langcodes]);
   }
 
   if (!empty($options['finish_feedback'])) {
-    $batch_builder->setFinishCallback('locale_config_batch_finished');
+    $batch_builder->setFinishCallback(LocaleConfigBatch::class . ':batchFinished');
   }
   return $batch_builder->toArray();
 }
@@ -525,11 +341,16 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
  *
  * @param array|\ArrayAccess $context
  *   The batch context.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleConfigBatch::class)->batchUpdateDefaultConfigLangcodes()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3589759
  */
 function locale_config_batch_update_default_config_langcodes(&$context): void {
-  \Drupal::service('locale.config_manager')->updateDefaultConfigLangcodes();
-  $context['finished'] = 1;
-  $context['message'] = t('Updated default configuration to %langcode', ['%langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId()]);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleConfigBatch::class)->batchUpdateDefaultConfigLangcodes(). See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
+  \Drupal::service(LocaleConfigBatch::class)->batchUpdateDefaultConfigLangcodes($context);
 }
 
 /**
@@ -562,19 +383,17 @@ function locale_config_batch_set_config_langcodes(&$context): void {
  * @param array|\ArrayAccess $context
  *   Contains a list of files imported.
  *
- * @see locale_config_batch_build()
+ * @see \Drupal\locale\LocaleConfigBatch::buildBatch()
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleConfigBatch::class)->batchUpdateConfigTranslations()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3589759
  */
 function locale_config_batch_update_config_translations(array $names, array $langcodes, &$context): void {
-  if (!isset($context['results']['stats']['config'])) {
-    $context['results']['stats']['config'] = 0;
-  }
-  $context['results']['stats']['config'] += \Drupal::service('locale.config_manager')
-    ->updateConfigTranslations($names, $langcodes);
-  foreach ($names as $name) {
-    $context['results']['names'][] = $name;
-  }
-  $context['results']['langcodes'] = $langcodes;
-  $context['finished'] = 1;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleConfigBatch::class)->batchUpdateConfigTranslations(). See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
+  \Drupal::service(LocaleConfigBatch::class)->batchUpdateConfigTranslations($names, $langcodes, $context);
 }
 
 /**
@@ -610,18 +429,15 @@ function locale_config_batch_refresh_name(array $names, array $langcodes, &$cont
  * @param array $results
  *   Information about the results of the batch import.
  *
- * @see locale_config_batch_build()
+ * @see \Drupal\locale\LocaleConfigBatch::buildBatch()
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleConfigBatch::class)->batchFinished()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3589759
  */
 function locale_config_batch_finished($success, array $results): void {
-  if ($success) {
-    $configuration = $results['stats']['config'] ?? 0;
-    if ($configuration) {
-      \Drupal::messenger()->addStatus(t('The configuration was successfully updated. There are %number configuration objects updated.', ['%number' => $configuration]));
-      \Drupal::logger('locale')->notice('The configuration was successfully updated. %number configuration objects updated.', ['%number' => $configuration]);
-    }
-    else {
-      \Drupal::messenger()->addStatus(t('No configuration objects have been updated.'));
-      \Drupal::logger('locale')->warning('No configuration objects have been updated.');
-    }
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleConfigBatch::class)->batchFinished(). See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
+  \Drupal::service(LocaleConfigBatch::class)->batchFinished($success, $results);
 }

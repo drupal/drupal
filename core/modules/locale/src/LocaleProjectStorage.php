@@ -214,7 +214,7 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
         \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
         // At least the core project should be in the database, so we build the
         // data if none are found.
-        locale_translation_build_projects();
+        \Drupal::service(LocaleProjectRepository::class)->buildProjects();
       }
       $this->projectCache = $this->getAll();
       array_walk($this->projectCache, function (&$project) {

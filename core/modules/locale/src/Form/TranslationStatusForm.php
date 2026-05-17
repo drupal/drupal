@@ -8,10 +8,10 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
+use Drupal\locale\LocaleConfigBatch;
 use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\LocaleProjectRepository;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a translation status form.
@@ -20,23 +20,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class TranslationStatusForm extends FormBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('module_handler'),
-      $container->get('state'),
-      $container->get('datetime.time'),
-      $container->get(LocaleFetch::class),
-    );
-  }
-
   public function __construct(
     protected ModuleHandlerInterface $moduleHandler,
     protected StateInterface $state,
     protected TimeInterface $time,
     protected LocaleFetch $localeFetch,
+    protected readonly LocaleConfigBatch $localeConfigBatch,
   ) {
   }
 
@@ -271,15 +260,15 @@ class TranslationStatusForm extends FormBase {
     $last_checked = $this->state->get('locale.translation_last_checked');
     if ($last_checked < $this->time->getRequestTime() - LOCALE_TRANSLATION_STATUS_TTL) {
       locale_translation_clear_status();
-      $batch = $this->localeFetch->batchUpdateBuild([], $langcodes, $options);
+      $batch = $this->localeFetch->buildUpdateBatch([], $langcodes, $options);
       batch_set($batch);
     }
     else {
       // Set a batch to download and import translations.
-      $batch = $this->localeFetch->batchFetchBuild($projects, $langcodes, $options);
+      $batch = $this->localeFetch->buildFetchBatch($projects, $langcodes, $options);
       batch_set($batch);
       // Set a batch to update configuration as well.
-      if ($batch = locale_config_batch_update_components($options, $langcodes)) {
+      if ($batch = $this->localeConfigBatch->buildBatch($options, $langcodes)) {
         batch_set($batch);
       }
     }

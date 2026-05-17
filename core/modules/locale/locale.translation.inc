@@ -307,7 +307,7 @@ function locale_cron_fill_queue(): void {
     $queue = \Drupal::queue('locale_translation', TRUE);
 
     foreach ($updates as $project => $languages) {
-      $batch = \Drupal::service(LocaleFetch::class)->batchUpdateBuild([$project], $languages, $options);
+      $batch = \Drupal::service(LocaleFetch::class)->buildUpdateBatch([$project], $languages, $options);
       foreach ($batch['operations'] as $item) {
         $queue->createItem($item);
       }
