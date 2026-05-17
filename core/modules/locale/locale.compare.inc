@@ -7,7 +7,6 @@
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Utility\ProjectInfo;
 use Drupal\locale\LocaleDefaultOptions;
-use Drupal\locale\LocaleFetch;
 use Drupal\locale\LocaleProjectChecker;
 use Drupal\locale\LocaleProjectRepository;
 
@@ -189,16 +188,11 @@ function locale_translation_check_projects($projects = [], $langcodes = []): voi
  *   Array of project names to check. Defaults to all translatable projects.
  * @param array $langcodes
  *   Array of language codes. Defaults to all translatable languages.
- *
- * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
- *   \Drupal::service(LocaleProjectChecker::class)->triggerBatch()
- *   instead.
- *
- * @see https://www.drupal.org/node/3589759
  */
 function locale_translation_check_projects_batch($projects = [], $langcodes = []): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleProjectChecker::class)->triggerBatch() instead. See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
-  \Drupal::service(LocaleProjectChecker::class)->triggerBatch($projects, $langcodes);
+  // Build and set the batch process.
+  $batch = locale_translation_batch_status_build($projects, $langcodes);
+  batch_set($batch);
 }
 
 /**
@@ -218,26 +212,19 @@ function locale_translation_check_projects_batch($projects = [], $langcodes = []
  *
  * @return array
  *   Batch definition array.
- *
- * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
- *   \Drupal::service(LocaleProjectChecker::class)->triggerBatch()
- *   instead, this now calls batch_set immediately instead of returning the
- *   array.
- *
- * @see https://www.drupal.org/node/3589759
  */
 function locale_translation_batch_status_build($projects = [], $langcodes = []) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleProjectChecker::class)->triggerBatch() instead, this now calls batch_set immediately instead of returning the array. See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
   $projects = $projects ?: array_keys(\Drupal::service(LocaleProjectRepository::class)->getAll());
   $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
   $options = LocaleDefaultOptions::updateOptions();
 
-  $operations = \Drupal::service(LocaleFetch::class)->getStatusOperations($projects, $langcodes, $options);
+  $operations = _locale_translation_batch_status_operations($projects, $langcodes, $options);
 
   $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('locale') . '/locale.batch.inc')
     ->setTitle(t('Checking translations'))
     ->setErrorMessage(t('Error checking translation updates.'))
-    ->setFinishCallback(LocaleProjectChecker::class . ':batchFinished');
+    ->setFinishCallback('locale_translation_batch_status_finished');
 
   array_walk($operations, function ($operation) use ($batch_builder) {
     call_user_func_array([$batch_builder, 'addOperation'], $operation);
@@ -258,16 +245,19 @@ function locale_translation_batch_status_build($projects = [], $langcodes = []) 
  *
  * @return array
  *   Array of batch operations.
- *
- * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
- *   \Drupal::service(LocaleFetch::class)->getStatusOperations()
- *   instead.
- *
- * @see https://www.drupal.org/node/3589759
  */
 function _locale_translation_batch_status_operations($projects, $langcodes, $options = []): array {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleFetch::class)->getStatusOperations(). See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
-  return \Drupal::service(LocaleFetch::class)->getStatusOperations($projects, $langcodes, $options);
+  $operations = [];
+
+  foreach ($projects as $project) {
+    foreach ($langcodes as $langcode) {
+      // Check version and status translation sources.
+      $operations[] = ['locale_translation_batch_version_check', [$project, $langcode]];
+      $operations[] = ['locale_translation_batch_status_check', [$project, $langcode, $options]];
+    }
+  }
+
+  return $operations;
 }
 
 /**

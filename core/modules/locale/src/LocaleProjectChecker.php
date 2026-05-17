@@ -5,32 +5,18 @@ declare(strict_types=1);
 namespace Drupal\locale;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\Core\Url;
 
 /**
  * Provide Locale Project Checker helper methods.
  */
 class LocaleProjectChecker {
 
-  use StringTranslationTrait;
-
   public function __construct(
     protected readonly LocaleSource $localeSource,
     protected readonly LocaleProjectRepository $localeProjectRepository,
-    protected readonly LocaleFetch $localeFetch,
     protected readonly StateInterface $state,
     protected readonly TimeInterface $time,
-    protected readonly MessengerInterface $messenger,
-    protected readonly ModuleHandlerInterface $moduleHandler,
-    protected readonly TranslationInterface $translationManager,
-    protected readonly AccountProxyInterface $currentUser,
   ) {}
 
   /**
@@ -45,7 +31,7 @@ class LocaleProjectChecker {
     if (locale_translation_use_remote_source()) {
       // Retrieve the status of both remote and local translation sources by
       // using a batch process.
-      $this->triggerBatch($projects, $langcodes);
+      locale_translation_check_projects_batch($projects, $langcodes);
     }
     else {
       // Retrieve and save the status of local translations only.
@@ -86,77 +72,6 @@ class LocaleProjectChecker {
         $file = $this->localeSource->sourceCheckFile($source);
         locale_translation_status_save($name, $langcode, LOCALE_TRANSLATION_LOCAL, $file);
       }
-    }
-  }
-
-  /**
-   * Builds a batch to get the status of remote and local translation files.
-   *
-   * The batch process fetches the state of both local and (if configured)
-   * remote translation files. The data of the most recent translation is
-   * stored per project and per language. This data is stored in a state
-   * variable 'locale.translation_status'. The timestamp it was last updated is
-   * stored in the state variable 'locale.translation_last_checked'.
-   *
-   * @param array $projects
-   *   Array of project names for which to check the state of translation files.
-   *   Defaults to all translatable projects.
-   * @param array $langcodes
-   *   Array of language codes. Defaults to all translatable languages.
-   */
-  public function triggerBatch(array $projects, array $langcodes = []): void {
-    $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
-    $options = LocaleDefaultOptions::updateOptions();
-
-    $operations = $this->localeFetch->getStatusOperations($projects, $langcodes, $options);
-
-    $batch_builder = (new BatchBuilder())
-      ->setTitle($this->t('Checking translations'))
-      ->setErrorMessage($this->t('Error checking translation updates.'))
-      ->setFinishCallback(self::class . ':batchFinished');
-
-    foreach ($operations as $operation) {
-      $batch_builder->addOperation(... $operation);
-    }
-
-    batch_set($batch_builder->toArray());
-  }
-
-  /**
-   * Implements callback_batch_finished().
-   *
-   * Set result message.
-   *
-   * @param bool $success
-   *   TRUE if batch successfully completed.
-   * @param array $results
-   *   Batch results.
-   */
-  public function batchFinished(bool $success, array $results): void {
-    if ($success) {
-      if (isset($results['failed_files'])) {
-        if ($this->moduleHandler->moduleExists('dblog') && $this->currentUser->hasPermission('access site reports')) {
-          $message = $this->translationManager->formatPlural(count($results['failed_files']), 'One translation file could not be checked. <a href=":url">See the log</a> for details.', '@count translation files could not be checked. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
-        }
-        else {
-          $message = $this->translationManager->formatPlural(count($results['failed_files']), 'One translation files could not be checked. See the log for details.', '@count translation files could not be checked. See the log for details.');
-        }
-        $this->messenger->addError($message);
-      }
-      if (isset($results['files'])) {
-        $this->messenger->addStatus($this->translationManager->formatPlural(
-          count($results['files']),
-          'Checked available interface translation updates for one project.',
-          'Checked available interface translation updates for @count projects.'
-        ));
-      }
-      if (!isset($results['failed_files']) && !isset($results['files'])) {
-        $this->messenger->addStatus($this->t('Nothing to check.'));
-      }
-      $this->state->set('locale.translation_last_checked', $this->time->getRequestTime());
-    }
-    else {
-      $this->messenger->addError($this->t('An error occurred trying to check available interface translation updates.'));
     }
   }
 

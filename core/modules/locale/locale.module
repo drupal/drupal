@@ -21,7 +21,6 @@ use Drupal\locale\LocaleEvent;
 use Drupal\locale\LocaleEvents;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\File\LocaleFileManager;
-use Drupal\locale\LocaleConfigBatch;
 use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleSource;
 
@@ -249,7 +248,7 @@ function locale_system_update(array $components): void {
         // Get translation status of the projects, download and update
         // translations.
         $options = LocaleDefaultOptions::updateOptions();
-        $batch = \Drupal::service(LocaleFetch::class)->buildUpdateBatch($list, [], $options);
+        $batch = \Drupal::service(LocaleFetch::class)->batchUpdateBuild($list, [], $options);
         batch_set($batch);
       }
     }
@@ -259,7 +258,7 @@ function locale_system_update(array $components): void {
     // components. Do this even if import is not enabled because parsing new
     // configuration may expose new source strings.
     $module_handler->loadInclude('locale', 'inc', 'locale.bulk');
-    if ($batch = \Drupal::service(LocaleConfigBatch::class)->buildBatch([], [], [], TRUE)) {
+    if ($batch = locale_config_batch_update_components([], [], [], TRUE)) {
       batch_set($batch);
     }
   }
@@ -392,7 +391,7 @@ function locale_form_language_admin_add_form_alter_submit($form, FormStateInterf
 
   if (\Drupal::config('locale.settings')->get('translation.import_enabled')) {
     // Download and import translations for the newly added language.
-    $batch = \Drupal::service(LocaleFetch::class)->buildUpdateBatch([], [$langcode], $options);
+    $batch = \Drupal::service(LocaleFetch::class)->batchUpdateBuild([], [$langcode], $options);
     batch_set($batch);
   }
 
@@ -401,7 +400,7 @@ function locale_form_language_admin_add_form_alter_submit($form, FormStateInterf
   // because then we extract English sources from shipped configuration.
   if (\Drupal::config('locale.settings')->get('translation.import_enabled') || $langcode == 'en') {
     \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
-    if ($batch = \Drupal::service(LocaleConfigBatch::class)->buildBatch($options, [$langcode])) {
+    if ($batch = locale_config_batch_update_components($options, [$langcode])) {
       batch_set($batch);
     }
   }

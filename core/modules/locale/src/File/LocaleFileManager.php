@@ -51,6 +51,7 @@ class LocaleFileManager {
    *   An array of interface translation files keyed by their URI.
    */
   public function getInterfaceTranslationFiles(array $projects = [], array $langcodes = []): array {
+    \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
     $files = [];
     $projects = $projects ?: array_keys($this->localeProjectRepository->getAll());
     $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());

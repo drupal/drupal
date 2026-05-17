@@ -6,7 +6,6 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\locale\LocaleFetch;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -27,6 +26,7 @@ class LocaleTranslationChangeProjectVersionTest extends LocaleUpdateBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.batch');
     ConfigurableLanguage::createFromLangcode('de')->save();
 
     \Drupal::state()->set('locale.test_projects_alter', TRUE);
@@ -73,9 +73,9 @@ class LocaleTranslationChangeProjectVersionTest extends LocaleUpdateBase {
 
     // Run batch tasks.
     $context = [];
-    \Drupal::service(LocaleFetch::class)->batchVersionCheck('contrib_module_one', 'de', $context);
-    \Drupal::service(LocaleFetch::class)->batchStatusCheck('contrib_module_one', 'de', [], $context);
-    \Drupal::service(LocaleFetch::class)->batchDownload('contrib_module_one', 'de', $context);
+    locale_translation_batch_version_check('contrib_module_one', 'de', $context);
+    locale_translation_batch_status_check('contrib_module_one', 'de', [], $context);
+    locale_translation_batch_fetch_download('contrib_module_one', 'de', $context);
 
     // Verify that the project status has the new version.
     $status = locale_translation_get_status(['contrib_module_one']);

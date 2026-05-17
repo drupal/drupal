@@ -10,9 +10,7 @@ use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\File\LocaleFile;
-use Drupal\locale\LocaleConfigBatch;
-use Drupal\locale\LocaleImportBatch;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form constructor for the translation import screen.
@@ -28,13 +26,42 @@ class ImportForm extends FormBase {
    */
   protected $file;
 
-  public function __construct(
-    protected ModuleHandlerInterface $moduleHandler,
-    #[Autowire('language_manager')]
-    protected ConfigurableLanguageManagerInterface $languageManager,
-    protected readonly LocaleImportBatch $localeImportBatch,
-    protected readonly LocaleConfigBatch $localeConfigBatch,
-  ) {}
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The configurable language manager.
+   *
+   * @var \Drupal\language\ConfigurableLanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('module_handler'),
+      $container->get('language_manager')
+    );
+  }
+
+  /**
+   * Constructs a form for language import.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
+   * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
+   *   The configurable language manager.
+   */
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigurableLanguageManagerInterface $language_manager) {
+    $this->moduleHandler = $module_handler;
+    $this->languageManager = $language_manager;
+  }
 
   /**
    * {@inheritdoc}
@@ -162,11 +189,11 @@ class ImportForm extends FormBase {
     ]);
     $this->moduleHandler->loadInclude('locale', 'bulk.inc');
     $file = LocaleFile::createFromPath($this->file->getFilename(), $this->file->getFileUri(), $options['langcode']);
-    $batch = $this->localeImportBatch->buildBatch([$file->uri => $file], $options);
+    $batch = locale_translate_batch_build([$file->uri => $file], $options);
     batch_set($batch);
 
     // Create or update all configuration translations for this language.
-    if ($batch = $this->localeConfigBatch->buildBatch($options, [$form_state->getValue('langcode')])) {
+    if ($batch = locale_config_batch_update_components($options, [$form_state->getValue('langcode')])) {
       batch_set($batch);
     }
 

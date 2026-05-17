@@ -19,22 +19,21 @@ use Drupal\locale\LocaleFetch;
  * @param array $langcodes
  *   Array of language codes. Defaults to all translatable languages.
  * @param array $options
- *   Array of import options. See
- *   \Drupal\locale\LocaleImportBatch::buildBatch().
+ *   Array of import options. See locale_translate_batch_build().
  *
  * @return array
  *   Batch definition array.
  *
  * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
  *   \Drupal::service(LocaleFetch::class)
- *   ->buildUpdateBatch($projects, $langcodes, $options) instead.
+ *   ->batchUpdateBuild($projects, $langcodes, $options) instead.
  *
  * @see https://www.drupal.org/node/3572345
  */
 function locale_translation_batch_update_build($projects = [], $langcodes = [], $options = []) {
   \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleFetch::class)->buildUpdateBatch($projects, $langcodes, $options) instead. See https://www.drupal.org/node/3572345', E_USER_DEPRECATED);
-  return \Drupal::service(LocaleFetch::class)->buildUpdateBatch($projects, $langcodes, $options);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleFetch::class)->batchUpdateBuild($projects, $langcodes, $options) instead. See https://www.drupal.org/node/3572345', E_USER_DEPRECATED);
+  return \Drupal::service(LocaleFetch::class)->batchUpdateBuild($projects, $langcodes, $options);
 }
 
 /**
@@ -46,21 +45,20 @@ function locale_translation_batch_update_build($projects = [], $langcodes = [], 
  * @param array $langcodes
  *   Array of language codes. Defaults to all translatable languages.
  * @param array $options
- *   Array of import options. See
- *   \Drupal\locale\LocaleImportBatch::buildBatch().
+ *   Array of import options. See locale_translate_batch_build().
  *
  * @return array
  *   Batch definition array.
  *
  * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
  *   \Drupal::service(LocaleFetch::class)
- *   ->buildFetchBatch($projects, $langcodes, $options) instead.
+ *   ->batchFetchBuild($projects, $langcodes, $options) instead.
  *
  * @see https://www.drupal.org/node/3572345
  */
 function locale_translation_batch_fetch_build($projects = [], $langcodes = [], $options = []) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleFetch::class)->buildFetchBatch($projects, $langcodes, $options) instead. See https://www.drupal.org/node/3572345', E_USER_DEPRECATED);
-  return \Drupal::service(LocaleFetch::class)->buildFetchBatch($projects, $langcodes, $options);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleFetch::class)->batchFetchBuild($projects, $langcodes, $options) instead. See https://www.drupal.org/node/3572345', E_USER_DEPRECATED);
+  return \Drupal::service(LocaleFetch::class)->batchFetchBuild($projects, $langcodes, $options);
 }
 
 /**
@@ -89,9 +87,9 @@ function _locale_translation_fetch_operations($projects, $langcodes, $options): 
   foreach ($projects as $project) {
     foreach ($langcodes as $langcode) {
       if (locale_translation_use_remote_source()) {
-        $operations[] = [LocaleFetch::class . ':batchDownload', [$project, $langcode]];
+        $operations[] = ['locale_translation_batch_fetch_download', [$project, $langcode]];
       }
-      $operations[] = [LocaleFetch::class . ':batchImport', [$project, $langcode, $options]];
+      $operations[] = ['locale_translation_batch_fetch_import', [$project, $langcode, $options]];
     }
   }
 

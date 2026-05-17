@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\locale\LocaleConfigBatch;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
@@ -24,7 +23,6 @@ class LocaleBulkDeprecationTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
     $container->set('locale.config_manager', $this->createMock('Drupal\locale\LocaleConfigManager'));
-    $container->set(LocaleConfigBatch::class, $this->createMock('Drupal\locale\LocaleConfigBatch'));
     $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
     $language_manager->expects($this->any())
       ->method('getDefaultLanguage')
@@ -46,7 +44,6 @@ class LocaleBulkDeprecationTest extends UnitTestCase {
     $this->expectUserDeprecationMessage('locale_config_batch_refresh_name() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use locale_config_batch_update_config_translations() instead. See https://www.drupal.org/node/3475054');
     $names = ['English', 'German'];
     $langcodes = ['en', 'de'];
-    $context = [];
     locale_config_batch_refresh_name($names, $langcodes, $context);
   }
 
