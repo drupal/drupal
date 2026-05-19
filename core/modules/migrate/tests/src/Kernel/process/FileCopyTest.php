@@ -89,6 +89,8 @@ class FileCopyTest extends FileTestBase {
    */
   #[DataProvider('providerSuccessfulReuse')]
   public function testSuccessfulReuse($source_path, $destination_path): void {
+    $source_path = str_replace('{%root%}', $this->root, $source_path);
+
     $file_reuse = $this->doTransform($source_path, $destination_path);
     clearstatcache(TRUE, $destination_path);
 
@@ -116,7 +118,7 @@ class FileCopyTest extends FileTestBase {
   public static function providerSuccessfulReuse() {
     return [
       [
-        'source_path' => static::getDrupalRoot() . '/core/tests/fixtures/files/image-test.jpg',
+        'source_path' => '{%root%}/core/tests/fixtures/files/image-test.jpg',
         'destination_path' => 'public://file1.jpg',
       ],
       [

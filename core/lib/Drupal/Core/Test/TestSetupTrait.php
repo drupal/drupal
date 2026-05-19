@@ -91,13 +91,6 @@ trait TestSetupTrait {
   protected $databasePrefix;
 
   /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * The temporary file directory for the test environment.
    *
    * This value has to match the temporary directory created in

@@ -27,15 +27,12 @@ use Drupal\Tests\ExtensionListTestTrait;
 use Drupal\Tests\HttpKernelUiHelperTrait;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\RandomGeneratorTrait;
-use Drupal\Tests\TestRequirementsTrait;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
-use Drupal\TestTools\Extension\Dump\DebugDump;
 use Drupal\TestTools\Extension\SchemaInspector;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use PHPUnit\Framework\Attributes\After;
-use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -43,7 +40,6 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Base class for functional integration tests.
@@ -104,7 +100,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use RandomGeneratorTrait;
   use ConfigTestTrait;
   use ExtensionListTestTrait;
-  use TestRequirementsTrait;
   use PhpUnitCompatibilityTrait;
   use ProphecyTrait;
   use ExpectDeprecationTrait;
@@ -185,13 +180,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected KeyValueMemoryFactory $keyValue;
 
   /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * Set to TRUE to strict check all configuration saved.
    *
    * @var bool
@@ -226,16 +214,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected bool $usesSuperUserAccessPolicy;
 
   /**
-   * Registers the dumper CLI handler when the DebugDump extension is enabled.
-   */
-  #[BeforeClass]
-  public static function setDebugDumpHandler(): void {
-    if (DebugDump::isEnabled()) {
-      VarDumper::setHandler(DebugDump::class . '::cliHandler');
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -248,7 +226,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Allow tests to compare MarkupInterface objects via assertEquals().
     $this->registerComparator(new MarkupInterfaceComparator());
 
-    $this->root = static::getDrupalRoot();
     chdir($this->root);
     $this->initFileCache();
     $this->bootEnvironment();

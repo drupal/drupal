@@ -81,6 +81,13 @@ class TestSiteInstallCommand extends Command {
   protected $langcode = 'en';
 
   /**
+   * The Drupal root directory.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * {@inheritdoc}
    */
   protected function configure(): void {
