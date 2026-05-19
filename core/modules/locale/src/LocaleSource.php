@@ -107,17 +107,10 @@ class LocaleSource {
   public function sourceCheckFile($source) {
     if (isset($source->files[LOCALE_TRANSLATION_LOCAL])) {
       $source_file = $source->files[LOCALE_TRANSLATION_LOCAL];
-      $directory = $source_file->directory;
-      $filename = '/' . preg_quote($source_file->filename) . '$/';
-
-      if (is_dir($directory)) {
-        if ($files = $this->fileSystem->scanDirectory($directory, $filename, ['key' => 'name', 'recurse' => FALSE])) {
-          $file = current($files);
-          $source_file->uri = $file->uri;
-          $source_file->timestamp = filemtime($file->uri);
-          $source_file->hash = hash_file(self::LOCAL_FILE_HASH_ALGO, $file->uri);
-          return $source_file;
-        }
+      if (isset($source_file->uri) && file_exists($source_file->uri)) {
+        $source_file->timestamp = filemtime($source_file->uri);
+        $source_file->hash = hash_file(self::LOCAL_FILE_HASH_ALGO, $source_file->uri);
+        return $source_file;
       }
     }
     return FALSE;
