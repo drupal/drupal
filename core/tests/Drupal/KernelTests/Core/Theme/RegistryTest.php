@@ -44,21 +44,12 @@ class RegistryTest extends KernelTestBase {
     \Drupal::request()->setMethod('GET');
     $cid = 'test_theme_registry';
 
-    // Directly instantiate the theme registry, this will cause a base cache
-    // entry to be written in __construct().
     $cache = \Drupal::cache();
     $lock_backend = \Drupal::lock();
     $registry = new ThemeRegistry($cid, $cache, $lock_backend, [], $this->container->get('module_handler')->isLoaded());
 
-    $this->assertNotEmpty(\Drupal::cache()->get($cid), 'Cache entry was created.');
-
     // Trigger a cache miss for an offset.
     $this->assertNotEmpty($registry->get('theme_test_template_test'), 'Offset was returned correctly from the theme registry.');
-    // This will cause the ThemeRegistry class to write an updated version of
-    // the cache entry when it is destroyed, usually at the end of the request.
-    // Before that happens, manually delete the cache entry we created earlier
-    // so that the new entry is written from scratch.
-    \Drupal::cache()->delete($cid);
 
     // Destroy the class so that it triggers a cache write for the offset.
     $registry->destruct();
