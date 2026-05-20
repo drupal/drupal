@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4978c213d0e6969b2134427d4604a610",
+    "content-hash": "46c9019b0f633bde48778f3968d8f35f",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -413,11 +413,11 @@
         },
         {
             "name": "drupal/core",
-            "version": "10.6.8",
+            "version": "10.6.9",
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "3a8876ef3c40654a0cb7cc46d6ff0370dc167ebb"
+                "reference": "c8e1737cc9f878b62b7da5f39691a7e9dcd64a79"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -452,17 +452,17 @@
                 "symfony/filesystem": "^6.4",
                 "symfony/finder": "^6.4",
                 "symfony/http-foundation": "^6.4",
-                "symfony/http-kernel": "^6.4",
-                "symfony/mailer": "^6.4",
-                "symfony/mime": "^6.4",
+                "symfony/http-kernel": "^6.4.40",
+                "symfony/mailer": "^6.4.40",
+                "symfony/mime": "^6.4.40",
                 "symfony/polyfill-iconv": "^1.26",
                 "symfony/process": "^6.4.33",
                 "symfony/psr-http-message-bridge": "^2.1|^6.4",
-                "symfony/routing": "^6.4",
+                "symfony/routing": "^6.4.40",
                 "symfony/serializer": "^6.4",
                 "symfony/validator": "^6.4",
-                "symfony/yaml": "^6.4",
-                "twig/twig": "^3.22.0"
+                "symfony/yaml": "^6.4.40",
+                "twig/twig": "^3.26.0"
             },
             "conflict": {
                 "dealerdirect/phpcodesniffer-composer-installer": "1.1.0",
@@ -575,7 +575,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "10.6.8",
+            "version": "10.6.9",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -608,7 +608,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "10.6.8",
+            "version": "10.6.9",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
