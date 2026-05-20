@@ -39,7 +39,7 @@
         "phpunit/phpunit": "^9.6.34",
         "symfony/browser-kit": "^6.4",
         "symfony/css-selector": "^6.4",
-        "symfony/dom-crawler": "^6.4",
+        "symfony/dom-crawler": "^6.4.40",
         "symfony/error-handler": "^6.4",
         "symfony/lock": "^6.4",
         "symfony/phpunit-bridge": "^6.4",
