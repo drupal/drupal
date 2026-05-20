@@ -41,6 +41,9 @@ class ConditionAggregate extends ConditionAggregateBase {
       else {
         $type = ((strtoupper($this->conjunction) == 'OR') || ($condition['operator'] == 'IS NULL')) ? 'LEFT' : 'INNER';
         $field = $tables->addField($condition['field'], $type, $condition['langcode']);
+        if (is_array($condition['value'])) {
+          $condition['value'] = array_values($condition['value']);
+        }
         $condition_class = QueryBase::getClass($this->namespaces, 'Condition');
         $condition_class::translateCondition($condition, $sql_query, $tables->isFieldCaseSensitive($condition['field']));
         $function = $condition['function'];
