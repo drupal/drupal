@@ -175,7 +175,7 @@ class ExceptionHandlingTest extends KernelTestBase {
     $kernel = \Drupal::getContainer()->get('http_kernel');
     $response = $kernel->handle($request)->prepare($request);
     $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-    $this->assertEquals('text/html; charset=UTF-8', $response->headers->get('Content-type'));
+    $this->assertEquals('text/html; charset=utf-8', $response->headers->get('Content-type'));
 
     // Test both that the backtrace is properly escaped, and that the unescaped
     // string is not output at all.
@@ -198,7 +198,7 @@ class ExceptionHandlingTest extends KernelTestBase {
     $kernel = \Drupal::getContainer()->get('http_kernel');
     $response = $kernel->handle($request)->prepare($request);
     $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $response->getStatusCode());
-    $this->assertEquals('text/html; charset=UTF-8', $response->headers->get('Content-type'));
+    $this->assertEquals('text/html; charset=utf-8', $response->headers->get('Content-type'));
 
     // Test message is properly escaped, and that the unescaped string is not
     // output at all.
@@ -215,7 +215,7 @@ class ExceptionHandlingTest extends KernelTestBase {
     // contained in the output would not matter, but because it is output by the
     // final exception subscriber, it is printed as partial HTML, and hence
     // escaped.
-    $this->assertEquals('text/plain; charset=UTF-8', $response->headers->get('Content-type'));
+    $this->assertEquals('text/plain; charset=utf-8', $response->headers->get('Content-type'));
     $this->assertEquals('A route that returns a rendered array as its response only supports the HTML format.', $response->getContent());
   }
 

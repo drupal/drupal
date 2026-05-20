@@ -43,3 +43,6 @@
 
 # Symfony 7.3.
 %Since symfony/validator 7.3: Passing an array of options to configure the "[^"]+" constraint is deprecated, use named arguments instead.%
+
+# Symfony 7.4.
+%Since symfony/[\w-]+ 7.4:%
