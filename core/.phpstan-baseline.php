@@ -9914,6 +9914,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Routing/CurrentRouteMatch.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Core\\\\Routing\\\\Enhancer\\\\ParamConversionEnhancer\\:\\:copyRawVariables\\(\\) return type with generic class Symfony\\\\Component\\\\HttpFoundation\\\\InputBag does not specify its types\\: TInput$#',
+	'identifier' => 'missingType.generics',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Routing/Enhancer/ParamConversionEnhancer.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Routing\\\\Enhancer\\\\ParamConversionEnhancer\\:\\:onException\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -18652,6 +18658,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jsonapi\\\\Controller\\\\EntityResource\\:\\:validate\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/jsonapi/src/Controller/EntityResource.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$include_parameter in empty\\(\\) always exists and is not falsy\\.$#',
+	'identifier' => 'empty.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/src/Controller/EntityResource.php',
 ];

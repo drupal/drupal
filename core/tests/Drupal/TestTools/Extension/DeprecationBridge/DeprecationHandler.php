@@ -188,7 +188,9 @@ final class DeprecationHandler {
     if (!self::isEnabled()) {
       return;
     }
-    self::$collectedDeprecations[] = $message;
+    if (!array_search($message, self::$collectedDeprecations, TRUE)) {
+      self::$collectedDeprecations[] = $message;
+    }
   }
 
   /**

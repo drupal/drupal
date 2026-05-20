@@ -52,6 +52,9 @@ parameters:
     - "#^Class .* extends @internal class#"
     - identifier: missingType.iterableValue
 
+    # Symfony 7.4.
+    - "#since Symfony 7\\.4#"
+
 rules:
   - Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest
   - PHPStan\Rules\Functions\MissingFunctionReturnTypehintRule
