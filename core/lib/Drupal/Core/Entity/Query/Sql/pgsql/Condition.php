@@ -22,7 +22,7 @@ class Condition extends BaseCondition {
       // argument following similar pattern in
       // \Drupal\Core\Database\Connection::expandArguments().
       $where_prefix = str_replace('.', '_', $condition['real_field']);
-      foreach ($condition['value'] as $key => $value) {
+      foreach (array_values($condition['value']) as $key => $value) {
         $where_id = $where_prefix . $key;
         $condition['where'] .= 'LOWER(:' . $where_id . '),';
         $condition['where_args'][':' . $where_id] = $value;
