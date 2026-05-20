@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8da13a4434e0d9436d7376147261e021",
+    "content-hash": "4f213f3d5dad6c2c4d56ce24cbe600a6",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -493,11 +493,11 @@
         },
         {
             "name": "drupal/core",
-            "version": "11.2.x-dev",
+            "version": "11.2.12",
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "74581f4e5f24dbea4ac0099e4a79f0e0bff77f55"
+                "reference": "e32a12950958b33d0ed9e4a85d304748bd90e4c7"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -536,18 +536,18 @@
                 "symfony/filesystem": "^7.3",
                 "symfony/finder": "^7.3",
                 "symfony/http-foundation": "^7.3",
-                "symfony/http-kernel": "^7.3",
-                "symfony/mailer": "^7.3",
-                "symfony/mime": "^7.3",
+                "symfony/http-kernel": "^7.4.12",
+                "symfony/mailer": "^7.4.12",
+                "symfony/mime": "^7.4.12",
                 "symfony/polyfill-iconv": "^1.32",
                 "symfony/polyfill-php84": "^1.32",
                 "symfony/process": "^7.3",
                 "symfony/psr-http-message-bridge": "^7.3",
-                "symfony/routing": "^7.3",
+                "symfony/routing": "^7.4.12",
                 "symfony/serializer": "^7.3",
                 "symfony/validator": "^7.3",
-                "symfony/yaml": "^7.3",
-                "twig/twig": "^3.21.0"
+                "symfony/yaml": "^7.4.12",
+                "twig/twig": "^3.26.0"
             },
             "conflict": {
                 "dealerdirect/phpcodesniffer-composer-installer": "1.1.0",
@@ -662,7 +662,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "11.2.x-dev",
+            "version": "11.2.12",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -695,7 +695,7 @@
         },
         {
             "name": "drupal/core-recipe-unpack",
-            "version": "11.2.x-dev",
+            "version": "11.2.12",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/RecipeUnpack",
@@ -731,7 +731,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "11.2.x-dev",
+            "version": "11.2.12",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
@@ -10419,12 +10419,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "drupal/core": 20,
-        "drupal/core-project-message": 20,
-        "drupal/core-recipe-unpack": 20,
-        "drupal/core-vendor-hardening": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {},
