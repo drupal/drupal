@@ -93,7 +93,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * Constructs a connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
-    // @phpstan-ignore class.notFound
     assert(\PHP_VERSION_ID >= 80400 ? $connection instanceof Pgsql : TRUE);
     // Sanitize the schema name here, so we do not have to do it in other
     // functions.
@@ -182,7 +181,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
 
     try {
       if (\PHP_VERSION_ID >= 80400) {
-        // @phpstan-ignore class.notFound
         $pgsql = new Pgsql($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
       }
       else {
