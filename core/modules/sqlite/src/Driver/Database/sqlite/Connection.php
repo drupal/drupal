@@ -109,7 +109,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
 
     try {
       if (\PHP_VERSION_ID >= 80400) {
-        // @phpstan-ignore new.noConstructor
         $sqlite = new SqliteConnection('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
       }
       else {
