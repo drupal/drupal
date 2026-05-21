@@ -139,6 +139,9 @@ class TwigNodeTrans extends Node {
           if ($args instanceof FunctionExpression) {
             $args = $n->getNode('arguments')->getNode(0);
           }
+          if ($args instanceof CheckToStringNode) {
+            $args = $args->getNode('expr');
+          }
 
           // Detect if a token implements one of the filters reserved for
           // modifying the prefix of a token. The default prefix used for
