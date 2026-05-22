@@ -431,7 +431,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $display_edit = [
       'fields[message][label]' => 'hidden',
     ];
-    $this->drupalGet('admin/structure/contact/manage/' . $contact_form . '/display');
+    $this->drupalGet('admin/structure/contact/manage/' . $contact_form . '/display/default');
     $this->submitForm($display_edit, 'Save');
 
     $this->drupalGet($form->toUrl('canonical'));

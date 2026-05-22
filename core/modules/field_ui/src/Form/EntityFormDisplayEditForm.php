@@ -151,4 +151,79 @@ class EntityFormDisplayEditForm extends EntityDisplayFormBase {
     $this->moduleHandler->alter('field_widget_settings_summary', $summary, $context);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function form(array $form, FormStateInterface $form_state): array {
+    $form = parent::form($form, $form_state);
+
+    // Custom display settings.
+    if ($this->entity->getMode() == 'default') {
+      // Only show the settings if there is at least one custom display mode.
+      $display_mode_options = $this->getDisplayModeOptions();
+      // Unset default option.
+      unset($display_mode_options['default']);
+      if ($display_mode_options) {
+        $form['modes'] = [
+          '#type' => 'details',
+          '#title' => $this->t('Custom display settings'),
+        ];
+        // Prepare default values for the 'Custom display settings' checkboxes.
+        $default = [];
+        if ($enabled_displays = array_filter($this->getDisplayStatuses())) {
+          $default = array_keys(array_intersect_key($display_mode_options, $enabled_displays));
+        }
+        natcasesort($display_mode_options);
+        $form['modes']['display_modes_custom'] = [
+          '#type' => 'checkboxes',
+          '#title' => $this->t('Use custom display settings for the following @display_context modes', ['@display_context' => $this->displayContext]),
+          '#options' => $display_mode_options,
+          '#default_value' => $default,
+        ];
+        // Provide link to manage display modes.
+        $form['modes']['display_modes_link'] = $this->getDisplayModesLink();
+      }
+    }
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
+    parent::submitForm($form, $form_state);
+    $form_values = $form_state->getValues();
+
+    // Handle the 'display modes' checkboxes if present.
+    if ($this->entity->getMode() == 'default' && !empty($form_values['display_modes_custom'])) {
+      $display_modes = $this->getDisplayModes();
+      $current_statuses = $this->getDisplayStatuses();
+
+      $statuses = [];
+      foreach ($form_values['display_modes_custom'] as $mode => $value) {
+        if (!empty($value) && empty($current_statuses[$mode])) {
+          // If no display exists for the newly enabled form mode, initialize
+          // it with those from the 'default' form mode, which were used so
+          // far.
+          if (!$this->entityTypeManager->getStorage($this->entity->getEntityTypeId())->load($this->entity->getTargetEntityTypeId() . '.' . $this->entity->getTargetBundle() . '.' . $mode)) {
+            $display = $this->getEntityDisplay($this->entity->getTargetEntityTypeId(), $this->entity->getTargetBundle(), 'default')->createCopy($mode);
+            $display->save();
+          }
+
+          $display_mode_label = $display_modes[$mode]['label'];
+          $url = $this->getOverviewUrl($mode);
+          $this->messenger()
+            ->addStatus($this->t('The %display_mode mode now uses custom display settings. You might want to <a href=":url">configure them</a>.', [
+              '%display_mode' => $display_mode_label,
+              ':url' => $url->toString(),
+            ]));
+        }
+        $statuses[$mode] = !empty($value);
+      }
+
+      $this->saveDisplayStatuses($statuses);
+    }
+  }
+
 }

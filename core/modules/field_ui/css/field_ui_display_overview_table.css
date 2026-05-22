@@ -1,0 +1,42 @@
+.display-mode-overview-table th:first-child {
+  width: 20%;
+}
+.display-mode-overview-table th:nth-child(2) {
+  width: 50%;
+}
+.display-mode-overview-table th:last-child {
+  width: 30%;
+}
+.display-mode-overview-table td {
+  max-width: 50px;
+  word-wrap: break-word;
+}
+
+.field-ui-display-overview-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.field-ui-display-overview-heading h2 {
+  margin: 0;
+}
+
+.field-ui-display-overview-heading .action-link {
+  flex-shrink: 0;
+  align-self: center;
+  margin: 0;
+}
+
+@media (max-width: 43.75rem) {
+  .field-ui-display-overview-heading {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+
+  .field-ui-display-overview-heading .action-link {
+    align-self: flex-start;
+  }
+}

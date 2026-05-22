@@ -176,7 +176,7 @@ class LinkFieldUITest extends BrowserTestBase {
     // Load the formatter page to check that the settings summary does not
     // generate warnings.
     // @todo Mess with the formatter settings a bit here.
-    $this->drupalGet("$type_path/display");
+    $this->drupalGet("$type_path/display/default");
     $this->assertSession()->pageTextContains('Link text trimmed to 80 characters');
 
     // Make the fields visible in the form display.

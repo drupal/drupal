@@ -279,7 +279,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $date_format_field_name = $this->createEntityReferenceField('date_format');
 
     // Display all newly created Entity Reference configuration.
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display');
+    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display/default');
 
     // Check for Taxonomy Term select box values.
     // Test if Taxonomy Term Entity Reference Field has the correct formatters.

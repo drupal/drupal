@@ -426,7 +426,7 @@ class OptionsFieldUITest extends FieldTestBase {
         "fields[$this->fieldName][type]" => $formatter,
         "fields[$this->fieldName][region]" => 'content',
       ];
-      $this->drupalGet('admin/structure/types/manage/' . $this->typeName . '/display');
+      $this->drupalGet('admin/structure/types/manage/' . $this->typeName . '/display/default');
       $this->submitForm($edit, 'Save');
       $this->drupalGet('node/' . $node->id());
 

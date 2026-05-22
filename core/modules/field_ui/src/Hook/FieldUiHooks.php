@@ -184,7 +184,7 @@ class FieldUiHooks {
         $operations['manage-display'] = [
           'title' => $this->t('Manage display'),
           'weight' => 25,
-          'url' => Url::fromRoute("entity.entity_view_display.{$bundle_of}.default", [
+          'url' => Url::fromRoute("entity.entity_view_display_overview.{$bundle_of}", [
             $entity->getEntityTypeId() => $entity->id(),
           ]),
         ];

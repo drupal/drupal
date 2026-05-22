@@ -4,6 +4,7 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+  Drupal\field_ui\Controller\EntityViewDisplayOverviewController: ~
   field_ui.subscriber:
     class: Drupal\field_ui\Routing\RouteSubscriber
     arguments: ['@entity_type.manager']

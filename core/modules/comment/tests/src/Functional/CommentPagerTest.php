@@ -360,7 +360,7 @@ class CommentPagerTest extends CommentTestBase {
     // Make sure pager appears in formatter summary and settings form.
     $account = $this->drupalCreateUser(['administer node display']);
     $this->drupalLogin($account);
-    $this->drupalGet('admin/structure/types/manage/article/display');
+    $this->drupalGet('admin/structure/types/manage/article/display/default');
     // No summary for standard pager.
     $this->assertSession()->pageTextNotContains('Pager ID: 0');
     $this->assertSession()->pageTextContains('Pager ID: 1');

@@ -107,7 +107,7 @@ class TimestampAgoFormatterTest extends BrowserTestBase {
    * Tests the formatter settings.
    */
   public function testSettings(): void {
-    $this->drupalGet('entity_test/structure/entity_test/display');
+    $this->drupalGet('entity_test/structure/entity_test/display/default');
 
     $edit = [
       'fields[field_timestamp][region]' => 'content',

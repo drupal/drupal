@@ -48,7 +48,7 @@ trait FieldLayoutEntityDisplayFormTrait {
   /**
    * Overrides \Drupal\field_ui\Form\EntityDisplayFormBase::form().
    */
-  public function form(array $form, FormStateInterface $form_state) {
+  public function form(array $form, FormStateInterface $form_state): array {
     $form = parent::form($form, $form_state);
 
     $form['field_layouts'] = [
@@ -155,7 +155,7 @@ trait FieldLayoutEntityDisplayFormTrait {
   /**
    * Overrides \Drupal\field_ui\Form\EntityDisplayFormBase::submitForm().
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     parent::submitForm($form, $form_state);
 
     $entity = $this->getEntity();

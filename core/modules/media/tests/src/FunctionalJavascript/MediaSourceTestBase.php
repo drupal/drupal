@@ -156,7 +156,7 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
 
     // Assert that the default display of the media type only shows the source
     // field.
-    $this->drupalGet("/admin/structure/media/manage/$media_type_id/display");
+    $this->drupalGet("/admin/structure/media/manage/$media_type_id/display/default");
     // There should be only one field with editable settings, and it should be
     // the source field.
     $assert_session->elementsCount('css', 'input[name$="_settings_edit"]', 1);

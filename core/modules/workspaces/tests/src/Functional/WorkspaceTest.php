@@ -267,7 +267,7 @@ class WorkspaceTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($field_label);
 
     // Check that the field is displayed on the manage display page.
-    $this->drupalGet('admin/config/workflow/workspaces/display');
+    $this->drupalGet('admin/config/workflow/workspaces/display/default');
     $this->assertSession()->pageTextContains($field_label);
   }
 

@@ -366,7 +366,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     $page->fillField('link[0][uri]', '/');
     $page->pressButton('Save');
 
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display');
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
     $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $assert_session->linkExists('Manage layout');
     $this->clickLink('Manage layout');
@@ -682,7 +682,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
       'Structure' => $base_path . 'admin/structure',
       'Content types' => $base_path . 'admin/structure/types',
       'Bundle with section field' => $base_path . 'admin/structure/types/manage/bundle_with_section_field',
-      'Manage display' => $base_path . 'admin/structure/types/manage/bundle_with_section_field/display/default',
+      'Manage display' => $base_path . 'admin/structure/types/manage/bundle_with_section_field/display',
       'External link' => 'http://www.example.com',
     ];
     $this->assertSame($expected, $breadcrumb_titles);

@@ -63,7 +63,7 @@ class DateTimeWidgetTest extends DateTestBase {
     ];
     $this->drupalGet('admin/structure/types/manage/date_only_content/form-display');
     $this->submitForm($edit, 'Save');
-    $this->drupalGet('admin/structure/types/manage/date_only_content/display');
+    $this->drupalGet('admin/structure/types/manage/date_only_content/display/default');
     $this->submitForm($edit, 'Save');
 
     // Set now as default_value.

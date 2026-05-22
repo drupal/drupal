@@ -329,3 +329,7 @@ libraries-override:
     css:
       theme:
         css/field_ui_display_mode_table.css: css/field_ui/field_ui_display_mode_table.css
+  field_ui/drupal.field_ui_display_overview:
+    css:
+      theme:
+        css/field_ui_display_overview_table.css: css/field_ui/field_ui_display_overview_table.css

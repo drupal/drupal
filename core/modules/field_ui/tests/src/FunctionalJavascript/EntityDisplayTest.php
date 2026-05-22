@@ -80,7 +80,7 @@ class EntityDisplayTest extends WebDriverTestBase {
     $this->drupalGet('entity_test/1');
     $this->assertSession()->pageTextNotContains('The field test text value');
 
-    $this->drupalGet('entity_test/structure/entity_test/display');
+    $this->drupalGet('entity_test/structure/entity_test/display/default');
     $this->assertSession()->elementExists('css', '.region-content-message.region-empty');
     $this->getSession()->getPage()->pressButton('Show row weights');
     $this->assertSession()->waitForElementVisible('css', '[name="fields[field_test_text][region]"]');
@@ -102,7 +102,7 @@ class EntityDisplayTest extends WebDriverTestBase {
    */
   public function testExtraFields(): void {
     EntityTestHelper::createBundle('bundle_with_extra_fields');
-    $this->drupalGet('entity_test/structure/bundle_with_extra_fields/display');
+    $this->drupalGet('entity_test/structure/bundle_with_extra_fields/display/default');
     $this->assertSession()->waitForElement('css', '.tabledrag-handle');
     $id = $this->getSession()->getPage()->find('css', '[name="form_build_id"]')->getValue();
 

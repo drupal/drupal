@@ -271,7 +271,7 @@ trait StandardTestTrait {
       if (is_a($media_type->getSource(), Image::class, TRUE)) {
         // Assert the default entity view display is configured with an image
         // style.
-        $this->drupalGet('/admin/structure/media/manage/' . $media_type->id() . '/display');
+        $this->drupalGet('/admin/structure/media/manage/' . $media_type->id() . '/display/default');
         $assert_session->fieldValueEquals('fields[field_media_image][type]', 'image');
         $assert_session->elementTextContains('css', 'tr[data-drupal-selector="edit-fields-field-media-image"]', 'Image style: Large (480×480)');
         // By default for media types with an image source, only the image

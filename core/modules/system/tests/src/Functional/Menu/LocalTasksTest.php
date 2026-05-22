@@ -299,7 +299,7 @@ class LocalTasksTest extends BrowserTestBase {
       ['entity.node_type.edit_form', ['node_type' => 'page']],
       ['entity.node.field_ui_fields', ['node_type' => 'page']],
       ['entity.entity_form_display.node.default', ['node_type' => 'page']],
-      ['entity.entity_view_display.node.default', ['node_type' => 'page']],
+      ['entity.entity_view_display_overview.node', ['node_type' => 'page']],
       ['entity.node_type.entity_permissions_form', ['node_type' => 'page']],
     ]);
   }

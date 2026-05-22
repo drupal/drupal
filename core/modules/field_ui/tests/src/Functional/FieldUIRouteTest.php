@@ -67,8 +67,9 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->assertSession()->titleEquals('Manage display | Drupal');
     $this->assertLocalTasks();
 
-    $edit = ['display_modes_custom[compact]' => TRUE];
-    $this->submitForm($edit, 'Save');
+    $xpath = "//tr[@id='display-mode-user-user-compact']//a[contains(., 'Enable')]";
+    $this->assertSession()->elementExists('xpath', $xpath);
+    $this->getSession()->getPage()->find('xpath', $xpath)->click();
     $this->drupalGet('admin/config/people/accounts/display/compact');
     $this->assertSession()->titleEquals('Manage display | Drupal');
     $this->assertLocalTasks();
@@ -99,9 +100,10 @@ class FieldUIRouteTest extends BrowserTestBase {
     ])->save();
     $this->container->get('router.builder')->rebuildIfNeeded();
 
-    $edit = ['display_modes_custom[test]' => TRUE];
     $this->drupalGet('admin/config/people/accounts/display');
-    $this->submitForm($edit, 'Save');
+    $xpath = "//tr[@id='display-mode-user-user-test']//a[contains(., 'Enable')]";
+    $this->assertSession()->elementExists('xpath', $xpath);
+    $this->getSession()->getPage()->find('xpath', $xpath)->click();
     $this->assertSession()->linkExists('Test');
 
     // Create new form mode and verify it's available on the Manage Form

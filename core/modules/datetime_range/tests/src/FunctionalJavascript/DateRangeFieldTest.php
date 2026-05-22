@@ -75,7 +75,7 @@ class DateRangeFieldTest extends WebDriverTestBase {
         ],
       ])
       ->save();
-    $this->drupalGet("admin/structure/types/manage/date_content/display");
+    $this->drupalGet("admin/structure/types/manage/date_content/display/default");
 
     $page = $this->getSession()->getPage();
     $page->pressButton("{$field_name}_settings_edit");

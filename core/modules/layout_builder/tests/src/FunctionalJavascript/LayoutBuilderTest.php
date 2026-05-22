@@ -117,7 +117,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Powered by Drupal');
     $assert_session->linkNotExists('Layout');
 
-    $this->enableLayoutsForBundle('admin/structure/types/manage/bundle_with_section_field/display', TRUE);
+    $this->enableLayoutsForBundle('admin/structure/types/manage/bundle_with_section_field/display/default', TRUE);
 
     // The existing content is still shown until overridden.
     $this->drupalGet($node_url);

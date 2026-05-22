@@ -176,20 +176,37 @@ class EntityDisplayModeTest extends BrowserTestBase {
       'administer node form display',
       'view the administration theme',
     ]));
+    // Enable "Full content" view mode for testing.
+    $display = \Drupal::entityTypeManager()->getStorage('entity_view_display')->create([
+      'targetEntityType' => 'node',
+      'bundle' => 'article',
+      'mode' => 'full',
+      'status' => TRUE,
+    ]);
+    $display->save();
+
     $this->drupalGet('admin/structure/types/manage/article/display');
     // Verify that the order of view modes is alphabetical by visible label.
     // Since the default view modes all have machine names which coincide with
     // the English labels, they should appear in alphabetical order, by default
     // if viewing the site in English and if no changes have been made. We will
     // verify this first.
-    $page_text = $this->getTextContent();
-    $start = strpos($page_text, 'view modes');
+    $enabled_text = $this->getSession()->getPage()->find('css', '#enabled-display-modes-wrapper')->getText();
+    $start = strpos($enabled_text, 'Display mode') ?: 0;
     $pos = $start;
-    $list = ['Full content', 'RSS', 'Search index', 'Search result', 'Teaser'];
-    // Verify that the order of the view modes is correct on the page.
-    foreach ($list as $name) {
-      $new_pos = strpos($page_text, $name, $start);
-      $this->assertGreaterThan($pos, $new_pos);
+    $enabled_list = ['Full content', 'Teaser'];
+    foreach ($enabled_list as $name) {
+      $new_pos = strpos($enabled_text, $name, $start);
+      $this->assertGreaterThan($pos, $new_pos, "View mode '$name' should appear after the previous one in alphabetical order in enabled table. Previous position: $pos, current position: $new_pos");
+      $pos = $new_pos;
+    }
+    $disabled_text = $this->getSession()->getPage()->find('css', '#disabled-display-modes-wrapper')->getText();
+    $start = strpos($disabled_text, 'Display mode') ?: 0;
+    $pos = $start;
+    $disabled_list = ['RSS', 'Search index', 'Search result'];
+    foreach ($disabled_list as $name) {
+      $new_pos = strpos($disabled_text, $name, $start);
+      $this->assertGreaterThan($pos, $new_pos, "View mode '$name' should appear after the previous one in alphabetical order in disabled table. Previous position: $pos, current position: $new_pos");
       $pos = $new_pos;
     }
     // Now that we have verified the original display order, we can change the
@@ -207,14 +224,13 @@ class EntityDisplayModeTest extends BrowserTestBase {
     // that changing "Teaser" to "Breezier" makes it appear before "Full
     // content".
     $this->drupalGet('admin/structure/types/manage/article/display');
-    $page_text = $this->getTextContent();
-    $start = strpos($page_text, 'view modes');
+    $enabled_text = $this->getSession()->getPage()->find('css', '#enabled-display-modes-wrapper')->getText();
+    $start = strpos($enabled_text, 'Display mode') ?: 0;
     $pos = $start;
-    $list = ['Breezier', 'Full content'];
-    // Verify that the order of the view modes is correct on the page.
-    foreach ($list as $name) {
-      $new_pos = strpos($page_text, $name, $start);
-      $this->assertGreaterThan($pos, $new_pos);
+    $enabled_list = ['Breezier', 'Full content'];
+    foreach ($enabled_list as $name) {
+      $new_pos = strpos($enabled_text, $name, $start);
+      $this->assertGreaterThan($pos, $new_pos, "View mode '$name' should appear after the previous one in alphabetical order in enabled table. Previous position: $pos, current position: $new_pos");
       $pos = $new_pos;
     }
   }

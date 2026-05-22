@@ -27,3 +27,9 @@ drupal.field_ui_table:
   css:
     theme:
       css/field_ui_display_mode_table.css: {}
+
+drupal.field_ui_display_overview:
+  version: VERSION
+  css:
+    theme:
+      css/field_ui_display_overview_table.css: {}

@@ -1,0 +1,13 @@
+.display-mode-overview-table th:first-child {
+  width: 20%;
+}
+.display-mode-overview-table th:nth-child(2) {
+  width: 50%;
+}
+.display-mode-overview-table th:last-child {
+  width: 30%;
+}
+.display-mode-overview-table td {
+  max-width: 50px;
+  word-wrap: break-word;
+}

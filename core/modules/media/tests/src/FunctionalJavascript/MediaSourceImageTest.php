@@ -182,7 +182,7 @@ class MediaSourceImageTest extends MediaSourceTestBase {
     // Since components that aren't explicitly hidden can show up on the
     // display edit form, check that only the image field appears enabled on
     // the display edit form.
-    $this->drupalGet('/admin/structure/media/manage/' . $media_type_id . '/display');
+    $this->drupalGet('/admin/structure/media/manage/' . $media_type_id . '/display/default');
     // Assert that only the source field is enabled.
     $assert_session->elementExists('css', 'input[name="' . $source_field_definition->getName() . '_settings_edit"]');
     $assert_session->elementsCount('css', 'input[name$="_settings_edit"]', 1);

@@ -58,12 +58,23 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
     $page->pressButton('Confirm');
     $assert_session->addressEquals("$field_ui_prefix/display/teaser");
     $page->clickLink('Default');
-    $assert_session->addressEquals("$field_ui_prefix/display");
-    $assert_session->linkNotExists('Full content');
-    $page->checkField('display_modes_custom[full]');
+    $assert_session->addressEquals("$field_ui_prefix/display/default");
     $page->pressButton('Save');
 
-    // Enable Layout Builder for the full view mode.
+    $page->clickLink('Overview');
+    $assert_session->addressEquals("$field_ui_prefix/display");
+    // Verify that the "Full content" view mode is not enabled yet.
+    $assert_session->elementNotExists('css', '#enabled-display-modes-wrapper #display-mode-node-bundle-with-section-field-full');
+
+    // Enable the "Full content" view mode using the overview UI.
+    $page = $this->getSession()->getPage();
+    $enable_link = $page->find('xpath', "//tr[@id='display-mode-node-bundle-with-section-field-full']//a[contains(., 'Enable')]");
+    $this->assertNotNull($enable_link, 'Enable link should exist for the full view mode.');
+    $enable_link->click();
+    // After enabling, the view mode should appear in the enabled table.
+    $assert_session->elementExists('css', '#enabled-display-modes-wrapper #display-mode-node-bundle-with-section-field-full');
+
+    // Enable Layout Builder for the full view mode using the UI.
     $display = LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.full');
     $this->enableLayoutBuilder($display);
     $this->drupalGet("$field_ui_prefix/display/full");
@@ -93,12 +104,15 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
 
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
 
-    // For the purposes of this test, turn the full view mode on and off to
-    // prevent copying from the customized default view mode.
-    $this->drupalGet("{$field_ui_prefix}/display/default");
-    $this->submitForm(['display_modes_custom[full]' => TRUE], 'Save');
-    $this->drupalGet("{$field_ui_prefix}/display/default");
-    $this->submitForm(['display_modes_custom[full]' => FALSE], 'Save');
+    // For the purposes of this test, turn the full view mode on and off on the
+    // overview page to prevent copying from the customized default view mode.
+    $this->drupalGet("{$field_ui_prefix}/display");
+    $page = $this->getSession()->getPage();
+    // Enable the "Full content" view mode if it is disabled.
+    $enable_link = $page->find('xpath', "//tr[@id='display-mode-node-bundle-with-section-field-full']//a[contains(., 'Enable')]");
+    $enable_link->click();
+    $disable_link = $page->find('xpath', "//tr[@id='display-mode-node-bundle-with-section-field-full']//a[contains(., 'Disable')]");
+    $disable_link->click();
 
     // Allow overrides for the layout.
     $this->drupalGet("{$field_ui_prefix}/display/default");
@@ -126,9 +140,12 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
     $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
 
-    // Enable the full view mode and customize it.
-    $this->drupalGet("{$field_ui_prefix}/display/default");
-    $this->submitForm(['display_modes_custom[full]' => TRUE], 'Save');
+    // Enable the full view mode using the overview UI and customize it.
+    $this->drupalGet("{$field_ui_prefix}/display");
+    $page = $this->getSession()->getPage();
+    $enable_link = $page->find('xpath', "//tr[@id='display-mode-node-bundle-with-section-field-full']//a[contains(., 'Enable')]");
+    $this->assertNotNull($enable_link, 'Enable link should exist for the full view mode.');
+    $enable_link->click();
     $this->drupalGet("{$field_ui_prefix}/display/full");
     $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $this->drupalGet("{$field_ui_prefix}/display/full");
@@ -152,9 +169,13 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
     $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
 
-    // Disable the full view mode, the default should be used again.
-    $this->drupalGet("{$field_ui_prefix}/display/default");
-    $this->submitForm(['display_modes_custom[full]' => FALSE], 'Save');
+    // Disable the full view mode using the overview UI, the default should be
+    // used again.
+    $this->drupalGet("{$field_ui_prefix}/display");
+    $page = $this->getSession()->getPage();
+    $disable_link = $page->find('xpath', "//tr[@id='display-mode-node-bundle-with-section-field-full']//a[contains(., 'Disable')]");
+    $this->assertNotNull($disable_link, 'Disable link should exist for the full view mode.');
+    $disable_link->click();
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('This is the default view mode');
     $assert_session->pageTextNotContains('This is the full view mode');
@@ -164,9 +185,13 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
     $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
 
-    // Re-enabling the full view mode restores the layout changes.
-    $this->drupalGet("{$field_ui_prefix}/display/default");
-    $this->submitForm(['display_modes_custom[full]' => TRUE], 'Save');
+    // Re-enabling the full view mode using the overview UI restores the layout
+    // changes.
+    $this->drupalGet("{$field_ui_prefix}/display");
+    $page = $this->getSession()->getPage();
+    $enable_link = $page->find('xpath', "//tr[@id='display-mode-node-bundle-with-section-field-full']//a[contains(., 'Enable')]");
+    $this->assertNotNull($enable_link, 'Enable link should exist for the full view mode.');
+    $enable_link->click();
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('This is the full view mode');
     $assert_session->pageTextNotContains('This is the default view mode');
@@ -231,9 +256,12 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
     $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
 
-    // Disable the full view mode.
-    $this->drupalGet("{$field_ui_prefix}/display/default");
-    $this->submitForm(['display_modes_custom[full]' => FALSE], 'Save');
+    // Disable the full view mode using the overview UI.
+    $this->drupalGet("{$field_ui_prefix}/display");
+    $page = $this->getSession()->getPage();
+    $disable_link = $page->find('xpath', "//tr[@id='display-mode-node-bundle-with-section-field-full']//a[contains(., 'Disable')]");
+    $this->assertNotNull($disable_link, 'Disable link should exist for the full view mode.');
+    $disable_link->click();
 
     // The override of the full view mode is still available.
     $this->drupalGet('node/1');
@@ -268,15 +296,19 @@ class LayoutBuilderViewModeTest extends LayoutBuilderTestBase {
 
     // Create one bundle with the full view mode enabled.
     $this->createContentType(['type' => 'full_bundle']);
-    $this->drupalGet('admin/structure/types/manage/full_bundle/display/default');
-    $page->checkField('display_modes_custom[full]');
-    $page->pressButton('Save');
+    $this->drupalGet('admin/structure/types/manage/full_bundle/display');
+    $page = $this->getSession()->getPage();
+    $enable_link = $page->find('xpath', "//tr[@id='display-mode-node-full-bundle-full']//a[contains(., 'Enable')]");
+    $this->assertNotNull($enable_link, 'Enable link should exist for the full view mode on full_bundle.');
+    $enable_link->click();
 
     // Create another bundle without the full view mode enabled.
     $this->createContentType(['type' => 'default_bundle']);
 
-    $display = LayoutBuilderEntityViewDisplay::load('node.default_bundle.default');
-    $this->enableLayoutBuilder($display);
+    $this->drupalGet('admin/structure/types/manage/default_bundle/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $this->drupalGet('admin/structure/types/manage/default_bundle/display/default');
+    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
     $this->drupalGet('admin/structure/types/manage/default_bundle/display/default');
     $assert_session->checkboxChecked('layout[allow_custom]');
   }

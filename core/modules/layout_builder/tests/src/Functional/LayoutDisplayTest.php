@@ -78,9 +78,11 @@ class LayoutDisplayTest extends BrowserTestBase {
     $page->pressButton('Save');
 
     // Enable the new view mode.
-    $this->drupalGet("$field_ui_prefix/default");
-    $page->checkField('display_modes_custom[new]');
-    $page->pressButton('Save');
+    $this->drupalGet("$field_ui_prefix");
+    $enable_link = $page->find('xpath', "//tr[@id='display-mode-node-bundle-with-section-field-new']//a[contains(., 'Enable')]");
+    $this->assertNotNull($enable_link, 'Enable link should exist for the new view mode.');
+    $enable_link->click();
+    $assert_session->elementExists('css', '#enabled-display-modes-wrapper #display-mode-node-bundle-with-section-field-new');
 
     // Enable and disable Layout Builder for the new view mode.
     $this->enableLayoutBuilderFromUi('bundle_with_section_field', 'new', FALSE);

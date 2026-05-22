@@ -121,7 +121,7 @@ class BooleanFormatterSettingsTest extends WebDriverTestBase {
 
       $assert_session->waitForText('Saved ' . $this->fieldName . ' configuration.');
       // Open the Manage Display page and trigger the field settings form.
-      $this->drupalGet('admin/structure/types/manage/' . $this->bundle . '/display');
+      $this->drupalGet('admin/structure/types/manage/' . $this->bundle . '/display/default');
       $this->getSession()->getPage()->pressButton($this->fieldName . '_settings_edit');
       $assert_session->waitForElement('css', '.ajax-new-content');
 
