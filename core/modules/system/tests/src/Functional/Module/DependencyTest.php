@@ -52,7 +52,7 @@ class DependencyTest extends ModuleTestBase {
   /**
    * Attempts to enable the Content Translation module without Language enabled.
    */
-  public function testEnableWithoutDependency(): void {
+  protected function doTestEnableWithoutDependency(): void {
     // Attempt to enable Content Translation without Language enabled.
     $edit = [];
     $edit['modules[content_translation][enable]'] = 'content_translation';
@@ -75,9 +75,19 @@ class DependencyTest extends ModuleTestBase {
   }
 
   /**
+   * Tests functionality that can be tested without submitting the form.
+   */
+  public function testModulesForm(): void {
+    $this->doTestMissingRequirements();
+    $this->doTestCoreVersionContains8X();
+    $this->doTestEnableWithoutDependency();
+    $this->doTestEnableRequirementsFailureDependency();
+  }
+
+  /**
    * Tests that modules that don't pass requirement checks cannot be enabled.
    */
-  public function testMissingRequirements(): void {
+  protected function doTestMissingRequirements(): void {
     // Test that the system_dependencies_test module is marked
     // as missing a dependency.
     $this->drupalGet('admin/modules');
@@ -100,6 +110,21 @@ class DependencyTest extends ModuleTestBase {
     // Test PHP version requirements.
     $this->assertSession()->pageTextContains('This module requires PHP version 6502.* and is incompatible with PHP version ' . phpversion() . '.');
     $this->assertSession()->fieldDisabled('modules[system_incompatible_php_version_test][enable]');
+  }
+
+  /**
+   * Tests the dependency checks when core version contains '8.x' within it.
+   */
+  protected function doTestCoreVersionContains8X(): void {
+    // Enable the helper module that alters the version and dependencies.
+    \Drupal::service('module_installer')->install(['dependency_version_test']);
+
+    // Check that the above module installed OK.
+    $this->drupalGet('admin/modules');
+    $this->assertModules(['dependency_version_test'], TRUE);
+
+    // Check that test_module dependencies are met and the box is not greyed.
+    $this->assertSession()->fieldEnabled('modules[test_module][enable]');
   }
 
   /**
@@ -188,24 +213,9 @@ class DependencyTest extends ModuleTestBase {
   }
 
   /**
-   * Tests the dependency checks when core version contains '8.x' within it.
-   */
-  public function testCoreVersionContains8X(): void {
-    // Enable the helper module that alters the version and dependencies.
-    \Drupal::service('module_installer')->install(['dependency_version_test']);
-
-    // Check that the above module installed OK.
-    $this->drupalGet('admin/modules');
-    $this->assertModules(['dependency_version_test'], TRUE);
-
-    // Check that test_module dependencies are met and the box is not greyed.
-    $this->assertSession()->fieldEnabled('modules[test_module][enable]');
-  }
-
-  /**
    * Tests enabling a module that depends on a module which fails hook_requirements().
    */
-  public function testEnableRequirementsFailureDependency(): void {
+  protected function doTestEnableRequirementsFailureDependency(): void {
     \Drupal::service('module_installer')->install(['comment']);
 
     $this->assertModules(['requirements1_test'], FALSE);
