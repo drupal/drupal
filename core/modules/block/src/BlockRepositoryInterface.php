@@ -28,7 +28,7 @@ interface BlockRepositoryInterface {
   const REGIONS_ALL = 'all';
 
   /**
-   * Returns an array of regions and their block entities.
+   * Returns an array of regions and their block entities for the active theme.
    *
    * @param \Drupal\Core\Cache\CacheableMetadata[] $cacheable_metadata
    *   (optional) List of CacheableMetadata objects, keyed by region. This is
