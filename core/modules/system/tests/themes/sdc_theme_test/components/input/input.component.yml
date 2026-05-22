@@ -1,0 +1,12 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: "Test textfield"
+status: experimental
+slots:
+  label:
+    title: "Label"
+props:
+  type: object
+  properties:
+    id:
+      title: ID
+      type: string

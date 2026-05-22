@@ -1,0 +1,18 @@
+{% set input_attributes = create_attribute({
+  type: 'text',
+  name: form_state.value.name,
+  id: id|default('test-sdc-text-field-' ~ random()),
+  value: form_state.value.value,
+}) %}
+
+{% if form_state.value.required %}
+  {% set input_attributes = input_attributes.setAttribute('required', true) %}
+{% endif %}
+
+<div{{ attributes }}>
+  <label class="form-label" for="{{ input_attributes.id }}">
+    {{ label }}
+  </label>
+  <input{{ input_attributes }}>
+</div>
+
