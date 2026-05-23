@@ -289,7 +289,7 @@ class ViewExecutableTest extends UnitTestCase {
       ->willReturn('test-path/%/%');
 
     $route = new Route('/test-path/{arg_0}/{arg_1}');
-    $this->routeProvider
+    $this->routeProvider->expects($this->once())
       ->method('getRouteByName')
       ->with('views.test.page_1')
       ->willReturn($route);
@@ -317,7 +317,7 @@ class ViewExecutableTest extends UnitTestCase {
       ->willReturn('test-path/%/%');
 
     $route = new Route('/test-path/{arg_0}/{arg_1}');
-    $this->routeProvider
+    $this->routeProvider->expects($this->once())
       ->method('getRouteByName')
       ->with('views.test.page_1')
       ->willReturn($route);
@@ -565,10 +565,14 @@ class ViewExecutableTest extends UnitTestCase {
   /**
    * Setups a view executable and default display.
    *
+   * @param int $getPluginCallCount
+   *   (optional) The number of expected calls to the ::getPlugin method.
+   *   Defaults to 0.
+   *
    * @return array
    *   Returns the view executable and default display.
    */
-  protected function setupBaseViewAndDisplay(): array {
+  protected function setupBaseViewAndDisplay(int $getPluginCallCount = 0): array {
     $config = [
       'id' => 'test_view',
       'tag' => 'OnE, TWO, and three',
@@ -584,7 +588,7 @@ class ViewExecutableTest extends UnitTestCase {
     $storage = new View($config, 'view');
     $view = new ViewExecutable($storage, $this->user, $this->viewsData, $this->routeProvider, $this->displayPluginManager);
     $display = $this->createMock(DisplayPluginBase::class);
-    $display
+    $display->expects($this->exactly($getPluginCallCount))
       ->method('getPlugin')
       ->with($this->equalTo('cache'))
       ->willReturn($this->successCache);
@@ -733,7 +737,7 @@ class ViewExecutableTest extends UnitTestCase {
 
     $noneCache = $this->createMock(NoneCache::class);
     $noneCache->expects($this->once())->method('cacheGet');
-    $this->cacheManager->method('createInstance')
+    $this->cacheManager->expects($this->once())->method('createInstance')
       ->with('none')
       ->willReturn($noneCache);
     $query->expects($this->once())->method('execute');
@@ -748,12 +752,14 @@ class ViewExecutableTest extends UnitTestCase {
    *   Whether the display to test should be enabled.
    * @param bool $expected_result
    *   The expected result when calling execute().
+   * @param int $getPluginCallCount
+   *   The number of expected calls to the ::getPlugin method.
    */
   #[DataProvider('providerExecuteReturn')]
-  public function testExecuteReturn($display_enabled, bool $expected_result): void {
-    /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
-    /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject $display */
-    [$view, $display] = $this->setupBaseViewAndDisplay();
+  public function testExecuteReturn($display_enabled, bool $expected_result, int $getPluginCallCount): void {
+    /** @var \Drupal\views\ViewExecutable&\PHPUnit\Framework\MockObject\MockObject $view */
+    /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase&\PHPUnit\Framework\MockObject\MockObject $display */
+    [$view, $display] = $this->setupBaseViewAndDisplay($getPluginCallCount);
 
     $display
       ->method('isEnabled')
@@ -778,8 +784,8 @@ class ViewExecutableTest extends UnitTestCase {
    */
   public static function providerExecuteReturn(): array {
     return [
-      'enabled' => [static::DISPLAY_ENABLED, TRUE],
-      'disabled' => [static::DISPLAY_DISABLED, FALSE],
+      'enabled' => [static::DISPLAY_ENABLED, TRUE, 1],
+      'disabled' => [static::DISPLAY_DISABLED, FALSE, 0],
     ];
   }
 

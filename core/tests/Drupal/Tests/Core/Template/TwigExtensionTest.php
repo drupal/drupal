@@ -293,7 +293,7 @@ class TwigExtensionTest extends UnitTestCase {
   public function testSafeJoin(): void {
     $this->setUpMockRenderer();
 
-    $this->renderer
+    $this->renderer->expects($this->exactly(2))
       ->method('render')
       ->with(['#markup' => '<strong>will be rendered</strong>', '#printed' => FALSE])
       ->willReturn('<strong>will be rendered</strong>');
@@ -337,7 +337,7 @@ class TwigExtensionTest extends UnitTestCase {
   public function testRenderVar($result, $input): void {
     $this->setUpMockRenderer();
 
-    $this->renderer
+    $this->renderer->expects($this->once())
       ->method('render')
       ->with($result += ['#printed' => FALSE])
       ->willReturn('Rendered output');

@@ -340,7 +340,7 @@ class UrlGeneratorTest extends UnitTestCase {
     // No cacheability to test; UrlGenerator::generate() doesn't support
     // collecting cacheability metadata.
 
-    $this->routeProcessorManager
+    $this->routeProcessorManager->expects($this->exactly(9))
       ->method('processOutbound')
       ->with($this->anything());
 

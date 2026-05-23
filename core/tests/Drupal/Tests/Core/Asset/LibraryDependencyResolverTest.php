@@ -11,7 +11,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests Drupal\Core\Asset\LibraryDependencyResolver.
@@ -30,7 +30,7 @@ class LibraryDependencyResolverTest extends UnitTestCase {
   /**
    * The mocked library discovery service.
    */
-  protected LibraryDiscoveryInterface&MockObject $libraryDiscovery;
+  protected LibraryDiscoveryInterface&Stub $libraryDiscovery;
 
   /**
    * Test library data.
@@ -57,13 +57,12 @@ class LibraryDependencyResolverTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->libraryDiscovery = $this->getMockBuilder(LibraryDiscoveryCollector::class)
+    $this->libraryDiscovery = $this->getStubBuilder(LibraryDiscoveryCollector::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['getLibrariesByExtension'])
-      ->getMock();
+      ->getStub();
     $this->libraryDiscovery
       ->method('getLibrariesByExtension')
-      ->with('test')
       ->willReturn($this->libraryData);
     $this->libraryDependencyResolver = new LibraryDependencyResolver($this->libraryDiscovery);
   }

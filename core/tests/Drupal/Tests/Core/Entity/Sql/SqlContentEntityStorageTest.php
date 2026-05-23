@@ -432,7 +432,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $schema_handler = $this->getMockBuilder('Drupal\Core\Database\Schema')
       ->disableOriginalConstructor()
       ->getMock();
-    $schema_handler
+    $schema_handler->expects($this->once())
       ->method('createTable')
       ->with($this->equalTo('entity_test'), $this->equalTo($expected));
 

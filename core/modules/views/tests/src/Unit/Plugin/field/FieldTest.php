@@ -516,7 +516,7 @@ class FieldTest extends UnitTestCase {
     $entity_storage
       ->method('getTableMapping')
       ->willReturn($table_mapping);
-    $this->entityTypeManager
+    $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with('test_entity')
       ->willReturn($entity_storage);
@@ -579,7 +579,7 @@ class FieldTest extends UnitTestCase {
     $entity_storage
       ->method('getTableMapping')
       ->willReturn($table_mapping);
-    $this->entityTypeManager
+    $this->entityTypeManager->expects($this->once())
       ->method('getStorage')
       ->with('test_entity')
       ->willReturn($entity_storage);

@@ -38,10 +38,8 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * The bundle used for testing.
-   *
-   * @var string
    */
-  protected $bundle;
+  protected string $bundle;
 
   /**
    * The content entity used for testing.
@@ -50,10 +48,8 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * The content entity adapter under test.
-   *
-   * @var \Drupal\Core\Entity\Plugin\DataType\EntityAdapter
    */
-  protected $entityAdapter;
+  protected EntityAdapter $entityAdapter;
 
   /**
    * The entity type used for testing.
@@ -72,10 +68,8 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * The type ID of the entity under test.
-   *
-   * @var string
    */
-  protected $entityTypeId;
+  protected string $entityTypeId;
 
   /**
    * The typed data manager used for testing.
@@ -104,17 +98,15 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
   /**
    * The entity ID.
-   *
-   * @var int
    */
-  protected $id;
+  protected int $id;
 
   /**
    * Field definitions.
    *
-   * @var \Drupal\Core\Field\BaseFieldDefinition[]
+   * @var array{'id': \Drupal\Core\Field\BaseFieldDefinition, 'revision_id': \Drupal\Core\Field\BaseFieldDefinition}
    */
-  protected $fieldDefinitions;
+  protected array $fieldDefinitions;
 
   /**
    * {@inheritdoc}
@@ -149,6 +141,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->entityTypeManager
+      ->expects($this->exactly(6))
       ->method('getDefinition')
       ->with($this->entityTypeId)
       ->willReturn($this->entityType);
@@ -157,6 +150,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
 
     $this->typedDataManager = $this->createMock(TypedDataManagerInterface::class);
     $this->typedDataManager
+      ->expects($this->never())
       ->method('getDefinition')
       ->with('entity')
       ->willReturn(['class' => '\Drupal\Core\Entity\Plugin\DataType\EntityAdapter']);
@@ -179,6 +173,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
       ->willReturn([LanguageInterface::LANGCODE_NOT_SPECIFIED => $not_specified]);
 
     $this->languageManager
+      ->expects($this->never())
       ->method('getLanguage')
       ->with(LanguageInterface::LANGCODE_NOT_SPECIFIED)
       ->willReturn($not_specified);
@@ -212,6 +207,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
       'revision_id' => BaseFieldDefinition::create('integer'),
     ];
     $this->entityFieldManager
+      ->expects($this->once())
       ->method('getFieldDefinitions')
       ->with($this->entityTypeId, $this->bundle)
       ->willReturn($this->fieldDefinitions);

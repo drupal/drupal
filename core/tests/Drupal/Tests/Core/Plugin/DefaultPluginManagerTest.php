@@ -291,7 +291,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
   public function testCreateInstanceWithInvalidInterfaces(): void {
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
-    $module_handler
+    $module_handler->expects($this->never())
       ->method('moduleExists')
       ->with('plugin_test')
       ->willReturn(TRUE);
@@ -318,7 +318,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
   public function testGetDefinitionsWithoutRequiredInterface(): void {
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
-    $module_handler
+    $module_handler->expects($this->exactly(3))
       ->method('moduleExists')
       ->with('plugin_test')
       ->willReturn(FALSE);

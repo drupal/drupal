@@ -494,6 +494,7 @@ class AccessResultTest extends UnitTestCase {
     // ::allowIfHasPermission and ::allowedIfHasPermission convenience methods.
     $account = $this->createMock('\Drupal\Core\Session\AccountInterface');
     $account
+      ->expects($this->once())
       ->method('hasPermission')
       ->with('may herd llamas')
       ->willReturn(FALSE);
