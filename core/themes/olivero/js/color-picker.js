@@ -123,7 +123,7 @@
     Object.entries(colorSchemeOptions).forEach((option) => {
       const [key, values] = option;
 
-      const { label, colors } = values;
+      const { colors } = values;
 
       let allColorsMatch = true;
       Object.entries(colors).forEach(([colorName, colorHex]) => {
