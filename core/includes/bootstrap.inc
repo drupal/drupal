@@ -438,6 +438,11 @@ function drupal_static_reset($name = NULL): void {
       @trigger_error("Using drupal_static_reset() with 'locale_translation_project_list' as argument is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. See https://www.drupal.org/node/3037033", E_USER_DEPRECATED);
       break;
 
+    case 'locale_translation_get_file_history':
+      @trigger_error('Calling drupal_static_reset() with "locale_translation_get_file_history" as argument is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service("cache.memory")->invalidateTags(["locale_current_import"]) instead. See https://www.drupal.org/node/3037162', E_USER_DEPRECATED);
+      \Drupal::service('cache.memory')->invalidateTags(['locale_current_import']);
+      break;
+
     case 'filter_formats':
       @trigger_error("Using drupal_static_reset() with 'filter_formats' as argument is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. No replacement is provided. See https://www.drupal.org/node/3035368", E_USER_DEPRECATED);
       break;
