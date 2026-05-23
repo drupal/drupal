@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Queue;
 
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\PluginBase;
 
 /**
  * Provides a base implementation for a QueueWorker plugin.
