@@ -1,5 +1,0 @@
-name: 'Mailer event subscriber test'
-type: module
-description: 'Support module for mailer event subscriber testing.'
-package: Testing
-version: VERSION
