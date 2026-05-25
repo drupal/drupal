@@ -428,6 +428,7 @@ sitewide
 slatkin
 smacss
 smalldatetime
+smartdate
 smtps
 squaresmall
 squiz
@@ -489,6 +490,7 @@ tabledrag
 tableheader
 tableinfo
 tableresponsive
+tablesaw
 tableselect
 tablesort
 tablesorts
@@ -573,6 +575,7 @@ writeln
 xbitmap
 xmlhttp
 xpsdocument
+xsmall
 xtmpl
 yamls
 yearless

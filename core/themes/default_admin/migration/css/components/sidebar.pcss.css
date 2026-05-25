@@ -3,7 +3,7 @@
  * Sidebar panel and controls.
  */
 
-@import "../base/media-queries.pcss.css";
+@import "../../../css/base/media-queries.pcss.css";
 
 #gin-sidebar-draggable {
   position: absolute;

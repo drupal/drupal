@@ -4,5 +4,5 @@
 
 .divider {
   height: 1px;
-  background-color: var(--color-divider);
+  background-color: var(--gin-border-color);
 }

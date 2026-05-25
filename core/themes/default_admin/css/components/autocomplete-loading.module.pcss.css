@@ -25,25 +25,23 @@
  */
 
 .js {
-  & .form-autocomplete {
+  .form-autocomplete {
     margin-inline-end: calc(var(--input-border-size) - 1.5 * var(--input-padding-horizontal));
-    padding-inline-end: calc(var(--input-padding-horizontal) * 2.5 - var(--input-border-size));
+    padding-inline-end: 36px;
     background-image: url(../../images/icons/868686/magnifier.svg);
     background-repeat: no-repeat;
     background-position: 100% 50%;
 
+    &:dir(rtl) {
+      background-image: url(../../images/icons/868686/magnifier-rtl.svg);
+      background-position: 0 50%;
+    }
+
     &.is-autocompleting {
       background-image: url(../../images/icons/003ecc/spinner.svg);
       background-position: center right -10px;
-    }
-  }
 
-  &[dir="rtl"] {
-    & .form-autocomplete {
-      background-image: url(../../images/icons/868686/magnifier-rtl.svg);
-      background-position: 0 50%;
-
-      &.is-autocompleting {
+      &:dir(rtl) {
         background-image: url(../../images/icons/003ecc/spinner-rtl.svg);
         background-position: center left 10px;
       }
@@ -57,7 +55,12 @@
 .claro-autocomplete {
   position: relative;
   display: inline-block;
+  width: calc(100% - var(--gin-spacing-m));
   max-width: 100%;
+
+  .form-autocomplete {
+    width: 100%;
+  }
 }
 
 .claro-autocomplete__message {

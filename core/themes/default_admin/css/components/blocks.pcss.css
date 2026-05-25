@@ -1,0 +1,11 @@
+/**
+ * @file
+ * Block styles.
+ */
+
+.block-disabled {
+  &:not(:hover) {
+    opacity: 0.6;
+    background: transparent;
+  }
+}

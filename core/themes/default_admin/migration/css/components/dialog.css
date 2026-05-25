@@ -13,7 +13,6 @@
 /* cspell:ignore treetable */
 
 .ui-dialog:not(.ui-dialog-off-canvas) {
-  max-width: 80rem;
   border: 0 none !important;
   border-radius: var(--gin-border-m);
   background: var(--gin-bg-layer);

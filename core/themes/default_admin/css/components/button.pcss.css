@@ -1,3 +1,5 @@
+@import "../base/media-queries.pcss.css";
+
 /**
  * @file
  * Structural styles for Claro's UI buttons
@@ -24,44 +26,46 @@
  * making changes to this file, remember to check if that needs to be applied to
  * dropbutton.css or action-links.css as well.
  */
-.button {
+.button,
+.project__action_button {
   display: inline-block;
   margin-block: var(--space-m);
   margin-inline: 0 var(--space-s);
-  padding-block: var(--space-s);
-  padding-inline: var(--space-m);
+  padding-block: calc(var(--gin-spacing-s) - 2px);
+  padding-inline: var(--gin-spacing-m);
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: var(--button-fg-color);
-  border: 1px solid var(--button-border-color);
-  border-radius: var(--button-border-radius-size);
-  background-color: var(--button-bg-color);
-  font-size: var(--button-font-size);
-  font-weight: var(--button-font-weight);
+  color: var(--gin-color-primary);
+  border: 2px solid var(--gin-color-primary);
+  border-radius: var(--gin-border-m);
+  background-color: transparent;
+  box-shadow: 0 1px 2px var(--gin-color-primary-light);
+  font-size: var(--gin-font-size-s);
+  font-weight: var(--gin-font-weight-semibold);
   line-height: 1;
   appearance: none;
 
   &:hover {
     text-decoration: none;
-    color: var(--button-fg-color);
-    border-color: var(--button--hover-border-color);
-    background-color: var(--button--hover-bg-color);
-  }
-
-  &:focus {
-    text-decoration: none;
-    box-shadow: var(--focus-ring);
+    color: var(--gin-color-button-text);
+    border-color: var(--gin-color-primary-hover);
+    background-color: var(--gin-color-primary-hover);
   }
 
   &:active {
-    border-color: var(--button--active-border-color);
-    background-color: var(--button--active-bg-color);
+    color: var(--gin-color-button-text);
+    border-color: var(--gin-color-primary-active);
+    background-color: var(--gin-color-primary-active);
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    transition: var(--transition);
+    transition: var(--gin-transition);
   }
+}
+
+.form-actions .button {
+  margin-inline-end: var(--gin-spacing-xs);
 }
 
 /* Common styles for small buttons. */
@@ -86,6 +90,21 @@
   }
 }
 
+.button.button--small {
+  border-radius: var(--gin-border-s);
+  font-size: var(--gin-font-size-xxs);
+  padding-block: calc(var(--gin-spacing-xxs) + 2px);
+  padding-inline: var(--gin-spacing-s);
+}
+
+/* Common styles for extra small buttons. */
+.button.button--extrasmall {
+  border-radius: var(--gin-border-s);
+  font-size: var(--gin-font-size-xxs);
+  padding-block: var(--gin-spacing-xxs);
+  padding-inline: var(--gin-spacing-s);
+}
+
 /* Styles for action link buttons. */
 .button--action {
   margin: 0;
@@ -98,16 +117,28 @@
   }
 }
 
-/* Primary button style.s */
-.button--primary {
-  color: var(--button-fg-color--primary);
-  border-color: transparent;
-  background-color: var(--button-bg-color--primary);
+/* Primary button styles. */
+#edit-submit.form-submit,
+.button--primary,
+.button--primary:not(:focus),
+.ief-entity-submit {
+  background: var(--gin-color-primary);
+  box-shadow: 0.1em 0.25em 0.5em var(--gin-color-primary-light);
 
-  &:is(:hover, :active) {
-    color: var(--button-fg-color--primary);
-    border-color: transparent;
-    background-color: var(--button--hover-bg-color--primary);
+  &:hover {
+    color: var(--gin-color-button-text);
+    background-color: var(--gin-color-primary-hover);
+  }
+
+  &:active {
+    color: var(--gin-color-button-text);
+    background-color: var(--gin-color-primary-active);
+  }
+
+  &,
+  &:hover,
+  &:active {
+    color: var(--gin-color-button-text);
   }
 }
 
@@ -115,11 +146,23 @@
 .button--danger {
   color: var(--button-fg-color--danger);
   border-color: transparent;
-  background-color: var(--button-bg-color--danger);
 
   &:is(:hover, :active) {
     color: var(--button-fg-color--danger);
+    border-color: var(--gin-color-danger);
     background-color: var(--button--hover-bg-color--danger);
+  }
+}
+
+a.button:hover,
+a.button:active {
+  color: var(--gin-color-button-text);
+}
+
+a.button--primary:hover,
+a.button--primary:active {
+  .gin--dark-mode & {
+    color: var(--gin-bg-app);
   }
 }
 
@@ -128,16 +171,31 @@
  *
  * Overrides every definitions before, including variants.
  */
-.button {
-  &:is(:disabled, .is-disabled) {
-    color: var(--button--disabled-fg-color);
-    background-color: var(--button--disabled-bg-color);
+.button.button:disabled,
+.button.button.is-disabled {
+  &,
+  &:hover,
+  &:active {
+    color: var(--gin-color-disabled);
+    border: 2px solid var(--gin-color-disabled-border) !important;
+    background: transparent;
+    box-shadow: none;
   }
 
   /* Make disabled <link> behave like a [disabled] <input> or <button>. */
   &.is-disabled {
     user-select: none;
     pointer-events: none;
+  }
+}
+
+.button.button--primary:disabled,
+.button.button--primary.is-disabled {
+  &,
+  &:hover,
+  &:active {
+    color: var(--gin-color-disabled);
+    background-color: var(--gin-color-disabled-bg);
   }
 }
 
@@ -153,4 +211,13 @@
   border: 0;
   background: none;
   appearance: none;
+}
+
+/* Autocomplete field remove button. */
+.multiple-fields-remove-button.button {
+  border: 0 none !important;
+  mask-image: var(--admin-icon-remove);
+  mask-size: 16px 16px;
+  mask-repeat: no-repeat;
+  mask-position: center center;
 }

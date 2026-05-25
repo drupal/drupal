@@ -130,20 +130,7 @@
   border-end-start-radius: var(--vertical-tabs-border-radius);
 
   &:focus {
-    z-index: 4; /* Focus state should be on the highest level to make the focus effect be fully visible. This also means that it should have bigger z-index than the selected link. */
-    -webkit-text-decoration: none;
-    text-decoration: none;
-    box-shadow: none;
-
-    &::after {
-      position: absolute;
-      inset: 0;
-      margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
-      content: "";
-      pointer-events: none;
-      border: var(--vertical-tabs-menu-link-focus-border-size) solid var(--color-focus);
-      border-radius: var(--vertical-tabs-border-radius);
-    }
+    outline-offset: calc(-1 * var(--outline-size, 0px));
   }
 
   &:hover {
@@ -168,7 +155,8 @@
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
   z-index: 3; /* The selected menu link should be on a higher level than the white masking line that hides the gray separator. */
-  color: var(--color-absolutezero);
+  color: var(--gin-color-primary);
+  text-decoration-style: var(--gin-link-decoration-style);
   border-color: var(--vertical-tabs-border-color) transparent;
   background-color: var(--color-white);
   box-shadow: var(--vertical-tabs-shadow);
@@ -181,12 +169,21 @@
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
   z-index: 1; /* The blue active-tab indication should be on a higher level than the green focus border. */
+  border-color: var(--gin-color-primary);
   border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
   border-radius: var(--base-border-radius) 0 0 var(--base-border-radius);
   border-start-start-radius: var(--base-border-radius);
   border-start-end-radius: 0;
   border-end-end-radius: 0;
   border-end-start-radius: var(--base-border-radius);
+
+  &:hover {
+    border-color: var(--gin-color-primary-hover);
+  }
+
+  &:active {
+    border-color: var(--gin-color-primary-active);
+  }
 
   @media (forced-colors: active) {
     border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid canvastext;

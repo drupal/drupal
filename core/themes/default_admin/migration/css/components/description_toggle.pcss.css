@@ -3,7 +3,7 @@
  * Help icon description toggle styles.
  */
 
-@import "../base/media-queries.pcss.css";
+@import "../../../css/base/media-queries.pcss.css";
 
 .help-icon {
   display: flex;

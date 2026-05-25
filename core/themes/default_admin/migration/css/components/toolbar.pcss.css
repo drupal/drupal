@@ -5,12 +5,73 @@
 
 /* cspell:ignore tmgmt */
 
-@import "../base/media-queries.pcss.css";
+@import "../../../css/base/media-queries.pcss.css";
+
+/* This block copied from system-admin-layout.pcss.css */
+@media screen and (min-width: 38em) {
+  .toolbar-tray-open:not(.toolbar-vertical) .layout-container,
+  body:not(.toolbar-tray-open) .layout-container {
+    margin-right: 3em;
+    margin-left: 3em;
+  }
+
+  .toolbar-tray-open:not(.toolbar-vertical) .layout-row,
+  body:not(.toolbar-tray-open) .layout-row {
+    margin-right: -1.5em;
+    margin-left: -1.5em;
+  }
+
+  .toolbar-tray-open:not(.toolbar-vertical) .layout-column,
+  body:not(.toolbar-tray-open) .layout-column {
+    float: left;
+    /* LTR */
+    box-sizing: border-box;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
+  }
+
+  [dir="rtl"] .toolbar-tray-open:not(.toolbar-vertical) .layout-column,
+  [dir="rtl"] body:not(.toolbar-tray-open) .layout-column {
+    float: right;
+  }
+
+  .toolbar-tray-open:not(.toolbar-vertical) .layout-column--half,
+  body:not(.toolbar-tray-open) .layout-column--half {
+    width: 50%;
+  }
+
+  .toolbar-tray-open:not(.toolbar-vertical) .layout-column--quarter,
+  body:not(.toolbar-tray-open) .layout-column--quarter {
+    width: 25%;
+  }
+
+  .toolbar-tray-open:not(.toolbar-vertical) .layout-column--three-quarter,
+  body:not(.toolbar-tray-open) .layout-column--three-quarter {
+    width: 75%;
+  }
+}
 
 body.gin--toolbar {
   margin-inline-start: 0;
   padding-block-start: var(--gin-toolbar-y-offset) !important;
   padding-inline-start: var(--gin-toolbar-x-offset, 256px) !important;
+}
+
+.toolbar-tray-open:not(.toolbar-vertical) .layout-container,
+body:not(.toolbar-tray-open) .layout-container {
+  margin-inline: var(--gin-spacing-m);
+
+  @media (--admin-small) {
+    margin-inline: var(--gin-spacing-xl);
+  }
+
+  @media (--admin-medium) {
+    margin-inline: min(5vw, var(--gin-spacing-xxl));
+
+    .layout-container {
+      margin-inline: 0;
+    }
+  }
 }
 
 .toolbar {

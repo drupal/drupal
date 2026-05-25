@@ -3,8 +3,12 @@
  */
 
 .content-header {
-  overflow: hidden;
   margin-bottom: var(--space-s);
-  padding: var(--space-l) 0 0;
-  background-color: var(--color-gray-050);
+
+  /* Normalize whitespace if empty. */
+  @media (--admin-small) {
+    &:not(:has(.layout-container *)) {
+      margin-block-start: calc(var(--gin-spacing-m) * -1);
+    }
+  }
 }

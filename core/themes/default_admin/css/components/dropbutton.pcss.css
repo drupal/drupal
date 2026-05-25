@@ -34,7 +34,7 @@
 .dropbutton-wrapper {
   display: inline-flex;
   border-radius: var(--button-border-radius-size);
-  box-shadow: 0 1px 2px rgb(0, 0, 0, 0.25);
+  box-shadow: none;
 }
 
 .form-actions .dropbutton-wrapper,
@@ -46,6 +46,9 @@
 .dropbutton-widget {
   position: relative;
   flex: 1 1 auto;
+  border-radius: var(--button-border-radius-size);
+  background-color: transparent;
+
   .js .dropbutton-wrapper.open & {
     z-index: var(--dropbutton-widget-z-index);
   }
@@ -57,15 +60,143 @@
 .dropbutton {
   display: block;
   overflow: visible;
-  min-width: 6rem; /* Help mitigate long dropbutton text from obscuring other dropbuttons. */
+  min-width: 6rem;
+  /* Help mitigate long dropbutton text from obscuring other dropbuttons. */
   height: var(--dropbutton-toggle-size);
   margin: 0;
   list-style: none;
-}
+  border: 2px solid var(--gin-color-primary);
+  border-radius: var(--gin-border-m);
+  box-shadow: 0 1px 2px var(--gin-color-primary-light);
 
-.dropbutton-widget {
-  border-radius: var(--button-border-radius-size);
-  background-color: var(--button-bg-color);
+  .gin--dark-mode & {
+    box-shadow: 0 4px 18px var(--gin-shadow-button);
+  }
+
+  &:hover {
+    border-color: var(--gin-color-primary);
+  }
+
+  &:active {
+    border-color: var(--gin-color-primary-active);
+  }
+
+  .dropbutton__items {
+    position: absolute;
+    min-width: 120px;
+    margin: 0;
+    padding: 0.5em;
+    list-style: none;
+    border-radius: var(--gin-border-l);
+    background: var(--gin-bg-layer3);
+    box-shadow: var(--gin-shadow-l2);
+    inset-inline-end: 0;
+
+    .node-form & {
+      inset-inline-start: 0;
+      inset-inline-end: auto;
+    }
+
+    @media (forced-colors: active) {
+      border: 1px solid linktext;
+    }
+  }
+
+  > .dropbutton__items > .dropbutton__item:first-of-type {
+    > a,
+    > input,
+    > .button {
+      border-radius: var(--gin-border-s) var(--gin-border-s) 0 0;
+    }
+  }
+
+  /* Drupal 10.2.x fix */
+  &.dropbutton--gin .dropbutton-action > .button {
+    border: var(--dropbutton-border-size) solid transparent !important;
+  }
+
+  /* The ugly part: make it work for all different dropbutton versions out there */
+  &:not(.dropbutton--gin) > .dropbutton__item ~ .dropbutton__item,
+  .dropbutton__items > .dropbutton__item,
+  .dropbutton__items > .dropbutton__item ~ .dropbutton__item {
+    border: 0 none;
+    background-color: var(--gin-bg-app);
+    box-shadow: none;
+
+    &:first-of-type {
+      margin-inline-end: 0;
+    }
+
+    /* Multiple Dropbutton only has one item */
+    &:first-of-type:last-of-type > * {
+      .js .dropbutton--multiple & {
+        border-radius: var(--gin-border-s);
+      }
+    }
+
+    > a,
+    > input,
+    > .button {
+      display: block;
+      overflow: hidden;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 320px;
+      margin: 0;
+      text-align: start;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: var(--gin-color-primary);
+      border: 0 none !important;
+      border-radius: 0;
+      background: var(--gin-bg-layer3);
+      box-shadow: none;
+      font-weight: var(--gin-font-weight-heavy);
+
+      &:focus {
+        outline-offset: -2px;
+      }
+
+      &:hover,
+      &:active {
+        color: var(--gin-color-button-text);
+        border-radius: var(--gin-border-s);
+        background: var(--gin-color-primary);
+      }
+    }
+  }
+
+  & > .dropbutton__item:first-of-type {
+    > a,
+    > input,
+    > .button {
+      &:hover,
+      &:active {
+        color: var(--gin-color-button-text);
+        background: var(--gin-color-primary);
+      }
+    }
+  }
+
+  .dropbutton__items > .dropbutton__item {
+    border-radius: var(--gin-border-s);
+  }
+
+  /* Shadow for pseudo dropdown on views page */
+  &:not(.dropbutton--gin) > .dropbutton__item.secondary-action {
+    box-shadow: var(--gin-shadow-l2);
+  }
+
+  &:not(.dropbutton--gin) > .dropbutton__item:not(:first-of-type),
+  .dropbutton__items > .dropbutton__item,
+  > .dropbutton__items > .dropbutton__item ~ .dropbutton__item {
+    > a,
+    > input,
+    > .button {
+      padding: 0.75em 1em !important;
+      font-size: var(--gin-font-size-s) !important;
+    }
+  }
 }
 
 /* Variants. */
@@ -81,8 +212,20 @@
  * First dropbutton list item.
  */
 .dropbutton--multiple .dropbutton__item:first-of-type {
-  margin-right: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  height: 100%;
+  margin-right: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing));
   white-space: nowrap;
+  border-inline-end: 1px solid var(--gin-color-primary-light-active);
+
+  input {
+    height: 100%;
+    color: var(--gin-color-primary);
+    border: 0 none !important;
+    border-radius: 0 !important;
+    background-color: transparent;
+  }
+
+  /* LTR */
   [dir="rtl"] & {
     margin-right: 0;
     margin-left: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing));
@@ -91,8 +234,10 @@
 
 /* First dropbutton list item variants */
 .no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
-  margin-right: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  margin-right: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing));
+  /* LTR */
   white-space: nowrap;
+
   [dir="rtl"] & {
     margin-right: 0;
     margin-left: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing));
@@ -100,8 +245,10 @@
 }
 
 .no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
-  margin-right: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  margin-right: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing));
+  /* LTR */
   white-space: nowrap;
+
   [dir="rtl"] & {
     margin-right: 0;
     margin-left: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing));
@@ -115,21 +262,30 @@
   position: absolute;
   z-index: 3;
   top: 0;
-  right: 0; /* LTR */
+  right: 0;
+  inset-block-start: 2px;
+  inset-inline-end: 2px;
   bottom: 0;
-  width: var(--dropbutton-toggle-size);
-  height: var(--dropbutton-toggle-size);
-  border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
-  border-inline-start: var(--dropbutton-border-size) solid white !important;
-  border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0; /* LTR */
-  background: var(--button-bg-color);
-  font-size: 1px; /* iOS Safari sets a minimum button-width based on font-size. */
+  width: calc(var(--gin-spacing-xxl) + 1px);
+  height: 2.75rem;
+  white-space: nowrap;
+  border: var(--dropbutton-border-size) solid transparent !important;
+  /* 1 */
+  border-inline-start: var(--dropbutton-border-size, 1px) solid var(--gin-color-primary) !important;
+  border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0;
+  /* LTR */
+  background: none;
+  box-shadow: none;
+  font-size: var(--gin-font-size-s);
+  font-weight: var(--gin-font-weight-semibold);
   appearance: none;
+
   [dir="rtl"] & {
     right: auto;
     left: 0;
     border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size);
   }
+
   &::before {
     position: absolute;
     top: 50%;
@@ -144,21 +300,52 @@
 
   /* Toggler states. */
   &:hover {
-    color: var(--button-fg-color);
-    background-color: var(--button--hover-bg-color);
+    color: var(--gin-color-button-text);
+    background-color: var(--gin-color-primary);
     box-shadow: 0 2px 4px rgb(0, 0, 0, 0.25);
   }
+
   &:focus {
     z-index: 2;
   }
+
   &:active {
-    color: var(--button-fg-color);
+    color: var(--gin-color-button-text);
     background-color: var(--button--active-bg-color);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: var(--gin-transition);
+  }
+
+  @media (--admin-wide) {
+    font-size: var(--gin-font-size);
+  }
+
+  @media (forced-colors: active) {
+    border-width: 0 !important;
+  }
+
+  @media not (forced-colors: active) {
+    &::before {
+      background-color: var(--gin-color-primary);
+      background-image: none;
+      mask-image: var(--admin-icon-drop);
+      mask-repeat: no-repeat;
+      mask-position: center center;
+      mask-size: 12px 12px;
+    }
+
+    &:hover::before,
+    &:active::before {
+      background-color: var(--gin-color-button-text);
+    }
   }
 }
 
 .dropbutton-wrapper.open .dropbutton__toggle::before {
   transform: translate(50%, -50%) rotate(180deg);
+
   [dir="rtl"] & {
     transform: translate(50%, -50%) rotate(-180deg);
   }
@@ -177,7 +364,8 @@
 
 .no-touchevents .dropbutton--small .dropbutton__toggle::before,
 .no-touchevents .dropbutton--extrasmall .dropbutton__toggle::before {
-  width: 0.75rem; /* 12px */
+  width: 0.75rem;
+  /* 12px */
 }
 
 /* High contrast. */
@@ -187,21 +375,23 @@
     width: 0.5625rem;
     height: 0.5625rem;
     margin-top: calc(0.5625rem / (2 * -1.41429));
-    transform: translate(50%, -50%) rotate(135deg); /* LTR */
+    transform: translate(50%, -50%) rotate(135deg);
+    /* LTR */
     border-width: 0.125rem 0.125rem 0 0;
     border-style: solid;
     background: none;
+
     .dropbutton-wrapper.open & {
       margin-top: calc(0.5625rem / (2 * 1.41429));
       transform: translate(50%, -50%) rotate(315deg);
     }
+
     [dir="rtl"] .dropbutton-wrapper.open & {
       transform: translate(50%, -50%) rotate(-45deg);
     }
   }
 
   /* Variants */
-
   .no-touchevents .dropbutton--small .dropbutton__toggle::before,
   .no-touchevents .dropbutton--extrasmall .dropbutton__toggle::before {
     width: 0.4375rem;
@@ -223,19 +413,47 @@
   & > * {
     display: inline-block;
     margin: 0;
-    padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size)) calc(var(--space-l) - var(--dropbutton-border-size));
+    padding: calc(0.875rem - 1px) calc(var(--gin-spacing-l) - 1px);
     cursor: pointer;
     text-align: center;
+    white-space: nowrap;
     text-decoration: none;
-    color: var(--button-fg-color);
-    border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
+    color: var(--gin-color-primary);
+    border: var(--dropbutton-border-size) solid transparent !important;
+    /* 1 */
     border-radius: var(--button-border-radius-size);
-    background-color: var(--button-bg-color);
-    font-size: var(--dropbutton-font-size);
-    font-weight: 700;
+    background: none;
+    box-shadow: none;
+    font-size: var(--gin-font-size-s);
+    font-weight: var(--gin-font-weight-semibold);
     line-height: var(--dropbutton-line-height);
     appearance: none;
     -webkit-font-smoothing: antialiased;
+
+    &:hover {
+      background-color: var(--gin-color-primary-hover);
+    }
+
+    &:active {
+      background-color: var(--gin-color-primary-active);
+    }
+
+    &:hover,
+    &:active {
+      color: var(--gin-color-button-text);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: var(--gin-transition);
+    }
+
+    @media (--admin-wide) {
+      font-size: var(--gin-font-size);
+    }
+
+    @media (forced-colors: active) {
+      border-width: 0 !important;
+    }
   }
 
   .dropbutton--multiple & > * {
@@ -264,17 +482,6 @@
     box-shadow: 0 2px 4px rgb(0, 0, 0, 0.25);
   }
 
-  & > *:focus:hover,
-  & > .button:focus:hover {
-    box-shadow:
-      0 0 0 2px var(--color-white),
-      0 0 0 5px var(--color-focus);
-  }
-
-  & > *:focus {
-    text-decoration: none;
-  }
-
   & > *:active {
     color: var(--button-fg-color);
     background-color: var(--button--active-bg-color);
@@ -290,8 +497,14 @@
   }
 
   .dropbutton--multiple & > * {
-    border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size); /* LTR */
+    border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size);
+    /* LTR */
   }
+
+  & ~ .dropbutton__item__item ~ .dropbutton__item:last-child {
+    border-color: var(--gin-color-primary);
+  }
+
   [dir="rtl"] .dropbutton--multiple & > * {
     border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0;
   }
@@ -303,8 +516,10 @@
   box-sizing: border-box;
   width: 100%;
   margin: 0;
-  text-align: left; /* LTR */
+  text-align: left;
+  /* LTR */
 }
+
 [dir="rtl"] .dropbutton > .dropbutton__item > a,
 [dir="rtl"] .dropbutton > .dropbutton__item > .button {
   text-align: right;
@@ -323,11 +538,17 @@
  * Non-first dropbutton list elements.
  */
 .dropbutton__item:first-of-type ~ .dropbutton__item {
-  border: var(--dropbutton-border-size) solid var(--color-gray-200);
+  max-width: unset;
+  border: var(--dropbutton-border-size) solid var(--gin-color-primary);
   border-bottom: 0;
   box-shadow: 0 2px 10px rgb(0, 0, 0, 0.15);
+
   & ~ .dropbutton__item {
     border-top: 0;
+  }
+
+  & > *:hover {
+    background-color: var(--gin-bg-layer3);
   }
 }
 
@@ -350,7 +571,8 @@
   white-space: normal;
   text-decoration: none;
   color: var(--color-gray-800);
-  border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
+  border: var(--dropbutton-border-size) solid transparent !important;
+  /* 1 */
   border-radius: var(--dropbutton-border-radius-size);
   background: var(--color-white);
   box-shadow: none;
@@ -399,9 +621,95 @@
   }
 
   &:first-of-type ~ & > *:focus {
-    border-color: var(--color-focus) !important; /* 1 */
+    border-color: var(--color-focus) !important;
+    /* 1 */
     box-shadow:
       inset 0 0 0 1px var(--color-focus),
       0 0 0 1px var(--color-focus);
+  }
+}
+
+/* Overlay the dropdown button on top of the sticky header and main toolbar */
+html.js {
+  .dropbutton-wrapper.open {
+    .dropbutton-widget {
+      z-index: 502;
+      /* Above toolbar and sticky header */
+    }
+
+    .dropbutton {
+      background: var(--gin-bg-layer3);
+    }
+  }
+
+  .dropbutton {
+    box-sizing: border-box;
+    height: 3rem;
+    min-height: 3rem;
+  }
+
+  .dropbutton-wrapper:not(.open) .dropbutton__items {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  .dropbutton-wrapper .dropbutton__items {
+    visibility: visible;
+    overflow: auto;
+    max-height: 30vh;
+    opacity: 1;
+  }
+
+  .dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__items {
+    display: none;
+  }
+
+  .dropbutton-wrapper:not(.open) .dropbutton__items .dropbutton__item:first-of-type ~ .dropbutton__item {
+    display: block;
+    height: auto;
+  }
+}
+
+html.js.no-touchevents {
+  .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
+    margin-inline-end: 0;
+  }
+
+  .dropbutton--multiple.dropbutton--small > .dropbutton__item:first-of-type {
+    margin-inline-end: var(--gin-spacing-xl);
+  }
+
+  .dropbutton--multiple.dropbutton--extrasmall > .dropbutton__item:first-of-type {
+    margin-inline-end: var(--gin-spacing-l);
+  }
+
+  .dropbutton--small {
+    min-width: 0;
+    height: 2.25rem;
+    min-height: 2.25rem;
+    border-radius: var(--gin-border-s);
+
+    .dropbutton__toggle {
+      width: calc(var(--dropbutton-small-toggle-size, 2rem) + 1px);
+    }
+  }
+
+  .dropbutton--extrasmall {
+    min-width: 0;
+    height: 1.75rem;
+    min-height: 1.75rem;
+    border-radius: var(--gin-border-s);
+
+    .dropbutton__toggle {
+      width: calc(var(--dropbutton-extrasmall-toggle-size, 1.5rem) + 1px);
+    }
+
+    .dropbutton__item:first-of-type > * {
+      padding-inline: var(--gin-spacing-s);
+    }
+  }
+
+  .dropbutton--multiple.dropbutton--extrasmall .dropbutton__items .dropbutton__item {
+    margin-inline-end: 0;
   }
 }

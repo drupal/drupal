@@ -10,7 +10,13 @@
   margin-bottom: 0;
 }
 .form-element--editor-format {
+  width: auto;
   vertical-align: top;
+
+  .form-item__label {
+    inset-block-start: 3px;
+    padding-block-end: 0;
+  }
 }
 
 @media screen and (max-width: 600px) {
@@ -21,11 +27,17 @@
 }
 
 .filter-wrapper {
-  margin-top: 0.5em; /* (8 / 16) */
-  margin-bottom: 0.5em; /* (8 / 16) */
-}
-.filter-wrapper .form-item {
-  margin: 0;
+  margin-block: 0.5em; /* (8 / 16) */
+
+  .form-item {
+    margin: 0;
+  }
+
+  .field--type-text-with-summary &,
+  .field--widget-text-textarea & {
+    border: 0 none;
+    padding-inline: 0;
+  }
 }
 
 .filter-help {
@@ -52,10 +64,12 @@
  * Filter guidelines.
  */
 .filter-guidelines__item {
+  max-width: var(--gin-max-line-length);
   margin-top: 0.5em; /* (6 / 12) */
-  color: var(--input-fg-color--description);
+  color: var(--gin-color-text-light);
   font-size: 0.75em; /* (12 / 16) */
 }
+
 .filter-guidelines p {
   margin-top: 0.3333em; /* (4 / 12) */
   margin-bottom: 0;

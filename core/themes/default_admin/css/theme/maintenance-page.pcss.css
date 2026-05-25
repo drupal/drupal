@@ -225,6 +225,8 @@ h3 {
 .system-status-report__status-title {
   float: none;
   width: 100%;
+  color: var(--gin-color-title);
+  font-weight: var(--gin-font-weight-semibold);
 }
 .system-status-report__entry__value {
   float: none;

@@ -9,24 +9,44 @@
  * Generic elements.
  */
 
+::selection {
+  background: var(--gin-color-primary-light-hover);
+}
+
 html {
-  font-family: var(--font-family);
+  font-family: var(--gin-font);
   font-size: 100%;
   font-weight: normal;
   font-style: normal;
   line-height: var(--line-height);
+  scroll-padding-block-start: var(--gin-scroll-offset) !important;
 }
 
 body {
+  overflow-x: hidden;
   word-wrap: break-word;
   hyphens: auto;
-  color: var(--color-fg);
+  color: var(--gin-color-text);
   background: var(--app-bg-color);
+
+  @media (--admin-large) {
+    overflow-x: auto;
+  }
 }
 
 a,
-.link {
-  color: var(--color-link);
+.link,
+button.link {
+  word-wrap: break-word;
+  color: var(--gin-color-primary);
+  overflow-wrap: break-word;
+  text-decoration-style: var(--gin-link-decoration-style);
+}
+
+*|*:any-link:not(svg|a) {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-style: var(--gin-link-decoration-style);
 }
 
 a:hover,
@@ -35,7 +55,6 @@ a:focus,
 .link:focus {
   -webkit-text-decoration: none;
   text-decoration: none;
-  outline: 0;
 }
 
 a:hover,
@@ -50,7 +69,7 @@ a:active,
 
 hr {
   height: 1px;
-  margin: var(--space-m) 0;
+  margin: var(--gin-spacing-xl) 0;
   padding: 0;
   border: none;
   background: var(--color-divider);
@@ -68,24 +87,27 @@ summary {
 h1,
 .heading-a {
   margin: var(--space-m) 0 var(--space-s);
+  letter-spacing: -0.025em;
   font-size: var(--font-size-h1);
-  font-weight: bold;
+  font-weight: var(--gin-font-weight-normal);
   line-height: var(--line-height-heading);
 }
 
 h2,
 .heading-b {
   margin: var(--space-m) 0 var(--space-s);
-  font-size: var(--font-size-h2);
-  font-weight: bold;
+  letter-spacing: -0.025em;
+  font-size: var(--gin-font-size-h2);
+  font-weight: var(--gin-font-weight-normal);
   line-height: var(--line-height-heading);
 }
 
 h3,
 .heading-c {
   margin: var(--space-m) 0 var(--space-s);
-  font-size: var(--font-size-h3);
-  font-weight: bold;
+  letter-spacing: -0.025em;
+  font-size: var(--gin-font-size-h3);
+  font-weight: var(--gin-font-weight-normal);
   line-height: var(--line-height-heading);
 }
 
@@ -129,23 +151,29 @@ dl dl {
 
 blockquote {
   position: relative;
-  margin-block: var(--space-l);
-  margin-inline: 2.5rem var(--space-l);
-  font-size: var(--font-size-h6);
-}
+  margin: var(--gin-spacing-m);
+  padding-inline-start: var(--gin-spacing-l);
+  font-size: var(--gin-font-size-quote);
 
-blockquote::before {
-  position: absolute;
-  inset-inline-start: -2.5rem;
-  content: open-quote;
-  color: var(--color-absolutezero);
-  font-family: var(--font-family-serif);
-  font-size: var(--space-xxl);
-  line-height: 1em;
-}
+  &::before {
+    position: absolute;
+    display: block;
+    width: 0.25rem;
+    height: 100%;
+    content: "";
+    color: var(--color-absolutezero);
+    border-radius: 2px;
+    background-color: var(--gin-color-primary);
+    font-family: var(--font-family-serif);
+    font-size: var(--space-xxl);
+    line-height: 1em;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+  }
 
-blockquote::after {
-  content: no-close-quote;
+  &::after {
+    content: no-close-quote;
+  }
 }
 
 address {
@@ -216,11 +244,7 @@ details {
   line-height: var(--details-line-height);
 
   & summary {
-    padding: 0.95em 1.45em;
-
-    &:focus {
-      outline: none;
-    }
+    padding: var(--gin-spacing-m);
   }
 }
 
@@ -239,7 +263,6 @@ img {
 .page-wrapper *:focus,
 .ui-dialog *:focus {
   outline: var(--focus-outline);
-  box-shadow: var(--focus-box-shadow);
 }
 
 /**
@@ -251,4 +274,28 @@ img {
 .views-tabs,
 .views-display-top > input.button {
   display: none;
+}
+
+/* Set a dark color scheme to style native browser elements. */
+
+.gin--dark-mode {
+  color-scheme: dark;
+}
+
+/* Enforcing colors on visually hidden text does not change anything for the
+   user, but it prevents accessibility scanners like Wave from reporting contrast
+   errors on visually hidden elements. While this is certainly an issue with the
+   scanners and not Gin, this ensures that scans provide an accurate account of
+   Gin's contrast support. */
+
+.visually-hidden {
+  color: #000;
+
+  .gin--dark-mode & {
+    color: #fff;
+  }
+
+  &.skip-link {
+    color: var(--gin-color-button-text);
+  }
 }

@@ -3,7 +3,7 @@
  * Node preview bar styles.
  */
 
-@import "../base/media-queries.pcss.css";
+@import "../../../css/base/media-queries.pcss.css";
 
 .node-preview-container.node-preview-container {
   position: sticky;

@@ -1,7 +1,8 @@
 /**
  * @file
- * Styles for Claro's Pagination.
+ * Styles for Admin's Pagination.
  */
+
 .pager {
   --pager-size: 2rem; /* --space-m Ã— 2 */
   --pager-border-width: 0.125rem; /* 2px */
@@ -43,43 +44,54 @@
   block-size: var(--pager-size);
   padding-inline: var(--space-xs);
   text-decoration: none;
-  color: var(--pager-fg-color);
+  color: var(--gin-color-text);
   border-radius: var(--space-m); /* Pager size ÷ 2 */
-  background: var(--pager-bg-color); /* Make sure that the text is visible on dark background. */
+  background: transparent;
   line-height: 1;
 }
-.pager__link:hover,
-.pager__link:focus,
-.pager__link:active {
-  text-decoration: none;
+
+.pager__link {
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+  }
+
+  &:hover,
+  &.is-active:hover {
+    color: var(--gin-color-button-text);
+    background: var(--gin-color-primary-hover);
+  }
 }
-.pager__link:hover,
-.pager__link.is-active:hover {
-  color: var(--pager-fg-color);
-  background: var(--pager-hover-bg-color);
-}
+
 .pager__link--action-link {
   border-radius: var(--pager-border-radius--action);
 }
+
 /* Active number link. */
 .pager__link.is-active,
 .pager__item--current {
-  color: var(--pager-active-fg-color);
+  color: var(--gin-bg-app);
   border: var(--pager-border-width) solid transparent;
-  background: var(--pager-active-bg-color);
+  background: var(--gin-color-primary);
 }
+
 .pager__item--first .pager__link::before {
-  --background-image: url(../../images/icons/545560/pager-first.svg);
+  mask-image: var(--admin-icon-first);
 }
+
 .pager__item--previous .pager__link::before {
-  --background-image: url(../../images/icons/545560/pager-prev.svg);
+  mask-image: var(--admin-icon-prev);
 }
+
 .pager__item--next .pager__link::after {
-  --background-image: url(../../images/icons/545560/pager-next.svg);
+  mask-image: var(--admin-icon-next);
 }
+
 .pager__item--last .pager__link::after {
-  --background-image: url(../../images/icons/545560/pager-last.svg);
+  mask-image: var(--admin-icon-last);
 }
+
 .pager__item--first .pager__link::before,
 .pager__item--previous .pager__link::before,
 .pager__item--next .pager__link::after,
@@ -89,44 +101,31 @@
   inline-size: 1rem;
   block-size: 1rem;
   content: "";
-  background-image: var(--background-image);
-  background-repeat: no-repeat;
-  background-position: center;
-}
+  background: currentColor;
 
-@media (forced-colors: active) {
-  .pager__item--first .pager__link::before,
-  .pager__item--previous .pager__link::before,
-  .pager__item--next .pager__link::after,
-  .pager__item--last .pager__link::after {
-    background-color: linktext;
-    background-image: none;
-    mask-image: var(--background-image);
-    mask-repeat: no-repeat;
-    mask-position: center;
+  &:dir(rtl) {
+    transform: scaleX(-1);
   }
-}
 
-[dir="rtl"] .pager__item--first .pager__link::before,
-[dir="rtl"] .pager__item--previous .pager__link::before,
-[dir="rtl"] .pager__item--next .pager__link::after,
-[dir="rtl"] .pager__item--last .pager__link::after {
-  transform: scaleX(-1);
+  @media (forced-colors: active) {
+    background-color: linktext;
+  }
 }
 
 .pager__item--mini {
   margin-inline: calc(var(--space-m) / 2);
 }
+
 .pager__link--mini {
   border-radius: 50%;
-}
 
-/**
-* On the mini pager, remove margins for the previous and next icons.
-* Margins are not needed here as there is no accompanying text.
-*/
-.pager__link--mini::before {
-  margin-inline: 0;
+  /**
+   * On the mini pager, remove margins for the previous and next icons.
+   * Margins are not needed here as there is no accompanying text.
+   */
+  &::before {
+    margin-inline: 0;
+  }
 }
 
 .pager__item-title--backwards {

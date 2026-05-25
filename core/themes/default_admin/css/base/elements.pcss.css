@@ -2,42 +2,65 @@
  * Generic elements.
  */
 
+::selection {
+  background: var(--gin-color-primary-light-hover);
+}
+
 html {
-  font-family: var(--font-family);
+  font-family: var(--gin-font);
   font-size: 100%;
   font-weight: normal;
   font-style: normal;
   line-height: var(--line-height);
+  scroll-padding-block-start: var(--gin-scroll-offset) !important;
 }
+
 body {
+  overflow-x: hidden;
   word-wrap: break-word;
   hyphens: auto;
-  color: var(--color-fg);
+  color: var(--gin-color-text);
   background: var(--app-bg-color);
+
+  @media (--admin-large) {
+    overflow-x: auto;
+  }
 }
 
 a,
-.link {
-  color: var(--color-link);
+.link,
+button.link {
+  word-wrap: break-word;
+  color: var(--gin-color-primary);
+  overflow-wrap: break-word;
+  text-decoration-style: var(--gin-link-decoration-style);
 }
+
+*|*:any-link:not(svg|a) {
+  text-decoration: underline;
+  text-decoration-style: var(--gin-link-decoration-style);
+}
+
 a:hover,
 a:focus,
 .link:hover,
 .link:focus {
   text-decoration: none;
-  outline: 0;
 }
+
 a:hover,
 .link:hover {
   color: var(--color-link-hover);
 }
+
 a:active,
 .link:active {
   color: var(--color-link-active);
 }
+
 hr {
   height: 1px;
-  margin: var(--space-m) 0;
+  margin: var(--gin-spacing-xl) 0;
   padding: 0;
   border: none;
   background: var(--color-divider);
@@ -54,24 +77,30 @@ summary {
 h1,
 .heading-a {
   margin: var(--space-m) 0 var(--space-s);
+  letter-spacing: -0.025em;
   font-size: var(--font-size-h1);
-  font-weight: bold;
+  font-weight: var(--gin-font-weight-normal);
   line-height: var(--line-height-heading);
 }
+
 h2,
 .heading-b {
   margin: var(--space-m) 0 var(--space-s);
-  font-size: var(--font-size-h2);
-  font-weight: bold;
+  letter-spacing: -0.025em;
+  font-size: var(--gin-font-size-h2);
+  font-weight: var(--gin-font-weight-normal);
   line-height: var(--line-height-heading);
 }
+
 h3,
 .heading-c {
   margin: var(--space-m) 0 var(--space-s);
-  font-size: var(--font-size-h3);
-  font-weight: bold;
+  letter-spacing: -0.025em;
+  font-size: var(--gin-font-size-h3);
+  font-weight: var(--gin-font-weight-normal);
   line-height: var(--line-height-heading);
 }
+
 h4,
 .heading-d {
   margin: var(--space-m) 0 var(--space-s);
@@ -79,6 +108,7 @@ h4,
   font-weight: bold;
   line-height: var(--line-height-heading);
 }
+
 h5,
 .heading-e {
   margin: var(--space-m) 0 var(--space-s);
@@ -86,6 +116,7 @@ h5,
   font-weight: bold;
   line-height: var(--line-height-heading);
 }
+
 h6,
 .heading-f {
   margin: var(--space-m) 0 var(--space-s);
@@ -93,73 +124,95 @@ h6,
   font-weight: bold;
   line-height: var(--line-height-heading);
 }
+
 p {
   margin: 1em 0;
 }
+
 dl {
   margin: 0 0 20px;
 }
+
 dl dd,
 dl dl {
   margin-block-end: 10px;
   margin-inline-start: 20px;
 }
+
 blockquote {
   position: relative;
-  margin-block: var(--space-l);
-  margin-inline: 2.5rem var(--space-l);
-  font-size: var(--font-size-h6);
+  margin: var(--gin-spacing-m);
+  padding-inline-start: var(--gin-spacing-l);
+  font-size: var(--gin-font-size-quote);
+
+  &::before {
+    position: absolute;
+    display: block;
+    width: 4px;
+    height: 100%;
+    content: "";
+    color: var(--color-absolutezero);
+    border-radius: 2px;
+    background-color: var(--gin-color-primary);
+    font-family: var(--font-family-serif);
+    font-size: var(--space-xxl);
+    line-height: 1em;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+  }
+
+  &::after {
+    content: no-close-quote;
+  }
 }
-blockquote::before {
-  position: absolute;
-  inset-inline-start: -2.5rem;
-  content: open-quote;
-  color: var(--color-absolutezero);
-  font-family: var(--font-family-serif);
-  font-size: var(--space-xxl);
-  line-height: 1em;
-}
-blockquote::after {
-  content: no-close-quote;
-}
+
 address {
   font-style: italic;
 }
+
 u,
 ins {
   text-decoration: underline;
 }
+
 s,
 strike,
 del {
   text-decoration: line-through;
 }
+
 big {
   font-size: larger;
 }
+
 small {
   font-size: smaller;
 }
+
 sub {
   vertical-align: sub;
   font-size: smaller;
   line-height: normal;
 }
+
 sup {
   vertical-align: super;
   font-size: smaller;
   line-height: normal;
 }
+
 abbr,
 acronym {
   border-bottom: dotted 1px;
 }
+
 ul {
   margin-block: 0.25em;
   margin-inline: 1.5em 0;
   padding-inline-start: 0;
   list-style-image: none;
 }
+
 ol {
   margin-block: 0.25em;
   margin-inline: 2em 0;
@@ -169,21 +222,20 @@ ol {
 code {
   margin: 0.5em 0;
 }
+
 pre {
   margin: 0.5em 0;
   white-space: pre-wrap;
 }
+
 details {
   line-height: var(--details-line-height);
 
   & summary {
-    padding: 0.95em 1.45em;
-
-    &:focus {
-      outline: none;
-    }
+    padding: var(--gin-spacing-m);
   }
 }
+
 img {
   max-width: 100%;
   height: auto;
@@ -198,7 +250,6 @@ img {
 .page-wrapper *:focus,
 .ui-dialog *:focus {
   outline: var(--focus-outline);
-  box-shadow: var(--focus-box-shadow);
 }
 
 /**
@@ -209,4 +260,26 @@ img {
 .views-tabs,
 .views-display-top > input.button {
   display: none;
+}
+
+/* Set a dark color scheme to style native browser elements. */
+.gin--dark-mode {
+  color-scheme: dark;
+}
+
+/* Enforcing colors on visually hidden text does not change anything for the
+   user, but it prevents accessibility scanners like Wave from reporting contrast
+   errors on visually hidden elements. While this is certainly an issue with the
+   scanners and not Gin, this ensures that scans provide an accurate account of
+   Gin's contrast support. */
+.visually-hidden {
+  color: #000;
+
+  .gin--dark-mode & {
+    color: #fff;
+  }
+
+  &.skip-link {
+    color: var(--gin-color-button-text);
+  }
 }

@@ -12,33 +12,53 @@
   --card-box-shadow: 0 4px 10px rgb(0, 0, 0, 0.1);
 }
 
+.card-list {
+  margin-block-end: var(--gin-spacing-xl);
+}
+
 .card {
   display: flex;
+  overflow: hidden;
   flex-direction: column;
   align-items: stretch;
   justify-items: flex-start;
   padding: 0;
-  border: var(--card-border-size) solid var(--card-border-color);
-  border-radius: var(--card-border-radius-size);
-  background-color: var(--card-bg-color);
-  box-shadow: var(--card-box-shadow);
+  border: 1px solid var(--gin-border-color-layer2);
+  border-radius: var(--gin-border-m);
 }
 
-/* 588px theme screenshot width */
-@media screen and (min-width: 36.75rem) {
-  .card--horizontal {
+/* 588px theme screenshot width. 53.75rem is screenshot image width + toolbar width (15rem) + 2rem of margins. */
+.card--horizontal {
+  /* 588px theme screenshot width */
+  @media screen and (min-width: 36.75rem) {
     flex-direction: row;
+
+    .card__image {
+      flex-basis: 35%;
+      border-start-start-radius: var(--card-image-border-radius-size);
+      border-start-end-radius: 0;
+      border-end-start-radius: var(--card-image-border-radius-size);
+      border-end-end-radius: 0;
+    }
+
+    .card__content-wrapper {
+      flex-basis: 65%;
+    }
+
+    /* Card content with image. */
+    .card__image ~ .card__content-wrapper {
+      padding-inline-start: var(--space-m);
+    }
   }
 
-  .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal {
-    flex-direction: column;
-  }
-}
+  @media screen and (min-width: 85.375rem) {
+    .card__image {
+      flex-basis: 45%;
+    }
 
-/* 53.75rem it is width of screenshot image + toolbar width(15rem) + 2rem of margins. */
-@media screen and (min-width: 53.75rem) {
-  .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal {
-    flex-direction: row;
+    .card__content-wrapper {
+      flex-basis: 55%;
+    }
   }
 }
 
@@ -47,35 +67,12 @@
  */
 .card__image {
   overflow: hidden;
-  border-radius: var(--card-image-border-radius-size) var(--card-image-border-radius-size) 0 0;
+  border-radius: var(--gin-border-m) var(--gin-border-m) 0 0;
   line-height: 0;
-}
 
-@media screen and (min-width: 36.75rem) {
-  .card--horizontal .card__image {
-    flex-basis: 35%;
-    border-start-start-radius: var(--card-image-border-radius-size);
-    border-start-end-radius: 0;
-    border-end-start-radius: var(--card-image-border-radius-size);
-    border-end-end-radius: 0;
+  @media (--admin-xsmall) {
+    border-radius: var(--gin-border-m) 0 0 var(--gin-border-m);
   }
-}
-
-/* 53.75rem it is width of screenshot image + toolbar width(15rem) + 2rem of margins. */
-@media screen and (max-width: 53.75rem) {
-  .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal .card__image {
-    flex-basis: auto;
-  }
-}
-
-@media screen and (min-width: 85.375rem) {
-  .card--horizontal .card__image {
-    flex-basis: 45%;
-  }
-
-  /* .card--vertical .card__image {
-    flex-basis: auto;
-  } */
 }
 
 /**
@@ -88,34 +85,18 @@
   flex-shrink: 0;
   box-sizing: border-box;
   padding: var(--space-l);
-}
+  border-radius: 0 0 var(--gin-border-xs) var(--gin-border-xs);
+  background-color: var(--gin-bg-layer);
 
-@media screen and (min-width: 36.75rem) {
-  .card--horizontal .card__content-wrapper {
-    flex-basis: 65%;
+  .gin--dark-mode & {
+    background-color: var(--gin-bg-layer2);
   }
 
-  /* Card content with image. */
-  .card--horizontal .card__image ~ .card__content-wrapper {
-    padding-inline-start: var(--space-m);
-  }
-}
-
-@media screen and (max-width: 53.75rem) {
-  .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal .card__content-wrapper {
-    flex-basis: auto;
+  @media (--admin-xsmall) {
+    border-radius: 0 var(--gin-border-xs) var(--gin-border-xs) 0;
   }
 }
 
-@media screen and (min-width: 85.375rem) {
-  .card--horizontal .card__content-wrapper {
-    flex-basis: 55%;
-  }
-}
-
-/**
- * Card content.
- */
 .card__content {
   flex-grow: 1;
 }
@@ -137,13 +118,9 @@
 .card__footer {
   order: 100;
   margin-block-start: var(--space-l);
-}
 
-.card__footer .action-links {
-  margin-block: 0;
-  text-align: right; /* LTR */
-
-  [dir="rtl"] & {
-    text-align: left;
+  .action-links {
+    margin-block: 0;
+    text-align: end;
   }
 }
