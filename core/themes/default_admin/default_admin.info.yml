@@ -13,12 +13,7 @@ libraries:
   - default_admin/global-styling
 
 libraries-override:
-  core/drupal.tabledrag:
-    css:
-      component:
-        misc/components/tabledrag.module.css: css/components/tabledrag.css
-    js:
-      misc/tabledrag.js: migration/js/tabledrag.js
+  core/drupal.tabledrag: default_admin/admin.tabledrag
 
   core/drupal.ajax:
     css:
@@ -93,9 +88,9 @@ libraries-override:
   views_ui/admin.styling:
     css:
       component:
-        css/views_ui.admin.css: css/components/views_ui.admin.css
+        css/views_ui.admin.css: false
       theme:
-        css/views_ui.admin.theme.css: css/theme/views_ui.admin.theme.css
+        css/views_ui.admin.theme.css: false
 
   # Admin overrides: replace
   media_library/view:
@@ -151,8 +146,6 @@ libraries-extend:
     - default_admin/progress
   core/drupal.tabbingmanager:
     - default_admin/tabbingmanager
-  core/drupal.tabledrag:
-    - default_admin/admin.tabledrag
   core/drupal.tableselect:
     - default_admin/tableselect
   core/drupal.tablesort:
@@ -165,6 +158,8 @@ libraries-extend:
     - default_admin/filter
   filter/drupal.filter:
     - default_admin/filter
+  dblog/drupal.dblog:
+    - default_admin/drupal.dblog
   system/admin:
     - default_admin/system.admin
   core/drupal.autocomplete:
@@ -173,8 +168,12 @@ libraries-extend:
     - default_admin/drupal.shortcut
   core/drupal.ajax:
     - default_admin/ajax
+  update/drupal.update.admin:
+    - default_admin/drupal.update.admin
   user/drupal.user:
     - default_admin/form.password-confirm
+  user/drupal.user.admin:
+    - default_admin/drupal.user.admin
   node/drupal.node.preview:
     - default_admin/drupal.node.preview
   system/status.report:

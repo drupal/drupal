@@ -7,9 +7,25 @@
 
 /**
  * @file
- * Claro styles for the help component.
+ * Admin styles for the help component.
  */
 
-.help p {
-  margin: 0 0 0.625rem;
+.help {
+  max-width: 64rem;
+  margin: 0;
+  font-size: var(--gin-font-size-s);
+
+  &:has(*:not(.region-help)) {
+    margin-block-end: var(--gin-spacing-m);
+  }
+
+  p {
+    margin: 0 0 0.625rem;
+    color: var(--gin-color-text-light);
+  }
+}
+
+#edit-help {
+  color: var(--gin-color-text-light);
+  font-size: var(--gin-font-size-s);
 }

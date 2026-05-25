@@ -1,0 +1,10 @@
+/**
+ * @file
+ * Batch page styles.
+ */
+
+.path-batch {
+  .region-header {
+    display: flex;
+  }
+}

@@ -4,10 +4,12 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 /**
  * @file
- * Styles for Claro's Pagination.
+ * Styles for Admin's Pagination.
  */
+
 .pager {
   --pager-size: 2rem; /* --space-m Ã— 2 */
   --pager-border-width: 0.125rem; /* 2px */
@@ -21,6 +23,7 @@
 
   margin-block: var(--space-m);
 }
+
 .pager__items {
   display: flex;
   flex-wrap: wrap;
@@ -31,11 +34,13 @@
   text-align: center;
   font-weight: bold;
 }
+
 .pager__item {
   display: inline-block;
   margin-inline: calc(var(--space-xs) / 2);
   vertical-align: top;
 }
+
 .pager__link,
 .pager__item--current {
   display: flex;
@@ -47,44 +52,56 @@
   padding-inline: var(--space-xs);
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: var(--pager-fg-color);
+  color: var(--gin-color-text);
   border-radius: var(--space-m); /* Pager size ÷ 2 */
-  background: var(--pager-bg-color); /* Make sure that the text is visible on dark background. */
+  background: transparent;
   line-height: 1;
 }
-.pager__link:hover,
-.pager__link:focus,
-.pager__link:active {
-  -webkit-text-decoration: none;
-  text-decoration: none;
+
+.pager__link {
+  &:hover,
+  &:focus,
+  &:active {
+    -webkit-text-decoration: none;
+    text-decoration: none;
+  }
+
+  &:hover,
+  &.is-active:hover {
+    color: var(--gin-color-button-text);
+    background: var(--gin-color-primary-hover);
+  }
 }
-.pager__link:hover,
-.pager__link.is-active:hover {
-  color: var(--pager-fg-color);
-  background: var(--pager-hover-bg-color);
-}
+
 .pager__link--action-link {
   border-radius: var(--pager-border-radius--action);
 }
+
 /* Active number link. */
+
 .pager__link.is-active,
 .pager__item--current {
-  color: var(--pager-active-fg-color);
+  color: var(--gin-bg-app);
   border: var(--pager-border-width) solid transparent;
-  background: var(--pager-active-bg-color);
+  background: var(--gin-color-primary);
 }
+
 .pager__item--first .pager__link::before {
-  --background-image: url("data:image/svg+xml,%3csvg width='16' height='16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M2 2v12M14 2L8 8l6 6' stroke='%23545560' stroke-width='2'/%3e%3c/svg%3e");
+  mask-image: var(--admin-icon-first);
 }
+
 .pager__item--previous .pager__link::before {
-  --background-image: url("data:image/svg+xml,%3csvg width='16' height='16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M11 2L5 8l6 6' stroke='%23545560' stroke-width='2'/%3e%3c/svg%3e");
+  mask-image: var(--admin-icon-prev);
 }
+
 .pager__item--next .pager__link::after {
-  --background-image: url("data:image/svg+xml,%3csvg width='16' height='16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5 14l6-6-6-6' stroke='%23545560' stroke-width='2'/%3e%3c/svg%3e");
+  mask-image: var(--admin-icon-next);
 }
+
 .pager__item--last .pager__link::after {
-  --background-image: url("data:image/svg+xml,%3csvg width='16' height='16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M14 14V2M2 14l6-6-6-6' stroke='%23545560' stroke-width='2'/%3e%3c/svg%3e");
+  mask-image: var(--admin-icon-last);
 }
+
 .pager__item--first .pager__link::before,
 .pager__item--previous .pager__link::before,
 .pager__item--next .pager__link::after,
@@ -94,47 +111,41 @@
   inline-size: 1rem;
   block-size: 1rem;
   content: "";
-  background-image: var(--background-image);
-  background-repeat: no-repeat;
-  background-position: center;
-}
-@media (forced-colors: active) {
-  .pager__item--first .pager__link::before,
-  .pager__item--previous .pager__link::before,
-  .pager__item--next .pager__link::after,
-  .pager__item--last .pager__link::after {
+  background: currentColor;
+
+  &:dir(rtl) {
+    transform: scaleX(-1);
+  }
+
+  @media (forced-colors: active) {
     background-color: linktext;
-    background-image: none;
-    mask-image: var(--background-image);
-    mask-repeat: no-repeat;
-    mask-position: center;
   }
 }
-[dir="rtl"] .pager__item--first .pager__link::before,
-[dir="rtl"] .pager__item--previous .pager__link::before,
-[dir="rtl"] .pager__item--next .pager__link::after,
-[dir="rtl"] .pager__item--last .pager__link::after {
-  transform: scaleX(-1);
-}
+
 .pager__item--mini {
   margin-inline: calc(var(--space-m) / 2);
 }
+
 .pager__link--mini {
   border-radius: 50%;
+
+  /**
+   * On the mini pager, remove margins for the previous and next icons.
+   * Margins are not needed here as there is no accompanying text.
+   */
+  &::before {
+    margin-inline: 0;
+  }
 }
-/**
-* On the mini pager, remove margins for the previous and next icons.
-* Margins are not needed here as there is no accompanying text.
-*/
-.pager__link--mini::before {
-  margin-inline: 0;
-}
+
 .pager__item-title--backwards {
   margin-inline-start: 0.5rem;
 }
+
 .pager__item-title--forward {
   margin-inline-end: 0.5rem;
 }
+
 @media (forced-colors: active) {
   .pager__item a:hover {
     -webkit-text-decoration: underline;

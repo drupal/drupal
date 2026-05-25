@@ -4,14 +4,12 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * @file
  * Structural styles for Claro's UI buttons
  *
  * Apply these classes to button elements (<button>, <input type="button" />).
  */
-
 /**
  * Buttons.
  *
@@ -22,7 +20,6 @@
  * @todo Consider moving box-sizing into base.css under a universal selector.
  * See https://www.drupal.org/node/2124251
  */
-
 /**
  * Base button styles.
  *
@@ -31,52 +28,49 @@
  * making changes to this file, remember to check if that needs to be applied to
  * dropbutton.css or action-links.css as well.
  */
-
-.button {
+.button,
+.project__action_button {
   display: inline-block;
   margin-block: var(--space-m);
   margin-inline: 0 var(--space-s);
-  padding-block: var(--space-s);
-  padding-inline: var(--space-m);
+  padding-block: calc(var(--gin-spacing-s) - 2px);
+  padding-inline: var(--gin-spacing-m);
   cursor: pointer;
   text-align: center;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: var(--button-fg-color);
-  border: 1px solid var(--button-border-color);
-  border-radius: var(--button-border-radius-size);
-  background-color: var(--button-bg-color);
-  font-size: var(--button-font-size);
-  font-weight: var(--button-font-weight);
+  color: var(--gin-color-primary);
+  border: 2px solid var(--gin-color-primary);
+  border-radius: var(--gin-border-m);
+  background-color: transparent;
+  box-shadow: 0 1px 2px var(--gin-color-primary-light);
+  font-size: var(--gin-font-size-s);
+  font-weight: var(--gin-font-weight-semibold);
   line-height: 1;
   appearance: none;
 
   &:hover {
     -webkit-text-decoration: none;
     text-decoration: none;
-    color: var(--button-fg-color);
-    border-color: var(--button--hover-border-color);
-    background-color: var(--button--hover-bg-color);
-  }
-
-  &:focus {
-    -webkit-text-decoration: none;
-    text-decoration: none;
-    box-shadow: var(--focus-ring);
+    color: var(--gin-color-button-text);
+    border-color: var(--gin-color-primary-hover);
+    background-color: var(--gin-color-primary-hover);
   }
 
   &:active {
-    border-color: var(--button--active-border-color);
-    background-color: var(--button--active-bg-color);
+    color: var(--gin-color-button-text);
+    border-color: var(--gin-color-primary-active);
+    background-color: var(--gin-color-primary-active);
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    transition: var(--transition);
+    transition: var(--gin-transition);
   }
 }
-
+.form-actions .button {
+  margin-inline-end: var(--gin-spacing-xs);
+}
 /* Common styles for small buttons. */
-
 .no-touchevents {
   & .button--small {
     min-height: 2rem;
@@ -97,9 +91,20 @@
     padding-inline: var(--space-xs);
   }
 }
-
+.button.button--small {
+  border-radius: var(--gin-border-s);
+  font-size: var(--gin-font-size-xxs);
+  padding-block: calc(var(--gin-spacing-xxs) + 2px);
+  padding-inline: var(--gin-spacing-s);
+}
+/* Common styles for extra small buttons. */
+.button.button--extrasmall {
+  border-radius: var(--gin-border-s);
+  font-size: var(--gin-font-size-xxs);
+  padding-block: var(--gin-spacing-xxs);
+  padding-inline: var(--gin-spacing-s);
+}
 /* Styles for action link buttons. */
-
 .button--action {
   margin: 0;
 
@@ -110,44 +115,65 @@
     font-weight: 900;
   }
 }
+/* Primary button styles. */
+#edit-submit.form-submit,
+.button--primary,
+.button--primary:not(:focus),
+.ief-entity-submit {
+  background: var(--gin-color-primary);
+  box-shadow: 0.1em 0.25em 0.5em var(--gin-color-primary-light);
 
-/* Primary button style.s */
+  &:hover {
+    color: var(--gin-color-button-text);
+    background-color: var(--gin-color-primary-hover);
+  }
 
-.button--primary {
-  color: var(--button-fg-color--primary);
-  border-color: transparent;
-  background-color: var(--button-bg-color--primary);
+  &:active {
+    color: var(--gin-color-button-text);
+    background-color: var(--gin-color-primary-active);
+  }
 
-  &:is(:hover, :active) {
-    color: var(--button-fg-color--primary);
-    border-color: transparent;
-    background-color: var(--button--hover-bg-color--primary);
+  &,
+  &:hover,
+  &:active {
+    color: var(--gin-color-button-text);
   }
 }
-
 /* Danger button styles */
-
 .button--danger {
   color: var(--button-fg-color--danger);
   border-color: transparent;
-  background-color: var(--button-bg-color--danger);
 
   &:is(:hover, :active) {
     color: var(--button-fg-color--danger);
+    border-color: var(--gin-color-danger);
     background-color: var(--button--hover-bg-color--danger);
   }
 }
-
+a.button:hover,
+a.button:active {
+  color: var(--gin-color-button-text);
+}
+a.button--primary:hover,
+a.button--primary:active {
+  .gin--dark-mode & {
+    color: var(--gin-bg-app);
+  }
+}
 /**
  * Disabled state styles as last.
  *
  * Overrides every definitions before, including variants.
  */
-
-.button {
-  &:is(:disabled, .is-disabled) {
-    color: var(--button--disabled-fg-color);
-    background-color: var(--button--disabled-bg-color);
+.button.button:disabled,
+.button.button.is-disabled {
+  &,
+  &:hover,
+  &:active {
+    color: var(--gin-color-disabled);
+    border: 2px solid var(--gin-color-disabled-border) !important;
+    background: transparent;
+    box-shadow: none;
   }
 
   /* Make disabled <link> behave like a [disabled] <input> or <button>. */
@@ -157,12 +183,19 @@
     pointer-events: none;
   }
 }
-
+.button.button--primary:disabled,
+.button.button--primary.is-disabled {
+  &,
+  &:hover,
+  &:active {
+    color: var(--gin-color-disabled);
+    background-color: var(--gin-color-disabled-bg);
+  }
+}
 /**
  * Style a clickable/tappable element as a link. Duplicates the base style for
  * the <a> tag, plus a reset for padding, borders and background.
  */
-
 .link {
   display: inline;
   padding: 0;
@@ -172,4 +205,12 @@
   border: 0;
   background: none;
   appearance: none;
+}
+/* Autocomplete field remove button. */
+.multiple-fields-remove-button.button {
+  border: 0 none !important;
+  mask-image: var(--admin-icon-remove);
+  mask-size: 1rem 1rem;
+  mask-repeat: no-repeat;
+  mask-position: center center;
 }

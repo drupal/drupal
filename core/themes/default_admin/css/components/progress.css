@@ -13,8 +13,8 @@
  */
 
 :root {
-  --progress-bar-bg-color: var(--color-absolutezero);
-  --progress-bar-border-color: var(--color-absolutezero);
+  --progress-bar-bg-color: var(--gin-color-primary);
+  --progress-bar-border-color: var(--gin-color-primary);
   --progress-bar-label-font-size: var(--font-size-base);
   --progress-bar-small-label-font-size: var(--font-size-label);
   --progress-bar-default-size: calc(var(--space-m) - (2 * var(--progress-bar-border-size)));
@@ -46,9 +46,10 @@
 .progress__track {
   height: var(--progress-bar-default-size);
   margin-block-start: 0;
-  border: var(--progress-bar-border-size) var(--progress-track-border-color) solid;
+  padding: var(--gin-spacing-xs);
+  border: var(--progress-bar-border-size) var(--gin-border-color) solid;
   border-radius: var(--progress-bar-default-size-radius);
-  background-color: var(--progress-track-bg-color);
+  background-color: var(--gin-bg-layer3);
 }
 
 .progress__bar {
@@ -61,6 +62,9 @@
   border: var(--progress-bar-border-size) var(--progress-bar-border-color) solid;
   border-radius: var(--progress-bar-default-size-radius);
   background-color: var(--progress-bar-bg-color);
+  box-shadow:
+    0 0.125em 0.25em var(--gin-color-primary-light),
+    1.25em 0.9375em 2em var(--gin-color-primary-light);
 
   @media screen and (prefers-reduced-motion: reduce) {
     transition: none;
@@ -81,6 +85,6 @@
 .progress__percentage {
   overflow: hidden;
   margin-block-start: var(--progress-bar-spacing-size);
-  color: var(--progress-bar-description-color);
+  color: var(--gin-color-text);
   font-size: var(--progress-bar-description-font-size);
 }

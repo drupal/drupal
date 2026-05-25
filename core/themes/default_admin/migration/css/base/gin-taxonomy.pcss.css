@@ -1,6 +1,0 @@
-/* For visibility issue in Taxonomy terms */
-.taxonomy-overview-terms:not(:has(.action-link)) {
-  #edit-help {
-    margin-block-end: var(--gin-spacing-m);
-  }
-}

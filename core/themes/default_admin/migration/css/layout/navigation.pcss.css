@@ -5,7 +5,7 @@
 
 /* cspell:ignore navigationcreate, toolsextra, xxxs */
 
-@import "../base/media-queries.pcss.css";
+@import "../../../css/base/media-queries.pcss.css";
 
 :root {
   --gin-toolbar-height: 48px;

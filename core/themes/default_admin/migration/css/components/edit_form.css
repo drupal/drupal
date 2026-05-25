@@ -236,8 +236,8 @@
       inset-inline-start: 1.5rem;
     }
 
-    &:focus::after {
-      border-radius: 0.375rem;
+    &:focus {
+      outline-offset: calc(-1 * var(--outline-size, 0px));
     }
   }
 

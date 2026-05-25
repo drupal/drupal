@@ -4,15 +4,16 @@
  */
 .system-status-counter {
   --system-status-counter-status-icon: #e6e4df;
-  --system-status-counter-status-icon-error: url(../../../../misc/icons/dc2323/error.svg);
-  --system-status-counter-status-icon-warning: url(../../images/core/e29700/warning.svg);
-  --system-status-counter-status-icon-checked: url(../../images/core/73b355/check.svg);
 
   display: inline-block;
   overflow-y: hidden;
   box-sizing: border-box;
-  inline-size: 100%;
+  height: auto;
+  padding: var(--gin-spacing-m) 0;
   white-space: nowrap;
+  border-radius: var(--gin-border-m);
+  background: var(--gin-bg-layer);
+  inline-size: 100%;
 }
 
 .system-status-counter__status-icon {
@@ -20,59 +21,51 @@
   block-size: 65px;
   inline-size: 60px;
   vertical-align: middle;
+  background-color: transparent;
+  box-shadow: none;
 
   &::before {
     display: block;
     block-size: 100%;
     inline-size: 100%;
     content: "";
-    background-repeat: no-repeat;
-    background-position: right center;
-    background-size: 40px;
+    mask-repeat: no-repeat;
+    mask-position: center 16px;
+    mask-size: 32px;
 
-    [dir="rtl"] & {
-      background-position: left center;
+    &:dir(rtl) {
+      mask-position: left center;
     }
 
     @media (forced-colors: active) {
       background-color: canvastext;
-      background-image: none;
-      mask-repeat: no-repeat;
-      mask-position: right center;
-      mask-size: 40px;
     }
+  }
+
+  @media screen and (min-width: 61rem) {
+    inline-size: 65px;
   }
 }
 
 .system-status-counter__status-icon--error::before {
-  background-image: var(--system-status-counter-status-icon-error);
+  background-color: var(--gin-color-danger);
+  mask-image: var(--admin-icon-error);
 }
 
 .system-status-counter__status-icon--warning::before {
-  background-image: var(--system-status-counter-status-icon-warning);
+  background-color: var(--gin-color-warning);
+  mask-image: var(--admin-icon-warning);
 }
 
 .system-status-counter__status-icon--checked::before {
-  background-image: var(--system-status-counter-status-icon-checked);
-}
-
-@media (forced-colors: active) {
-  .system-status-counter__status-icon--error::before {
-    mask-image: var(--system-status-counter-status-icon-error);
-  }
-
-  .system-status-counter__status-icon--warning::before {
-    mask-image: var(--system-status-counter-status-icon-warning);
-  }
-
-  .system-status-counter__status-icon--checked::before {
-    mask-image: var(--system-status-counter-status-icon-checked);
-  }
+  background-color: var(--gin-color-green);
+  mask-image: var(--admin-icon-status);
 }
 
 .system-status-counter__status-title {
   display: inline-block;
   padding: 0 18px;
+  padding-inline-start: 0;
   vertical-align: middle;
   font-size: 1.125em;
   font-weight: bold;
@@ -82,6 +75,7 @@
 .system-status-counter__title-count {
   display: block;
   margin-block-end: 8px;
+  font-weight: var(--gin-font-weight-semibold);
 }
 
 .system-status-counter__details {
@@ -90,19 +84,4 @@
   font-size: var(--font-size-s);
   font-weight: normal;
   line-height: 1.5;
-}
-
-@media screen and (min-width: 61rem) {
-  .system-status-report-counters__item {
-    padding-block: var(--space-s);
-  }
-
-  .system-status-counter__status-icon,
-  .system-status-counter {
-    block-size: 65px;
-  }
-
-  .system-status-counter__status-icon {
-    inline-size: 65px;
-  }
 }

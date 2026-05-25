@@ -3,7 +3,7 @@
  * Edit form layout and sidebar styles.
  */
 
-@import "../base/media-queries.pcss.css";
+@import "../../../css/base/media-queries.pcss.css";
 
 .gin--edit-form {
   .dialog-off-canvas-main-canvas {
@@ -230,8 +230,8 @@
       inset-inline-start: 1.5rem;
     }
 
-    &:focus::after {
-      border-radius: 6px;
+    &:focus {
+      outline-offset: calc(-1 * var(--outline-size, 0px));
     }
   }
 

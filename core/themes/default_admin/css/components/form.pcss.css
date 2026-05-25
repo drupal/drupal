@@ -13,25 +13,56 @@
  */
 .form-item {
   margin-block: var(--space-l);
+
+  .field--type-text-with-summary &,
+  .field--widget-text-textarea & {
+    margin-block-end: 0;
+  }
+
+  /* Special case, form starts with a form item, remove margin-block-start. */
+  #block-gin-content > form > &:first-of-type {
+    margin-block-start: 0;
+  }
+
+  .image-style-new & {
+    margin-inline-end: var(--gin-spacing-xxs);
+  }
+
+  /**
+   * When a table row or a container-inline has a single form item, prevent it
+   * from adding unnecessary extra spacing.
+   * If it has multiple form items, allow spacing between them.
+   */
+  .container-inline & {
+    margin-block: var(--gin-spacing-density-s);
+  }
+
+  /* Maxlength styles. */
+  .counter {
+    margin-block-start: var(--gin-spacing-xs);
+    color: var(--gin-color-text);
+    font-size: var(--gin-font-size-xs);
+    line-height: 1.3;
+  }
+
+  tr & {
+    margin-block: 0;
+  }
 }
-/**
- * When a table row or a container-inline has a single form item, prevent it
- * from adding unnecessary extra spacing.
- * If it has multiple form items, allow spacing between them.
- */
-tr .form-item,
-.container-inline .form-item {
-  margin-block: var(--space-s);
+
+.form-item__warning {
+  display: inline-block;
+  margin-block-start: var(--gin-spacing-xs);
 }
 
 /**
  * Form element label.
  */
 .form-item__label {
-  display: table;
-  margin-block: calc(var(--space-xs) / 2); /* 4px */
+  display: block;
+  margin-block: 0 var(--gin-spacing-xs);
   font-size: var(--font-size-s); /* ~14px */
-  font-weight: bold;
+  font-weight: var(--gin-font-weight-semibold);
   line-height: var(--line-height-form-label);
 
   &[for] {
@@ -55,7 +86,13 @@ tr .form-item,
     cursor: default; /* @todo ...or auto? */
     color: var(--input--disabled-fg-color);
   }
+
+  .form-wrapper &,
+  .form-composite & {
+    position: relative;
+  }
 }
+
 /* Multiple selectors used to ensure styling even if modules override markup. */
 .form-item__label--multiple-value-form,
 .field-multiple-table .field-label h4.label {
@@ -68,22 +105,29 @@ tr .form-item,
 }
 
 .form-item__label.form-required::after,
-.fieldset__label.form-required::after {
+.fieldset__label.form-required::after,
+.form-required > .fieldset__label::after,
+.horizontal-tab-button .form-required::after,
+.vertical-tabs__menu-link .form-required::after {
   display: inline-block;
-  margin-inline: 0.15em;
   content: "*";
-  color: var(--color-maximumred);
+  vertical-align: text-top;
+  color: var(--gin-color-danger);
+  background: none;
   font-size: 0.875rem;
+  line-height: 1;
+  margin-inline: 0.15em;
 }
 
 /**
  * Form item description.
  */
 .form-item__description {
-  margin-block: calc(6rem / 16); /* 6px */
-  color: var(--input-fg-color--description);
+  max-width: var(--gin-max-line-length);
+  color: var(--gin-color-text-light);
   font-size: var(--font-size-xs); /* ~13px */
   line-height: calc(17rem / 16); /* 17px */
+  margin-block: calc(6rem / 16); /* 6px */
 
   &.is-disabled {
     color: var(--input--disabled-fg-color);
@@ -95,7 +139,7 @@ tr .form-item,
  */
 .form-item__error-message {
   margin-block: calc(6rem / 16); /* 6px */
-  color: var(--input--error-color);
+  color: var(--gin-color-danger);
   font-size: var(--font-size-xs); /* ~13px */
   font-weight: normal;
   line-height: calc(17rem / 16); /* 17px */
@@ -140,8 +184,16 @@ tr .form-item,
   }
 }
 
-.form-actions > .form-wrapper {
-  margin-inline: 0 var(--space-s);
+.form-actions {
+  margin-block-end: 0;
+
+  > .form-wrapper {
+    margin-inline: 0 var(--space-s);
+  }
+
+  .entity-form-display-form > & {
+    margin-block: 0;
+  }
 }
 
 /**
@@ -168,30 +220,40 @@ tr .form-item,
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  width: auto;
   max-width: 100%;
 
-  & .form-item__label,
-  & .form-item__prefix,
-  & .form-item__suffix,
-  & .form-element--editor-format {
+  .form-item__label {
+    inset-block-start: 3px;
+    padding-block-end: 0;
+
+    &.has-error {
+      color: var(--gin-color-danger);
+    }
+  }
+
+  .form-item__label,
+  .form-item__prefix,
+  .form-item__suffix,
+  .form-element--editor-format {
     min-width: 1px;
   }
 
-  & .form-item__label,
-  & .form-item__prefix,
-  & .form-item__suffix,
-  & .form-element--editor-format {
+  .form-item__label,
+  .form-item__prefix,
+  .form-item__suffix,
+  .form-element--editor-format {
     min-width: 1px;
   }
 
-  & .form-item__label,
-  & .form-item__prefix,
-  & .form-item__suffix {
+  .form-item__label,
+  .form-item__prefix,
+  .form-item__suffix {
     margin-inline-end: var(--space-xs);
   }
 
-  & .form-item__description,
-  & .form-item__error-message {
+  .form-item__description,
+  .form-item__error-message {
     flex: 0 1 100%;
     min-width: 1px;
   }
@@ -229,4 +291,17 @@ optgroup {
  */
 ::-webkit-file-upload-button {
   -webkit-appearance: push-button;
+}
+
+.required-mark {
+  &::after {
+    background: var(--gin-color-danger);
+    mask-image: var(--admin-icon-asterisk);
+    mask-position: center center;
+    mask-size: 100% 100%;
+  }
+}
+
+.length-indicator {
+  margin-block-end: var(--gin-spacing-l);
 }

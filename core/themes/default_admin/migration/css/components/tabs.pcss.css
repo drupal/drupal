@@ -3,7 +3,7 @@
  * Styles for tabs and horizontal/vertical tab components.
  */
 
-@import "../base/media-queries.pcss.css";
+@import "../../../css/base/media-queries.pcss.css";
 
 .tabs {
   box-shadow: none;
@@ -72,24 +72,6 @@
   }
 }
 
-.gin-details {
-  color: var(--gin-color-text);
-  border: 1px solid var(--gin-border-color);
-  border-radius: var(--gin-border-m);
-  box-shadow: none;
-}
-
-.gin-details__summary {
-  &::after {
-    border-radius: var(--gin-border-m);
-  }
-
-  &:hover {
-    color: var(--gin-color-primary);
-    background-color: var(--gin-bg-item-hover);
-  }
-}
-
 .is-horizontal .tabs--primary,
 .is-horizontal .tabs--secondary,
 .horizontal-tabs ul.horizontal-tabs-list {
@@ -141,18 +123,6 @@
 .horizontal-tabs ul.horizontal-tabs-list .tabs__tab,
 .horizontal-tabs ul.horizontal-tabs-list .horizontal-tab-button {
   position: relative;
-
-  &:focus-within::after {
-    position: absolute;
-    z-index: 3;
-    display: block;
-    width: calc(100% + var(--space-xs));
-    height: 4px;
-    content: "";
-    background: var(--gin-bg-app);
-    inset-block-end: calc(var(--space-xxs) * -1);
-    inset-inline-start: calc(var(--space-xxs) * -1);
-  }
 }
 
 .is-horizontal .tabs--primary .horizontal-tab-button:focus-within::after,
@@ -200,14 +170,6 @@
 
   .is-horizontal .tabs--primary .tabs__tab[data-original-order="0"] {
     border-block-end: none;
-  }
-}
-
-.is-horizontal .tabs--primary .tabs__tab {
-  @media (--admin-small) {
-    &:focus-within::after {
-      display: none;
-    }
   }
 }
 

@@ -101,6 +101,10 @@ tr.selected td {
   & .button {
     margin-block: 0;
   }
+
+  &.form-actions {
+    margin-block-end: 0;
+  }
 }
 
 .views-bulk-actions__item--status {
@@ -129,5 +133,5 @@ tr.selected td {
 }
 
 .ui-autocomplete {
-  z-index: 501;
+  z-index: 2000;
 }

@@ -1,0 +1,22 @@
+.system-themes-list {
+  margin-block-end: var(--gin-spacing-l);
+}
+
+#system-themes-page {
+  hr {
+    display: none;
+  }
+}
+
+.system-themes-list__header {
+  padding: var(--gin-spacing-m) var(--gin-spacing-l);
+  text-transform: none;
+  color: var(--gin-color-primary-active);
+  border: 0 none;
+  border-radius: var(--gin-border-m);
+  background: var(--gin-bg-header);
+  font-size: var(--gin-font-size-l);
+  font-weight: var(--gin-font-weight-bold);
+  margin-block: 0 var(--gin-spacing-m);
+  margin-inline: 0;
+}

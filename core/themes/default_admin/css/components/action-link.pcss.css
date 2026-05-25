@@ -35,9 +35,9 @@
   padding: calc(var(--space-m) - ((var(--space-l) - var(--space-m)) / 2)) var(--space-m);
   cursor: pointer;
   text-decoration: none;
-  color: var(--color-gray-800);
-  border-radius: var(--button-border-radius-size);
-  background-color: var(--color-bg);
+  color: var(--gin-color-primary);
+  border-radius: var(--gin-border-s);
+  background: transparent;
   font-size: var(--font-size-base);
   font-weight: 700;
   line-height: var(--space-l);
@@ -47,19 +47,25 @@
   /* Action link states */
   &:hover {
     text-decoration: none;
-    color: var(--color-absolutezero-hover);
-    background-color: var(--color-bgblue-hover);
+    color: var(--gin-color-primary-hover);
+    background: var(--gin-bg-item-hover);
   }
 
   &:focus {
     position: relative;
     z-index: 1;
     text-decoration: none;
+    color: var(--gin-color-primary-active);
+    background: var(--gin-color-primary-light-hover);
   }
 
   &:active {
     color: var(--color-absolutezero-active);
     background-color: var(--color-bgblue-active);
+  }
+
+  &.action-link--extrasmall {
+    font-size: var(--gin-font-size-xxs);
   }
 
   /**
@@ -77,9 +83,11 @@
     width: 1em;
     height: 1em;
     margin-inline: calc(var(--space-s) - var(--space-m)) 0.5em;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
+    background: currentColor;
+    background-image: none;
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
   }
 
   & + .action-link {
@@ -95,6 +103,12 @@
   .field-actions & {
     margin-inline: 0 var(--space-s);
   }
+
+  @media (forced-colors: active) {
+    &::before {
+      background: linktext;
+    }
+  }
 }
 
 .no-touchevents {
@@ -107,7 +121,7 @@
   /* Extra small variant. */
   & .action-link--extrasmall {
     padding: 0 var(--space-xs);
-    font-size: var(--font-size-s);
+    font-size: var(--gin-font-size-xxs);
   }
 
   & .action-link--small + .action-link--small,
@@ -124,370 +138,97 @@
   color: var(--color-maximumred);
 
   &:hover {
-    color: var(--color-maximumred-hover);
-    background-color: var(--color-bgred-hover);
-  }
-
-  &:active {
-    color: var(--color-maximumred-active);
-    background-color: var(--color-bgred-active);
+    color: var(--gin-bg-layer);
+    background-color: var(--gin-color-danger);
   }
 }
 
 .no-touchevents .action-link--small::before,
 .no-touchevents .action-link--extrasmall::before {
   inset-block-start: 0.0625rem;
-  /* Set the proper vertical alignment */
   width: var(--space-s);
   height: var(--space-s);
   margin-inline: -0.125rem 0.4em;
 }
 
-.action-link--icon-plus {
-  /* Plus */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/plus.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/plus.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/plus.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/plus.svg);
-  }
-
-  &.action-link--danger {
-    /* Plus — danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/plus.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/plus.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/plus.svg);
-    }
-  }
-}
-
 .action-link--icon-trash {
-  /* Trash */
   &::before {
     content: "";
-    background-image: url(../../images/icons/545560/trash.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/trash.svg);
-    }
+    mask-image: url(../../images/icons/545560/trash.svg);
   }
 
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/trash.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/trash.svg);
-  }
-
+  /* Trash action link rendered as a button. */
   &.action-link--danger {
-    /* Trash — danger */
+    border: 2px solid var(--gin-color-danger);
+    border-radius: var(--gin-border-m);
+    font-size: var(--gin-font-size-s);
+    line-height: 1;
+    padding-block: calc(var(--gin-spacing-s) - 2px);
+    padding-inline: var(--gin-spacing-m);
+
     &::before {
-      background-image: url(../../images/icons/d72222/trash.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/trash.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/trash.svg);
+      content: none;
     }
   }
 }
 
-.action-link--icon-ex {
-  /* Ex */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/ex.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/ex.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/ex.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/ex.svg);
-  }
-
-  &.action-link--danger {
-    /* Ex — danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/ex.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/ex.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/ex.svg);
-    }
-  }
+.action-link--icon-plus::before {
+  content: "";
+  mask-image: var(--admin-icon-add);
 }
 
-.action-link--icon-checkmark {
-  /* Checkmark */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/checkmark.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/checkmark.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/checkmark.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/checkmark.svg);
-  }
-
-  &.action-link--danger {
-    /* Checkmark — danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/checkmark.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/checkmark.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/checkmark.svg);
-    }
-  }
+.action-link--icon-ex::before {
+  content: "";
+  mask-image: var(--admin-icon-remove);
 }
 
-.action-link--icon-cog {
-  /* Cog */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/cog.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/cog.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/cog.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/cog.svg);
-  }
-
-  &.action-link--danger {
-    /* Cog — danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/cog.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/cog.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/cog.svg);
-    }
-  }
+.action-link--icon-checkmark::before {
+  content: "";
+  mask-image: var(--admin-icon-checkmark);
 }
 
-.action-link--icon-show {
-  /* Show */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/show.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/show.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/show.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/show.svg);
-  }
-
-  &.action-link--danger {
-    /* Show - danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/show.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/show.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/show.svg);
-    }
-  }
+.action-link--icon-cog::before {
+  content: "";
+  mask-image: var(--admin-icon-config);
 }
 
-.action-link--icon-hide {
-  /* Hide */
-  &::before {
-    content: "";
-    background-image: url(../../images/icons/545560/hide.svg);
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/hide.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url(../../images/icons/0036b1/hide.svg);
-  }
-
-  &:active::before {
-    background-image: url(../../images/icons/002e9a/hide.svg);
-  }
-
-  &.action-link--danger {
-    /* Hide - danger */
-    &::before {
-      background-image: url(../../images/icons/d72222/hide.svg);
-    }
-
-    &:hover::before {
-      background-image: url(../../images/icons/c11f1f/hide.svg);
-    }
-
-    &:active::before {
-      background-image: url(../../images/icons/ab1b1b/hide.svg);
-    }
-  }
+.action-link--icon-show::before {
+  content: "";
+  mask-image: var(--admin-icon-show);
 }
 
-.action-link--icon-key {
-  /* Key */
-  &::before {
-    content: "";
-    background-image: url("../../images/icons/545560/key.svg");
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/key.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url("../../images/icons/0036b1/key.svg");
-  }
-
-  &:active::before {
-    background-image: url("../../images/icons/002e9a/key.svg");
-  }
-
-  &.action-link--danger {
-    /* Key — danger */
-    &::before {
-      background-image: url("../../images/icons/d72222/key.svg");
-    }
-
-    &:hover::before {
-      background-image: url("../../images/icons/c11f1f/key.svg");
-    }
-
-    &:active::before {
-      background-image: url("../../images/icons/ab1b1b/key.svg");
-    }
-  }
+.action-link--icon-hide::before {
+  content: "";
+  mask-image: var(--admin-icon-hide);
 }
 
-.action-link--icon-questionmark {
-  /* Question Mark */
-  &::before {
-    content: "";
-    background-image: url("../../images/icons/545560/questionmark.svg");
-
-    @media (forced-colors: active) {
-      background: linktext !important;
-      mask-repeat: no-repeat;
-      mask-image: url(../../images/icons/d72222/questionmark.svg);
-    }
-  }
-
-  &:hover::before {
-    background-image: url("../../images/icons/0036b1/questionmark.svg");
-  }
-
-  &:active::before {
-    background-image: url("../../images/icons/002e9a/questionmark.svg");
-  }
-
-  &.action-link--danger {
-    /* Question Mark - danger */
-    &::before {
-      background-image: url("../../images/icons/d72222/questionmark.svg");
-    }
-
-    &:hover::before {
-      background-image: url("../../images/icons/c11f1f/questionmark.svg");
-    }
-
-    &:active::before {
-      background-image: url("../../images/icons/ab1b1b/questionmark.svg");
-    }
-  }
+.action-link--icon-key::before {
+  content: "";
+  mask-image: var(--admin-icon-devel);
 }
 
-.action-link--icon-chevron-left {
-  &::before {
-    display: block;
-    content: "";
-    background-image: url("../../images/icons/545560/pager-prev.svg");
-  }
+.action-link--icon-questionmark::before {
+  content: "";
+  mask-image: var(--admin-icon-help);
 }
 
-@media (min-width: 30em) {
-  .action-link--icon-chevron-left {
-    &::before {
-      display: inline-block;
-    }
+.action-link--icon-chevron-left::before {
+  content: "";
+  mask-image: url("../../images/icons/545560/pager-prev.svg");
+}
+
+/* @todo Maybe move these styles over to button. */
+
+.button.button--danger {
+  min-height: 0;
+  color: var(--gin-color-danger);
+  border-color: var(--gin-color-danger);
+  box-shadow: 0 1px 2px var(--gin-color-danger-lightest);
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: var(--gin-bg-layer);
+    background-color: var(--gin-color-danger);
   }
 }

@@ -7,11 +7,24 @@
  * @see tabledrag.js
  */
 
-body.drag {
-  cursor: move;
+@import "../base/media-queries.pcss.css";
+
+/*
+ * When mouse is pressed, scrollbar disappears. This prevents the horizontal
+ * layout shift from occurring
+ */
+html {
+  scrollbar-gutter: stable;
 }
-body.drag-y {
-  cursor: row-resize;
+
+body {
+  &.drag {
+    cursor: move;
+  }
+
+  &.drag-y {
+    cursor: row-resize;
+  }
 }
 
 .draggable-table {
@@ -19,11 +32,40 @@ body.drag-y {
   --table-row--last-dragged-bg-color: #ffb;
   --tabledrag-handle-icon-size: 17px;
 
+  /*
+   * We remove all padding and hard-code the height of the <td> elements to
+   * ensure that the "tree" icons span full height. You can replicate this in
+   * the UI by clicking and holding down the drag icon. The tree icons will
+   * become visible underneath.
+   */
+  :is(th, td) {
+    height: 60px;
+
+    html[data-gin-layout-density="medium"] & {
+      height: 50px;
+    }
+
+    html[data-gin-layout-density="small"] & {
+      height: 40px;
+    }
+
+    .layer-wrapper {
+      margin-block: var(--gin-spacing-density-s);
+    }
+
+    .draggable-table {
+      margin-block: 0;
+    }
+
+    :is(th, td) {
+      height: auto;
+    }
+  }
+
   /**
   * Reduce the spacing of draggable table cells.
   */
-  & td:first-child ~ td,
-  & th:first-child ~ th {
+  & :is(th, td):first-child ~ :is(th, td) {
     padding-inline-start: 0;
   }
 }
@@ -71,20 +113,62 @@ body.drag-y {
 /**
  * Draggable row state colors.
  */
-.draggable.drag,
-.draggable.drag:focus {
-  background-color: var(--table-row--dragging-bg-color);
-}
 
-.draggable.drag-previous {
-  background-color: var(--table-row--last-dragged-bg-color);
-}
+.draggable {
+  &.region-title,
+  &.region-title:focus {
+    background-color: var(--table-row--dragging-bg-color);
+  }
 
-/* Auto width for weight selects and number inputs. */
-.draggable td .form-element--type-select[name$="][_weight]"], /* Multiple field */
-.draggable td .term-weight, /* Taxonomy term list */
-.draggable td .field-weight /* Field UI table */ {
-  width: auto;
+  &.region-title-previous {
+    background-color: var(--table-row--last-dragged-bg-color);
+  }
+
+  &.drag-previous {
+    background-color: var(--gin-bg-layer2);
+    box-shadow: inset 6px 0 0 0 var(--gin-color-warning);
+
+    &:dir(rtl) {
+      box-shadow: inset -6px 0 0 0 var(--gin-color-warning);
+    }
+
+    &::after {
+      position: absolute;
+      width: 6px;
+      height: 100%;
+      content: "";
+    }
+
+    @media (forced-colors: active) {
+      position: relative;
+
+      &::after {
+        border-inline-start: 6px solid linktext;
+        inset-inline-start: 0;
+      }
+    }
+  }
+
+  &.drag,
+  &.drag:focus {
+    background-color: var(--gin-bg-layer2);
+
+    .gin--dark-mode & {
+      background-color: var(--gin-color-primary-light-hover);
+    }
+  }
+
+  /* Auto width for weight selects and number inputs. */
+  td .form-element--type-select[name$="][_weight]"], /* Multiple field */
+  td .term-weight, /* Taxonomy term list */
+  td .field-weight /* Field UI table */ {
+    width: auto;
+  }
+
+  a.tabledrag-handle {
+    float: none;
+    vertical-align: middle;
+  }
 }
 
 /**
@@ -93,26 +177,54 @@ body.drag-y {
 .tabledrag-handle {
   position: relative;
   z-index: 1;
+  display: flex;
   overflow: visible;
+  place-content: center;
+  box-sizing: border-box;
+  height: 44px;
   cursor: move;
   text-align: center;
   vertical-align: text-top;
+  margin-inline: calc(-1 * var(--space-s)) var(--space-s);
+  padding-inline: var(--space-s);
 
   &::after {
     display: inline-block;
+    box-sizing: border-box;
     width: var(--tabledrag-handle-icon-size);
     height: var(--tabledrag-handle-icon-size);
-    margin-inline-start: calc(var(--space-m) * -1);
-    padding: var(--space-xs) var(--space-m);
+    padding: var(--space-xs);
     content: "";
     transition: transform 0.1s ease-in-out 0s;
-    background: url(../../images/icons/000f33/tabledrag-handle.svg) no-repeat center;
+    background-color: var(--gin-color-text-light);
+    mask-image: var(--admin-icon-drag);
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-size: 16px 16px;
 
     @media (forced-colors: active) {
       background: linktext;
       mask-image: url(../../images/icons/000f33/tabledrag-handle.svg);
       mask-repeat: no-repeat;
       mask-position: center;
+
+      @supports (mask-composite: source-over) {
+        background-color: var(--gin-color-text-light);
+      }
+    }
+  }
+
+  &:focus {
+    outline-offset: calc(-1 * var(--outline-size, 0px));
+  }
+
+  &:hover {
+    &::after {
+      transform: scale(1);
+
+      @media (forced-colors: none) {
+        background-color: var(--gin-color-primary);
+      }
     }
   }
 }
@@ -120,11 +232,10 @@ body.drag-y {
 /* Change icon and cursor if only vertical drag is allowed. */
 .tabledrag-handle.tabledrag-handle-y {
   cursor: row-resize;
-}
 
-.tabledrag-handle.tabledrag-handle-y::after {
-  background-image: url(../../images/icons/currentColor/tabledrag-handle-y.svg);
-  background-size: 16px 16px;
+  &::after {
+    mask-image: var(--admin-icon-drag-y);
+  }
 }
 
 .tabledrag-handle::after,
@@ -135,22 +246,6 @@ body.drag-y {
 .tabledrag-handle:is(:hover, :focus)::after,
 .draggable.drag .tabledrag-handle::after {
   transform: scale(1.25);
-}
-
-.tabledrag-handle:focus {
-  outline: none !important;
-  box-shadow: none !important;
-
-  &::before {
-    display: block;
-    width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
-    height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
-    margin: 0 calc(var(--space-xs) * -1) calc((var(--space-m) + (var(--space-xs) * 2)) * -1); /* Bottom: handle height as negative value. */
-    content: "";
-    border-radius: var(--base-border-radius);
-    outline: var(--outline-size) dotted transparent;
-    box-shadow: 0 0 0 var(--focus-border-size) var(--color-focus);
-  }
 }
 
 /* Disabled tabledrag handle. */
@@ -187,18 +282,44 @@ body.drag-y {
  */
 .tabledrag-toggle-weight-wrapper {
   text-align: end;
+  line-height: calc(28rem / 16);
+
+  & + table,
+  & + .tableresponsive-toggle-columns + table {
+    margin-block-start: 0;
+  }
 
   /* Hide nested weight toggles as they are redundant. */
   .draggable-table & {
     display: none;
   }
-}
 
-/**
- * Keep crowded tabledrag cells vertically centered.
- */
-.tabledrag-cell {
-  padding-block: 0;
+  #field-display-overview,
+  #field-display-overview-wrapper,
+  .field--widget-entity-reference-paragraphs,
+  .field--type-link,
+  .field--type-smartdate {
+    .gin-layer-wrapper > & {
+      .action-link {
+        pointer-events: all;
+        background-color: var(--gin-bg-layer);
+      }
+      @media (--admin-medium) {
+        position: relative;
+        z-index: 1;
+        margin-block-end: calc(var(--gin-spacing-xxl) * -1);
+        pointer-events: none;
+      }
+    }
+  }
+
+  .action-link {
+    margin-block-end: var(--gin-spacing-xs);
+
+    .action-link {
+      margin-block-end: 0;
+    }
+  }
 }
 
 /**
@@ -229,9 +350,15 @@ body.drag-y {
   & .tabledrag-handle::after {
     vertical-align: middle;
   }
+
+  .table-file-multiple-widget & {
+    display: flex;
+  }
 }
 
 .tabledrag-cell-content__item {
+  display: flex;
+  align-items: center;
   padding-inline-end: var(--space-xs);
 
   &:empty {
@@ -273,6 +400,7 @@ body.drag-y {
  * These rules are styling the inline SVG that is placed inside the .indentation
  * element.
  */
+
 .tree {
   width: 25px;
   height: 25px;
@@ -334,4 +462,19 @@ body.drag-y {
   &.tree__item-horizontal {
     display: block;
   }
+}
+
+/* @todo do these styles belong here? They were migrated from Gin. */
+.field-plugin-settings-edit-wrapper,
+.field-plugin-settings-edit-wrapper + a {
+  margin-block: var(--gin-spacing-m);
+}
+
+.field-plugin-settings-edit-wrapper + a {
+  margin-block-start: var(--gin-spacing-s);
+}
+
+/* Correctly align bulk action checkboxes when used in combination with tabledrag */
+table:has(.tabledrag-cell-content__item .form-checkbox) th.select-all .form-checkbox {
+  margin-inline-start: calc(var(--tabledrag-handle-icon-size, calc(17rem / 16)) + var(--gin-spacing-m));
 }
