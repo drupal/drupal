@@ -55,9 +55,9 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     $this->assertSession()->pageTextContains('quiche');
 
     $expected = [
-      'QueryCount' => 197,
-      'CacheGetCount' => 223,
-      'CacheSetCount' => 222,
+      'QueryCount' => 195,
+      'CacheGetCount' => 221,
+      'CacheSetCount' => 220,
       'CacheDeleteCount' => 0,
       'CacheTagLookupQueryCount' => 23,
       'CacheTagInvalidationCount' => 0,

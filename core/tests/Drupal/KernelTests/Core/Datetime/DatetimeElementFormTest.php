@@ -32,6 +32,16 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
+  public function setUp(): void {
+    parent::setUp();
+
+    $this->installEntitySchema('date_format');
+    $this->installConfig(['system']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId(): string {
     return 'test_datetime_element';
   }
