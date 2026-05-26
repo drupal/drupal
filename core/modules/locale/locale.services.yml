@@ -63,3 +63,5 @@ services:
   logger.channel.locale:
     parent: logger.channel_base
     arguments: ['locale']
+  Drupal\locale\CurrentImportStorage:
+    autowire: true

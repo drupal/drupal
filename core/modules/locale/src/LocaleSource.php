@@ -21,6 +21,7 @@ class LocaleSource {
     protected readonly LocaleProjectRepository $localeProjectRepository,
     protected readonly FileSystemInterface $fileSystem,
     protected readonly ConfigFactoryInterface $configFactory,
+    protected readonly CurrentImportStorage $currentImportStorage,
   ) {}
 
   /**
@@ -206,16 +207,15 @@ class LocaleSource {
     // If this project+language is already translated, we add its status and
     // update the current translation timestamp and last_updated time. If the
     // project+language is not translated before, create a new record.
-    $history = locale_translation_get_file_history();
-    if (isset($history[$project->name][$langcode]) && $history[$project->name][$langcode]->timestamp) {
-      $source->files[LOCALE_TRANSLATION_CURRENT] = $history[$project->name][$langcode];
+    $current_import_state = $this->currentImportStorage->get($project->name, $langcode);
+    if ($current_import_state instanceof CurrentImport && $current_import_state->timestamp) {
       $source->type = LOCALE_TRANSLATION_CURRENT;
-      $source->timestamp = $history[$project->name][$langcode]->timestamp;
-      $source->hash = $history[$project->name][$langcode]->hash;
-      $source->last_checked = $history[$project->name][$langcode]->last_checked;
+      $source->timestamp = $current_import_state->timestamp;
+      $source->hash = $current_import_state->hash;
+      $source->last_checked = $current_import_state->last_checked ?? NULL;
     }
-    else {
-      locale_translation_update_file_history($source);
+    elseif (!$current_import_state) {
+      $this->currentImportStorage->save(CurrentImport::createFromSource($source));
     }
 
     return $source;

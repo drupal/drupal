@@ -15,6 +15,8 @@ use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Crypt;
+use Drupal\locale\CurrentImport;
+use Drupal\locale\CurrentImportStorage;
 use Drupal\locale\Hook\LocaleThemeHooks;
 use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleEvent;
@@ -289,8 +291,6 @@ function locale_system_remove($components): void {
     // modules.
     $projects = array_keys(\Drupal::service(LocaleProjectRepository::class)->getAll());
     if ($list = array_intersect($list, $projects)) {
-      locale_translation_file_history_delete($list);
-
       // Remove translation files.
       \Drupal::service(LocaleFileManager::class)->deleteTranslationFiles($list, []);
 
@@ -455,20 +455,27 @@ function locale_system_file_system_settings_submit(&$form, FormStateInterface $f
  *
  * @return array
  *   Array of translation file objects.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There
+ *   is no direct replacement use
+ *   \Drupal::service(CurrentImportStorage::class)->get() with the
+ *   project and langcode instead.
+ *
+ *  @see https://www.drupal.org/node/3037162
  */
 function locale_translation_get_file_history() {
-  $history = &drupal_static(__FUNCTION__, []);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no direct replacement use \Drupal::service(CurrentImportStorage::class)->get() with the project and langcode instead. See https://www.drupal.org/node/3037162', E_USER_DEPRECATED);
+  // drupal_static() was removed as invalidation no longer happens.
+  $history = [];
 
-  if (empty($history)) {
-    // Get file history from the database.
-    $result = \Drupal::database()->select('locale_file')
-      ->fields('locale_file', ['project', 'langcode', 'filename', 'version', 'uri', 'timestamp', 'hash', 'last_checked'])
-      ->execute()
-      ->fetchAll();
-    foreach ($result as $file) {
-      $file->type = $file->timestamp ? LOCALE_TRANSLATION_CURRENT : '';
-      $history[$file->project][$file->langcode] = $file;
-    }
+  // Get file history from the database.
+  $result = \Drupal::database()->select('locale_file')
+    ->fields('locale_file', ['project', 'langcode', 'filename', 'version', 'uri', 'timestamp', 'hash', 'last_checked'])
+    ->execute()
+    ->fetchAll();
+  foreach ($result as $file) {
+    $file->type = $file->timestamp ? LOCALE_TRANSLATION_CURRENT : '';
+    $history[$file->project][$file->langcode] = $file;
   }
   return $history;
 }
@@ -481,24 +488,17 @@ function locale_translation_get_file_history() {
  *
  * @return int
  *   FALSE on failure. Otherwise SAVED_NEW or SAVED_UPDATED.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(CurrentImportStorage::class)->save() instead.
+ *
+ *  @see https://www.drupal.org/node/3037162
  */
 function locale_translation_update_file_history($source) {
-  $status = \Drupal::database()->merge('locale_file')
-    ->keys([
-      'project' => $source->project,
-      'langcode' => $source->langcode,
-    ])
-    ->fields([
-      'version' => $source->version,
-      'timestamp' => $source->timestamp,
-      'hash' => $source->hash,
-      'last_checked' => $source->last_checked,
-    ])
-    ->execute();
-  // The file history has changed, flush the static cache now.
-  // @todo Can we make this more fine grained?
-  drupal_static_reset('locale_translation_get_file_history');
-  return $status;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(CurrentImportStorage::class)->save(). See https://www.drupal.org/node/3037162', E_USER_DEPRECATED);
+  \Drupal::service(CurrentImportStorage::class)->save(CurrentImport::createFromSource($source));
+  // The api returns void.
+  return SAVED_NEW;
 }
 
 /**
@@ -509,16 +509,15 @@ function locale_translation_update_file_history($source) {
  *   language code(s) are specified the conditions will be ANDed.
  * @param array $langcodes
  *   Language code(s) to be deleted from the file history.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(CurrentImportStorage::class)->delete() instead.
+ *
+ *  @see https://www.drupal.org/node/3037162
  */
 function locale_translation_file_history_delete($projects = [], $langcodes = []): void {
-  $query = \Drupal::database()->delete('locale_file');
-  if (!empty($projects)) {
-    $query->condition('project', $projects, 'IN');
-  }
-  if (!empty($langcodes)) {
-    $query->condition('langcode', $langcodes, 'IN');
-  }
-  $query->execute();
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(CurrentImportStorage::class)->delete(). See https://www.drupal.org/node/3037162', E_USER_DEPRECATED);
+  \Drupal::service(CurrentImportStorage::class)->delete($projects, $langcodes);
 }
 
 /**
@@ -625,7 +624,7 @@ function locale_translation_status_save($project, $langcode, $type, $data): void
         $status[$project][$langcode]->hash = $data->hash ?? '';
         $status[$project][$langcode]->last_checked = $data->last_checked;
         $status[$project][$langcode]->type = $type;
-        locale_translation_update_file_history($data);
+        \Drupal::service(CurrentImportStorage::class)->save(CurrentImport::createFromSource($data));
         break;
     }
 

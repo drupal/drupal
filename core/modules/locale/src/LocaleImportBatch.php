@@ -31,6 +31,7 @@ class LocaleImportBatch {
     protected readonly AccountProxyInterface $currentUser,
     protected readonly TranslationInterface $translation,
     protected readonly LocaleConfigBatch $localeConfigBatch,
+    protected readonly CurrentImportStorage $currentImportStorage,
     /**
      * @var \Closure(): \Psr\Log\LoggerInterface
      */
@@ -211,7 +212,9 @@ class LocaleImportBatch {
         // this table.
         if ($file->project && $file->version) {
           $file->last_checked = $request_time;
-          locale_translation_update_file_history($file);
+          $currentImport = CurrentImport::createFromFile($file);
+          $currentImport->last_checked = $request_time;
+          $this->currentImportStorage->save($currentImport);
         }
       }
       $context['message'] = $this->t('Translations imported.');
