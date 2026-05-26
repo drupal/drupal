@@ -46,7 +46,7 @@
         "symfony/polyfill-ctype": "~v1.37.0",
         "symfony/polyfill-iconv": "~v1.37.0",
         "symfony/polyfill-intl-grapheme": "~v1.37.0",
-        "symfony/polyfill-intl-idn": "~v1.37.0",
+        "symfony/polyfill-intl-idn": "~v1.38.1",
         "symfony/polyfill-intl-normalizer": "~v1.37.0",
         "symfony/polyfill-mbstring": "~v1.37.0",
         "symfony/polyfill-php84": "~v1.37.0",
