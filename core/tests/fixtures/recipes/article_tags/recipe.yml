@@ -2,8 +2,8 @@ name: 'Article tags'
 description: 'Provides tags on article content.'
 type: 'Content field'
 recipes:
-  - article_content_type
-  - tags_taxonomy
+  - core/tests/fixtures/recipes/article_content_type
+  - core/recipes/tags_taxonomy
 install:
   - views
 config:

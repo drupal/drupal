@@ -46,10 +46,6 @@ trait StandardTestTrait {
       'administer nodes',
       'administer blocks',
       'administer block content',
-      'post comments',
-      'skip comment approval',
-      'create article content',
-      'create page content',
     ]);
     $this->drupalLogin($this->adminUser);
     // Configure the block.
@@ -70,38 +66,7 @@ trait StandardTestTrait {
     $this->drupalLogout();
     $this->assertSession()->pageTextContains('Main navigation');
 
-    // Ensure comments don't show in the front page RSS feed.
-    // Create an article.
-    $this->drupalCreateNode([
-      'type' => 'article',
-      'title' => 'Foobar',
-      'promote' => 1,
-      'status' => 1,
-      'body' => [['value' => 'Then she picked out two somebodies,<br />Sally and me', 'format' => 'basic_html']],
-    ]);
-
-    // Add a comment.
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('node/1');
-    // Verify that a line break is present.
-    $this->assertSession()->responseContains('Then she picked out two somebodies,<br>Sally and me');
-    $this->submitForm([
-      'subject[0][value]' => 'Bar foo',
-      'comment_body[0][value]' => 'Then she picked out two somebodies, Sally and me',
-    ], 'Save');
-    // Fetch the feed.
-    $this->drupalGet('rss.xml');
-    $this->assertSession()->responseContains('Foobar');
-    $this->assertSession()->responseNotContains('Then she picked out two somebodies, Sally and me');
-
-    // Test promote and sticky fields are hidden by default for the page content
-    // type and visible for the article content type.
-    $this->drupalGet('node/add/page');
-    $this->assertSession()->fieldNotExists('promote[value]');
-    $this->assertSession()->fieldNotExists('sticky[value]');
-    $this->drupalGet('node/add/article');
-    $this->assertSession()->fieldExists('promote[value]');
-    $this->assertSession()->fieldExists('sticky[value]');
 
     // Ensure block body exists.
     $this->drupalGet('block/add');
@@ -157,11 +122,15 @@ trait StandardTestTrait {
     $this->rebuildContainer();
     \Drupal::service('module_installer')->install(['editor']);
 
+    // Standard does not include any content types, to test admin theme
+    // use on the node/add page, we need a test content type.
+    $this->drupalCreateContentType(['type' => 'test_content', 'name' => 'Test Content']);
     $role = Role::create([
       'id' => 'admin_theme',
       'label' => 'Admin theme',
     ]);
     $role->grantPermission('view the administration theme');
+    $role->grantPermission('create test_content content');
     $role->save();
     $this->adminUser->addRole($role->id())->save();
     $this->drupalGet('node/add');
@@ -205,13 +174,20 @@ trait StandardTestTrait {
     // ensure these responses are very fast for authenticated users.
     $this->drupalLogin($this->adminUser);
 
+    // Create a test node for caching tests.
+    $node = $this->drupalCreateNode([
+      'type' => 'test_content',
+      'title' => 'Test node for caching',
+      'status' => 1,
+    ]);
+
     $url = Url::fromRoute('<front>');
     $this->drupalGet($url);
     $this->drupalGet($url);
     // Verify that frontpage is cached by Dynamic Page Cache.
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
 
-    $url = Url::fromRoute('entity.node.canonical', ['node' => 1]);
+    $url = Url::fromRoute('entity.node.canonical', ['node' => $node->id()]);
     $this->drupalGet($url);
     $this->drupalGet($url);
     // Verify that full node page is cached by Dynamic Page Cache.
