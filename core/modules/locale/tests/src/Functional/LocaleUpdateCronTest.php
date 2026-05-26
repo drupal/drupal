@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Database\Database;
-use Drupal\locale\Hook\LocaleHooks;
+use Drupal\locale\CurrentImportStorage;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -58,7 +58,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $this->submitForm([], 'Update translations');
 
     // Store translation status for comparison.
-    $initial_history = locale_translation_get_file_history();
+    $initial_import = \Drupal::service(CurrentImportStorage::class)->get('contrib_module_two', 'de');
 
     // Prepare for test: Simulate new translations being available.
     // Change the last updated timestamp of a translation file.
@@ -85,8 +85,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Execute locale cron tasks to add tasks to the queue.
-    $localeCron = new LocaleHooks();
-    $localeCron->cron();
+    \Drupal::moduleHandler()->invoke('locale', 'cron');
 
     // Check whether no tasks are added to the queue.
     $queue = \Drupal::queue('locale_translation', TRUE);
@@ -102,7 +101,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Execute locale cron tasks to add tasks to the queue.
-    $localeCron->cron();
+    \Drupal::moduleHandler()->invoke('locale', 'cron');
 
     // Check whether tasks are added to the queue.
     // Expected tasks:
@@ -117,7 +116,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
     // Test: Run cron for a second time and check if tasks are not added to
     // the queue twice.
-    $localeCron->cron();
+    \Drupal::moduleHandler()->invoke('locale', 'cron');
 
     // Check whether no more tasks are added to the queue.
     $queue = \Drupal::queue('locale_translation', TRUE);
@@ -129,14 +128,11 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     // Run cron to process the tasks in the queue.
     $this->cronRun();
 
-    drupal_static_reset('locale_translation_get_file_history');
-    $history = locale_translation_get_file_history();
-    $initial = $initial_history['contrib_module_two']['de'];
-    $current = $history['contrib_module_two']['de'];
+    $current_import = \Drupal::service(CurrentImportStorage::class)->get('contrib_module_two', 'de');
     // Verify that the translation of contrib_module_one is imported and
     // updated.
-    $this->assertGreaterThan($initial->timestamp, $current->timestamp);
-    $this->assertGreaterThan($initial->last_checked, $current->last_checked);
+    $this->assertGreaterThan($initial_import->timestamp, $current_import->timestamp);
+    $this->assertGreaterThan($initial_import->last_checked, $current_import->last_checked);
   }
 
 }
