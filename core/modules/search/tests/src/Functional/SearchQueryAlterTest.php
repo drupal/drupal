@@ -18,7 +18,7 @@ class SearchQueryAlterTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'search', 'search_query_alter'];
+  protected static $modules = ['node', 'search', 'search_query_alter', 'search_node'];
 
   /**
    * {@inheritdoc}

@@ -29,7 +29,7 @@ class SearchCommentTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['filter', 'node', 'comment', 'search'];
+  protected static $modules = ['filter', 'node', 'comment', 'search', 'search_node'];
 
   /**
    * {@inheritdoc}

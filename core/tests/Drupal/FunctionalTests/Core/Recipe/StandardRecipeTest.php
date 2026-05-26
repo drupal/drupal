@@ -132,8 +132,6 @@ class StandardRecipeTest extends StandardTest {
       'core.entity_view_mode.comment.full',
       'image.style.wide',
       'core.entity_view_mode.node.teaser',
-      'core.entity_view_mode.node.search_result',
-      'core.entity_view_mode.node.search_index',
       'core.entity_view_mode.node.rss',
       'core.entity_view_mode.node.full',
       'system.action.comment_delete_action',

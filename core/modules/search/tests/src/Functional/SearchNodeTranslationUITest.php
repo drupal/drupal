@@ -30,6 +30,7 @@ class SearchNodeTranslationUITest extends ContentTranslationTestBase {
     'content_translation',
     'node',
     'search',
+    'search_node',
   ];
 
   /**

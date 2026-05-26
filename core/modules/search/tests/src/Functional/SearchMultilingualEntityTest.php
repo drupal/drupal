@@ -43,6 +43,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     'comment',
     'node',
     'search',
+    'search_node',
   ];
 
   /**
