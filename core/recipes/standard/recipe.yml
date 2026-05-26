@@ -76,7 +76,6 @@ config:
         - 'access navigation'
         - 'administer url aliases'
         - 'create url aliases'
-        - 'edit own comments'
         - 'delete own files'
         - 'revert all revisions'
         - 'view all revisions'
