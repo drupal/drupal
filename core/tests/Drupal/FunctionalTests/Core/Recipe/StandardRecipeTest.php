@@ -150,7 +150,6 @@ class StandardRecipeTest extends StandardTest {
       'system.action.taxonomy_term_publish_action',
       'core.entity_view_mode.taxonomy_term.full',
       'taxonomy.settings',
-      'taxonomy.vocabulary.tags',
       'field.storage.comment.comment_body',
       'field.field.comment.comment.comment_body',
       'core.entity_view_display.comment.comment.default',
