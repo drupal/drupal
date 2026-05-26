@@ -34,6 +34,7 @@ class Upgrade7WithContentModerationTest extends Upgrade7Test {
 
     // Set up a moderation flow.
     $types = [
+      'article',
       'blog',
       'et',
       'test_content_type',
@@ -53,6 +54,8 @@ class Upgrade7WithContentModerationTest extends Upgrade7Test {
     $type_plugin = $editorial->getTypePlugin();
     $type_plugin->setConfiguration($type_settings);
     $editorial->trustData()->save();
+
+    $this->expectedLoggedErrors = 29;
   }
 
   /**
@@ -63,7 +66,6 @@ class Upgrade7WithContentModerationTest extends Upgrade7Test {
       'content_moderation_state' => 5,
       'workflow' => 1,
     ];
-    $entity_counts['entity_view_display'] = $entity_counts['entity_view_display'] + 1;
     $entity_counts['field_config'] = $entity_counts['field_config'] + 2;
     $entity_counts['view'] = $entity_counts['view'] + 1;
     return $entity_counts;

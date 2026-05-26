@@ -34,6 +34,7 @@ class Upgrade6WithContentModerationTest extends Upgrade6Test {
 
     // Set up a moderation flow.
     $types = [
+      'page',
       'story',
       'test_planet',
       'company',

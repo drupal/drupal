@@ -3,10 +3,6 @@ description: 'Provides a standard site with commonly used features pre-configure
 type: 'Site'
 recipes:
   - basic_block_type
-  - article_comment
-  - article_tags
-  - article_content_type
-  - page_content_type
   - basic_html_format_editor
   - full_html_format_editor
   - core_recommended_performance
