@@ -24,11 +24,22 @@ class DependencyTest extends ModuleTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    if ($this->name() === 'testCoreCompatibility') {
-      $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
-    }
-    parent::setUp();
+  protected function prepareEnvironment(): void {
+    parent::prepareEnvironment();
+    // Create a module for testing semver support.
+    \Drupal::service('file_system')->mkdir($this->publicFilesDirectory . '/../modules/system_core_semver_test', NULL, TRUE);
+    $contents = <<<INFO
+name: 'System core ^8 version test'
+type: module
+description: 'Support module for testing core using semver.'
+package: Testing
+version: 1.0.0
+
+INFO;
+    // Add the core_version_requirement key.
+    $version = explode('.', \Drupal::VERSION, 2);
+    $contents .= "core_version_requirement: ^$version[0]\n";
+    file_put_contents($this->publicFilesDirectory . '/../modules/system_core_semver_test/system_core_semver_test.info.yml', $contents);
   }
 
   /**

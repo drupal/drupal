@@ -67,9 +67,6 @@ class UpdateScriptTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    if ($this->name() === 'testMissingExtension') {
-      $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
-    }
     parent::setUp();
     $this->updateUrl = Url::fromRoute('system.db_update');
     $this->statusReportUrl = Url::fromRoute('system.status');
@@ -371,7 +368,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $test_error_urls = [];
     $extension_base_info = [
       'version' => 'VERSION',
-      'core_version_requirement' => '^8 || ^9 || ^10',
+      'core_version_requirement' => \Drupal::VERSION,
     ];
 
     // For each core extension create and error of info.yml information and

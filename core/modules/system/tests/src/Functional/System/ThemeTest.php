@@ -51,10 +51,6 @@ class ThemeTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    if ($this->name() === 'testInstallAndSetAsDefault') {
-      $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
-    }
-
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
@@ -69,6 +65,27 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->node = $this->drupalCreateNode();
     $this->drupalPlaceBlock('local_tasks_block');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function prepareEnvironment(): void {
+    parent::prepareEnvironment();
+    // Create theme for testing semver.
+    \Drupal::service('file_system')->mkdir($this->publicFilesDirectory . '/../themes/test_core_semver', NULL, TRUE);
+    $contents = <<<INFO
+name: 'Theme test with semver core version'
+type: theme
+base theme: false
+description: 'Test theme which has semver core version.'
+version: VERSION
+
+INFO;
+    // Add the core_version_requirement key.
+    $version = explode('.', \Drupal::VERSION, 2);
+    $contents .= "core_version_requirement: ^$version[0]\n";
+    file_put_contents($this->publicFilesDirectory . '/../themes/test_core_semver/test_core_semver.info.yml', $contents);
   }
 
   /**

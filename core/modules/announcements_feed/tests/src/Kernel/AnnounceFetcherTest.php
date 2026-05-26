@@ -20,12 +20,20 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class AnnounceFetcherTest extends AnnounceTestBase {
 
   /**
+   * Version constraint.
+   */
+  protected string $constraint;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
     parent::setUp();
     $this->installConfig(['announcements_feed']);
+
+    // Set version constraint to current major version.
+    $version = explode('.', \Drupal::VERSION, 2);
+    $this->constraint = "^$version[0]";
   }
 
   /**
@@ -42,7 +50,11 @@ class AnnounceFetcherTest extends AnnounceTestBase {
     $this->assertCount(1, $feeds);
     $this->assertSame('https://www.drupal.org/project/announce', $feeds[0]->url);
     $this->assertSame('Drupal security update Test', $feeds[0]->title);
-    $this->assertSame('^10', $feeds[0]->version);
+
+    // Set version constraint to current major version.
+    $version = explode('.', \Drupal::VERSION, 2);
+    $constraint = "^$version[0]";
+    $this->assertSame($constraint, $feeds[0]->version);
     $this->assertCount(1, $this->history);
   }
 
@@ -56,7 +68,7 @@ class AnnounceFetcherTest extends AnnounceTestBase {
       'url' => 'https://www.drupal.org/project/announce',
       '_drupalorg' => [
         'featured' => TRUE,
-        'version' => '^10',
+        'version' => $this->constraint,
       ],
       'date_modified' => "2021-09-02T15:09:42+00:00",
       'date_published' => "2021-09-01T15:09:42+00:00",
@@ -75,6 +87,9 @@ class AnnounceFetcherTest extends AnnounceTestBase {
    * Data provider for testShowAnnouncements().
    */
   public static function providerShowAnnouncements(): array {
+    // Set version constraint to current major version.
+    $version = explode('.', \Drupal::VERSION, 2);
+    $constraint = "^$version[0]";
     return [
       '1' => [
         'feed_item' => [
@@ -82,7 +97,7 @@ class AnnounceFetcherTest extends AnnounceTestBase {
           'content_html' => 'Test teaser 1',
           '_drupalorg' => [
             'featured' => 1,
-            'version' => '^10',
+            'version' => $constraint,
           ],
           'date_modified' => "2021-09-02T15:09:42+00:00",
           'date_published' => "2021-09-01T15:09:42+00:00",
@@ -94,7 +109,7 @@ class AnnounceFetcherTest extends AnnounceTestBase {
           'content_html' => 'Test teaser 2',
           '_drupalorg' => [
             'featured' => 1,
-            'version' => '^10',
+            'version' => $constraint,
           ],
           'date_modified' => "2021-09-02T15:09:42+00:00",
           'date_published' => "2021-09-01T15:09:42+00:00",
@@ -106,7 +121,7 @@ class AnnounceFetcherTest extends AnnounceTestBase {
           'content_html' => 'Test teaser 3',
           '_drupalorg' => [
             'featured' => 1,
-            'version' => '^10',
+            'version' => $constraint,
           ],
           'date_modified' => "2021-09-02T15:09:42+00:00",
           'date_published' => "2021-09-01T15:09:42+00:00",
@@ -118,7 +133,7 @@ class AnnounceFetcherTest extends AnnounceTestBase {
           'content_html' => 'Test teaser 4',
           '_drupalorg' => [
             'featured' => 1,
-            'version' => '^10',
+            'version' => $constraint,
           ],
           'date_modified' => "2021-09-02T15:09:42+00:00",
           'date_published' => "2021-09-01T15:09:42+00:00",
