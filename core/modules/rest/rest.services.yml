@@ -24,4 +24,3 @@ services:
     class: Drupal\rest\EventSubscriber\ResourceResponseSubscriber
   rest.resource.entity.post_route.subscriber:
     class: \Drupal\rest\EventSubscriber\EntityResourcePostRouteSubscriber
-  Drupal\rest\EventSubscriber\DeprecatedUserRoutesSubscriber: ~
