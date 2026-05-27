@@ -63,7 +63,7 @@
         "symfony/var-exporter": "~v8.0.9",
         "symfony/yaml": "~v8.0.12",
         "twig/html-extra": "~v3.23.0",
-        "twig/twig": "~v3.26.0"
+        "twig/twig": "~v3.27.0"
     },
     "extra": {
         "branch-alias": {

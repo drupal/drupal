@@ -37,7 +37,7 @@
         "symfony/runtime": "^8.0",
         "symfony/yaml": "^8.0.12",
         "revolt/event-loop": "^1.0",
-        "twig/twig": "^3.26.0",
+        "twig/twig": "^3.27.0",
         "doctrine/lexer": "^2 || ^3",
         "drupal/core-composer-scaffold": "self.version",
         "guzzlehttp/guzzle": "^7.10",
