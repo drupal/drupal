@@ -36,7 +36,7 @@
         "symfony/polyfill-php84": "^1.32",
         "symfony/yaml": "^7.4.12",
         "revolt/event-loop": "^1.0",
-        "twig/twig": "^3.27.0",
+        "twig/twig": "^3.26.0",
         "doctrine/annotations": "^2.0",
         "doctrine/lexer": "^2.0",
         "guzzlehttp/guzzle": "^7.5",
