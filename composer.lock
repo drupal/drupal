@@ -368,7 +368,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "fcb995fbb4cfbe11222747879620f479e23aa6d2"
+                "reference": "154e8ed951857b1ee8c75e4e43f75691c13f920a"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -407,7 +407,7 @@
                 "symfony/event-dispatcher": "^7.4",
                 "symfony/filesystem": "^7.4",
                 "symfony/finder": "^7.4",
-                "symfony/http-foundation": "^7.4",
+                "symfony/http-foundation": "^7.4.13",
                 "symfony/http-kernel": "^7.4.12",
                 "symfony/mailer": "^7.4.12",
                 "symfony/mime": "^7.4.12",
@@ -417,7 +417,7 @@
                 "symfony/polyfill-php86": "^1.37",
                 "symfony/process": "^7.4.5",
                 "symfony/psr-http-message-bridge": "^7.4",
-                "symfony/routing": "^7.4.12",
+                "symfony/routing": "^7.4.13",
                 "symfony/runtime": "^7.4",
                 "symfony/serializer": "^7.4",
                 "symfony/validator": "^7.4",
@@ -2792,16 +2792,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v7.4.8",
+            "version": "v7.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "9381209597ec66c25be154cbf2289076e64d1eab"
+                "reference": "bc354f47c62301e990b7874fa662326368508e2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/9381209597ec66c25be154cbf2289076e64d1eab",
-                "reference": "9381209597ec66c25be154cbf2289076e64d1eab",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/bc354f47c62301e990b7874fa662326368508e2c",
+                "reference": "bc354f47c62301e990b7874fa662326368508e2c",
                 "shasum": ""
             },
             "require": {
@@ -2850,7 +2850,7 @@
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v7.4.8"
+                "source": "https://github.com/symfony/http-foundation/tree/v7.4.13"
             },
             "funding": [
                 {
@@ -2870,7 +2870,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-24T13:12:05+00:00"
+            "time": "2026-05-24T11:20:33+00:00"
         },
         {
             "name": "symfony/http-kernel",
@@ -4065,16 +4065,16 @@
         },
         {
             "name": "symfony/routing",
-            "version": "v7.4.12",
+            "version": "v7.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "3b04a5ec4887a8135a12ebf0f4cbc5b8fc8ee204"
+                "reference": "3a162171bb008e5e0f15dce6581373a4c0e8390d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/3b04a5ec4887a8135a12ebf0f4cbc5b8fc8ee204",
-                "reference": "3b04a5ec4887a8135a12ebf0f4cbc5b8fc8ee204",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/3a162171bb008e5e0f15dce6581373a4c0e8390d",
+                "reference": "3a162171bb008e5e0f15dce6581373a4c0e8390d",
                 "shasum": ""
             },
             "require": {
@@ -4126,7 +4126,7 @@
                 "url"
             ],
             "support": {
-                "source": "https://github.com/symfony/routing/tree/v7.4.12"
+                "source": "https://github.com/symfony/routing/tree/v7.4.13"
             },
             "funding": [
                 {
@@ -4146,7 +4146,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-20T07:20:23+00:00"
+            "time": "2026-05-24T11:20:33+00:00"
         },
         {
             "name": "symfony/runtime",
