@@ -25,7 +25,7 @@ class TranslationStatusForm extends FormBase {
     protected StateInterface $state,
     protected TimeInterface $time,
     protected LocaleFetch $localeFetch,
-    protected readonly LocaleConfigBatch $localeConfigBatch,
+    protected LocaleConfigBatch $localeConfigBatch,
   ) {
   }
 
