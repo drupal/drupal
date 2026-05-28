@@ -85,7 +85,7 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
       'CacheGetCount' => 41,
       'CacheGetCountByBin' => [
         'config' => 7,
-        'data' => 8,
+        'routes' => 8,
         'bootstrap' => 5,
         'discovery' => 13,
         'entity' => 2,
@@ -95,7 +95,7 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
       ],
       'CacheSetCount' => 16,
       'CacheSetCountByBin' => [
-        'data' => 7,
+        'routes' => 7,
         'entity' => 1,
         'default' => 3,
         'dynamic_page_cache' => 2,
@@ -143,7 +143,7 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
       'CacheGetCount' => 18,
       'CacheGetCountByBin' => [
         'config' => 5,
-        'data' => 1,
+        'routes' => 1,
         'discovery' => 5,
         'bootstrap' => 3,
         'entity' => 1,
@@ -197,7 +197,7 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
       'CacheGetCount' => 42,
       'CacheGetCountByBin' => [
         'config' => 7,
-        'data' => 8,
+        'routes' => 8,
         'discovery' => 13,
         'bootstrap' => 4,
         'entity' => 2,

@@ -350,6 +350,12 @@ services:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
     factory: ['@cache_factory', 'get']
     arguments: [discovery]
+  cache.routes:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin, default_backend: cache.backend.chainedfast }
+    factory: ['@cache_factory', 'get']
+    arguments: [routes]
   cache.memory:
     class: Drupal\Core\Cache\MemoryCache\MemoryCacheInterface
     tags:
@@ -1109,16 +1115,13 @@ services:
   Drupal\Core\Routing\AdminContext: '@router.admin_context'
   router.route_provider:
     class: Drupal\Core\Routing\RouteProvider
-    arguments: ['@database', '@state', '@path.current', '@cache.data', '@path_processor_manager', '@cache_tags.invalidator', 'router', '@language_manager']
+    arguments: ['@database', '@state', '@path.current', '@cache.routes', '@path_processor_manager', '@cache_tags.invalidator', 'router', '@language_manager']
     tags:
       - { name: backend_overridable }
   Drupal\Core\Routing\RouteProviderInterface: '@router.route_provider'
   router.route_provider.lazy_builder:
     class: Drupal\Core\Routing\RouteProviderLazyBuilder
     arguments: ['@router.route_provider', '@router.builder']
-  router.route_preloader:
-    class: Drupal\Core\Routing\RoutePreloader
-    arguments: ['@router.route_provider', '@state']
   url_generator.non_bubbling:
     class: Drupal\Core\Routing\UrlGenerator
     arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@request_stack', '%filter_protocols%']
