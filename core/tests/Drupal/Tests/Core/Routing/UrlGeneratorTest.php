@@ -97,12 +97,16 @@ class UrlGeneratorTest extends UnitTestCase {
     $third_route = new Route('/test/two/');
     $fourth_route = new Route('/test/four', [], [], [], '', ['https']);
     $none_route = new Route('', [], [], ['_no_path' => TRUE]);
+    $path_route = new Route('/test-path/{path}/bar', [], ['path' => '.+']);
+    $tail_route = new Route('/test-tail/{path}', [], ['path' => '.+']);
 
     $routes->add('test_1', $first_route);
     $routes->add('test_2', $second_route);
     $routes->add('test_3', $third_route);
     $routes->add('test_4', $fourth_route);
     $routes->add('<none>', $none_route);
+    $routes->add('test_path', $path_route);
+    $routes->add('test_tail', $tail_route);
 
     // Create a route provider stub.
     $provider = $this->getMockBuilder('Drupal\Core\Routing\RouteProvider')
@@ -132,6 +136,14 @@ class UrlGeneratorTest extends UnitTestCase {
       [
         'route_name' => '<none>',
         'return' => $none_route,
+      ],
+      [
+        'route_name' => 'test_path',
+        'return' => $path_route,
+      ],
+      [
+        'route_name' => 'test_tail',
+        'return' => $tail_route,
       ],
     ];
     foreach ($return_map_values as $values) {
@@ -553,6 +565,18 @@ class UrlGeneratorTest extends UnitTestCase {
 
     $options = [];
     $this->assertGenerateFromRoute('test_2', ['Lassie' => 5], $options, '/goodbye/cruel/world?zoo=5#foo', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+  }
+
+  /**
+   * Tests generate with chained relative path segments.
+   */
+  public function testEncodingOfChainedRelativePathSegments(): void {
+    $this->assertGenerateFromRoute('test_path', ['path' => '../../..'], [], '/test-path/%2E%2E/%2E%2E/%2E%2E/bar', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+    $this->assertGenerateFromRoute('test_path', ['path' => '././.'], [], '/test-path/%2E/%2E/%2E/bar', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+    $this->assertGenerateFromRoute('test_path', ['path' => '../././..'], [], '/test-path/%2E%2E/%2E/%2E/%2E%2E/bar', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+
+    $this->assertGenerateFromRoute('test_tail', ['path' => '../../..'], [], '/test-tail/%2E%2E/%2E%2E/%2E%2E', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
+    $this->assertGenerateFromRoute('test_tail', ['path' => '././.'], [], '/test-tail/%2E/%2E/%2E', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
   }
 
   /**
