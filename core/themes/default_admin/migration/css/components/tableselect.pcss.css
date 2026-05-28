@@ -1,0 +1,143 @@
+/**
+ * @file
+ * Table select and views bulk operations styles.
+ */
+
+.block-system > .views-form .gin-details,
+.view-content .views-form .gin-details {
+  box-shadow: none;
+}
+
+.block-system > .views-form form,
+.view-content .views-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.block-system > .views-form .views-table,
+.view-content .views-form .views-table {
+  order: -1;
+  margin-block-start: 0;
+}
+
+.block-system > .views-form [data-drupal-selector*="edit-header"],
+.view-content .views-form [data-drupal-selector*="edit-header"] {
+  position: relative;
+  order: 99;
+  inset-inline-start: 0;
+}
+
+.block-system > .views-form [data-drupal-selector*="edit-header"] > .form-wrapper,
+.view-content .views-form [data-drupal-selector*="edit-header"] > .form-wrapper {
+  padding: var(--space-m);
+}
+
+.block-system > .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] > *,
+.view-content .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] > * {
+  margin-inline-end: var(--space-xs);
+}
+
+.block-system > .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] .form-type--select,
+.block-system > .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] .form-actions,
+.view-content .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] .form-type--select,
+.view-content .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] .form-actions {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.block-system > .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] .form-actions,
+.view-content .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] .form-actions {
+  justify-content: flex-end;
+}
+
+.block-system > .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] .form-type--checkbox,
+.view-content .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] .form-type--checkbox {
+  align-self: center;
+}
+
+.block-system > .views-form [data-drupal-selector*="edit-header"] .form-item__label:not([for="edit-select-all"]),
+.view-content .views-form [data-drupal-selector*="edit-header"] .form-item__label:not([for="edit-select-all"]) {
+  display: block;
+  float: inline-start;
+  inset-block-start: 2px;
+  margin-block-start: var(--space-xxs);
+  margin-inline-end: var(--space-m);
+  line-height: 1.75;
+}
+
+@keyframes fade-in-bottom {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.block-system > .views-form [data-drupal-selector*="edit-header"].is-sticky,
+.view-content .views-form [data-drupal-selector*="edit-header"].is-sticky {
+  z-index: 4;
+  animation: fade-in-bottom 320ms 1 forwards;
+}
+
+.block-system > .views-form [data-drupal-selector*="edit-header"],
+.block-system > .views-form .views-bulk-actions,
+.view-content .views-form [data-drupal-selector*="edit-header"],
+.view-content .views-form .views-bulk-actions {
+  border: 0 none;
+  border-radius: var(--gin-border-m);
+  background: rgb(var(--gin-color-sticky-rgb), 0.95);
+
+  @supports (backdrop-filter: blur()) {
+    opacity: 0.999; /* Fix Chrome issue with mask */
+    background: rgb(var(--gin-color-sticky-rgb), 0.9);
+    backdrop-filter: blur(12px);
+
+    .gin--dark-mode & {
+      background: rgb(27, 27, 29, 0.8);
+    }
+  }
+}
+
+.block-system > .views-form [data-drupal-selector*="edit-header"].is-sticky,
+.block-system > .views-form .views-bulk-actions[data-drupal-sticky-vbo="true"],
+.view-content .views-form [data-drupal-selector*="edit-header"].is-sticky,
+.view-content .views-form .views-bulk-actions[data-drupal-sticky-vbo="true"] {
+  position: sticky;
+  opacity: 1;
+  box-shadow: 0 2px 6px 2px rgb(0, 0, 0, 0.03);
+  inset-inline-start: 0;
+  inset-block-end: var(--space-xs);
+}
+
+.views-bulk-actions {
+  padding: var(--space-m);
+}
+
+.views-bulk-actions__item {
+  margin-inline-end: var(--space-xs);
+  color: var(--gin-color-text);
+  font-weight: var(--font-weight-semibold);
+
+  &:has(+ .views-bulk-actions__item.form-actions) {
+    margin-inline-end: var(--space-xs);
+  }
+
+  .button--primary:not(:disabled, .is-disabled) {
+    background-color: var(--gin-color-primary);
+
+    &:hover {
+      background-color: var(--gin-color-primary-hover);
+    }
+
+    &:active {
+      background-color: var(--gin-color-primary-active);
+    }
+  }
+}
+
+.views-bulk-actions__item--status {
+  margin-inline-end: var(--space-l);
+  color: var(--gin-color-text-light);
+}

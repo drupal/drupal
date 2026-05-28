@@ -1,0 +1,126 @@
+/**
+ * @file
+ * Card.
+ */
+
+:root {
+  --card-bg-color: var(--color-white);
+  --card-border-size: 1px;
+  --card-border-color: var(--color-gray-200-o-80);
+  --card-border-radius-size: var(--base-border-radius);
+  --card-image-border-radius-size: calc(var(--card-border-radius-size) - var(--card-border-size));
+  --card-box-shadow: 0 4px 10px rgb(0, 0, 0, 0.1);
+}
+
+.card-list {
+  margin-block-end: var(--gin-spacing-xl);
+}
+
+.card {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  align-items: stretch;
+  justify-items: flex-start;
+  padding: 0;
+  border: 1px solid var(--gin-border-color-layer2);
+  border-radius: var(--gin-border-m);
+}
+
+/* 588px theme screenshot width. 53.75rem is screenshot image width + toolbar width (15rem) + 2rem of margins. */
+.card--horizontal {
+  /* 588px theme screenshot width */
+  @media screen and (min-width: 36.75rem) {
+    flex-direction: row;
+
+    .card__image {
+      flex-basis: 35%;
+      border-start-start-radius: var(--card-image-border-radius-size);
+      border-start-end-radius: 0;
+      border-end-start-radius: var(--card-image-border-radius-size);
+      border-end-end-radius: 0;
+    }
+
+    .card__content-wrapper {
+      flex-basis: 65%;
+    }
+
+    /* Card content with image. */
+    .card__image ~ .card__content-wrapper {
+      padding-inline-start: var(--space-m);
+    }
+  }
+
+  @media screen and (min-width: 85.375rem) {
+    .card__image {
+      flex-basis: 45%;
+    }
+
+    .card__content-wrapper {
+      flex-basis: 55%;
+    }
+  }
+}
+
+/**
+ * Card image.
+ */
+.card__image {
+  overflow: hidden;
+  border-radius: var(--gin-border-m) var(--gin-border-m) 0 0;
+  line-height: 0;
+
+  @media (--admin-xsmall) {
+    border-radius: var(--gin-border-m) 0 0 var(--gin-border-m);
+  }
+}
+
+/**
+ * Card content.
+ */
+.card__content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  padding: var(--space-l);
+  border-radius: 0 0 var(--gin-border-xs) var(--gin-border-xs);
+  background-color: var(--gin-bg-layer);
+
+  .gin--dark-mode & {
+    background-color: var(--gin-bg-layer2);
+  }
+
+  @media (--admin-xsmall) {
+    border-radius: 0 var(--gin-border-xs) var(--gin-border-xs) 0;
+  }
+}
+
+.card__content {
+  flex-grow: 1;
+}
+
+/**
+ * Card content items (title, description).
+ */
+.card__content-item {
+  margin-block: 0 var(--space-m);
+
+  &:last-child {
+    margin-block-end: 0;
+  }
+}
+
+/**
+ * Card footer.
+ */
+.card__footer {
+  order: 100;
+  margin-block-start: var(--space-l);
+
+  .action-links {
+    margin-block: 0;
+    text-align: end;
+  }
+}

@@ -1,0 +1,165 @@
+/*
+ * @file
+ * Single checkbox: show as toggle.
+ */
+
+:not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox {
+  position: relative;
+  margin-inline-start: 0;
+
+  input {
+    all: unset;
+    appearance: none;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 2.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+    vertical-align: top;
+    border: 3px solid transparent;
+    border-radius: var(--gin-border-l);
+    background-color: var(--gin-color-disabled);
+    clip-path: circle(var(--gin-spacing-l) at 50% 50%); /* Fix Safari bug */
+
+    .gin--dark-mode & {
+      background-color: var(--gin-bg-input);
+    }
+
+    &::before {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      content: "";
+      transform: translateX(-16px);
+      border-radius: 21px;
+      background-color: #fff;
+
+      &:dir(rtl) {
+        transform: translateX(16px);
+      }
+
+      .gin--dark-mode & {
+        background-color: var(--gin-border-color-form-element);
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: transform 0.3s;
+      }
+
+      @media (forced-colors: active) {
+        background-color: CanvasText;
+      }
+    }
+
+    /* Disabled state: set cursor to not-allowed */
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    /* Hover state */
+    &:hover {
+      opacity: 0.9;
+      box-shadow: 0 0 2px rgb(0, 0, 0, 0.2);
+    }
+
+    /* Hover/Focus state */
+    &:active,
+    &:focus {
+      box-shadow:
+        0 0 0 1px var(--gin-color-focus-border),
+        0 0 0 4px var(--gin-color-focus);
+    }
+
+    /* Active state */
+    &:checked {
+      background-color: var(--gin-switch);
+
+      .gin--dark-mode & {
+        background-color: var(--gin-color-primary-light-active);
+      }
+
+      &::before {
+        transform: translateX(16px);
+        background-color: #fff;
+
+        &:dir(rtl) {
+          transform: translateX(-16px);
+        }
+
+        .gin--dark-mode & {
+          background-color: var(--gin-color-primary-hover);
+        }
+
+        .gin--high-contrast-mode & {
+          background-color: var(--gin-border-color);
+        }
+
+        @media (forced-colors: active) {
+          padding-inline-start: var(--gin-spacing-xs);
+          background-color: LinkText !important;
+        }
+      }
+
+      @media (forced-colors: active) {
+        &::after {
+          transform: translateX(16px);
+          mask-image: var(--admin-icon-checked);
+          mask-position: 2px 2px;
+
+          &:dir(rtl) {
+            transform: translateX(-16px);
+          }
+        }
+      }
+    }
+
+    /* Disabled state */
+    &:disabled {
+      opacity: 0.75;
+      background-color: var(--gin-color-disabled);
+      box-shadow: none;
+
+      &::before {
+        opacity: 0.6;
+        background-color: #fff;
+      }
+    }
+
+    @media (forced-colors: active) {
+      border-width: 2px;
+    }
+
+    @media (forced-colors: active) {
+      &::after {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        content: "";
+        transform: translateX(-16px);
+        background-color: Canvas;
+        mask-image: var(--admin-icon-toggle-unchecked);
+        mask-size: 16px 16px;
+        mask-position: 17px 2px;
+        mask-repeat: no-repeat;
+
+        &:dir(rtl) {
+          transform: translateX(16px);
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+          transition: transform 0.3s;
+        }
+      }
+    }
+  }
+
+  label {
+    position: relative;
+    z-index: 1;
+    padding-block-end: 0;
+    padding-inline-start: var(--gin-spacing-xxs);
+    color: var(--gin-color-text);
+  }
+}

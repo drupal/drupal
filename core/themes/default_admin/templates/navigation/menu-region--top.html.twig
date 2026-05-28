@@ -1,0 +1,32 @@
+{% set menu_id = 'menu-top-menus' %}
+{% set item_id = 'item-' ~ class|clean_class %}
+
+<div class="admin-toolbar__item toolbar-block menu--shortcuts">
+  <h2 id="{{ menu_id }}" class="toolbar-block__title visually-hidden">{{ 'Top Menus'|t }}</h2>
+  <ul class="toolbar-menu toolbar-block__content" aria-toolbar-link__labelledby="{{ menu_id }}">
+    <li id="{{ item_id }}" class="toolbar-menu__item toolbar-menu__item--has-dropdown toolbar-menu__item--level-1">
+      <button class="toolbar-link toolbar-link--has-icon toolbar-link--{{ menu_name|clean_class }}">
+        <span class="toolbar-link__action">{{ 'Extend'|t }}</span>
+        <span class="toolbar-link__label">{{ title }}</span>
+      </button>
+      <div class="toolbar-menu__submenu">
+        <div class="toolbar-menu__arrow-ref"></div>
+        <ul class="toolbar-menu">
+          <li class="toolbar-menu__item toolbar-menu__item--to-title toolbar-menu__item--to-title">
+            <button class="toolbar-link toolbar-link--has-icon toolbar-link--{{ menu_name|clean_class }}" tabindex="-1" data-url="{{ url }}">
+              <span class="toolbar-link__action">{{ 'Extend'|t }}</span>
+              <span class="toolbar-link__label">{{ title }}</span>
+            </button>
+          </li>
+          {% for item in links %}
+            <li class="toolbar-menu__item toolbar-menu__item--level-2">
+              <a href="{{ item.url }}" class="toolbar-link">
+                <span class="toolbar-link__label">{{ item.title }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>

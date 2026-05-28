@@ -1,0 +1,604 @@
+/**
+ * @file
+ * Dialog theme overrides for form elements, links, and controls.
+ */
+
+/* cspell:ignore tablesaw */
+
+.ui-dialog {
+  a,
+  .link,
+  button.link,
+  .tabs__link.is-active,
+  [open] .gin-details__summary--accordion,
+  [open] .gin-details__summary--accordion-item,
+  [open] .gin-details__summary--vertical-tabs-item,
+  .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
+    color: var(--gin-color-primary);
+    text-decoration-style: var(--gin-link-decoration-style);
+
+    &:hover {
+      color: var(--gin-color-primary-hover);
+    }
+
+    &:active {
+      color: var(--gin-color-primary-active);
+    }
+  }
+
+  *|*:any-link:not(svg|a) {
+    text-decoration: underline;
+    text-decoration-style: var(--gin-link-decoration-style);
+  }
+
+  .is-horizontal .tabs__link:hover,
+  .gin-details__summary:hover,
+  .action-link:hover {
+    color: var(--gin-color-primary-hover);
+  }
+
+  .gin-details[open] > .gin-details__summary:focus {
+    color: var(--gin-color-primary-active);
+  }
+
+  .form-boolean--type-checkbox:checked,
+  .form-boolean--type-radio:checked:not(:disabled),
+  .is-horizontal .tabs__link.is-active::before,
+  .tabs__tab.is-active::before,
+  [open] > .gin-details__summary--accordion:not(:focus, :active)::after,
+  [open] > .gin-details__summary--accordion-item:not(:focus, :active)::after,
+  .collapse-processed[open] > .gin-details__summary--accordion .details-title:not(:focus)::after,
+  .collapse-processed[open] > .gin-details__summary--accordion-item .details-title:not(:focus)::after,
+  [open] > .gin-details__summary--vertical-tabs-item:not(:focus, :active)::after,
+  .collapse-processed[open] > .gin-details__summary--vertical-tabs-item .details-title:not(:focus)::after,
+  .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
+    border-color: var(--gin-color-primary);
+
+    &:hover {
+      border-color: var(--gin-color-primary-hover);
+    }
+
+    &:active {
+      border-color: var(--gin-color-primary-active);
+    }
+  }
+
+  .form-element {
+    box-sizing: border-box;
+    min-height: calc(var(--input-padding-vertical) * 2 + var(--input-line-height));
+    color: var(--gin-color-text);
+    border: 1px solid var(--gin-border-color-form-element);
+    border-radius: var(--gin-border-m);
+    background-color: var(--gin-bg-input);
+    line-height: var(--input-line-height);
+    padding-block: calc(var(--input-padding-vertical) - 1px);
+    padding-inline: var(--input-padding-horizontal);
+
+    &:hover {
+      border-color: var(--gin-color-text);
+      box-shadow: inset 0 0 0 1px var(--gin-color-text);
+    }
+
+    &[disabled],
+    &[disabled]:hover {
+      cursor: not-allowed;
+      color: var(--gin-color-disabled);
+      border-color: var(--gin-color-disabled-border);
+      background-color: var(--gin-color-disabled-bg) !important;
+      box-shadow: none;
+    }
+
+    .gin--dark-mode & {
+      color-scheme: dark;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: var(--gin-transition);
+    }
+  }
+
+  .form-element--small,
+  .form-element--extrasmall {
+    border-radius: var(--gin-border-s);
+    font-size: var(--font-size-s);
+    line-height: 1.5;
+  }
+
+  .form-textarea-wrapper {
+    border-radius: var(--gin-border-m);
+
+    textarea {
+      max-width: 100%;
+    }
+  }
+
+  .form-item--editor-format,
+  .form-element--editor-format {
+    width: auto;
+
+    .form-item__label {
+      inset-block-start: 3px;
+      padding-block-end: 0;
+    }
+  }
+
+  .password-field {
+    width: 100%;
+  }
+
+  .password-confirm {
+    width: 100%;
+    max-width: var(--gin-max-line-length);
+  }
+
+  .password-strength__title {
+    color: var(--gin-color-text-light);
+  }
+
+  .password-strength__text {
+    color: var(--gin-color-title);
+  }
+
+  .password-suggestions {
+    color: var(--gin-color-text-light);
+    border: 1px solid var(--gin-border-color-layer2);
+    background-color: transparent;
+  }
+
+  .form-element--type-select {
+    padding-inline-end: calc(var(--space-xs) + var(--space-xl) - 1px);
+
+    .gin--dark-mode & {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3E%3Cpath fill='none' stroke-width='1.5' d='M1 1L7 7L13 1' stroke='%23ffffff'/%3E%3C/svg%3E%0A");
+    }
+  }
+
+  .form-element--type-select--small {
+    min-height: 2.25rem;
+    background-position: 100% 52%;
+    font-size: var(--font-size-xs);
+    line-height: 1.4;
+    padding-block: 0.474rem;
+
+    &:dir(rtl) {
+      background-position: 0% 52%;
+    }
+  }
+
+  .form-boolean {
+    width: 21px;
+    height: 21px;
+    border-color: var(--gin-border-color-form-element);
+    border-radius: var(--gin-border-xs);
+  }
+
+  .form-boolean--type-checkbox {
+    .gin--dark-mode &:not(:checked) {
+      background: var(--gin-bg-input);
+    }
+
+    &:checked {
+      background-color: var(--gin-color-primary);
+
+      .gin--dark-mode &:not(:disabled) {
+        background-image: url("../../media/icons/form/checked.svg");
+      }
+
+      &:hover {
+        background-color: var(--gin-color-primary-hover);
+      }
+
+      &:active {
+        background-color: var(--gin-color-primary-active);
+      }
+    }
+
+    &[disabled],
+    &[disabled]:hover {
+      cursor: not-allowed;
+      border-color: var(--gin-color-disabled-border);
+      background-color: var(--gin-color-disabled-bg);
+    }
+
+    &[disabled]:checked,
+    &[disabled]:hover:checked {
+      border-color: var(--gin-color-disabled-border);
+      background-color: var(--gin-color-disabled-bg);
+      box-shadow: none;
+    }
+  }
+
+  .gin--dark-mode & .form-boolean:hover,
+  .gin--dark-mode & .form-boolean:active {
+    border-color: var(--gin-color-text);
+    box-shadow: none;
+  }
+
+  .form-boolean--type-radio {
+    &,
+    &:hover,
+    &:active,
+    &:focus,
+    &:hover:focus {
+      border-color: var(--gin-border-color-form-element);
+      border-radius: 50%;
+      background-color: var(--gin-bg-input);
+      background-image: none;
+    }
+
+    &:hover {
+      box-shadow: inset 0 0 0 1px var(--gin-border-color-layer2);
+    }
+
+    &:hover {
+      border-color: var(--gin-color-text);
+    }
+
+    .gin--dark-mode &:hover {
+      border-color: var(--gin-color-text);
+    }
+
+    &:active,
+    &:focus {
+      box-shadow:
+        inset 0 0 0 1px var(--gin-border-color-layer2),
+        0 0 0 1px var(--gin-color-focus-border),
+        0 0 0 4px var(--gin-color-focus);
+    }
+
+    &:checked:not(:disabled) {
+      &,
+      &:hover {
+        background-color: var(--gin-bg-layer);
+        background-image: none;
+        box-shadow: inset 0 0 0 5px var(--gin-color-primary);
+      }
+
+      &:active,
+      &:focus,
+      &:hover:focus {
+        border-color: var(--gin-color-focus-border);
+        box-shadow:
+          inset 0 0 0 5px var(--gin-color-primary),
+          0 0 0 1px var(--gin-color-focus-border),
+          0 0 0 4px var(--gin-color-focus);
+      }
+    }
+
+    &:disabled,
+    &:disabled:hover {
+      cursor: not-allowed;
+      border-color: var(--gin-color-disabled-border);
+      background: var(--gin-color-disabled-bg);
+    }
+
+    &:checked:disabled,
+    &:checked:disabled:hover {
+      background: var(--gin-color-disabled);
+      box-shadow: inset 0 0 0 5px var(--gin-color-disabled-bg);
+    }
+  }
+}
+
+/* Toggle checkbox — long selector kept at top level to limit nesting depth. */
+.ui-dialog :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox {
+  position: relative;
+  margin-inline-start: 0;
+
+  input {
+    all: unset;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 2.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+    vertical-align: top;
+    border: 3px solid transparent;
+    border-radius: var(--gin-border-l);
+    background-color: var(--gin-color-disabled);
+    appearance: none;
+    clip-path: circle(var(--space-l) at 50% 50%);
+
+    .gin--dark-mode & {
+      background-color: var(--gin-bg-input);
+    }
+
+    &::before {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      content: "";
+      transform: translateX(-16px);
+      border-radius: 21px;
+      background-color: #fff;
+
+      &:dir(rtl) {
+        transform: translateX(16px);
+      }
+
+      .gin--dark-mode & {
+        background-color: var(--gin-border-color-form-element);
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: transform 0.3s;
+      }
+
+      @media (forced-colors: active) {
+        background-color: CanvasText;
+      }
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    &:hover {
+      opacity: 0.9;
+      box-shadow: 0 0 2px rgb(0, 0, 0, 0.2);
+    }
+
+    &:active,
+    &:focus {
+      box-shadow:
+        0 0 0 1px var(--gin-color-focus-border),
+        0 0 0 4px var(--gin-color-focus);
+    }
+
+    &:checked {
+      background-color: var(--gin-switch);
+
+      .gin--dark-mode & {
+        background-color: var(--gin-color-primary-light-active);
+      }
+
+      &::before {
+        transform: translateX(16px);
+        background-color: #fff;
+
+        &:dir(rtl) {
+          transform: translateX(-16px);
+        }
+
+        .gin--dark-mode & {
+          background-color: var(--gin-color-primary-hover);
+        }
+
+        .gin--high-contrast-mode & {
+          background-color: var(--gin-border-color);
+        }
+
+        @media (forced-colors: active) {
+          padding-inline-start: var(--space-xs);
+          background-color: LinkText !important;
+        }
+      }
+
+      @media (forced-colors: active) {
+        &::after {
+          mask-image: url("../../media/icons/form/checked.svg");
+          mask-position: 2px 2px;
+          transform: translateX(16px);
+
+          &:dir(rtl) {
+            transform: translateX(-16px);
+          }
+        }
+      }
+    }
+
+    &:disabled {
+      opacity: 0.75;
+      background-color: var(--gin-color-disabled);
+      box-shadow: none;
+
+      &::before {
+        opacity: 0.6;
+        background-color: #fff;
+      }
+    }
+
+    @media (forced-colors: active) {
+      border-width: 2px;
+    }
+
+    @media (forced-colors: active) {
+      &::after {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        content: "";
+        transition: transform 0.3s;
+        transform: translateX(-16px);
+        background-color: Canvas;
+        mask-image: url("../../media/icons/form/toggle-unchecked.svg");
+        mask-size: 16px 16px;
+        mask-position: 17px 2px;
+        mask-repeat: no-repeat;
+
+        &:dir(rtl) {
+          transform: translateX(16px);
+        }
+      }
+    }
+  }
+
+  label {
+    position: relative;
+    z-index: 1;
+    padding-block-end: 0;
+    padding-inline-start: var(--space-xxs);
+    color: var(--gin-color-text);
+  }
+}
+
+.ui-dialog table:has(.tabledrag-cell-content__item .form-checkbox) th.select-all .form-checkbox {
+  margin-inline-start: calc(var(--tabledrag-handle-icon-size, 1.0625rem) + var(--space-m));
+}
+
+.ui-dialog {
+  .form-radios .form-type--boolean,
+  .form-checkboxes .form-type--boolean {
+    margin-block: var(--space-xs);
+  }
+
+  .form-actions {
+    margin-block-end: 0;
+  }
+
+  .form-edit .form-actions {
+    margin-block-end: 0;
+    padding: 0;
+    border: 0 none;
+    background-color: transparent;
+  }
+
+  fieldset:not(.fieldgroup) {
+    padding-block-start: var(--space-xs);
+    color: var(--gin-color-text-light);
+    border-color: var(--gin-border-color);
+    border-radius: var(--gin-border-m);
+    background: transparent;
+    box-shadow: none;
+    padding-inline: 0;
+
+    > legend {
+      inset-block-start: 20px;
+    }
+
+    > .fieldset-wrapper {
+      margin-block-start: 20px;
+    }
+
+    &.error {
+      border: 2px solid var(--gin-color-danger);
+    }
+  }
+
+  .fieldset__label,
+  .fieldset__label--group,
+  .form-item__label {
+    margin-block-start: 0;
+    margin-block-end: var(--space-xs);
+    color: var(--gin-color-title);
+    font-size: var(--font-size-s);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .form-item__label.has-error,
+  .form-item__error-message {
+    color: var(--gin-color-danger);
+  }
+
+  .form-item__description,
+  .fieldset__description,
+  .filter-guidelines__item {
+    max-width: var(--gin-max-line-length);
+    color: var(--gin-color-text-light);
+  }
+
+  .form-item__label.form-required::after,
+  .fieldset__label.form-required::after,
+  .form-required > .fieldset__label::after,
+  .horizontal-tab-button .form-required::after,
+  .vertical-tabs__menu-link .form-required::after {
+    content: "*";
+    vertical-align: text-top;
+    color: var(--gin-color-danger);
+    background: none;
+    line-height: 1;
+    margin-inline: 0.15em;
+  }
+
+  .gin-details.error {
+    border: 2px solid var(--gin-color-danger);
+  }
+
+  .gin-details__summary:not(.form-required) .required-mark {
+    display: none;
+  }
+
+  .form-item__warning {
+    display: inline-block;
+    margin-block-start: var(--space-xs);
+  }
+
+  html.js .form-autocomplete {
+    padding-inline-end: 36px;
+  }
+
+  .entity-form-display-form > .form-actions {
+    margin-block: 0;
+  }
+
+  .required-mark::after {
+    background: var(--gin-color-danger);
+    mask-image: url("../../media/icons/form/asterisk.svg");
+    mask-position: center center;
+    mask-size: 100% 100%;
+  }
+
+  .form-wrapper .form-item__label,
+  .form-composite .form-item__label {
+    position: relative;
+  }
+
+  .field--type-text-with-summary .form-item,
+  .field--widget-text-textarea .form-item {
+    margin-block-end: 0;
+  }
+
+  .field--type-text-with-summary .filter-wrapper,
+  .field--widget-text-textarea .filter-wrapper {
+    border: 0 none;
+    padding-inline: 0;
+  }
+
+  .gin-autocomplete {
+    width: calc(100% - var(--space-m));
+
+    .form-autocomplete {
+      width: 100%;
+    }
+  }
+
+  .no-touchevents .form-element--type-select.form-element--extrasmall {
+    min-height: 1.75rem;
+    font-size: var(--font-size-s);
+    line-height: 1.5;
+  }
+
+  #block-gin-content > form > .form-item:first-of-type {
+    margin-block-start: 0;
+  }
+
+  .image-style-new .form-item {
+    margin-inline-end: var(--space-xxs);
+  }
+
+  tr .form-item {
+    margin-block: 0;
+  }
+
+  .container-inline .form-item {
+    margin-block: var(--gin-spacing-density-s);
+  }
+
+  .field-plugin-settings-edit-form {
+    margin-block-start: var(--space-s);
+
+    .form-item {
+      margin-block: var(--space-m);
+    }
+
+    .form-boolean-group .form-item {
+      margin-block: var(--space-xs);
+    }
+  }
+
+  .length-indicator {
+    margin-block-end: var(--space-l);
+  }
+}

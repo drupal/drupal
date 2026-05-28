@@ -1,0 +1,14 @@
+/**
+ * Content header.
+ */
+
+.content-header {
+  margin-bottom: var(--space-s);
+
+  /* Normalize whitespace if empty. */
+  @media (--admin-small) {
+    &:not(:has(.layout-container *)) {
+      margin-block-start: calc(var(--gin-spacing-m) * -1);
+    }
+  }
+}

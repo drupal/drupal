@@ -1,0 +1,260 @@
+/**
+ * @file
+ * Replacement styles for Field UI admin.
+ */
+
+/* 'Manage fields' and 'Manage display' overviews */
+.field-ui-overview {
+  /* Extra specificity to override tabledrag CSS. */
+  &[class] td {
+    padding-block: var(--gin-spacing-s);
+  }
+
+  .region-title td {
+    font-weight: bold;
+  }
+
+  .region-message td {
+    font-style: italic;
+  }
+
+  td[data-drupal-selector*="details"] {
+    text-align: start;
+  }
+}
+
+.field-option {
+  --thumb-size: 5rem;
+
+  align-items: baseline;
+  padding: 0;
+  border: 1px solid var(--gin-border-color);
+  border-radius: var(--gin-border-m);
+  background-color: transparent;
+  gap: var(--gin-spacing-m);
+
+  .field-option__thumb {
+    border-radius: 0;
+    background-color: var(--gin-bg-layer2);
+    border-start-start-radius: var(--gin-border-s);
+    border-end-start-radius: var(--gin-border-s);
+
+    .add-field-container & {
+      background-color: var(--gin-bg-layer2);
+    }
+  }
+
+  .field-option__icon {
+    filter: brightness(0);
+
+    .gin--dark-mode & {
+      filter: brightness(0) invert(1);
+    }
+  }
+
+  .field-option__words {
+    padding-block: var(--gin-spacing-s);
+
+    .field-option__label {
+      display: block;
+      margin-block-end: var(--gin-spacing-xxs);
+      font-weight: var(--gin-font-weight-semibold);
+    }
+  }
+
+  .field-option__item {
+    column-gap: 0;
+    padding-block: var(--gin-spacing-s);
+
+    .form-item__label {
+      margin-block-end: var(--gin-spacing-xxs);
+      font-weight: var(--gin-font-weight-semibold);
+    }
+  }
+
+  .field-option__description {
+    color: var(--gin-color-text-light);
+    font-size: var(--gin-font-size-xs);
+    line-height: 1.3;
+  }
+
+  .field-option-radio {
+    all: unset !important;
+  }
+
+  &.selected,
+  &:focus-within,
+  &:has(.field-option-radio:checked) {
+    background-color: var(--gin-bg-layer2);
+
+    .field-option__thumb {
+      background-color: var(--gin-color-primary);
+    }
+
+    .field-option__icon {
+      filter: brightness(0) invert(1);
+
+      .gin--dark-mode & {
+        filter: brightness(0);
+      }
+    }
+  }
+
+  &:focus-within,
+  &:focus-within:has(.field-option-radio:checked) {
+    .field-option__thumb {
+      background-color: var(--gin-color-primary-active);
+    }
+  }
+}
+
+/* 'Manage form display' and 'Manage display' overview */
+.field-plugin-summary {
+  float: inline-start;
+  color: var(--gin-color-text-light);
+  font-size: var(--gin-font-size-xs);
+}
+
+.field-plugin-summary-cell .warning {
+  display: block;
+  float: inline-start;
+  margin-inline-end: 0.5em;
+}
+
+/* Settings edit. */
+.field-plugin-settings-edit-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  .ajax-progress--throbber {
+    position: absolute;
+    inset-block-start: 25px;
+    margin-inline: 0;
+  }
+}
+
+.field-plugin-settings-edit {
+  width: var(--space-m);
+  margin: 0;
+  padding: 1px 8px;
+}
+
+.field-plugin-settings-editing {
+  td {
+    vertical-align: top;
+  }
+
+  .field-plugin-type {
+    display: none;
+  }
+
+  /* Settings editing subform. */
+  &.draggable,
+  &.draggable.drag-previous {
+    background: var(--gin-bg-app);
+  }
+}
+
+.field-plugin-settings-edit-form {
+  margin-block-start: var(--gin-spacing-xs);
+
+  .form-item {
+    margin-block: var(--gin-spacing-m);
+  }
+
+  .form-boolean-group .form-item {
+    margin-block: var(--gin-spacing-xs);
+  }
+
+  .plugin-name {
+    font-weight: bold;
+  }
+}
+
+.field-settings-summary-cell[class] li,
+.storage-settings-summary-cell[class] li {
+  margin: 0;
+  list-style-type: none;
+}
+
+.field-settings-summary-cell li {
+  font-size: 0.9em;
+
+  &:first-child {
+    font-size: 1em;
+  }
+}
+
+.allowed-values-table .form-item:where(:not(.hidden)) {
+  display: inline-table;
+}
+
+.field-label-wrapper {
+  white-space: nowrap;
+
+  .field-label-text,
+  .field-ui-secondary-text {
+    display: inline;
+    white-space: nowrap;
+  }
+}
+
+.field-machine-name {
+  margin-inline-start: 0.25rem;
+  font-family: monospace;
+}
+
+.field-label-container .field-label-text {
+  font-weight: 600;
+}
+
+.field-ui-secondary-text {
+  margin-block-start: 0;
+  color: var(--color-gray-600);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.field-settings-summary-container {
+  gap: 0;
+}
+
+.field-settings-summary-items {
+  gap: 0;
+}
+
+.field-details-container {
+  gap: 0.5rem;
+  margin-block-start: 0.5rem;
+}
+
+.field-ui-pill {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  letter-spacing: 0.025em;
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-gray-300);
+  border-radius: 0.75rem;
+  background-color: var(--color-white);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.subfield-option {
+  border: 1px solid var(--gin-border-color);
+  border-radius: var(--gin-border-m);
+
+  .item-list {
+    margin-block-start: var(--gin-spacing-xs);
+    color: var(--gin-color-text-light);
+    font-size: var(--gin-font-size-xs);
+  }
+
+  &.selected,
+  &:focus-within {
+    background-color: var(--gin-bg-layer2);
+  }
+}

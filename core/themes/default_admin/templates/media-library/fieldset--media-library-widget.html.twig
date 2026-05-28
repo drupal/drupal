@@ -1,0 +1,24 @@
+{% extends 'fieldset.html.twig' %}
+{#
+/**
+ * @file
+ * Theme override for the media library widget.
+ *
+ * @see \Drupal\default_admin\Hook\PreprocessHooks::preprocessFieldsetMediaLibraryWidget()
+ * @see \Drupal\default_admin\Hook\PreprocessHooks::preprocessFieldset()
+ * @see \Drupal\Core\Form\FormPreprocess::preprocessFieldset()
+ */
+#}
+{% macro media_library_prefix(prefix) %}
+  {% if prefix.empty_selection %}
+    <p class="media-library-widget-empty-text">{{ prefix }}</p>
+  {% else %}
+    {{ prefix }}
+  {% endif %}
+{% endmacro %}
+{%
+  set attributes = attributes.addClass('media-library-widget')
+%}
+{%
+  set prefix = _self.media_library_prefix(prefix)
+%}

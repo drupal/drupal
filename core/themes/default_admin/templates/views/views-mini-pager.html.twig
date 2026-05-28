@@ -1,0 +1,51 @@
+{#
+/**
+ * @file
+ * Theme override for a views mini-pager.
+ *
+ * Available variables:
+ * - heading_id: Pagination heading ID.
+ * - pagination_heading_level: The heading level to use for the pager.
+ * - items: List of pager items.
+ *
+ * @see template_preprocess_views_mini_pager()
+ */
+#}
+{%
+  set pager_action_classes = [
+    'pager__link',
+    'pager__link--mini',
+    'pager__link--action-link'
+  ]
+%}
+{% if items.previous or items.next %}
+  <nav{{ attributes.addClass('pager').setAttribute('role', 'navigation').setAttribute('aria-labelledby', heading_id) }}>
+    <{{ pagination_heading_level }} id="{{ heading_id }}" class="visually-hidden">{{ 'Pagination'|t }}</{{ pagination_heading_level }}>
+    <ul{{ content_attributes.addClass('pager__items', 'js-pager__items') }}>
+      {% if items.previous %}
+        <li class="pager__item pager__item--mini pager__item--action pager__item--previous">
+          <a{{ items.previous.attributes.addClass(pager_action_classes).setAttribute('title', 'Go to previous page'|t).setAttribute('href', items.previous.href) }}>
+            <span class="visually-hidden">{{ 'Previous page'|t }}</span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% if items.current %}
+        <li class="pager__item pager__item--mini pager__item--current">
+          <span class="visually-hidden">
+            {{ 'Current page'|t }}
+          </span>
+          {{ items.current }}
+        </li>
+      {% endif %}
+
+      {% if items.next %}
+        <li class="pager__item pager__item--mini pager__item--action pager__item--next">
+          <a{{ items.next.attributes.addClass(pager_action_classes).setAttribute('title', 'Go to next page'|t).setAttribute('href', items.next.href) }}>
+            <span class="visually-hidden">{{ 'Next page'|t }}</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}

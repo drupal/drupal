@@ -1,0 +1,9 @@
+preset_accent_color: 'blue'
+preset_focus_color: 'gin'
+enable_dark_mode: '0'
+high_contrast_mode: false
+accent_color: ''
+focus_color: ''
+layout_density: 'default'
+show_description_toggle: false
+show_user_theme_settings: false

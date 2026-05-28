@@ -1,0 +1,144 @@
+/**
+ * @file
+ * Presentational styles for Drupal dialogs.
+ */
+
+.ui-dialog {
+  position: absolute;
+  inset-block-start: 0;
+  left: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--jui-dialog-border-radius);
+  background: transparent;
+  box-shadow: var(--jui-dialog-box-shadow);
+
+  &:focus {
+    outline: var(--jui-dialog--focus-outline);
+    box-shadow: var(--jui-dialog--focus-box-shadow);
+  }
+
+  /* Media queries are moved outside */
+}
+
+@media (forced-colors: active) {
+  .ui-dialog {
+    border: 1px solid transparent;
+  }
+}
+
+@media all and (max-width: 48em) {
+  .ui-dialog:not(.ui-dialog-off-canvas) {
+    min-width: 92%;
+    max-width: 92%;
+  }
+}
+
+.ui-dialog {
+  .ui-dialog-titlebar {
+    position: relative;
+    box-sizing: border-box;
+    padding-block: var(--space-m);
+    padding-inline: var(--space-l) var(--jui-dialog-close-button-reserved-space);
+    color: var(--jui-dialog-title-color);
+    border-start-end-radius: var(--jui-dialog-border-radius);
+    border-start-start-radius: var(--jui-dialog-border-radius);
+    background: var(--jui-dialog-title-bg-color);
+    line-height: calc(var(--space-m) * 2);
+
+    .ui-dialog-title {
+      -webkit-font-smoothing: antialiased;
+      margin: 0;
+      font-size: var(--jui-dialog-title-font-size);
+      font-weight: bold;
+    }
+
+    .ui-dialog-titlebar-close {
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline-end: 0;
+      box-sizing: border-box;
+      inline-size: var(--jui-dialog-close-button-size);
+      block-size: var(--jui-dialog-close-button-size);
+      margin-inline: var(--space-l);
+      padding: 0;
+      transition: all 0.1s;
+      transform: translateY(-50%);
+      border: 2px solid transparent;
+      border-radius: var(--jui-dialog-close-button-border-radius);
+      background: none;
+
+      &:hover {
+        border-color: var(--color-white);
+      }
+
+      &:focus {
+        border-color: var(--color-focus);
+        outline: var(--jui-dialog--focus-outline);
+        box-shadow: none;
+      }
+
+      .ui-icon.ui-icon-closethick {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        transform: translate(-50%, -50%);
+        background: url(../../images/icons/d3d4d9/ex.svg) no-repeat 50%;
+
+        @media (forced-colors: active) {
+          background: buttontext;
+          mask: url(../../images/icons/d3d4d9/ex.svg) no-repeat 50%;
+        }
+      }
+    }
+  }
+
+  > .ui-dialog-content {
+    overflow: auto;
+    padding: var(--space-m) var(--space-l);
+    color: var(--color-text);
+    background: var(--color-white);
+
+    .form-actions,
+    .field-actions {
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  > .ui-dialog-buttonpane {
+    color: var(--color-text);
+    border-bottom-right-radius: var(--jui-dialog-border-radius);
+    border-bottom-left-radius: var(--jui-dialog-border-radius);
+    background: var(--color-gray-050);
+
+    .ui-dialog-buttonset {
+      display: flex;
+      gap: var(--space-s);
+      justify-content: flex-end;
+      margin-block: var(--space-m);
+      margin-inline-end: var(--space-l);
+
+      & > * {
+        margin: 0;
+      }
+    }
+
+    .ui-button-text-only .ui-button-text {
+      padding: 0;
+    }
+  }
+
+  &.ui-dialog-off-canvas {
+    .ui-widget-content.ui-dialog-content {
+      background: none;
+    }
+  }
+}
+
+#drupal-off-canvas {
+  .form-item .form-item__description {
+    color: var(--color-gray-050);
+    font-size: 0.75rem;
+  }
+}

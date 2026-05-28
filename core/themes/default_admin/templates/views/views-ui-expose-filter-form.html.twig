@@ -1,0 +1,81 @@
+{#
+/**
+ * @file
+ * Theme override for exposed filter form.
+ *
+ * Available variables:
+ * - form_description: The exposed filter's description.
+ * - expose_button: The button to toggle the expose filter form.
+ * - group_button: Toggle options between single and grouped filters.
+ * - required: A checkbox to require this filter or not.
+ * - label: A filter label input field.
+ * - description: A filter description field.
+ * - operator: The operators for how the filters value should be treated.
+ *   - #type: The operator type.
+ * - value: The filters available values.
+ * - use_operator: Checkbox to allow the user to expose the operator.
+ * - more: A details element for additional field exposed filter fields.
+ *
+ * @ingroup themeable
+ */
+#}
+{{ form.form_description }}
+{{ form.expose_button }}
+{{ form.required }}
+{{ form.group_button }}
+{{ form.label }}
+{{ form.description }}
+
+{{ form.operator }}
+{{ form.value }}
+
+{% if form.use_operator %}
+  <div class="views-config-group-region">
+    <div class="views-group-box">
+      {{ form.use_operator }}
+      {{ form.operator_limit_selection }}
+      {{ form.operator_list }}
+      {{ form.operator_id }}
+    </div>
+{% endif %}
+
+{#
+  Collect a list of elements printed to exclude when printing the
+  remaining elements.
+#}
+{% set remaining_form = form|without(
+  'form_description',
+  'expose_button',
+  'group_button',
+  'required',
+  'label',
+  'description',
+  'operator',
+  'value',
+  'use_operator',
+  'more',
+  'admin_label',
+  'operator_limit_selection',
+  'operator_list',
+  'operator_id'
+  )
+%}
+
+{#
+  Only output the right column markup if there's a left column to begin with.
+#}
+{% if form.operator['#type'] %}
+    <div class="views-group-box">
+      {{ remaining_form }}
+    </div>
+{% else %}
+  {{ remaining_form }}
+{% endif %}
+
+{% if form.use_operator %}
+  </div>
+{% endif %}
+
+{{ form.admin_label }}
+
+{{ form.more }}

@@ -1,0 +1,1535 @@
+/**
+ * @file
+ * Views UI styling.
+ */
+
+/* @group Views admin */
+
+.views-admin {
+  a:hover {
+    text-decoration: none;
+  }
+
+  a.button {
+    margin-block: 0;
+    margin-inline-end: 0;
+  }
+
+  /* Links and lists */
+  .links {
+    margin: 0;
+    list-style: none outside none;
+
+    li {
+      padding-inline-end: 0;
+    }
+  }
+
+  .button .links li {
+    padding-inline-end: 12px;
+  }
+
+  .item-list ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Icons */
+  .icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .icon,
+  .icon-text {
+    background-image: url(../../../../modules/views_ui/images/sprites.png);
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: top left;
+
+    &:dir(rtl) {
+      background-position: top right;
+    }
+  }
+
+  a.icon {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background:
+      linear-gradient(-90deg, #fff 0, #e8e8e8 100%) no-repeat,
+      repeat-y;
+    box-shadow: 0 0 0 rgb(0, 0, 0, 0.3333) inset;
+
+    &:hover {
+      border-color: #d0d0d0;
+      box-shadow: 0 0 1px rgb(0, 0, 0, 0.3333) inset;
+    }
+
+    &:active {
+      border-color: #c0c0c0;
+    }
+  }
+
+  span.icon {
+    position: relative;
+    float: inline-start;
+  }
+
+  .icon.compact {
+    display: block;
+    overflow: hidden;
+    text-indent: -9999px;
+    direction: ltr;
+  }
+
+  /* Targets any element with an icon -> text combo */
+  .icon-text {
+    padding-inline-start: 19px;
+  }
+
+  .icon.linked {
+    background-position: center -153px;
+  }
+
+  .icon.unlinked {
+    background-position: center -195px;
+  }
+
+  .icon.delete {
+    background-position: center -52px;
+  }
+
+  a.icon.delete {
+    background-position:
+      center -52px,
+      top left;
+
+    &:dir(rtl) {
+      background-position:
+        center -52px,
+        top right;
+    }
+  }
+
+  .icon.rearrange {
+    background-position: center -111px;
+  }
+
+  a.icon.rearrange {
+    background-position:
+      center -111px,
+      top left;
+
+    &:dir(rtl) {
+      background-position:
+        center -111px,
+        top right;
+    }
+  }
+
+  .icon.add {
+    background: none;
+
+    &::before {
+      content: "+";
+      font-size: var(--gin-font-size);
+      line-height: 0.1;
+    }
+  }
+
+  /* Details */
+  details details {
+    margin-bottom: 0;
+  }
+
+  details.box-padding {
+    border: none;
+  }
+
+  /* Form items */
+  .form-item {
+    margin-top: 9px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .container-inline .form-item {
+    margin-block: var(--gin-spacing-density-s);
+  }
+
+  .form-type-checkbox {
+    margin-top: 6px;
+  }
+
+  .form-checkbox,
+  .form-radio {
+    vertical-align: baseline;
+  }
+
+  /* Hide 'remove' checkboxes. */
+  .views-remove-checkbox {
+    display: none;
+  }
+
+  .form-textarea-wrapper,
+  .form-item-options-content {
+    width: 100%;
+  }
+
+  /* Indent form elements so they're directly underneath the label of the checkbox that reveals them */
+  .form-type-checkbox + .form-wrapper {
+    margin-inline-start: 16px;
+  }
+
+  /* Sizes the labels of checkboxes and radio buttons to the height of the text. */
+  .form-type-checkbox label,
+  .form-type-radio label {
+    line-height: 2;
+  }
+
+  .unit-title {
+    margin-top: 18px;
+    margin-bottom: 0;
+    font-size: 15px;
+    line-height: 1.6154;
+  }
+
+  /* View list */
+  .view-changed {
+    margin-bottom: 21px;
+  }
+
+  /* Display edit form actions */
+  .form-edit {
+    .form-actions,
+    .field-actions {
+      margin-top: 0;
+      padding: var(--space-s) var(--space-m);
+      border-right: 1px solid var(--color-gray-200-o-80);
+      border-bottom: 1px solid var(--color-gray-200-o-80);
+      border-left: 1px solid var(--color-gray-200-o-80);
+      background-color: var(--color-gray-050);
+    }
+  }
+
+  .label--separator.label--separator {
+    margin-inline: var(--space-xs);
+  }
+
+  /* Filter rearrange grouping */
+  .group-populated {
+    display: none;
+  }
+
+  td.group-title {
+    font-weight: bold;
+  }
+
+  .group-message .form-submit,
+  .views-remove-group-link,
+  .views-add-group {
+    float: inline-end;
+    clear: both;
+  }
+
+  .views-operator-label {
+    position: absolute;
+    z-index: 1;
+    bottom: -13px;
+    padding: 0.5px 6px;
+    text-transform: uppercase;
+    border: 1px solid var(--color-gray-200);
+    background: #fff;
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  .grouped-description,
+  .exposed-description {
+    float: inline-start;
+    padding-block-start: 3px;
+    padding-inline-end: 10px;
+  }
+
+  /* Live preview */
+  .preview-submit-wrapper {
+    display: inline-block;
+  }
+
+  .form-item--live-preview {
+    vertical-align: top;
+  }
+
+  /* Messages */
+  .messages {
+    margin-bottom: 18px;
+    line-height: 1.4555;
+  }
+
+  /* Dropbuttons (with JS enabled) */
+  .js & .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
+    position: absolute;
+    z-index: 2;
+    top: -1px;
+    inset-inline-end: -5px;
+  }
+
+  pre {
+    margin-block: 0;
+    white-space: pre-wrap;
+  }
+}
+
+/* @end */
+
+.views-admin-dependent .form-item {
+  margin-block: 6px;
+}
+
+/* @end */
+
+/* @group View list */
+
+.views-ui-view-name h3 {
+  margin: 0.25em 0;
+  font-weight: bold;
+}
+
+.views-ui-view-displays ul {
+  margin-inline: 0;
+  padding-inline: 0;
+  list-style: none;
+}
+
+.views-list-section {
+  margin-bottom: 2em;
+}
+
+/* These header classes are ambiguous and should be scoped to th elements */
+.views-ui-name {
+  width: 20%;
+}
+
+.views-ui-description {
+  width: 30%;
+}
+
+.views-ui-machine-name {
+  width: 15%;
+}
+
+.views-ui-displays {
+  width: 25%;
+}
+
+.views-ui-operations {
+  width: 10%;
+}
+
+.form-item-description-enable + .form-item-description {
+  margin-top: 0;
+}
+
+.form-item-description-enable label {
+  font-weight: bold;
+}
+
+.form-item-page-create label,
+.form-item-block-create label,
+.form-item-rest-export-create label {
+  font-weight: bold;
+}
+
+/* This makes the form elements after the "Display Format" label flow underneath the label */
+.form-item-page-style-style-plugin > label,
+.form-item-block-style-style-plugin > label {
+  display: block;
+}
+
+.views-attachment .options-set label {
+  font-weight: normal;
+}
+
+/* @end */
+
+/* @group Views display layout */
+
+.views-displays {
+  padding-bottom: 36px;
+  border: 1px solid var(--gin-border-color);
+  border-radius: var(--gin-border-l);
+}
+
+.views-display-top {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-block: var(--gin-spacing-m) var(--gin-spacing-xs);
+  padding-inline: var(--space-s);
+  border: 0 none;
+  border-radius: var(--gin-border-l);
+  background-color: var(--gin-bg-header);
+
+  .dropbutton-wrapper {
+    inset-block-start: 20px;
+    inset-inline-end: var(--gin-spacing-l);
+  }
+}
+
+.edit-display-settings {
+  margin: var(--space-l) var(--space-l) 0 var(--space-l);
+}
+
+.edit-display-settings-top.views-ui-display-tab-bucket {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0 0 var(--space-l);
+  padding: 0;
+  border-bottom: none;
+  line-height: 20px;
+
+  .views-display-setting {
+    padding: 0.125rem 0 0;
+  }
+}
+
+.views-display-column {
+  box-sizing: border-box;
+  border: 1px solid var(--color-gray-200-o-80);
+  border-radius: var(--base-border-radius);
+  box-shadow: var(--details-box-shadow);
+
+  & + & {
+    margin-top: 0;
+  }
+}
+
+.views-display-deleted {
+  & > details > summary,
+  & .details-wrapper > .views-ui-display-tab-bucket > *,
+  & .views-display-columns {
+    opacity: 0.25;
+  }
+}
+
+.views-display-disabled {
+  & > details > summary,
+  & .details-wrapper > .views-ui-display-tab-bucket > *,
+  & .views-display-columns {
+    opacity: 0.5;
+  }
+}
+
+.views-display-tab .details-wrapper > .views-ui-display-tab-bucket .actions {
+  opacity: 1;
+}
+
+.views-edit-view {
+  margin-bottom: 15px;
+
+  .unit-title {
+    margin-block-start: 0;
+    margin-block-end: var(--gin-spacing-m);
+    /* Duplicated from h1/h2/h3 styles in _body.scss (was @extend h2). */
+    letter-spacing: -0.025em;
+    font-size: var(--gin-font-size-h2);
+    font-weight: var(--gin-font-weight-normal);
+  }
+
+  &.disabled {
+    .views-displays {
+      background-color: transparent;
+    }
+
+    .views-display-column {
+      opacity: 0.75;
+      background: transparent;
+    }
+  }
+}
+
+/* @end */
+
+/* @group Attachment buckets */
+
+.views-ui-display-tab-bucket {
+  position: relative;
+  margin: 0;
+  padding-block: 0 var(--space-xs);
+  border-bottom: 1px solid var(--gin-border-color);
+  line-height: 20px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+    border-bottom: none;
+  }
+
+  & + & {
+    border-top: medium none;
+  }
+
+  &.access {
+    padding-top: 0;
+  }
+
+  &.page-settings {
+    border-bottom: medium none;
+  }
+
+  .links {
+    padding: 2px 6px 4px;
+
+    li + li {
+      margin-inline-start: 3px;
+    }
+  }
+
+  .views-ui-display-tab-bucket__title {
+    margin: 0;
+    padding: var(--gin-spacing-m);
+    text-transform: none;
+    color: var(--gin-color-title);
+    font-size: var(--gin-font-size-xl);
+    font-weight: var(--gin-font-weight-semibold);
+  }
+
+  .views-display-setting {
+    display: flex;
+    flex-wrap: wrap;
+    padding: var(--gin-spacing-xs) var(--gin-spacing-m);
+    color: var(--gin-color-text);
+    font-size: var(--font-size-s);
+  }
+
+  .views-group-text {
+    margin-block: 6px;
+  }
+
+  .dropbutton-wrapper {
+    inset-block-start: 14px;
+    inset-inline-end: var(--gin-spacing-m);
+  }
+}
+
+/** Applies an overridden(italics) font style to overridden buckets.
+ * The better way to implement this would be to add the overridden class
+ * to the bucket header when the bucket is overridden and style it as a
+ * generic icon classed element. For the moment, we'll style the bucket
+ * header specifically with the overridden font style.
+ */
+.views-ui-display-tab-setting.overridden,
+.views-ui-display-tab-bucket.overridden .views-ui-display-tab-bucket__title {
+  font-style: italic;
+}
+
+.views-ui-display-tab-actions.views-ui-display-tab-bucket .views-display-setting {
+  background-color: transparent;
+}
+
+.views-display-setting .label {
+  margin-inline-end: var(--space-xs);
+  white-space: nowrap;
+}
+
+/**
+ * Position dropbuttons with flexbox instead after the dropbuttons have been
+ * converted to splitbuttons.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3134107
+ * @see https://www.drupal.org/project/drupal/issues/1899236
+ */
+.edit-display-settings-top.views-ui-display-tab-bucket .dropbutton-wrapper {
+  top: 0.8125rem;
+  inset-inline-end: var(--space-s);
+}
+
+/* Styles on devices with touchevents. */
+html:not(.no-touchevents) {
+  .views-ui-display-tab-bucket__header--actions {
+    padding: var(--space-l) var(--space-xs);
+  }
+
+  .edit-display-settings-top.views-ui-display-tab-bucket {
+    padding: var(--space-m) var(--space-xs);
+  }
+}
+
+/* @end */
+
+/* @group Filter rearrange grouping */
+.views-ui-dialog td.group-title {
+  height: 1px;
+  margin: 0;
+  padding: 0;
+
+  span {
+    display: block;
+    overflow: hidden;
+    height: 1px;
+  }
+}
+
+/* @end */
+
+/* @group Filter form */
+
+.views-ui-rearrange-filter-form {
+  table {
+    border-collapse: collapse;
+  }
+
+  :is(th, td) {
+    vertical-align: top;
+  }
+
+  tr {
+    border-bottom: 0;
+
+    &:first-of-type {
+      border-top: 0.0625rem solid var(--color-gray-200);
+    }
+
+    &:not(.draggable):hover {
+      background: inherit;
+    }
+
+    &[id^="views-row"] {
+      border-inline-end: 1px solid #cdcdcd;
+    }
+
+    td:last-child {
+      border-inline-end: medium none;
+    }
+
+    &.drag td {
+      background-color: #fe7 !important;
+    }
+
+    &.drag-previous td {
+      background-color: #ffb !important;
+    }
+  }
+
+  td {
+    & > .form-item {
+      display: revert;
+    }
+
+    &[rowspan] {
+      border: 1px solid var(--color-gray-200);
+    }
+  }
+
+  [id^="views-row"] {
+    border: medium none;
+  }
+
+  .draggable td {
+    vertical-align: middle;
+    border-bottom: 0.0625rem solid var(--color-gray-200);
+  }
+
+  .group-empty {
+    border-bottom: 1px solid #cdcdcd;
+  }
+
+  .filter-group-operator-row {
+    border-right: 1px solid transparent !important;
+    border-left: 1px solid transparent !important;
+  }
+
+  .action-links {
+    float: inline-start;
+    margin: 0 0 1em;
+    padding: 0;
+  }
+
+  .tabledrag-cell {
+    position: relative;
+  }
+}
+
+/* @end */
+
+/* @group Live preview */
+
+.view-preview-form {
+  position: relative;
+
+  .form-item--view-args,
+  .form-actions,
+  .field-actions {
+    margin-top: 5px;
+  }
+
+  .form-actions,
+  .field-actions {
+    vertical-align: top;
+  }
+
+  .form-actions {
+    align-items: flex-end;
+  }
+
+  .views-bulk-actions__item {
+    margin-block-start: 0;
+  }
+
+  .arguments-preview {
+    margin-inline-start: 0;
+    font-size: 1em;
+  }
+
+  .form-item--view-args {
+    margin-top: var(--space-m);
+  }
+
+  .arguments-preview,
+  .form-item--view-args {
+    margin-inline: var(--space-m);
+  }
+
+  .form-item--live-preview {
+    position: static !important;
+    top: 0.6875rem;
+    inset-inline-end: var(--space-s);
+    margin-block-start: var(--gin-spacing-l);
+    margin-inline-start: 2px;
+  }
+
+  .preview-section {
+    padding: var(--gin-spacing-m);
+    border: 1px dashed var(--gin-border-color-layer2);
+  }
+
+  .view-filters .preview-section {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  @media screen and (min-width: 45em) {
+    /* 720px */
+    .form-type-textfield .description {
+      white-space: nowrap;
+    }
+  }
+}
+
+.views-preview-wrapper {
+  border: 1px solid #ccc;
+}
+
+.view-preview-form__title {
+  margin-top: 0;
+  padding: 0;
+  border-block-end: 0 none;
+  background-color: transparent;
+}
+
+.views-live-preview {
+  padding: 0;
+
+  .views-query-info {
+    overflow: auto;
+  }
+
+  .section-title {
+    display: inline-block;
+    margin-block: 0;
+    color: var(--gin-color-text);
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 1.6154;
+  }
+
+  .view > * {
+    margin-top: var(--space-m);
+  }
+
+  .preview-section {
+    margin: 0 -5px;
+    padding: 3px 5px;
+    border: 1px dashed #dedede;
+  }
+
+  li.views-row + li.views-row {
+    margin-top: 18px;
+  }
+
+  /* The div.views-row is intentional and excludes li.views-row, for example */
+  div.views-row + div.views-row {
+    margin-top: 36px;
+  }
+
+  .gin-layer-wrapper {
+    border-color: var(--gin-border-color);
+  }
+}
+
+.views-query-info {
+  pre {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  table {
+    margin: 10px 0;
+    border-spacing: 1px;
+    border-collapse: separate;
+    border-color: var(--color-bg);
+    border-radius: 7px;
+
+    tr {
+      background-color: var(--gin-bg-layer2);
+
+      td {
+        color: var(--gin-color-text);
+
+        &:last-child {
+          border: 0;
+        }
+      }
+    }
+
+    th,
+    td {
+      padding: var(--space-xs) var(--space-l);
+      font-size: var(--font-size-s);
+    }
+  }
+}
+
+/* @end */
+
+/* @group Modal dialog box */
+
+.views-filterable-options {
+  .form-type-checkbox {
+    padding: 5px 8px;
+    border-top: none;
+
+    .description {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.filterable-option .form-item {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.views-filterable-options-controls {
+  .form-item {
+    width: 30%;
+    margin: 0;
+    margin-inline-start: 2%;
+  }
+
+  input,
+  select {
+    width: 100%;
+  }
+}
+
+.views-ui-dialog.views-ui-dialog > .ui-dialog-content {
+  padding: 0;
+}
+
+.views-ui-dialog {
+  /* Form layout */
+  .form--flex {
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap;
+  }
+
+  .form--inline {
+    padding-block-start: 0;
+  }
+
+  /* Form items */
+  .form-item {
+    margin-block: var(--space-m);
+  }
+
+  .form-item-selected {
+    margin: 0;
+    padding: 6px 16px;
+  }
+
+  .form-item:first-of-type.description {
+    margin: 0 0 var(--space-l) 0;
+    padding-bottom: var(--space-s);
+    border-bottom: 0.0625rem solid var(--color-gray-200);
+    font-weight: bold;
+  }
+
+  .form-item--fields-area-text-custom-removed {
+    display: inline-block;
+    margin-inline-end: var(--gin-spacing-xxs);
+  }
+
+  /* Form fields */
+  .form-element {
+    min-height: calc(((var(--input-padding-vertical--small) + var(--input-border-size)) * 2) + var(--input-line-height--small)); /* iOS. */
+    padding: var(--input-padding-vertical--small) var(--input-padding-horizontal--small);
+    font-size: var(--input-font-size--small);
+    line-height: var(--input-line-height--small);
+  }
+
+  .form-element--type-select {
+    padding-inline-end: calc(2rem - var(--input-border-size));
+    background-position-y: 56%;
+  }
+
+  textarea {
+    width: 100%;
+  }
+
+  /* Extra specificity to override dialog CSS. */
+  .form-item__description[class] {
+    max-width: none;
+  }
+
+  td .form-element {
+    width: auto;
+  }
+
+  /* Booleans */
+  .form-type--boolean {
+    margin-inline: 0;
+
+    .form-boolean {
+      top: 0;
+      float: none;
+      margin: 0;
+      margin-inline-end: 0.25rem;
+      transform: none;
+    }
+  }
+
+  .form-boolean-group .form-type--boolean {
+    margin-top: 0.4em;
+    margin-bottom: 0.4em;
+  }
+
+  /* So "remove" link appears next to the checkbox. */
+  .draggable .form-type--checkbox {
+    display: inline-block;
+    margin: 0 0.25rem;
+  }
+
+  /* Buttons */
+  input.form-submit,
+  a.button {
+    margin-block: 0;
+    margin-inline-end: 0;
+  }
+
+  /* Add form selection list */
+  .views-add-form-selected {
+    padding: 0 1rem;
+
+    > div {
+      display: block;
+      margin: 0;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid #dedfe4;
+      border-radius: 2px 2px 0 0;
+      box-shadow: 0 4px 20px rgb(0, 0, 0, 0.1);
+    }
+
+    .views-selected-options {
+      display: inline;
+    }
+  }
+
+  /* Top offset banner */
+  .views-offset-top:not(:empty) {
+    position: relative;
+    padding: var(--space-s) var(--space-m) var(--space-xs);
+    background-color: var(--color-gray-050);
+
+    &::after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      content: "";
+      background: linear-gradient(to bottom, rgb(80, 81, 86, 0.11) 0%, rgb(18, 19, 20, 0.02) 49%, rgb(18, 19, 20, 0) 100%);
+    }
+  }
+
+  .views-offset-top {
+    > * {
+      margin: 0;
+    }
+
+    .form-item {
+      max-width: 40%;
+      margin: 0 var(--space-s) var(--space-s) 0;
+    }
+  }
+
+  /* Misc */
+  .tabledrag-toggle-weight-wrapper {
+    margin: 0 0 var(--space-m) 0;
+  }
+
+  details .item-list {
+    padding-inline-start: 2em;
+  }
+
+  .views-override:not(:empty) {
+    border-block-end: 0 none;
+    background-color: var(--gin-bg-app);
+  }
+
+  .views-filterable-options {
+    margin-bottom: 10px;
+  }
+
+  .scroll {
+    overflow: auto;
+    padding: 1em;
+  }
+
+  /* Don't let the messages overwhelm the modal */
+  .views-messages {
+    overflow: auto;
+    max-height: 200px;
+  }
+}
+
+[id^="views-ui-add-handler-form"] .scroll {
+  padding-block: 0;
+}
+
+.views-ui-dialog.views-ui-dialog-scroll .ui-dialog-titlebar {
+  border: none;
+}
+
+/* @end */
+
+/* @group Messages */
+
+.views-messages .messages-list,
+.views-messages .messages-list__item {
+  margin-block: 0;
+}
+
+/* @end */
+
+/* @group Forms */
+
+/**
+ * Claro positions the summary absolutely, but does not have a way to ignore
+ * details without a summary so we make one up.
+ *
+ * @todo Neither a fieldset without legend nor a details without summary is
+ *   valid HTML markup in any way. Refactor Views UI to not produce such invalid
+ *   markup.
+ */
+details.fieldset-no-legend {
+  padding-top: 0;
+}
+
+/* @group Dependent options */
+
+/* This is necessary to supercede the Claro .form-item
+ * reset declaration that sets the margin to zero.
+ */
+.form-item-options-expose-required,
+.form-item-options-expose-label,
+.form-item-options-expose-field-identifier,
+.form-item-options-expose-description {
+  margin-block: 6px;
+  margin-inline-start: 1.5em;
+}
+
+.views-admin-dependent {
+  .form-item .form-item,
+  .form-type-checkboxes,
+  .form-type-radios {
+    margin-block: 6px;
+  }
+
+  .form-type-radio,
+  .form-radios .form-item {
+    margin-block: 2px;
+  }
+}
+
+.views-display-top__extra-actions-wrapper {
+  margin: 0 var(--space-xs);
+}
+
+/* @group Attachment details */
+
+#edit-display-settings-title {
+  color: var(--color-blue-400);
+}
+
+#edit-displays {
+  .views-display-top {
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+  }
+}
+
+.edit-display-settings {
+  margin: 0;
+  padding: var(--gin-spacing-l);
+}
+
+/* @group Attachment details tabs
+ *
+ * The tabs that switch between sections
+ *
+ * @todo this group contains lots of duplicates from core styles because Claro
+ *   has its custom markup for views tabs. Some of these could be removed after
+ *   https://www.drupal.org/node/3051605 has been solved.
+ */
+
+.views-tabs {
+  display: flex;
+  overflow: visible;
+  flex-wrap: wrap;
+  margin: 0;
+  margin-inline-end: var(--space-l);
+  padding: 0;
+  list-style: none;
+  text-align: end;
+  border-bottom: 0 none;
+
+  .views-display-deleted-link {
+    text-decoration: line-through;
+  }
+
+  li.add ul.action-list li {
+    margin: 0;
+  }
+
+  li {
+    margin-block: 0 5px;
+    margin-inline: 6px 5px;
+
+    &,
+    &.is-active {
+      width: auto;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    &:hover {
+      padding-inline-start: 0;
+      border: 0;
+    }
+
+    & + li {
+      border-top: 0;
+    }
+  }
+
+  a {
+    display: inline-block;
+    padding: var(--gin-spacing-xs) var(--gin-spacing-m);
+    border: var(--input-border-size) solid #cbcbcb;
+    border-radius: 7px;
+    font-size: small;
+    line-height: 1.3333;
+
+    &.views-display-disabled-link {
+      padding-inline-start: var(--gin-spacing-l);
+
+      &::before {
+        display: inline-block;
+        width: var(--gin-spacing-l);
+        height: var(--gin-spacing-s);
+        margin-inline-start: calc(var(--gin-spacing-m) * -1);
+        content: "";
+        background-color: currentColor;
+        mask-image: var(--admin-icon-hide);
+        mask-repeat: no-repeat;
+        mask-position: center left;
+        mask-size: contain;
+
+        &:dir(rtl) {
+          mask-position: center right;
+        }
+      }
+    }
+  }
+
+  /* Display a red border if the display doesn't validate. */
+  li.is-active a.is-active.error,
+  .error {
+    padding: 8px;
+    border: 2px solid #ed541d;
+  }
+
+  a:focus {
+    outline: none;
+  }
+
+  li a {
+    padding: var(--gin-spacing-xs) var(--gin-spacing-m);
+    color: var(--gin-color-primary);
+    border: 2px solid var(--gin-color-primary);
+    border-radius: var(--gin-border-xs);
+    background: transparent;
+    font-size: var(--gin-font-size-xs);
+    font-weight: var(--gin-font-weight-heavy);
+
+    .icon.add {
+      display: block;
+    }
+  }
+
+  li a:hover,
+  li.is-active a,
+  li.is-active a.is-active {
+    color: var(--gin-bg-app);
+    border-color: transparent;
+    background: var(--gin-color-primary);
+  }
+
+  .add {
+    position: relative;
+
+    a {
+      padding: var(--gin-spacing-xs) var(--gin-spacing-m);
+      color: var(--gin-color-primary);
+      border: 2px solid var(--gin-color-primary);
+      border-radius: var(--gin-border-xs);
+      background: transparent;
+      font-size: var(--gin-font-size-xs);
+      font-weight: var(--gin-font-weight-heavy);
+
+      &:hover,
+      &:focus {
+        color: var(--gin-bg-app);
+        border-color: transparent;
+        background: var(--gin-color-primary);
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow:
+          0 0 0 1px var(--gin-color-focus-border),
+          0 0 0 4px var(--gin-color-focus);
+      }
+    }
+
+    &.open a {
+      color: var(--gin-color-primary);
+      background: var(--gin-bg-layer2);
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: var(--gin-color-primary);
+      }
+    }
+
+    /* Hide core icon, added via JS that isn't accessible via theme function. */
+    .icon.add {
+      display: none;
+    }
+  }
+
+  .action-list {
+    position: absolute;
+    z-index: 50;
+    margin: 0;
+    background: var(--gin-bg-layer3);
+    box-shadow: 0 1px 2px var(--gin-shadow-button);
+    inset-block-start: 36px;
+    inset-inline-start: -2px;
+
+    li {
+      /* @todo are these styles */
+      display: block;
+      border: none;
+      background-color: transparent;
+
+      input.button {
+        width: 100%;
+        text-align: start;
+        border: none !important;
+        box-shadow: none;
+        line-height: 1.2;
+      }
+
+      &:hover,
+      &:focus,
+      &:active {
+        &,
+        input.button {
+          color: var(--gin-color-button-text);
+          background: var(--gin-color-primary);
+        }
+      }
+    }
+
+    li:first-child {
+      border-width: 1px 1px 0;
+      border-radius: 0 var(--base-border-radius) 0 0; /* LTR */
+
+      &:dir(rtl) {
+        border-radius: 0 0 0 var(--base-border-radius);
+      }
+    }
+  }
+}
+
+.views-tabs .action-list li:last-child,
+.views-displays .action-list li:last-child {
+  padding-bottom: 0.4rem;
+  border-width: 0 1px 1px;
+  border-bottom-right-radius: var(--gin-border-l);
+  border-bottom-left-radius: var(--gin-border-l);
+}
+
+.views-tabs__action-list-button {
+  width: 100%;
+  margin: 0;
+  padding: var(--space-s) var(--space-l);
+  text-align: left;
+  border: medium none;
+  border-radius: 0;
+  background: none repeat scroll 0 0 transparent;
+  font-weight: normal;
+
+  &.button:hover,
+  &.button:focus {
+    color: var(--color-white);
+    background-color: var(--color-absolutezero);
+  }
+
+  /* Remove outline provided by default styling */
+  &:not(:focus) {
+    box-shadow: none;
+  }
+
+  /* JS moves Views action buttons under a secondary tabs container, which causes
+  a large layout shift. We mitigate this by using animations to temporarily hide
+  the buttons, but they will appear after a set amount of time just in case the JS
+  is loaded but does not properly run. */
+  @media (scripting: enabled) {
+    &:not(.views-tabs--secondary *) {
+      animation-name: appear;
+      animation-duration: 0.1s;
+      /* Buttons will be hidden for the amount of time in the animation-delay if
+      not moved. Note this is the approximate time to download the views
+      aggregate CSS with slow 3G. */
+      animation-delay: 5s;
+      animation-iteration-count: 1;
+      animation-fill-mode: backwards;
+    }
+  }
+}
+
+@keyframes appear {
+  from {
+    display: none;
+  }
+
+  to {
+    display: unset;
+  }
+}
+
+/* #3186729: Drupal 9.1 fix */
+.views-ui-display-tab-bucket__header {
+  display: inline-flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+  padding-block: var(--gin-spacing-m) var(--gin-spacing-xs);
+  padding-inline: 0;
+
+  .views-ui-display-tab-bucket__title {
+    padding: 0 var(--gin-spacing-m);
+  }
+
+  .views-ui-display-tab-bucket__actions {
+    margin-inline-start: var(--space-xs);
+    margin-inline-end: var(--gin-spacing-m);
+  }
+}
+
+.views-ui-display-tab-actions {
+  .views-ui-display-tab-setting {
+    padding: var(--gin-spacing-m);
+  }
+}
+
+/* @group Add view */
+
+.form-item-page-create,
+.form-item-block-create {
+  margin-top: 13px;
+}
+
+/* @group Modal dialog box
+ *
+ * The contents of the popup dialog on the views edit form.
+ */
+
+.filterable-option .form-item.form-type-checkbox {
+  padding-top: 4px;
+  /* This selector is aggressive because Claro's reset for .form-items is aggressive. */
+  padding-bottom: 4px;
+  padding-inline-start: 4px;
+}
+
+/* @group Grouping styles
+ *
+ * For grouping related form elements together, mainly used with exposed
+ * filters.
+ */
+.views-config-group-region {
+  display: table;
+  margin: var(--space-l) 0;
+  border: 0.0625rem solid var(--color-gray-200);
+  border-collapse: collapse;
+
+  .views-group-box {
+    position: relative;
+    display: table-cell;
+    padding: var(--space-l);
+    border: 0.0625rem solid var(--color-gray-200);
+  }
+
+  .views-group-box--operator {
+    padding-inline-end: var(--space-xxl);
+    border-inline-end-width: 0;
+  }
+
+  .views-group-box--value {
+    padding: 0;
+    border-inline-start-width: 0;
+
+    > .form-item {
+      margin-inline: var(--space-xxl) var(--space-l);
+
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0.0625rem;
+        height: 100%;
+        content: "";
+        border-inline-start: 0.0625rem solid var(--color-gray-200);
+      }
+
+      &::after {
+        position: absolute;
+        z-index: 1;
+        top: 3.8rem;
+        inset-inline-start: calc(var(--space-m) * -1);
+        padding-block: 0 0.3rem;
+        padding-inline: 0.4rem 0.3rem;
+        content: ">";
+        color: var(--color-gray-600);
+        border: 0.0625rem solid var(--color-gray-200);
+        background: #fff;
+        font-size: var(--font-size-h1);
+        font-weight: bold;
+        line-height: var(--font-size-h1);
+      }
+    }
+  }
+}
+
+.views-display-column,
+.edit-display-settings-top.views-ui-display-tab-bucket {
+  margin-block-end: var(--gin-spacing-m);
+  border-color: var(--gin-border-color);
+  border-radius: var(--gin-border-m);
+  box-shadow: none;
+}
+
+a.views-field-excluded {
+  color: var(--gin-color-disabled);
+}
+
+.views-filterable-options {
+  border-block-start: none;
+}
+
+.view-block-content .views-table {
+  margin-block-start: 0;
+}
+
+.views-display-columns {
+  display: grid;
+  gap: var(--space-xl);
+
+  .details-wrapper {
+    margin: 0;
+  }
+
+  @media screen and (min-width: 60rem) {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+/* @todo. This was in Gin's Views file. Might could move it. */
+.system-modules,
+.locale-translation-status-form {
+  tr.even,
+  tr.odd {
+    border-block-start: 1px solid var(--gin-border-color);
+    border-block-end: none;
+    background: none;
+  }
+}
+
+.system-modules td {
+  height: auto;
+  padding: var(--gin-spacing-m);
+
+  details summary {
+    background-color: transparent;
+  }
+}
+
+.machine-name-label {
+  color: var(--gin-color-text);
+}
+
+.machine-name-value {
+  color: var(--gin-color-title);
+}
+
+.view-header {
+  margin-block-end: var(--gin-spacing-l);
+}
+
+.form-item--options-value-all {
+  display: none;
+}
+
+.js-only {
+  display: none;
+}
+
+html.js {
+  .js-only {
+    display: inherit;
+  }
+
+  span.js-only {
+    display: inline;
+  }
+}

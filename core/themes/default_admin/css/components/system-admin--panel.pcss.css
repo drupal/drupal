@@ -1,0 +1,34 @@
+/**
+ * @file
+ * System admin module: Panel styling.
+ */
+
+.panel {
+  margin-block: 1em 3em;
+  border-block-end: calc(1em / 16) solid var(--color-gray-200);
+
+  /* Override specificity from .gin-layer-wrapper in layers.css. */
+  &[class] {
+    padding: 0;
+  }
+}
+
+.panel__title {
+  margin: var(--gin-spacing-s);
+  padding: var(--gin-spacing-m) var(--gin-spacing-l);
+  color: var(--gin-color-primary-active);
+  border-radius: var(--gin-border-m);
+  background: var(--gin-bg-header);
+  font-size: var(--gin-font-size-l);
+  font-weight: var(--gin-font-weight-bold);
+  line-height: calc(24em / 18);
+}
+
+.panel__description {
+  padding-block: 1em;
+  padding-inline: 1.5em;
+}
+
+.panel__content {
+  padding: 0;
+}

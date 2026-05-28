@@ -1,0 +1,137 @@
+/**
+ * @file
+ * Breadcrumb navigation styles.
+ */
+
+:where(*),
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) {
+  .gin-breadcrumb {
+    padding: 0;
+    color: var(--gin-color-text);
+  }
+
+  .gin-breadcrumb-wrapper {
+    min-width: 1px;
+  }
+
+  .gin-breadcrumb__list {
+    overflow: hidden;
+    width: auto;
+    margin: 0;
+    margin-block-start: 0;
+    margin-inline-start: calc(var(--space-xxs) * -1);
+    padding: 0;
+    padding-inline-start: var(--space-xxs);
+    list-style-type: none;
+    text-overflow: ellipsis;
+  }
+
+  .gin-breadcrumb__item,
+  .gin-breadcrumb__link,
+  .gin-breadcrumb__text {
+    display: inline;
+    vertical-align: middle;
+    text-decoration: none;
+    color: var(--gin-color-text-light);
+    font-weight: var(--font-weight-normal);
+  }
+
+  .gin-breadcrumb__item {
+    font-size: 0;
+
+    & + .gin-breadcrumb__item::before {
+      display: inline-block;
+      padding: 0 0.5em;
+      content: "/";
+      vertical-align: middle;
+      opacity: 0.3;
+      background: none;
+      font-size: var(--font-size-xs);
+
+      @media (forced-colors: active) {
+        opacity: 1;
+      }
+    }
+
+    &:first-of-type .gin-breadcrumb__link {
+      position: relative;
+      padding-inline-start: 1.75em;
+
+      &::before {
+        position: absolute;
+        display: inline-block;
+        width: var(--gin-icon-size-toolbar-secondary);
+        height: var(--gin-icon-size-toolbar-secondary);
+        content: "";
+        transform: translateY(-50%);
+        background-color: var(--gin-icon-color);
+        inset-block-start: calc(50% - 1px);
+        inset-inline-start: 0;
+        /* cspell:disable-next-line */
+        mask-image: url("../../media/icons/toolbar-meta/backtosite.svg");
+        mask-size: 100% 100%;
+        mask-position: center center;
+
+        @media (forced-colors: active) {
+          background: linktext;
+        }
+      }
+
+      &:hover::before {
+        background-color: var(--gin-color-primary);
+
+        @media (forced-colors: active) {
+          background: linktext;
+        }
+      }
+    }
+
+    &:first-of-type + .gin-breadcrumb__item::before {
+      width: 1px;
+      height: 20px;
+      margin-inline-end: 0.75em;
+      padding-inline-start: 0.75em;
+      padding-inline-end: 0;
+      content: "";
+      opacity: 0.3;
+      border-inline-end: 1px solid var(--gin-color-text);
+
+      @media (forced-colors: active) {
+        opacity: 1;
+      }
+    }
+  }
+
+  .gin-breadcrumb__link,
+  .gin-breadcrumb__text {
+    border-radius: var(--gin-border-xxs);
+    font-size: var(--font-size-xs);
+    line-height: 2;
+  }
+
+  .gin-breadcrumb__link,
+  .gin-breadcrumb__link:link,
+  .gin-breadcrumb__link:visited,
+  .gin-breadcrumb__link em,
+  .gin-breadcrumb__link em:link,
+  .gin-breadcrumb__link em:visited,
+  .gin-breadcrumb__text,
+  .gin-breadcrumb__text:link,
+  .gin-breadcrumb__text:visited,
+  .gin-breadcrumb__text em,
+  .gin-breadcrumb__text em:link,
+  .gin-breadcrumb__text em:visited {
+    color: var(--gin-color-text-light);
+    font-weight: var(--font-weight-normal);
+  }
+
+  .gin-breadcrumb__link em,
+  .gin-breadcrumb__text em {
+    font-style: italic;
+  }
+
+  .gin-breadcrumb__link:hover,
+  .gin-breadcrumb__link:hover em {
+    color: var(--gin-color-primary-hover);
+  }
+}

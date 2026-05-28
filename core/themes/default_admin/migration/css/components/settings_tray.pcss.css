@@ -1,0 +1,44 @@
+/**
+ * @file
+ * Settings tray toolbar styles.
+ */
+
+#gin-toolbar-bar {
+  position: fixed;
+
+  &.js-settings-tray-edit-mode {
+    background: var(--gin-color-primary);
+
+    button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active {
+      color: var(--gin-bg-app);
+
+      &:hover {
+        background: var(--gin-color-primary-hover);
+      }
+    }
+  }
+
+  .contextual-toolbar-tab {
+    order: 100;
+  }
+}
+
+#toolbar-bar.toolbar-bar.js-settings-tray-edit-mode {
+  border-radius: var(--gin-border-s);
+  background-color: transparent;
+
+  .toolbar-item,
+  .toolbar-item.is-active:hover {
+    border-radius: var(--gin-border-s);
+    background: var(--gin-switch);
+  }
+
+  .toolbar-item::before,
+  .toolbar-item.is-active:hover::before {
+    background-color: #fff;
+  }
+
+  button.toolbar-icon.toolbar-icon-edit.toolbar-item.is-active:hover {
+    background-image: none;
+  }
+}
