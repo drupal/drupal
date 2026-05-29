@@ -443,7 +443,10 @@ class Tables implements TablesInterface {
       $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
       // For a data table, get the entity language key from the entity type.
       // A dedicated field table has a hard-coded 'langcode' column.
-      $langcode_key = $entity_type->getDataTable() == $table ? $entity_type->getKey('langcode') : 'langcode';
+      $langcode_key = match($table) {
+        $entity_type->getDataTable(), $entity_type->getRevisionDataTable() => $entity_type->getKey('langcode'),
+        default => 'langcode',
+      };
       $placeholder = ':langcode' . $this->sqlQuery->nextPlaceholder();
       $join_condition .= ' AND [%alias].[' . $langcode_key . '] = ' . $placeholder;
       $arguments[$placeholder] = $langcode;
