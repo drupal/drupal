@@ -117,7 +117,7 @@ interface TypedDataInterface {
   /**
    * Returns the parent data structure; i.e. either complex data or a list.
    *
-   * @return \Drupal\Core\TypedData\TraversableTypedDataInterface|null
+   * @return \Drupal\Core\TypedData\TraversableTypedDataInterface<int|string, \Drupal\Core\TypedData\TypedDataInterface>|null
    *   The parent data structure, either complex data or a list; or NULL if this
    *   is the root of the typed data tree.
    */
@@ -129,7 +129,7 @@ interface TypedDataInterface {
    * Returns the root data for a tree of typed data objects; e.g. for an entity
    * field item the root of the tree is its parent entity object.
    *
-   * @return \Drupal\Core\TypedData\TraversableTypedDataInterface
+   * @return \Drupal\Core\TypedData\TraversableTypedDataInterface<int|string, \Drupal\Core\TypedData\TypedDataInterface>
    *   The root data structure, either complex data or a list.
    */
   public function getRoot();

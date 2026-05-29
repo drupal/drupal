@@ -13,6 +13,8 @@ use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests ComponentTestDoesNotExtendCoreTest rule.
+ *
+ * @extends RuleTestCase<ComponentTestDoesNotExtendCoreTest>
  */
 #[Group('PHPStan')]
 class ComponentTestDoesNotExtendCoreTestTest extends RuleTestCase {

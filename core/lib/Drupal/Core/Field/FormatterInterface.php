@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Interface definition for field formatter plugins.
  *
+ * @template T of FieldItemListInterface
+ *
  * @ingroup field_formatter
  */
 interface FormatterInterface extends PluginSettingsInterface {
@@ -56,6 +58,8 @@ interface FormatterInterface extends PluginSettingsInterface {
    *
    * @param \Drupal\Core\Field\FieldItemListInterface[] $entities_items
    *   An array with the field values from the multiple entities being rendered.
+   *
+   * @phpstan-param array<T> $entities_items
    */
   public function prepareView(array $entities_items);
 
@@ -67,6 +71,8 @@ interface FormatterInterface extends PluginSettingsInterface {
    * @param string $langcode
    *   (optional) The language that should be used to render the field. Defaults
    *   to the current content language.
+   *
+   * @phpstan-param T $items
    *
    * @return array
    *   A renderable array for a themed field with its label and all its values.
@@ -81,7 +87,9 @@ interface FormatterInterface extends PluginSettingsInterface {
    * @param string $langcode
    *   The language that should be used to render the field.
    *
-   * @return array
+   * @phpstan-param T $items
+   *
+   * @return array<int, array<int|string, mixed>>
    *   A renderable array for $items, as an array of child elements keyed by
    *   consecutive numeric indexes starting from 0.
    */

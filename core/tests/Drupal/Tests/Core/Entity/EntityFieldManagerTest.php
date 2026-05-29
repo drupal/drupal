@@ -600,7 +600,7 @@ class EntityFieldManagerTest extends UnitTestCase {
    *   (optional) An array of entity keys for the mocked entity type. Defaults
    *   to an empty array.
    *
-   * @return \Drupal\Core\Field\BaseFieldDefinition|\Prophecy\Prophecy\ProphecyInterface
+   * @return \Prophecy\Prophecy\ProphecyInterface<\Drupal\Core\Field\BaseFieldDefinition>
    *   A field definition object.
    */
   protected function setUpEntityWithFieldDefinition($custom_invoke_all = FALSE, $field_definition_id = 'id', $entity_keys = []) {

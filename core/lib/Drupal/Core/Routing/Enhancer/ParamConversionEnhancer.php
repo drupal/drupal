@@ -53,7 +53,7 @@ class ParamConversionEnhancer implements EnhancerInterface, EventSubscriberInter
    * @param array $defaults
    *   The route defaults array.
    *
-   * @return \Symfony\Component\HttpFoundation\InputBag
+   * @return \Symfony\Component\HttpFoundation\InputBag<string|int|float|bool|null>
    *   The input bag container with the raw variables.
    */
   protected function copyRawVariables(array $defaults) {

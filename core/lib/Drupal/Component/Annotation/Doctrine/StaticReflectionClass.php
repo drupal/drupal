@@ -179,6 +179,7 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
+    // @phpstan-ignore missingType.generics
     public function getInterfaces(): array
     {
         throw new ReflectionException('Method not implemented');
@@ -203,6 +204,7 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
+    // @phpstan-ignore missingType.generics
     public function getParentClass(): \ReflectionClass|FALSE
     {
         throw new ReflectionException('Method not implemented');
@@ -267,6 +269,7 @@ class StaticReflectionClass extends ReflectionClass
     /**
      * {@inheritDoc}
      */
+    // @phpstan-ignore missingType.generics
     public function getTraits(): array
     {
         throw new ReflectionException('Method not implemented');

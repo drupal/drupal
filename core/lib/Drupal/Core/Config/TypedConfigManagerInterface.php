@@ -20,7 +20,7 @@ interface TypedConfigManagerInterface extends TypedDataManagerInterface {
    * @param string $name
    *   Configuration object name.
    *
-   * @return \Drupal\Core\TypedData\TraversableTypedDataInterface
+   * @return \Drupal\Core\TypedData\TraversableTypedDataInterface<int|string, \Drupal\Core\TypedData\TypedDataInterface>
    *   Typed configuration element.
    */
   public function get($name);
@@ -82,7 +82,7 @@ interface TypedConfigManagerInterface extends TypedDataManagerInterface {
    *   The data associated with the configuration. Note: This configuration
    *   doesn't yet have to be stored.
    *
-   * @return \Drupal\Core\TypedData\TraversableTypedDataInterface
+   * @return \Drupal\Core\TypedData\TraversableTypedDataInterface<int|string, \Drupal\Core\TypedData\TypedDataInterface>
    *   The typed configuration element.
    */
   public function createFromNameAndData($config_name, array $config_data);

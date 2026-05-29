@@ -142,7 +142,7 @@ interface FieldableEntityInterface extends EntityInterface {
    * @param string $field_name
    *   The name of the field to get; e.g., 'title' or 'name'.
    *
-   * @return \Drupal\Core\Field\FieldItemListInterface
+   * @return \Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>
    *   The field item list, containing the field items.
    *
    * @throws \InvalidArgumentException
@@ -175,7 +175,7 @@ interface FieldableEntityInterface extends EntityInterface {
    * @param bool $include_computed
    *   If set to TRUE, computed fields are included. Defaults to TRUE.
    *
-   * @return \Drupal\Core\Field\FieldItemListInterface[]
+   * @return array<string, \Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>>
    *   An array of field item lists implementing, keyed by field name.
    */
   public function getFields($include_computed = TRUE);
@@ -186,7 +186,7 @@ interface FieldableEntityInterface extends EntityInterface {
    * @param bool $include_computed
    *   If set to TRUE, computed fields are included. Defaults to TRUE.
    *
-   * @return \Drupal\Core\Field\FieldItemListInterface[]
+   * @return array<string, \Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>>
    *   An array of field item lists implementing, keyed by field name.
    */
   public function getTranslatableFields($include_computed = TRUE);

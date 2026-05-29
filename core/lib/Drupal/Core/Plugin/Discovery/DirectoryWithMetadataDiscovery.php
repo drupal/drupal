@@ -47,7 +47,7 @@ class DirectoryWithMetadataDiscovery extends YamlDirectoryDiscovery {
    * @param string $directory
    *   The directory to scan.
    *
-   * @return \RecursiveIteratorIterator
+   * @return \RecursiveIteratorIterator<\SplFileInfo>
    *   A \RecursiveIteratorIterator object or array where the values are
    *   \SplFileInfo objects.
    */

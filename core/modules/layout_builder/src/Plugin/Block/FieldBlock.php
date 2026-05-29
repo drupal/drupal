@@ -384,7 +384,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @return \Drupal\Core\Field\FormatterInterface
+   * @return \Drupal\Core\Field\FormatterInterface<\Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>>
    *   The formatter object.
    */
   protected function getFormatter(array $parents, FormStateInterface $form_state) {

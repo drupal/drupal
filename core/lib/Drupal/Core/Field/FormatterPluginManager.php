@@ -91,7 +91,7 @@ class FormatterPluginManager extends DefaultPluginManager {
    *     - third_party_settings: (array) Settings provided by other extensions
    *       through hook_field_formatter_third_party_settings_form().
    *
-   * @return \Drupal\Core\Field\FormatterInterface|false
+   * @return \Drupal\Core\Field\FormatterInterface<\Drupal\Core\Field\FieldItemListInterface<\Drupal\Core\Field\FieldItemInterface>>|false
    *   A formatter object or FALSE when plugin is not found.
    */
   public function getInstance(array $options) {
