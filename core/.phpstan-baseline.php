@@ -9734,24 +9734,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Routing/RouteBuilderInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Routing\\\\RoutePreloader\\:\\:onAlterRoutes\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Routing/RoutePreloader.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Routing\\\\RoutePreloader\\:\\:onFinishedRoutes\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Routing/RoutePreloader.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Routing\\\\RoutePreloader\\:\\:onRequest\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Routing/RoutePreloader.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Routing\\\\RouteProvider\\:\\:addExtraCacheKeyPart\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

@@ -160,3 +160,10 @@ function system_post_update_migrate_compress_setting(): void {
   $performanceConfig->clear('js.gzip');
   $performanceConfig->save();
 }
+
+/**
+ * Remove non-admin routes state key.
+ */
+function system_post_update_remove_non_admin_routes_state(): void {
+  \Drupal::state()->delete('routing.non_admin_routes');
+}
