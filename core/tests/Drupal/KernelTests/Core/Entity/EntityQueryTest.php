@@ -1472,6 +1472,28 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests langcode key handling for revision data table joins.
+   */
+  public function testRevisionDataTableJoinUsesConfiguredLangcodeKey(): void {
+    $entity_type_manager = $this->container->get('entity_type.manager');
+    $entity_type = $entity_type_manager->getActiveDefinition('entity_test_mulrev');
+    $keys = $entity_type->getKeys();
+    $keys['langcode'] = 'language';
+    $entity_type->set('entity_keys', $keys);
+
+    $query = $this->storage
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('name.value', $this->randomMachineName(), '=', 'tr')
+      ->allRevisions();
+
+    $query_string = (string) $query;
+    $this->assertStringContainsString('entity_test_mulrev_property_revision', $query_string);
+    $this->assertMatchesRegularExpression('/"entity_test_mulrev_property_revision"\."language"\s*=\s*\'tr\'/', $query_string);
+    $this->assertDoesNotMatchRegularExpression('/"entity_test_mulrev_property_revision"\."langcode"\s*=\s*\'tr\'/', $query_string);
+  }
+
+  /**
    * Tests __toString().
    */
   public function testToString(): void {
