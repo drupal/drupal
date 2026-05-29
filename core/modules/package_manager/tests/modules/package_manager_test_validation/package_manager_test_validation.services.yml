@@ -14,5 +14,5 @@ services:
     public: false
     arguments:
       - '@.inner'
-      - '@state'
+      - '@keyvalue'
     decorates: 'PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface'
