@@ -58,6 +58,12 @@ function shortcut_install(): void {
       ->set('third_party_settings.shortcut.module_link', TRUE)
       ->save();
   }
+  if (\Drupal::service('theme_handler')->themeExists('olivero')) {
+    \Drupal::configFactory()
+      ->getEditable("olivero.settings")
+      ->set('third_party_settings.shortcut.module_link', TRUE)
+      ->save();
+  }
 }
 
 /**
@@ -69,6 +75,12 @@ function shortcut_uninstall(): void {
   if (\Drupal::service('theme_handler')->themeExists('claro')) {
     \Drupal::configFactory()
       ->getEditable("claro.settings")
+      ->clear('third_party_settings.shortcut')
+      ->save();
+  }
+  if (\Drupal::service('theme_handler')->themeExists('olivero')) {
+    \Drupal::configFactory()
+      ->getEditable("olivero.settings")
       ->clear('third_party_settings.shortcut')
       ->save();
   }

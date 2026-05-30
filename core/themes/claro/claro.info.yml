@@ -129,8 +129,6 @@ libraries-extend:
     - claro/system.admin
   core/drupal.autocomplete:
     - claro/autocomplete
-  shortcut/drupal.shortcut:
-    - claro/drupal.shortcut
   core/drupal.ajax:
     - claro/ajax
   user/drupal.user:
