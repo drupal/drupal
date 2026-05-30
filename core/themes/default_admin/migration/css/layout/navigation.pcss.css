@@ -358,7 +358,6 @@ body.gin--navigation {
     display: none;
   }
 
-  #toolbar-item-shortcuts,
   #toolbar-item-announcement {
     display: none;
   }
@@ -379,10 +378,5 @@ body.gin--navigation {
     .toolbar-tray .menu-item + .menu-item {
       border-inline-start: none;
     }
-  }
-
-  .toolbar-loading #toolbar-item-shortcuts-tray,
-  .toolbar-loading #toolbar-item-shortcuts {
-    visibility: hidden;
   }
 }

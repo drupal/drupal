@@ -238,11 +238,6 @@ body:not(.toolbar-tray-open) .layout-container {
     --icon: url("../../media/icons/navigation/bookmarks.svg");
   }
 
-  .toolbar-icon-shortcut::before,
-  .toolbar-button--icon--shortcuts::before {
-    --icon: url("../../media/icons/toolbar-meta/shortcut.svg");
-  }
-
   .toolbar-icon-system-admin-config::before,
   .toolbar-link--system-admin-config::before,
   .toolbar-button--icon--system-admin-config::before {

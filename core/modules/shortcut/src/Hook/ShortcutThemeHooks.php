@@ -5,6 +5,7 @@ namespace Drupal\shortcut\Hook;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Extension\ThemeSettingsProvider;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -18,6 +19,7 @@ class ShortcutThemeHooks {
 
   public function __construct(
     protected readonly ThemeSettingsProvider $themeSettingsProvider,
+    protected readonly ThemeManagerInterface $themeManager,
   ) {}
 
   /**
@@ -35,6 +37,13 @@ class ShortcutThemeHooks {
    */
   #[Hook('preprocess_page_title')]
   public function preprocessPageTitle(&$variables): void {
+    // Attach backport library for supported themes.
+    $active_theme = $this->themeManager->getActiveTheme()->getName();
+    $backport_themes = ['olivero', 'claro'];
+    if (in_array($active_theme, $backport_themes, TRUE)) {
+      $variables['#attached']['library'][] = 'shortcut/' . $active_theme . '.shortcut.backport';
+    }
+
     // Only display the shortcut link if the user has the ability to edit
     // shortcuts, the feature is enabled for the current theme and if the
     // page's actual content is being shown (for example, we do not want to
@@ -111,6 +120,44 @@ class ShortcutThemeHooks {
           ],
         ],
       ];
+    }
+
+    // Apply Olivero-specific page title preprocessing when Olivero is active.
+    if ($this->themeManager->getActiveTheme()->getName() === 'olivero') {
+      $this->preprocessPageTitleOlivero($variables);
+    }
+  }
+
+  /**
+   * Olivero-specific preprocessing for the page title.
+   *
+   * Wraps the title and shortcut link in a div for positioning, and removes
+   * the shortcut link on the front page.
+   *
+   * @param array $variables
+   *   An associative array of variables.
+   */
+  protected function preprocessPageTitleOlivero(array &$variables): void {
+    // Since the title and the shortcut link are both block level elements,
+    // positioning them next to each other is much simpler with a wrapper div.
+    if (!empty($variables['title_suffix']['add_or_remove_shortcut']) && $variables['title']) {
+      // Add a wrapper div using the title_prefix and title_suffix render
+      // elements.
+      $variables['title_prefix']['shortcut_wrapper'] = [
+        '#markup' => '<div class="shortcut-wrapper">',
+        '#weight' => 100,
+      ];
+      $variables['title_suffix']['shortcut_wrapper'] = [
+        '#markup' => '</div>',
+        '#weight' => -99,
+      ];
+      // Make sure the shortcut link is the first item in title_suffix.
+      $variables['title_suffix']['add_or_remove_shortcut']['#weight'] = -100;
+    }
+    // Unset shortcut link on front page.
+    $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
+    if ($variables['is_front'] === TRUE) {
+      unset($variables['title_suffix']['add_or_remove_shortcut']);
     }
   }
 
