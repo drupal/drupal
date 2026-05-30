@@ -4,17 +4,6 @@ olivero.settings:
   type: theme_settings
   label: 'olivero settings'
   mapping:
-    third_party_settings:
-      type: mapping
-      label: 'Third party settings'
-      mapping:
-        shortcut:
-          type: mapping
-          label: 'Shortcut'
-          mapping:
-            module_link:
-              type: boolean
-              label: 'Module Link'
     mobile_menu_all_widths:
       type: integer
       label: 'Mobile menu all widths'

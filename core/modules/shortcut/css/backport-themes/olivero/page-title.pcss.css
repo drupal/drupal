@@ -3,8 +3,6 @@
  * Page title.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .page-title {
   /*
     Necessary to properly display the star icon from core's shortcut

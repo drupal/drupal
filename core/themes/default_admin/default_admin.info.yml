@@ -164,8 +164,6 @@ libraries-extend:
     - default_admin/system.admin
   core/drupal.autocomplete:
     - default_admin/autocomplete
-  shortcut/drupal.shortcut:
-    - default_admin/drupal.shortcut
   core/drupal.ajax:
     - default_admin/ajax
   update/drupal.update.admin:

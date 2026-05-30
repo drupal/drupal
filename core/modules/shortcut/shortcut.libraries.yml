@@ -4,3 +4,19 @@ drupal.shortcut:
     theme:
       css/shortcut.theme.css: {}
       css/shortcut.icons.theme.css: {}
+
+olivero.shortcut.backport:
+  version: VERSION
+  css:
+    component:
+      css/backport-themes/olivero/page-title.css: {}
+
+claro.shortcut.backport:
+  version: VERSION
+  css:
+    # @todo move this to components after
+    #   https://www.drupal.org/project/drupal/issues/3045467 is in.
+    theme:
+      css/backport-themes/claro/shortcut.css: {}
+  dependencies:
+    - claro/variables
