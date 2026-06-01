@@ -194,7 +194,7 @@ class LocaleFileManager {
    */
   public function downloadTranslationSource(LocaleFile $source_file, string $directory = 'translations://'): LocaleFile|false {
     try {
-      $data = (string) $this->httpClient->request('get', $source_file->uri)->getBody();
+      $data = (string) $this->httpClient->request('GET', $source_file->uri)->getBody();
       $filename = basename($source_file->uri);
       if ($uri = $this->fileSystem->saveData($data, $directory . $filename, FileExists::Replace)) {
         $hash = hash_file(LocaleSource::LOCAL_FILE_HASH_ALGO, $uri);
