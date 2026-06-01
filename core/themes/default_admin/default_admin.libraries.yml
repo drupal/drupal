@@ -383,8 +383,6 @@ navigation:
     - default_admin/node_preview
     - default_admin/contextual_links
     - default_admin/breadcrumb
-    - default_admin/settings_tray
-    - default_admin/settings_tray_edit
 
 # Toolbar
 
@@ -399,7 +397,6 @@ toolbar:
     - default_admin/node_preview
     - default_admin/contextual_links
     - default_admin/breadcrumb
-    - default_admin/settings_tray_edit
     - core/once
 
 # Accent
@@ -557,15 +554,6 @@ node_preview:
     component:
       migration/css/components/node_preview.css: { minified: false }
 
-settings_tray:
-  css:
-    component:
-      migration/css/components/settings_tray.css: { minified: false }
-
-settings_tray_edit:
-  css:
-    component:
-      migration/css/components/settings_tray_edit.css: { minified: false }
 
 maintenance_page:
   css:
