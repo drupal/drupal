@@ -40,12 +40,16 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
    * {@inheritdoc}
    */
   public function processAccessPolicies(AccountInterface $account, string $scope = AccessPolicyInterface::SCOPE_DRUPAL): CalculatedPermissionsInterface {
-    if (!\Fiber::getCurrent()) {
+    // No Fiber isolation is needed when not in a Fiber, or when the requested
+    // account is the current user (no account switch will occur in
+    // doProcessAccessPolicies, so there is nothing to isolate).
+    if (!\Fiber::getCurrent() || $account->id() === $this->currentUser->id()) {
       return $this->doProcessAccessPolicies($account, $scope);
     }
 
-    // If running in a fiber, prevent the current user switch from escaping to
-    // outside the fiber by resuming the fiber if it was suspended.
+    // If running in a fiber and processing a different account, prevent the
+    // account switch from escaping to outside the fiber by resuming the fiber
+    // if it was suspended.
     $fiber = new \Fiber([$this, 'doProcessAccessPolicies']);
     $fiber->start($account, $scope);
     while (!$fiber->isTerminated()) {
