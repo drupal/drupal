@@ -86,6 +86,13 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   protected $cacheTagInvalidator;
 
   /**
+   * The chained fast cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $fastCache;
+
+  /**
    * A path processor manager for resolving the system path.
    *
    * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface
@@ -131,21 +138,33 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    *   The path processor.
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tag_invalidator
    *   The cache tag invalidator.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $fast_cache
+   *   The chained fast cache backend.
    * @param string $table
    *   (Optional) The table in the database to use for matching. Defaults to
    *   'router'.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   (Optional) The language manager.
    */
-  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', ?LanguageManagerInterface $language_manager = NULL) {
+  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $fast_cache = NULL, $table = 'router', ?LanguageManagerInterface $language_manager = NULL) {
     $this->connection = $connection;
     $this->state = $state;
     $this->currentPath = $current_path;
     $this->cache = $cache_backend;
     $this->cacheTagInvalidator = $cache_tag_invalidator;
     $this->pathProcessor = $path_processor;
-    $this->tableName = $table;
-    $this->languageManager = $language_manager ?: \Drupal::languageManager();
+    if (!$fast_cache instanceof CacheBackendInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $fast_cache argument is deprecated in drupal:11.4.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3503843', E_USER_DEPRECATED);
+
+      $this->fastCache = \Drupal::service('cache.routes');
+      $this->tableName = $fast_cache;
+      $this->languageManager = $table ?: \Drupal::languageManager();
+    }
+    else {
+      $this->fastCache = $fast_cache;
+      $this->tableName = $table;
+      $this->languageManager = $language_manager ?: \Drupal::languageManager();
+    }
   }
 
   /**
@@ -245,7 +264,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
 
     $routes_to_load = array_diff($names, array_keys($this->routes));
     if ($routes_to_load) {
-      $cached = $this->cache->getMultiple($routes_to_load);
+      $cached = $this->fastCache->getMultiple($routes_to_load);
       foreach ($cached as $cid => $item) {
         $this->routes[$cid] = $item->data;
       }
@@ -267,7 +286,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
             ];
           }
           if ($items) {
-            $this->cache->setMultiple($items);
+            $this->fastCache->setMultiple($items);
           }
         }
         catch (\Exception) {
