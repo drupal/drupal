@@ -811,61 +811,6 @@ $settings['entity_update_batch_size'] = 50;
  */
 $settings['entity_update_backup'] = TRUE;
 
-/**
- * Node migration type.
- *
- * This is used to force the migration system to use the classic node migrations
- * instead of the default complete node migrations. The migration system will
- * use the classic node migration only if there are existing migrate_map tables
- * for the classic node migrations and they contain data. These tables may not
- * exist if you are developing custom migrations and do not want to use the
- * complete node migrations. Set this to TRUE to force the use of the classic
- * node migrations.
- */
-$settings['migrate_node_migrate_type_classic'] = FALSE;
-
-/**
- * The default settings for migration sources.
- *
- * These settings are used as the default settings on the Credential form at
- * /upgrade/credentials.
- *
- * - migrate_source_version - The version of the source database. This can be
- *   '6' or '7'. Defaults to '7'.
- * - migrate_source_connection - The key in the $databases array for the source
- *   site.
- * - migrate_file_public_path - The location of the source Drupal 6 or Drupal 7
- *   public files. This can be a local file directory containing the source
- *   Drupal 6 or Drupal 7 site (e.g /var/www/docroot), or the site address
- *   (e.g http://example.com).
- * - migrate_file_private_path - The location of the source Drupal 7 private
- *   files. This can be a local file directory containing the source Drupal 7
- *   site (e.g /var/www/docroot), or empty to use the same value as Public
- *   files directory.
- *
- * Sample configuration for a drupal 6 source site with the source files in a
- * local directory.
- *
- * @code
- * $settings['migrate_source_version'] = '6';
- * $settings['migrate_source_connection'] = 'migrate';
- * $settings['migrate_file_public_path'] = '/var/www/drupal6';
- * @endcode
- *
- * Sample configuration for a drupal 7 source site with public source files on
- * the source site and the private files in a local directory.
- *
- * @code
- * $settings['migrate_source_version'] = '7';
- * $settings['migrate_source_connection'] = 'migrate';
- * $settings['migrate_file_public_path'] = 'https://drupal7.com';
- * $settings['migrate_file_private_path'] = '/var/www/drupal7';
- * @endcode
- */
-# $settings['migrate_source_connection'] = '';
-# $settings['migrate_source_version'] = '';
-# $settings['migrate_file_public_path'] = '';
-# $settings['migrate_file_private_path'] = '';
 
 /**
  * Load local development override configuration, if available.
