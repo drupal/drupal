@@ -52,7 +52,7 @@
         "phpspec/prophecy-phpunit": "v2.4.0",
         "phpstan/extension-installer": "1.4.3",
         "phpstan/phpdoc-parser": "2.3.0",
-        "phpstan/phpstan": "2.1.54",
+        "phpstan/phpstan": "2.2.0",
         "phpstan/phpstan-deprecation-rules": "2.0.4",
         "phpstan/phpstan-phpunit": "2.0.16",
         "phpunit/php-code-coverage": "12.5.3",
