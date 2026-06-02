@@ -1,0 +1,28 @@
+{
+  "Drupal\\Tests\\block\\Kernel\\BlockValidationTest": {
+    "name": "Drupal\\Tests\\block\\Kernel\\BlockValidationTest",
+    "group": "block",
+    "groups": {
+      "0": "block",
+      "1": "#slow",
+      "54": "legacy"
+    },
+    "type": "PHPUnit-Kernel",
+    "description": "Tests validation of block entities.",
+    "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/BlockValidationTest.php",
+    "tests_count": 37,
+    "worker_sequence": 1
+  },
+  "Drupal\\KernelTests\\Core\\Session\\SuperUserPermissionsTest": {
+    "name": "Drupal\\KernelTests\\Core\\Session\\SuperUserPermissionsTest",
+    "group": "Session",
+    "groups": [
+      "Session"
+    ],
+    "type": "PHPUnit-Kernel",
+    "description": "Test case for getting all permissions as a super user.",
+    "file": "/Users/foo/Dev/drupal/core/tests/Drupal/KernelTests/Core/Session/SuperUserPermissionsTest.php",
+    "tests_count": 1,
+    "worker_sequence": 2
+  }
+}
