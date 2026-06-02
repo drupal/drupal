@@ -31,11 +31,11 @@ class PhpUnitApiFindAllClassFilesTest extends KernelTestBase {
    */
   #[DataProvider('argumentsProvider')]
   #[IgnoreDeprecations]
-  public function testEquality(?string $extension = NULL, ?string $directory = NULL): void {
+  public function testEquality(?string $extension = NULL, ?string $directory = NULL, array $testsArg = []): void {
     // PHPUnit discovery.
     $configurationFilePath = $this->container->getParameter('app.root') . \DIRECTORY_SEPARATOR . 'core';
     $phpUnitTestDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath($configurationFilePath);
-    $phpUnitList = $phpUnitTestDiscovery->findAllClassFiles($extension, $directory);
+    $phpUnitList = $phpUnitTestDiscovery->findAllClassFiles($extension, $directory, $testsArg);
 
     // Legacy TestDiscovery.
     $testDiscovery = new TestDiscovery(
@@ -61,6 +61,11 @@ class PhpUnitApiFindAllClassFilesTest extends KernelTestBase {
     yield 'Extension: system, directory' => [
       'extension' => 'system',
       'directory' => 'core/modules/system/tests/src',
+    ];
+    yield 'directory, tests arg' => [
+      'extension' => NULL,
+      'directory' => 'core/modules/system/tests/src',
+      'testsArg' => ['Menu'],
     ];
   }
 
