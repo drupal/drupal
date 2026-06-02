@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional\Views;
+namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\views\Views;
@@ -26,7 +26,10 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected function setUp($import_test_views = TRUE): void {
+    parent::setUp($import_test_views);
+    $this->setUpCurrentUser(permissions: ['access content']);
+  }
 
   /**
    * Tests the "all terms" field handler.
@@ -40,7 +43,7 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
     // Test term1 links.
     $xpath = '//a[@href="' . $this->term1->toUrl()->toString() . '"]';
     $this->assertSession()->elementsCount('xpath', $xpath, 2);
-    $links = $this->xpath($xpath);
+    $links = $this->getNodeElementsByXpath($xpath);
     $this->assertEquals($this->term1->label(), $links[0]->getText());
     $this->assertEquals($this->term1->label(), $links[1]->getText());
     $this->assertSession()->assertEscaped($this->term1->label());
@@ -48,7 +51,7 @@ class TaxonomyFieldAllTermsTest extends TaxonomyTestBase {
     // Test term2 links.
     $xpath = '//a[@href="' . $this->term2->toUrl()->toString() . '"]';
     $this->assertSession()->elementsCount('xpath', $xpath, 2);
-    $links = $this->xpath($xpath);
+    $links = $this->getNodeElementsByXpath($xpath);
     $this->assertEquals($this->term2->label(), $links[0]->getText());
     $this->assertEquals($this->term2->label(), $links[1]->getText());
   }

@@ -258,4 +258,17 @@ trait HttpKernelUiHelperTrait {
     return $this->getSession()->getCurrentUrl();
   }
 
+  /**
+   * Rebuilds the container.
+   *
+   * Provided for compatibility with traits that call $this->rebuildContainer(),
+   * such as those shared with functional tests.
+   *
+   * @see \Drupal\Core\Test\FunctionalTestSetupTrait::rebuildContainer
+   */
+  protected function rebuildContainer(): void {
+    \Drupal::service('kernel')->rebuildContainer();
+    $this->container = \Drupal::getContainer();
+  }
+
 }

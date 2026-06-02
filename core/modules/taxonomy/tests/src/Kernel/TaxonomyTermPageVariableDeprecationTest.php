@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
@@ -21,13 +22,11 @@ class TaxonomyTermPageVariableDeprecationTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'test_theme';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
+    \Drupal::service(ThemeInstallerInterface::class)->install(['test_theme']);
+    $this->config('system.theme')->set('default', 'test_theme')->save();
+    $this->setUpCurrentUser(permissions: ['access content']);
     $this->createVocabulary(['vid' => 'test_page_variable']);
     EntityViewMode::create([
       'id' => 'taxonomy_term.test_page_variable',

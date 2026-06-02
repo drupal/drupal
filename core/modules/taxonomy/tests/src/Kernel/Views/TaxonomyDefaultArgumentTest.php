@@ -108,4 +108,13 @@ class TaxonomyDefaultArgumentTest extends TaxonomyTestBase {
     $this->assertEquals($expected, $view->argument['tid']->getDefaultArgument());
   }
 
+  /**
+   * Tests escaping of page title when the taxonomy plugin provides it.
+   */
+  public function testTermTitleEscaping(): void {
+    $this->term1->setName('<em>Markup</em>')->save();
+    $this->drupalGet('taxonomy_default_argument_test/' . $this->term1->id());
+    $this->assertSession()->assertEscaped($this->term1->label());
+  }
+
 }

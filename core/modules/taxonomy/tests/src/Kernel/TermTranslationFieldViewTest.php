@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\node\Entity\Node;
+use Drupal\Tests\taxonomy\Functional\TaxonomyTranslationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -46,13 +47,10 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
+    $this->setUpCurrentUser(permissions: ['access content']);
+    $this->installConfig(['language']);
     $this->setupLanguages();
     $this->vocabulary = $this->createVocabulary();
     $this->enableTranslation();

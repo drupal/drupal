@@ -169,6 +169,16 @@ class TaxonomyTermArgumentDepthTest extends TaxonomyTestBase {
   }
 
   /**
+   * Tests title escaping when the taxonomy argument provides it.
+   */
+  public function testTermWithDepthArgumentTitleEscaping(): void {
+    $this->terms[0]->setName('<em>First</em>')->save();
+    $this->setUpCurrentUser(permissions: ['access content']);
+    $this->drupalGet('test_argument_taxonomy_index_tid_depth/' . $this->terms[0]->id());
+    $this->assertSession()->assertEscaped($this->terms[0]->label());
+  }
+
+  /**
    * Asserts the result of the view for the given arguments.
    *
    * @param array $expected
