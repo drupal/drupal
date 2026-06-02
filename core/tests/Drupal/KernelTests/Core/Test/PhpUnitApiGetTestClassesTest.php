@@ -31,11 +31,25 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
    */
   #[DataProvider('argumentsProvider')]
   #[IgnoreDeprecations]
-  public function testEquality(array $suites, ?string $extension = NULL, ?string $directory = NULL): void {
+  public function testEquality(
+    array $suites = [],
+    ?string $extension = NULL,
+    ?string $directory = NULL,
+    array $testsArg = [],
+    ?int $minCount = NULL,
+    ?int $maxCount = NULL,
+  ): void {
     // PHPUnit discovery.
     $configurationFilePath = $this->container->getParameter('app.root') . \DIRECTORY_SEPARATOR . 'core';
     $phpUnitTestDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath($configurationFilePath);
-    $phpUnitList = $phpUnitTestDiscovery->getTestClasses($extension, $suites, $directory);
+    $phpUnitList = $phpUnitTestDiscovery->getTestClasses($extension, $suites, $directory, $testsArg);
+    $this->assertNotEmpty($phpUnitList);
+    if (isset($minCount)) {
+      $this->assertGreaterThanOrEqual($minCount, count($phpUnitList));
+    }
+    if (isset($maxCount)) {
+      $this->assertLessThanOrEqual($maxCount, count($phpUnitList));
+    }
 
     // Legacy TestDiscovery.
     $testDiscovery = new TestDiscovery(
@@ -77,20 +91,19 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
    * Provides test data to ::testEquality.
    */
   public static function argumentsProvider(): \Generator {
-    yield 'All tests' => ['suites' => []];
+    yield 'All tests' => [];
     yield 'Testsuite: functional-javascript' => ['suites' => ['PHPUnit-FunctionalJavascript']];
     yield 'Testsuite: functional' => ['suites' => ['PHPUnit-Functional']];
     yield 'Testsuite: kernel' => ['suites' => ['PHPUnit-Kernel']];
     yield 'Testsuite: unit' => ['suites' => ['PHPUnit-Unit']];
     yield 'Testsuite: unit-component' => ['suites' => ['PHPUnit-Unit-Component']];
     yield 'Testsuite: build' => ['suites' => ['PHPUnit-Build']];
-    yield 'Extension: system' => ['suites' => [], 'extension' => 'system'];
+    yield 'Extension: system' => ['extension' => 'system'];
     yield 'Extension: system, testsuite: unit' => [
       'suites' => ['PHPUnit-Unit'],
       'extension' => 'system',
     ];
     yield 'Extension: system, directory' => [
-      'suites' => [],
       'extension' => 'system',
       'directory' => 'core/modules/system/tests/src',
     ];
@@ -98,6 +111,17 @@ class PhpUnitApiGetTestClassesTest extends KernelTestBase {
       'suites' => ['PHPUnit-Unit'],
       'extension' => 'system',
       'directory' => 'core/modules/system/tests/src',
+    ];
+    yield 'directory' => [
+      'directory' => 'core/modules/system/tests/src',
+      'minCount' => 35,
+    ];
+    // Adding a group argument to the discovery should return only a subset of
+    // the tests discovered in the directory, see test case above.
+    yield 'directory, tests arg' => [
+      'directory' => 'core/modules/system/tests/src',
+      'testsArg' => ['Menu'],
+      'maxCount' => 1,
     ];
   }
 
