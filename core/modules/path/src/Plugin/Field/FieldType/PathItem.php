@@ -75,10 +75,11 @@ class PathItem extends FieldItemBase {
     $pid = $this->get('pid')->getValue();
     $langcode = $this->get('langcode')->getValue();
 
-    // If specified, rely on the langcode property for the language, so that the
-    // existing language of an alias can be kept. That could for example be
-    // unspecified even if the field/entity has a specific langcode.
-    $alias_langcode = ($langcode && $pid) ? $langcode : $this->getLangcode();
+    // If an explicit alias langcode is provided, use it. This allows code to
+    // preserve an existing alias language or set a specific language,
+    // including language-neutral, when creating or updating an alias.
+    // Otherwise, fall back to the field/entity langcode.
+    $alias_langcode = $langcode ?: $this->getLangcode();
 
     // If we have an alias, we need to create or update a path alias entity.
     if ($alias) {
@@ -109,9 +110,18 @@ class PathItem extends FieldItemBase {
       }
       else {
         $path_alias = $path_alias_storage->load($pid);
+        $path_alias_changed = FALSE;
 
         if ($alias != $path_alias->getAlias()) {
           $path_alias->setAlias($alias);
+          $path_alias_changed = TRUE;
+        }
+        // Persist langcode-only updates when the alias text is unchanged.
+        if ($alias_langcode !== $path_alias->language()->getId()) {
+          $path_alias->set('langcode', $alias_langcode);
+          $path_alias_changed = TRUE;
+        }
+        if ($path_alias_changed) {
           $path_alias->save();
         }
       }

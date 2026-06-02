@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path\Kernel;
 
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
@@ -74,6 +75,21 @@ class PathItemTest extends KernelTestBase {
 
     $stored_alias = $alias_repository->lookupBySystemPath('/' . $node->toUrl()->getInternalPath(), $node->language()->getId());
     $this->assertEquals('/foo', $stored_alias['alias']);
+    $this->assertEquals($node->language()->getId(), $stored_alias['langcode']);
+
+    $node_storage->resetCache();
+    $loaded_node = $node_storage->load($node->id());
+    $loaded_node->get('path')->langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
+    $loaded_node->save();
+
+    $stored_alias = $alias_repository->lookupBySystemPath('/' . $node->toUrl()->getInternalPath(), LanguageInterface::LANGCODE_NOT_SPECIFIED);
+    $this->assertEquals('/foo', $stored_alias['alias']);
+    $this->assertEquals(LanguageInterface::LANGCODE_NOT_SPECIFIED, $stored_alias['langcode']);
+    $stored_aliases = \Drupal::entityTypeManager()->getStorage('path_alias')->loadByProperties([
+      'path' => '/' . $node->toUrl()->getInternalPath(),
+      'langcode' => $node->language()->getId(),
+    ]);
+    $this->assertCount(0, $stored_aliases);
 
     $node_storage->resetCache();
 
@@ -111,6 +127,21 @@ class PathItemTest extends KernelTestBase {
     $this->assertEquals('/foo', $stored_alias['alias']);
     $stored_alias = $alias_repository->lookupBySystemPath('/' . $node->toUrl()->getInternalPath(), $translation->language()->getId());
     $this->assertEquals('/furchtbar', $stored_alias['alias']);
+
+    $node_with_unspecified_alias = Node::create([
+      'title' => 'Testing explicit alias langcode',
+      'type' => 'foo',
+      'langcode' => 'en',
+      'path' => [
+        'alias' => '/neutral',
+        'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      ],
+    ]);
+    $node_with_unspecified_alias->save();
+
+    $stored_alias = $alias_repository->lookupBySystemPath('/' . $node_with_unspecified_alias->toUrl()->getInternalPath(), LanguageInterface::LANGCODE_NOT_SPECIFIED);
+    $this->assertEquals('/neutral', $stored_alias['alias']);
+    $this->assertEquals(LanguageInterface::LANGCODE_NOT_SPECIFIED, $stored_alias['langcode']);
 
     $loaded_node->get('path')->alias = '/bar';
     $this->assertFalse($loaded_node->get('path')->isEmpty());
