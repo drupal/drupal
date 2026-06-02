@@ -11,7 +11,6 @@
  */
 
 use Composer\Autoload\ClassLoader;
-use Drupal\BuildTests\Framework\BuildTestBase;
 use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Html;
@@ -26,10 +25,8 @@ use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Test\TestRunResultsStorageInterface;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\TestTools\TestRunner\Configuration as Config;
+use Drupal\TestTools\TestRunner\WorkAllocator;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Helper\DescriptorHelper;
@@ -110,9 +107,9 @@ if (Config::get('list')) {
   // Display all available tests organized by one #[Group()] attribute.
   echo "\nAvailable test groups & classes\n";
   echo "-------------------------------\n\n";
-  $test_discovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath(Config::get('phpunit-configuration'));
+  $testDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath(Config::get('phpunit-configuration'));
   try {
-    $groups = $test_discovery->getTestClasses(Config::get('module'));
+    $groupedTestClassInfoList = $testDiscovery->getTestClasses(Config::get('module'));
     dump_discovery_warnings();
   }
   catch (Exception $e) {
@@ -125,7 +122,7 @@ if (Config::get('list')) {
   // need to present each test only once. The test is shown in the group that is
   // printed first.
   $printed_tests = [];
-  foreach ($groups as $group => $tests) {
+  foreach ($groupedTestClassInfoList as $group => $tests) {
     echo $group . "\n";
     $tests = array_diff(array_keys($tests), $printed_tests);
     foreach ($tests as $test) {
@@ -141,10 +138,10 @@ if (Config::get('list')) {
 // @see https://www.drupal.org/node/2569585
 if (Config::get('list-files') || Config::get('list-files-json')) {
   // List all files which could be run as tests.
-  $test_discovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath(Config::get('phpunit-configuration'));
+  $testDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath(Config::get('phpunit-configuration'));
   // PhpUnitTestDiscovery::findAllClassFiles() gives us a classmap similar to a
   // Composer 'classmap' array.
-  $test_classes = $test_discovery->findAllClassFiles();
+  $test_classes = $testDiscovery->findAllClassFiles();
   // JSON output is the easiest.
   if (Config::get('list-files-json')) {
     echo json_encode($test_classes);
@@ -211,7 +208,23 @@ echo sprintf("Working directory....: %s\n", getcwd());
 echo "--------------------------------------------------------------\n";
 echo "\n";
 
-$test_list = simpletest_script_get_test_list();
+$groupedTestClassInfoList = simpletest_script_get_test_list();
+
+$workAllocator = new WorkAllocator(
+  $groupedTestClassInfoList,
+  (int) Config::get('ci-parallel-node-total'),
+  (int) Config::get('ci-parallel-node-index'),
+);
+$test_list = array_keys($workAllocator->getAllocatedList());
+
+if (Config::get('debug-discovery')) {
+  if ((int) Config::get('ci-parallel-node-total') > 1) {
+    dump_bin_tests_sequence((int) Config::get('ci-parallel-node-index'), $workAllocator->getSortedList(), $workAllocator->getAllocatedList());
+  }
+  else {
+    dump_tests_sequence($workAllocator->getAllocatedList());
+  }
+}
 
 // Try to allocate unlimited time to run the tests.
 Environment::setTimeLimit(0);
@@ -305,6 +318,9 @@ EOF;
 
 /**
  * Initialize script variables and perform general setup requirements.
+ *
+ * @param \Drupal\Core\Composer\Composer $autoloader
+ *   The Composer provided PHP class loader.
  */
 function simpletest_script_init(ClassLoader $autoloader): void {
   // Get URL from arguments.
@@ -604,85 +620,38 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
  *   List of tests.
  */
 function simpletest_script_get_test_list() {
-  $test_discovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath(Config::get('phpunit-configuration'));
-  $test_list = [];
-  $slow_tests = [];
-  if (Config::get('all') || Config::get('module') || Config::get('directory')) {
-    try {
-      $groups = $test_discovery->getTestClasses(Config::get('module'), Config::get('types'), Config::get('directory'));
-      dump_discovery_warnings();
-    }
-    catch (Exception $e) {
-      echo (string) $e;
-      exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-    }
-    // Ensure that tests marked explicitly as #[Group('#slow')] are run at the
-    // beginning of each job.
-    if (key($groups) === '#slow') {
-      $slow_tests = array_shift($groups);
-    }
-    $not_slow_tests = [];
-    foreach ($groups as $group => $tests) {
-      $not_slow_tests = array_merge($not_slow_tests, $tests);
-    }
-    // Filter slow tests out of the not slow tests and ensure a unique list
-    // since tests may appear in more than one group.
-    $not_slow_tests = array_diff_key($not_slow_tests, $slow_tests);
+  $testDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath(Config::get('phpunit-configuration'));
 
-    // If the tests are not being run in parallel, then ensure slow tests run
-    // all together first.
-    if ((int) Config::get('ci-parallel-node-total') <= 1 ) {
-      sort_tests_by_type_and_methods($slow_tests);
-      sort_tests_by_type_and_methods($not_slow_tests);
-      $all_tests_list = array_merge($slow_tests, $not_slow_tests);
-      assign_tests_sequence($all_tests_list);
-      dump_tests_sequence($all_tests_list);
-      $test_list = array_keys($all_tests_list);
+  try {
+    if (Config::get('all') || Config::get('module') || Config::get('directory')) {
+      $groupedTestClassInfoList = $testDiscovery->getTestClasses(Config::get('module'), Config::get('types'), Config::get('directory'));
     }
-    else {
-      // Sort all tests by the number of test cases on the test class.
-      // This is used in combination with #[Group('#slow')] to start the
-      // slowest tests first and distribute tests between test runners.
-      sort_tests_by_public_method_count($slow_tests);
-      sort_tests_by_public_method_count($not_slow_tests);
-      $all_tests_list = array_merge($slow_tests, $not_slow_tests);
-      assign_tests_sequence($all_tests_list);
-
-      // Now set up a bin per test runner.
-      $bin_count = (int) Config::get('ci-parallel-node-total');
-
-      // Now loop over the slow tests and add them to a bin one by one, this
-      // distributes the tests evenly across the bins.
-      $binned_slow_tests = place_tests_into_bins($slow_tests, $bin_count);
-      $slow_tests_for_job = $binned_slow_tests[Config::get('ci-parallel-node-index') - 1];
-
-      // And the same for the rest of the tests.
-      $binned_other_tests = place_tests_into_bins($not_slow_tests, $bin_count);
-      $other_tests_for_job = $binned_other_tests[Config::get('ci-parallel-node-index') - 1];
-      $test_list = array_merge($slow_tests_for_job, $other_tests_for_job);
-      dump_bin_tests_sequence(Config::get('ci-parallel-node-index'), $all_tests_list, $test_list);
-      $test_list = array_keys($test_list);
-    }
-  }
-  else {
-    if (Config::get('class')) {
-      $test_list = [];
+    elseif (Config::get('class')) {
+      // When --class is specified, we have to find the file of each of the
+      // classes indicated as argument and run test discovery for it, then
+      // merge the results.
+      $groupedTestClassInfoList = [];
       foreach (Config::getTests() as $test_class) {
         [$class_name] = explode('::', $test_class, 2);
         if (class_exists($class_name)) {
-          $test_list[] = $test_class;
+          $fileName = (new \ReflectionClass($class_name))->getFileName();
+          $groupedClassInfo = $testDiscovery->getTestClasses(NULL, [], $fileName);
+          foreach (array_keys($groupedClassInfo) as $classGroupKey) {
+            if (array_key_exists($classGroupKey, $groupedTestClassInfoList)) {
+              $groupedTestClassInfoList[$classGroupKey] = array_merge($groupedTestClassInfoList[$classGroupKey], $groupedClassInfo[$classGroupKey]);
+            }
+            else {
+              $groupedTestClassInfoList[$classGroupKey] = $groupedClassInfo[$classGroupKey];
+            }
+          }
         }
         else {
-          try {
-            $groups = $test_discovery->getTestClasses(NULL, Config::get('types'));
-            dump_discovery_warnings();
-          }
-          catch (Exception $e) {
-            echo (string) $e;
-            exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-          }
+          // The class does not exist: we discover all the test classes and
+          // suggest a possible alternative.
+          $groupedTestClassInfoList = $testDiscovery->getTestClasses(NULL, Config::get('types'));
+          dump_discovery_warnings();
           $all_classes = [];
-          foreach ($groups as $group) {
+          foreach ($groupedTestClassInfoList as $group) {
             $all_classes = array_merge($all_classes, array_keys($group));
           }
           simpletest_script_print_error('Test class not found: ' . $class_name);
@@ -692,30 +661,38 @@ function simpletest_script_get_test_list() {
       }
     }
     elseif (Config::get('file')) {
-      // Extract test case class names from specified files.
+      // When --file is specified, we have to run test discovery for each of
+      // the files indicated, then merge the results.
+      $groupedTestClassInfoList = [];
       foreach (Config::getTests() as $file) {
         if (!file_exists($file) || is_dir($file)) {
           simpletest_script_print_error('File not found: ' . $file);
           exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
         }
-        $fileTests = current($test_discovery->getTestClasses(NULL, [], $file));
-        $test_list = array_merge($test_list, $fileTests);
+        $groupedClassInfo = $testDiscovery->getTestClasses(NULL, [], $file);
+        foreach (array_keys($groupedClassInfo) as $classGroupKey) {
+          if (array_key_exists($classGroupKey, $groupedTestClassInfoList)) {
+            $groupedTestClassInfoList[$classGroupKey] = array_merge($groupedTestClassInfoList[$classGroupKey], $groupedClassInfo[$classGroupKey]);
+          }
+          else {
+            $groupedTestClassInfoList[$classGroupKey] = $groupedClassInfo[$classGroupKey];
+          }
+        }
       }
-      assign_tests_sequence($test_list);
-      dump_tests_sequence($test_list);
-      $test_list = array_keys($test_list);
     }
     else {
+      // When no restriction options are specified, we consider the argument as
+      // a list of groups of tests to be executed.
+      $groupedTestClassInfoList = [];
       try {
-        $groups = $test_discovery->getTestClasses(NULL, Config::get('types'));
-        dump_discovery_warnings();
+        $groupedTestClassInfoFullSuiteList = $testDiscovery->getTestClasses(NULL, Config::get('types'));
       }
-      catch (Exception $e) {
+      catch (\Exception $e) {
         echo (string) $e;
         exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
       }
       // Store all the groups so we can suggest alternatives if we need to.
-      $all_groups = array_keys($groups);
+      $all_groups = array_keys($groupedTestClassInfoFullSuiteList);
       // Verify that the groups exist.
       if (!empty($unknown_groups = array_diff(Config::getTests(), $all_groups))) {
         $first_group = reset($unknown_groups);
@@ -723,82 +700,34 @@ function simpletest_script_get_test_list() {
         simpletest_script_print_alternatives($first_group, $all_groups);
         exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
       }
-      // Merge the tests from the groups together.
       foreach (Config::getTests() as $group_name) {
-        $test_list = array_merge($test_list, $groups[$group_name]);
+        $groupedTestClassInfoList[$group_name] = $groupedTestClassInfoFullSuiteList[$group_name];
       }
-      assign_tests_sequence($test_list);
-      dump_tests_sequence($test_list);
-      // Ensure our list of tests contains only one entry for each test.
-      $test_list = array_keys($test_list);
+      // The '#slow' group is a special case, because it may not be selected in
+      // the argument, but it must be present if any test class indicates it in
+      // metadata, for the work allocator to prioritize its execution.
+      foreach ($groupedTestClassInfoList as $groupName => $testClassInfoList) {
+        foreach ($testClassInfoList as $testClass => $testClassInfo) {
+          if (in_array('#slow', $testClassInfo['groups'])) {
+            $groupedTestClassInfoList['#slow'][$testClass] = $testClassInfo;
+          }
+        }
+      }
     }
   }
+  catch (\Exception $e) {
+    echo (string) $e;
+    exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
+  }
 
-  if (empty($test_list)) {
+  dump_discovery_warnings();
+
+  if (empty($groupedTestClassInfoList)) {
     simpletest_script_print_error('No valid tests were specified.');
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
 
-  return $test_list;
-}
-
-/**
- * Sort tests by test type and number of public methods.
- */
-function sort_tests_by_type_and_methods(array &$tests): void {
-  uasort($tests, function ($a, $b) {
-    if (get_test_type_weight($a['name']) === get_test_type_weight($b['name'])) {
-      return $b['tests_count'] <=> $a['tests_count'];
-    }
-    return get_test_type_weight($b['name']) <=> get_test_type_weight($a['name']);
-  });
-}
-
-/**
- * Sort tests by the number of public methods in the test class.
- *
- * Tests with several methods take longer to run than tests with a single
- * method all else being equal, so this allows tests runs to be sorted by
- * approximately the slowest to fastest tests. Tests that are exceptionally
- * slow can be added to the '#slow' group so they are placed first in each
- * test run regardless of the number of methods.
- *
- * @param string[] $tests
- *   An array of test class names.
- */
-function sort_tests_by_public_method_count(array &$tests): void {
-  uasort($tests, function (array $a, array $b) {
-    return $b['tests_count'] <=> $a['tests_count'];
-  });
-}
-
-/**
- * Weights a test class based on which test base class it extends.
- *
- * @param string $class
- *   The test class name.
- */
-function get_test_type_weight(string $class): int {
-  return match(TRUE) {
-    is_subclass_of($class, WebDriverTestBase::class) => 3,
-    is_subclass_of($class, BrowserTestBase::class) => 2,
-    is_subclass_of($class, BuildTestBase::class) => 2,
-    is_subclass_of($class, KernelTestBase::class) => 1,
-    default => 0,
-  };
-}
-
-/**
- * Assigns the test sequence.
- *
- * @param array $tests
- *   The array of test class info.
- */
-function assign_tests_sequence(array &$tests): void {
-  $i = 0;
-  foreach ($tests as &$testInfo) {
-    $testInfo['sequence'] = ++$i;
-  }
+  return $groupedTestClassInfoList;
 }
 
 /**
@@ -818,7 +747,7 @@ function dump_tests_sequence(array $tests): void {
   foreach ($tests as $testInfo) {
     echo sprintf(
       "%4d %5s %15s %4d %s\n",
-      $testInfo['sequence'],
+      $testInfo['worker_sequence'],
       in_array('#slow', $testInfo['groups']) ? '#slow' : '',
       trim_with_ellipsis($testInfo['group'], 15, \STR_PAD_RIGHT),
       $testInfo['tests_count'],
@@ -826,33 +755,6 @@ function dump_tests_sequence(array $tests): void {
     );
   }
   echo "-----------------------------------------\n\n";
-}
-
-/**
- * Distribute tests into bins.
- *
- * The given array of tests is split into the available bins. The distribution
- * starts with the first test, placing the first test in the first bin, the
- * second test in the second bin and so on. This results each bin having a
- * similar number of test methods to run in total.
- *
- * @param string[] $tests
- *   An array of test class names.
- * @param int $bin_count
- *   The number of bins available.
- *
- * @return array
- *   An associative array of bins and the test class names in each bin.
- */
-function place_tests_into_bins(array $tests, int $bin_count) {
-  // Create a bin corresponding to each parallel test job.
-  $bins = array_fill(0, $bin_count, []);
-  // Go through each test and add them to one bin at a time.
-  $i = 0;
-  foreach ($tests as $key => $test) {
-    $bins[($i++ % $bin_count)][$key] = $test;
-  }
-  return $bins;
 }
 
 /**
@@ -866,20 +768,19 @@ function place_tests_into_bins(array $tests, int $bin_count) {
  *   The list of test class to run for this bin.
  */
 function dump_bin_tests_sequence(int $bin, array $allTests, array $tests): void {
-  if (!Config::get('debug-discovery')) {
-    return;
-  }
   echo "Test execution sequence. ";
   echo "Tests marked *** will be executed in this PARALLEL BIN #{$bin}.\n";
   echo "-------------------------------------------------------------------------------------\n\n";
-  echo "Bin  Seq Slow? Group            Cnt Class\n";
-  echo "--------------------------------------------\n";
+  echo "    Sort  Bin                                 \n";
+  echo "Bin  Seq  Seq Slow? Group            Cnt Class\n";
+  echo "-------------------------------------------------------------------------------------\n";
   foreach ($allTests as $testInfo) {
     $inBin = isset($tests[$testInfo['name']]);
     $message = sprintf(
-      "%s %4d %5s %15s %4d %s\n",
+      "%s %4d %s %5s %15s %4d %s\n",
       $inBin ? "***" : "   ",
-      $testInfo['sequence'],
+      $testInfo['sorted_sequence'],
+      $inBin ? sprintf('%4d', $tests[$testInfo['name']]['worker_sequence']) : "    ",
       in_array('#slow', $testInfo['groups']) ? '#slow' : '',
       trim_with_ellipsis($testInfo['group'], 15, \STR_PAD_RIGHT),
       $testInfo['tests_count'],
@@ -887,7 +788,7 @@ function dump_bin_tests_sequence(int $bin, array $allTests, array $tests): void 
     );
     simpletest_script_print($message, $inBin ? SIMPLETEST_SCRIPT_COLOR_BRIGHT_WHITE : SIMPLETEST_SCRIPT_COLOR_GRAY);
   }
-  echo "-------------------------------------------------\n\n";
+  echo "-------------------------------------------------------------------------------------\n\n";
 }
 
 /**

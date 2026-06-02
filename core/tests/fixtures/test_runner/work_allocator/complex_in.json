@@ -1,0 +1,916 @@
+{
+  "block_content": {
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentCacheTagsTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentCacheTagsTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests the Content Block entity's cache tags.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentCacheTagsTest.php",
+      "tests_count": 2
+    },
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentContextualLinksTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentContextualLinksTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests views contextual links on block content.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentContextualLinksTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentCreationTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentCreationTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Create a block and test saving it.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentCreationTest.php",
+      "tests_count": 7
+    },
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentListTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentListTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests the listing of content blocks.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentListTest.php",
+      "tests_count": 2
+    },
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentListViewsTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentListViewsTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests the Views-powered listing of content blocks.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentListViewsTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentPageViewTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentPageViewTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Create a block and test block access by attempting to view the block.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentPageViewTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentRevisionDeleteTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentRevisionDeleteTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests \\Drupal\\Core\\Entity\\Form\\RevisionDeleteForm.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentRevisionDeleteTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentRevisionRevertTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentRevisionRevertTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests \\Drupal\\Core\\Entity\\Form\\RevisionRevertForm.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentRevisionRevertTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentRevisionVersionHistoryTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentRevisionVersionHistoryTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests \\Drupal\\Core\\Entity\\Controller\\VersionHistoryController.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentRevisionVersionHistoryTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentSaveTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentSaveTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests $block_content->save() for saving content.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentSaveTest.php",
+      "tests_count": 3
+    },
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentThemeSuggestionsTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentThemeSuggestionsTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests block content theme suggestions.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentThemeSuggestionsTest.php",
+      "tests_count": 2
+    },
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentTranslationUITest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentTranslationUITest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests the block content translation UI.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentTranslationUITest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\BlockContentTypeTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\BlockContentTypeTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Ensures that block type functions work correctly.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentTypeTest.php",
+      "tests_count": 5
+    },
+    "Drupal\\Tests\\block_content\\Functional\\GenericTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\GenericTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Generic module test for block_content.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/GenericTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\LocalActionTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\LocalActionTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests block_content local action links.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/LocalActionTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\PageEditTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\PageEditTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Create a block and test block edit functionality.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/PageEditTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\UnpublishedBlockTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\UnpublishedBlockTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests unpublishing of block_content entities.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/UnpublishedBlockTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\Views\\BlockContentFieldFilterTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\Views\\BlockContentFieldFilterTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests block_content field filters with translations.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/Views/BlockContentFieldFilterTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\Views\\BlockContentIntegrationTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\Views\\BlockContentIntegrationTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests the block_content integration into views.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/Views/BlockContentIntegrationTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\Views\\BlockContentRedirectTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\Views\\BlockContentRedirectTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests the redirect destination on block content on entity operations.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/Views/BlockContentRedirectTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Functional\\Views\\BlockContentWizardTest": {
+      "name": "Drupal\\Tests\\block_content\\Functional\\Views\\BlockContentWizardTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests block_content wizard and generic entity integration.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/Views/BlockContentWizardTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Kernel\\BlockContentAccessHandlerTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\BlockContentAccessHandlerTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests \\Drupal\\block_content\\BlockContentAccessControlHandler.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/BlockContentAccessHandlerTest.php",
+      "tests_count": 53
+    },
+    "Drupal\\Tests\\block_content\\Kernel\\BlockContentDeletionTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\BlockContentDeletionTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests that deleting a block clears the cached definitions.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/BlockContentDeletionTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Kernel\\BlockContentDeriverTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\BlockContentDeriverTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests block content plugin deriver.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/BlockContentDeriverTest.php",
+      "tests_count": 2
+    },
+    "Drupal\\Tests\\block_content\\Kernel\\BlockContentEntityReferenceSelectionTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\BlockContentEntityReferenceSelectionTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests EntityReference selection handlers don't return non-reusable blocks.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/BlockContentEntityReferenceSelectionTest.php",
+      "tests_count": 8
+    },
+    "Drupal\\Tests\\block_content\\Kernel\\BlockContentPermissionsTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\BlockContentPermissionsTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests \\Drupal\\block_content\\BlockContentPermissions.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/BlockContentPermissionsTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Kernel\\BlockContentRevisionsTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\BlockContentRevisionsTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests revision based functions for Block Content.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/BlockContentRevisionsTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Kernel\\BlockContentTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\BlockContentTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests the block content.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/BlockContentTest.php",
+      "tests_count": 2
+    },
+    "Drupal\\Tests\\block_content\\Kernel\\BlockContentTypeValidationTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\BlockContentTypeValidationTest",
+      "group": "block_content",
+      "groups": [
+        "block_content",
+        "#slow"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests validation of block_content_type entities.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/BlockContentTypeValidationTest.php",
+      "tests_count": 22
+    },
+    "Drupal\\Tests\\block_content\\Kernel\\BlockTemplateSuggestionsTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\BlockTemplateSuggestionsTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests the block_content_theme_suggestions_block() function.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/BlockTemplateSuggestionsTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Kernel\\Views\\FieldTypeTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\Views\\FieldTypeTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests the Drupal\\block_content\\Plugin\\views\\field\\Type handler.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/Views/FieldTypeTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Kernel\\Views\\RevisionRelationshipsTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\Views\\RevisionRelationshipsTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests the integration of block_content_revision table.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/Views/RevisionRelationshipsTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Kernel\\Views\\RevisionUserTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\Views\\RevisionUserTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests the block_content_revision_user field.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/Views/RevisionUserTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block_content\\Unit\\Menu\\BlockContentLocalTasksTest": {
+      "name": "Drupal\\Tests\\block_content\\Unit\\Menu\\BlockContentLocalTasksTest",
+      "group": "block_content",
+      "groups": [
+        "block_content"
+      ],
+      "type": "PHPUnit-Unit",
+      "description": "Tests existence of block_content local tasks.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Unit/Menu/BlockContentLocalTasksTest.php",
+      "tests_count": 1
+    }
+  },
+  "block": {
+    "Drupal\\FunctionalJavascriptTests\\Theme\\ClaroBlockFilterTest": {
+      "name": "Drupal\\FunctionalJavascriptTests\\Theme\\ClaroBlockFilterTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-FunctionalJavascript",
+      "description": "Runs BlockFilterTest in Claro.",
+      "file": "/Users/foo/Dev/drupal/core/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroBlockFilterTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\KernelTests\\Core\\Block\\BlockBaseTest": {
+      "name": "Drupal\\KernelTests\\Core\\Block\\BlockBaseTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests the BlockBase class, base for all block plugins.",
+      "file": "/Users/foo/Dev/drupal/core/tests/Drupal/KernelTests/Core/Block/BlockBaseTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\KernelTests\\Core\\Block\\MultipleBlockFormTest": {
+      "name": "Drupal\\KernelTests\\Core\\Block\\MultipleBlockFormTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests that blocks can have multiple forms.",
+      "file": "/Users/foo/Dev/drupal/core/tests/Drupal/KernelTests/Core/Block/MultipleBlockFormTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\FunctionalJavascript\\BlockAddTest": {
+      "name": "Drupal\\Tests\\block\\FunctionalJavascript\\BlockAddTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-FunctionalJavascript",
+      "description": "Tests the JS functionality in the block add form.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/FunctionalJavascript/BlockAddTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\FunctionalJavascript\\BlockContextualLinksTest": {
+      "name": "Drupal\\Tests\\block\\FunctionalJavascript\\BlockContextualLinksTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-FunctionalJavascript",
+      "description": "Tests the contextual links added while rendering the block.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/FunctionalJavascript/BlockContextualLinksTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\FunctionalJavascript\\BlockDragTest": {
+      "name": "Drupal\\Tests\\block\\FunctionalJavascript\\BlockDragTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-FunctionalJavascript",
+      "description": "Tests drag and drop blocks on block layout page.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/FunctionalJavascript/BlockDragTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\FunctionalJavascript\\BlockFilterTest": {
+      "name": "Drupal\\Tests\\block\\FunctionalJavascript\\BlockFilterTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-FunctionalJavascript",
+      "description": "Tests the JavaScript functionality of the block add filter.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/FunctionalJavascript/BlockFilterTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockAdminThemeTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockAdminThemeTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests the block system with admin themes.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockAdminThemeTest.php",
+      "tests_count": 2
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockCacheTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockCacheTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests block caching.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockCacheTest.php",
+      "tests_count": 5
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockDemoTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockDemoTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests the block demo page with admin themes.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockDemoTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockFormInBlockTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockFormInBlockTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests form in block caching.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockFormInBlockTest.php",
+      "tests_count": 2
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockHiddenRegionTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockHiddenRegionTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests that blocks are not added to hidden regions on theme installation.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockHiddenRegionTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockHookOperationTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockHookOperationTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests for Block module regarding hook_entity_operations_alter().",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockHookOperationTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockHtmlTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockHtmlTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests block HTML ID validity.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockHtmlTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockInstallTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockInstallTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests block module's installation.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockInstallTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockInvalidRegionTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockInvalidRegionTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests that blocks assigned to invalid regions are disabled with a warning.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockInvalidRegionTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockLanguageCacheTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockLanguageCacheTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests display of menu blocks with multiple languages.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockLanguageCacheTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockLanguageTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockLanguageTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests per-language block configuration.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockLanguageTest.php",
+      "tests_count": 3
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockRenderOrderTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockRenderOrderTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests blocks are being rendered in order by weight.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockRenderOrderTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockSystemBrandingTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockSystemBrandingTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests branding block display.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockSystemBrandingTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests basic block functionality.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockTest.php",
+      "tests_count": 14
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockUiTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockUiTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests that the block configuration UI exists and stores data correctly.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockUiTest.php",
+      "tests_count": 10
+    },
+    "Drupal\\Tests\\block\\Functional\\BlockXssTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\BlockXssTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests that the block module properly escapes block descriptions.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockXssTest.php",
+      "tests_count": 3
+    },
+    "Drupal\\Tests\\block\\Functional\\GenericTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\GenericTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Generic module test for block.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/GenericTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Functional\\NonDefaultBlockAdminTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\NonDefaultBlockAdminTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests the block administration page for a non-default theme.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/NonDefaultBlockAdminTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Functional\\Views\\DisplayBlockTest": {
+      "name": "Drupal\\Tests\\block\\Functional\\Views\\DisplayBlockTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Functional",
+      "description": "Tests the block display plugin.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/Views/DisplayBlockTest.php",
+      "tests_count": 6
+    },
+    "Drupal\\Tests\\block\\Kernel\\BlockConfigSchemaTest": {
+      "name": "Drupal\\Tests\\block\\Kernel\\BlockConfigSchemaTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests the block config schema.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/BlockConfigSchemaTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Kernel\\BlockConfigSyncTest": {
+      "name": "Drupal\\Tests\\block\\Kernel\\BlockConfigSyncTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests that blocks are not created during config sync.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/BlockConfigSyncTest.php",
+      "tests_count": 2
+    },
+    "Drupal\\Tests\\block\\Kernel\\BlockInterfaceTest": {
+      "name": "Drupal\\Tests\\block\\Kernel\\BlockInterfaceTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests that the block plugin can work properly without a supporting entity.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/BlockInterfaceTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Kernel\\BlockRebuildTest": {
+      "name": "Drupal\\Tests\\block\\Kernel\\BlockRebuildTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests block_rebuild().",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/BlockRebuildTest.php",
+      "tests_count": 3
+    },
+    "Drupal\\Tests\\block\\Kernel\\BlockStorageUnitTest": {
+      "name": "Drupal\\Tests\\block\\Kernel\\BlockStorageUnitTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests the storage of blocks.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/BlockStorageUnitTest.php",
+      "tests_count": 2
+    },
+    "Drupal\\Tests\\block\\Kernel\\BlockTemplateSuggestionsTest": {
+      "name": "Drupal\\Tests\\block\\Kernel\\BlockTemplateSuggestionsTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests the block theme suggestions.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/BlockTemplateSuggestionsTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Kernel\\BlockValidationTest": {
+      "name": "Drupal\\Tests\\block\\Kernel\\BlockValidationTest",
+      "group": "block",
+      "groups": {
+        "0": "block",
+        "1": "#slow",
+        "54": "legacy"
+      },
+      "type": "PHPUnit-Kernel",
+      "description": "Tests validation of block entities.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/BlockValidationTest.php",
+      "tests_count": 37
+    },
+    "Drupal\\Tests\\block\\Kernel\\BlockViewBuilderTest": {
+      "name": "Drupal\\Tests\\block\\Kernel\\BlockViewBuilderTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests the block view builder.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/BlockViewBuilderTest.php",
+      "tests_count": 6
+    },
+    "Drupal\\Tests\\block\\Kernel\\ConfigActionsTest": {
+      "name": "Drupal\\Tests\\block\\Kernel\\ConfigActionsTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/ConfigActionsTest.php",
+      "tests_count": 11
+    },
+    "Drupal\\Tests\\block\\Kernel\\NewDefaultThemeBlocksTest": {
+      "name": "Drupal\\Tests\\block\\Kernel\\NewDefaultThemeBlocksTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests that a new default theme gets blocks.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/NewDefaultThemeBlocksTest.php",
+      "tests_count": 2
+    },
+    "Drupal\\Tests\\block\\Unit\\BlockConfigEntityUnitTest": {
+      "name": "Drupal\\Tests\\block\\Unit\\BlockConfigEntityUnitTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Unit",
+      "description": "Tests \\Drupal\\block\\Entity\\Block.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Unit/BlockConfigEntityUnitTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Unit\\BlockFormTest": {
+      "name": "Drupal\\Tests\\block\\Unit\\BlockFormTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Unit",
+      "description": "Tests \\Drupal\\block\\BlockForm.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Unit/BlockFormTest.php",
+      "tests_count": 1
+    },
+    "Drupal\\Tests\\block\\Unit\\BlockRepositoryTest": {
+      "name": "Drupal\\Tests\\block\\Unit\\BlockRepositoryTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Unit",
+      "description": "Tests \\Drupal\\block\\BlockRepository.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Unit/BlockRepositoryTest.php",
+      "tests_count": 2
+    },
+    "Drupal\\Tests\\block\\Unit\\CategoryAutocompleteTest": {
+      "name": "Drupal\\Tests\\block\\Unit\\CategoryAutocompleteTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Unit",
+      "description": "Tests \\Drupal\\block\\Controller\\CategoryAutocompleteController.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Unit/CategoryAutocompleteTest.php",
+      "tests_count": 4
+    },
+    "Drupal\\Tests\\block\\Unit\\Menu\\BlockLocalTasksTest": {
+      "name": "Drupal\\Tests\\block\\Unit\\Menu\\BlockLocalTasksTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Unit",
+      "description": "Tests block local tasks.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Unit/Menu/BlockLocalTasksTest.php",
+      "tests_count": 3
+    },
+    "Drupal\\Tests\\block\\Unit\\Plugin\\DisplayVariant\\BlockPageVariantTest": {
+      "name": "Drupal\\Tests\\block\\Unit\\Plugin\\DisplayVariant\\BlockPageVariantTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Unit",
+      "description": "Tests \\Drupal\\block\\Plugin\\DisplayVariant\\BlockPageVariant.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Unit/Plugin/DisplayVariant/BlockPageVariantTest.php",
+      "tests_count": 4
+    },
+    "Drupal\\Tests\\Core\\Block\\BlockBaseTest": {
+      "name": "Drupal\\Tests\\Core\\Block\\BlockBaseTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Unit",
+      "description": "Tests \\Drupal\\Core\\Block\\BlockBase.",
+      "file": "/Users/foo/Dev/drupal/core/tests/Drupal/Tests/Core/Block/BlockBaseTest.php",
+      "tests_count": 2
+    },
+    "Drupal\\Tests\\Core\\Block\\BlockManagerTest": {
+      "name": "Drupal\\Tests\\Core\\Block\\BlockManagerTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Unit",
+      "description": "Tests \\Drupal\\Core\\Block\\BlockManager.",
+      "file": "/Users/foo/Dev/drupal/core/tests/Drupal/Tests/Core/Block/BlockManagerTest.php",
+      "tests_count": 4
+    },
+    "Drupal\\Tests\\responsive_image\\Unit\\ResponsiveImageStyleConfigEntityUnitTest": {
+      "name": "Drupal\\Tests\\responsive_image\\Unit\\ResponsiveImageStyleConfigEntityUnitTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Unit",
+      "description": "Tests \\Drupal\\responsive_image\\Entity\\ResponsiveImageStyle.",
+      "file": "/Users/foo/Dev/drupal/core/modules/responsive_image/tests/src/Unit/ResponsiveImageStyleConfigEntityUnitTest.php",
+      "tests_count": 7
+    },
+    "Drupal\\Tests\\views\\Unit\\Plugin\\views\\display\\BlockTest": {
+      "name": "Drupal\\Tests\\views\\Unit\\Plugin\\views\\display\\BlockTest",
+      "group": "block",
+      "groups": [
+        "block"
+      ],
+      "type": "PHPUnit-Unit",
+      "description": "Tests \\Drupal\\views\\Plugin\\views\\display\\Block.",
+      "file": "/Users/foo/Dev/drupal/core/modules/views/tests/src/Unit/Plugin/views/display/BlockTest.php",
+      "tests_count": 5
+    }
+  },
+  "#slow": {
+    "Drupal\\Tests\\block_content\\Kernel\\BlockContentTypeValidationTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\BlockContentTypeValidationTest",
+      "group": "block_content",
+      "groups": [
+        "block_content",
+        "#slow"
+      ],
+      "type": "PHPUnit-Kernel",
+      "description": "Tests validation of block_content_type entities.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/BlockContentTypeValidationTest.php",
+      "tests_count": 22
+    },
+    "Drupal\\Tests\\block\\Kernel\\BlockValidationTest": {
+      "name": "Drupal\\Tests\\block\\Kernel\\BlockValidationTest",
+      "group": "block",
+      "groups": {
+        "0": "block",
+        "1": "#slow",
+        "54": "legacy"
+      },
+      "type": "PHPUnit-Kernel",
+      "description": "Tests validation of block entities.",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/BlockValidationTest.php",
+      "tests_count": 37
+    }
+  }
+}

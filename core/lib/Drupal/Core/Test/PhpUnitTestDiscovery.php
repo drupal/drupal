@@ -17,6 +17,10 @@ use PHPUnit\TextUI\Configuration\TestSuiteBuilder;
 /**
  * Discovers available tests using the PHPUnit API.
  *
+ * @phpstan-type TestClassInfo array{name: class-string, description: string, group: string|int, groups: list<string|int>, type: string, file: string, tests_count: positive-int}
+ * @phpstan-type TestClassInfoList array<class-string,TestClassInfo>
+ * @phpstan-type GroupedTestClassInfoList array<string|int,TestClassInfoList>
+ *
  * @internal
  */
 class PhpUnitTestDiscovery {
@@ -100,7 +104,7 @@ class PhpUnitTestDiscovery {
    * @param string|null $directory
    *   (optional) Limit discovered tests to a specific directory.
    *
-   * @return array<string<array<class-string, array{name: class-string, description: string, group: string|int, groups: list<string|int>, type: string, file: string, tests_count: positive-int}>>>
+   * @return GroupedTestClassInfoList
    *   An array of test groups keyed by the group name. Each test group is an
    *   array of test class information arrays as returned by
    *   ::getTestClassInfo(), keyed by test class. If a test class belongs to
@@ -218,7 +222,7 @@ class PhpUnitTestDiscovery {
    * @param string|null $extension
    *   The name of an extension to limit discovery to; e.g., 'node'.
    *
-   * @return array<string<array<class-string, array{name: class-string, description: string, group: string|int, groups: list<string|int>, type: string, file: string, tests_count: positive-int}>>>
+   * @return GroupedTestClassInfoList
    *   An array of test groups keyed by the group name. Each test group is an
    *   array of test class information arrays as returned by
    *   ::getTestClassInfo(), keyed by test class. If a test class belongs to
@@ -259,7 +263,7 @@ class PhpUnitTestDiscovery {
    * @param list<string> $testSuites
    *   An array of PHPUnit test suites to filter the discovery for.
    *
-   * @return array<string<array<class-string, array{name: class-string, description: string, group: string|int, groups: list<string|int>, type: string, file: string, tests_count: positive-int}>>>
+   * @return GroupedTestClassInfoList
    *   An array of test groups keyed by the group name. Each test group is an
    *   array of test class information arrays as returned by
    *   ::getTestClassInfo(), keyed by test class. If a test class belongs to
@@ -327,7 +331,8 @@ class PhpUnitTestDiscovery {
    * @param string $testSuite
    *   The test suite of this test class.
    *
-   * @return array{name: class-string, description: string, group: string|int, groups: list<string|int>, type: string, file: string, tests_count: positive-int}
+   * phpcs:ignore Drupal.Commenting.DataTypeNamespace.DataTypeNamespace
+   * @return TestClassInfo
    *   The test class information.
    */
   private function getTestClassInfo(Test $testClass, string $testSuite): array {
