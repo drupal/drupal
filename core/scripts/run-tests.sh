@@ -4,7 +4,7 @@
  * @file
  * Script for running tests on DrupalCI.
  *
- * This script is intended for use only by drupal.org's testing. In general,
+ * This script is intended for use only by drupal.org testing. In general,
  * tests should be run directly with phpunit.
  *
  * @internal
@@ -109,7 +109,7 @@ if (Config::get('list')) {
   echo "-------------------------------\n\n";
   $testDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath(Config::get('phpunit-configuration'));
   try {
-    $groupedTestClassInfoList = $testDiscovery->getTestClasses(Config::get('module'));
+    $groupedTestClassInfoList = $testDiscovery->getTestClasses(Config::get('module'), Config::get('types'), Config::get('directory'), Config::getTests());
     dump_discovery_warnings();
   }
   catch (Exception $e) {
@@ -141,7 +141,7 @@ if (Config::get('list-files') || Config::get('list-files-json')) {
   $testDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath(Config::get('phpunit-configuration'));
   // PhpUnitTestDiscovery::findAllClassFiles() gives us a classmap similar to a
   // Composer 'classmap' array.
-  $test_classes = $testDiscovery->findAllClassFiles();
+  $test_classes = $testDiscovery->findAllClassFiles(Config::get('module'), Config::get('types'), Config::get('directory'), Config::getTests());
   // JSON output is the easiest.
   if (Config::get('list-files-json')) {
     echo json_encode($test_classes);
@@ -206,7 +206,6 @@ if (Config::get('dburl')) {
 }
 echo sprintf("Working directory....: %s\n", getcwd());
 echo "--------------------------------------------------------------\n";
-echo "\n";
 
 $groupedTestClassInfoList = simpletest_script_get_test_list();
 
@@ -624,14 +623,35 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
 function simpletest_script_get_test_list() {
   $testDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath(Config::get('phpunit-configuration'));
 
+  echo "Test discovery\n";
+
   try {
     if (Config::get('all') || Config::get('module') || Config::get('directory')) {
-      $groupedTestClassInfoList = $testDiscovery->getTestClasses(Config::get('module'), Config::get('types'), Config::get('directory'));
+      if (Config::get('types')) {
+        echo sprintf("PHPUnit test suite(s): %s\n", implode(', ', Config::get('types')));
+      }
+      if (Config::get('module')) {
+        echo sprintf("Drupal module........: %s\n", Config::get('module'));
+      }
+      if (Config::get('directory')) {
+        echo sprintf("Directory............: %s\n", Config::get('directory'));
+      }
+      if (Config::getTests()) {
+        echo sprintf("PHPUnit test group(s): %s\n", implode(', ', Config::getTests()));
+      }
+      echo "--------------------------------------------------------------\n";
+      $groupedTestClassInfoList = $testDiscovery->getTestClasses(Config::get('module'), Config::get('types'), Config::get('directory'), Config::getTests());
     }
     elseif (Config::get('class')) {
       // When --class is specified, we have to find the file of each of the
       // classes indicated as argument and run test discovery for it, then
       // merge the results.
+      $classesArg = Config::getTests();
+      echo sprintf("Test class(es).......: %s\n", array_shift($classesArg));
+      foreach ($classesArg as $arg) {
+        echo sprintf("                     : %s\n", $arg);
+      }
+      echo "--------------------------------------------------------------\n";
       $groupedTestClassInfoList = [];
       foreach (Config::getTests() as $test_class) {
         [$class_name] = explode('::', $test_class, 2);
@@ -665,6 +685,12 @@ function simpletest_script_get_test_list() {
     elseif (Config::get('file')) {
       // When --file is specified, we have to run test discovery for each of
       // the files indicated, then merge the results.
+      $filesArg = Config::getTests();
+      echo sprintf("Test file(s).........: %s\n", array_shift($filesArg));
+      foreach ($filesArg as $arg) {
+        echo sprintf("                     : %s\n", $arg);
+      }
+      echo "--------------------------------------------------------------\n";
       $groupedTestClassInfoList = [];
       foreach (Config::getTests() as $file) {
         if (!file_exists($file) || is_dir($file)) {
@@ -685,6 +711,13 @@ function simpletest_script_get_test_list() {
     else {
       // When no restriction options are specified, we consider the argument as
       // a list of groups of tests to be executed.
+      if (Config::get('types')) {
+        echo sprintf("PHPUnit test suite(s): %s\n", implode(', ', Config::get('types')));
+      }
+      if (Config::getTests()) {
+        echo sprintf("PHPUnit test group(s): %s\n", implode(', ', Config::getTests()));
+      }
+      echo "--------------------------------------------------------------\n";
       $groupedTestClassInfoList = [];
       try {
         $groupedTestClassInfoFullSuiteList = $testDiscovery->getTestClasses(NULL, Config::get('types'));
@@ -721,6 +754,7 @@ function simpletest_script_get_test_list() {
     echo (string) $e;
     exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
   }
+  echo "\n";
 
   dump_discovery_warnings();
 
