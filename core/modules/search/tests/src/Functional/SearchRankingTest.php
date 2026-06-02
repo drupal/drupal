@@ -36,7 +36,7 @@ class SearchRankingTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'search', 'comment'];
+  protected static $modules = ['node', 'search', 'comment', 'search_node'];
 
   /**
    * {@inheritdoc}

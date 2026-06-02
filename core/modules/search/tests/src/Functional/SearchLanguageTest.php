@@ -22,7 +22,7 @@ class SearchLanguageTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['language', 'node', 'search'];
+  protected static $modules = ['language', 'node', 'search', 'search_node'];
 
   /**
    * {@inheritdoc}

@@ -19,7 +19,7 @@ class SearchNodePunctuationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'search'];
+  protected static $modules = ['node', 'search', 'search_node'];
 
   /**
    * {@inheritdoc}

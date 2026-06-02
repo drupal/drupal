@@ -1,0 +1,12 @@
+# Plugin \Drupal\search_node\Plugin\Search\SearchNode
+search.plugin.node_search:
+  type: mapping
+  label: 'Content search'
+  mapping:
+    rankings:
+      type: sequence
+      label: 'Content ranking'
+      orderby: key
+      sequence:
+        type: integer
+        label: 'Influence'

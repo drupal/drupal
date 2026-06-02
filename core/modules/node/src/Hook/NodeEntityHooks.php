@@ -10,7 +10,6 @@ use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\Core\Hook\Attribute\Hook;
 
@@ -20,24 +19,6 @@ use Drupal\Core\Hook\Attribute\Hook;
 class NodeEntityHooks {
 
   use StringTranslationTrait;
-
-  /**
-   * Implements hook_entity_view_display_alter().
-   */
-  #[Hook('entity_view_display_alter')]
-  public function entityViewDisplayAlter(EntityViewDisplayInterface $display, $context): void {
-    if ($context['entity_type'] == 'node') {
-      // Hide field labels in search index.
-      if ($context['view_mode'] == 'search_index') {
-        foreach ($display->getComponents() as $name => $options) {
-          if (isset($options['label'])) {
-            $options['label'] = 'hidden';
-            $display->setComponent($name, $options);
-          }
-        }
-      }
-    }
-  }
 
   /**
    * Implements hook_entity_extra_field_info().

@@ -23364,12 +23364,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/Entity/Node.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Entity\\\\Node\\:\\:preDelete\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Entity/Node.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Entity\\\\Node\\:\\:preSave\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -23638,42 +23632,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/NodeViewBuilder.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Plugin\\\\Search\\\\NodeSearch\\:\\:addNodeRankings\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Plugin/Search/NodeSearch.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Plugin\\\\Search\\\\NodeSearch\\:\\:indexClear\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Plugin/Search/NodeSearch.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Plugin\\\\Search\\\\NodeSearch\\:\\:markForReindex\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Plugin/Search/NodeSearch.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Plugin\\\\Search\\\\NodeSearch\\:\\:searchFormAlter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Plugin/Search/NodeSearch.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Plugin\\\\Search\\\\NodeSearch\\:\\:submitConfigurationForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Plugin/Search/NodeSearch.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\Plugin\\\\Search\\\\NodeSearch\\:\\:updateIndex\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Plugin/Search/NodeSearch.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to method __construct\\(\\) of deprecated class Drupal\\\\migrate_drupal\\\\Plugin\\\\migrate\\\\source\\\\DrupalSqlBase\\:

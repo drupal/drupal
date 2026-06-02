@@ -22,7 +22,7 @@ class SearchPageTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'search'];
+  protected static $modules = ['node', 'search', 'search_node'];
 
   /**
    * {@inheritdoc}
@@ -106,7 +106,7 @@ class SearchPageTest extends ConfigEntityResourceTestBase {
           ],
           'dependencies' => [
             'module' => [
-              'node',
+              'search_node',
             ],
           ],
           'label' => 'Search of magnetic activity of the Sun',

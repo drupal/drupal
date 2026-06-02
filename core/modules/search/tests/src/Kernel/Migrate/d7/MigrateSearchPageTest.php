@@ -54,8 +54,8 @@ class MigrateSearchPageTest extends MigrateDrupal7TestBase {
    * Tests migration of search status and settings to search page entity.
    */
   public function testSearchPage(): void {
-    $this->enableModules(['node']);
-    $this->installConfig(['search']);
+    $this->enableModules(['node', 'search_node']);
+    $this->installConfig(['search', 'search_node']);
     $this->executeMigration('d7_search_page');
     $configuration = [
       'rankings' => [
@@ -113,8 +113,8 @@ class MigrateSearchPageTest extends MigrateDrupal7TestBase {
    * Tests that a search page will be created if it does not exist.
    */
   public function testUserSearchCreate(): void {
-    $this->enableModules(['node']);
-    $this->installConfig(['search']);
+    $this->enableModules(['node', 'search_node']);
+    $this->installConfig(['search', 'search_node']);
     /** @var \Drupal\search\Entity\SearchPage $search_page */
     $search_page = SearchPage::load('user_search');
     $search_page->delete();

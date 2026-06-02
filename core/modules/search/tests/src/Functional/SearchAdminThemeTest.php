@@ -27,6 +27,7 @@ class SearchAdminThemeTest extends BrowserTestBase {
     'node',
     'search',
     'search_help',
+    'search_node',
     'search_extra_type',
     'user',
   ];
@@ -72,7 +73,7 @@ class SearchAdminThemeTest extends BrowserTestBase {
    *
    * @see \Drupal\node\Plugin\Search\NodeSearch
    * @see \Drupal\search_extra_type\Plugin\Search\SearchExtraTypeSearch
-   * @see \Drupal\user\Plugin\Search\UserSearch
+   * @see \Drupal\user\Plugin\Search\SearchUser
    */
   public function testSearchUsingAdminTheme(): void {
     /** @var \Drupal\search\SearchPageRepositoryInterface $repository */

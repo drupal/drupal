@@ -57,19 +57,6 @@ node.type.*:
       type: boolean
       label: 'Display setting for author and date Submitted by post information'
 
-# Plugin \Drupal\node\Plugin\Search\NodeSearch
-search.plugin.node_search:
-  type: mapping
-  label: 'Content search'
-  mapping:
-    rankings:
-      type: sequence
-      label: 'Content ranking'
-      orderby: key
-      sequence:
-        type: integer
-        label: 'Influence'
-
 action.configuration.node_unpromote_action:
   type: action_configuration_default
   label: 'Demote selected content from front page configuration'

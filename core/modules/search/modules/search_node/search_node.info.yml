@@ -1,0 +1,8 @@
+name: Search node
+type: module
+description: 'Provides a search plugin for searching content.'
+package: Core
+version: VERSION
+dependencies:
+  - drupal:node
+  - drupal:search

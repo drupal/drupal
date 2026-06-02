@@ -80,7 +80,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'entity_form_display' => 13,
       'entity_form_mode' => 1,
       'entity_view_display' => 19,
-      'entity_view_mode' => 11,
+      'entity_view_mode' => 9,
       'field_config' => 30,
       'field_storage_config' => 21,
       'file' => 1,

@@ -61,7 +61,6 @@ class NodePreviewForm extends FormBase {
     // Unset view modes that are not used in the front end.
     unset($view_mode_options['default']);
     unset($view_mode_options['rss']);
-    unset($view_mode_options['search_index']);
 
     $form['uuid'] = [
       '#type' => 'value',

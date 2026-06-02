@@ -79,7 +79,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'entity_form_display' => 7,
       'entity_form_mode' => 1,
       'entity_view_display' => 10,
-      'entity_view_mode' => 11,
+      'entity_view_mode' => 9,
       'field_config' => 10,
       'field_storage_config' => 7,
       'file' => 1,
