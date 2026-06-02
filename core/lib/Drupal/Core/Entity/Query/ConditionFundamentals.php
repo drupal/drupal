@@ -89,4 +89,24 @@ abstract class ConditionFundamentals {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setQuery(QueryInterface $query): static {
+    $this->query = $query;
+    foreach ($this->conditions as $condition) {
+      if ($condition['field'] instanceof ConditionInterface) {
+        $condition['field']->setQuery($query);
+      }
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getQuery(): QueryInterface {
+    return $this->query;
+  }
+
 }

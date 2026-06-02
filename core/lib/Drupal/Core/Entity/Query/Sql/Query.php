@@ -105,15 +105,16 @@ class Query extends QueryBase implements QueryInterface {
         throw new QueryException("No base table for " . $this->entityTypeId . ", invalid query.");
       }
     }
-    $simple_query = TRUE;
-    if ($this->entityType->getDataTable()) {
-      $simple_query = FALSE;
-    }
     $this->sqlQuery = $this->connection->select($base_table, 'base_table', ['conjunction' => $this->conjunction]);
     // Reset the tables structure, as it might have been built for a previous
     // execution of this query.
     $this->tables = NULL;
     $this->sqlQuery->addMetaData('entity_type', $this->entityTypeId);
+    // Store the base table in the query metadata for use by Tables class, so
+    // it knows to avoid joining the base table again. We use the key
+    // 'entity_query_base_table' to avoid confusion with other usages of
+    // 'base_table' metadata, such as in node access queries.
+    $this->sqlQuery->addMetaData('entity_query_base_table', $base_table);
     $id_field = $this->entityType->getKey('id');
     // Add the key field for fetchAllKeyed().
     if (!$revision_field = $this->entityType->getKey('revision')) {
@@ -179,7 +180,7 @@ class Query extends QueryBase implements QueryInterface {
     // This now contains first the table containing entity properties and
     // last the entity base table. They might be the same.
     $this->sqlQuery->addMetaData('all_revisions', $this->allRevisions);
-    $this->sqlQuery->addMetaData('simple_query', $simple_query);
+    $this->sqlQuery->addMetaData('simple_query', TRUE);
     return $this;
   }
 
@@ -302,7 +303,7 @@ class Query extends QueryBase implements QueryInterface {
    */
   protected function getSqlField($field, $langcode) {
     if (!isset($this->tables)) {
-      $this->tables = $this->getTables($this->sqlQuery);
+      $this->tables = $this->getTables();
     }
     $base_property = "base_table.$field";
     if (isset($this->sqlFields[$base_property])) {
@@ -328,26 +329,59 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Implements the magic __clone method.
    *
-   * Reset fields and GROUP BY when cloning.
+   * Reset SQL query and tables collected.
+   * Reset fields and GROUP BY.
+   * Ensure condition points to the new query.
    */
   public function __clone() {
     parent::__clone();
+    $this->sqlQuery = NULL;
+    $this->tables = NULL;
     $this->sqlFields = [];
     $this->sqlGroupBy = [];
+    $this->condition->setQuery($this);
   }
 
   /**
    * Gets the Tables object for this query.
    *
-   * @param \Drupal\Core\Database\Query\SelectInterface $sql_query
-   *   The SQL query object being built.
+   * @param ?\Drupal\Core\Database\Query\SelectInterface $sql_query
+   *   The SQL query object being built. Deprecated, do not use.
    *
    * @return \Drupal\Core\Entity\Query\Sql\TablesInterface
    *   The object that adds tables and fields to the SQL query object.
    */
-  public function getTables(SelectInterface $sql_query) {
-    $class = static::getClass($this->namespaces, 'Tables');
-    return new $class($sql_query);
+  public function getTables(?SelectInterface $sql_query = NULL) {
+    if (isset($sql_query)) {
+      @trigger_error('Passing $sql_query to \Drupal\Core\Entity\Query\Sql\Query::getTables() is deprecated in drupal:11.4.0 and removed in drupal:13.0.0. See https://www.drupal.org/node/3585318', E_USER_DEPRECATED);
+    }
+    return $this->doGetTables($sql_query);
+  }
+
+  /**
+   * Gets the Tables object for this query.
+   *
+   * @param ?\Drupal\Core\Database\Query\SelectInterface $sql_query
+   *   The SQL query object being built. Deprecated, do not use.
+   *
+   * @return \Drupal\Core\Entity\Query\Sql\TablesInterface
+   *   The object that adds tables and fields to the SQL query object.
+   *
+   * @internal
+   */
+  public function doGetTables(?SelectInterface $sql_query = NULL) {
+    if (isset($sql_query)) {
+      if ($sql_query !== $this->sqlQuery) {
+        // Old behavior if a different query is passed in.
+        $class = static::getClass($this->namespaces, 'Tables');
+        return new $class($sql_query);
+      }
+    }
+    if (!$this->tables) {
+      $class = static::getClass($this->namespaces, 'Tables');
+      $this->tables = new $class($this->sqlQuery);
+    }
+    return $this->tables;
   }
 
   /**

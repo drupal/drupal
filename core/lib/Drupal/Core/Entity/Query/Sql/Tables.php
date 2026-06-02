@@ -9,6 +9,7 @@ use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Entity\Sql\TableMappingInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 
 /**
@@ -44,6 +45,16 @@ class Tables implements TablesInterface {
   protected $fieldTables = [];
 
   /**
+   * Next base tables array.
+   *
+   * Key is table this joins to and its column, value is alias. This array
+   * contains one entry per joined table via addNextBaseTable.
+   *
+   * @var array
+   */
+  protected $nextBaseTables = [];
+
+  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -72,6 +83,9 @@ class Tables implements TablesInterface {
     $this->sqlQuery = $sql_query;
     $this->entityTypeManager = \Drupal::entityTypeManager();
     $this->entityFieldManager = \Drupal::service('entity_field.manager');
+    if ($base_table = $sql_query->getMetaData('entity_query_base_table')) {
+      $this->entityTables['base_table.' . $base_table] = 'base_table';
+    }
   }
 
   /**
@@ -88,7 +102,23 @@ class Tables implements TablesInterface {
     // The first two should use the same table but the last one needs to be a
     // new table. So for the first two, the table array index will be 'tags'
     // while the third will be 'node_reference.nid.tags'.
+    // Similarly, for an AND condition group, we ensure separate tables are
+    // used for each condition group if the field is multi-valued. For
+    // example, given the following conditions:
+    // ->andConditionGroup()->condition('multi_value', '1')
+    // ->andConditionGroup()->condition('multi_value', '2')
+    // The two conditions should use different tables to ensure that where
+    // an entity contains both values (higher cardinality fields) the correct
+    // results are returned. Conditions within a group are against a single
+    // value, whereas conditions across groups are against different values.
+    // This is appended to index_prefix only if the field is multi-valued.
     $index_prefix = '';
+    if (str_contains($type, ':')) {
+      [$type, $condition_prefix] = explode(':', $type, 2);
+    }
+    else {
+      $condition_prefix = '';
+    }
     $specifiers = explode('.', $field);
     $base_table = 'base_table';
     $count = count($specifiers) - 1;
@@ -189,6 +219,9 @@ class Tables implements TablesInterface {
             $next_index_prefix = "$relationship_specifier.$column";
           }
         }
+        if ($index_prefix === '' && $field_storage->getCardinality() > 1) {
+          $index_prefix = $condition_prefix;
+        }
         $table = $this->ensureFieldTable($index_prefix, $field_storage, $type, $langcode, $base_table, $entity_id_field, $field_id_field, $delta);
         $sql_column = $table_mapping->getFieldColumnName($field_storage, $column);
       }
@@ -213,7 +246,13 @@ class Tables implements TablesInterface {
           }
         }
         if ($data_table) {
-          $this->sqlQuery->addMetaData('simple_query', FALSE);
+          if (!$langcode) {
+            // Without a langcode, the data table join can return one row per
+            // translation, so the query is no longer simple. A
+            // langcode-restricted join already limits the result to a single
+            // row per entity.
+            $this->sqlQuery->addMetaData('simple_query', FALSE);
+          }
           $entity_tables[$data_table] = $this->getTableMapping($data_table, $entity_type_id);
         }
         if ($revision_table) {
@@ -362,11 +401,11 @@ class Tables implements TablesInterface {
     foreach ($entity_tables as $table => $mapping) {
       if (isset($mapping[$property])) {
         // Ensure a table joined multiple times through different index prefixes
-        // has unique entityTables entries by concatenating the index prefix
-        // and the base table alias. This way, if the same entity table is
-        // joined several times for different entity reference fields, each join
-        // gets a unique alias.
-        $key = $index_prefix . ($base_table === 'base_table' ? $table : $base_table);
+        // has unique entityTables entries by concatenating the index prefix,
+        // the base table alias joined to, and the desired table. This way, if
+        // the same entity table is joined several times for different entity
+        // reference fields, each join gets a unique alias.
+        $key = $index_prefix . $base_table . '.' . $table . ($langcode ? '.' . $langcode : '');
         if (!isset($this->entityTables[$key])) {
           $this->entityTables[$key] = $this->addJoin($type, $table, "[%alias].[$id_field] = [$base_table].[$id_field]", $langcode);
         }
@@ -406,7 +445,8 @@ class Tables implements TablesInterface {
    */
   protected function ensureFieldTable($index_prefix, &$field, $type, $langcode, $base_table, $entity_id_field, $field_id_field, $delta) {
     $field_name = $field->getName();
-    if (!isset($this->fieldTables[$index_prefix . $field_name])) {
+    $key = $index_prefix . $field_name . (is_numeric($delta) ? '.' . $delta : '') . ($langcode ? '.' . $langcode : '');
+    if (!isset($this->fieldTables[$key])) {
       $entity_type_id = $this->sqlQuery->getMetaData('entity_type');
       /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
       $table_mapping = $this->entityTypeManager->getStorage($entity_type_id)->getTableMapping();
@@ -414,9 +454,9 @@ class Tables implements TablesInterface {
       if ($field->getCardinality() != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }
-      $this->fieldTables[$index_prefix . $field_name] = $this->addJoin($type, $table, "[%alias].[$field_id_field] = [$base_table].[$entity_id_field]", $langcode, $delta);
+      $this->fieldTables[$key] = $this->addJoin($type, $table, "[%alias].[$field_id_field] = [$base_table].[$entity_id_field]", $langcode, $delta);
     }
-    return $this->fieldTables[$index_prefix . $field_name];
+    return $this->fieldTables[$key];
   }
 
   /**
@@ -443,10 +483,16 @@ class Tables implements TablesInterface {
       $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
       // For a data table, get the entity language key from the entity type.
       // A dedicated field table has a hard-coded 'langcode' column.
-      $langcode_key = match($table) {
-        $entity_type->getDataTable(), $entity_type->getRevisionDataTable() => $entity_type->getKey('langcode'),
-        default => 'langcode',
-      };
+      if ($entity_type->getDataTable() === $table || $entity_type->getRevisionDataTable() === $table) {
+        $langcode_key = $entity_type->getKey('langcode');
+        if ($langcode === LanguageInterface::LANGCODE_DEFAULT) {
+          $langcode_key = $entity_type->getKey('default_langcode');
+          $langcode = 1;
+        }
+      }
+      else {
+        $langcode_key = 'langcode';
+      }
       $placeholder = ':langcode' . $this->sqlQuery->nextPlaceholder();
       $join_condition .= ' AND [%alias].[' . $langcode_key . '] = ' . $placeholder;
       $arguments[$placeholder] = $langcode;
@@ -505,8 +551,12 @@ class Tables implements TablesInterface {
    *   The alias of the next entity table joined in.
    */
   protected function addNextBaseTable(EntityType $entity_type, $table, $sql_column, FieldStorageDefinitionInterface $field_storage) {
-    $join_condition = '[%alias].[' . $entity_type->getKey('id') . "] = [$table].[$sql_column]";
-    return $this->sqlQuery->leftJoin($entity_type->getBaseTable(), NULL, $join_condition);
+    $key = $table . '.' . $sql_column;
+    if (!isset($this->nextBaseTables[$key])) {
+      $join_condition = '[%alias].[' . $entity_type->getKey('id') . "] = [$table].[$sql_column]";
+      $this->nextBaseTables[$key] = $this->sqlQuery->leftJoin($entity_type->getBaseTable(), NULL, $join_condition);
+    }
+    return $this->nextBaseTables[$key];
   }
 
 }
