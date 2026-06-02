@@ -17,6 +17,8 @@ interface TablesInterface {
    *   \Drupal\Core\Entity\Query\QueryInterface::condition().
    * @param string $type
    *   Join type, can either be INNER or LEFT.
+   *   Can also add an index prefix after ':' to namespace the join, allowing
+   *   a different set of tables to be used for different conditions.
    * @param string $langcode
    *   The language code the field values are to be queried in.
    *
