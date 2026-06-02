@@ -203,7 +203,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $disabled_text = $this->getSession()->getPage()->find('css', '#disabled-display-modes-wrapper')->getText();
     $start = strpos($disabled_text, 'Display mode') ?: 0;
     $pos = $start;
-    $disabled_list = ['RSS', 'Search index', 'Search result'];
+    $disabled_list = ['RSS'];
     foreach ($disabled_list as $name) {
       $new_pos = strpos($disabled_text, $name, $start);
       $this->assertGreaterThan($pos, $new_pos, "View mode '$name' should appear after the previous one in alphabetical order in disabled table. Previous position: $pos, current position: $new_pos");

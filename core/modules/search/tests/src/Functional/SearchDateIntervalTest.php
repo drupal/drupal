@@ -25,6 +25,7 @@ class SearchDateIntervalTest extends BrowserTestBase {
     'search_date_query_alter',
     'node',
     'search',
+    'search_node',
   ];
 
   /**

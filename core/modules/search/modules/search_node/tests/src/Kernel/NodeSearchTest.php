@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\search\Kernel\node;
+namespace Drupal\Tests\search_node\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
@@ -25,6 +25,7 @@ class NodeSearchTest extends KernelTestBase {
   protected static $modules = [
     'node',
     'search',
+    'search_node',
     'user',
     'system',
   ];
