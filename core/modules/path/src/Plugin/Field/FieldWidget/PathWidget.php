@@ -46,7 +46,10 @@ class PathWidget extends WidgetBase {
     ];
     $element['langcode'] = [
       '#type' => 'value',
-      '#value' => $items[$delta]->langcode,
+      // For new aliases, let the save logic fall back to the entity language
+      // unless a form alter or other code explicitly provides an alias
+      // langcode. Existing aliases keep their stored langcode.
+      '#value' => $items[$delta]->pid ? $items[$delta]->langcode : NULL,
     ];
 
     // If the advanced settings tabs-set is available (normally rendered in the
