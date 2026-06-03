@@ -492,17 +492,21 @@ class XssTest extends TestCase {
    * @legacy-covers ::attributes
    */
   #[DataProvider('providerTestAttributes')]
-  public function testAttribute($value, $expected, $message, $allowed_tags = NULL): void {
+  public function testAttribute(string $value, string $expected_non_normalized, string $expected_normalized, string $message, ?array $allowed_tags = NULL): void {
     $value = Xss::filter($value, $allowed_tags);
-    $this->assertEquals($expected, $value, $message);
+    $normalized_value = Html::normalize($value);
+
+    $this->assertSame($expected_normalized, $normalized_value);
+    $this->assertSame($expected_non_normalized, $value);
   }
 
   /**
-   * Data provider for testFilterXssAdminNotNormalized().
+   * Data provider for testAttribute().
    */
   public static function providerTestAttributes(): array {
-    return [
+    $scenarios = [
       [
+        '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt" class="md:block">',
         '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt" class="md:block">',
         '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt" class="md:block">',
         'Image tag with alt and title attribute',
@@ -511,10 +515,12 @@ class XssTest extends TestCase {
       [
         '<a href="https://www.drupal.org/" rel="dc:publisher">Drupal</a>',
         '<a href="https://www.drupal.org/" rel="dc:publisher">Drupal</a>',
+        '<a href="https://www.drupal.org/" rel="dc:publisher">Drupal</a>',
         'Link tag with rel attribute',
         ['a'],
       ],
       [
+        '<span property="dc:subject">Drupal 8: The best release ever.</span>',
         '<span property="dc:subject">Drupal 8: The best release ever.</span>',
         '<span property="dc:subject">Drupal 8: The best release ever.</span>',
         'Span tag with property attribute',
@@ -523,10 +529,12 @@ class XssTest extends TestCase {
       [
         '<img src="http://example.com/foo.jpg" data-caption="Drupal 8: The best release ever.">',
         '<img src="http://example.com/foo.jpg" data-caption="Drupal 8: The best release ever.">',
+        '<img src="http://example.com/foo.jpg" data-caption="Drupal 8: The best release ever.">',
         'Image tag with data attribute',
         ['img'],
       ],
       [
+        '<a data-a2a-url="foo"></a>',
         '<a data-a2a-url="foo"></a>',
         '<a data-a2a-url="foo"></a>',
         'Link tag with numeric data attribute',
@@ -535,22 +543,26 @@ class XssTest extends TestCase {
       [
         '<img src= onmouseover="script(\'alert\');">',
         '<img>',
+        '<img>',
         'Image tag with malformed SRC',
         ['img'],
       ],
       [
         'Body"></iframe><img/src="x"/onerror="alert(document.domain)"/><"',
         'Body"&gt;<img />&lt;"',
+        'Body"&gt;<img>&lt;"',
         'Image tag with malformed SRC',
         ['img'],
       ],
       [
         '<img/src="x"/onerror="alert(document.domain)"/>',
         '<img />',
+        '<img>',
         'Image tag with malformed SRC',
         ['img'],
       ],
       [
+        '<del datetime="1789-08-22T12:30:00.1-04:00">deleted text</del>',
         '<del datetime="1789-08-22T12:30:00.1-04:00">deleted text</del>',
         '<del datetime="1789-08-22T12:30:00.1-04:00">deleted text</del>',
         'Del with datetime attribute',
@@ -559,16 +571,198 @@ class XssTest extends TestCase {
       [
         '<ins datetime="1986-01-28 11:38:00.010">inserted text</ins>',
         '<ins datetime="1986-01-28 11:38:00.010">inserted text</ins>',
+        '<ins datetime="1986-01-28 11:38:00.010">inserted text</ins>',
         'Ins with datetime attribute',
         ['ins'],
       ],
       [
         '<time datetime="1978-11-19T05:00:00Z">#DBD</time>',
         '<time datetime="1978-11-19T05:00:00Z">#DBD</time>',
+        '<time datetime="1978-11-19T05:00:00Z">#DBD</time>',
         'Time with datetime attribute',
         ['time'],
       ],
+      [
+        '<a -dummy=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a>I\'m magic, click me!</a>',
+        '<a>I\'m magic, click me!</a>',
+        'Link tag with an attribute starting with -',
+        ['a'],
+      ],
+      [
+        '<a class="good" -dummy=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a class="good">I\'m magic, click me!</a>',
+        '<a class="good">I\'m magic, click me!</a>',
+        'Link tag with an attribute starting with - and a valid attribute before',
+        ['a'],
+      ],
+      [
+        '<a -dummy=\': href=javascript:alert("oh\x20no")//\' class="good">I\'m magic, click me!</a>',
+        '<a class="good">I\'m magic, click me!</a>',
+        '<a class="good">I\'m magic, click me!</a>',
+        'Link tag with an attribute starting with - and a valid attribute afterwards',
+        ['a'],
+      ],
+      [
+        '<a _dummy=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a dummy=\': href=javascript:alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a dummy=": href=javascript:alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with a bogus attribute starting with _',
+        ['a'],
+      ],
+      [
+        '<a _href=\'javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a href=\'alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a href="alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with an attribute starting with _',
+        ['a'],
+      ],
+      [
+        '<a class="good" _dummy=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a class="good" dummy=\': href=javascript:alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a class="good" dummy=": href=javascript:alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with an attribute starting with _ and a valid attribute before',
+        ['a'],
+      ],
+      [
+        '<a _dummy=\': href=javascript:alert("oh\x20no")//\' class="good">I\'m magic, click me!</a>',
+        '<a dummy=\': href=javascript:alert(&quot;oh\x20no&quot;)//\' class="good">I\'m magic, click me!</a>',
+        '<a dummy=": href=javascript:alert(&quot;oh\x20no&quot;)//" class="good">I\'m magic, click me!</a>',
+        'Link tag with an attribute starting with _ and a valid attribute afterwards',
+        ['a'],
+      ],
+      [
+        '<a :dummy=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a dummy=\': href=javascript:alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a dummy=": href=javascript:alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with an attribute starting with :',
+        ['a'],
+      ],
+      [
+        '<a class="good" :dummy=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a class="good" dummy=\': href=javascript:alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a class="good" dummy=": href=javascript:alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with an attribute starting with : and a valid attribute before',
+        ['a'],
+      ],
+      [
+        '<a :dummy=\': href=javascript:alert("oh\x20no")//\' class="good">I\'m magic, click me!</a>',
+        '<a dummy=\': href=javascript:alert(&quot;oh\x20no&quot;)//\' class="good">I\'m magic, click me!</a>',
+        '<a dummy=": href=javascript:alert(&quot;oh\x20no&quot;)//" class="good">I\'m magic, click me!</a>',
+        'Link tag with an attribute starting with : and a valid attribute afterwards',
+        ['a'],
+      ],
+      [
+        '<a .dummy=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a dummy=\': href=javascript:alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a dummy=": href=javascript:alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with an attribute starting with .',
+        ['a'],
+      ],
+      [
+        '<a class="good" .dummy=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a class="good" dummy=\': href=javascript:alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a class="good" dummy=": href=javascript:alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with an attribute starting with . and a valid attribute before',
+        ['a'],
+      ],
+      [
+        '<a .dummy=\': href=javascript:alert("oh\x20no")//\' class="good">I\'m magic, click me!</a>',
+        '<a dummy=\': href=javascript:alert(&quot;oh\x20no&quot;)//\' class="good">I\'m magic, click me!</a>',
+        '<a dummy=": href=javascript:alert(&quot;oh\x20no&quot;)//" class="good">I\'m magic, click me!</a>',
+        'Link tag with an attribute starting with . and a valid attribute afterwards',
+        ['a'],
+      ],
     ];
+    for ($attr_name_length = 96; $attr_name_length < 103; $attr_name_length++) {
+      $attr_name = str_repeat('z', $attr_name_length);
+
+      $scenarios[] = [
+        '<a ' . $attr_name . '-x=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a>I\'m magic, click me!</a>',
+        '<a>I\'m magic, click me!</a>',
+        'Link tag with a long attribute containing -',
+        ['a'],
+      ];
+      $scenarios[] = [
+        '<a class="good" ' . $attr_name . '-x=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a class="good">I\'m magic, click me!</a>',
+        '<a class="good">I\'m magic, click me!</a>',
+        'Link tag with a long attribute containing - and a valid attribute before',
+        ['a'],
+      ];
+      $scenarios[] = [
+        '<a ' . $attr_name . '-x=\': href=javascript:alert("oh\x20no")//\' class="good">I\'m magic, click me!</a>',
+        '<a class="good">I\'m magic, click me!</a>',
+        '<a class="good">I\'m magic, click me!</a>',
+        'Link tag with a long attribute containing - and a valid attribute afterwards',
+        ['a'],
+      ];
+      $scenarios[] = [
+        '<a ' . $attr_name . '_x=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a x=\': href=javascript:alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a x=": href=javascript:alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with a long attribute containing _',
+        ['a'],
+      ];
+      $scenarios[] = [
+        '<a class="good" ' . $attr_name . '_x=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a class="good" x=\': href=javascript:alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a class="good" x=": href=javascript:alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with a long attribute containing _ and a valid attribute before',
+        ['a'],
+      ];
+      $scenarios[] = [
+        '<a ' . $attr_name . '_x=\': href=javascript:alert("oh\x20no")//\' class="good">I\'m magic, click me!</a>',
+        '<a x=\': href=javascript:alert(&quot;oh\x20no&quot;)//\' class="good">I\'m magic, click me!</a>',
+        '<a x=": href=javascript:alert(&quot;oh\x20no&quot;)//" class="good">I\'m magic, click me!</a>',
+        'Link tag with a long attribute containing _ and a valid attribute afterwards',
+        ['a'],
+      ];
+      $scenarios[] = [
+        '<a ' . $attr_name . ':x=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a x=\': href=javascript:alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a x=": href=javascript:alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with a long attribute containing :',
+        ['a'],
+      ];
+      $scenarios[] = [
+        '<a class="good" ' . $attr_name . ':x=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a class="good" x=\': href=javascript:alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a class="good" x=": href=javascript:alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with a long attribute containing : and a valid attribute before',
+        ['a'],
+      ];
+      $scenarios[] = [
+        '<a ' . $attr_name . ':x=\': href=javascript:alert("oh\x20no")//\' class="good">I\'m magic, click me!</a>',
+        '<a x=\': href=javascript:alert(&quot;oh\x20no&quot;)//\' class="good">I\'m magic, click me!</a>',
+        '<a x=": href=javascript:alert(&quot;oh\x20no&quot;)//" class="good">I\'m magic, click me!</a>',
+        'Link tag with a long attribute containing : and a valid attribute afterwards',
+        ['a'],
+      ];
+      $scenarios[] = [
+        '<a ' . $attr_name . '.x=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a x=\': href=javascript:alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a x=": href=javascript:alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with a long attribute containing .',
+        ['a'],
+      ];
+      $scenarios[] = [
+        '<a class="good" ' . $attr_name . '.x=\': href=javascript:alert("oh\x20no")//\'>I\'m magic, click me!</a>',
+        '<a class="good" x=\': href=javascript:alert(&quot;oh\x20no&quot;)//\'>I\'m magic, click me!</a>',
+        '<a class="good" x=": href=javascript:alert(&quot;oh\x20no&quot;)//">I\'m magic, click me!</a>',
+        'Link tag with a long attribute containing . and a valid attribute before',
+        ['a'],
+      ];
+      $scenarios[] = [
+        '<a ' . $attr_name . '.x=\': href=javascript:alert("oh\x20no")//\' class="good">I\'m magic, click me!</a>',
+        '<a x=\': href=javascript:alert(&quot;oh\x20no&quot;)//\' class="good">I\'m magic, click me!</a>',
+        '<a x=": href=javascript:alert(&quot;oh\x20no&quot;)//" class="good">I\'m magic, click me!</a>',
+        'Link tag with a long attribute containing . and a valid attribute afterwards',
+        ['a'],
+      ];
+    }
+    return $scenarios;
   }
 
   /**
