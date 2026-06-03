@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Asset;
 
-use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Component\FileCache\FileCacheInterface;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
@@ -12,11 +10,11 @@ use Drupal\Core\Asset\Exception\InvalidLibraryFileException;
 use Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException;
 use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\Theme\ComponentPluginManager;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\Core\Utility\YamlCacheCollector;
 use Drupal\Core\Plugin\Component;
 
 /**
@@ -24,89 +22,20 @@ use Drupal\Core\Plugin\Component;
  */
 class LibraryDiscoveryParser {
 
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
-   * The stream wrapper manager.
-   *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
-   */
-  protected $streamWrapperManager;
-
-  /**
-   * The libraries directory file finder.
-   *
-   * @var \Drupal\Core\Asset\LibrariesDirectoryFileFinder
-   */
-  protected $librariesDirectoryFileFinder;
-
-  /**
-   * The component plugin manager.
-   *
-   * @var \Drupal\Core\Theme\ComponentPluginManager
-   */
-  protected $componentPluginManager;
-
-  /**
-   * The extension path resolver.
-   *
-   * @var \Drupal\Core\Extension\ExtensionPathResolver
-   */
-  protected $extensionPathResolver;
-
-  /**
-   * The file cache.
-   *
-   * @var \Drupal\Component\FileCache\FileCacheInterface
-   */
-  protected FileCacheInterface $fileCache;
-
-  /**
-   * Constructs a new LibraryDiscoveryParser instance.
-   *
-   * @param string $root
-   *   The app root.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
-   *   The theme manager.
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
-   *   The stream wrapper manager.
-   * @param \Drupal\Core\Asset\LibrariesDirectoryFileFinder $libraries_directory_file_finder
-   *   The libraries directory file finder.
-   * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
-   *   The extension path resolver.
-   * @param \Drupal\Core\Theme\ComponentPluginManager $component_plugin_manager
-   *   The component plugin manager.
-   */
-  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder, ExtensionPathResolver $extension_path_resolver, ComponentPluginManager $component_plugin_manager) {
-    $this->root = $root;
-    $this->moduleHandler = $module_handler;
-    $this->themeManager = $theme_manager;
-    $this->streamWrapperManager = $stream_wrapper_manager;
-    $this->librariesDirectoryFileFinder = $libraries_directory_file_finder;
-    $this->extensionPathResolver = $extension_path_resolver;
-    $this->fileCache = FileCacheFactory::get('library_parser');
-    $this->componentPluginManager = $component_plugin_manager;
+  public function __construct(
+    protected string $appRoot,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected ThemeManagerInterface $themeManager,
+    protected StreamWrapperManagerInterface $streamWrapperManager,
+    protected LibrariesDirectoryFileFinder $librariesDirectoryFileFinder,
+    protected ExtensionPathResolver $extensionPathResolver,
+    protected ComponentPluginManager $componentPluginManager,
+    protected ?YamlCacheCollector $yamlCacheCollector = NULL,
+  ) {
+    if (!isset($yamlCacheCollector)) {
+      $this->yamlCacheCollector = \Drupal::service('libraries.parsing_cache');
+      @trigger_error('Calling ' . __METHOD__ . '() without the $yamlCacheCollector argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3486503', E_USER_DEPRECATED);
+    }
   }
 
   /**
@@ -386,21 +315,16 @@ class LibraryDiscoveryParser {
     $libraries = [];
 
     $library_file = $path . '/' . $extension . '.libraries.yml';
-    $library_path = $this->root . '/' . $library_file;
+    $library_path = $this->appRoot . '/' . $library_file;
 
-    if (file_exists($library_path)) {
-      $libraries = $this->fileCache->get($library_path);
-      if ($libraries === NULL) {
-        try {
-          $libraries = Yaml::decode(file_get_contents($this->root . '/' . $library_file)) ?? [];
-          $this->fileCache->set($library_path, $libraries);
-        }
-        catch (InvalidDataTypeException $e) {
-          // Rethrow a more helpful exception to provide context.
-          throw new InvalidLibraryFileException(sprintf('Invalid library definition in %s: %s', $library_file, $e->getMessage()), 0, $e);
-        }
-      }
+    try {
+      $libraries = $this->yamlCacheCollector->get($library_path);
     }
+    catch (InvalidDataTypeException $e) {
+      // Rethrow a more helpful exception to provide context.
+      throw new InvalidLibraryFileException(sprintf('Invalid library definition in %s: %s', $library_file, $e->getMessage()), 0, $e);
+    }
+
     // Core also provides additional libraries that don't come from the YAML,
     // file nor the hook_library_info_build. They come from single-directory
     // component definitions.

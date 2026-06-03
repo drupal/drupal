@@ -367,6 +367,13 @@ services:
       - { name: cache.bin.memory, default_backend: cache.backend.memory.memory }
     factory: ['@cache_factory', 'get']
     arguments: [memory]
+  cache.file_parsing:
+    # The cache.bin service tag is intentionally omitted because items in this
+    # bin are designed to persist between cache clears. Invalidation happens via
+    # filemtime checks instead.
+    class: Drupal\Core\Cache\CacheBackendInterface
+    factory: ['@cache_factory', 'get']
+    arguments: [file_parsing]
   cache_prewarmer:
     class: Drupal\Core\PreWarm\CachePreWarmer
     arguments: ['@class_resolver']
@@ -1214,9 +1221,12 @@ services:
   router.builder.attributes:
     class: Drupal\Core\Routing\AttributeRouteDiscovery
     arguments: ['@container.namespaces']
+  router.yaml_cache_collector:
+    class: Drupal\Core\Utility\YamlCacheCollector
+    arguments: ['router.parsing_cache', '@cache.file_parsing', '@lock', '@datetime.time']
   router.builder.yaml:
     class: Drupal\Core\Routing\YamlRouteDiscovery
-    arguments: ['@module_handler', '@controller_resolver']
+    arguments: ['@module_handler', '@controller_resolver', '@router.yaml_cache_collector']
   menu.rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\MenuRouterRebuildSubscriber
     arguments: ['@lock', '@plugin.manager.menu.link', '@database', '@database.replica_kill_switch', '@logger.channel.menu']
@@ -1805,8 +1815,13 @@ services:
     deprecated: The "%service_id%" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use LibraryDiscovery instead. See https://www.drupal.org/node/3462970
   library.discovery.parser:
     class: Drupal\Core\Asset\LibraryDiscoveryParser
-    arguments: ['%app.root%', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder', '@extension.path.resolver', '@plugin.manager.sdc']
+    arguments: ['%app.root%', '@module_handler', '@theme.manager', '@stream_wrapper_manager', '@library.libraries_directory_file_finder', '@extension.path.resolver', '@plugin.manager.sdc', '@library.parsing_cache']
   Drupal\Core\Asset\LibraryDiscoveryParser: '@library.discovery.parser'
+  library.parsing_cache:
+    class: Drupal\Core\Utility\YamlCacheCollector
+    arguments: ['library.parsing_cache', '@cache.file_parsing', '@lock', '@datetime.time']
+    tags:
+      - { name: needs_destruction }
   library.libraries_directory_file_finder:
     class: Drupal\Core\Asset\LibrariesDirectoryFileFinder
     arguments: ['%app.root%', '%site.path%', '@extension.list.profile', '%install_profile%']
