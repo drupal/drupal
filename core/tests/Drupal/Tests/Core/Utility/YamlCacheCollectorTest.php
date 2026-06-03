@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Core\Cache;
+namespace Drupal\Tests\Core\Utility;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Datetime\Time;
