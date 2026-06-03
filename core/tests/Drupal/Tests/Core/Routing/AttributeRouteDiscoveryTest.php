@@ -106,6 +106,15 @@ class AttributeRouteDiscoveryTest extends UnitTestCase {
   }
 
   /**
+   * Tests that invalid controller classes do not break route discovery.
+   */
+  public function testInvalidClasses(): void {
+    $this->assertNotNull($this->routeCollection->get('router_test.method_attribute'));
+    $this->assertNotNull($this->routeCollection->get('router_test.class_invoke'));
+    $this->assertNull($this->routeCollection->get('router_test.missing_dependency'));
+  }
+
+  /**
    * Tests that a method inherits class-level globals.
    */
   public function testClassGlobalsInheritance(): void {
