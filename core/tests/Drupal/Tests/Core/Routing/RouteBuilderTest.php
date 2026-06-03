@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Routing;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Access\CheckProviderInterface;
+use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Discovery\YamlDiscovery;
@@ -16,6 +18,7 @@ use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\Routing\YamlRouteDiscovery;
+use Drupal\Core\Utility\YamlCacheCollector;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -110,7 +113,10 @@ class RouteBuilderTest extends UnitTestCase implements EventSubscriberInterface 
       ->getMock();
     $this->checkProvider = $this->createStub(CheckProviderInterface::class);
 
-    $yamlRouteDiscovery = new TestYamlRouteDiscovery($this->moduleHandler, $this->controllerResolver);
+    $time = new Time();
+    $cache_backend = new MemoryBackend($time);
+    $yamlCacheCollector = new YamlCacheCollector('route_discovery', $cache_backend, $this->lock, $time);
+    $yamlRouteDiscovery = new TestYamlRouteDiscovery($this->moduleHandler, $this->controllerResolver, $yamlCacheCollector);
     $yamlRouteDiscovery->setYamlDiscovery($this->yamlDiscovery);
 
     $this->dispatcher->addSubscriber($this);

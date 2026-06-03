@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Asset;
 
-use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Asset\Exception\IncompleteLibraryDefinitionException;
 use Drupal\Core\Asset\Exception\InvalidLibraryFileException;
 use Drupal\Core\Asset\Exception\LibraryDefinitionMissingLicenseException;
 use Drupal\Core\Asset\LibrariesDirectoryFileFinder;
 use Drupal\Core\Asset\LibraryDiscoveryParser;
+use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\ComponentPluginManager;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\Core\Utility\YamlCacheCollector;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -89,6 +92,11 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
   protected ComponentPluginManager&Stub $componentPluginManager;
 
   /**
+   * The YAML cache collector.
+   */
+  protected YamlCacheCollector $yamlCacheCollector;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -107,7 +115,9 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->librariesDirectoryFileFinder = $this->createStub(LibrariesDirectoryFileFinder::class);
     $this->extensionPathResolver = $this->createMock(ExtensionPathResolver::class);
     $this->componentPluginManager = $this->createStub(ComponentPluginManager::class);
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager);
+
+    $this->yamlCacheCollector = new YamlCacheCollector('library.yaml_parser', new MemoryCache(new Time()), new NullLockBackend(), new Time());
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager, $this->yamlCacheCollector);
   }
 
   /**
@@ -133,12 +143,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    */
   #[RunInSeparateProcess]
   public function testBuildByExtensionSimple(): void {
-    FileCacheFactory::setPrefix('testing');
-    // Use the default file cache configuration.
-    FileCacheFactory::setConfiguration([
-      'library_parser' => [],
-    ]);
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager, $this->yamlCacheCollector);
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with('example_module')
@@ -163,7 +168,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     $this->assertEquals(\Drupal::VERSION, $library['version']);
 
     // Ensure that the expected FileCache entry exists.
-    $cache = FileCacheFactory::get('library_parser')->get($path . '/example_module.libraries.yml');
+    $cache = $this->yamlCacheCollector->get($path . '/example_module.libraries.yml');
     $this->assertArrayHasKey('example', $cache);
   }
 
@@ -666,7 +671,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->willReturn($path);
     $this->componentPluginManager = $this->createStub(ComponentPluginManager::class);
 
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager, $this->yamlCacheCollector);
 
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
@@ -722,7 +727,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->with('module', 'deprecated')
       ->willReturn($path);
     $this->componentPluginManager = $this->createStub(ComponentPluginManager::class);
-    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager);
+    $this->libraryDiscoveryParser = new TestLibraryDiscoveryParser($this->root, $this->moduleHandler, $this->themeManager, $this->streamWrapperManager, $this->librariesDirectoryFileFinder, $this->extensionPathResolver, $this->componentPluginManager, $this->yamlCacheCollector);
 
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
