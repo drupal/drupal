@@ -311,6 +311,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    */
   public function destruct() {
     $this->updateCache();
+    $this->reset();
   }
 
   /**
