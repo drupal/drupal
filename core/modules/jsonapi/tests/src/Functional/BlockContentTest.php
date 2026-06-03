@@ -219,7 +219,7 @@ class BlockContentTest extends ResourceTestBase {
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
     return match ($method) {
-      'GET' => "The 'access block library' permission is required.",
+      'GET' => "The following permissions are required: 'access block library' OR 'view unpublished block content'.",
       'PATCH' => "The 'edit any basic block content' permission is required.",
       'POST' => "The following permissions are required: 'create basic block content' OR 'administer block content'.",
       'DELETE' => "The 'delete any basic block content' permission is required.",
