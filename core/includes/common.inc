@@ -445,9 +445,6 @@ function drupal_flush_all_caches($kernel = NULL): void {
   // Rebuild all information based on new module data.
   \Drupal::moduleHandler()->invokeAll('rebuild');
 
-  // Clear all plugin caches.
-  \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
-
   // Rebuild the menu router based on all rebuilt data.
   // Important: This rebuild must happen last, so the menu router is guaranteed
   // to be based on up to date information.
