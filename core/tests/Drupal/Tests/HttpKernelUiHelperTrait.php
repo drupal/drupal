@@ -45,9 +45,9 @@ trait HttpKernelUiHelperTrait {
    *
    * @param \Drupal\Core\Url|string $path
    *   The Drupal path to load into Mink controlled browser, as a string or a
-   *   Url object. (Note that the Symfony browser's functionality of paths
-   *   relative to the previous request is not available, because an initial '/'
-   *   is assumed if not present.)
+   *   Url object. Relative paths (without a leading '/') are made absolute by
+   *   prepending '/'. Query strings starting with '?' are resolved relative to
+   *   the current page URL.
    * @param array $options
    *   (optional) Options to be forwarded to the URL generator. The 'absolute'
    *   option is not supported.
@@ -67,7 +67,10 @@ trait HttpKernelUiHelperTrait {
   protected function drupalGet($path, array $options = [], array $headers = []): string {
     $session = $this->getSession();
 
-    if (is_string($path) && !str_starts_with($path, '/')) {
+    // Ensure relative paths are made absolute by prepending '/'. Query strings
+    // (starting with '?') are left as-is so they resolve relative to the
+    // current page URL.
+    if (is_string($path) && !str_starts_with($path, '?') && !str_starts_with($path, '/')) {
       $path = '/' . $path;
     }
 
