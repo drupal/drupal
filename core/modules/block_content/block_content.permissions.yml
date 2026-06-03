@@ -14,3 +14,7 @@ administer block content:
   title: 'Administer block content'
   description: 'View, edit and delete all block content regardless of permission restrictions.'
   restrict access: TRUE
+
+view unpublished block content:
+  title: 'View unpublished block content'
+  description: 'Allows viewing unpublished block content'

@@ -61,10 +61,15 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
     $access = AccessResult::allowedIfHasPermissions($account, ['administer block content']);
     if (!$access->isAllowed()) {
       $access = match ($operation) {
-        // Allow view and update access to user with the 'edit any (type) block
-        // content' permission or the 'administer block content' permission.
+        // Allow view access if the block is published, or the user has either
+        // "access block library" or "view unpublished block content"
+        // permissions.
         'view' => AccessResult::allowedIf($entity->isPublished())
-          ->orIf(AccessResult::allowedIfHasPermission($account, 'access block library')),
+          ->orIf(AccessResult::allowedIfHasPermissions($account, [
+            'access block library',
+            'view unpublished block content',
+          ], 'OR'))
+          ->addCacheableDependency($entity),
         'update' => AccessResult::allowedIfHasPermission($account, 'edit any ' . $bundle . ' block content'),
         'delete' => AccessResult::allowedIfHasPermission($account, 'delete any ' . $bundle . ' block content'),
         // Revisions.
