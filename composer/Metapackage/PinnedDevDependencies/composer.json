@@ -8,7 +8,7 @@
         "webflo/drupal-core-require-dev": "*"
     },
     "require": {
-        "drupal/core": "11.4.x-dev",
+        "drupal/core": "11.4.0-beta1",
         "behat/mink": "v1.13.0",
         "behat/mink-browserkit-driver": "v2.3.0",
         "brick/math": "0.14.8",
@@ -96,7 +96,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "11.4.x-dev"
+            "dev-main": "11.4.0-beta1"
         }
     }
 }
