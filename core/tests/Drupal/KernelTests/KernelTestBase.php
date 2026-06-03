@@ -252,12 +252,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * Sets up the filesystem, so things like the file directory.
    */
   protected function setUpFilesystem(): void {
-    $test_db = new TestDatabase($this->databasePrefix);
-    $test_site_path = $test_db->getTestSitePath();
-
     $this->vfsRoot = vfsStream::setup('root');
-    $this->vfsRoot->addChild(vfsStream::newDirectory($test_site_path));
-    $this->siteDirectory = vfsStream::url('root/' . $test_site_path);
+    $this->vfsRoot->addChild(vfsStream::newDirectory($this->siteDirectory));
+    $this->siteDirectory = vfsStream::url('root/' . $this->siteDirectory);
 
     mkdir($this->siteDirectory . '/files', 0775);
     mkdir($this->siteDirectory . '/files/config/sync', 0775, TRUE);
