@@ -46,6 +46,11 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
         );
         foreach ($iterator as $fileinfo) {
           if ($fileinfo->getExtension() == 'php') {
+            // Skip files that do not contain a Route attribute.
+            $contents = file_get_contents($fileinfo->getPathname());
+            if (!str_contains($contents, '#[Route') && !str_contains($contents, 'Routing\\Attribute\\Route')) {
+              continue;
+            }
             $subPath = $iterator->getSubIterator()->getSubPath();
             $subPath = $subPath ? str_replace(DIRECTORY_SEPARATOR, '\\', $subPath) . '\\' : '';
             $class = $namespace . '\\' . $subPath . $fileinfo->getBasename('.php');
@@ -68,11 +73,16 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
   private function createRouteCollection(string $className): RouteCollection {
     $collection = new RouteCollection();
 
-    if (!class_exists($className)) {
-      // In Symfony code this triggers an exception. It is removed here because
-      // Drupal already has traits, interfaces and other things in this folder.
-      // Alternatively, we could remove this if clause and then check what the
-      // resulting reflection object is.
+    try {
+      if (!class_exists($className)) {
+        // In Symfony code this triggers an exception. It is removed here
+        // because Drupal already has traits, interfaces and other things in
+        // this folder. Alternatively, we could remove this if clause and then
+        // check what the resulting reflection object is.
+        return $collection;
+      }
+    }
+    catch (\Error) {
       return $collection;
     }
     $class = new \ReflectionClass($className);
