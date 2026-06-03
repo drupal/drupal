@@ -8,7 +8,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "11.4.0-beta1"
+            "dev-main": "11.4.x-dev"
         }
     },
     "require": {

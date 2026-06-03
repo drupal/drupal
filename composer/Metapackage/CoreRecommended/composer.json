@@ -7,7 +7,7 @@
         "webflo/drupal-core-strict": "*"
     },
     "require": {
-        "drupal/core": "11.4.0-beta1",
+        "drupal/core": "11.4.x-dev",
         "asm89/stack-cors": "~v2.4.0",
         "composer/semver": "~3.4.4",
         "doctrine/lexer": "~3.0.1",
@@ -69,7 +69,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "11.4.0-beta1"
+            "dev-main": "11.4.x-dev"
         }
     }
 }
