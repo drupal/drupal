@@ -3,10 +3,7 @@
 
 /**
  * @file
- * Drupal hash script - to generate a hash from a plaintext password
- *
- * @param string[] ...$password
- *  Plain-text passwords in quotes (or with spaces backslash escaped).
+ * Drupal hash script - to generate a hash from a plaintext password.
  *
  * @todo Port to a console command. https://www.drupal.org/node/2289409
  */

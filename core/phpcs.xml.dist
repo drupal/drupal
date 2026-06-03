@@ -2,6 +2,8 @@
 <!-- cspell:ignore Openercase -->
 <ruleset name="drupal_core">
   <arg name="extensions" value="engine,inc,install,module,php,profile,test,theme,yml"/>
+  <!-- Scan files that are explicitly listed via <file> elements as PHP. -->
+  <arg name="filter" value="core/tests/phpcs/PhpScriptFilter.php"/>
   <description>Default PHP CodeSniffer configuration for Drupal core.</description>
 
   <!--Exclude folders used by common frontend tools. These folders match the file_scan_ignore_directories setting in default.settings.php-->
@@ -22,6 +24,7 @@
 
   <file>.</file>
   <file>../composer</file>
+  <file>scripts/drupal</file>
   <file>scripts/password-hash.sh</file>
   <file>scripts/rebuild_token_calculator.sh</file>
   <file>scripts/run-tests.sh</file>
@@ -113,6 +116,9 @@
   <rule ref="Drupal.NamingConventions.ValidClassName"/>
   <rule ref="Drupal.NamingConventions.ValidEnumCase"/>
   <rule ref="Drupal.NamingConventions.ValidGlobal"/>
+  <rule ref="Drupal.NamingConventions.ValidGlobal.GlobalUnderScore">
+    <exclude-pattern>scripts/run-tests.sh</exclude-pattern>
+  </rule>
   <rule ref="Drupal.NamingConventions.ValidVariableName"/>
   <rule ref="Drupal.NamingConventions.ValidVariableName.LowerCamelName"/>
   <rule ref="Drupal.Scope.MethodScope"/>

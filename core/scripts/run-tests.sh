@@ -741,7 +741,7 @@ function simpletest_script_get_test_list() {
       // The '#slow' group is a special case, because it may not be selected in
       // the argument, but it must be present if any test class indicates it in
       // metadata, for the work allocator to prioritize its execution.
-      foreach ($groupedTestClassInfoList as $groupName => $testClassInfoList) {
+      foreach ($groupedTestClassInfoList as $testClassInfoList) {
         foreach ($testClassInfoList as $testClass => $testClassInfo) {
           if (in_array('#slow', $testClassInfo['groups'])) {
             $groupedTestClassInfoList['#slow'][$testClass] = $testClassInfo;

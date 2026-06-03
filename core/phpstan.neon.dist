@@ -53,6 +53,8 @@ parameters:
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/custom_annotation/ExtendingNonInstalledClass.php
     - modules/system/tests/modules/router_test_directory/src/Controller/TestInvalidController.php
     - modules/system/tests/modules/router_test_directory/src/Controller/TestMissingDependency.php
+    # The following class is only for PHPCS.
+    - tests/phpcs/PhpScriptFilter.php
 
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
