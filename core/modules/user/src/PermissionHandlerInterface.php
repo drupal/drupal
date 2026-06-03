@@ -4,13 +4,23 @@ namespace Drupal\user;
 
 /**
  * Defines an interface to list available permissions.
+ *
+ * @phpstan-type PermissionInfo array {
+ *   title: string,
+ *   description?: string|\Stringable,
+ *   "restrict access"?: bool,
+ *   warning?: string|\Stringable,
+ *   dependencies?: array,
+ *   provider: string,
+ * }
+ * @phpstan-type PermissionInfoList array<string, PermissionInfo>
  */
 interface PermissionHandlerInterface {
 
   /**
    * Gets all available permissions.
    *
-   * @return array
+   * @return PermissionInfoList
    *   An array whose keys are permission names and whose corresponding values
    *   are arrays containing the following key-value pairs:
    *   - title: The human-readable name of the permission, to be shown on the
