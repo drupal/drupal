@@ -637,7 +637,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // references to the same base tables.
     $this->createEntityReferenceField('node', 'page', 'field_test_node', 'Test node reference', 'node');
 
-    $this->switchToWorkspace('live');
     $node_1 = $this->createNode([
       'title' => 'live node 1',
     ]);
@@ -663,6 +662,9 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $node_2->save();
 
     $entity_test->name->value = 'stage entity_test_mulrevpub';
+    // Note: this value is essentially lost because the data for
+    // non-revisionable fields is not updated anywhere when creating pending
+    // revisions.
     $entity_test->non_rev_field->value = 'stage non-revisionable value';
     $entity_test->save();
 
@@ -692,15 +694,11 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       ->condition('field_test_node.entity.uuid', $node_1->uuid());
 
     // Add conditions for a reference to a different entity type.
-    // @todo Re-enable the two conditions below when we find a way to not join
-    //   the workspace_association table for every duplicate entity base table
-    //   join.
-    // @see https://www.drupal.org/project/drupal/issues/2983639
     $query
       // Check a condition on the revision data table.
-      // ->condition('field_test_entity.entity.name', 'stage entity_test_mulrevpub')
+      ->condition('field_test_entity.entity.name', 'stage entity_test_mulrevpub')
       // Check a condition on the data table.
-      // ->condition('field_test_entity.entity.non_rev_field', 'stage non-revisionable value')
+      ->condition('field_test_entity.entity.non_rev_field', 'live non-revisionable value')
       // Check a condition on the base table.
       ->condition('field_test_entity.entity.uuid', $entity_test->uuid());
 
