@@ -326,7 +326,7 @@ function locale_js_translate(array $files = [], $language_interface = NULL) {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
   }
 
-  $dir = 'public://' . \Drupal::config('locale.settings')->get('javascript.directory');
+  $dir = 'assets://' . \Drupal::config('locale.settings')->get('javascript.directory');
   $parsed = \Drupal::state()->get('system.javascript_parsed', []);
   $new_files = FALSE;
 
@@ -1020,7 +1020,7 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Construct the filepath where JS translation files are stored.
   // There is (on purpose) no front end to edit that variable.
-  $dir = 'public://' . $config->get('javascript.directory');
+  $dir = 'assets://' . $config->get('javascript.directory');
 
   // Delete old file, if we have no translations anymore, or a different file to
   // be saved.
