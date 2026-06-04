@@ -41,9 +41,8 @@ use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\File\LocaleFileManager;
 use Drupal\locale\LocaleConfigBatch;
-use Drupal\locale\LocaleProjectChecker;
 use Drupal\locale\LocaleProjectRepository;
-use Drupal\locale\LocaleTranslatableProject;
+use Drupal\locale\LocaleSource;
 use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -1791,7 +1790,7 @@ function install_import_translations(&$install_state) {
   if (count($languages) > 1 || !isset($languages['en'])) {
     $batch_builder->addOperation(
       '_install_prepare_import',
-      [array_keys($languages), $install_state['server_pattern']],
+      [array_keys($languages)],
     );
 
     // Set up a batch to import translations for drupal core. Translation import
@@ -1823,10 +1822,8 @@ function install_import_translations(&$install_state) {
  *
  * @param array $langcodes
  *   Language codes used for the translations.
- * @param string $server_pattern
- *   Server access pattern (to replace language code, version number, etc. in).
  */
-function _install_prepare_import($langcodes, $server_pattern): void {
+function _install_prepare_import($langcodes): void {
   $module_handler = \Drupal::moduleHandler();
   $module_handler->loadInclude('locale', 'inc', 'locale.bulk');
   $matches = [];
@@ -1846,18 +1843,17 @@ function _install_prepare_import($langcodes, $server_pattern): void {
         // Picking the first file does not necessarily result in the right file.
         // So we check if at least the major version number is available.
         if ($info['major']) {
-          $project = new LocaleTranslatableProject(
-            name: 'drupal',
-            type: 'module',
-            core: $info['major'] . '.x',
-            version: $version,
-            server_pattern: $server_pattern,
-            langcode: $langcode,
-            status: TRUE,
-          );
-          \Drupal::service(LocaleProjectRepository::class)->set($project);
           $module_handler->loadInclude('locale', 'inc', 'locale.compare');
-          \Drupal::service(LocaleProjectChecker::class)->checkLocalProjects(['drupal'], [$langcode]);
+          // Explicitly set the file URI and filename, then check and save the
+          // source information with that updated state.
+          $source_service = \Drupal::service(LocaleSource::class);
+          $source = $source_service->loadSource('drupal', $langcode);
+          $source->files[LOCALE_TRANSLATION_LOCAL]->filename = $file->filename;
+          $source->files[LOCALE_TRANSLATION_LOCAL]->uri = $file->uri;
+          $file = $source_service->sourceCheckFile($source);
+          if ($file) {
+            $source_service->saveSource('drupal', $langcode, LOCALE_TRANSLATION_LOCAL, $file);
+          }
         }
       }
     }
