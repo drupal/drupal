@@ -24,7 +24,7 @@ function locale_install(): void {
 function locale_uninstall(): void {
   $config = \Drupal::config('locale.settings');
   // Delete all JavaScript translation files.
-  $locale_js_directory = 'public://' . $config->get('javascript.directory');
+  $locale_js_directory = 'assets://' . $config->get('javascript.directory');
 
   if (is_dir($locale_js_directory)) {
     $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
