@@ -4,6 +4,7 @@ namespace Drupal\views\Plugin\views\row;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\Views;
 
 /**
@@ -168,18 +169,21 @@ abstract class RowPluginBase extends PluginBase {
   public function preRender($result) {}
 
   /**
-   * Renders a row object.
+   * Creates a render array for a row object.
    *
    * This usually passes through to a theme template of some form, but not
    * always.
    *
-   * @param object $row
+   * @param \Drupal\views\ResultRow $row
    *   A single row of the query result, so an element of $view->result.
    *
-   * @return string
-   *   The rendered output of a single row, used by the style plugin.
+   * @return array
+   *   The render array for a single row, used by the style plugin.
    */
   public function render($row) {
+    if (!$row instanceof ResultRow) {
+      @trigger_error('Passing an object other than a ResultRow to RowPluginBase::render() is deprecated in drupal:11.4.0 and will throw a type error in drupal:12.0.0. Pass a \Drupal\views\ResultRow object instead. See https://www.drupal.org/node/2939099', E_USER_DEPRECATED);
+    }
     return [
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
