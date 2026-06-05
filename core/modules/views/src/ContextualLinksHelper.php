@@ -76,7 +76,7 @@ class ContextualLinksHelper {
    * @see \Drupal\views\Hook\ViewsThemeHooks::preprocessViewsView()
    */
   public function addLinks(array &$renderElement, string $location, string $displayId, ?array $viewElement = NULL): void {
-    assert(in_array($location, ['block', 'page', 'view'], TRUE));
+    assert(in_array($location, ['block', 'page', 'view', 'exposed_filter'], TRUE));
 
     if (!isset($viewElement)) {
       $viewElement = $renderElement;
