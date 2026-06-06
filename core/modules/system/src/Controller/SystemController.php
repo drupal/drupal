@@ -247,7 +247,7 @@ class SystemController extends ControllerBase {
   public function themesPage() {
     $config = $this->config('system.theme');
     // Get all available themes.
-    $themes = $this->themeExtensionList->reset()->getList();
+    $themes = $this->themeExtensionList->getList(TRUE);
 
     // Remove obsolete themes.
     $themes = array_filter($themes, function ($theme) {
