@@ -267,10 +267,19 @@ abstract class ExtensionList {
   /**
    * Returns all available extensions.
    *
+   * @param bool $skip_cache
+   *   Whether to skip the extension list cache.
+   *
    * @return \Drupal\Core\Extension\Extension[]
    *   Processed extension objects, keyed by machine name.
    */
-  public function getList() {
+  public function getList(bool $skip_cache = FALSE) {
+    if ($skip_cache) {
+      // Although we're skipping the persistent cache, populate the extensions
+      // class property so that any subsequent calls use the latest information.
+      $this->extensions = $this->doList();
+      return $this->extensions;
+    }
     if ($this->extensions !== NULL) {
       return $this->extensions;
     }
