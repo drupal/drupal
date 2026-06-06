@@ -31,6 +31,7 @@ class NodeClassicTest extends MigrateUpgradeExecuteTestBase {
     'language',
     'content_translation',
     'config_translation',
+    'comment',
     'migrate_drupal_ui',
     'telephone',
   ];

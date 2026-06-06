@@ -8,7 +8,6 @@ install:
   - breakpoint
   - ckeditor5
   - config
-  - comment
   - contextual
   - menu_link_content
   - datetime

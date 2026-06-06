@@ -77,7 +77,6 @@ config:
         - 'administer url aliases'
         - 'create terms in tags'
         - 'create url aliases'
-        - 'edit own comments'
         - 'edit terms in tags'
         - 'delete own files'
         - 'revert all revisions'

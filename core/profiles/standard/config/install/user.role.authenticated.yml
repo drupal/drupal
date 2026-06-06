@@ -4,7 +4,6 @@ dependencies:
   config:
     - filter.format.basic_html
   module:
-    - comment
     - file
     - filter
     - system
@@ -13,9 +12,6 @@ label: 'Authenticated user'
 weight: 1
 is_admin: false
 permissions:
-  - 'access comments'
   - 'access content'
   - 'delete own files'
-  - 'post comments'
-  - 'skip comment approval'
   - 'use text format basic_html'
