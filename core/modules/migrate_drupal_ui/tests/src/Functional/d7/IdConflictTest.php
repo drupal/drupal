@@ -23,6 +23,7 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
   protected static $modules = [
     'config_translation',
     'content_translation',
+    'comment',
     'language',
     'migrate_drupal_ui',
     'telephone',

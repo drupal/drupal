@@ -14,7 +14,7 @@ abstract class MultilingualReviewPageTestBase extends MigrateUpgradeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['migrate_drupal_ui', 'shortcut'];
+  protected static $modules = ['migrate_drupal_ui', 'shortcut', 'comment'];
 
   /**
    * Tests the migrate upgrade review form.

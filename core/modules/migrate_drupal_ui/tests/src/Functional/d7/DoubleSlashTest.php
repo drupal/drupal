@@ -33,6 +33,7 @@ class DoubleSlashTest extends MigrateUpgradeExecuteTestBase {
    */
   protected static $modules = [
     'file',
+    'comment',
     'migrate_drupal_ui',
   ];
 

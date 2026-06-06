@@ -30,8 +30,6 @@ class StandardJavascriptTest extends WebDriverTestBase {
 
     $this->drupalLogin($this->drupalCreateUser([
       'access content',
-      'post comments',
-      'skip comment approval',
     ]));
 
     $node = Node::create(['type' => 'test_content'])
@@ -52,7 +50,7 @@ class StandardJavascriptTest extends WebDriverTestBase {
     $this->drupalGet($node->toUrl());
     $this->assertBigPipePlaceholderReplacementCount(4);
 
-    // Node page second request: Zero placeholders (no comment form on test content type).
+    // Node page second request: Zero placeholders.
     $this->drupalGet($node->toUrl());
     $this->assertBigPipePlaceholderReplacementCount(0);
   }

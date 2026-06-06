@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
+use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
@@ -41,6 +42,17 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $comment_types = CommentType::loadMultiple();
+    if (empty($comment_types['comment'])) {
+      $bundle = CommentType::create([
+        'id' => 'comment',
+        'label' => 'Default comments',
+        'description' => 'Allows commenting on content',
+        'target_entity_type_id' => 'node',
+      ]);
+      $bundle->save();
+    }
 
     // Create content.
     $this->createContent();

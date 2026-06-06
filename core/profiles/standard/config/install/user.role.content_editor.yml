@@ -4,7 +4,6 @@ dependencies:
   config:
     - taxonomy.vocabulary.tags
   module:
-    - comment
     - contextual
     - file
     - navigation
@@ -26,7 +25,6 @@ permissions:
   - 'create terms in tags'
   - 'create url aliases'
   - 'delete own files'
-  - 'edit own comments'
   - 'edit terms in tags'
   - 'revert all revisions'
   - 'view all revisions'
