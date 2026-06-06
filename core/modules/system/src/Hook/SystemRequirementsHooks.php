@@ -63,13 +63,10 @@ class SystemRequirementsHooks {
     // Get the current default PHP requirements for this version of Drupal.
     $minimum_supported_php = PhpRequirements::getMinimumSupportedPhp();
 
-    // Reset the extension lists.
     /** @var \Drupal\Core\Extension\ModuleExtensionList $module_extension_list */
     $module_extension_list = \Drupal::service('extension.list.module');
-    $module_extension_list->reset();
     /** @var \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list */
     $theme_extension_list = \Drupal::service('extension.list.theme');
-    $theme_extension_list->reset();
     $requirements = [];
 
     // Report Drupal version
@@ -928,8 +925,8 @@ class SystemRequirementsHooks {
       ];
     };
     $profile = \Drupal::installProfile();
-    $files = $module_extension_list->getList();
-    $files += $theme_extension_list->getList();
+    $files = $module_extension_list->getList(TRUE);
+    $files += $theme_extension_list->getList(TRUE);
     $core_incompatible_extensions = [];
     $php_incompatible_extensions = [];
     foreach ($files as $extension_name => $file) {
