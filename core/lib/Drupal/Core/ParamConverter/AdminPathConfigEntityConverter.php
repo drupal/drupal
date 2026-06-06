@@ -73,6 +73,11 @@ class AdminPathConfigEntityConverter extends EntityConverter {
       if (!$entity_type->entityClassImplements(ConfigEntityInterface::class)) {
         return parent::convert($value, $definition, $name, $defaults);
       }
+
+      // Ensure the value is printable ASCII.
+      if (!preg_match('/^' . static::PRINTABLE_ASCII . '$/', $value)) {
+        return NULL;
+      }
     }
 
     if ($storage = $this->entityTypeManager->getStorage($entity_type_id)) {

@@ -27,6 +27,7 @@ class EntityConverterTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'config_test',
     'entity_test',
     'user',
   ];
@@ -106,6 +107,36 @@ class EntityConverterTest extends KernelTestBase {
     $converted = $converter->convert($entity3->id(), $definition, 'qux', []);
     $this->assertSame($entity3->id(), $converted->id());
     $converted = $converter->convert('some-non-existing-entity-id', $definition, 'qux', []);
+    $this->assertNull($converted);
+  }
+
+  /**
+   * Tests convert() for dynamic config entity types.
+   *
+   * @legacy-covers ::convert
+   */
+  public function testConvertDynamicConfigEntityRejectsNonAscii(): void {
+    $converter = $this->container->get('paramconverter.entity');
+
+    $config_entity = $this->container->get('entity_type.manager')
+      ->getStorage('config_test')
+      ->create([
+        'id' => 'test_id',
+        'label' => 'Test',
+      ]);
+    $config_entity->save();
+
+    $definition = ['type' => 'entity:{entity_type}'];
+
+    // Test that the entity is loaded.
+    $defaults = ['example' => "test_id", 'entity_type' => 'config_test'];
+    $converted = $converter->convert("test_id", $definition, 'example', $defaults);
+    $this->assertSame('test_id', $converted->id());
+
+    // Test that an invalid entity ID is rejected without triggering an
+    // exception.
+    $defaults = ['example' => "invalid\x80value", 'entity_type' => 'config_test'];
+    $converted = $converter->convert("invalid\x80value", $definition, 'example', $defaults);
     $this->assertNull($converted);
   }
 

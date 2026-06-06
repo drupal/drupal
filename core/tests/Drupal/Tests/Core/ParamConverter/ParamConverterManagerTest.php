@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\ParamConverter;
 
+use Drupal\Core\ParamConverter\ParamConverterInterface;
 use Drupal\Core\ParamConverter\ParamConverterManager;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\RouteObjectInterface;
@@ -11,6 +12,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -75,7 +77,10 @@ class ParamConverterManagerTest extends UnitTestCase {
       ->method('applies')
       ->with($this->anything(), 'id', $this->anything())
       ->willReturn(TRUE);
-    $manager = new ParamConverterManager(new ServiceLocator(['applied' => fn() => $converter]));
+    $manager = new ParamConverterManager(new ServiceLocator([
+      'applied' => fn(): ParamConverterInterface&MockObject => $converter,
+      'predefined' => fn(): ParamConverterInterface&MockObject => $converter,
+    ]));
 
     $route = new Route($path);
     if ($parameters) {

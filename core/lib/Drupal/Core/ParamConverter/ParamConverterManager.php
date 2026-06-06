@@ -49,15 +49,23 @@ class ParamConverterManager implements ParamConverterManagerInterface {
 
       // Loop over all defined parameters and look up the right converter.
       foreach ($parameters as $name => &$definition) {
-        if (isset($definition['converter'])) {
-          // Skip parameters that already have a manually set converter.
-          continue;
+        // Skip parameters that already have a manually set converter.
+        if (!isset($definition['converter'])) {
+          foreach ($this->converters->getIterator() as $converter => $service) {
+            if ($service->applies($definition, $name, $route)) {
+              $definition['converter'] = $converter;
+              break;
+            }
+          }
         }
 
-        foreach ($this->converters->getIterator() as $converter => $service) {
-          if ($service->applies($definition, $name, $route)) {
-            $definition['converter'] = $converter;
-            break;
+        if (isset($definition['converter']) && !$route->hasRequirement($name)) {
+          $service = $this->getConverter($definition['converter']);
+          // If the converter can provide a regex requirement and the route
+          // doesn't already have one for this parameter, set it.
+          if ($service instanceof ParamConverterRouteRequirementInterface
+            && $requirement = $service->getRouteRequirement($definition, $name)) {
+            $route->setRequirement($name, $requirement);
           }
         }
       }

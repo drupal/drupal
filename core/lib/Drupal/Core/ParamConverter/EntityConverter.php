@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\ParamConverter;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -76,7 +78,16 @@ use Symfony\Component\Routing\Route;
  *
  * @see entities_revisions_translations
  */
-class EntityConverter implements ParamConverterInterface {
+class EntityConverter implements ParamConverterInterface, ParamConverterRouteRequirementInterface {
+
+  /**
+   * Regex to match printable ASCII characters.
+   *
+   * Used to prevent database errors when loading configuration entities.
+   * Configuration entities IDs have an even more limited character set
+   * depending on their schema.
+   */
+  protected const string PRINTABLE_ASCII = '[\x20-\x7E]+';
 
   use DynamicEntityTypeParamConverterTrait;
 
@@ -114,6 +125,17 @@ class EntityConverter implements ParamConverterInterface {
    */
   public function convert($value, $definition, $name, array $defaults) {
     $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
+
+    // If the entity type is dynamic, confirm it to be a config entity. Static
+    // entity types will have performed this check in self::applies().
+    if (str_starts_with($definition['type'], 'entity:{')) {
+      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+      if ($entity_type->entityClassImplements(ConfigEntityInterface::class)) {
+        if (!preg_match('/^' . static::PRINTABLE_ASCII . '$/', $value)) {
+          return NULL;
+        }
+      }
+    }
 
     // If the entity type is revisionable and the parameter has the
     // "load_latest_revision" flag, load the active variant.
@@ -157,6 +179,25 @@ class EntityConverter implements ParamConverterInterface {
       return $this->entityTypeManager->hasDefinition($entity_type_id);
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRouteRequirement($definition, $name): ?string {
+    $entity_type_id = substr($definition['type'], strlen('entity:'));
+    // Cannot determine requirements for dynamic entity types at build time.
+    if (str_contains($entity_type_id, '{')) {
+      return NULL;
+    }
+
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id, FALSE);
+    // Config entities: derive regex from config schema constraints.
+    if ($entity_type instanceof ConfigEntityTypeInterface) {
+      return static::PRINTABLE_ASCII;
+    }
+
+    return NULL;
   }
 
 }
