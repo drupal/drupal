@@ -4,14 +4,13 @@
  * @file
  */
 
-use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
-use Drupal\Core\Site\Settings;
-use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\user\Hook\UserThemeHooks;
+use Drupal\user\OneTimeAuthentication;
 use Drupal\user\UserInterface;
 
 /**
@@ -123,21 +122,14 @@ function user_login_finalize(UserInterface $account): void {
  * @return string
  *   A unique URL that provides a one-time log in for the user, from which
  *   they can change their password.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\user\OneTimeAuthentication::generateOneTimeLoginUrl() instead.
+ * @see https://www.drupal.org/node/3581062
  */
 function user_pass_reset_url($account, $options = []) {
-  $timestamp = \Drupal::time()->getCurrentTime();
-  $langcode = $options['langcode'] ?? $account->getPreferredLangcode();
-  return Url::fromRoute('user.reset',
-    [
-      'uid' => $account->id(),
-      'timestamp' => $timestamp,
-      'hash' => user_pass_rehash($account, $timestamp),
-    ],
-    [
-      'absolute' => TRUE,
-      'language' => \Drupal::languageManager()->getLanguage($langcode),
-    ]
-  )->toString();
+  @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\user\OneTimeAuthentication::generateOneTimeLoginUrl() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
+  return \Drupal::service(OneTimeAuthentication::class)->generateOneTimeLoginUrl($account, $options)->toString();
 }
 
 /**
@@ -154,18 +146,16 @@ function user_pass_reset_url($account, $options = []) {
  *   A unique URL that may be used to confirm the cancellation of the user
  *   account.
  *
- * @see user_mail_tokens()
+ * @see \Drupal\user\OneTimeAuthentication::tokens()
  * @see \Drupal\user\Controller\UserController::confirmCancel()
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\user\OneTimeAuthentication::generateCancelConfirmUrl() instead.
+ * @see https://www.drupal.org/node/3581062
  */
 function user_cancel_url(UserInterface $account, $options = []) {
-  $timestamp = \Drupal::time()->getRequestTime();
-  $langcode = $options['langcode'] ?? $account->getPreferredLangcode();
-  $url_options = ['absolute' => TRUE, 'language' => \Drupal::languageManager()->getLanguage($langcode)];
-  return Url::fromRoute('user.cancel_confirm', [
-    'user' => $account->id(),
-    'timestamp' => $timestamp,
-    'hashed_pass' => user_pass_rehash($account, $timestamp),
-  ], $url_options)->toString();
+  @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\user\OneTimeAuthentication::generateCancelConfirmUrl() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
+  return \Drupal::service(OneTimeAuthentication::class)->generateCancelConfirmUrl($account, $options)->toString();
 }
 
 /**
@@ -177,7 +167,8 @@ function user_cancel_url(UserInterface $account, $options = []) {
  * same information, and compared to the hash value from the URL. The hash
  * contains the time stamp, the user's last login time, the numeric user ID,
  * and the user's email address.
- * For a usage example, see user_cancel_url() and
+ * For a usage example, see
+ * \Drupal\user\OneTimeAuthentication::generateCancelConfirmUrl() and
  * \Drupal\user\Controller\UserController::confirmCancel().
  *
  * @param \Drupal\user\UserInterface $account
@@ -187,13 +178,14 @@ function user_cancel_url(UserInterface $account, $options = []) {
  *
  * @return string
  *   A string that is safe for use in URLs and SQL statements.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\user\OneTimeAuthentication::generateHmac() instead.
+ * @see https://www.drupal.org/node/3581062
  */
 function user_pass_rehash(UserInterface $account, $timestamp) {
-  $data = $timestamp;
-  $data .= ':' . $account->getLastLoginTime();
-  $data .= ':' . $account->id();
-  $data .= ':' . $account->getEmail();
-  return Crypt::hmacBase64($data, Settings::getHashSalt() . $account->getPassword());
+  @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\user\OneTimeAuthentication::generateHmac() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
+  return \Drupal::service(OneTimeAuthentication::class)->generateHmac($account, $timestamp);
 }
 
 /**
@@ -402,12 +394,15 @@ function user_cancel_methods(): array {
  * @param array $options
  *   A keyed array of settings and flags to control the token replacement
  *   process. See \Drupal\Core\Utility\Token::replace().
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\user\OneTimeAuthentication::tokens() instead.
+ * @see https://www.drupal.org/node/3581062
  */
 function user_mail_tokens(&$replacements, $data, $options): void {
-  if (isset($data['user'])) {
-    $replacements['[user:one-time-login-url]'] = user_pass_reset_url($data['user'], $options);
-    $replacements['[user:cancel-url]'] = user_cancel_url($data['user'], $options);
-  }
+  @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\user\OneTimeAuthentication::tokens() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
+  $bubbleableMetadata = new BubbleableMetadata();
+  \Drupal::service(OneTimeAuthentication::class)->tokens($replacements, $data, $options, $bubbleableMetadata);
 }
 
 /**
@@ -520,7 +515,7 @@ function user_role_revoke_permissions($rid, array $permissions = []): void {
  *   \Drupal\Core\Mail\MailManagerInterface::mail() for details. Or null if the
  *   account does not have an email address.
  *
- * @see user_mail_tokens()
+ * @see \Drupal\user\OneTimeAuthentication::tokens()
  */
 function _user_mail_notify($op, AccountInterface $account) {
 
