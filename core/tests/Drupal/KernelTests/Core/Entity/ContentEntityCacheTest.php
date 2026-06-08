@@ -470,6 +470,14 @@ class ContentEntityCacheTest extends KernelTestBase {
     // Since the preloaded entity is written back into the default and revision
     // static cache, the two objects are the same.
     $this->assertSame($revision, $loaded);
+
+    // Modifying the swapped-in revision in memory without saving must not
+    // affect loadUnchanged(), which has to return the persisted non-default
+    // revision rather than the in-memory modification.
+    $loaded->setName('Unsaved in-memory edit');
+    $unchanged = $storage->loadUnchanged($entity->id());
+    $this->assertEquals($expected_revision_id, $unchanged->getRevisionId());
+    $this->assertEquals('New name', $unchanged->getName());
   }
 
 }
