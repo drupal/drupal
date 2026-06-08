@@ -16,6 +16,10 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Contains helper methods for console commands that boot up Drupal.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. The new
+ * CLI in core automatically boots commands.
+ * @see https://www.drupal.org/node/3584928
  */
 trait BootableCommandTrait {
 
@@ -36,6 +40,8 @@ trait BootableCommandTrait {
    *   Exception thrown if kernel does not boot.
    */
   protected function boot(): DrupalKernelInterface {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. The new CLI in core automatically boots commands. See https://www.drupal.org/node/3584928', E_USER_DEPRECATED);
+
     $kernel = new DrupalKernel('prod', $this->classLoader);
     $kernel::bootEnvironment();
     $kernel->setSitePath($this->getSitePath());

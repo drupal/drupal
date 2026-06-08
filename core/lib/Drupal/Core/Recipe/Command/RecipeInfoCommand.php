@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Core\Recipe;
+namespace Drupal\Core\Recipe\Command;
 
-use Drupal\Core\Command\BootableCommandTrait;
+use Drupal\Core\Recipe\Recipe;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,21 +18,17 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @internal
  *   This API is experimental.
  */
+#[AsCommand(
+  name: 'recipe:info',
+  description: 'Shows information about a recipe.',
+)]
 final class RecipeInfoCommand extends Command {
-
-  use BootableCommandTrait;
-
-  public function __construct($class_loader) {
-    parent::__construct('recipe:info');
-    $this->classLoader = $class_loader;
-  }
 
   /**
    * {@inheritdoc}
    */
   protected function configure(): void {
     $this
-      ->setDescription('Shows information about a recipe.')
       ->addArgument('path', InputArgument::REQUIRED, 'The path to the recipe\'s folder');
   }
 
@@ -44,9 +41,8 @@ final class RecipeInfoCommand extends Command {
     $recipe_path = $input->getArgument('path');
     if (!is_string($recipe_path) || !is_dir($recipe_path)) {
       $io->error(sprintf('The supplied path %s is not a directory', $recipe_path));
-      return 1;
+      return Command::FAILURE;
     }
-    $this->boot();
 
     $recipe = Recipe::createFromDirectory($recipe_path);
     $io->section('Description');
@@ -64,7 +60,7 @@ final class RecipeInfoCommand extends Command {
     else {
       $io->writeln("This recipe does not accept any input.");
     }
-    return 0;
+    return Command::SUCCESS;
   }
 
 }

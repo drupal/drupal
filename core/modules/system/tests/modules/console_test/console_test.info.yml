@@ -1,0 +1,6 @@
+name: Drupal Console tests
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:autowire_test

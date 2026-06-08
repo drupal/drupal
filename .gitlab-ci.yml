@@ -715,7 +715,7 @@ default:
     # Composer-install Drush & the Config Inspector module.
     - composer require drush/drush drupal/config_inspector || exit 100
     # Install Drupal's Standard install profile + all core modules (except obsolete ones) + the config inspector module.
-    - php core/scripts/drupal install standard
+    - vendor/bin/dr install standard
     - ls core/modules | grep -v sdc | xargs vendor/bin/drush pm:install --yes
     - vendor/bin/drush pm:install config_inspector --yes --quiet || exit 101
     # Compute statistics for coverage of validatable config for HEAD.

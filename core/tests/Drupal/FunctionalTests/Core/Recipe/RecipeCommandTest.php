@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Core\Recipe;
 
 use Drupal\Core\Config\Checkpoint\Checkpoint;
-use Drupal\Core\Recipe\RecipeCommand;
+use Drupal\Core\Recipe\Command\RecipeCommand;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -80,7 +80,7 @@ class RecipeCommandTest extends BrowserTestBase {
       "Backup before the 'Install two modules' recipe.",
       "Test log message",
     ]);
-    $this->assertStringContainsString('[notice] A backup checkpoint was not created because nothing has changed since the "Test log message" checkpoint was created.', $process->getOutput());
+    $this->assertStringContainsString('[notice] A backup checkpoint was not created because nothing has changed since the "Test log message" checkpoint was created.', $process->getErrorOutput());
   }
 
   /**
