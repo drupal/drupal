@@ -10,6 +10,7 @@ use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
+use Drupal\user\OneTimeAuthentication;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -202,18 +203,18 @@ class UserPasswordResetTest extends BrowserTestBase {
     $timeout = $this->config('user.settings')->get('password_reset_timeout');
     $bogus_timestamp = \Drupal::time()->getRequestTime() - $timeout - 60;
     $_uid = $this->account->id();
-    $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account, $bogus_timestamp));
+    $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . \Drupal::service(OneTimeAuthentication::class)->generateHmac($this->account, $bogus_timestamp));
     $this->assertSession()->pageTextContains('You have tried to use a one-time login link that has expired. Request a new one using the form below.');
-    $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account, $bogus_timestamp) . '/login');
+    $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . \Drupal::service(OneTimeAuthentication::class)->generateHmac($this->account, $bogus_timestamp) . '/login');
     $this->assertSession()->pageTextContains('You have tried to use a one-time login link that has expired. Request a new one using the form below.');
 
     // Create a user, block the account, and verify that a login link is denied.
     $timestamp = \Drupal::time()->getRequestTime() - 1;
     $blocked_account = $this->drupalCreateUser()->block();
     $blocked_account->save();
-    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp));
+    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . \Drupal::service(OneTimeAuthentication::class)->generateHmac($blocked_account, $timestamp));
     $this->assertSession()->statusCodeEquals(403);
-    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp) . '/login');
+    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . \Drupal::service(OneTimeAuthentication::class)->generateHmac($blocked_account, $timestamp) . '/login');
     $this->assertSession()->statusCodeEquals(403);
 
     // Verify a blocked user can not request a new password.
@@ -253,11 +254,11 @@ class UserPasswordResetTest extends BrowserTestBase {
     $timestamp = \Drupal::time()->getRequestTime() - 1;
     $blocked_account = $this->drupalCreateUser()->block();
     $blocked_account->save();
-    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp) . '/login');
+    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . \Drupal::service(OneTimeAuthentication::class)->generateHmac($blocked_account, $timestamp) . '/login');
     $this->assertSession()->statusCodeEquals(403);
 
     $blocked_account->delete();
-    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp) . '/login');
+    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . \Drupal::service(OneTimeAuthentication::class)->generateHmac($blocked_account, $timestamp) . '/login');
     $this->assertSession()->statusCodeEquals(403);
   }
 
@@ -400,7 +401,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Logged in users should not be able to access the user.reset.login or the
     // user.reset.form routes.
     $timestamp = \Drupal::time()->getRequestTime() - 1;
-    $this->drupalGet("user/reset/" . $this->account->id() . "/$timestamp/" . user_pass_rehash($this->account, $timestamp) . '/login');
+    $this->drupalGet("user/reset/" . $this->account->id() . "/$timestamp/" . \Drupal::service(OneTimeAuthentication::class)->generateHmac($this->account, $timestamp) . '/login');
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet("user/reset/" . $this->account->id());
     $this->assertSession()->statusCodeEquals(403);
@@ -658,7 +659,7 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     // The password reset URL must not be valid for the second user when only
     // the user ID is changed in the URL.
-    $reset_url = user_pass_reset_url($user1);
+    $reset_url = \Drupal::service(OneTimeAuthentication::class)->generateOneTimeLoginUrl($user1)->toString();
     $attack_reset_url = str_replace("user/reset/{$user1->id()}", "user/reset/{$user2->id()}", $reset_url);
     $this->drupalGet($attack_reset_url);
     // Verify that the invalid password reset page does not show the user name.

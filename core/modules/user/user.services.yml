@@ -81,3 +81,4 @@ services:
     class: Drupal\user\UserNameValidator
     arguments: ['@validation.basic_recursive_validator_factory', '@validation.constraint']
   Drupal\user\UserNameValidator: '@user.name_validator'
+  Drupal\user\OneTimeAuthentication: ~

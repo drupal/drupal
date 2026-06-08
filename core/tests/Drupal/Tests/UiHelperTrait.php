@@ -11,6 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Test\RefreshVariablesTrait;
 use Drupal\Core\Url;
+use Drupal\user\OneTimeAuthentication;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
@@ -170,7 +171,10 @@ trait UiHelperTrait {
       $storage = \Drupal::entityTypeManager()->getStorage('user');
       /** @var \Drupal\user\UserInterface $accountUnchanged */
       $accountUnchanged = $storage->loadUnchanged($account->id());
-      $login = user_pass_reset_url($accountUnchanged) . '/login?destination=user/' . $account->id();
+      $login = \Drupal::service(OneTimeAuthentication::class)
+        ->generateOneTimeLoginUrl($accountUnchanged, immediate: TRUE)
+        ->mergeOptions(['query' => ['destination' => 'user/' . $account->id()]])
+        ->toString();
       $this->drupalGet($login);
     }
     else {

@@ -10,6 +10,7 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Url;
 use Drupal\user\Form\UserPasswordResetForm;
+use Drupal\user\OneTimeAuthentication;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
@@ -60,21 +61,10 @@ class UserController extends ControllerBase {
   protected $flood;
 
   /**
-   * Constructs a UserController object.
-   *
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
-   *   The date formatter service.
-   * @param \Drupal\user\UserStorageInterface $user_storage
-   *   The user storage.
-   * @param \Drupal\user\UserDataInterface $user_data
-   *   The user data service.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger instance.
-   * @param \Drupal\Core\Flood\FloodInterface $flood
-   *   The flood service.
-   * @param \Drupal\Component\Datetime\TimeInterface|null $time
-   *   The time service.
+   * One time authentication service.
    */
+  protected OneTimeAuthentication $oneTimeAuthentication;
+
   public function __construct(
     DateFormatterInterface $date_formatter,
     UserStorageInterface $user_storage,
@@ -82,12 +72,17 @@ class UserController extends ControllerBase {
     LoggerInterface $logger,
     FloodInterface $flood,
     protected TimeInterface $time,
+    ?OneTimeAuthentication $one_time_authentication = NULL,
   ) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
     $this->userData = $user_data;
     $this->logger = $logger;
     $this->flood = $flood;
+    if ($one_time_authentication === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $one_time_authentication argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
+    }
+    $this->oneTimeAuthentication = $one_time_authentication ?? \Drupal::service(OneTimeAuthentication::class);
   }
 
   /**
@@ -101,6 +96,7 @@ class UserController extends ControllerBase {
       $container->get('logger.factory')->get('user'),
       $container->get('flood'),
       $container->get('datetime.time'),
+      $container->get(OneTimeAuthentication::class),
     );
   }
 
@@ -145,7 +141,7 @@ class UserController extends ControllerBase {
       else {
         /** @var \Drupal\user\UserInterface $reset_link_user */
         $reset_link_user = $this->userStorage->load($uid);
-        if ($reset_link_user && $this->validatePathParameters($reset_link_user, $timestamp, $hash)) {
+        if ($reset_link_user && $this->oneTimeAuthentication->verifyHmac($reset_link_user, $timestamp, $hash)) {
           $this->messenger()
             ->addWarning($this->t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. <a href=":logout">Log out</a> and try using the link again.',
               [
@@ -318,7 +314,7 @@ class UserController extends ControllerBase {
       $this->messenger()->addError($this->t('You have tried to use a one-time login link that has expired. Request a new one using the form below.'));
       return $this->redirect('user.pass');
     }
-    elseif ($user->isAuthenticated() && $this->validatePathParameters($user, $timestamp, $hash, $timeout)) {
+    elseif ($user->isAuthenticated() && $this->oneTimeAuthentication->verifyHmac($user, $timestamp, $hash, $timeout)) {
       // The information provided is valid.
       return NULL;
     }
@@ -341,11 +337,14 @@ class UserController extends ControllerBase {
    *
    * @return bool
    *   Whether the provided data are valid.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+   *   \Drupal\user\OneTimeAuthentication::verifyHmac() instead.
+   * @see https://www.drupal.org/node/3581062
    */
   protected function validatePathParameters(UserInterface $user, int $timestamp, string $hash, int $timeout = 0): bool {
-    $current = \Drupal::time()->getRequestTime();
-    $timeout_valid = ((!empty($timeout) && $current - $timestamp < $timeout) || empty($timeout));
-    return ($timestamp >= $user->getLastLoginTime()) && $timestamp <= $current && $timeout_valid && hash_equals($hash, user_pass_rehash($user, $timestamp));
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\user\OneTimeAuthentication::verifyHmac() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
+    return $this->oneTimeAuthentication->verifyHmac($user, $timestamp, $hash, $timeout);
   }
 
   /**
@@ -424,7 +423,7 @@ class UserController extends ControllerBase {
     $account_data = $this->userData->get('user', $user->id());
     if (isset($account_data['cancel_method']) && !empty($timestamp) && !empty($hashed_pass)) {
       // Validate expiration and hashed password/login.
-      if ($user->id() && $this->validatePathParameters($user, $timestamp, $hashed_pass, $timeout)) {
+      if ($user->id() && $this->oneTimeAuthentication->verifyHmac($user, $timestamp, $hashed_pass, $timeout)) {
         $edit = [
           'user_cancel_notify' => $account_data['cancel_notify'] ?? $this->config('user.settings')->get('notify.status_canceled'),
         ];
