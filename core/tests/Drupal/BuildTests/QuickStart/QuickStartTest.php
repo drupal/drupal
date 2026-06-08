@@ -91,7 +91,7 @@ class QuickStartTest extends BuildTestBase {
 
     $install_command = [
       $this->php,
-      'core/scripts/drupal',
+      'core/scripts/dr',
       'quick-start',
       'standard',
       "--site-name='Test site {$this->testDb->getDatabasePrefix()}'",
@@ -145,7 +145,7 @@ class QuickStartTest extends BuildTestBase {
     // Install a site.
     $install_command = [
       $this->php,
-      'core/scripts/drupal',
+      'core/scripts/dr',
       'install',
       'minimal',
       "--password='secret'",
@@ -162,7 +162,7 @@ class QuickStartTest extends BuildTestBase {
     // Run the PHP built-in webserver.
     $server_command = [
       $this->php,
-      'core/scripts/drupal',
+      'core/scripts/dr',
       'server',
       '--suppress-login',
     ];
@@ -197,7 +197,7 @@ class QuickStartTest extends BuildTestBase {
     // Try to re-install over the top of an existing site.
     $install_command = [
       $this->php,
-      'core/scripts/drupal',
+      'core/scripts/dr',
       'install',
       'testing',
       "--site-name='Test another site {$this->testDb->getDatabasePrefix()}'",
@@ -225,7 +225,7 @@ class QuickStartTest extends BuildTestBase {
     // link generation works.
     $install_command = [
       $this->php,
-      'core/scripts/drupal',
+      'core/scripts/dr',
       'quick-start',
       'umami',
       "--site-name='Test site {$this->testDb->getDatabasePrefix()}' --suppress-login",
@@ -241,7 +241,7 @@ class QuickStartTest extends BuildTestBase {
   public function testServerWithNoInstall(): void {
     $server_command = [
       $this->php,
-      'core/scripts/drupal',
+      'core/scripts/dr',
       'server',
       '--suppress-login',
     ];

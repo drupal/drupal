@@ -86,7 +86,7 @@ class RecipeQuickStartTest extends BuildTestBase {
     // Install a site using the standard recipe to ensure the one time login
     // link generation works.
 
-    $script = $this->root . '/core/scripts/drupal';
+    $script = $this->root . '/core/scripts/dr';
     $install_command = [
       $this->php,
       $script,

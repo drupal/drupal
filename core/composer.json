@@ -29,12 +29,12 @@
         "symfony/mailer": "^8.0.12",
         "symfony/mime": "^8.0.12",
         "symfony/routing": "^8.0.13",
+        "symfony/runtime": "^8.0",
         "symfony/serializer": "^8.0",
         "symfony/validator": "^8.0",
         "symfony/process": "^8.0",
         "symfony/polyfill-iconv": "^1.32",
         "symfony/polyfill-php86": "^1.37",
-        "symfony/runtime": "^8.0",
         "symfony/yaml": "^8.0.12",
         "revolt/event-loop": "^1.0",
         "twig/twig": "^3.27.0",
@@ -123,6 +123,9 @@
             "includes/bootstrap.inc"
         ]
     },
+    "bin": [
+        "scripts/dr"
+    ],
     "config": {
         "preferred-install": "dist"
     },

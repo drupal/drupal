@@ -18,10 +18,13 @@ parameters:
 
   fileExtensions:
     - sh
+    - ''
 
   paths:
     - .
     - ../composer
+    - scripts/dr
+    - scripts/drupal
 
   bootstrapFiles:
     # Load aliases.

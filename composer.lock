@@ -368,7 +368,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "46e3ae0cee6e18134a48513f07cefecc6906c8f5"
+                "reference": "900ab1c311591948d6ccaf4349b9bb5568a3e6c7"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -455,6 +455,9 @@
                 "drupal/core-uuid": "self.version",
                 "drupal/core-version": "self.version"
             },
+            "bin": [
+                "scripts/dr"
+            ],
             "type": "drupal-core",
             "extra": {
                 "branch-alias": {

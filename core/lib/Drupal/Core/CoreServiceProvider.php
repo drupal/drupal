@@ -10,6 +10,7 @@ use Drupal\Core\DependencyInjection\Compiler\BackwardsCompatibilityClassLoaderPa
 use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\DeprecatedServicePass;
 use Drupal\Core\DependencyInjection\Compiler\DevelopmentSettingsPass;
+use Drupal\Core\DependencyInjection\Compiler\ConsoleCompilerPass;
 use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\Core\Hook\HookCollectorKeyValueWritePass;
 use Drupal\Core\DependencyInjection\Compiler\LoggerAwarePass;
@@ -33,6 +34,7 @@ use Drupal\Core\PreWarm\PreWarmableInterface;
 use Drupal\Core\Queue\QueueFactoryInterface;
 use Drupal\Core\Site\Settings;
 use Psr\Log\LoggerAwareInterface;
+use Symfony\Component\Console\DependencyInjection\AddConsoleCommandPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Compiler\RemoveBuildParametersPass;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
@@ -89,6 +91,10 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new StackedKernelPass());
 
     $container->addCompilerPass(new StackedSessionHandlerPass());
+
+    // Collect and register Commands.
+    $container->addCompilerPass(new ConsoleCompilerPass());
+    $container->addCompilerPass(new AddConsoleCommandPass());
 
     // Collect tagged handler services as method calls on consumer services.
     $container->addCompilerPass(new TaggedHandlersPass());

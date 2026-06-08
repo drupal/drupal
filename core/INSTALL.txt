@@ -24,14 +24,14 @@ Prerequisites:
 1. Run the following commands
 
 - composer create-project drupal/recommended-project drupal
-- cd drupal && php -d memory_limit=256M web/core/scripts/drupal quick-start standard
+- cd drupal && php -d memory_limit=256M vendor/bin/dr quick-start standard
 
 Wait… installation can take a minute or two. A successful installation will
 result in opening the new site in your browser.
 
 Run the following command for a list of available options that you may need to
 configure quick-start:
-- php core/scripts/drupal quick-start --help
+- vendor/bin/dr quick-start --help
 
 Follow the instructions in the REINSTALL section below to start over.
 

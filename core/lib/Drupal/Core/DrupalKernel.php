@@ -3,6 +3,7 @@
 namespace Drupal\Core;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\PhpSerialize;
@@ -12,7 +13,6 @@ use Drupal\Core\ClassLoader\BackwardsCompatibilityClassLoader;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
@@ -1490,6 +1490,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         /** @var \DirectoryIterator $component */
         $pathname = $component->getPathname();
         if (!$component->isDot() && $component->isDir() && (
+          is_dir($pathname . '/Command') ||
           is_dir($pathname . '/Plugin') ||
           is_dir($pathname . '/Entity') ||
           is_dir($pathname . '/Element')

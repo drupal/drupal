@@ -171,7 +171,7 @@ FIXTURE;
   private function generateThemeFromStarterkit($env = NULL) : Process {
     $install_command = [
       $this->php,
-      'core/scripts/drupal',
+      'core/scripts/dr',
       'generate-theme',
       'test_custom_theme',
       '--name="Test custom starterkit theme"',
@@ -293,7 +293,7 @@ YAML
 
     $install_command = [
       $this->php,
-      'core/scripts/drupal',
+      'core/scripts/dr',
       'generate-theme',
       'generated_from_another_theme',
       '--name="Generated from another theme"',
@@ -477,7 +477,7 @@ SH;
   protected function doTestThemeDoesNotExist(): void {
     $install_command = [
       $this->php,
-      'core/scripts/drupal',
+      'core/scripts/dr',
       'generate-theme',
       'test_custom_theme',
       '--name="Test custom starterkit theme"',
@@ -499,7 +499,7 @@ SH;
     // Explicitly not a starter theme.
     $install_command = [
       $this->php,
-      'core/scripts/drupal',
+      'core/scripts/dr',
       'generate-theme',
       'test_custom_theme',
       '--name="Test custom starterkit theme"',
@@ -516,7 +516,7 @@ SH;
     // Has not defined `starterkit`.
     $install_command = [
       $this->php,
-      'core/scripts/drupal',
+      'core/scripts/dr',
       'generate-theme',
       'test_custom_theme',
       '--name="Test custom starterkit theme"',

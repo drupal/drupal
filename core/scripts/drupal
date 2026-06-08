@@ -3,36 +3,21 @@
 
 /**
  * @file
- * Provides CLI commands for Drupal.
+ * Deprecated shim that forwards to the `dr` CLI entry point.
+ *
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the `dr`
+ *   script instead.
+ *
+ * @see https://www.drupal.org/node/3584928
  */
 
-use Drupal\Core\Command\GenerateTheme;
-use Drupal\Core\Command\QuickStartCommand;
-use Drupal\Core\Command\InstallCommand;
-use Drupal\Core\Command\ServerCommand;
-use Drupal\Core\DefaultContent\ContentExportCommand;
-use Drupal\Core\Recipe\RecipeCommand;
-use Drupal\Core\Recipe\RecipeInfoCommand;
-use Symfony\Component\Console\Application;
+declare(strict_types=1);
 
-if (PHP_SAPI !== 'cli') {
-  return;
-}
+trigger_error('Calling drupal is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the `dr` script instead. See https://www.drupal.org/node/3584928', E_USER_DEPRECATED);
 
-require_once __DIR__ . '/../../autoload_runtime.php';
+// The Symfony Runtime requires SCRIPT_FILENAME during startup. Without this,
+// it re-requires this deprecated shim instead of the replacement entry point,
+// triggering the deprecation twice.
+$_SERVER['SCRIPT_FILENAME'] = __DIR__ . '/dr';
 
-return static function () {
-  $classloader = require __DIR__ . '/../../autoload.php';
-
-  $application = new Application('drupal', \Drupal::VERSION);
-
-  $application->addCommand(new QuickStartCommand());
-  $application->addCommand(new InstallCommand($classloader));
-  $application->addCommand(new ServerCommand($classloader));
-  $application->addCommand(new GenerateTheme());
-  $application->addCommand(new RecipeCommand($classloader));
-  $application->addCommand(new RecipeInfoCommand($classloader));
-  $application->addCommand(new ContentExportCommand($classloader));
-
-  return $application;
-};
+return include __DIR__ . '/dr';
