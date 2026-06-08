@@ -6,15 +6,18 @@ namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\user\OneTimeAuthentication;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests user_pass_rehash().
+ * Tests OneTimeAuthentication service.
  */
 #[Group('user')]
 #[RunTestsInSeparateProcesses]
-class UserPassRehashTest extends KernelTestBase {
+#[CoversClass(OneTimeAuthentication::class)]
+class OneTimeAuthenticationTest extends KernelTestBase {
 
   use UserCreationTrait;
 
@@ -59,8 +62,9 @@ class UserPassRehashTest extends KernelTestBase {
     $user_a->setPassword('');
     $user_b->setPassword('');
 
-    $hash_a = user_pass_rehash($user_a, $timestamp);
-    $hash_b = user_pass_rehash($user_b, $timestamp);
+    $oneTimeAuthentication = \Drupal::service(OneTimeAuthentication::class);
+    $hash_a = $oneTimeAuthentication->generateHmac($user_a, $timestamp);
+    $hash_b = $oneTimeAuthentication->generateHmac($user_b, $timestamp);
 
     $this->assertNotEquals($hash_a, $hash_b);
   }

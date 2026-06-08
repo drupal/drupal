@@ -7,6 +7,7 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\user\Entity\User;
+use Drupal\user\OneTimeAuthentication;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -183,8 +184,13 @@ class ServerCommand extends Command {
    *
    * @return string
    *   The one time login URL for user 1.
+   *
+   * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
+   *   replacement.
+   * @see https://www.drupal.org/node/3581062
    */
   protected function getOneTimeLoginUrl() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
     $user = User::load(1);
     \Drupal::moduleHandler()->load('user');
     return user_pass_reset_url($user);
@@ -214,14 +220,17 @@ class ServerCommand extends Command {
       throw new \RuntimeException('Unable to find the PHP binary.');
     }
 
+    $one_time_authentication = \Drupal::service(OneTimeAuthentication::class);
+    $login_url = $one_time_authentication->generateOneTimeLoginUrl(User::load(1), immediate: TRUE);
+
     $io->writeln("<info>Drupal development server started:</info> <http://{$host}:{$port}>");
     $io->writeln('<info>This server is not meant for production use.</info>');
-    $one_time_login = "http://$host:$port{$this->getOneTimeLoginUrl()}/login";
-    $io->writeln("<info>One time login url:</info> <$one_time_login>");
+    $io->writeln("<info>One time login url:</info> <http://$host:$port{$login_url->toString()}>");
     $io->writeln('Press Ctrl-C to quit the Drupal development server.');
 
     if (!$input->getOption('suppress-login')) {
-      if ($this->openBrowser("$one_time_login?destination=" . urlencode("/"), $io) === 1) {
+      $login_url->mergeOptions(['query' => ['destination' => '/']]);
+      if ($this->openBrowser("http://$host:$port{$login_url->toString()}", $io) === 1) {
         $io->error('Error while opening up a one time login URL');
       }
     }

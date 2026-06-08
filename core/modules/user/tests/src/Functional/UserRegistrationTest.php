@@ -9,6 +9,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\OneTimeAuthentication;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -58,7 +59,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $accounts = $storage->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertTrue($new_user->isActive(), 'New account is active after registration.');
-    $resetURL = user_pass_reset_url($new_user);
+    $resetURL = \Drupal::service(OneTimeAuthentication::class)->generateOneTimeLoginUrl($new_user)->toString();
     $this->drupalGet($resetURL);
     $this->assertSession()->titleEquals('Set password | Drupal');
 
