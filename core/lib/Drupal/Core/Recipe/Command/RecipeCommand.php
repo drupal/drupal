@@ -2,23 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Core\Recipe;
+namespace Drupal\Core\Recipe\Command;
 
 use Drupal\Component\Render\PlainTextOutput;
-use Drupal\Core\Command\BootableCommandTrait;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
+use Drupal\Core\Config\Checkpoint\CheckpointStorageInterface;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\ConfigImporterFactory;
+use Drupal\Core\Config\StorageCacheInterface;
 use Drupal\Core\Config\StorageComparer;
+use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Recipe\ConsoleInputCollector;
+use Drupal\Core\Recipe\Recipe;
+use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LogLevel;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Applies recipe.
@@ -26,20 +32,24 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @internal
  *   This API is experimental.
  */
+#[AsCommand(
+  name: 'recipe:apply',
+  aliases: [
+    'recipe',
+  ],
+  description: 'Applies a recipe to a site.',
+)]
 final class RecipeCommand extends Command {
 
-  use BootableCommandTrait;
   use StringTranslationTrait;
 
-  /**
-   * Constructs a new RecipeCommand command.
-   *
-   * @param object $class_loader
-   *   The class loader.
-   */
-  public function __construct($class_loader) {
-    parent::__construct('recipe');
-    $this->classLoader = $class_loader;
+  public function __construct(
+    protected CheckpointStorageInterface $checkpoint_storage,
+    #[Autowire(service: 'logger.channel.default')]
+    protected LoggerInterface $logger,
+    protected StorageCacheInterface $configStorage,
+  ) {
+    parent::__construct();
   }
 
   /**
@@ -47,7 +57,6 @@ final class RecipeCommand extends Command {
    */
   protected function configure(): void {
     $this
-      ->setDescription('Applies a recipe to a site.')
       ->addArgument('path', InputArgument::REQUIRED, 'The path to the recipe\'s folder to apply');
 
     ConsoleInputCollector::configureCommand($this);
@@ -62,29 +71,19 @@ final class RecipeCommand extends Command {
     $recipe_path = $input->getArgument('path');
     if (!is_string($recipe_path) || !is_dir($recipe_path)) {
       $io->error(sprintf('The supplied path %s is not a directory', $recipe_path));
-      return 1;
+      return Command::FAILURE;
     }
-    // Recipes can only be applied to an already-installed site.
-    $container = $this->boot()->getContainer();
 
-    /** @var \Drupal\Core\Config\Checkpoint\CheckpointStorageInterface $checkpoint_storage */
-    $checkpoint_storage = $container->get('config.storage.checkpoint');
     $recipe = Recipe::createFromDirectory($recipe_path);
 
     // Collect input for this recipe and all the recipes it directly and
     // indirectly applies.
     $recipe->input->collectAll(new ConsoleInputCollector($input, $io));
 
-    if ($checkpoint_storage instanceof LoggerAwareInterface) {
-      $logger = new ConsoleLogger($output, [
-        // The checkpoint storage logs a notice if it decides to not create a
-        // checkpoint, and we want to be sure those notices are seen even
-        // without additional verbosity.
-        LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-      ]);
-      $checkpoint_storage->setLogger($logger);
+    if ($this->checkpoint_storage instanceof LoggerAwareInterface) {
+      $this->checkpoint_storage->setLogger($this->logger);
     }
-    $backup_checkpoint = $checkpoint_storage
+    $backup_checkpoint = $this->checkpoint_storage
       ->checkpoint("Backup before the '$recipe->name' recipe.");
     try {
       $steps = RecipeRunner::toBatchOperations($recipe);
@@ -107,7 +106,7 @@ final class RecipeCommand extends Command {
         if (!empty($context['results']['module'])) {
           $io->section($this->toPlainString($this->t('Modules installed')));
           $modules = array_map(fn ($module) => \Drupal::service('extension.list.module')->getName($module), $context['results']['module']);
-          sort($modules, SORT_NATURAL);
+          \sort($modules, SORT_NATURAL);
           $io->listing($modules);
         }
         if (!empty($context['results']['theme'])) {
@@ -126,7 +125,7 @@ final class RecipeCommand extends Command {
         }
       }
       $io->success($this->toPlainString($this->t('%recipe applied successfully', ['%recipe' => $recipe->name])));
-      return 0;
+      return Command::SUCCESS;
     }
     catch (\Throwable $e) {
       try {
@@ -160,12 +159,10 @@ final class RecipeCommand extends Command {
    */
   private function rollBackToCheckpoint(Checkpoint $checkpoint): void {
     $container = \Drupal::getContainer();
+    $this->checkpoint_storage->setCheckpointToReadFrom($checkpoint);
 
-    /** @var \Drupal\Core\Config\Checkpoint\CheckpointStorageInterface $checkpoint_storage */
-    $checkpoint_storage = $container->get('config.storage.checkpoint');
-    $checkpoint_storage->setCheckpointToReadFrom($checkpoint);
-
-    $storage_comparer = new StorageComparer($checkpoint_storage, $container->get('config.storage'));
+    assert($this->configStorage instanceof StorageInterface);
+    $storage_comparer = new StorageComparer($this->checkpoint_storage, $this->configStorage);
     $storage_comparer->reset();
 
     $container->get(ConfigImporterFactory::class)->get($storage_comparer)->import();

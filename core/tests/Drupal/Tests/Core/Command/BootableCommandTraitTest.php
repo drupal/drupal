@@ -10,6 +10,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
@@ -23,6 +24,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 #[Group('Command')]
 #[CoversTrait(BootableCommandTrait::class)]
 #[RequiresPhpExtension('pdo_sqlite')]
+#[IgnoreDeprecations]
 class BootableCommandTraitTest extends UnitTestCase {
 
   /**
@@ -61,6 +63,8 @@ class BootableCommandTraitTest extends UnitTestCase {
     // Create a fake command that boots Drupal and outputs the base URL.
     $this->application->addCommand(new class ($this->classLoader) extends Command {
 
+      // Since we are testing BootableCommandTrait, we must use it.
+      // @phpstan-ignore traitUse.deprecatedTrait
       use BootableCommandTrait;
 
       public function __construct(object $classLoader) {
@@ -87,6 +91,7 @@ class BootableCommandTraitTest extends UnitTestCase {
 
     $tester = new CommandTester($this->application->find('test'));
     $tester->execute([]);
+    $this->expectUserDeprecationMessage('Drupal\Core\Command\BootableCommandTrait::boot() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. The new CLI in core automatically boots commands. See https://www.drupal.org/node/3584928');
     $this->assertSame('http://default', $tester->getDisplay());
   }
 

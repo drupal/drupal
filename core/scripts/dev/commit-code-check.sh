@@ -400,7 +400,7 @@ fi
 for FILE in $FILES; do
   # Ensure the file still exists (i.e. is not being deleted).
   if [ -a $FILE ]; then
-    if [ ${FILE: -3} != ".sh" ]; then
+    if [ ${FILE: -3} != ".sh" ] && [ "$FILE" != "core/scripts/dr" ]; then
       if [ -x $FILE ]; then
         printf "${red}check failed:${reset} file $FILE should not be executable\n"
         FINAL_STATUS=1

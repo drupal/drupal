@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Command;
 
 use Drupal\Component\Utility\Crypt;
@@ -50,7 +52,8 @@ class InstallCommand extends Command {
    */
   protected function configure(): void {
     $this->setName('install')
-      ->setDescription('Installs a Drupal demo site. This is not meant for production and might be too simple for custom development. It is a quick and easy way to get Drupal running.')
+      ->setDescription('Install Drupal using an install profile or recipe.')
+      ->setHelp('This is not meant for production and might be too simple for custom development. It is a quick and easy way to get Drupal running.')
       ->addArgument('install-profile-or-recipe', InputArgument::OPTIONAL, 'Install profile or recipe directory from which to install the site.')
       ->addOption('langcode', NULL, InputOption::VALUE_OPTIONAL, 'The language to install the site in.', 'en')
       ->addOption('password', NULL, InputOption::VALUE_OPTIONAL, 'The password to use for the site. Defaults to random password.')
@@ -236,14 +239,14 @@ class InstallCommand extends Command {
         $started = TRUE;
         // We've already done 1.
         $progress_bar->setFormat("%current%/%max% [%bar%]\n%message%\n");
-        $progress_bar->setMessage($this->t('Installing @drupal', ['@drupal' => drupal_install_profile_distribution_name()]));
+        $progress_bar->setMessage((string) $this->t('Installing @drupal', ['@drupal' => drupal_install_profile_distribution_name()]));
         $tasks = install_tasks($install_state);
         $progress_bar->start(count($tasks) + 1);
       }
       $tasks_to_perform = install_tasks_to_perform($install_state);
       $task = current($tasks_to_perform);
       if (isset($task['display_name'])) {
-        $progress_bar->setMessage($task['display_name']);
+        $progress_bar->setMessage((string) $task['display_name']);
       }
       $progress_bar->advance();
     });

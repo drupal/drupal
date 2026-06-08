@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * @file
+ * CLI entry point for Drupal.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Command\DrupalApplication;
+use Symfony\Component\Console\Application;
+
+if (\PHP_SAPI !== 'cli') {
+  throw new \Exception('This script must be run from the command line.');
+}
+
+require_once __DIR__ . '/../../autoload_runtime.php';
+
+// The entry point uses the runtime component to encapsulate the application
+// cleanly by returning a closure.
+// @see https://symfony.com/doc/current/components/runtime.html
+return static function (array $context): Application {
+  // We must check _composer_autoload_path before we use it, because legacy
+  // callers that invoke this script directly, rather than using vendor/bin/dr,
+  // won't have that value set in $GLOBALS.
+  // @see https://getcomposer.org/doc/articles/vendor-binaries.md#finding-the-composer-autoloader-from-a-binary
+  $autoload_path = $GLOBALS['_composer_autoload_path'] ?? __DIR__ . '/../../vendor/autoload.php';
+  $classloader = require $autoload_path;
+  return new DrupalApplication($classloader, $context);
+};

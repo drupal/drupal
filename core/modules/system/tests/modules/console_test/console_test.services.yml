@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    public: false
+
+  Drupal\console_test\Command\ConsoleExampleConfigureCommand:
+    tags:
+      - { name: 'console.command' }
+    public: true
+
+  Drupal\console_test\Command\ConsoleExamplePrivateCommand:
+    tags:
+      - { name: 'console.command' }

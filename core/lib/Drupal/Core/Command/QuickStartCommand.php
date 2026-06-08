@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Attribute\Argument;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Attribute\Ask;
+use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -14,60 +17,69 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * Wraps 'install' and 'server' commands.
  *
- * @internal
- *   This command makes no guarantee of an API for Drupal extensions.
+ * This is not meant for production. It can be used as a quick and easy way to
+ * create a Drupal test site.
  *
  * @see \Drupal\Core\Command\InstallCommand
  * @see \Drupal\Core\Command\ServerCommand
+ * @internal
+ *   This command makes no guarantee of an API for Drupal extensions.
  */
-class QuickStartCommand extends Command {
+#[AsCommand(
+  name: 'quick-start',
+  description: 'Installs a Drupal site and starts a web server for local testing or development.',
+  usages: [
+    'demo_umami --langcode fr',
+    'standard --site-name QuickInstall --host localhost --port 8080',
+    'minimal --host my-site.com --port 80',
+    'core/recipes/standard --site-name MyDrupalRecipe',
+  ],
+)]
+class QuickStartCommand {
 
   /**
-   * {@inheritdoc}
+   * Installs a Drupal site and starts a webserver for local development.
    */
-  protected function configure(): void {
-    $this->setName('quick-start')
-      ->setDescription('Installs a Drupal site and runs a web server. This is not meant for production and might be too simple for custom development. It is a quick and easy way to get Drupal running.')
-      ->addArgument('install-profile-or-recipe', InputArgument::OPTIONAL, 'Install profile or recipe directory from which to install the site.')
-      ->addOption('langcode', NULL, InputOption::VALUE_OPTIONAL, 'The language to install the site in. Defaults to en.', 'en')
-      ->addOption('password', NULL, InputOption::VALUE_OPTIONAL, 'Set the administrator password. Defaults to a randomly generated password.')
-      ->addOption('site-name', NULL, InputOption::VALUE_OPTIONAL, 'Set the site name. Defaults to Drupal.', 'Drupal')
-      ->addOption('host', NULL, InputOption::VALUE_OPTIONAL, 'Provide a host for the server to run on. Defaults to 127.0.0.1.', '127.0.0.1')
-      ->addOption('port', NULL, InputOption::VALUE_OPTIONAL, 'Provide a port for the server to run on. Will be determined automatically if none supplied.')
-      ->addOption('suppress-login', 's', InputOption::VALUE_NONE, 'Disable opening a login URL in a browser.')
-      ->addUsage('demo_umami --langcode fr')
-      ->addUsage('standard --site-name QuickInstall --host localhost --port 8080')
-      ->addUsage('minimal --host my-site.com --port 80')
-      ->addUsage('core/recipes/standard --site-name MyDrupalRecipe');
-
-    parent::configure();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function execute(InputInterface $input, OutputInterface $output): int {
-    $command = $this->getApplication()->find('install');
+  public function __invoke(
+    Application $application,
+    OutputInterface $output,
+    #[Argument('Install profile or recipe directory from which to install the site.')]
+    #[Ask('Install profile or recipe directory', 'standard')]
+    string $install_profile_or_recipe,
+    #[Option('The language to install the site in. Defaults to \'en\'.')]
+    string $langcode = 'en',
+    #[Option('Set the administrator password. Defaults to a randomly generated password.')]
+    ?string $password = NULL,
+    #[Option('Set the site name.')]
+    string $site_name = 'Drupal',
+    #[Option('Provide a host for the server to run on.')]
+    string $host = '127.0.0.1',
+    #[Option('Provide a port for the server to run on (determined automatically if none is supplied).')]
+    ?string $port = NULL,
+    #[Option('Disable opening a login URL in a browser.', '', 's')]
+    bool $suppress_login = FALSE,
+  ): int {
+    $command = $application->find('install');
 
     $arguments = [
       'command' => 'install',
-      'install-profile-or-recipe' => $input->getArgument('install-profile-or-recipe'),
-      '--langcode' => $input->getOption('langcode'),
-      '--password' => $input->getOption('password'),
-      '--site-name' => $input->getOption('site-name'),
+      'install-profile-or-recipe' => $install_profile_or_recipe,
+      '--langcode' => $langcode,
+      '--password' => $password,
+      '--site-name' => $site_name,
     ];
 
     $installInput = new ArrayInput($arguments);
     $returnCode = $command->run($installInput, $output);
 
     if ($returnCode === 0) {
-      $command = $this->getApplication()->find('server');
+      $command = $application->find('server');
       $arguments = [
         'command' => 'server',
-        '--host' => $input->getOption('host'),
-        '--port' => $input->getOption('port'),
+        '--host' => $host,
+        '--port' => $port,
       ];
-      if ($input->getOption('suppress-login')) {
+      if ($suppress_login) {
         $arguments['--suppress-login'] = TRUE;
       }
       $serverInput = new ArrayInput($arguments);

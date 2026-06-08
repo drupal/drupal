@@ -1903,6 +1903,18 @@ services:
     class: Drupal\Core\Template\Loader\StringLoader
     tags:
       - { name: twig.loader, priority: -100 }
+  # Service holding the commands made available to the `dr` command.
+  # The service is completed with ConsoleCompilerPass.
+  console.command_loader:
+    class: Symfony\Component\Console\CommandLoader\CommandLoaderInterface
+  logger.console:
+    class: Drupal\Core\Command\DrupalConsoleLogger
+    arguments: ['@logger.log_message_parser']
+    tags:
+      - { name: logger }
+  Drupal\Core\Command\DrupalConsoleLogger: '@logger.console'
+  Drupal\Core\Command\EventSubscriber\ConsoleSubscriber:
+    autowire: true
   element_info:
     alias: plugin.manager.element_info
   file.htaccess_writer:

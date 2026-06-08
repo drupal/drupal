@@ -37,7 +37,7 @@ abstract class QuickStartTestBase extends BuildTestBase {
    */
   public function installQuickStart($profile, $working_dir = NULL): void {
     $php_finder = new PhpExecutableFinder();
-    $install_process = $this->executeCommand($php_finder->find() . ' ./core/scripts/drupal install ' . $profile, $working_dir);
+    $install_process = $this->executeCommand($php_finder->find() . ' ./vendor/bin/dr install ' . $profile, $working_dir);
     $this->assertCommandOutputContains('Username:');
     preg_match('/Username: (.+)\vPassword: (.+)/', $install_process->getOutput(), $matches);
     $this->assertNotEmpty($this->adminUsername = $matches[1]);
