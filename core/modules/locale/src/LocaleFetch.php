@@ -311,7 +311,7 @@ class LocaleFetch {
     $failure = $checked = FALSE;
     $options += [
       'finish_feedback' => TRUE,
-      'use_remote' => TRUE,
+      'use_remote' => locale_translation_use_remote_source(),
     ];
     $source = $this->localeSource->loadSource($project, $langcode);
 

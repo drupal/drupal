@@ -81,8 +81,7 @@ msgid "Non-word-item to translate."
 msgstr "Non-word-german sdfwedrsdf."
 
 PO;
-    $version = explode('.', \Drupal::VERSION)[0] . '.0.0';
-    file_put_contents($this->publicFilesDirectory . "/translations/drupal-{$version}.de.po", $contents);
+    file_put_contents($this->publicFilesDirectory . '/translations/drupal-' . \Drupal::VERSION . '.de.po', $contents);
     return $parameters;
   }
 

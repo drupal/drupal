@@ -100,7 +100,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     // localize.drupal.org. It does not need to match the version exactly as the
     // multi-lingual system will fallback.
     \Drupal::service('file_system')->mkdir($this->publicFilesDirectory . '/translations', NULL, TRUE);
-    file_put_contents($this->publicFilesDirectory . "/translations/drupal-8.0.0.{$this->defaultLangcode}.po", '');
+    file_put_contents($this->publicFilesDirectory . '/translations/drupal-' . \Drupal::VERSION . ".{$this->defaultLangcode}.po", '');
     return $parameters;
   }
 

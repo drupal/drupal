@@ -57,7 +57,7 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerConf
     // Place custom local translations in the translations directory and fix up
     // configuration.
     mkdir($this->publicFilesDirectory . '/translations', 0777, TRUE);
-    file_put_contents($this->publicFilesDirectory . '/translations/drupal-8.0.0.es.po', $this->getPo('es'));
+    file_put_contents($this->publicFilesDirectory . '/translations/drupal-' . \Drupal::VERSION . '.es.po', $this->getPo('es'));
     $locale_settings = Yaml::decode(file_get_contents($this->siteDirectory . '/config/sync/locale.settings.yml'));
     $locale_settings['translation']['use_source'] = 'local';
     file_put_contents($this->siteDirectory . '/config/sync/locale.settings.yml', Yaml::encode($locale_settings));
@@ -152,7 +152,7 @@ msgid "Apply"
 msgstr "Aplicar New"
 
 PO;
-    file_put_contents($this->publicFilesDirectory . '/translations/drupal-8.0.0.es.po', $po);
+    file_put_contents($this->publicFilesDirectory . '/translations/drupal-' . \Drupal::VERSION . '.es.po', $po);
 
     // Manually update the translation status so can re-run the import.
     $status = \Drupal::service(LocaleSource::class)->loadSources();
