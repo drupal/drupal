@@ -70,8 +70,10 @@
       {{- title -}}
       <span class="required-mark"></span>
       {% if show_description_toggle %}
-        {{ attach_library('gin/description_toggle') }}
-        <button class="help-icon__description-toggle"></button>
+        {{ attach_library('default_admin/description_toggle') }}
+        <button class="help-icon__description-toggle">
+          <span class="visually-hidden">{{ 'Toggle form description'|t }}</span>
+        </button>
       {% endif %}
     </summary>
   {%- endif -%}

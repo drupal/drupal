@@ -63,7 +63,7 @@
       }
     };
 
-    $tab.addClass('position-container is-horizontal-enabled');
+    $tab.addClass('is-horizontal-enabled');
 
     $target.find('.js-tab').each((index, element) => {
       const $item = $(element);

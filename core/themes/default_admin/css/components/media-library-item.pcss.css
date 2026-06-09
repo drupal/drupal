@@ -1,0 +1,317 @@
+/**
+ * @file
+ *
+ * Style the media library items.
+ */
+
+.media-library-item {
+  position: relative;
+  background: none;
+
+  /* Ajax throbbers inside a media library item. */
+  .ajax-progress {
+    position: absolute;
+    z-index: calc(var(--vertical-tabs-menu--z-index) + 1);
+    box-sizing: border-box;
+    width: 56px;
+    height: 56px;
+    margin: -1.5rem;
+    transform: translateY(-50%);
+    border: var(--input-border-size) solid var(--jui-dropdown-border-color);
+    border-radius: 3.5rem;
+    background: var(--color-white);
+    box-shadow: 0 0.25rem 0.625rem var(--jui-dropdown-shadow-color);
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+  }
+
+  .ajax-progress__throbber {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin: -0.875rem;
+    border: 3px solid var(--color-absolutezero);
+    border-inline-end: 3px dotted transparent;
+  }
+
+  label {
+    display: inline-block;
+  }
+
+  .ajax-progress__message {
+    display: none;
+  }
+
+  .form-item {
+    margin: var(--space-xs);
+  }
+}
+
+.media-library-item__preview-wrapper {
+  position: relative;
+
+  .media-library-item:focus & {
+    box-shadow: none;
+  }
+}
+
+.media-library-item--grid {
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 8px;
+  vertical-align: top;
+  border-radius: var(--gin-border-xl);
+  outline: none;
+
+  /**
+   * The media library grid item focus border is moved to a child element to
+   * improve padding.
+   */
+  &:focus {
+    outline: none;
+    box-shadow: none;
+
+    .media-library-item__preview-wrapper {
+      outline: var(--focus-outline);
+      box-shadow: var(--focus-box-shadow);
+    }
+  }
+
+  /* Media library widget weight field styles. */
+  .form-item {
+    margin: 0.75em;
+  }
+
+  .form-boolean--type-checkbox:checked {
+    border-color: var(--button--focus-border-color);
+    background-color: var(--button--focus-border-color);
+  }
+}
+
+/* Edit/remove button base appearance. */
+.media-library-edit__link,
+.media-library-item__edit,
+.media-library-item__edit.button,
+.media-library-item__remove,
+.media-library-item__remove.button {
+  border-color: var(--gin-border-color);
+
+  &:focus {
+    outline: var(--focus-outline);
+  }
+}
+
+.media-library-edit__link,
+.media-library-item__edit {
+  inset-block-start: 0.625rem;
+  inset-inline-end: 3.125rem;
+  background-image: url("../../migration/media/icons/media-library/media-edit.svg");
+  background-size: 0.75rem 0.75rem;
+}
+
+.media-library-item__remove,
+.media-library-item__remove.button {
+  background-image: url("../../migration/media/icons/media-library/media-remove.svg");
+  background-size: 0.75rem 0.75rem;
+}
+
+.media-library-item__click-to-select-checkbox {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 16px;
+  inset-inline-start: 16px;
+  display: block;
+
+  input {
+    width: 20px;
+    height: 20px;
+  }
+
+  .form-item {
+    margin: 0;
+  }
+
+  .form-boolean {
+    width: 29px;
+    height: 29px;
+    border-radius: var(--gin-border-xs);
+    box-shadow: 0 2px 4px rgb(0, 0, 0, 0.15);
+
+    &:hover,
+    &:active {
+      border-color: transparent;
+    }
+
+    &:checked {
+      border-color: var(--gin-color-primary);
+      background-color: var(--gin-color-primary);
+    }
+  }
+}
+
+.media-library-item__click-to-select-trigger {
+  cursor: pointer;
+}
+
+/* Media library item table styles. */
+.media-library-item--table img {
+  max-width: 100px;
+  height: auto;
+}
+
+/* Media library entity view display styles. */
+.media-library-item__preview {
+  position: relative;
+  overflow: clip;
+  border: 1px solid var(--gin-border-color);
+  border-radius: var(--gin-border-xl);
+  aspect-ratio: 1;
+  background-color: var(--gin-pattern-fallback);
+  background-image: linear-gradient(-45deg, var(--gin-pattern) 25%, transparent 26%), linear-gradient(-45deg, var(--gin-pattern) 25%, transparent 26%), linear-gradient(135deg, var(--gin-pattern) 25%, transparent 26%), linear-gradient(135deg, var(--gin-pattern) 25%, transparent 26%);
+  background-position:
+    0 0,
+    var(--gin-pattern-square) var(--gin-pattern-square),
+    var(--gin-pattern-square) var(--gin-pattern-square),
+    0 0;
+  background-size: calc(var(--gin-pattern-square) * 2) calc(var(--gin-pattern-square) * 2);
+
+  svg,
+  img {
+    position: absolute;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+    object-fit: cover;
+    inset: 0;
+  }
+
+  .media-library-item.is-hover & {
+    border-color: var(--gin-color-text);
+    box-shadow: 0 0 0 2px var(--gin-color-text);
+
+    .gin--dark-mode & {
+      border-color: var(--gin-border-color);
+    }
+  }
+
+  .media-library-item.checked &,
+  .media-library-item.is-active & {
+    border-color: var(--gin-color-primary);
+    box-shadow: 0 0 0 2px var(--gin-color-primary);
+  }
+}
+
+/*
+ * Status overlay shown during media processing; only fires for transient
+ * states.
+ */
+.media-library-item__status {
+  position: absolute;
+  inset-block-start: 40px;
+  inset-inline-start: 5px;
+  padding: 5px 10px;
+  pointer-events: none;
+  color: #e4e4e4;
+  background: #666;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.media-library-item__attributes {
+  padding: var(--space-xs);
+}
+
+.media-library-item__name {
+  text-wrap: pretty;
+  color: var(--gin-color-text);
+  font-size: 14px;
+}
+
+.media-library-item__content {
+  display: flex;
+  height: 100%;
+
+  article {
+    width: 100%;
+  }
+}
+
+.media-library-item__type {
+  color: #696969;
+  font-size: 12px;
+}
+
+.media-library-item--disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/**
+ * Media library widget edit and delete button styles.
+ *
+ * We have to override the .button styles since buttons make heavy use of
+ * background and border property changes.
+ */
+.media-library-item__edit,
+.media-library-item__edit:hover,
+.media-library-item__edit:focus,
+.media-library-item__remove,
+.media-library-item__remove:hover,
+.media-library-item__remove:focus,
+.media-library-item__remove.button,
+.media-library-item__remove.button:first-child,
+.media-library-item__remove.button:disabled,
+.media-library-item__remove.button:disabled:active,
+.media-library-item__remove.button:hover,
+.media-library-item__remove.button:focus {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 10px;
+  overflow: hidden;
+  width: 24px;
+  height: 24px;
+  margin: 5px;
+  padding: 0;
+  transition: 0.2s border-color;
+  color: transparent;
+  background-size: 12px;
+  text-shadow: none;
+  font-size: 0;
+}
+
+.media-library-item__edit {
+  inset-inline-end: 40px;
+  border: 1px solid var(--color-gray-200);
+  background-image: url("../../images/icons/545560/pencil.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px;
+
+  &:active {
+    background-image: url("../../../../misc/icons/ffffff/pencil.svg");
+  }
+}
+
+.media-library-item__remove,
+.media-library-item__remove.button,
+.media-library-item__remove.button:first-child,
+.media-library-item__remove.button:disabled,
+.media-library-item__remove.button:disabled:active,
+.media-library-item__remove.button:hover,
+.media-library-item__remove.button:focus {
+  inset-inline-end: 10px;
+  border: 1px solid var(--color-gray-200);
+  background-image: url("../../../../misc/icons/545560/ex.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px;
+}
+
+.media-library-item__remove:active,
+.media-library-item__remove.button:active,
+.media-library-item__remove.button:disabled:active {
+  border-color: var(--color-absolutezero);
+  background-image: url("../../../../misc/icons/ffffff/ex.svg");
+}

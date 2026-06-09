@@ -6,11 +6,7 @@
 @import "../base/media-queries.pcss.css";
 
 .block-page-title-block {
-  margin-block-end: var(--space-s);
-
-  &:last-child {
-    margin-block-end: 0;
-  }
+  margin-block: var(--gin-spacing-s);
 }
 
 .page-title {

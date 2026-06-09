@@ -387,26 +387,12 @@ body {
 
 .indentation {
   position: relative;
+  display: inline-flex;
+  overflow: clip;
+  flex-direction: column;
+  height: calc(100% + var(--cell-padding-y) * 2);
   inset-inline-start: calc(var(--space-xs) * -0.5);
-  float: left; /* LTR */
-  width: 1.5625rem;
-  height: 1.5625rem;
-  background: none !important;
-  line-height: 0;
-
-  .tabledrag-cell-content & {
-    /* Fixes Safari bug (16.1 at least) where table rows are overly large when
-      using indentation (e.g. re-ordering menu items. */
-    display: inline-flex;
-    float: none;
-    overflow: hidden;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  [dir="rtl"] & {
-    float: right;
-  }
+  margin-block: calc(-1 * var(--cell-padding-y));
 }
 
 /**

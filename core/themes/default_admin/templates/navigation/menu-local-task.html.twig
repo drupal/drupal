@@ -26,8 +26,7 @@
 <li{{ attributes.addClass(classes) }}>
   {{ link }}
   {% if is_active and level == 'primary' %}
-    {{ attach_library('core/drupal.reset-appearance') }}
-    <button class="reset-appearance tabs__trigger" type="button" aria-label="{{ 'Tabs display toggle'|t }}" data-drupal-nav-tabs-trigger>
+    <button class="tabs__trigger" type="button" aria-label="{{ 'Tabs display toggle'|t }}" data-drupal-nav-tabs-trigger>
       {% include "@default_admin/../images/src/hamburger-menu.svg" %}
     </button>
   {% endif %}

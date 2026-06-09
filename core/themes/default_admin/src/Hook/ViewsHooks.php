@@ -132,6 +132,7 @@ readonly class ViewsHooks {
     };
 
     if ($view->id() === 'media_library') {
+      $add_classes($view->style_plugin->options['row_class'], ['media-library-item']);
       if ($view->display_handler->options['defaults']['css_class']) {
         $add_classes($view->displayHandlers->get('default')->options['css_class'], ['media-library-view']);
       }
