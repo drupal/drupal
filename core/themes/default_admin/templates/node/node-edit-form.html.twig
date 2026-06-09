@@ -31,7 +31,7 @@
 {% else %}
   <div class="layout-node-form clearfix">
     <div class="layout-region layout-region-node-main layout-region--main">
-      {{ form|without('advanced', 'footer', 'gin_actions', 'default_admin_sidebar', 'gin_sidebar_toggle') }}
+      {{ form|without('advanced', 'footer', 'actions', 'default_admin_sidebar', 'default_admin_sidebar_toggle') }}
     </div>
     <div class="layout-region layout-region-node-secondary layout-region--secondary" id="default_admin_sidebar" tabindex="0">
       <span class="gin-sidebar-draggable" id="gin-sidebar-draggable"></span>
@@ -39,6 +39,9 @@
         {{ form.advanced }}
         {{ form.default_admin_sidebar_toggle }}
       </div>
+    </div>
+    <div class="layout-region layout-region-node-footer">
+      {{ form.actions }}
     </div>
   </div>
 {% endif %}
