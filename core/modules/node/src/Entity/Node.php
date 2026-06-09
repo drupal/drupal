@@ -325,7 +325,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setTranslatable(TRUE);
 
     $fields['promote'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Promoted to front page'))
+      ->setLabel(t('Promoted'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setDefaultValue(FALSE)

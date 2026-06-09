@@ -52,7 +52,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
     ];
     $this->submitForm($edit, 'Save');
 
-    // Create a new node with a file field set. Promote to frontpage
+    // Create a new node with a file field set. Promoted
     // needs to be set so this node will appear in the RSS feed.
     $node = $this->drupalCreateNode(['type' => $type_name, 'promote' => 1]);
     $test_file = $this->getTestFile('text');

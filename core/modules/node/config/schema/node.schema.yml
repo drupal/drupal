@@ -59,11 +59,11 @@ node.type.*:
 
 action.configuration.node_unpromote_action:
   type: action_configuration_default
-  label: 'Demote selected content from front page configuration'
+  label: 'Unpromote selected content configuration'
 
 action.configuration.node_promote_action:
   type: action_configuration_default
-  label: 'Promote selected content from front page configuration'
+  label: 'Promote selected content configuration'
 
 action.configuration.node_make_sticky_action:
   type: action_configuration_default

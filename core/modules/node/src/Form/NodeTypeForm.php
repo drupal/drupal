@@ -147,7 +147,7 @@ class NodeTypeForm extends BundleEntityFormBase {
       '#default_value' => $workflow_options,
       '#options' => [
         'status' => $this->t('Published'),
-        'promote' => $this->t('Promoted to front page'),
+        'promote' => $this->t('Promoted'),
         'sticky' => $this->t('Sticky at top of lists'),
         'revision' => $this->t('Create new revision'),
       ],

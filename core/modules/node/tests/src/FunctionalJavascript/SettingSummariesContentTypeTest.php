@@ -48,7 +48,7 @@ class SettingSummariesContentTypeTest extends WebDriverTestBase {
     $page->findField('options[sticky]')->check();
     $page->findField('options[promote]')->check();
     $page->findField('options[revision]')->check();
-    $summary = 'Not published, Promoted to front page, Sticky at top of lists, Create new revision';
+    $summary = 'Not published, Promoted, Sticky at top of lists, Create new revision';
     $locator = '[href="#edit-workflow"] .vertical-tabs__menu-item-summary:contains("' . $summary . '")';
     $this->assertNotEmpty($this->assertSession()->waitForElement('css', $locator));
   }
