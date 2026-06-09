@@ -114,7 +114,8 @@ class MediaFilterController implements ContainerInjectionInterface {
     // in an ARIA label.
     $headers = [];
     if ($media = $this->entityRepository->loadEntityByUuid('media', $uuid)) {
-      $headers['Drupal-Media-Label'] = $this->entityRepository->getTranslationFromContext($media)->label();
+      $media = $this->entityRepository->getTranslationFromContext($media);
+      $headers['Drupal-Media-Label'] = $media->access('view label') ? $media->label() : $this->t('Media @id', ['@id' => $media->id()]);
     }
 
     // Note that we intentionally do not use:
