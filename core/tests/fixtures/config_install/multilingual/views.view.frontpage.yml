@@ -13,7 +13,7 @@ _core:
 id: frontpage
 label: Frontpage
 module: node
-description: 'All content promoted to the front page.'
+description: 'All promoted content.'
 tag: default
 base_table: node_field_data
 base_field: nid
@@ -76,7 +76,7 @@ display:
           plugin_id: text_custom
           label: ''
           empty: true
-          content: 'No front page content has been created yet.<br/>Follow the <a target="_blank" href="https://www.drupal.org/docs/user_guide/en/index.html">User Guide</a> to start building your site.'
+          content: 'No promoted content has been created yet.<br/>Follow the <a target="_blank" href="https://www.drupal.org/docs/user_guide/en/index.html">User Guide</a> to start building your site.'
           tokenize: false
         node_listing_empty:
           id: node_listing_empty

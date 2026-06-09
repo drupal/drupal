@@ -11,7 +11,7 @@ dependencies:
 id: frontpage
 label: Frontpage
 module: node
-description: 'All content promoted to the front page.'
+description: 'All promoted content.'
 tag: default
 base_table: node_field_data
 base_field: nid
@@ -57,7 +57,7 @@ display:
           plugin_id: text_custom
           label: ''
           empty: true
-          content: 'No front page content has been created yet.'
+          content: 'No promoted content has been created yet.'
           tokenize: false
         node_listing_empty:
           id: node_listing_empty

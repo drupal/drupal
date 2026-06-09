@@ -60,7 +60,7 @@ class NodeSearchHooks {
         'score' => 'n.sticky',
       ],
       'promote' => [
-        'title' => $this->t('Content is promoted to the front page'),
+        'title' => $this->t('Content is promoted'),
         // The promote flag is either 0 or 1, which is automatically normalized.
         'score' => 'n.promote',
       ],

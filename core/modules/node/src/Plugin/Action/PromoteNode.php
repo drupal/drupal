@@ -12,7 +12,7 @@ use Drupal\node\NodeInterface;
  */
 #[Action(
   id: 'node_promote_action',
-  label: new TranslatableMarkup('Promote selected content to front page'),
+  label: new TranslatableMarkup('Promote selected content'),
   type: 'node'
 )]
 class PromoteNode extends FieldUpdateActionBase {

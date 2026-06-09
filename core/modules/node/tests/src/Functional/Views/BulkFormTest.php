@@ -153,21 +153,21 @@ class BulkFormTest extends NodeTestBase {
     $node = $this->loadNode($node->id());
     $this->assertFalse($node->isSticky(), 'Node is not sticky anymore');
 
-    // Promote to front page.
-    $this->assertFalse($node->isPromoted(), 'Node is not promoted to the front page');
-    $this->assertFalse($node->getTranslation('en-gb')->isPromoted(), 'Node translation is not promoted to the front page');
-    $this->assertFalse($node->getTranslation('it')->isPromoted(), 'Node translation is not promoted to the front page');
+    // Promote content.
+    $this->assertFalse($node->isPromoted(), 'Node is not promoted');
+    $this->assertFalse($node->getTranslation('en-gb')->isPromoted(), 'Node translation is not promoted');
+    $this->assertFalse($node->getTranslation('it')->isPromoted(), 'Node translation is not promoted');
     $edit = [
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_promote_action',
     ];
     $this->submitForm($edit, 'Apply to selected items');
     $node = $this->loadNode($node->id());
-    $this->assertTrue($node->isPromoted(), 'Node has been promoted to the front page');
-    $this->assertFalse($node->getTranslation('en-gb')->isPromoted(), 'Node translation has not been promoted to the front page');
-    $this->assertFalse($node->getTranslation('it')->isPromoted(), 'Node translation has not been promoted to the front page');
+    $this->assertTrue($node->isPromoted(), 'Node has been promoted');
+    $this->assertFalse($node->getTranslation('en-gb')->isPromoted(), 'Node translation has not been promoted');
+    $this->assertFalse($node->getTranslation('it')->isPromoted(), 'Node translation has not been promoted');
 
-    // Demote from front page.
+    // Unpromote content.
     $edit = [
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_unpromote_action',

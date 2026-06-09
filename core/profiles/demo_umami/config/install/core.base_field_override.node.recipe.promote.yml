@@ -7,7 +7,7 @@ id: node.recipe.promote
 field_name: promote
 entity_type: node
 bundle: recipe
-label: 'Promoted to front page'
+label: 'Promoted'
 description: ''
 required: false
 translatable: false

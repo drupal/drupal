@@ -66,7 +66,7 @@ class BaseFieldOverrideTest extends ConfigEntityResourceTestBase {
       'field_name' => 'promote',
       'entity_type' => 'node',
       'bundle' => 'camelids',
-      'label' => 'Promote to front page',
+      'label' => 'Promoted',
     ]);
     $entity->save();
 
@@ -109,7 +109,7 @@ class BaseFieldOverrideTest extends ConfigEntityResourceTestBase {
           'entity_type' => 'node',
           'field_name' => 'promote',
           'field_type' => 'boolean',
-          'label' => 'Promote to front page',
+          'label' => 'Promoted',
           'langcode' => 'en',
           'required' => FALSE,
           'settings' => [

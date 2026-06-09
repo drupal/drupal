@@ -12,7 +12,7 @@ use Drupal\node\NodeInterface;
  */
 #[Action(
   id: 'node_unpromote_action',
-  label: new TranslatableMarkup('Demote selected content from front page'),
+  label: new TranslatableMarkup('Unpromote selected content'),
   type: 'node'
 )]
 class DemoteNode extends FieldUpdateActionBase {

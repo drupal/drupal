@@ -4,7 +4,7 @@ dependencies:
   module:
     - node
 id: node_unpromote_action
-label: 'Remove content from front page'
+label: 'Unpromote content'
 type: node
 plugin: node_unpromote_action
 configuration: {  }

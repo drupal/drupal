@@ -57,7 +57,7 @@ class NodeHelpHooks {
         $output .= '<h2>' . $this->t('Uses') . '</h2>';
         $output .= '<dl>';
         $output .= '<dt>' . $this->t('Creating content') . '</dt>';
-        $output .= '<dd>' . $this->t('When new content is created, the Node module records basic information about the content, including the author, date of creation, and the <a href=":content-type">Content type</a>. It also manages the <em>publishing options</em>, which define whether or not the content is published, promoted to the front page of the site, and/or sticky at the top of content lists. Default settings can be configured for each <a href=":content-type">type of content</a> on your site.', [
+        $output .= '<dd>' . $this->t('When new content is created, the Node module records basic information about the content, including the author, date of creation, and the <a href=":content-type">Content type</a>. It also manages the <em>publishing options</em>, which define whether or not the content is published, promoted, and/or sticky at the top of content lists. Default settings can be configured for each <a href=":content-type">type of content</a> on your site.', [
           ':content-type' => Url::fromRoute('entity.node_type.collection')->toString(),
         ]) . '</dd>';
         $output .= '<dt>' . $this->t('Creating custom content types') . '</dt>';

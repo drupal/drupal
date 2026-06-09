@@ -121,8 +121,8 @@ class NodeViewsData extends EntityViewsData {
       ],
     ];
 
-    $data['node_field_data']['promote']['help'] = $this->t('A boolean indicating whether the node is visible on the front page.');
-    $data['node_field_data']['promote']['filter']['label'] = $this->t('Promoted to front page status');
+    $data['node_field_data']['promote']['help'] = $this->t('A boolean indicating whether the node is promoted.');
+    $data['node_field_data']['promote']['filter']['label'] = $this->t('Promoted status');
     $data['node_field_data']['promote']['filter']['type'] = 'yes-no';
 
     $data['node_field_data']['sticky']['help'] = $this->t('A boolean indicating whether the node should sort to the top of content lists.');
@@ -291,7 +291,7 @@ class NodeViewsData extends EntityViewsData {
     $data['node_field_revision']['status']['filter']['type'] = 'yes-no';
     $data['node_field_revision']['status']['filter']['use_equal'] = TRUE;
 
-    $data['node_field_revision']['promote']['help'] = $this->t('A boolean indicating whether the node is visible on the front page.');
+    $data['node_field_revision']['promote']['help'] = $this->t('A boolean indicating whether the node is promoted.');
 
     $data['node_field_revision']['sticky']['help'] = $this->t('A boolean indicating whether the node should sort to the top of content lists.');
 

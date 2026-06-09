@@ -27,7 +27,7 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
   public function testViewsTranslationUI(): void {
     $this->drupalLogin($this->adminUser);
 
-    $description = 'All content promoted to the front page.';
+    $description = 'All promoted content.';
     $human_readable_name = 'Frontpage';
     $display_settings_default = 'Default';
     $display_options_default = '(Empty)';
