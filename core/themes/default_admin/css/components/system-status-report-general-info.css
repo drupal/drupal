@@ -25,17 +25,16 @@
 }
 
 .system-status-general-info__header {
-  --system-status-general-info-header-color: #ccc;
-
   padding: var(--gin-spacing-m) var(--gin-spacing-l);
   text-transform: none;
-  margin-block: 0 var(--gin-spacing-xs);
-  margin-inline: 0;
+  color: var(--gin-color-primary-active);
   border: 0 none;
   border-radius: var(--gin-border-m);
   background: var(--gin-bg-header);
   font-size: var(--gin-font-size-l);
   font-weight: var(--gin-font-weight-bold);
+  margin-block: 0 var(--gin-spacing-xs);
+  margin-inline: 0;
 
   @media screen and (max-width: 48em) {
     display: none;

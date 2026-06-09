@@ -55,6 +55,12 @@
     box-shadow: 0 6px 16px var(--gin-border-color-layer);
   }
 
+  /* If Layout Builder form is active, remove background images. */
+  .layout-builder__message--defaults &,
+  .layout-builder__message--overrides & {
+    background-image: none;
+  }
+
   .button--dismiss {
     position: absolute;
     width: 1.8125rem;
@@ -159,6 +165,11 @@
 
     &:dir(rtl) {
       mask-position: center right;
+    }
+
+    /* If no icon, then remove the pseudo-element. */
+    @container style(--messages-icon: none) {
+      content: none;
     }
 
     @media (forced-colors: active) {

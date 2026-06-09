@@ -71,6 +71,13 @@
     color: var(--gin-color-button-text);
     background: var(--gin-color-primary-hover);
   }
+
+  &:dir(rtl) {
+    &::before,
+    &::after {
+      scale: -1 1;
+    }
+  }
 }
 
 .pager__link--action-link {
@@ -112,10 +119,6 @@
   block-size: 1rem;
   content: "";
   background: currentColor;
-
-  &:dir(rtl) {
-    transform: scaleX(-1);
-  }
 
   @media (forced-colors: active) {
     background-color: linktext;

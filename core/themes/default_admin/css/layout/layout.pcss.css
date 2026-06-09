@@ -102,7 +102,6 @@
     flex-grow: 1;
     align-self: center;
     min-width: 0;
-    margin: 0;
 
     .page-title {
       align-self: center;
@@ -140,10 +139,6 @@
     flex-wrap: nowrap;
     align-items: center;
     margin-block-end: 0;
-
-    .block-page-title-block {
-      margin: 0;
-    }
   }
 }
 

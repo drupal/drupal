@@ -122,7 +122,7 @@
   --easing: cubic-bezier(0.19, 1, 0.22, 1);
   --speed-transition: 0.15s;
   --transition: all var(--speed-transition) var(--easing);
-  --base-border-radius: 0.5rem;
+  --base-border-radius: 2px;
   --focus-border-size: calc(var(--base-border-radius) - 1px);
   --focus-border-offset-size: 0px;
   --outline-size: 4px;
@@ -273,7 +273,7 @@
   --vertical-tabs-margin-vertical: var(--space-s);
   --vertical-tabs-border-radius: var(--details-accordion-border-size-radius);
   --vertical-tabs-shadow: var(--details-box-shadow);
-  --vertical-tabs-border-color: var(--details-border-color);
+  --vertical-tabs-border-color: var(--gin-border-color);
   --vertical-tabs-border-size: 1px;
   --vertical-tabs-border: var(--vertical-tabs-border-size) solid var(--vertical-tabs-border-color);
   --vertical-tabs-menu-item-shadow-extraspace: 0.5rem;
@@ -342,7 +342,7 @@
   --gin-bg-layer3: #fff;
   --gin-bg-layer4: #e2e5ec;
   --gin-bg-secondary: var(--gin-bg-layer);
-  --gin-bg-header: #eeeff3;
+  --gin-bg-header: #e1eafc;
   --gin-bg-unpublished: var(--gin-bg-danger-light);
   --gin-pattern: var(--gin-border-color);
   --gin-pattern-fallback: var(--gin-bg-layer2);

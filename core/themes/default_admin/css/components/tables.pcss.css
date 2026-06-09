@@ -6,6 +6,9 @@
 @import "../base/media-queries.pcss.css";
 
 table {
+  --cell-padding-y: var(--gin-spacing-density-m);
+  --cell-padding-x: var(--gin-spacing-m);
+
   width: 100%;
   margin-block: var(--space-l);
   border-collapse: collapse;
@@ -41,7 +44,7 @@ table {
 
     td {
       height: auto;
-      padding: var(--gin-spacing-density-m) var(--gin-spacing-m);
+      padding: var(--cell-padding-y) var(--cell-padding-x);
     }
   }
 

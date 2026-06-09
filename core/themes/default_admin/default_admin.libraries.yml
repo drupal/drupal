@@ -72,8 +72,6 @@ global-styling:
     # rendering links, it is hard to recognize when this detection should be
     # attached, therefore it is always attached.
     - core/drupal.touchevents-test
-    - default_admin/tabs
-    - default_admin/admin_dialog
     - default_admin/status
 
 form-two-columns:
@@ -125,6 +123,7 @@ admin.drupal.dialog:
     theme:
       css/components/dialog.css: {}
   dependencies:
+    - default_admin/accent
     - default_admin/admin.jquery.ui
 
 admin.tabledrag:
@@ -221,12 +220,11 @@ dropbutton:
     - core/drupal
     - core/once
 
-
 autocomplete:
   version: VERSION
   css:
     theme:
-      migration/css/components/autocomplete.css: { minified: false }
+      css/components/autocomplete-loading.module.css: { }
   js:
     js/autocomplete.js: {}
   dependencies:
@@ -238,9 +236,6 @@ details-focus:
     js/details.js: {}
 
 ajax:
-  css:
-    theme:
-      migration/css/components/ajax.css: { minified: false, weight: 99 }
   js:
     js/ajax.js: {}
 
@@ -300,25 +295,20 @@ file:
     component:
       css/components/file.css: {}
 
-media_library.theme:
-  version: VERSION
-  css:
-    theme:
-      css/theme/media-library.css: {}
-  dependencies:
-    - default_admin/icon-link
-
-media_library.ui:
+media_library:
   version: VERSION
   css:
     component:
-      css/components/media-library.ui.css : {}
+      css/components/media-library.css: {}
+      css/components/media-library-item.css: {}
+      css/components/media-library-vertical-tabs.css: {}
   js:
     js/media-library.ui.js: { weight: -1 }
   dependencies:
     - core/drupal
     - core/jquery
     - core/once
+    - default_admin/icon-link
 
 progress:
   version: VERSION
@@ -339,9 +329,6 @@ filter:
 
 tableselect:
   version: VERSION
-  css:
-    component:
-      migration/css/components/tableselect.css: { minified: false }
   js:
     js/tableselect.js: {}
   dependencies:
@@ -366,7 +353,7 @@ init:
 top_bar:
   css:
     component:
-      migration/css/layout/top_bar.css: { minified: false }
+      css/layout/top-bar.css: { minified: false }
   dependencies:
     - default_admin/status
 
@@ -375,29 +362,14 @@ top_bar:
 navigation:
   css:
     theme:
-      migration/css/layout/navigation.css: { minified: false }
+      css/components/navigation.css: { }
   js:
     migration/js/navigation.js: { minified: false }
   dependencies:
     - default_admin/escape_admin
-    - default_admin/node_preview
+    - default_admin/drupal.node.preview
     - default_admin/contextual_links
     - default_admin/breadcrumb
-
-# Toolbar
-
-toolbar:
-  css:
-    component:
-      migration/css/components/toolbar.css: { minified: false }
-    theme:
-      migration/css/layout/toolbar.css: { minified: false }
-  dependencies:
-    - default_admin/escape_admin
-    - default_admin/node_preview
-    - default_admin/contextual_links
-    - default_admin/breadcrumb
-    - core/once
 
 # Accent
 
@@ -413,18 +385,10 @@ accent:
 
 # Libraries
 
-admin_dialog:
-  css:
-    theme:
-      migration/css/theme/dialog.css: { minified: false }
-  dependencies:
-    - default_admin/dialog
-    - default_admin/accent
-
 description_toggle:
   css:
-    theme:
-      migration/css/components/description_toggle.css: { minified: false }
+    component:
+      css/components/description-toggle.css: { }
   js:
     migration/js/description_toggle.js: { minified: false }
 
@@ -466,7 +430,7 @@ sticky:
 sidebar:
   css:
     theme:
-      migration/css/components/sidebar.css: { minified: false }
+      css/components/sidebar.css: { minified: false }
   js:
     migration/js/sidebar.js: { minified: false }
   dependencies:
@@ -477,7 +441,7 @@ settings:
     migration/js/settings.js: { minified: false }
   css:
     component:
-      migration/css/components/settings.css: { minified: false }
+      css/components/settings.css: { minified: false }
   dependencies:
     - core/drupalSettings
 
@@ -488,78 +452,38 @@ tableheader:
     - core/once
     - default_admin/scroll_sync
 
-tabs:
-  css:
-    component:
-      migration/css/components/tabs.css: { minified: false, weight: 99 }
-
 tooltip:
   css:
     component:
-      migration/css/components/tooltip.css: { minified: false }
+      css/components/tooltip.css: { minified: false }
   dependencies:
     - core/once
 
 status:
   css:
     component:
-      migration/css/components/status.css: { minified: false }
+      css/components/status.css: { minified: false }
 
 more_actions:
   js:
     migration/js/more_actions.js: { minified: false }
   css:
-    layout:
-      migration/css/components/more_actions.css: { minified: false }
+    component:
+      css/components/more-actions.css: { minified: false }
   dependencies:
     - core/once
 
 edit_form:
   css:
     layout:
-      migration/css/components/edit_form.css: { minified: false }
-
-media_library:
-  css:
-    theme:
-      migration/css/components/media_library.css: { minified: false, weight: 99 }
+      css/components/edit-form.css: {}
 
 contextual_links:
   css:
     theme:
-      migration/css/components/contextual_links.css: { minified: false, weight: 99 }
-
-dialog:
-  css:
-    theme:
-      migration/css/components/dialog.css: { minified: false, weight: 99 }
-
-ckeditor5:
-  css:
-    theme:
-      migration/css/components/ckeditor5.css: { minified: false }
+      css/components/contextual-links.css: {}
 
 revisions:
   css:
-    theme:
-      migration/css/components/revisions.css: { minified: false }
-
-breadcrumb:
-  css:
-    theme:
-      migration/css/components/breadcrumb.css: { minified: false }
-
-node_preview:
-  css:
     component:
-      migration/css/components/node_preview.css: { minified: false }
-
-
-maintenance_page:
-  css:
-    theme:
-      migration/css/components/maintenance_page.css: { minified: false }
-  dependencies:
-    - system/maintenance
-    - default_admin/accent
-    - default_admin/init
+      css/components/revisions.css: { minified: false }
