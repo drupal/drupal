@@ -26,7 +26,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
    */
   protected static $modules = [
     'entity_test',
-    'telephone',
+    'field_test',
     'config',
     'filter',
     'datetime',
@@ -50,11 +50,11 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
    * Tests deleting field storages and fields as part of config import.
    */
   public function testImportDeleteUninstall(): void {
-    // Create a telephone field.
+    // Create a test_field field.
     $field_storage = FieldStorageConfig::create([
-      'field_name' => 'field_tel',
+      'field_name' => 'field_test_field',
       'entity_type' => 'entity_test',
-      'type' => 'telephone',
+      'type' => 'test_field',
     ]);
     $field_storage->save();
     FieldConfig::create([
@@ -74,15 +74,15 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
       'bundle' => 'entity_test',
     ])->save();
 
-    // Create an entity which has values for the telephone and text field.
+    // Create an entity which has values for the test_field and date field.
     $entity = EntityTest::create();
-    $value = '+0123456789';
-    $entity->field_tel = $value;
+    $value = '99';
+    $entity->field_test_field = $value;
     $entity->field_date = time();
     $entity->name->value = $this->randomMachineName();
     $entity->save();
 
-    // Delete the text field before exporting configuration so that we can test
+    // Delete the date field before exporting configuration so that we can test
     // that deleted fields that are provided by modules that will be uninstalled
     // are also purged and that the UI message includes such fields.
     $date_field_storage->delete();
@@ -90,26 +90,26 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertEquals($value, $entity->field_tel->value);
-    $this->assertEquals($value, $entity->field_tel[0]->value);
+    $this->assertEquals($value, $entity->field_test_field->value);
+    $this->assertEquals($value, $entity->field_test_field[0]->value);
 
     $active = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
     $this->copyConfig($active, $sync);
 
-    // Stage uninstall of the Telephone module.
+    // Stage uninstall of the field_test module.
     $core_extension = $this->config('core.extension')->get();
-    unset($core_extension['module']['telephone']);
+    unset($core_extension['module']['field_test']);
     $sync->write('core.extension', $core_extension);
 
     // Stage the field deletion including its dependencies.
-    $sync->delete('field.storage.entity_test.field_tel');
-    $sync->delete('field.field.entity_test.entity_test.field_tel');
+    $sync->delete('field.storage.entity_test.field_test_field');
+    $sync->delete('field.field.entity_test.entity_test.field_test_field');
     $sync->delete('core.entity_form_display.entity_test.entity_test.default');
     $this->drupalGet('admin/config/development/configuration');
     // Test that the message for one field being purged during a configuration
     // synchronization is correct.
-    $this->assertSession()->pageTextContains('This synchronization will delete data from the field entity_test.field_tel.');
+    $this->assertSession()->pageTextContains('This synchronization will delete data from the field entity_test.field_test_field.');
 
     // Stage an uninstall of the datetime module to test the message for
     // multiple fields.
@@ -117,17 +117,17 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     $sync->write('core.extension', $core_extension);
 
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertSession()->pageTextContains('This synchronization will delete data from the fields: entity_test.field_tel, entity_test.field_date.');
+    $this->assertSession()->pageTextContains('This synchronization will delete data from the fields: entity_test.field_test_field, entity_test.field_date.');
 
     // This will purge all the data, delete the field and uninstall the
-    // Telephone and Text modules.
+    // field_test and Datetime modules.
     $this->submitForm([], 'Import all');
     $this->assertSession()->pageTextNotContains('Field data will be deleted by this synchronization.');
     $this->rebuildContainer();
-    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('telephone'));
-    $this->assertNull(\Drupal::service('entity.repository')->loadEntityByUuid('field_storage_config', $field_storage->uuid()), 'The telephone field has been deleted by the configuration synchronization');
+    $this->assertFalse(\Drupal::moduleHandler()->moduleExists('field_test'));
+    $this->assertNull(\Drupal::service('entity.repository')->loadEntityByUuid('field_storage_config', $field_storage->uuid()), 'The field_test_field field has been deleted by the configuration synchronization');
     $deleted_storage_definitions = \Drupal::service('entity_field.deleted_fields_repository')->getFieldStorageDefinitions();
-    $this->assertFalse(isset($deleted_storage_definitions[$field_storage->uuid()]), 'Telephone field has been completed removed from the system.');
+    $this->assertFalse(isset($deleted_storage_definitions[$field_storage->uuid()]), 'field_test field has been completed removed from the system.');
     $this->assertFalse(isset($deleted_storage_definitions[$field_storage->uuid()]), 'Text field has been completed removed from the system.');
   }
 
