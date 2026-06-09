@@ -1,0 +1,341 @@
+/*
+ * @file
+ *
+ * Styling for Media Library.
+ */
+
+@import "../base/media-queries.pcss.css";
+
+/*
+ * The field widget shown on the entity create page.
+ */
+.field--widget-media-library-widget {
+  .media-library-item__preview {
+    cursor: move;
+
+    img {
+      border-start-start-radius: 2px;
+      border-start-end-radius: 2px;
+    }
+  }
+
+  .js-media-library-item:only-child .media-library-item__preview {
+    cursor: inherit;
+  }
+}
+
+/**
+ * Negative margins compensate for modal dialog padding and compensate for
+ * positioning that would otherwise hide the active tab indicator on the start.
+ */
+#media-library-wrapper {
+  display: flex;
+  margin-inline: calc(-1 * var(--space-l));
+
+  .messages-list,
+  .messages {
+    margin-block: 0 var(--space-l);
+  }
+
+  /* "Grid" and "Table" buttons. */
+  .views-display-link {
+    position: relative;
+    margin: 0;
+    padding-inline-start: 22px;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--gin-color-text);
+    background-image: none;
+    font-size: 15px;
+    line-height: 16px;
+
+    &::before {
+      position: absolute;
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      content: "";
+      background-color: var(--gin-color-text);
+      inset-block-start: 1px;
+      inset-inline-start: 0;
+    }
+
+    &.is-active {
+      color: var(--gin-color-primary);
+      font-weight: bold;
+
+      &::before {
+        background-color: var(--gin-color-primary);
+      }
+    }
+  }
+
+  .views-display-link-widget::before {
+    mask-image: url("../../migration/media/icons/media-library/grid.svg");
+  }
+
+  .views-display-link-widget_table::before {
+    mask-image: url("../../migration/media/icons/media-library/list.svg");
+  }
+}
+
+#media-library-content {
+  width: 100%;
+  padding: 1em;
+  border-color: var(--gin-border-color);
+  border-inline-start: 0 none;
+  outline: none;
+
+  .media-library-menu + & {
+    z-index: var(--vertical-tabs-menu--z-index);
+    border-inline-start: var(--vertical-tabs-border);
+    box-shadow: var(--vertical-tabs-shadow);
+  }
+}
+
+/* Generic media add form styles. */
+.media-library-add-form--without-input .form-item {
+  margin-inline-end: 1rem;
+}
+
+.media-library-add-form__input-wrapper {
+  .form-item--upload {
+    margin-block-start: 0;
+    margin-inline-end: 0;
+  }
+
+  .dropzone-enable .button {
+    margin: 0;
+  }
+}
+
+/* Form within media library that allows you to upload additional media. */
+.media-library-add-form {
+  .messages-list:has(.messages) {
+    margin-block: var(--space-m);
+  }
+
+  .file-upload-help {
+    margin: 8px 0 0;
+  }
+}
+
+/* Style the media add oEmbed form. */
+.media-library-add-form--oembed {
+  .media-library-add-form__input-wrapper {
+    display: flex;
+    align-items: center;
+
+    @media screen and (max-width: 37.5em) {
+      display: block;
+    }
+  }
+
+  &.media-library-add-form--without-input .form-item-url {
+    margin-block-end: 0;
+  }
+}
+
+.media-library-add-form-oembed-url {
+  width: 100%;
+}
+
+.media-library-select-all {
+  flex-basis: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  color: var(--gin-color-title);
+  border-block-end: 1px solid var(--gin-border-color-table-header);
+  border-radius: 0;
+  background: var(--gin-bg-layer);
+  margin-block: 0 10px;
+  margin-inline: 0 8px;
+  padding-block: 0 var(--space-m);
+  padding-inline: var(--space-m);
+
+  input {
+    margin-inline-end: 10px;
+  }
+}
+
+.media-library-add-form__selected-media .details-wrapper,
+.media-library-view .form--inline {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.media-library-views-form__header {
+  flex-basis: 100%;
+
+  .form-item {
+    margin-inline-end: 8px;
+  }
+}
+
+.media-library-views-form__rows {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.media-library-widget-modal {
+  /* By default, the dialog is too narrow to be usable. @see Drupal.ckeditor5.openDialog() */
+  &.ui-dialog--narrow {
+    min-width: min(75%, 1500px);
+  }
+
+  .ui-dialog-buttonpane {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .form-actions,
+    .field-actions {
+      flex: 1;
+    }
+
+    .form-actions {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      margin-block-start: 0;
+      white-space: nowrap;
+
+      .button:not(:last-child) {
+        margin-inline-end: var(--space-xs);
+      }
+    }
+
+    .media-library-selected-count {
+      flex-grow: 1;
+      margin-block-end: var(--space-s);
+
+      /* cspell:disable-next-line */
+      @media (--admin-xsmall) {
+        margin-block-end: 0;
+        margin-inline-start: 0;
+      }
+    }
+
+    /* cspell:disable-next-line */
+    @media (--admin-xsmall) {
+      flex-direction: row;
+    }
+  }
+}
+
+/*
+ * Selection widget area shown on the parent form after items are
+ * inserted.
+ */
+.media-library-selection {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+/* Media library widget styles. */
+.media-library-widget {
+  position: relative;
+}
+
+fieldset.media-library-widget {
+  .media-library-edit__link {
+    margin: var(--space-xs);
+  }
+}
+
+.media-library-widget__toggle-weight {
+  position: absolute;
+  inset-block-start: var(--space-s);
+  inset-inline-end: var(--space-m);
+  text-decoration: none;
+
+  .fieldset.media-library-widget & {
+    padding: var(--space-xs);
+    font-size: var(--font-size-xxs);
+    line-height: 1;
+  }
+}
+
+/* The <li> that is shown after a media item has been uploaded */
+.media-library-add-form__media {
+  position: relative;
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+  border-block-end: 1px solid #c0c0c0;
+
+  /* Do not show the bottom border and padding for the last item. */
+  &:last-child {
+    padding-block-end: 0;
+    border-block-end: 0;
+  }
+}
+
+/*
+ * Only renders after a file is uploaded via the add-form. Coverage matrix never
+ * completed an upload.
+ */
+.media-library-add-form__preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 220px;
+  background: var(--gin-bg-app);
+}
+
+.media-library-add-form__fields {
+  display: grid;
+  flex-grow: 1;
+  gap: 10px;
+
+  .form-item,
+  .form-managed-file__meta {
+    margin-block: 0;
+  }
+}
+
+.media-library-add-form__remove-button {
+  position: absolute;
+  inset-inline-end: 0;
+
+  &.button--extrasmall {
+    margin: var(--space-xs) 0;
+  }
+}
+
+.media-library-selected-count {
+  margin: 0 var(--space-l);
+  color: var(--gin-color-text-light);
+}
+
+.media-library-widget-empty-text {
+  margin-inline: 0;
+  color: var(--gin-color-text-light);
+}
+
+.media-library-open-button {
+  margin-block-start: 0;
+}
+
+.media-library-view {
+  display: grid;
+  gap: var(--space-l);
+
+  .view-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: var(--space-m);
+    text-decoration: none;
+    color: var(--gin-color-text);
+    border-radius: var(--gin-border-m);
+    background: var(--gin-bg-layer3);
+    box-shadow: var(--gin-shadow-l1);
+  }
+
+  .views-exposed-form {
+    margin-block: 0;
+  }
+}

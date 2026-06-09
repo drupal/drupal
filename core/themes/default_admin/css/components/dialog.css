@@ -7,145 +7,170 @@
 
 /**
  * @file
- * Presentational styles for Drupal dialogs.
+ * Dialog and modal styles, including theme overrides for form elements,
+ * links, and controls.
  */
 
 .ui-dialog {
   position: absolute;
-  inset-block-start: 0;
-  left: 0;
-  padding: 0;
-  border: 0;
-  border-radius: var(--jui-dialog-border-radius);
-  background: transparent;
-  box-shadow: var(--jui-dialog-box-shadow);
+  border-radius: var(--gin-border-m);
+  outline: none;
+  background: var(--gin-bg-layer);
+  box-shadow: var(--gin-shadow-l1);
+  font-family: var(--gin-font);
 
-  &:focus {
-    outline: var(--jui-dialog--focus-outline);
-    box-shadow: var(--jui-dialog--focus-box-shadow);
+  .ui-dialog-titlebar {
+    position: relative;
+    padding: var(--space-m) var(--space-l);
+    color: var(--color-white);
+    border: 0 none;
+    border-radius: var(--gin-border-m) var(--gin-border-m) 0 0;
+    background: #1b1b1d;
+    line-height: 1.2;
+
+    @media (forced-colors: active) {
+      border-block-end: 1px solid buttonBorder;
+    }
   }
 
-  /* Media queries are moved outside */
-}
+  .ui-dialog-titlebar-close {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    margin: 0 var(--space-m);
+    transform: translateY(-50%);
+    opacity: 0.8;
+    color: inherit;
+    border: none;
+    background: none;
+    inset-block-start: 50%;
+    inset-inline-end: 0;
 
-@media (forced-colors: active) {
-  .ui-dialog {
-    border: 1px solid transparent;
+    &:hover {
+      opacity: 1;
+    }
+
+    .ui-icon-closethick {
+      width: 100%;
+      height: 100%;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      margin: 0;
+      transform: none;
+      background: currentColor;
+      mask-image: url("data:image/svg+xml,%3csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3e  %3cg fill='none' stroke='currentColor' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3e    %3cpath d='M20 4L4 20' /%3e    %3cpath d='M4 4L20 20' /%3e  %3c/g%3e%3c/svg%3e");
+      mask-size: var(--gin-icon-size-close) var(--gin-icon-size-close);
+      mask-repeat: no-repeat;
+      mask-position: center;
+
+      @media (forced-colors: active) {
+        background: linktext;
+      }
+    }
   }
-}
 
-@media all and (max-width: 48em) {
-  .ui-dialog:not(.ui-dialog-off-canvas) {
+  .ui-dialog-title {
+    padding-inline-end: var(--space-xl);
+    font-size: var(--font-size-h6);
+  }
+
+  .ui-dialog-content {
+    color: var(--gin-color-text);
+
+    &:first-of-type {
+      border-start-start-radius: var(--gin-border-m);
+      border-start-end-radius: var(--gin-border-m);
+    }
+  }
+
+  .ui-widget-content {
+    padding-inline: var(--space-l);
+    background: var(--gin-bg-layer);
+
+    &.ui-dialog-content {
+      overflow: auto;
+    }
+  }
+
+  .ui-widget-content.ui-dialog-buttonpane {
+    padding: var(--space-s) var(--space-l);
+    border-block-start: 1px solid var(--gin-border-color-layer);
+    background: var(--gin-bg-app);
+
+    .button {
+      padding-block: calc(var(--space-s) - 2px);
+      padding-inline: var(--space-m);
+      margin-block: 0;
+
+      &:last-of-type {
+        margin-inline-end: 0;
+      }
+    }
+  }
+
+  .ui-dialog-buttonset {
+    margin: 0;
+  }
+
+  [data-drupal-selector*="-remove-form"] .button.button--danger {
+    border-color: var(--gin-color-danger) !important;
+  }
+
+  .gin--dark-mode & {
+    .views-exposed-form,
+    .views-form {
+      background: var(--gin-bg-layer2);
+    }
+  }
+
+  .form-edit .form-actions {
+    margin-block-end: 0;
+    padding: 0;
+    border: 0 none;
+    background-color: transparent;
+  }
+
+  tr .form-item {
+    margin-block: 0;
+  }
+
+  .layout-region-node-actions {
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-start: var(--space-m);
+    inset-block-start: auto;
+    inset-inline-end: auto;
+  }
+
+  .layout-region--secondary {
+    width: 100%;
+  }
+
+  .gin-layer-wrapper {
+    margin-block: var(--space-l);
+  }
+
+  .gin-confirm-form {
+    margin-block-start: var(--space-m);
+    margin-block-end: var(--space-s);
+  }
+
+  @media (--admin-to-small) {
     min-width: 92%;
     max-width: 92%;
   }
 }
 
-.ui-dialog {
-  .ui-dialog-titlebar {
-    position: relative;
-    box-sizing: border-box;
-    padding-block: var(--space-m);
-    padding-inline: var(--space-l) var(--jui-dialog-close-button-reserved-space);
-    color: var(--jui-dialog-title-color);
-    border-start-end-radius: var(--jui-dialog-border-radius);
-    border-start-start-radius: var(--jui-dialog-border-radius);
-    background: var(--jui-dialog-title-bg-color);
-    line-height: calc(var(--space-m) * 2);
-
-    .ui-dialog-title {
-      -webkit-font-smoothing: antialiased;
-      margin: 0;
-      font-size: var(--jui-dialog-title-font-size);
-      font-weight: bold;
-    }
-
-    .ui-dialog-titlebar-close {
-      position: absolute;
-      inset-block-start: 50%;
-      inset-inline-end: 0;
-      box-sizing: border-box;
-      inline-size: var(--jui-dialog-close-button-size);
-      block-size: var(--jui-dialog-close-button-size);
-      margin-inline: var(--space-l);
-      padding: 0;
-      transition: all 0.1s;
-      transform: translateY(-50%);
-      border: 2px solid transparent;
-      border-radius: var(--jui-dialog-close-button-border-radius);
-      background: none;
-
-      &:hover {
-        border-color: var(--color-white);
-      }
-
-      &:focus {
-        border-color: var(--color-focus);
-        outline: var(--jui-dialog--focus-outline);
-        box-shadow: none;
-      }
-
-      .ui-icon.ui-icon-closethick {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        transform: translate(-50%, -50%);
-        background: url("data:image/svg+xml,%3csvg width='12' height='12' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M11 1.318l-10 10M11 11.318l-10-10' stroke='%23D3D4D9' stroke-width='1.5'/%3e%3c/svg%3e") no-repeat 50%;
-
-        @media (forced-colors: active) {
-          background: buttontext;
-          mask: url("data:image/svg+xml,%3csvg width='12' height='12' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M11 1.318l-10 10M11 11.318l-10-10' stroke='%23D3D4D9' stroke-width='1.5'/%3e%3c/svg%3e") no-repeat 50%;
-        }
-      }
-    }
-  }
-
-  > .ui-dialog-content {
-    overflow: auto;
-    padding: var(--space-m) var(--space-l);
-    color: var(--color-text);
-    background: var(--color-white);
-
-    .form-actions,
-    .field-actions {
-      margin: 0;
-      padding: 0;
-    }
-  }
-
-  > .ui-dialog-buttonpane {
-    color: var(--color-text);
-    border-bottom-right-radius: var(--jui-dialog-border-radius);
-    border-bottom-left-radius: var(--jui-dialog-border-radius);
-    background: var(--color-gray-050);
-
-    .ui-dialog-buttonset {
-      display: flex;
-      gap: var(--space-s);
-      justify-content: flex-end;
-      margin-block: var(--space-m);
-      margin-inline-end: var(--space-l);
-
-      & > * {
-        margin: 0;
-      }
-    }
-
-    .ui-button-text-only .ui-button-text {
-      padding: 0;
-    }
-  }
-
-  &.ui-dialog-off-canvas {
-    .ui-widget-content.ui-dialog-content {
-      background: none;
-    }
-  }
+.ui-widget-overlay {
+  opacity: 0.9;
+  background: var(--gin-bg-layer2);
 }
 
-#drupal-off-canvas {
-  .form-item .form-item__description {
-    color: var(--color-gray-050);
-    font-size: 0.75rem;
-  }
+.ui-widget.ui-widget-content {
+  padding: 0;
+  border: 1px solid var(--gin-border-color);
+}
+
+#drupal-modal .gin-sticky-form-actions.form-actions {
+  display: none;
 }

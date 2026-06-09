@@ -443,6 +443,16 @@ final class PreprocessHooks implements TrustedCallbackInterface {
   }
 
   /**
+   * Implements hook_preprocess_HOOK() for container__media_library_widget_selection.
+   *
+   * @see \Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::formElement()
+   */
+  #[Hook('preprocess_container__media_library_widget_selection')]
+  public function preprocessContainerMediaLibraryWidgetSelection(array &$variables): void {
+    $variables['attributes']['class'][] = 'media-library-selection';
+  }
+
+  /**
    * Implements hook_preprocess_HOOK() for file_managed_file.
    */
   #[Hook('preprocess_file_managed_file')]
@@ -830,6 +840,7 @@ final class PreprocessHooks implements TrustedCallbackInterface {
    */
   #[Hook('preprocess_links__media_library_menu')]
   public function preprocessLinksMediaLibraryMenu(array &$variables): void {
+    $variables['attributes']['class'][] = 'media-library-menu';
     foreach ($variables['links'] as &$link) {
       // Add a class to the Media Library menu items.
       $link['attributes']->addClass('media-library-menu__item');
@@ -854,6 +865,7 @@ final class PreprocessHooks implements TrustedCallbackInterface {
    */
   #[Hook('preprocess_media_library_item__small')]
   public function preprocessMediaLibraryItemSmall(array &$variables): void {
+    $variables['attributes']['class'][] = 'media-library-item';
     $variables['content']['select']['#attributes']['class'][] = 'media-library-item__click-to-select-checkbox';
   }
 
@@ -864,6 +876,7 @@ final class PreprocessHooks implements TrustedCallbackInterface {
    */
   #[Hook('preprocess_media_library_item__widget')]
   public function preprocessMediaLibraryItemWidget(array &$variables): void {
+    $variables['attributes']['class'][] = 'media-library-item';
     $variables['content']['remove_button']['#attributes']['class'][] = 'media-library-item__remove';
     $variables['content']['remove_button']['#attributes']['class'][] = 'icon-link';
   }
@@ -1198,37 +1211,6 @@ final class PreprocessHooks implements TrustedCallbackInterface {
       $variables['description_display'] = 'invisible';
       $variables['description_toggle'] = TRUE;
     }
-  }
-
-  /**
-   * Implements toolbar preprocess.
-   *
-   * This is also called by system_preprocess_toolbar() in instances where Admin
-   * is the administration theme but not the active theme.
-   *
-   * @see system_preprocess_toolbar()
-   */
-  #[Hook('preprocess_toolbar')]
-  public function preprocessToolbar(array &$variables): void {
-    $variables['attributes']['data-drupal-gin-processed-toolbar'] = TRUE;
-
-    // The controller resolver does not support Closures at this time. For now,
-    // we use a wrapper function to load the service with dependencies.
-    // @see https://www.drupal.org/project/drupal/issues/3060638
-    $variables['user_picture'] = [
-      '#lazy_builder' => [static::class . '::lazyToolbarUserPicture', []],
-      '#create_placeholder' => TRUE,
-    ];
-
-    // Check if Navigation module is active.
-    if ($this->moduleHandler->moduleExists('navigation')) {
-      // Attach the new drupal navigation styles.
-      $variables['#attached']['library'][] = 'default_admin/navigation';
-      return;
-    }
-
-    // Toolbar library.
-    $variables['#attached']['library'][] = 'default_admin/toolbar';
   }
 
   /**

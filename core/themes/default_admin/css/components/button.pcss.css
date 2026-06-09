@@ -2,20 +2,7 @@
 
 /**
  * @file
- * Structural styles for Claro's UI buttons
- *
- * Apply these classes to button elements (<button>, <input type="button" />).
- */
-
-/**
- * Buttons.
- *
- * 1. Padding widths detracted by width of the transparent borders to make
- *    button size match with design system.
- * 2. Prevent fat text in WebKit.
- *
- * @todo Consider moving box-sizing into base.css under a universal selector.
- * See https://www.drupal.org/node/2124251
+ * Button styles.
  */
 
 /**
@@ -26,13 +13,10 @@
  * making changes to this file, remember to check if that needs to be applied to
  * dropbutton.css or action-links.css as well.
  */
-.button,
-.project__action_button {
-  display: inline-block;
-  margin-block: var(--space-m);
-  margin-inline: 0 var(--space-s);
-  padding-block: calc(var(--gin-spacing-s) - 2px);
-  padding-inline: var(--gin-spacing-m);
+.button {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -44,6 +28,10 @@
   font-size: var(--gin-font-size-s);
   font-weight: var(--gin-font-weight-semibold);
   line-height: 1;
+  margin-block: var(--space-m);
+  margin-inline: 0 var(--space-s);
+  padding-block: calc(var(--gin-spacing-s) - 2px);
+  padding-inline: var(--gin-spacing-m);
   appearance: none;
 
   &:hover {

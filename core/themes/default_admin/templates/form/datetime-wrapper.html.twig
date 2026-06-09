@@ -38,8 +38,10 @@
   <h4{{ title_attributes.addClass(title_classes) }}>{{ title }}</h4>
   {% endif %}
   {% if show_description_toggle %}
-    {{ attach_library('gin/description_toggle') }}
-    <button class="help-icon__description-toggle"></button>
+    {{ attach_library('default_admin/description_toggle') }}
+    <button class="help-icon__description-toggle">
+      <span class="visually-hidden">{{ 'Toggle form description'|t }}</span>
+    </button>
   </div>
   {% endif %}
   {{ content }}

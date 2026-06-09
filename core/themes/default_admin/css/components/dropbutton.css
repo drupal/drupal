@@ -12,6 +12,8 @@
  * Transparent border is needed for high contrast mode. The border-width has to
  * be set with !important to render borders with the defined width in high
  * contrast mode Firefox.
+ *
+ * @todo This file is overcomplicated and needs to be refactored.
  */
 
 :root {
@@ -426,7 +428,9 @@
 
 .dropbutton__item:first-of-type {
   & > * {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
     margin: 0;
     padding: calc(0.875rem - 1px) calc(var(--gin-spacing-l) - 1px);
     cursor: pointer;
@@ -445,6 +449,12 @@
     line-height: var(--dropbutton-line-height);
     appearance: none;
     -webkit-font-smoothing: antialiased;
+
+    /* This is a fix for when an <input> is the first item within a dropdown.
+    This can be replicated using the theming_tools development contrib module. */
+    &:not(:is(:hover)) {
+      color: var(--gin-color-primary) !important;
+    }
 
     &:hover {
       background-color: var(--gin-color-primary-hover);

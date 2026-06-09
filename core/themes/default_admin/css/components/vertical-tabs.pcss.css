@@ -5,13 +5,22 @@
  * Replaces /core/misc/vertical-tabs.css.
  */
 
+@import "../base/media-queries.pcss.css";
+
 /**
  * Main wrapper of vertical tabs.
  * This wrapper div is added by JavaScript.
  */
 .vertical-tabs {
+  box-sizing: border-box;
   margin-block: var(--vertical-tabs-margin-vertical);
-  border-block-start: 1px solid transparent; /* Need to hide the pane wrapper clearfix's height */
+  border-block-start: 1px solid transparent; /* Hide the pane wrapper clearfix's height. */
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 }
 
 /**
@@ -20,78 +29,67 @@
 .vertical-tabs__menu {
   position: relative;
   display: block;
-  float: left; /* LTR */
-  width: var(--vertical-tabs-menu-width);
+  float: inline-start;
+  inline-size: var(--vertical-tabs-menu-width);
   margin: 0;
   padding-block-start: var(--vertical-tabs-menu-item-shadow-extraspace);
   list-style: none;
   color: var(--color-text);
-
-  [dir="rtl"] & {
-    float: right;
-  }
 }
 
 /**
  * Vertical tabs menu item.
  */
 .vertical-tabs__menu-item {
-  overflow: hidden;
+  overflow: hidden; /* Necessary to cut off the end of the focus state. */
   margin-block: var(--vertical-tabs-menu-item--top-margin);
-  margin-inline: var(--vertical-tabs-menu-item--left-margin) var(--vertical-tabs-menu-item--right-margin);
   padding-block: var(--vertical-tabs-menu-item-shadow-extraspace);
-  padding-inline: var(--vertical-tabs-menu-item-shadow-extraspace) 0;
-}
 
-/**
- * These are the (gray) lines that are visually separating the vertical tab menu
- * items.
- */
-.vertical-tabs__menu-item::before,
-.vertical-tabs__menu-item::after {
-  position: absolute;
-  z-index: 1; /* The line should be kept above the vertical tabs menu link to keep it visible even if the link is hovered and gets the 'hover' background color. */
-  display: block;
-  width: 100%;
-  margin-block-start: calc(var(--vertical-tabs-menu-separator-size) * -1);
-  border-block-start: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
-}
+  /**
+   * The (gray) lines that visually separate the vertical tab menu items.
+   */
+  &::before,
+  &::after {
+    position: absolute;
+    z-index: 1; /* Keep above the link hover background so the line stays visible. */
+    display: block;
+    inline-size: 100%;
+    margin-block-start: calc(var(--vertical-tabs-menu-separator-size) * -1);
+    border-block-start: var(--vertical-tabs-menu-separator-size) solid var(--gin-border-color);
+  }
 
-/**
- * This pseudo element covers the gray separator line of the vertical tab menu
- * item that follows the active one.
- *
- * Without this, we would have a lightgray line at the bottom-left (LTR) corner
- * of the active vertical tab menu item.
- *
- * Let's call this 'masking' line.
- */
-.vertical-tabs__menu-item::after {
-  z-index: 2;
-  border-color: var(--color-white);
-}
+  /**
+   * Masking line that hides the gray separator below the active item — without
+   * it the active item shows a lightgray line at its bottom-start corner.
+   */
+  &::after {
+    z-index: 2;
+    border-color: var(--color-white);
+  }
 
-/**
- * Making the separator line visible only if it follows an unhidden menu item.
- */
-.vertical-tabs__menu-item:not(.vertical-tab--hidden) ~ .vertical-tabs__menu-item::before {
-  content: "";
-}
+  /* Only show a separator after an unhidden menu item. */
+  &:not(.vertical-tab--hidden) ~ &::before {
+    content: "";
+  }
 
-/* Menu item states. */
-.vertical-tabs__menu-item:focus {
-  outline: 0;
-  box-shadow: none;
-}
+  &:focus {
+    outline: 0;
+    box-shadow: none;
+  }
 
-.vertical-tabs__menu-item.is-selected::before,
-.vertical-tabs__menu-item:not(.vertical-tab--hidden) ~ .vertical-tabs__menu-item.is-selected::before {
-  content: normal;
-}
+  &.is-selected {
+    width: calc(100% + 1px); /* Cover up the border of the vertical tabs pane. */
+  }
 
-/* Make the white masking line displayed for the selected menu item. */
-.vertical-tabs__menu-item.is-selected::after {
-  content: "";
+  &.is-selected::before,
+  &:not(.vertical-tab--hidden) ~ &.is-selected::before {
+    content: normal;
+  }
+
+  /* Show the white masking line for the selected menu item. */
+  &.is-selected::after {
+    content: "";
+  }
 }
 
 /**
@@ -101,7 +99,8 @@
   position: relative;
   display: block;
   margin-block-start: calc(var(--vertical-tabs-border-size) * -1);
-  padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size));
+  padding-block: var(--space-s);
+  padding-inline: calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)) var(--space-s);
   text-decoration: none;
   color: var(--color-text);
   border: var(--vertical-tabs-border-size) solid transparent;
@@ -118,67 +117,89 @@
 
   &:hover {
     text-decoration: none;
-    color: var(--color-absolutezero);
+    color: var(--gin-color-primary);
+
     &::before {
-      background: var(--color-bgblue-hover);
+      background: var(--gin-bg-item-hover);
     }
   }
 
   &::before {
     position: absolute;
-    z-index: 0; /* This should be on a lower level than the menu-item separator lines. */
+    z-index: 0; /* Below the menu-item separator lines. */
     inset-block: calc(var(--vertical-tabs-border-size) * -1);
     inset-inline: calc(var(--vertical-tabs-menu-link--active-border-size) * -1) 0;
     content: "";
     pointer-events: none;
     background-clip: padding-box;
   }
-}
 
-.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
-  z-index: 3; /* The selected menu link should be on a higher level than the white masking line that hides the gray separator. */
-  color: var(--gin-color-primary);
-  text-decoration-style: var(--gin-link-decoration-style);
-  border-color: var(--vertical-tabs-border-color) transparent;
-  background-color: var(--color-white);
-  box-shadow: var(--vertical-tabs-shadow);
-}
-
-.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover {
-  color: var(--color-absolutezero-hover);
-  background-color: var(--color-bgblue-hover);
-}
-
-.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
-  z-index: 1; /* The blue active-tab indication should be on a higher level than the green focus border. */
-  border-color: var(--gin-color-primary);
-  border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
-  border-radius: var(--base-border-radius) 0 0 var(--base-border-radius);
-  border-start-start-radius: var(--base-border-radius);
-  border-start-end-radius: 0;
-  border-end-end-radius: 0;
-  border-end-start-radius: var(--base-border-radius);
-
-  &:hover {
-    border-color: var(--gin-color-primary-hover);
+  .gin--dark-mode & {
+    color: var(--gin-color-text);
   }
 
-  &:active {
-    border-color: var(--gin-color-primary-active);
+  .vertical-tabs__menu-item.is-selected & {
+    z-index: 3; /* Above the white masking line that hides the gray separator. */
+    width: calc(100% + var(--outline-size)); /* Larger width will intentionally cut off the right focus line. */
+    color: var(--gin-color-primary);
+    text-decoration-style: var(--gin-link-decoration-style);
+    border-block-color: var(--vertical-tabs-border-color);
+    border-inline-color: transparent;
+    background-color: var(--color-white);
+    box-shadow: var(--vertical-tabs-shadow);
+
+    &:hover {
+      color: var(--gin-color-primary);
+      background-color: var(--color-bgblue-hover);
+
+      &::before {
+        background: var(--gin-bg-item-hover);
+      }
+    }
+
+    &::before {
+      z-index: 1; /* Blue active-tab indicator above the green focus border. */
+      border-color: var(--gin-color-primary);
+      border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
+      border-start-start-radius: var(--base-border-radius);
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+      border-end-start-radius: var(--base-border-radius);
+
+      &:hover {
+        border-color: var(--gin-color-primary-hover);
+      }
+
+      &:active {
+        border-color: var(--gin-color-primary-active);
+      }
+
+      @media (forced-colors: active) {
+        border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid canvastext;
+      }
+    }
+
+    &:hover::before {
+      background: none;
+    }
+
+    .gin--dark-mode & {
+      border-color: var(--gin-border-color);
+      background: var(--gin-bg-app);
+    }
   }
 
   @media (forced-colors: active) {
-    border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid canvastext;
+    &:not(.is-selected *) {
+      margin-inline-start: var(--vertical-tabs-menu-link--active-border-size);
+      border-width: 0;
+    }
   }
-}
-
-.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover::before {
-  background: none;
 }
 
 .vertical-tabs__menu-link-content {
   position: relative;
-  z-index: 1; /* We are using a pseudo element for displaying the hover state's background, and we have to keep the link content above that pseudo element. Without this, the text would be covered by the background. */
+  z-index: 1; /* Keep text above the pseudo element that paints the hover background. */
 }
 
 /**
@@ -189,6 +210,10 @@
   color: var(--color-gray-800);
   font-size: var(--font-size-s);
   font-weight: normal;
+
+  .gin--dark-mode & {
+    color: var(--gin-color-text-light);
+  }
 }
 
 /**
@@ -199,31 +224,40 @@
   margin-block: var(--vertical-tabs-margin-vertical);
   color: var(--color-text);
   border: var(--vertical-tabs-border);
-  border-radius: var(--vertical-tabs-border-radius);
+  border-radius: var(--gin-border-m);
   background-color: var(--color-white);
   box-shadow: var(--vertical-tabs-shadow);
+
+  .gin--dark-mode & {
+    border-color: var(--gin-border-color);
+    background: var(--gin-bg-app);
+  }
+
+  @media (--admin-large) {
+    border-start-start-radius: 0;
+  }
 }
 
 /* This modifier is added by JavaScript (this is inherited from Drupal core). */
 .vertical-tabs__panes {
   position: relative;
-  z-index: 1; /* The wrapper of the details of the vertical tabs should be on a higher level than the vertical tabs menu */
+  z-index: 1; /* Above the vertical tabs menu. */
   inset-block-start: -1px;
   margin-block: 0;
 
   &::after {
-    display: block; /* This clearfix makes the pane wrapper at least as tall as the menu. */
+    display: block; /* Clearfix so the pane wrapper is at least as tall as the menu. */
     clear: both;
     content: "";
   }
-}
 
-.vertical-tabs .vertical-tabs__panes {
-  margin-inline-start: var(--vertical-tabs-menu-width);
-  border-top-left-radius: 0;
+  .vertical-tabs & {
+    margin-inline-start: var(--vertical-tabs-menu-width);
+    border-start-start-radius: 0;
 
-  [dir="rtl"] & {
-    border-top-left-radius: var(--vertical-tabs-border-radius);
+    &:dir(rtl) {
+      border-start-end-radius: var(--vertical-tabs-border-radius);
+    }
   }
 }
 
@@ -234,32 +268,67 @@
  */
 .vertical-tabs__item {
   /* Render on top of the border of vertical-tabs__items. */
-  margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-border-size) * -1) 0;
+  margin-block: calc(var(--vertical-tabs-border-size) * -1) 0;
+  margin-inline: calc(var(--vertical-tabs-border-size) * -1);
   border-radius: 0;
 
   &.first {
-    border-top-left-radius: var(--details-accordion-border-size-radius);
-    border-top-right-radius: var(--details-accordion-border-size-radius);
+    border-start-start-radius: var(--details-accordion-border-size-radius);
+    border-start-end-radius: var(--details-accordion-border-size-radius);
   }
 
   &.last {
-    margin-bottom: calc(var(--vertical-tabs-border-size) * -1);
-    border-bottom-right-radius: var(--details-accordion-border-size-radius);
-    border-bottom-left-radius: var(--details-accordion-border-size-radius);
+    margin-block-end: calc(var(--vertical-tabs-border-size) * -1);
+    border-end-start-radius: var(--details-accordion-border-size-radius);
+    border-end-end-radius: var(--details-accordion-border-size-radius);
+  }
+
+  .js .vertical-tabs & {
+    float: inline-start;
+    overflow: visible;
+    width: 100%;
+    margin: 0;
+    border: 0;
+
+    &.first,
+    &.last {
+      border-radius: 0;
+    }
+
+    > summary {
+      display: none;
+    }
+  }
+
+  .gin--dark-mode & {
+    background: none;
+  }
+
+  @media (--admin-wider) {
+    border-start-end-radius: var(--gin-border-m);
+    border-end-end-radius: var(--gin-border-m);
+    border-end-start-radius: var(--gin-border-m);
+
+    & ~ .vertical-tabs__item {
+      border-start-start-radius: var(--gin-border-m);
+    }
+  }
+
+  @media (--admin-large) {
+    .gin-details__summary {
+      padding-inline-start: var(--space-xxl);
+
+      &::before {
+        inset-inline-start: var(--space-m);
+      }
+    }
   }
 }
 
-.js .vertical-tabs .vertical-tabs__item {
-  overflow: hidden;
-  margin: 0;
-  border: 0;
+.vertical-tabs__menu-item-title {
+  font-weight: var(--font-weight-bold);
+}
 
-  &.first,
-  &.last {
-    border-radius: 0;
-  }
-
-  & > summary {
-    display: none;
-  }
+[open] > .gin-details__summary--vertical-tabs-item:not(:focus, :active)::after {
+  border-inline-start-width: 5px;
 }
