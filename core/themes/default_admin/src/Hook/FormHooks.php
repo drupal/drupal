@@ -620,7 +620,7 @@ class FormHooks {
    * @see hook_form_alter()
    */
   public function stickyActionButtonsAndSidebar(array &$form, FormStateInterface $form_state, string $form_id): void {
-    if ($this->isModalOrOffcanvas()) {
+    if ($this->isAjax()) {
       $form['is_ajax_request'] = ['#weight' => -1];
       return;
     }
@@ -785,17 +785,6 @@ class FormHooks {
     return $is_content_form ?
       $flag === 'content_forms' || $flag === 'always' :
       $flag === 'always';
-  }
-
-  /**
-   * Check the context we're in.
-   *
-   * Checks if the form is in either a modal or an off-canvas dialog.
-   */
-  private function isModalOrOffcanvas(): bool {
-    $wrapper_format = $this->getRequestWrapperFormat() ?? '';
-    return str_contains($wrapper_format, 'drupal_modal') ||
-      str_contains($wrapper_format, 'drupal_dialog');
   }
 
   /**
