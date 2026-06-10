@@ -48,11 +48,4 @@ class SystemMessagesBlock extends BlockBase implements MessagesBlockPluginInterf
     return Cache::PERMANENT;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function createPlaceholder(): bool {
-    return TRUE;
-  }
-
 }
