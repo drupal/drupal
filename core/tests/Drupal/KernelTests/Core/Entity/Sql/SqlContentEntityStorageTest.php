@@ -9,7 +9,10 @@ use Drupal\Core\Database\Log;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -18,7 +21,15 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Entity')]
 #[RunTestsInSeparateProcesses]
-class SqlContentEntityStorageTest extends KernelTestBase {
+class SqlContentEntityStorageTest extends EntityKernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp(): void {
+    parent::setUp();
+    $this->installEntitySchema('entity_test_rev');
+  }
 
   /**
    * Tests that only one SQL DELETE is executed on dedicated data tables.
@@ -109,6 +120,64 @@ class SqlContentEntityStorageTest extends KernelTestBase {
     // Assert that exactly one DELETE query was executed on each table.
     $this->assertCount(1, $dedicatedTableDeleteQueries, 'Only one DELETE query on the dedicated data table was executed.');
     $this->assertCount(1, $dedicatedRevisionTableDeleteQueries, 'Only one DELETE query on the dedicated revision data table was executed.');
+  }
+
+  /**
+   * Tests that entities with a large number (65+) of fields load successfully.
+   */
+  #[DataProvider('providerCardinality')]
+  public function testEntityWithManyFieldsLoad(int $cardinality): void {
+    $fieldCount = 71;
+    for ($i = 1; $i <= $fieldCount; $i++) {
+      $fieldStorage = FieldStorageConfig::create([
+        'field_name' => 'field_test_' . $i,
+        'entity_type' => 'entity_test_rev',
+        'type' => 'string',
+        'cardinality' => $cardinality,
+      ]);
+      $fieldStorage->save();
+
+      FieldConfig::create([
+        'field_storage' => $fieldStorage,
+        'bundle' => 'entity_test_rev',
+      ])->save();
+    }
+
+    $values = [
+      'name' => 'Test entity',
+      'bundle' => 'entity_test_rev',
+    ];
+    for ($i = 1; $i <= $fieldCount; $i++) {
+      $values['field_test_' . $i] = 'value_' . $i;
+    }
+    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test_rev');
+    $entity = $storage->create($values);
+    $entity->save();
+    $id = $entity->id();
+    $storage->resetCache();
+    $entity = $storage->load($id);
+    for ($i = 1; $i <= $fieldCount; $i++) {
+      $this->assertSame("value_$i", $entity->get("field_test_$i")->value);
+    }
+    $revision_id = $entity->getRevisionId();
+    $storage->resetCache();
+    $revision = $storage->loadRevision($revision_id);
+    for ($i = 1; $i <= $fieldCount; $i++) {
+      $this->assertSame("value_$i", $revision->get("field_test_$i")->value);
+    }
+  }
+
+  /**
+   * Data provider for testEntityWithManyFieldsLoad().
+   *
+   * @return array
+   *   Test cases.
+   */
+  public static function providerCardinality(): array {
+    return [
+      'single cardinality' => [1],
+      'unlimited cardinality' => [-1],
+    ];
   }
 
 }
