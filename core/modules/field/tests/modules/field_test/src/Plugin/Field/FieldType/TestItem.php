@@ -113,7 +113,7 @@ class TestItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function delete() {
+  public function delete(): void {
     // Reports that delete() method is executed for testing purposes.
     FieldTestHelper::memorize('field_test_field_delete', [$this->getEntity()]);
   }

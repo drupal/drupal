@@ -68,7 +68,7 @@ class CacheTagsChecksumDecorator implements CacheTagsChecksumInterface, CacheTag
   /**
    * {@inheritdoc}
    */
-  public function reset() {
+  public function reset(): void {
     $this->checksumInvalidator->reset();
   }
 

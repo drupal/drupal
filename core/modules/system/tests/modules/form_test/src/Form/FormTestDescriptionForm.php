@@ -57,7 +57,7 @@ class FormTestDescriptionForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     // The test that uses this form does not submit the form so this is empty.
   }
 

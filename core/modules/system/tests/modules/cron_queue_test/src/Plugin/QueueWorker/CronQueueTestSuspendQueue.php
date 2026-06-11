@@ -27,7 +27,7 @@ class CronQueueTestSuspendQueue extends QueueWorkerBase {
   /**
    * {@inheritdoc}
    */
-  public function processItem($data) {
+  public function processItem($data): void {
     if ($data === 'suspend') {
       throw new SuspendQueueException('The queue is broken.');
     }

@@ -15,7 +15,7 @@ class MediaTestOembedServiceProvider extends ServiceProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function alter(ContainerBuilder $container) {
+  public function alter(ContainerBuilder $container): void {
     parent::alter($container);
 
     $container->getDefinition('media.oembed.provider_repository')

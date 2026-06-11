@@ -70,7 +70,7 @@ class NestedEntityTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     $entity_1 = $form_state->get('entity_1');
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display_1 */
     $form_display_1 = $form_state->get('form_display_1');
@@ -96,7 +96,7 @@ class NestedEntityTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     /** @var \Drupal\Core\Entity\EntityInterface $entity_1 */
     $entity_1 = $form_state->get('entity_1');
     $entity_1->save();

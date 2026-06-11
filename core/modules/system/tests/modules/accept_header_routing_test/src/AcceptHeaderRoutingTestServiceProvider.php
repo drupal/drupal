@@ -15,7 +15,7 @@ class AcceptHeaderRoutingTestServiceProvider implements ServiceModifierInterface
   /**
    * {@inheritdoc}
    */
-  public function alter(ContainerBuilder $container) {
+  public function alter(ContainerBuilder $container): void {
     // Remove the basic content negotiation middleware and replace it with a
     // basic header based one.
     $container->register('http_middleware.negotiation', 'Drupal\accept_header_routing_test\AcceptHeaderMiddleware')

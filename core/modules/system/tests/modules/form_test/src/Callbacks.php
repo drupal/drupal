@@ -17,7 +17,7 @@ class Callbacks {
   /**
    * Form element validation handler for 'name' in form_test_validate_form().
    */
-  public function validateName(&$element, FormStateInterface $form_state) {
+  public function validateName(&$element, FormStateInterface $form_state): void {
     $triggered = FALSE;
     if ($form_state->getValue('name') == 'element_validate') {
       // Alter the form element.

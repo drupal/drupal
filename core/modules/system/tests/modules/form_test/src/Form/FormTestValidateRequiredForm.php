@@ -75,7 +75,7 @@ class FormTestValidateRequiredForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function elementValidateRequired($element, FormStateInterface $form_state) {
+  public function elementValidateRequired($element, FormStateInterface $form_state): void {
     // Set a custom validation error on the #required element.
     if (!empty($element['#required_but_empty']) && isset($element['#form_test_required_error'])) {
       $form_state->setError($element, $element['#form_test_required_error']);
@@ -85,7 +85,7 @@ class FormTestValidateRequiredForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->messenger()->addStatus('The form_test_validate_required_form form was submitted successfully.');
   }
 

@@ -35,7 +35,7 @@ class FieldFormButtonTest extends FieldPluginBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function viewsForm(&$form, FormStateInterface $form_state) {
+  public function viewsForm(&$form, FormStateInterface $form_state): void {
     // Make sure we do not accidentally cache this form.
     $form['#cache']['max-age'] = 0;
     // The view is empty, abort.
@@ -65,7 +65,7 @@ class FieldFormButtonTest extends FieldPluginBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function viewsFormSubmit(&$form, FormStateInterface $form_state) {
+  public function viewsFormSubmit(&$form, FormStateInterface $form_state): void {
     $triggering_element = $form_state->getTriggeringElement();
     if (!empty($triggering_element['#test_button'])) {
       $row_index = $triggering_element['#row_index'];
@@ -79,7 +79,7 @@ class FieldFormButtonTest extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function query() {
+  public function query(): void {
     // Do nothing.
   }
 

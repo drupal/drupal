@@ -22,7 +22,7 @@ class ErrorServiceTestServiceProvider implements ServiceModifierInterface {
   /**
    * {@inheritdoc}
    */
-  public function alter(ContainerBuilder $container) {
+  public function alter(ContainerBuilder $container): void {
     static::$containerBuilder = $container;
   }
 

@@ -71,7 +71,7 @@ class FileModuleTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     if ($form['#tree']) {
       $uploads = $form_state->getValue(['nested', 'file']);
     }

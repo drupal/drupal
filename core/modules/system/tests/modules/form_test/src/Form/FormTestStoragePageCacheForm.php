@@ -66,14 +66,14 @@ class FormTestStoragePageCacheForm extends FormBase {
   /**
    * Form submit callback: Rebuild the form and continue.
    */
-  public function form_test_storage_page_cache_rebuild($form, FormStateInterface $form_state) {
+  public function form_test_storage_page_cache_rebuild($form, FormStateInterface $form_state): void {
     $form_state->setRebuild();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     // Test using form cache when re-displaying a form due to validation
     // errors.
     if ($form_state->hasAnyErrors()) {
@@ -84,7 +84,7 @@ class FormTestStoragePageCacheForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     // Nothing must happen.
   }
 

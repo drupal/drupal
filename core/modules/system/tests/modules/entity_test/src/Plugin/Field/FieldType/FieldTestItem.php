@@ -67,7 +67,7 @@ class FieldTestItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function preSave() {
+  public function preSave(): void {
     $name = $this->getFieldDefinition()->getName();
     static::$counter[$name]++;
 
@@ -111,7 +111,7 @@ class FieldTestItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function delete() {
+  public function delete(): void {
     parent::delete();
     $deleted_languages = \Drupal::state()->get('entity_test.delete.' . $this->getFieldDefinition()->getName(), []);
     $deleted_languages[] = $this->getLangcode();

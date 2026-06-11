@@ -88,7 +88,7 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function onEntityTypeCreate(EntityTypeInterface $entity_type) {
+  public function onEntityTypeCreate(EntityTypeInterface $entity_type): void {
     if ($this->entityLastInstalledSchemaRepository->getLastInstalledDefinition($entity_type->id())) {
       $this->storeDefinitionUpdate(EntityTypeEvents::CREATE);
     }
@@ -106,14 +106,14 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function onFieldableEntityTypeCreate(EntityTypeInterface $entity_type, array $field_storage_definitions) {
+  public function onFieldableEntityTypeCreate(EntityTypeInterface $entity_type, array $field_storage_definitions): void {
     $this->storeEvent(EntityTypeEvents::CREATE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original) {
+  public function onEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original): void {
     $last_installed_definition = $this->entityLastInstalledSchemaRepository->getLastInstalledDefinition($entity_type->id());
     if ((string) $last_installed_definition->getLabel() === 'Updated entity test rev') {
       $this->storeDefinitionUpdate(EntityTypeEvents::UPDATE);
@@ -133,14 +133,14 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, ?array &$sandbox = NULL) {
+  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, ?array &$sandbox = NULL): void {
     $this->storeEvent(EntityTypeEvents::UPDATE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function onEntityTypeDelete(EntityTypeInterface $entity_type) {
+  public function onEntityTypeDelete(EntityTypeInterface $entity_type): void {
     if (!$this->entityLastInstalledSchemaRepository->getLastInstalledDefinition($entity_type->id())) {
       $this->storeDefinitionUpdate(EntityTypeEvents::DELETE);
     }
@@ -158,7 +158,7 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition) {
+  public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition): void {
     if (isset($this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($storage_definition->getTargetEntityTypeId())[$storage_definition->getName()])) {
       $this->storeDefinitionUpdate(FieldStorageDefinitionEvents::CREATE);
     }
@@ -176,7 +176,7 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function onFieldStorageDefinitionUpdate(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
+  public function onFieldStorageDefinitionUpdate(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original): void {
     $last_installed_definition = $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($storage_definition->getTargetEntityTypeId())[$storage_definition->getName()];
     if ((string) $last_installed_definition->getLabel() === 'Updated field storage test') {
       $this->storeDefinitionUpdate(FieldStorageDefinitionEvents::UPDATE);
@@ -195,7 +195,7 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition) {
+  public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition): void {
     if (!isset($this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($storage_definition->getTargetEntityTypeId())[$storage_definition->getName()])) {
       $this->storeDefinitionUpdate(FieldStorageDefinitionEvents::DELETE);
     }
@@ -213,14 +213,14 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
   /**
    * Enables event tracking.
    */
-  public function enableEventTracking() {
+  public function enableEventTracking(): void {
     $this->trackEvents = TRUE;
   }
 
   /**
    * Enables live definition updates.
    */
-  public function enableLiveDefinitionUpdates() {
+  public function enableLiveDefinitionUpdates(): void {
     $this->updateLiveDefinitions = TRUE;
   }
 

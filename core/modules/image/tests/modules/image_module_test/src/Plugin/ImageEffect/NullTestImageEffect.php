@@ -21,7 +21,7 @@ class NullTestImageEffect extends ImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function transformDimensions(array &$dimensions, $uri) {
+  public function transformDimensions(array &$dimensions, $uri): void {
     // Unset image dimensions.
     $dimensions['width'] = $dimensions['height'] = NULL;
   }

@@ -67,7 +67,7 @@ class UnicornEditor extends EditorBase implements ContainerFactoryPluginInterfac
    *
    * Moves the text editor's image upload settings into $editor->image_upload.
    */
-  public function validateImageUploadSettings(array $element, FormStateInterface $form_state) {
+  public function validateImageUploadSettings(array $element, FormStateInterface $form_state): void {
     $settings = &$form_state->getValue(['editor', 'settings', 'image_upload']);
     $form_state->get('editor')->setImageUploadSettings($settings);
     $form_state->unsetValue(['editor', 'settings', 'image_upload']);

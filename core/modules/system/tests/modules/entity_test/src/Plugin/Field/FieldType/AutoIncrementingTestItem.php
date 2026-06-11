@@ -22,7 +22,7 @@ class AutoIncrementingTestItem extends IntegerItem {
   /**
    * {@inheritdoc}
    */
-  public function preSave() {
+  public function preSave(): void {
     parent::preSave();
     $this->value = static::getIncrementedFieldValue();
   }

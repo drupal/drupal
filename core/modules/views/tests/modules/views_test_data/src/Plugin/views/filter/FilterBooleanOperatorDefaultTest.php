@@ -18,7 +18,7 @@ class FilterBooleanOperatorDefaultTest extends BooleanOperator {
   /**
    * {@inheritdoc}
    */
-  public function query() {
+  public function query(): void {
     $this->ensureMyTable();
     $field = "$this->tableAlias.$this->realField";
     $this->queryOpBoolean($field);

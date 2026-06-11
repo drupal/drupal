@@ -22,14 +22,14 @@ class TestProfilerExtension extends AbstractExtension {
   /**
    * Dummy function called when a Twig template is entered.
    */
-  public function enter() {
+  public function enter(): void {
     // NOOP.
   }
 
   /**
    * Dummy function called when a Twig template is left.
    */
-  public function leave() {
+  public function leave(): void {
     // NOOP.
   }
 

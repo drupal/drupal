@@ -40,7 +40,7 @@ class StaticTest extends AccessPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function alterRouteDefinition(Route $route) {
+  public function alterRouteDefinition(Route $route): void {
     if (!empty($this->options['access'])) {
       $route->setRequirement('_access', 'TRUE');
     }

@@ -74,7 +74,7 @@ class TestControllers {
    * Passes unsafe HTML as an argument to a method which throws an exception.
    * This can be used to test if the generated backtrace is properly escaped.
    */
-  public function test10() {
+  public function test10(): void {
     $this->removeExceptionLogger();
     $this->throwException('<script>alert(\'xss\')</script>');
   }
@@ -100,7 +100,7 @@ class TestControllers {
     return new Psr7Response(200, [], 'test23');
   }
 
-  public function test24() {
+  public function test24(): void {
     $this->removeExceptionLogger();
     throw new \Exception('Escaped content: <p> <br> <h3>');
   }

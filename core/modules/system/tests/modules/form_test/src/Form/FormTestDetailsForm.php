@@ -37,7 +37,7 @@ class FormTestDetailsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     $form_state->setErrorByName('meta', 'I am an error on the details element.');
   }
 

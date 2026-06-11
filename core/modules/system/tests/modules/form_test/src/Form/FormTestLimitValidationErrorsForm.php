@@ -87,7 +87,7 @@ class FormTestLimitValidationErrorsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function elementValidateLimitValidationErrors($element, FormStateInterface $form_state) {
+  public function elementValidateLimitValidationErrors($element, FormStateInterface $form_state): void {
     if ($element['#value'] == 'invalid') {
       $form_state->setError($element, $this->t('@label element is invalid', ['@label' => $element['#title']]));
     }
@@ -102,7 +102,7 @@ class FormTestLimitValidationErrorsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function partialSubmitForm(array &$form, FormStateInterface $form_state) {
+  public function partialSubmitForm(array &$form, FormStateInterface $form_state): void {
     // The title has not been validated, thus its value - in case of the test
     // case an empty string - may not be set.
     if (!$form_state->hasValue('title') && $form_state->hasValue('test')) {

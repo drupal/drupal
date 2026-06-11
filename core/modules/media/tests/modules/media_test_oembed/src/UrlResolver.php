@@ -19,7 +19,7 @@ class UrlResolver extends BaseUrlResolver {
    * @param string $endpoint_url
    *   The endpoint URL.
    */
-  public static function setEndpointUrl($url, $endpoint_url) {
+  public static function setEndpointUrl($url, $endpoint_url): void {
     $urls = \Drupal::state()->get(static::class, []);
     $urls[$url] = $endpoint_url;
     \Drupal::state()->set(static::class, $urls);

@@ -16,7 +16,7 @@ class ThemeTestPreprocess {
    *   An associative array containing:
    *   - foo: Text for testing preprocess callback.
    */
-  public static function preprocess(&$variables) {
+  public static function preprocess(&$variables): void {
     $variables['foo'] = 'Make Drupal full of kittens again!';
   }
 

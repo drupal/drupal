@@ -86,7 +86,7 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function addMoreSubmitForm(array &$form, FormStateInterface $form_state) {
+  public function addMoreSubmitForm(array &$form, FormStateInterface $form_state): void {
     // Rebuild, to test preservation of input values.
     $form_state->set('add_more', TRUE);
     $form_state->setRebuild();
@@ -95,7 +95,7 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     // Finish the workflow. Do not rebuild.
     $this->messenger()->addStatus($this->t('Form values: %values', ['%values' => var_export($form_state->getValues(), TRUE)]));
   }

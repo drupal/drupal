@@ -37,7 +37,7 @@ class FormTestValidateRequiredNoTitleForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->messenger()->addStatus('The form_test_validate_required_form_no_title form was submitted successfully.');
   }
 

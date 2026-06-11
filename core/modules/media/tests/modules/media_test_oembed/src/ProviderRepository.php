@@ -40,7 +40,7 @@ class ProviderRepository extends BaseProviderRepository {
    * @param \Drupal\media\OEmbed\Provider $provider
    *   The provider to store.
    */
-  public function setProvider(Provider $provider) {
+  public function setProvider(Provider $provider): void {
     $providers = \Drupal::state()->get(static::class, []);
     $name = $provider->getName();
     $providers[$name] = $provider;

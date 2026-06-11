@@ -51,14 +51,14 @@ class FormTestServiceObject extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     $this->messenger()->addStatus($this->t('The FormTestServiceObject::validateForm() method was used for this form.'));
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->messenger()->addStatus($this->t('The FormTestServiceObject::submitForm() method was used for this form.'));
     $this->config('form_test.object')
       ->set('bananas', $form_state->getValue('bananas'))

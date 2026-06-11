@@ -53,14 +53,14 @@ class PerformanceDataCollector implements EventSubscriberInterface, Destructable
   /**
    * Adds a cache operation.
    */
-  public function addCacheOperation(array $operation) {
+  public function addCacheOperation(array $operation): void {
     $this->cacheOperations[] = $operation;
   }
 
   /**
    * Adds a cache tag operation.
    */
-  public function addCacheTagOperation(array $operation) {
+  public function addCacheTagOperation(array $operation): void {
     $this->cacheTagOperations[] = $operation;
   }
 

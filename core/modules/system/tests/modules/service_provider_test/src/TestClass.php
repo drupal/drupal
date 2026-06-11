@@ -39,14 +39,14 @@ class TestClass implements EventSubscriberInterface, DestructableInterface {
   /**
    * A simple kernel listener method.
    */
-  public function onKernelRequestTest(RequestEvent $event) {
+  public function onKernelRequestTest(RequestEvent $event): void {
     \Drupal::messenger()->addStatus($this->t('The service_provider_test event subscriber fired!'));
   }
 
   /**
    * Flags the response in case a rebuild indicator is used.
    */
-  public function onKernelResponseTest(ResponseEvent $event) {
+  public function onKernelResponseTest(ResponseEvent $event): void {
     $container = \Drupal::getContainer();
     if ($container->hasParameter('container_rebuild_indicator')) {
       $event->getResponse()->headers->set('container_rebuild_indicator', $container->getParameter('container_rebuild_indicator'));
@@ -71,7 +71,7 @@ class TestClass implements EventSubscriberInterface, DestructableInterface {
   /**
    * {@inheritdoc}
    */
-  public function destruct() {
+  public function destruct(): void {
     $this->state->set('service_provider_test.destructed', TRUE);
   }
 

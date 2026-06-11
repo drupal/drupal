@@ -59,7 +59,7 @@ class ResourceController {
    * @param string $resource_path
    *   The path of the oEmbed resource representing the asset.
    */
-  public static function setResourceUrl($asset_url, $resource_path) {
+  public static function setResourceUrl($asset_url, $resource_path): void {
     \Drupal::keyValue('media_test_oembed')->set($asset_url, $resource_path);
   }
 
@@ -69,7 +69,7 @@ class ResourceController {
    * @param string $asset_url
    *   The asset URL.
    */
-  public static function setResource404($asset_url) {
+  public static function setResource404($asset_url): void {
     \Drupal::keyValue('media_test_oembed')->set($asset_url, 404);
   }
 

@@ -32,7 +32,7 @@ class BigPipeTestSubscriber implements EventSubscriberInterface {
    *
    * @see \Drupal\big_pipe_test\BigPipeTestController::responseException()
    */
-  public function onRespondTriggerException(ResponseEvent $event) {
+  public function onRespondTriggerException(ResponseEvent $event): void {
     $response = $event->getResponse();
 
     if (!$response instanceof AttachmentsInterface) {
@@ -53,7 +53,7 @@ class BigPipeTestSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
    */
-  public function onRespondSetBigPipeDebugPlaceholderHeaders(ResponseEvent $event) {
+  public function onRespondSetBigPipeDebugPlaceholderHeaders(ResponseEvent $event): void {
     $response = $event->getResponse();
     if (!$response instanceof HtmlResponse) {
       return;

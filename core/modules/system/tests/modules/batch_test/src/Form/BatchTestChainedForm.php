@@ -56,7 +56,7 @@ class BatchTestChainedForm extends FormBase {
   /**
    * Form submission handler #1 for batch_test_chained_form.
    */
-  public static function batchTestChainedFormSubmit1($form, FormStateInterface $form_state) {
+  public static function batchTestChainedFormSubmit1($form, FormStateInterface $form_state): void {
     $batch_test_definitions = new BatchTestDefinitions();
     $batch_test_helper = new BatchTestHelper();
     $batch_test_helper->stack(NULL, TRUE);
@@ -73,7 +73,7 @@ class BatchTestChainedForm extends FormBase {
   /**
    * Form submission handler #2 for batch_test_chained_form.
    */
-  public static function batchTestChainedFormSubmit2($form, FormStateInterface $form_state) {
+  public static function batchTestChainedFormSubmit2($form, FormStateInterface $form_state): void {
     $batch_test_definitions = new BatchTestDefinitions();
     $batch_test_helper = new BatchTestHelper();
     $batch_test_helper->stack('submit handler 2');
@@ -89,7 +89,7 @@ class BatchTestChainedForm extends FormBase {
   /**
    * Form submission handler #3 for batch_test_chained_form.
    */
-  public static function batchTestChainedFormSubmit3($form, FormStateInterface $form_state) {
+  public static function batchTestChainedFormSubmit3($form, FormStateInterface $form_state): void {
     $batch_test_helper = new BatchTestHelper();
     $batch_test_helper->stack('submit handler 3');
     $batch_test_helper->stack('value = ' . $form_state->getValue('value'));
@@ -103,7 +103,7 @@ class BatchTestChainedForm extends FormBase {
   /**
    * Form submission handler #4 for batch_test_chained_form.
    */
-  public static function batchTestChainedFormSubmit4($form, FormStateInterface $form_state) {
+  public static function batchTestChainedFormSubmit4($form, FormStateInterface $form_state): void {
     $batch_test_definitions = new BatchTestDefinitions();
     $batch_test_helper = new BatchTestHelper();
     $batch_test_helper->stack('submit handler 4');

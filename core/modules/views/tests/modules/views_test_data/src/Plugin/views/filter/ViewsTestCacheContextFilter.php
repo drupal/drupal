@@ -16,7 +16,7 @@ class ViewsTestCacheContextFilter extends FilterPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function query() {
+  public function query(): void {
     $this->value = \Drupal::state()->get('views_test_cache_context', 'George');
 
     parent::query();

@@ -20,7 +20,7 @@ class FormTestEventSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The kernel request event.
    */
-  public function onKernelRequest(RequestEvent $event) {
+  public function onKernelRequest(RequestEvent $event): void {
     $request = $event->getRequest();
     $request->attributes->set('custom_attributes', 'custom_value');
     $request->attributes->set('request_attribute', 'request_value');
@@ -32,7 +32,7 @@ class FormTestEventSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The kernel response event.
    */
-  public function onKernelResponse(ResponseEvent $event) {
+  public function onKernelResponse(ResponseEvent $event): void {
     $response = $event->getResponse();
     $response->headers->set('X-Form-Test-Response-Event', 'invoked');
   }

@@ -23,7 +23,7 @@ class BatchUserAction extends ActionBase {
   /**
    * {@inheritdoc}
    */
-  public function executeMultiple(array $entities) {
+  public function executeMultiple(array $entities): void {
     $operations = [];
 
     foreach ($entities as $entity) {
@@ -50,7 +50,7 @@ class BatchUserAction extends ActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute($entity = NULL) {
+  public function execute($entity = NULL): void {
     assert($entity instanceof ContentEntityInterface);
     $this->executeMultiple([$entity]);
   }
@@ -70,7 +70,7 @@ class BatchUserAction extends ActionBase {
    * @param array $context
    *   The batch context.
    */
-  public static function processBatch($data, &$context) {
+  public static function processBatch($data, &$context): void {
     if (!isset($context['results']['processed'])) {
       $context['results']['processed'] = 0;
       $context['results']['theme'] = \Drupal::service('theme.manager')->getActiveTheme(\Drupal::routeMatch())->getName();
@@ -86,7 +86,7 @@ class BatchUserAction extends ActionBase {
    * @param array $results
    *   Results information passed from the processing callback.
    */
-  public static function finishBatch($success, $results) {
+  public static function finishBatch($success, $results): void {
     \Drupal::messenger()->addMessage(
       \Drupal::translation()->formatPlural($results['processed'], 'One item has been processed.', '@count items have been processed.')
     );

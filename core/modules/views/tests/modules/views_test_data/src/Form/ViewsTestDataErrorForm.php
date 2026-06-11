@@ -40,7 +40,7 @@ class ViewsTestDataErrorForm implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     $form_state->setErrorByName('text', $this->t('Form validation error'));
   }
 

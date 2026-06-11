@@ -24,7 +24,7 @@ class TestDifferentDisplays extends Test {
   /**
    * {@inheritdoc}
    */
-  public function prepareViewDisplay(MediaTypeInterface $type, EntityViewDisplayInterface $display) {
+  public function prepareViewDisplay(MediaTypeInterface $type, EntityViewDisplayInterface $display): void {
     parent::prepareViewDisplay($type, $display);
     $source_name = $this->getSourceFieldDefinition($type)->getName();
     $source_component = $display->getComponent($source_name) ?: [];
@@ -35,7 +35,7 @@ class TestDifferentDisplays extends Test {
   /**
    * {@inheritdoc}
    */
-  public function prepareFormDisplay(MediaTypeInterface $type, EntityFormDisplayInterface $display) {
+  public function prepareFormDisplay(MediaTypeInterface $type, EntityFormDisplayInterface $display): void {
     parent::prepareFormDisplay($type, $display);
     $source_name = $this->getSourceFieldDefinition($type)->getName();
     $source_component = $display->getComponent($source_name) ?: [];

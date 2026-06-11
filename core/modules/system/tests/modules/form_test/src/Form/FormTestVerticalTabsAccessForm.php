@@ -106,7 +106,7 @@ class FormTestVerticalTabsAccessForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     $values = $form_state->getValues();
     if (empty($values['field1'])) {
       $form_state->setErrorByName('tab1][field1', $this->t('This checkbox inside a vertical tab does not have its default value.'));
@@ -131,7 +131,7 @@ class FormTestVerticalTabsAccessForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->messenger()->addStatus($this->t('The form submitted correctly.'));
   }
 

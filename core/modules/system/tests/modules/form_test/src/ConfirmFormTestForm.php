@@ -69,7 +69,7 @@ class ConfirmFormTestForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->messenger()->addStatus($this->t('The ConfirmFormTestForm::submitForm() method was used for this form.'));
     $form_state->setRedirect('<front>');
   }

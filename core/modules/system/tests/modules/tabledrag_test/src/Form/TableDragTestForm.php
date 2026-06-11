@@ -182,7 +182,7 @@ class TableDragTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $operation = $form_state->getTriggeringElement()['#op'] ?? 'save';
 
     switch ($operation) {

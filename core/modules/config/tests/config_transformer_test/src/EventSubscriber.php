@@ -68,7 +68,7 @@ class EventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Config\StorageTransformEvent $event
    *   The config storage transform event.
    */
-  public function onImportTransform(StorageTransformEvent $event) {
+  public function onImportTransform(StorageTransformEvent $event): void {
     $storage = $event->getStorage();
     $site = $storage->read('system.site');
     // Only change something if the sync storage has data.
@@ -92,7 +92,7 @@ class EventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Config\StorageTransformEvent $event
    *   The config storage transform event.
    */
-  public function onExportTransform(StorageTransformEvent $event) {
+  public function onExportTransform(StorageTransformEvent $event): void {
     $sync = $this->sync->read('system.site');
     // Only change something if the sync storage has data.
     if (!empty($sync)) {

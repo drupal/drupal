@@ -22,7 +22,7 @@ class CronQueueTestMemoryDelayException extends QueueWorkerBase {
   /**
    * {@inheritdoc}
    */
-  public function processItem($data) {
+  public function processItem($data): void {
     // Set the delay to something larger than the original lease.
     $cron_time = $this->pluginDefinition['cron']['time'];
     throw new DelayedRequeueException($cron_time + 100);

@@ -24,7 +24,7 @@ class SetterInjection {
    * @param \Drupal\new_dependency_test_with_service\NewService $service
    *   The service of the new module.
    */
-  public function setter(NewService $service) {
+  public function setter(NewService $service): void {
     $this->service = $service;
   }
 

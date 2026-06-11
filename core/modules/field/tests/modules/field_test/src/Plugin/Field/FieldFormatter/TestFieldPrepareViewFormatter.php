@@ -62,7 +62,7 @@ class TestFieldPrepareViewFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function prepareView(array $entities_items) {
+  public function prepareView(array $entities_items): void {
     foreach ($entities_items as $items) {
       foreach ($items as $item) {
         // Don't add anything on empty values.

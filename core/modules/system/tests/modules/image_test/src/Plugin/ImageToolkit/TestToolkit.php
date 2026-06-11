@@ -102,7 +102,7 @@ class TestToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
     if ($form_state->getValue(['test', 'test_parameter']) == 0) {
       $form_state->setErrorByName('test][test_parameter', $this->t('Test parameter should be different from 0.'));
     }
@@ -111,7 +111,7 @@ class TestToolkit extends ImageToolkitBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configFactory->getEditable('system.image.test_toolkit')
       ->set('test_parameter', $form_state->getValue(['test', 'test_parameter']))
       ->save();

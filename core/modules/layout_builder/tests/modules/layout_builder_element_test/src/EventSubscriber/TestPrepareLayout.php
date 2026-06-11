@@ -67,7 +67,7 @@ class TestPrepareLayout implements EventSubscriberInterface {
    * @param \Drupal\layout_builder\Event\PrepareLayoutEvent $event
    *   The prepare layout event.
    */
-  public function onBeforePrepareLayout(PrepareLayoutEvent $event) {
+  public function onBeforePrepareLayout(PrepareLayoutEvent $event): void {
     $section_storage = $event->getSectionStorage();
     $context = $section_storage->getContextValues();
 
@@ -100,7 +100,7 @@ class TestPrepareLayout implements EventSubscriberInterface {
    * @param \Drupal\layout_builder\Event\PrepareLayoutEvent $event
    *   The prepare layout event.
    */
-  public function onAfterPrepareLayout(PrepareLayoutEvent $event) {
+  public function onAfterPrepareLayout(PrepareLayoutEvent $event): void {
     $section_storage = $event->getSectionStorage();
     $context = $section_storage->getContextValues();
 

@@ -125,7 +125,7 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
   /**
    * {@inheritdoc}
    */
-  public function buildRoutes(RouteCollection $collection) {
+  public function buildRoutes(RouteCollection $collection): void {
     $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), 'layout-builder-test-simple-config/{id}');
   }
 

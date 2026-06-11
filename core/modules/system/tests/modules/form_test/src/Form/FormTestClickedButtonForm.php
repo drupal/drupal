@@ -82,7 +82,7 @@ class FormTestClickedButtonForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     if ($triggering_element = $form_state->getTriggeringElement()) {
       $this->messenger()->addStatus($this->t('The clicked button is %name.', ['%name' => $triggering_element['#name']]));
     }
@@ -94,7 +94,7 @@ class FormTestClickedButtonForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->messenger()->addStatus('Submit handler for form_test_clicked_button executed.');
   }
 

@@ -42,7 +42,7 @@ class PluginManagerCacheClearer extends DefaultPluginManager {
    *
    * @see \Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface::clearCachedDefinitions()
    */
-  public function clearCachedDefinitions() {
+  public function clearCachedDefinitions(): void {
     $this->state->set(self::class, isset($this->optionalService));
   }
 

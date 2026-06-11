@@ -68,7 +68,7 @@ class AjaxTestFormPromise extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     // An empty implementation, as we never submit the actual form.
   }
 

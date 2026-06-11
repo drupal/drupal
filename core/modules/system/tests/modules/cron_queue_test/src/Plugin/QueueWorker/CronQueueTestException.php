@@ -26,7 +26,7 @@ class CronQueueTestException extends QueueWorkerBase {
   /**
    * {@inheritdoc}
    */
-  public function processItem($data) {
+  public function processItem($data): void {
     $state = \Drupal::state();
     if (!$state->get('cron_queue_test_exception')) {
       $state->set('cron_queue_test_exception', 1);

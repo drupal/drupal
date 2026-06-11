@@ -130,7 +130,7 @@ class ConfigTestForm extends EntityForm {
   /**
    * Element submit handler for non-JS testing.
    */
-  public static function changeSize(array $form, FormStateInterface $form_state) {
+  public static function changeSize(array $form, FormStateInterface $form_state): void {
     $form_state->setRebuild();
   }
 

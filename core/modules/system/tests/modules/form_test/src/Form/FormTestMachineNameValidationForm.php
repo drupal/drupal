@@ -101,14 +101,14 @@ class FormTestMachineNameValidationForm extends FormBase {
   /**
    * Validate callback that forces a form rebuild.
    */
-  public function buildAjaxSnackConfigureFormValidate(array $form, FormStateInterface $form_state) {
+  public function buildAjaxSnackConfigureFormValidate(array $form, FormStateInterface $form_state): void {
     $form_state->set('id', $form_state->getValue('id'));
   }
 
   /**
    * Submit callback that forces a form rebuild.
    */
-  public function buildAjaxSnackConfigureFormSubmit(array $form, FormStateInterface $form_state) {
+  public function buildAjaxSnackConfigureFormSubmit(array $form, FormStateInterface $form_state): void {
     $form_state->setRebuild();
   }
 
@@ -139,7 +139,7 @@ class FormTestMachineNameValidationForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->messenger()->addStatus('The form_test_machine_name_validation_form form has been submitted successfully.');
   }
 

@@ -10972,18 +10972,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/big_pipe/tests/modules/big_pipe_test/src/BigPipeTestController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\big_pipe_test\\\\EventSubscriber\\\\BigPipeTestSubscriber\\:\\:onRespondSetBigPipeDebugPlaceholderHeaders\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/big_pipe/tests/modules/big_pipe_test/src/EventSubscriber/BigPipeTestSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\big_pipe_test\\\\EventSubscriber\\\\BigPipeTestSubscriber\\:\\:onRespondTriggerException\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/big_pipe/tests/modules/big_pipe_test/src/EventSubscriber/BigPipeTestSubscriber.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\big_pipe_test\\\\Form\\\\BigPipeTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -11152,36 +11140,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block/tests/modules/block_test/src/Controller/TestMultipleFormController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\block_test\\\\Form\\\\FavoriteAnimalTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/modules/block_test/src/Form/FavoriteAnimalTestForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\block_test\\\\Form\\\\TestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/modules/block_test/src/Form/TestForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\block_test\\\\Form\\\\TestForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/modules/block_test/src/Form/TestForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\block_test\\\\Plugin\\\\Block\\\\TestBlockInstantiation\\:\\:blockSubmit\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/modules/block_test/src/Plugin/Block/TestBlockInstantiation.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\block_test\\\\Plugin\\\\Block\\\\TestSettingsValidationBlock\\:\\:blockValidate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/modules/block_test/src/Plugin/Block/TestSettingsValidationBlock.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\block_test\\\\Plugin\\\\Condition\\\\BaloneySpam\\:\\:summary\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -11192,12 +11150,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block/tests/modules/block_test/src/Plugin/Condition/MissingSchema.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\block_test\\\\PluginForm\\\\EmptyBlockForm\\:\\:submitConfigurationForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/modules/block_test/src/PluginForm/EmptyBlockForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$position might not be defined\\.$#',
@@ -11450,12 +11402,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/src/Routing/RouteSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\block_content_test\\\\Plugin\\\\EntityReferenceSelection\\\\TestSelection\\:\\:setTestMode\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/tests/modules/block_content_test/src/Plugin/EntityReferenceSelection/TestSelection.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Functional\\\\BlockContentTranslationUITest\\:\\:getEditValues\\(\\) has no return type specified\\.$#',
@@ -12682,48 +12628,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/config/src/Form/ConfigSync.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_collection_install_test\\\\EventSubscriber\\:\\:addCollections\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_collection_install_test/src/EventSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_events_test\\\\EventSubscriber\\:\\:configEventRecorder\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_events_test/src/EventSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_import_test\\\\EventSubscriber\\:\\:onConfigDelete\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_import_test/src/EventSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_import_test\\\\EventSubscriber\\:\\:onConfigImporterMissingContentOne\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_import_test/src/EventSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_import_test\\\\EventSubscriber\\:\\:onConfigImporterMissingContentTwo\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_import_test/src/EventSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_import_test\\\\EventSubscriber\\:\\:onConfigImporterValidate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_import_test/src/EventSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_import_test\\\\EventSubscriber\\:\\:onConfigSave\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_import_test/src/EventSubscriber.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config_test\\\\ConfigActionErrorEntity\\\\DuplicatePluralizedMethodName\\:\\:testMethod\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -12740,12 +12644,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config/tests/config_test/src/ConfigActionErrorEntity/DuplicatePluralizedOtherMethodName.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_test\\\\ConfigTestForm\\:\\:changeSize\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_test/src/ConfigTestForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config_test\\\\ConfigTestForm\\:\\:form\\(\\) has no return type specified\\.$#',
@@ -12776,54 +12674,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config/tests/config_test/src/ConfigTestStorage.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_test\\\\ConfigValidation\\:\\:validateCatCount\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_test/src/ConfigValidation.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_test\\\\ConfigValidation\\:\\:validateCats\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_test/src/ConfigValidation.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_test\\\\ConfigValidation\\:\\:validateGiraffes\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_test/src/ConfigValidation.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_test\\\\ConfigValidation\\:\\:validateLlama\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_test/src/ConfigValidation.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_test\\\\ConfigValidation\\:\\:validateMapping\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_test/src/ConfigValidation.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_test\\\\ConfigValidation\\:\\:validateSequence\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_test/src/ConfigValidation.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_test\\\\Entity\\\\ConfigTest\\:\\:postDelete\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_test/src/Entity/ConfigTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_test\\\\Entity\\\\ConfigTest\\:\\:postSave\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_test/src/Entity/ConfigTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config_test\\\\Entity\\\\ConfigTest\\:\\:sort\\(\\) has no return type specified\\.$#',
@@ -12872,18 +12722,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config/tests/config_test/tests/src/Functional/Rest/ConfigTestXmlBasicAuthTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_transformer_test\\\\EventSubscriber\\:\\:onExportTransform\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_transformer_test/src/EventSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_transformer_test\\\\EventSubscriber\\:\\:onImportTransform\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/config_transformer_test/src/EventSubscriber.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\config\\\\Functional\\\\CacheabilityMetadataConfigOverrideIntegrationTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
@@ -13058,12 +12896,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config_translation/src/Routing/RouteSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\config_translation_test\\\\EventSubscriber\\\\ConfigTranslationTestSubscriber\\:\\:addConfigNames\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config_translation/tests/modules/config_translation_test/src/EventSubscriber/ConfigTranslationTestSubscriber.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\config_translation\\\\Functional\\\\ConfigTranslationUiTestBase\\:\\:assertMailPattern\\(\\) has no return type specified\\.$#',
@@ -14516,12 +14348,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/editor/src/Plugin/EditorBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\editor_test\\\\Plugin\\\\Editor\\\\UnicornEditor\\:\\:validateImageUploadSettings\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/editor/tests/modules/editor_test/src/Plugin/Editor/UnicornEditor.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\editor\\\\Functional\\\\Rest\\\\EditorJsonBasicAuthTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -14760,18 +14586,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field/tests/modules/field_test/src/FieldDefaultValueCallbackProvider.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_test\\\\Form\\\\NestedEntityTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/modules/field_test/src/Form/NestedEntityTestForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_test\\\\Form\\\\NestedEntityTestForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/modules/field_test/src/Form/NestedEntityTestForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$items in empty\\(\\) always exists and is not falsy\\.$#',
 	'identifier' => 'empty.variable',
 	'count' => 1,
@@ -14782,24 +14596,6 @@ $ignoreErrors[] = [
 	'identifier' => 'empty.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/tests/modules/field_test/src/Plugin/Field/FieldFormatter/TestFieldMultipleFormatter.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_test\\\\Plugin\\\\Field\\\\FieldFormatter\\\\TestFieldPrepareViewFormatter\\:\\:prepareView\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/modules/field_test/src/Plugin/Field/FieldFormatter/TestFieldPrepareViewFormatter.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_test\\\\Plugin\\\\Field\\\\FieldType\\\\TestItem\\:\\:delete\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/modules/field_test/src/Plugin/Field/FieldType/TestItem.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_test\\\\Plugin\\\\Field\\\\FieldWidget\\\\TestFieldWidgetMultiple\\:\\:multipleValidate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/modules/field_test/src/Plugin/Field/FieldWidget/TestFieldWidgetMultiple.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Functional\\\\EntityReference\\\\EntityReferenceFieldTranslatedReferenceViewTest\\:\\:createNotTranslatedReferencedEntity\\(\\) has no return type specified\\.$#',
@@ -15746,19 +15542,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/src/Plugin/views/field/File.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\file_module_test\\\\Form\\\\FileModuleTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/file_module_test/src/Form/FileModuleTestForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\file_test\\\\Form\\\\FileTestSaveUploadFromForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/file_test/src/Form/FileTestSaveUploadFromForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\file_test\\\\Form\\\\FileTestSaveUploadFromForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/file_test/src/Form/FileTestSaveUploadFromForm.php',
@@ -15780,12 +15564,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/file_test/src/StreamWrapper/DummyStreamWrapper.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\file_validator_test\\\\EventSubscriber\\\\FileSanitizationEventSubscriber\\:\\:onFileSanitization\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/modules/file_validator_test/src/EventSubscriber/FileSanitizationEventSubscriber.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileFieldTestBase\\:\\:assertFileEntryExists\\(\\) has no return type specified\\.$#',
@@ -16876,24 +16654,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/tests/modules/image_module_test/src/Plugin/ImageEffect/AjaxTestImageEffect.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\image_module_test\\\\Plugin\\\\ImageEffect\\\\AjaxTestImageEffect\\:\\:submitConfigurationForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/modules/image_module_test/src/Plugin/ImageEffect/AjaxTestImageEffect.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\image_module_test\\\\Plugin\\\\ImageEffect\\\\NullTestImageEffect\\:\\:transformDimensions\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/modules/image_module_test/src/Plugin/ImageEffect/NullTestImageEffect.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\image_module_test\\\\Plugin\\\\ImageEffect\\\\UriDependentTestImageEffect\\:\\:transformDimensions\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/modules/image_module_test/src/Plugin/ImageEffect/UriDependentTestImageEffect.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\image\\\\Functional\\\\ImageAdminStylesTest\\:\\:createSampleImage\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -17402,30 +17162,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/src/Serializer/Serializer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi_test_resource_type_building\\\\EventSubscriber\\\\ResourceTypeBuildEventSubscriber\\:\\:aliasResourceTypeFields\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/modules/jsonapi_test_resource_type_building/src/EventSubscriber/ResourceTypeBuildEventSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi_test_resource_type_building\\\\EventSubscriber\\\\ResourceTypeBuildEventSubscriber\\:\\:disableResourceType\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/modules/jsonapi_test_resource_type_building/src/EventSubscriber/ResourceTypeBuildEventSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi_test_resource_type_building\\\\EventSubscriber\\\\ResourceTypeBuildEventSubscriber\\:\\:disableResourceTypeFields\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/modules/jsonapi_test_resource_type_building/src/EventSubscriber/ResourceTypeBuildEventSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\jsonapi_test_resource_type_building\\\\EventSubscriber\\\\ResourceTypeBuildEventSubscriber\\:\\:renameResourceType\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/modules/jsonapi_test_resource_type_building/src/EventSubscriber/ResourceTypeBuildEventSubscriber.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\InternalEntitiesTest\\:\\:jsonapiGet\\(\\) has no return type specified\\.$#',
@@ -18878,18 +18614,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/src/SectionStorageInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder_element_test\\\\EventSubscriber\\\\TestPrepareLayout\\:\\:onAfterPrepareLayout\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/modules/layout_builder_element_test/src/EventSubscriber/TestPrepareLayout.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder_element_test\\\\EventSubscriber\\\\TestPrepareLayout\\:\\:onBeforePrepareLayout\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/modules/layout_builder_element_test/src/EventSubscriber/TestPrepareLayout.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder_form_block_test\\\\Plugin\\\\Block\\\\TestFormApiFormBlock\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -18915,12 +18639,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder_test\\\\Plugin\\\\SectionStorage\\\\SimpleConfigSectionStorage\\:\\:buildLayoutRoutes\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/modules/layout_builder_test/src/Plugin/SectionStorage/SimpleConfigSectionStorage.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder_test\\\\Plugin\\\\SectionStorage\\\\SimpleConfigSectionStorage\\:\\:buildRoutes\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/tests/modules/layout_builder_test/src/Plugin/SectionStorage/SimpleConfigSectionStorage.php',
@@ -20318,66 +20036,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media/src/Plugin/views/filter/Status.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_test_embed\\\\Routing\\\\RouteSubscriber\\:\\:alterRoutes\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/modules/media_test_embed/src/Routing/RouteSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_test_oembed\\\\Controller\\\\ResourceController\\:\\:setResource404\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/modules/media_test_oembed/src/Controller/ResourceController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_test_oembed\\\\Controller\\\\ResourceController\\:\\:setResourceUrl\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/modules/media_test_oembed/src/Controller/ResourceController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_test_oembed\\\\MediaTestOembedServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/modules/media_test_oembed/src/MediaTestOembedServiceProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_test_oembed\\\\ProviderRepository\\:\\:setProvider\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/modules/media_test_oembed/src/ProviderRepository.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_test_oembed\\\\UrlResolver\\:\\:setEndpointUrl\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/modules/media_test_oembed/src/UrlResolver.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_test_source\\\\Plugin\\\\media\\\\Source\\\\TestDifferentDisplays\\:\\:prepareFormDisplay\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/modules/media_test_source/src/Plugin/media/Source/TestDifferentDisplays.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_test_source\\\\Plugin\\\\media\\\\Source\\\\TestDifferentDisplays\\:\\:prepareViewDisplay\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/modules/media_test_source/src/Plugin/media/Source/TestDifferentDisplays.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_test_source\\\\Plugin\\\\media\\\\Source\\\\TestWithHiddenSourceField\\:\\:prepareFormDisplay\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/modules/media_test_source/src/Plugin/media/Source/TestWithHiddenSourceField.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_test_source\\\\Plugin\\\\media\\\\Source\\\\TestWithHiddenSourceField\\:\\:prepareViewDisplay\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/modules/media_test_source/src/Plugin/media/Source/TestWithHiddenSourceField.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Functional\\\\FieldFormatter\\\\OEmbedFormatterTest\\:\\:hijackProviderEndpoints\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -20808,18 +20466,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media_library/src/Routing/RouteSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_library_test\\\\Form\\\\TestNodeFormOverride\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/modules/media_library_test/src/Form/TestNodeFormOverride.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media_library_test_widget\\\\Plugin\\\\Field\\\\FieldWidget\\\\MediaLibraryInceptionWidget\\:\\:elementValidate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/modules/media_library_test_widget/src/Plugin/Field/FieldWidget/MediaLibraryInceptionWidget.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$jpg_image might not be defined\\.$#',
@@ -25830,18 +25476,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/search/src/ViewsSearchQuery.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\search_embedded_form\\\\Form\\\\SearchEmbeddedForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/modules/search_embedded_form/src/Form/SearchEmbeddedForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\search_extra_type\\\\Plugin\\\\Search\\\\SearchExtraTypeSearch\\:\\:submitConfigurationForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/modules/search_extra_type/src/Plugin/Search/SearchExtraTypeSearch.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\Rest\\\\SearchPageJsonBasicAuthTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -26116,12 +25750,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/settings_tray/tests/modules/settings_tray_test/src/Form/SettingsTrayFormAnnotationIsClassBlockForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\settings_tray_test\\\\Plugin\\\\Block\\\\ValidationErrorBlock\\:\\:validateConfigurationForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/settings_tray/tests/modules/settings_tray_test/src/Plugin/Block/ValidationErrorBlock.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\settings_tray\\\\FunctionalJavascript\\\\SettingsTrayBlockFormTest\\:\\:getBlockTests\\(\\) has no return type specified\\.$#',
@@ -27260,22 +26888,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/system.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\accept_header_routing_test\\\\AcceptHeaderRoutingTestServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/accept_header_routing_test/src/AcceptHeaderRoutingTestServiceProvider.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\action_test\\\\Plugin\\\\Action\\\\NoType\\:\\:execute\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/action_test/src/Plugin/Action/NoType.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\action_test\\\\Plugin\\\\Action\\\\SaveEntity\\:\\:execute\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/action_test/src/Plugin/Action/SaveEntity.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\advisory_feed_test\\\\AdvisoryTestClientMiddleware\\:\\:__invoke\\(\\) has no return type specified\\.$#',
@@ -27296,34 +26912,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/ajax_forms_test/src/Form/AjaxFormsTestCommandsForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ajax_forms_test\\\\Form\\\\AjaxFormsTestImageButtonForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/ajax_forms_test/src/Form/AjaxFormsTestImageButtonForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ajax_forms_test\\\\Form\\\\AjaxFormsTestLazyLoadForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/ajax_forms_test/src/Form/AjaxFormsTestLazyLoadForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\ajax_forms_test\\\\Form\\\\AjaxFormsTestSimpleForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/ajax_forms_test/src/Form/AjaxFormsTestSimpleForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ajax_forms_test\\\\Form\\\\AjaxFormsTestValidationForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/ajax_forms_test/src/Form/AjaxFormsTestValidationForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ajax_forms_test\\\\Plugin\\\\Block\\\\AjaxFormBlock\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/ajax_forms_test/src/Plugin/Block/AjaxFormBlock.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\ajax_forms_test\\\\Plugin\\\\Block\\\\AjaxFormBlock\\:\\:validateForm\\(\\) has no return type specified\\.$#',
@@ -27386,12 +26978,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/ajax_test/src/Form/AjaxTestDialogForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ajax_test\\\\Form\\\\AjaxTestDialogForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/ajax_test/src/Form/AjaxTestDialogForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\ajax_test\\\\Form\\\\AjaxTestDialogForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -27428,12 +27014,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/ajax_test/src/Form/AjaxTestFormPromise.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\ajax_test\\\\Form\\\\AjaxTestFormPromise\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/ajax_test/src/Form/AjaxTestFormPromise.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\ajax_test\\\\Form\\\\AjaxTestMessageCommandForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -27446,52 +27026,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/ajax_test/src/Form/AjaxTestMessageCommandForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\batch_test\\\\Form\\\\BatchTestChainedForm\\:\\:batchTestChainedFormSubmit1\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/src/Form/BatchTestChainedForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\batch_test\\\\Form\\\\BatchTestChainedForm\\:\\:batchTestChainedFormSubmit2\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/src/Form/BatchTestChainedForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\batch_test\\\\Form\\\\BatchTestChainedForm\\:\\:batchTestChainedFormSubmit3\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/src/Form/BatchTestChainedForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\batch_test\\\\Form\\\\BatchTestChainedForm\\:\\:batchTestChainedFormSubmit4\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/src/Form/BatchTestChainedForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\batch_test\\\\Form\\\\BatchTestChainedForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/src/Form/BatchTestChainedForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\batch_test\\\\Form\\\\BatchTestMockForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/src/Form/BatchTestMockForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\batch_test\\\\Form\\\\BatchTestMultiStepForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/src/Form/BatchTestMultiStepForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\batch_test\\\\Form\\\\BatchTestSimpleForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/src/Form/BatchTestSimpleForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\cache_test\\\\Controller\\\\CacheTestController\\:\\:urlBubbling\\(\\) has no return type specified\\.$#',
@@ -27504,18 +27042,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/common_test/src/Controller/CommonTestController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\condition_test\\\\FormController\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/condition_test/src/FormController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\condition_test\\\\FormController\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/condition_test/src/FormController.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\condition_test\\\\Plugin\\\\Condition\\\\ConditionTestDualUser\\:\\:summary\\(\\) has no return type specified\\.$#',
@@ -27536,52 +27062,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/condition_test/src/Plugin/Condition/OptionalContextCondition.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\container_rebuild_test\\\\ContainerRebuildTestServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/container_rebuild_test/src/ContainerRebuildTestServiceProvider.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\cron_queue_test\\\\Plugin\\\\QueueWorker\\\\CronQueueTestDatabaseDelayException\\:\\:processItem\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/cron_queue_test/src/Plugin/QueueWorker/CronQueueTestDatabaseDelayException.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\cron_queue_test\\\\Plugin\\\\QueueWorker\\\\CronQueueTestDeriverQueue\\:\\:processItem\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/cron_queue_test/src/Plugin/QueueWorker/CronQueueTestDeriverQueue.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\cron_queue_test\\\\Plugin\\\\QueueWorker\\\\CronQueueTestException\\:\\:processItem\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/cron_queue_test/src/Plugin/QueueWorker/CronQueueTestException.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\cron_queue_test\\\\Plugin\\\\QueueWorker\\\\CronQueueTestLeaseTime\\:\\:processItem\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/cron_queue_test/src/Plugin/QueueWorker/CronQueueTestLeaseTime.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\cron_queue_test\\\\Plugin\\\\QueueWorker\\\\CronQueueTestMemoryDelayException\\:\\:processItem\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/cron_queue_test/src/Plugin/QueueWorker/CronQueueTestMemoryDelayException.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\cron_queue_test\\\\Plugin\\\\QueueWorker\\\\CronQueueTestRequeueException\\:\\:processItem\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/cron_queue_test/src/Plugin/QueueWorker/CronQueueTestRequeueException.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\cron_queue_test\\\\Plugin\\\\QueueWorker\\\\CronQueueTestSuspendQueue\\:\\:processItem\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/cron_queue_test/src/Plugin/QueueWorker/CronQueueTestSuspendQueue.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\database_test\\\\Form\\\\DatabaseTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -27604,22 +27088,10 @@ in drupal\\:8\\.4\\.0 and is removed from drupal\\:9\\.0\\.0\\. This is
 	'path' => __DIR__ . '/modules/system/tests/modules/deprecation_test/src/DeprecatedController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\destructable_test\\\\Destructable\\:\\:destruct\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/destructable_test/src/Destructable.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\dialog_renderer_test\\\\Form\\\\TestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/dialog_renderer_test/src/Form/TestForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\display_variant_test\\\\EventSubscriber\\\\TestPageDisplayVariantSubscriber\\:\\:onSelectPageDisplayVariant\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/display_variant_test/src/EventSubscriber/TestPageDisplayVariantSubscriber.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\early_rendering_controller_test\\\\EarlyRenderingTestController\\:\\:ajaxResponse\\(\\) has no return type specified\\.$#',
@@ -27724,46 +27196,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/early_rendering_controller_test/src/EarlyRenderingTestController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\early_rendering_controller_test\\\\TestDomainObjectViewSubscriber\\:\\:onViewTestDomainObject\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/early_rendering_controller_test/src/TestDomainObjectViewSubscriber.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\entity_test\\\\Controller\\\\EntityTestController\\:\\:testAdmin\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/Controller/EntityTestController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\Entity\\\\EntityTest\\:\\:preCreate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/Entity/EntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestDefinitionSubscriber\\:\\:enableEventTracking\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestDefinitionSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestDefinitionSubscriber\\:\\:enableLiveDefinitionUpdates\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestDefinitionSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestDefinitionSubscriber\\:\\:onEntityTypeCreate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestDefinitionSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestDefinitionSubscriber\\:\\:onEntityTypeDelete\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestDefinitionSubscriber.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestDefinitionSubscriber\\:\\:onEntityTypeEvent\\(\\) has no return type specified\\.$#',
@@ -27772,43 +27208,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestDefinitionSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestDefinitionSubscriber\\:\\:onEntityTypeUpdate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestDefinitionSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestDefinitionSubscriber\\:\\:onFieldStorageDefinitionCreate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestDefinitionSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestDefinitionSubscriber\\:\\:onFieldStorageDefinitionDelete\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestDefinitionSubscriber.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestDefinitionSubscriber\\:\\:onFieldStorageDefinitionEvent\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestDefinitionSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestDefinitionSubscriber\\:\\:onFieldStorageDefinitionUpdate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestDefinitionSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestDefinitionSubscriber\\:\\:onFieldableEntityTypeCreate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestDefinitionSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestDefinitionSubscriber\\:\\:onFieldableEntityTypeUpdate\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestDefinitionSubscriber.php',
@@ -27836,12 +27236,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\EntityTestViewBuilder\\:\\:buildComponents\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestViewBuilder.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\entity_test\\\\Plugin\\\\Field\\\\ComputedReferenceTestFieldItemList\\:\\:computeValue\\(\\) has no return type specified\\.$#',
@@ -27932,30 +27326,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/Plugin/Field/ComputedTestFieldItemList.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\Plugin\\\\Field\\\\FieldType\\\\AutoIncrementingTestItem\\:\\:preSave\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/AutoIncrementingTestItem.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\Plugin\\\\Field\\\\FieldType\\\\ChangedTestItem\\:\\:preSave\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/ChangedTestItem.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\Plugin\\\\Field\\\\FieldType\\\\FieldTestItem\\:\\:delete\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/FieldTestItem.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test\\\\Plugin\\\\Field\\\\FieldType\\\\FieldTestItem\\:\\:preSave\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/FieldTestItem.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\entity_test\\\\TypedData\\\\ComputedString\\:\\:getCastedValue\\(\\) has no return type specified\\.$#',
@@ -28078,52 +27448,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/tests/src/Functional/Rest/EntityTestXmlBasicAuthTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test_bundle_class\\\\Entity\\\\EntityTestBundleClass\\:\\:postCreate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_bundle_class/src/Entity/EntityTestBundleClass.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test_bundle_class\\\\Entity\\\\EntityTestBundleClass\\:\\:postDelete\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_bundle_class/src/Entity/EntityTestBundleClass.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test_bundle_class\\\\Entity\\\\EntityTestBundleClass\\:\\:postLoad\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_bundle_class/src/Entity/EntityTestBundleClass.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test_bundle_class\\\\Entity\\\\EntityTestBundleClass\\:\\:preCreate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_bundle_class/src/Entity/EntityTestBundleClass.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test_bundle_class\\\\Entity\\\\EntityTestBundleClass\\:\\:preDelete\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_bundle_class/src/Entity/EntityTestBundleClass.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test_update\\\\Entity\\\\EntityTestUpdate\\:\\:preCreate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_update/src/Entity/EntityTestUpdate.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\entity_test_update\\\\EntityTestUpdateStorage\\:\\:saveToDedicatedTables\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_update/src/EntityTestUpdateStorage.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test_update\\\\EventSubscriber\\\\EntitySchemaSubscriber\\:\\:onEntityTypeCreate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_update/src/EventSubscriber/EntitySchemaSubscriber.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\entity_test_update\\\\EventSubscriber\\\\EntitySchemaSubscriber\\:\\:onEntityTypeDelete\\(\\) has no return type specified\\.$#',
@@ -28133,12 +27461,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\entity_test_update\\\\EventSubscriber\\\\EntitySchemaSubscriber\\:\\:onEntityTypeEvent\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_update/src/EventSubscriber/EntitySchemaSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\entity_test_update\\\\EventSubscriber\\\\EntitySchemaSubscriber\\:\\:onEntityTypeUpdate\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_update/src/EventSubscriber/EntitySchemaSubscriber.php',
@@ -28162,12 +27484,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/error_service_test/src/Controller/LonelyMonkeyController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\error_service_test\\\\ErrorServiceTestServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/error_service_test/src/ErrorServiceTestServiceProvider.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\error_test\\\\Controller\\\\ErrorTestController\\:\\:generateFatalErrors\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -28180,46 +27496,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\error_test\\\\Controller\\\\ErrorTestController\\:\\:triggerPDOException\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\error_test\\\\Controller\\\\ErrorTestController\\:\\:triggerRendererException\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Callbacks\\:\\:validateName\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Callbacks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\ConfirmFormTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/ConfirmFormTestForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Controller\\\\FormTestController\\:\\:storageLegacyHandler\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Controller/FormTestController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\EventSubscriber\\\\FormTestEventSubscriber\\:\\:onKernelRequest\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/EventSubscriber/FormTestEventSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\EventSubscriber\\\\FormTestEventSubscriber\\:\\:onKernelResponse\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/EventSubscriber/FormTestEventSubscriber.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestAlterForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -28234,52 +27520,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestButtonClassForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestCheckboxForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestCheckboxForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestCheckboxTypeJugglingForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestCheckboxTypeJugglingForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestCheckboxesRadiosForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestCheckboxesRadiosForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestCheckboxesZeroForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestCheckboxesZeroForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestClickedButtonForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestClickedButtonForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestClickedButtonForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestClickedButtonForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestColorForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestColorForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestDescriptionForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestDescriptionForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestDetailsContainsRequiredTextfieldForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -28294,24 +27538,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestDetailsForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestDetailsForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestDetailsForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestDisabledElementsForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestDisabledElementsForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestEmailForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestEmailForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestEmptySelectForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -28322,30 +27548,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestFileForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestFormStateValuesCleanAdvancedForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestFormStateValuesCleanAdvancedForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestFormStateValuesCleanForm\\:\\:cleanValue\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestFormStateValuesCleanForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestFormStateValuesCleanForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestFormStateValuesCleanForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestGetForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestGetForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestGroupContainerForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -28372,12 +27574,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestGroupVerticalTabsForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestGroupVerticalTabsForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestGroupVerticalTabsForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestInputForgeryForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -28390,55 +27586,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestLabelForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestLanguageSelectForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestLanguageSelectForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestLimitValidationErrorsForm\\:\\:elementValidateLimitValidationErrors\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestLimitValidationErrorsForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestLimitValidationErrorsForm\\:\\:partialSubmitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestLimitValidationErrorsForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestLimitValidationErrorsForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestLimitValidationErrorsForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestMachineNameForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestMachineNameForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestMachineNameValidationForm\\:\\:buildAjaxSnackConfigureForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestMachineNameValidationForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestMachineNameValidationForm\\:\\:buildAjaxSnackConfigureFormSubmit\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestMachineNameValidationForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestMachineNameValidationForm\\:\\:buildAjaxSnackConfigureFormValidate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestMachineNameValidationForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestMachineNameValidationForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestMachineNameValidationForm.php',
@@ -28468,52 +27622,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestPlaceholderForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestProgrammaticForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestProgrammaticForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestProgrammaticForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestProgrammaticForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestRadiosCheckedForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestRadiosCheckedForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestRangeForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestRangeForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestRangeInvalidForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestRangeInvalidForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestRebuildPreserveValuesForm\\:\\:addMoreSubmitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestRebuildPreserveValuesForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestRebuildPreserveValuesForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestRebuildPreserveValuesForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestRedirectForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestRedirectForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestRequiredAttributeForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -28522,67 +27634,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestRequiredAttributeForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestResponseForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestResponseForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestSelectForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestSelectForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestStatePersistForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestStatePersistForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestStorageForm\\:\\:continueSubmitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestStorageForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestStorageForm\\:\\:elementValidateValueCached\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestStorageForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestStorageForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestStorageForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestStorageForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestStorageForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestStoragePageCacheForm\\:\\:form_test_storage_page_cache_old_build_id\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestStoragePageCacheForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestStoragePageCacheForm\\:\\:form_test_storage_page_cache_rebuild\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestStoragePageCacheForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestStoragePageCacheForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestStoragePageCacheForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestStoragePageCacheForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestStoragePageCacheForm.php',
@@ -28618,76 +27670,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestTableSelectJsSelectForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestTableSelectMultipleFalseForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestTableSelectMultipleFalseForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestTableSelectMultipleTrueForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestTableSelectMultipleTrueForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestUrlForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestUrlForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestValidateForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestValidateForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestValidateForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestValidateForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestValidateNoToken\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestValidateNoToken.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestValidateRequiredForm\\:\\:elementValidateRequired\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestValidateRequiredForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestValidateRequiredForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestValidateRequiredForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestValidateRequiredNoTitleForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestValidateRequiredNoTitleForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestVerticalTabsAccessForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestVerticalTabsAccessForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestVerticalTabsAccessForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestVerticalTabsAccessForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\FormTestVerticalTabsForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/FormTestVerticalTabsForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\JavascriptStatesForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
@@ -28696,79 +27682,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/JavascriptStatesForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\Form\\\\RedirectBlockForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/Form/RedirectBlockForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\FormTestArgumentsObject\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/FormTestArgumentsObject.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\FormTestArgumentsObject\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/FormTestArgumentsObject.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\form_test\\\\FormTestAutocompleteForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/FormTestAutocompleteForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\FormTestControllerObject\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/FormTestControllerObject.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\FormTestControllerObject\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/FormTestControllerObject.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\FormTestObject\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/FormTestObject.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\FormTestObject\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/FormTestObject.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\FormTestServiceObject\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/FormTestServiceObject.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\form_test\\\\FormTestServiceObject\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/form_test/src/FormTestServiceObject.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\hold_test\\\\EventSubscriber\\\\HoldTestSubscriber\\:\\:hold\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/hold_test/src/EventSubscriber/HoldTestSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\hold_test\\\\EventSubscriber\\\\HoldTestSubscriber\\:\\:onRequest\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/hold_test/src/EventSubscriber/HoldTestSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\hold_test\\\\EventSubscriber\\\\HoldTestSubscriber\\:\\:onRespond\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/hold_test/src/EventSubscriber/HoldTestSubscriber.php',
@@ -28784,24 +27704,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/image_test/src/Plugin/ImageToolkit/TestToolkit.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\image_test\\\\Plugin\\\\ImageToolkit\\\\TestToolkit\\:\\:submitConfigurationForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/image_test/src/Plugin/ImageToolkit/TestToolkit.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\image_test\\\\Plugin\\\\ImageToolkit\\\\TestToolkit\\:\\:validateConfigurationForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/image_test/src/Plugin/ImageToolkit/TestToolkit.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\js_interaction_test\\\\Controller\\\\JSInteractionTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/js_interaction_test/src/Controller/JSInteractionTestForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jswebassert_test\\\\Controller\\\\TestController\\:\\:page\\(\\) has no return type specified\\.$#',
@@ -28850,18 +27752,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/jswebassert_test/src/Form/JsWebAssertTestForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_test\\\\Plugin\\\\Layout\\\\LayoutTestPlugin\\:\\:submitConfigurationForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/layout_test/src/Plugin/Layout/LayoutTestPlugin.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_test\\\\Plugin\\\\Layout\\\\LayoutTestPlugin\\:\\:validateConfigurationForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/layout_test/src/Plugin/Layout/LayoutTestPlugin.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Constructor of class Drupal\\\\lazy_route_provider_install_test\\\\PluginManager has an unused parameter \\$cache_backend\\.$#',
@@ -28930,22 +27820,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/module_test/module_test.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\module_test\\\\PluginManagerCacheClearer\\:\\:clearCachedDefinitions\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/module_test/src/PluginManagerCacheClearer.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Missing cache backend declaration for performance\\.$#',
 	'identifier' => 'pluginManagerSetsCacheBackend.missingCacheBackend',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/module_test/src/PluginManagerCacheClearer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\new_dependency_test\\\\SetterInjection\\:\\:setter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/new_dependency_test/src/SetterInjection.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\pager_test\\\\Controller\\\\PagerTestController\\:\\:multiplePagers\\(\\) has no return type specified\\.$#',
@@ -28984,94 +27862,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/paramconverter_test/src/TestControllers.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:delete\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:deleteAll\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:deleteMultiple\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:garbageCollection\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:invalidate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:invalidateAll\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:invalidateMultiple\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:invalidateTags\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:removeBin\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:set\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheBackendDecorator\\:\\:setMultiple\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheBackendDecorator.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheTagsChecksumDecorator\\:\\:invalidateTags\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheTagsChecksumDecorator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\Cache\\\\CacheTagsChecksumDecorator\\:\\:reset\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/Cache/CacheTagsChecksumDecorator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\PerformanceDataCollector\\:\\:addCacheOperation\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/PerformanceDataCollector.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\performance_test\\\\PerformanceDataCollector\\:\\:addCacheTagOperation\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/performance_test/src/PerformanceDataCollector.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\plugin_test\\\\Plugin\\\\Annotation\\\\PluginExample\\:\\:get\\(\\) has no return type specified\\.$#',
@@ -29218,12 +28012,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/router_test_directory/src/RouteTestSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\router_test\\\\RouterTestServiceProvider\\:\\:register\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/router_test_directory/src/RouterTestServiceProvider.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\router_test\\\\TestContent\\:\\:subrequestTest\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29260,12 +28048,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/router_test_directory/src/TestControllers.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\router_test\\\\TestControllers\\:\\:test10\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/router_test_directory/src/TestControllers.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\router_test\\\\TestControllers\\:\\:test18\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29285,12 +28067,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\router_test\\\\TestControllers\\:\\:test23\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/router_test_directory/src/TestControllers.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\router_test\\\\TestControllers\\:\\:test24\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/router_test_directory/src/TestControllers.php',
@@ -29356,42 +28132,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/router_test_directory/src/TestControllers.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\sdc_other_node_visitor\\\\Twig\\\\Extension\\\\TestProfilerExtension\\:\\:enter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/sdc_other_node_visitor/src/Twig/Extension/TestProfilerExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\sdc_other_node_visitor\\\\Twig\\\\Extension\\\\TestProfilerExtension\\:\\:leave\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/sdc_other_node_visitor/src/Twig/Extension/TestProfilerExtension.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\service_provider_test\\\\ServiceProviderTestServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/service_provider_test/src/ServiceProviderTestServiceProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\service_provider_test\\\\TestClass\\:\\:destruct\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/service_provider_test/src/TestClass.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\service_provider_test\\\\TestClass\\:\\:onKernelRequestTest\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/service_provider_test/src/TestClass.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\service_provider_test\\\\TestClass\\:\\:onKernelResponseTest\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/service_provider_test/src/TestClass.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\service_provider_test\\\\TestFileUsage\\:\\:add\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29414,36 +28154,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/services_defaults_test/src/TestService.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\session_test\\\\EventSubscriber\\\\SessionTestSubscriber\\:\\:onKernelRequestSessionTest\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/session_test/src/EventSubscriber/SessionTestSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\session_test\\\\EventSubscriber\\\\SessionTestSubscriber\\:\\:onKernelResponseSessionTest\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/session_test/src/EventSubscriber/SessionTestSubscriber.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\session_test\\\\Form\\\\SessionTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/session_test/src/Form/SessionTestForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\session_test\\\\Session\\\\TestSessionBag\\:\\:clearFlag\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/session_test/src/Session/TestSessionBag.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\session_test\\\\Session\\\\TestSessionBag\\:\\:setFlag\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/session_test/src/Session/TestSessionBag.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system_test\\\\Controller\\\\SystemTestController\\:\\:authorizeInit\\(\\) has no return type specified\\.$#',
@@ -29524,22 +28234,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/system_test/src/Controller/SystemTestController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\system_test\\\\Form\\\\CopyFieldValueTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/system_test/src/Form/CopyFieldValueTestForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system_test\\\\MockFileTransfer\\:\\:getSettingsForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/system_test/src/MockFileTransfer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\tabledrag_test\\\\Form\\\\TableDragTestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/tabledrag_test/src/Form/TableDragTestForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\test_page_test\\\\Controller\\\\Test\\:\\:deprecations\\(\\) has no return type specified\\.$#',
@@ -29596,18 +28294,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/test_page_test/src/Controller/TestPageTestController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\test_page_test\\\\Form\\\\TestForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/test_page_test/src/Form/TestForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\theme_test\\\\EventSubscriber\\\\ThemeTestSubscriber\\:\\:onRequest\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/src/EventSubscriber/ThemeTestSubscriber.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\theme_test\\\\ThemeTestController\\:\\:generalSuggestionAlter\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -29642,12 +28328,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/src/ThemeTestController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\theme_test\\\\ThemeTestPreprocess\\:\\:preprocess\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/theme_test/src/ThemeTestPreprocess.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\trusted_hosts_test\\\\Controller\\\\TrustedHostsTestController\\:\\:bagType\\(\\) has no return type specified\\.$#',
@@ -38915,30 +37595,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/ViewsData.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user_batch_action_test\\\\Plugin\\\\Action\\\\BatchUserAction\\:\\:execute\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/user_batch_action_test/src/Plugin/Action/BatchUserAction.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user_batch_action_test\\\\Plugin\\\\Action\\\\BatchUserAction\\:\\:executeMultiple\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/user_batch_action_test/src/Plugin/Action/BatchUserAction.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user_batch_action_test\\\\Plugin\\\\Action\\\\BatchUserAction\\:\\:finishBatch\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/user_batch_action_test/src/Plugin/Action/BatchUserAction.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user_batch_action_test\\\\Plugin\\\\Action\\\\BatchUserAction\\:\\:processBatch\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/user_batch_action_test/src/Plugin/Action/BatchUserAction.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_test_cacheable_metadata_calculation\\\\Plugin\\\\views\\\\access\\\\CacheableMetadataCalculationTest\\:\\:alterRouteDefinition\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -38987,28 +37643,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Form/ViewsTestDataErrorForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Form\\\\ViewsTestDataErrorForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Form/ViewsTestDataErrorForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$view in isset\\(\\) always exists and is not nullable\\.$#',
 	'identifier' => 'isset.variable',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Hook/ViewsTestDataViewsExecutionHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\access\\\\StaticTest\\:\\:alterRouteDefinition\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/access/StaticTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\area\\\\TestExample\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/area/TestExample.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\argument_default\\\\ArgumentDefaultTest\\:\\:getArgument\\(\\) has no return type specified\\.$#',
@@ -39023,88 +37661,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/argument_validator/ArgumentValidatorTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\display\\\\DisplayTest\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/display/DisplayTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\display\\\\DisplayTest\\:\\:execute\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/display/DisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\display\\\\DisplayTest\\:\\:optionsSummary\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/display/DisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\display\\\\DisplayTest\\:\\:submitOptionsForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/display/DisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\display\\\\DisplayTest\\:\\:validateOptionsForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/display/DisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\display_extender\\\\DisplayExtenderTest\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/display_extender/DisplayExtenderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\display_extender\\\\DisplayExtenderTest\\:\\:defaultableSections\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/display_extender/DisplayExtenderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\display_extender\\\\DisplayExtenderTest\\:\\:optionsSummary\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/display_extender/DisplayExtenderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\display_extender\\\\DisplayExtenderTest\\:\\:preExecute\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/display_extender/DisplayExtenderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\display_extender\\\\DisplayExtenderTest\\:\\:query\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/display_extender/DisplayExtenderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\display_extender\\\\DisplayExtenderTest\\:\\:submitOptionsForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/display_extender/DisplayExtenderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\field\\\\FieldFormButtonTest\\:\\:query\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/field/FieldFormButtonTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\field\\\\FieldFormButtonTest\\:\\:viewsForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/field/FieldFormButtonTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\field\\\\FieldFormButtonTest\\:\\:viewsFormSubmit\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/field/FieldFormButtonTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\field\\\\FieldTest\\:\\:addSelfTokens\\(\\) has no return type specified\\.$#',
@@ -39113,97 +37673,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/field/FieldTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\field\\\\FieldTest\\:\\:setTestValue\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/field/FieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\filter\\\\FilterBooleanOperatorDefaultTest\\:\\:query\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/filter/FilterBooleanOperatorDefaultTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\filter\\\\FilterExceptionTest\\:\\:query\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/filter/FilterExceptionTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\filter\\\\FilterTest\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/filter/FilterTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\filter\\\\FilterTest\\:\\:query\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/filter/FilterTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\filter\\\\ViewsTestCacheContextFilter\\:\\:query\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/filter/ViewsTestCacheContextFilter.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\join\\\\JoinTest\\:\\:buildJoin\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/join/JoinTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\join\\\\JoinTest\\:\\:setJoinValue\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/join/JoinTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\query\\\\QueryTest\\:\\:addField\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/query/QueryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\query\\\\QueryTest\\:\\:addOrderBy\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/query/QueryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\query\\\\QueryTest\\:\\:addWhere\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/query/QueryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\query\\\\QueryTest\\:\\:build\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/query/QueryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\query\\\\QueryTest\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/query/QueryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\query\\\\QueryTest\\:\\:ensureTable\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/query/QueryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\query\\\\QueryTest\\:\\:execute\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/query/QueryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\query\\\\QueryTest\\:\\:setAllItems\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/query/QueryTest.php',
@@ -39215,43 +37685,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/query/QueryTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\row\\\\RowTest\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/row/RowTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\row\\\\RowTest\\:\\:setOutput\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/row/RowTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\style\\\\MappingTest\\:\\:filterNumericFields\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/style/MappingTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\style\\\\StyleTest\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/style/StyleTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\style\\\\StyleTest\\:\\:render\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/style/StyleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\style\\\\StyleTest\\:\\:setOutput\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/style/StyleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\style\\\\StyleTest\\:\\:setUsesRowPlugin\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/style/StyleTest.php',
@@ -40853,12 +39293,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workflows/src/WorkflowListBuilder.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workflow_type_test\\\\Form\\\\ComplexTestTypeConfigureForm\\:\\:submitConfigurationForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workflows/tests/modules/workflow_type_test/src/Form/ComplexTestTypeConfigureForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workflow_type_test\\\\Plugin\\\\WorkflowType\\\\WorkflowCustomAccessType\\:\\:workflowAccess\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -41163,18 +39597,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspacesServiceProvider.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workspace_update_test\\\\Negotiator\\\\TestWorkspaceNegotiator\\:\\:setActiveWorkspace\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/modules/workspace_update_test/src/Negotiator/TestWorkspaceNegotiator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workspace_update_test\\\\Negotiator\\\\TestWorkspaceNegotiator\\:\\:unsetActiveWorkspace\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/modules/workspace_update_test/src/Negotiator/TestWorkspaceNegotiator.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\PathWorkspacesTest\\:\\:isLabelInContentOverview\\(\\) has no return type specified\\.$#',

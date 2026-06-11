@@ -49,7 +49,7 @@ class StyleTest extends StylePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state): void {
     parent::buildOptionsForm($form, $form_state);
 
     $form['test_option'] = [
@@ -66,7 +66,7 @@ class StyleTest extends StylePluginBase {
    * @param bool $status
    *   TRUE if this style plugin should use rows.
    */
-  public function setUsesRowPlugin($status) {
+  public function setUsesRowPlugin($status): void {
     $this->usesRowPlugin = $status;
   }
 
@@ -76,7 +76,7 @@ class StyleTest extends StylePluginBase {
    * @param string $output
    *   The string to output by this plugin.
    */
-  public function setOutput($output) {
+  public function setOutput($output): void {
     $this->output = $output;
   }
 

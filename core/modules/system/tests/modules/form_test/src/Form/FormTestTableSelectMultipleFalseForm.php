@@ -30,7 +30,7 @@ class FormTestTableSelectMultipleFalseForm extends FormTestTableSelectFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->messenger()->addStatus($this->t('Submitted: @value', ['@value' => $form_state->getValue('tableselect')]));
   }
 

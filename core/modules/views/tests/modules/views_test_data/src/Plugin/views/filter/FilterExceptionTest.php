@@ -16,7 +16,7 @@ class FilterExceptionTest extends FilterPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function query() {
+  public function query(): void {
     $this->query->addWhereExpression(NULL, "syntax error");
   }
 

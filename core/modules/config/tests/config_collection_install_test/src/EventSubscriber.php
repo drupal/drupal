@@ -37,7 +37,7 @@ class EventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Config\ConfigCollectionInfo $collection_info
    *   The configuration collection info event.
    */
-  public function addCollections(ConfigCollectionInfo $collection_info) {
+  public function addCollections(ConfigCollectionInfo $collection_info): void {
     $collections = $this->state->get('config_collection_install_test.collection_names', []);
     foreach ($collections as $collection) {
       $collection_info->addCollection($collection);

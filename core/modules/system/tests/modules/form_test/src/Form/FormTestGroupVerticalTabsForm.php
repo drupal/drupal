@@ -56,7 +56,7 @@ class FormTestGroupVerticalTabsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     if ($form_state->getValue('element_2') === 'bad') {
       $form_state->setErrorByName('element_2', $this->t('there was an error'));
     }

@@ -41,7 +41,7 @@ class MediaLibraryInceptionWidget extends MediaLibraryWidget {
   /**
    * {@inheritdoc}
    */
-  public function elementValidate($element, FormStateInterface $form_state, $form) {
+  public function elementValidate($element, FormStateInterface $form_state, $form): void {
     $field_name = $element['#field_name'];
     $entity = $form_state->getFormObject()->getEntity();
     $input = $form_state->getUserInput();

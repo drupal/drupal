@@ -89,7 +89,7 @@ class FormTestStorageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     if ($this->getRequest()->query->get('cache')) {
       // Manually activate caching, so we can test that the storage keeps
       // working when it's enabled.
@@ -102,7 +102,7 @@ class FormTestStorageForm extends FormBase {
    *
    * Tests updating of cached form storage during validation.
    */
-  public function elementValidateValueCached($element, FormStateInterface $form_state) {
+  public function elementValidateValueCached($element, FormStateInterface $form_state): void {
     // If caching is enabled and we receive a certain value, change the storage.
     // This presumes that another submitted form value triggers a validation
     // error elsewhere in the form. Form API should still update the cached form
@@ -115,7 +115,7 @@ class FormTestStorageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function continueSubmitForm(array &$form, FormStateInterface $form_state) {
+  public function continueSubmitForm(array &$form, FormStateInterface $form_state): void {
     $form_state->set(['thing', 'title'], $form_state->getValue('title'));
     $form_state->set(['thing', 'value'], $form_state->getValue('value'));
     $form_state->setRebuild();
@@ -124,7 +124,7 @@ class FormTestStorageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $this->messenger()->addStatus("Title: " . Html::escape($form_state->getValue('title')));
     $this->messenger()->addStatus("Form constructions: " . $this->getRequest()->getSession()->get('constructions'));
     if ($form_state->has(['thing', 'changed'])) {

@@ -51,7 +51,7 @@ class DisplayTest extends DisplayPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function optionsSummary(&$categories, &$options) {
+  public function optionsSummary(&$categories, &$options): void {
     parent::optionsSummary($categories, $options);
 
     $categories['display_test'] = [
@@ -74,7 +74,7 @@ class DisplayTest extends DisplayPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state): void {
     parent::buildOptionsForm($form, $form_state);
 
     switch ($form_state->get('section')) {
@@ -93,7 +93,7 @@ class DisplayTest extends DisplayPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function validateOptionsForm(&$form, FormStateInterface $form_state) {
+  public function validateOptionsForm(&$form, FormStateInterface $form_state): void {
     parent::validateOptionsForm($form, $form_state);
     \Drupal::logger('views')->notice($form_state->getValue('test_option'));
     switch ($form_state->get('section')) {
@@ -108,7 +108,7 @@ class DisplayTest extends DisplayPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state): void {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state->get('section')) {
       case 'test_option':

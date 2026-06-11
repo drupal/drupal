@@ -40,7 +40,7 @@ class EventSubscriber implements EventSubscriberInterface {
    * @param string $event_name
    *   The event name.
    */
-  public function configEventRecorder(ConfigCrudEvent $event, $event_name) {
+  public function configEventRecorder(ConfigCrudEvent $event, $event_name): void {
     $config = $event->getConfig();
     $event_info = [
       'event_name' => $event_name,

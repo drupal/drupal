@@ -43,7 +43,7 @@ class RowTest extends RowPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state): void {
     parent::buildOptionsForm($form, $form_state);
 
     $form['test_option'] = [
@@ -60,7 +60,7 @@ class RowTest extends RowPluginBase {
    * @param string $output
    *   The string to output by this plugin.
    */
-  public function setOutput($output) {
+  public function setOutput($output): void {
     $this->output = $output;
   }
 

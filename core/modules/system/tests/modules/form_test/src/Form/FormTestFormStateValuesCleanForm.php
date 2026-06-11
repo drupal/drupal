@@ -51,14 +51,14 @@ class FormTestFormStateValuesCleanForm extends FormBase {
   /**
    * Helper function to clean a value on an element.
    */
-  public static function cleanValue(&$element, FormStateInterface $form_state, &$complete_form) {
+  public static function cleanValue(&$element, FormStateInterface $form_state, &$complete_form): void {
     $form_state->addCleanValueKey('wine');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $form_state->cleanValues();
     // This won't have a proper JSON header, but Drupal doesn't check for that
     // anyway so this is fine until it's replaced with a JsonResponse.

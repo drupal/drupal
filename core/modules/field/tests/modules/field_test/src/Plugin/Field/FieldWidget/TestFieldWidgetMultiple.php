@@ -91,7 +91,7 @@ class TestFieldWidgetMultiple extends WidgetBase {
   /**
    * Element validation helper.
    */
-  public static function multipleValidate($element, FormStateInterface $form_state) {
+  public static function multipleValidate($element, FormStateInterface $form_state): void {
     $values = array_map('trim', explode(',', $element['#value']));
     $items = [];
     foreach ($values as $value) {

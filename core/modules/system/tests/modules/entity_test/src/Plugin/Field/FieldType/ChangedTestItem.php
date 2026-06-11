@@ -28,7 +28,7 @@ class ChangedTestItem extends ChangedItem {
   /**
    * {@inheritdoc}
    */
-  public function preSave() {
+  public function preSave(): void {
     parent::preSave();
 
     if ($this->value == \Drupal::time()->getRequestTime()) {

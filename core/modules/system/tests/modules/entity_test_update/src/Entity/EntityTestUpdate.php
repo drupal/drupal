@@ -46,7 +46,7 @@ class EntityTestUpdate extends ContentEntityBase {
   /**
    * {@inheritdoc}
    */
-  public static function preCreate(EntityStorageInterface $storage, array &$values) {
+  public static function preCreate(EntityStorageInterface $storage, array &$values): void {
     parent::preCreate($storage, $values);
     if (empty($values['type'])) {
       $values['type'] = $storage->getEntityTypeId();

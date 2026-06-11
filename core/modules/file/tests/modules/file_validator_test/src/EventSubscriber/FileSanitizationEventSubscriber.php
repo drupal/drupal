@@ -22,7 +22,7 @@ class FileSanitizationEventSubscriber implements EventSubscriberInterface {
   /**
    * Handles the file sanitization event.
    */
-  public function onFileSanitization(FileUploadSanitizeNameEvent $event) {
+  public function onFileSanitization(FileUploadSanitizeNameEvent $event): void {
     $this->allowedExtensions = $event->getAllowedExtensions();
   }
 

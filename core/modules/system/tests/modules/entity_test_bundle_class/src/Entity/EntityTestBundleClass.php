@@ -59,7 +59,7 @@ class EntityTestBundleClass extends EntityTest {
   /**
    * {@inheritdoc}
    */
-  public static function preCreate(EntityStorageInterface $storage, array &$values) {
+  public static function preCreate(EntityStorageInterface $storage, array &$values): void {
     parent::preCreate($storage, $values);
     self::$preCreateCount++;
   }
@@ -67,7 +67,7 @@ class EntityTestBundleClass extends EntityTest {
   /**
    * {@inheritdoc}
    */
-  public function postCreate(EntityStorageInterface $storage) {
+  public function postCreate(EntityStorageInterface $storage): void {
     parent::postCreate($storage);
     $this->postCreateCount++;
   }
@@ -75,7 +75,7 @@ class EntityTestBundleClass extends EntityTest {
   /**
    * {@inheritdoc}
    */
-  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+  public static function preDelete(EntityStorageInterface $storage, array $entities): void {
     parent::preDelete($storage, $entities);
     self::$preDeleteCount++;
   }
@@ -83,7 +83,7 @@ class EntityTestBundleClass extends EntityTest {
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+  public static function postDelete(EntityStorageInterface $storage, array $entities): void {
     parent::postDelete($storage, $entities);
     self::$postDeleteCount++;
   }
@@ -91,7 +91,7 @@ class EntityTestBundleClass extends EntityTest {
   /**
    * {@inheritdoc}
    */
-  public static function postLoad(EntityStorageInterface $storage, array &$entities) {
+  public static function postLoad(EntityStorageInterface $storage, array &$entities): void {
     parent::postLoad($storage, $entities);
     self::$postLoadCount++;
     self::$postLoadEntitiesCount[] = count($entities);

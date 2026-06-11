@@ -40,7 +40,7 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function optionsSummary(&$categories, &$options) {
+  public function optionsSummary(&$categories, &$options): void {
     parent::optionsSummary($categories, $options);
 
     $categories['display_extender_test'] = [
@@ -61,7 +61,7 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function buildOptionsForm(&$form, FormStateInterface $form_state) {
+  public function buildOptionsForm(&$form, FormStateInterface $form_state): void {
     switch ($form_state->get('section')) {
       case 'test_extender_test_option':
         $form['#title'] .= 'Test option';
@@ -77,7 +77,7 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
+  public function submitOptionsForm(&$form, FormStateInterface $form_state): void {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state->get('section')) {
       case 'test_extender_test_option':
@@ -89,21 +89,21 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function defaultableSections(&$sections, $section = NULL) {
+  public function defaultableSections(&$sections, $section = NULL): void {
     $sections['test_extender_test_option'] = ['test_extender_test_option'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function query() {
+  public function query(): void {
     $this->testState['query'] = TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function preExecute() {
+  public function preExecute(): void {
     $this->testState['preExecute'] = TRUE;
   }
 

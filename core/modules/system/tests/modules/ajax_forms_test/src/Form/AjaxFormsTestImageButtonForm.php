@@ -44,7 +44,7 @@ class AjaxFormsTestImageButtonForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     // No submit code needed.
   }
 
