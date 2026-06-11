@@ -50,7 +50,7 @@ class LocaleProjectChecker {
     else {
       // Retrieve and save the status of local translations only.
       $this->checkLocalProjects($projects, $langcodes);
-      $this->localeSource->updateLastChecked();
+      $this->state->set('locale.translation_last_checked', $this->time->getRequestTime());
     }
   }
 
@@ -74,18 +74,17 @@ class LocaleProjectChecker {
    *   Array of language codes. Defaults to all translatable languages.
    */
   public function checkLocalProjects(array $projects, array $langcodes = []): void {
+    $projects = $this->localeProjectRepository->getMultiple($projects);
     $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
 
     // For each project and each language we check if a local po file is
     // available. When found the source object is updated with the appropriate
     // type and timestamp of the po file.
-    foreach ($projects as $project) {
+    foreach ($projects as $name => $project) {
       foreach ($langcodes as $langcode) {
-        $source = $this->localeSource->loadSource($project, $langcode);
+        $source = $this->localeSource->sourceBuild($project, $langcode);
         $file = $this->localeSource->sourceCheckFile($source);
-        if ($file) {
-          $this->localeSource->saveSource($project, $langcode, LOCALE_TRANSLATION_LOCAL, $file);
-        }
+        locale_translation_status_save($name, $langcode, LOCALE_TRANSLATION_LOCAL, $file);
       }
     }
   }
@@ -95,8 +94,9 @@ class LocaleProjectChecker {
    *
    * The batch process fetches the state of both local and (if configured)
    * remote translation files. The data of the most recent translation is
-   * stored per project and per language. The data for this is maintained
-   * by \Drupal\locale\LocaleSource.
+   * stored per project and per language. This data is stored in a state
+   * variable 'locale.translation_status'. The timestamp it was last updated is
+   * stored in the state variable 'locale.translation_last_checked'.
    *
    * @param array $projects
    *   Array of project names for which to check the state of translation files.
@@ -153,7 +153,7 @@ class LocaleProjectChecker {
       if (!isset($results['failed_files']) && !isset($results['files'])) {
         $this->messenger->addStatus($this->t('Nothing to check.'));
       }
-      $this->localeSource->updateLastChecked();
+      $this->state->set('locale.translation_last_checked', $this->time->getRequestTime());
     }
     else {
       $this->messenger->addError($this->t('An error occurred trying to check available interface translation updates.'));

@@ -12,7 +12,6 @@ use Drupal\locale\LocaleConfigBatch;
 use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\LocaleProjectRepository;
-use Drupal\locale\LocaleSource;
 
 /**
  * Provides a translation status form.
@@ -27,7 +26,6 @@ class TranslationStatusForm extends FormBase {
     protected TimeInterface $time,
     protected LocaleFetch $localeFetch,
     protected LocaleConfigBatch $localeConfigBatch,
-    protected LocaleSource $localeSource,
   ) {
   }
 
@@ -45,15 +43,15 @@ class TranslationStatusForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $languages = locale_translatable_language_list();
-    $sources = $this->localeSource->loadSources();
+    $status = locale_translation_get_status();
     $options = [];
     $languages_update = [];
     $languages_not_found = [];
     $projects_update = [];
     // Prepare information about projects which have available translation
     // updates.
-    if ($languages && $sources) {
-      $updates = $this->prepareUpdateData($sources);
+    if ($languages && $status) {
+      $updates = $this->prepareUpdateData($status);
 
       // Build data options for the select table.
       foreach ($updates as $langcode => $update) {
@@ -90,7 +88,7 @@ class TranslationStatusForm extends FormBase {
       $languages_not_found = array_diff($languages_not_found, $languages_update);
     }
 
-    $last_checked = $this->localeSource->getLastChecked();
+    $last_checked = $this->state->get('locale.translation_last_checked');
     $form['last_checked'] = [
       '#theme' => 'locale_translation_last_check',
       '#last' => $last_checked,
@@ -112,7 +110,7 @@ class TranslationStatusForm extends FormBase {
         ':add_language' => Url::fromRoute('entity.configurable_language.collection')->toString(),
       ]);
     }
-    elseif ($sources) {
+    elseif ($status) {
       $empty = $this->t('All translations up to date.');
     }
     else {
@@ -259,9 +257,9 @@ class TranslationStatusForm extends FormBase {
     // If the status was updated recently we can immediately start fetching the
     // translation updates. If the status is expired we clear it and run a batch
     // to update the status and then fetch the translation updates.
-    $last_checked = $this->localeSource->getLastChecked();
+    $last_checked = $this->state->get('locale.translation_last_checked');
     if ($last_checked < $this->time->getRequestTime() - LOCALE_TRANSLATION_STATUS_TTL) {
-      $this->localeSource->clearSources();
+      locale_translation_clear_status();
       $batch = $this->localeFetch->buildUpdateBatch([], $langcodes, $options);
       batch_set($batch);
     }

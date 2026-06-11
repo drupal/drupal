@@ -2,13 +2,10 @@
 
 namespace Drupal\locale\Form;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\locale\LocaleSource;
 use Drupal\locale\StreamWrapper\TranslationsStream;
 
 /**
@@ -17,14 +14,6 @@ use Drupal\locale\StreamWrapper\TranslationsStream;
  * @internal
  */
 class LocaleSettingsForm extends ConfigFormBase {
-
-  public function __construct(
-    ConfigFactoryInterface $config_factory,
-    protected TypedConfigManagerInterface $typedConfigManager,
-    protected LocaleSource $localeSource,
-  ) {
-    parent::__construct($config_factory, $typedConfigManager);
-  }
 
   /**
    * {@inheritdoc}
@@ -130,7 +119,7 @@ class LocaleSettingsForm extends ConfigFormBase {
     // Invalidate the cached translation status when the configuration setting
     // of 'use_source' changes.
     if ($form['use_source']['#default_value'] != $form_state->getValue('use_source')) {
-      $this->localeSource->clearSources();
+      locale_translation_clear_status();
     }
 
     parent::submitForm($form, $form_state);

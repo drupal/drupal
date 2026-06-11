@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Url;
-use Drupal\locale\LocaleSource;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -61,7 +60,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     $this->addLanguage('de');
 
     // Override Drupal core translation status as 'up-to-date'.
-    $status = \Drupal::service(LocaleSource::class)->loadSources();
+    $status = locale_translation_get_status();
     $status['drupal']['de']->type = 'current';
     \Drupal::keyValue('locale.translation_status')->set('drupal', $status['drupal']);
 
@@ -73,7 +72,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     $this->assertSession()->pageTextContains('All translations up to date.');
 
     // Set locale_test_translate module to have a local translation available.
-    $status = \Drupal::service(LocaleSource::class)->loadSources();
+    $status = locale_translation_get_status();
     $status['locale_test_translate']['de']->type = 'local';
     \Drupal::keyValue('locale.translation_status')->set('locale_test_translate', $status['locale_test_translate']);
 
@@ -87,7 +86,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
     // Set locale_test_translate module to have a dev release and no
     // translation found.
-    $status = \Drupal::service(LocaleSource::class)->loadSources();
+    $status = locale_translation_get_status();
     $status['locale_test_translate']['de']->version = '1.3-dev';
     $status['locale_test_translate']['de']->type = '';
     \Drupal::keyValue('locale.translation_status')->set('locale_test_translate', $status['locale_test_translate']);
@@ -102,7 +101,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     $this->assertSession()->pageTextContains('Locale test translate (1.3-dev). File not found at core/modules/locale/tests/test.de.po');
 
     // Override Drupal core translation status as 'no translations found'.
-    $status = \Drupal::service(LocaleSource::class)->loadSources();
+    $status = locale_translation_get_status();
     $status['drupal']['de']->type = '';
     $status['drupal']['de']->timestamp = 0;
     $status['drupal']['de']->version = '8.1.1';
@@ -114,7 +113,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     $this->assertSession()->pageTextContains('Drupal core (8.1.1).');
 
     // Override Drupal core translation status as 'translations available'.
-    $status = \Drupal::service(LocaleSource::class)->loadSources();
+    $status = locale_translation_get_status();
     $status['drupal']['de']->type = 'local';
     $status['drupal']['de']->files['local']->timestamp = \Drupal::time()->getRequestTime();
     $status['drupal']['de']->files['local']->version = '8.1.1';

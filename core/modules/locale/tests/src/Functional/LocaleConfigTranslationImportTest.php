@@ -65,6 +65,12 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     // translations of locale_test_translate module.
     $this->drupalGet('admin/reports/translations/check');
 
+    // Override the Drupal core translation status to be up to date.
+    // Drupal core should not be a subject in this test.
+    $status = locale_translation_get_status();
+    $status['drupal']['af']->type = 'current';
+    \Drupal::state()->set('locale.translation_status', $status);
+
     $this->drupalGet('admin/reports/translations');
     $this->submitForm([], 'Update translations');
 
@@ -93,6 +99,9 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $this->configImporter()->import();
 
     $this->drupalGet('admin/reports/translations/check');
+    $status = locale_translation_get_status();
+    $status['drupal']['af']->type = 'current';
+    \Drupal::state()->set('locale.translation_status', $status);
     $this->drupalGet('admin/reports/translations');
     $this->submitForm([], 'Update translations');
 

@@ -10,7 +10,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\locale\CurrentImportStorage;
 use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\CurrentImport;
-use Drupal\locale\LocaleSource;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -87,7 +86,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Get status of translation sources at local file system.
     $this->drupalGet('admin/reports/translations/check');
-    $result = \Drupal::service(LocaleSource::class)->loadSources();
+    $result = locale_translation_get_status();
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
     $this->assertEquals($this->timestampOld, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
@@ -104,7 +103,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Get status of translation sources at both local and remote locations.
     $this->drupalGet('admin/reports/translations/check');
-    $result = \Drupal::service(LocaleSource::class)->loadSources();
+    $result = locale_translation_get_status();
     $this->assertEquals(LOCALE_TRANSLATION_REMOTE, $result['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
     $this->assertEquals($this->timestampNew, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
@@ -154,7 +153,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm([], 'Update translations');
 
     // Check if the translation has been updated, using the status cache.
-    $status = \Drupal::service(LocaleSource::class)->loadSources();
+    $status = locale_translation_get_status();
     $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
     $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
     $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
@@ -214,7 +213,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm([], 'Update translations');
 
     // Check if the translation has been updated, using the status cache.
-    $status = \Drupal::service(LocaleSource::class)->loadSources();
+    $status = locale_translation_get_status();
     $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
     $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
     $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');

@@ -11,7 +11,6 @@ use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\locale\LocaleSource;
 use Drupal\locale\StreamWrapper\TranslationsStream;
 use Drupal\locale\File\LocaleFileManager;
 
@@ -135,7 +134,7 @@ class LocaleHooks {
     _locale_invalidate_js($language->id());
     \Drupal::cache('render')->deleteAll();
     // Clear locale translation caches.
-    \Drupal::service(LocaleSource::class)->deleteSourcesByLanguage($language->id());
+    locale_translation_status_delete_languages([$language->id()]);
     \Drupal::cache()->delete('locale:' . $language->id());
   }
 

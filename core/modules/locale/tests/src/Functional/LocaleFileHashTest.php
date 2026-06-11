@@ -114,7 +114,7 @@ class LocaleFileHashTest extends LocaleUpdateBase {
     // Change the mtime of the file and empty the hash to prove that fallback
     // works.
     touch($uri, time() + 20000);
-    $status = \Drupal::service(LocaleSource::class)->loadSources(['contrib_module_two']);
+    $status = locale_translation_get_status(['contrib_module_two']);
     $status['contrib_module_two']['de']->hash = '';
     $status['contrib_module_two']['de']->files[LOCALE_TRANSLATION_LOCAL]->hash = '';
     \Drupal::keyValue('locale.translation_status')->set('contrib_module_two', $status['contrib_module_two']);
@@ -141,7 +141,7 @@ class LocaleFileHashTest extends LocaleUpdateBase {
   public function assertHashes(string $history_hash, string $status_hash, string $project, string $langcode): void {
     $current_import = \Drupal::service(CurrentImportStorage::class)->get($project, $langcode);
     $this->assertSame($history_hash, $current_import->hash);
-    $status = \Drupal::service(LocaleSource::class)->loadSources([$project]);
+    $status = locale_translation_get_status([$project]);
     $this->assertSame($status_hash, $status[$project][$langcode]->hash);
     $this->assertSame($status_hash, $status[$project][$langcode]->files[LOCALE_TRANSLATION_LOCAL]->hash);
   }
