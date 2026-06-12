@@ -1164,7 +1164,29 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     mb_internal_encoding('utf-8');
     mb_language('uni');
 
-    // Indicate that code is operating in a test child site.
+    // Set DRUPAL_TEST_IN_CHILD_SITE if we're inside a test.
+    static::setupDrupalTestInChildSite($app_root);
+
+    // Set the Drupal custom error handler.
+    set_error_handler('_drupal_error_handler');
+    set_exception_handler('_drupal_exception_handler');
+
+    static::$isEnvironmentInitialized = TRUE;
+  }
+
+  /**
+   * Define the DRUPAL_TEST_IN_CHILD_SITE constant as appropriate.
+   *
+   * @param string $app_root
+   *   The path to the application root.
+   *
+   * @internal This method is only intended to be called by this class and
+   *   \Drupal\Core\Command\DrupalApplication. We aim to remove the need for it
+   *   without a BC layer during Drupal 12.
+   * @see https://www.drupal.org/node/2690035
+   */
+  public static function setupDrupalTestInChildSite(string $app_root): void {
+    // Indicate if code is operating in a test child site or not.
     if (!defined('DRUPAL_TEST_IN_CHILD_SITE')) {
       if ($test_prefix = drupal_valid_test_ua()) {
         $test_db = new TestDatabase($test_prefix);
@@ -1187,12 +1209,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
       }
     }
-
-    // Set the Drupal custom error handler.
-    set_error_handler('_drupal_error_handler');
-    set_exception_handler('_drupal_exception_handler');
-
-    static::$isEnvironmentInitialized = TRUE;
   }
 
   /**
