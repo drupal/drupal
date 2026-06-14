@@ -136,16 +136,23 @@ function locale_translation_load_sources(?array $projects = NULL, ?array $langco
  *
  * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
  *   \Drupal::service(LocaleSource::class)
- *   ->buildSources($projects, $langcodes) instead.
+ *   ->sourceBuild($project, $langcode) instead.
  *
  * @see https://www.drupal.org/node/3569330
  */
 function locale_translation_build_sources(array $projects = [], array $langcodes = []): array {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleSource::class)->buildSources($projects, $langcodes) instead. See https://www.drupal.org/node/3569330', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleSource::class)->sourceBuild($project, $langcode) instead. See https://www.drupal.org/node/3569330', E_USER_DEPRECATED);
   if (empty($projects)) {
     $projects = array_keys(\Drupal::service(LocaleProjectRepository::class)->getAll());
   }
-  return \Drupal::service(LocaleSource::class)->buildSources($projects, $langcodes);
+  $sources = [];
+  $locale_source = \Drupal::service(LocaleSource::class);
+  foreach ($projects as $project) {
+    foreach ($langcodes as $langcode) {
+      $sources[$project][$langcode] = $locale_source->sourceBuild($project, $langcode);
+    }
+  }
+  return $sources;
 }
 
 /**
