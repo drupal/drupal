@@ -785,13 +785,6 @@ class ConfigSchemaTest extends KernelTestBase {
     \Drupal::configFactory()->getEditable('wrapping.config_schema_test.double_brackets')
       ->setData($untyped_values)
       ->save();
-    // TRICKY: https://www.drupal.org/project/drupal/issues/2663410 introduced a
-    // bug that made TypedConfigManager sensitive to cache pollution. Saving
-    // config in a test triggers the schema checking and validation logic from
-    // \Drupal\Core\Config\Development\ConfigSchemaChecker , which in turn
-    // triggers that cache pollution bug. This is a work-around.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3400181
-    \Drupal::service('config.typed')->clearCachedDefinitions();
     $this->assertSame($typed_values, \Drupal::config('wrapping.config_schema_test.double_brackets')->get());
 
     $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.double_brackets')->get('tests')->getElements();
@@ -818,13 +811,6 @@ class ConfigSchemaTest extends KernelTestBase {
     \Drupal::configFactory()->getEditable('wrapping.config_schema_test.double_brackets')
       ->setData($typed_values)
       ->save();
-    // TRICKY: https://www.drupal.org/project/drupal/issues/2663410 introduced a
-    // bug that made TypedConfigManager sensitive to cache pollution. Saving
-    // config in a test triggers the schema checking and validation logic from
-    // \Drupal\Core\Config\Development\ConfigSchemaChecker , which in turn
-    // triggers that cache pollution bug. This is a work-around.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3400181
-    \Drupal::service('config.typed')->clearCachedDefinitions();
     $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.double_brackets')->get('tests')->getElements();
     $definition = $tests[0]->getDataDefinition()->toArray();
     $this->assertEquals('wrapping.test.double_brackets.*||test.double_brackets.cat.dog', $definition['type']);
@@ -845,13 +831,6 @@ class ConfigSchemaTest extends KernelTestBase {
     \Drupal::configFactory()->getEditable('wrapping.config_schema_test.other_double_brackets')
       ->setData($typed_values)
       ->save();
-    // TRICKY: https://www.drupal.org/project/drupal/issues/2663410 introduced a
-    // bug that made TypedConfigManager sensitive to cache pollution. Saving
-    // config in a test triggers the schema checking and validation logic from
-    // \Drupal\Core\Config\Development\ConfigSchemaChecker , which in turn
-    // triggers that cache pollution bug. This is a work-around.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3400181
-    \Drupal::service('config.typed')->clearCachedDefinitions();
     $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.other_double_brackets')->get('tests')->getElements();
     $definition = $tests[0]->getDataDefinition()->toArray();
     // Check that definition type is a merge of the expected types.
