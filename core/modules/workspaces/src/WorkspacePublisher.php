@@ -102,7 +102,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
       });
       $transaction->commitOrRelease();
     }
-    catch (\Exception $e) {
+    catch (\Throwable $e) {
       if (isset($transaction)) {
         $transaction->rollBack();
       }

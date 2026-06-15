@@ -4,21 +4,26 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\Component\Datetime\Time;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormState;
+use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\node\NodeInterface;
 use Drupal\workspaces\Entity\Workspace;
 use Drupal\workspaces\WorkspaceOperationFactory;
 use Drupal\workspaces\WorkspacePublisher;
 use Drupal\workspaces\WorkspacePublisherInterface;
 use Drupal\workspaces_ui\Form\WorkspacePublishForm;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Log\LoggerInterface;
@@ -39,6 +44,16 @@ class WorkspacePublisherTest extends KernelTestBase {
    * The entity type manager.
    */
   protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
+   * The class to throw during node presave, or empty string to skip.
+   */
+  protected string $throwOnNodePresaveClass = '';
+
+  /**
+   * The number of times node_presave has fired since arming.
+   */
+  protected int $nodePresaveCount = 0;
 
   /**
    * {@inheritdoc}
@@ -106,6 +121,84 @@ class WorkspacePublisherTest extends KernelTestBase {
 
     $entity = $this->entityTypeManager->getStorage('node')->loadUnchanged($entity->id());
     $this->assertEquals($initial_request_time + 2, $entity->getChangedTime());
+  }
+
+  /**
+   * Tests that a throwable during publish is logged and rolls back the save.
+   */
+  #[DataProvider('providerPublishThrowableRollback')]
+  public function testPublishThrowableRollback(string $thrown): void {
+    $logger = new TestLogger();
+    $this->container->get(LoggerChannelFactoryInterface::class)
+      ->get('workspaces')
+      ->addLogger($logger);
+
+    // Create two nodes in Live and capture their default revision IDs.
+    $node_1 = $this->createNode(['title' => 'node_1 live']);
+    $node_2 = $this->createNode(['title' => 'node_2 live']);
+    $node_1_live_vid = $node_1->getRevisionId();
+    $node_2_live_vid = $node_2->getRevisionId();
+
+    // Create a workspace and add a workspace-specific revision for each node.
+    $workspace = Workspace::create(['id' => 'stage', 'label' => 'Stage']);
+    $workspace->save();
+    $this->switchToWorkspace('stage');
+
+    $storage = $this->entityTypeManager->getStorage('node');
+    foreach ([$node_1, $node_2] as $node) {
+      $edited = $storage->loadUnchanged($node->id());
+      $edited->title = 'workspace edit';
+      $edited->save();
+    }
+
+    // Throw on the second presave inside the publisher's save loop, so the
+    // first node's save has already happened inside the open transaction. The
+    // data provider covers both \Exception and \Error subclasses; the
+    // publisher's catch block must handle any \Throwable.
+    $this->throwOnNodePresaveClass = $thrown;
+
+    try {
+      $workspace->publish();
+    }
+    catch (\Throwable) {
+    }
+
+    // Rollback proof: the first node's in-flight save was undone.
+    $this->switchToLive();
+    $this->assertSame($node_1_live_vid, $storage->loadUnchanged($node_1->id())->getRevisionId());
+    $this->assertSame($node_2_live_vid, $storage->loadUnchanged($node_2->id())->getRevisionId());
+
+    // The publisher logged the throwable on its channel.
+    $this->assertTrue($logger->hasRecordThatPasses(
+      static fn (array $record): bool => ($record['context']['@message'] ?? '') === 'Simulated node presave failure.',
+      RfcLogLevel::ERROR,
+    ));
+  }
+
+  /**
+   * Implements hook_ENTITY_TYPE_presave() for the 'node' entity type.
+   *
+   * @see ::testPublishThrowableRollback()
+   */
+  #[Hook('node_presave')]
+  public function nodePresave(NodeInterface $node): void {
+    if (!$this->throwOnNodePresaveClass) {
+      return;
+    }
+    $this->nodePresaveCount++;
+    if ($this->nodePresaveCount >= 2) {
+      throw new $this->throwOnNodePresaveClass('Simulated node presave failure.');
+    }
+  }
+
+  /**
+   * Data provider for ::testPublishThrowableRollback().
+   */
+  public static function providerPublishThrowableRollback(): array {
+    return [
+      'exception' => [\RuntimeException::class],
+      'error' => [\Error::class],
+    ];
   }
 
   /**
