@@ -8,6 +8,9 @@ use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Hook\HookCollectorKeyValueWritePass;
 use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\hook_collector_depends_test\Hook\DependsOnModuleClassHooks;
+use Drupal\hook_collector_depends_test\Hook\DependsOnModuleMethodHooks;
+use Drupal\hook_collector_depends_test\Hook\DependsOnModuleMultipleHooks;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\module_handler_test_all1\Hook\ModuleHandlerTestAll1Hooks;
 use Drupal\user_hooks_test\Hook\UserHooksTest;
@@ -307,6 +310,51 @@ class HookCollectorPassTest extends KernelTestBase {
     ];
     $calls = $module_handler->invokeAll('custom_hook_override');
     $this->assertEquals($expected_calls, $calls);
+  }
+
+  /**
+   * Tests hook dependencies.
+   */
+  public function testHookDependsOn(): void {
+    $this->container->get('module_installer')->install(['hook_collector_depends_test']);
+    $module_handler = $this->container->get('module_handler');
+
+    // Hook implementations for this hook must not be invoked as they depend on
+    // an unavailable module.
+    $calls = $module_handler->invokeAll('with_dependency');
+    $this->assertSame([], $calls);
+
+    // The hook without dependency is invoked.
+    $expected_calls = [
+      'Drupal\hook_collector_depends_test\Hook\DependsOnModuleMultipleHooks::noDependency',
+    ];
+    $calls = $module_handler->invokeAll('no_dependency');
+    $this->assertSame($expected_calls, $calls);
+
+    // Hook classes that have no available hooks must not be registered.
+    $this->assertFalse($this->container->has(DependsOnModuleClassHooks::class));
+    $this->assertFalse($this->container->has(DependsOnModuleMethodHooks::class));
+    $this->assertTrue($this->container->has(DependsOnModuleMultipleHooks::class));
+
+    // Install the module that the with dependency hooks depend on.
+    $this->container->get('module_installer')->install(['aaa_hook_collector_test']);
+    $module_handler = $this->container->get('module_handler');
+
+    // The hook with dependency is invoked.
+    $expected_calls = [
+      'Drupal\hook_collector_depends_test\Hook\DependsOnModuleClassHooks::withDependency',
+      'Drupal\hook_collector_depends_test\Hook\DependsOnModuleMethodHooks::withDependency',
+      'Drupal\hook_collector_depends_test\Hook\DependsOnModuleMultipleHooks::withDependency',
+    ];
+    $calls = $module_handler->invokeAll('with_dependency');
+    // Hook order is not relevant here, sort them.
+    sort($calls);
+    $this->assertSame($expected_calls, $calls);
+
+    // All hook classes are now registered as a service.
+    $this->assertTrue($this->container->has(DependsOnModuleClassHooks::class));
+    $this->assertTrue($this->container->has(DependsOnModuleMethodHooks::class));
+    $this->assertTrue($this->container->has(DependsOnModuleMultipleHooks::class));
   }
 
   /**

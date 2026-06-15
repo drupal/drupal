@@ -4,6 +4,7 @@ namespace Drupal\menu_ui\Hook;
 
 use Drupal\block\BlockInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Hook\Attribute\HookDependsOnModule;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Link;
 use Drupal\menu_ui\MenuUiUtility;
@@ -366,11 +367,8 @@ class MenuUiHooks {
    * Implements hook_ENTITY_TYPE_delete().
    */
   #[Hook('menu_delete')]
+  #[HookDependsOnModule('node')]
   public function menuDelete(EntityInterface $entity): void {
-    if (!$this->entityTypeManager->hasDefinition('node_type')) {
-      return;
-    }
-
     // Remove the menu from content type third party settings.
     $menu_id = $entity->id();
     $parent_prefix = $menu_id . ':';

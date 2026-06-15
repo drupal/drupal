@@ -1,0 +1,5 @@
+name: 'Test Hook dependencies'
+type: module
+description: 'Test Hook classes and methods that depend on other modules'
+package: Testing
+version: VERSION
