@@ -11,6 +11,7 @@ use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\HookAttributeInterface;
+use Drupal\Core\Hook\Attribute\HookDependsOnModule;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter;
 use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
@@ -471,6 +472,7 @@ class HookCollectorPass implements CompilerPassInterface {
         if ($cached) {
           $class = $cached['class'];
           $attributes = $cached['attributes'];
+          $class_attributes = $cached['class_attributes'] ?? [];
         }
         else {
           // Immediately after a deployment, opcache may not yet have refreshed
@@ -482,14 +484,42 @@ class HookCollectorPass implements CompilerPassInterface {
           $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
           $class = $namespace . '/' . $fileinfo->getBasename('.php');
           $class = str_replace('/', '\\', $class);
+          $class_attributes = [];
           $attributes = [];
           if (class_exists($class)) {
             $reflectionClass = new \ReflectionClass($class);
+            $class_attributes = $reflectionClass->getAttributes(HookAttributeInterface::class, \ReflectionAttribute::IS_INSTANCEOF);
+            $class_attributes = array_map(static fn (\ReflectionAttribute $ra) => $ra->newInstance(), $class_attributes);
             $attributes = self::getAttributeInstances($reflectionClass);
-            $hook_file_cache->set($filename, ['class' => $class, 'attributes' => $attributes]);
+            $hook_file_cache->set($filename, [
+              'class' => $class,
+              'attributes' => $attributes,
+              'class_attributes' => $class_attributes,
+            ]);
           }
         }
+
+        foreach ($class_attributes as $class_attribute) {
+          // Skip the whole class if it depends on something that isn't
+          // available. It will not be registered in the container then.
+          if ($class_attribute instanceof HookDependsOnModule) {
+            if (!in_array($class_attribute->module, $this->modules)) {
+              continue 2;
+            }
+          }
+        }
+
         foreach ($attributes as $method => $methodAttributes) {
+          foreach ($methodAttributes as $attribute) {
+            // Skip the method if it depends on something that isn't available.
+            // If all methods are skipped, then the class will not be registered
+            // in the container.
+            if ($attribute instanceof HookDependsOnModule) {
+              if (!in_array($attribute->module, $this->modules)) {
+                continue 2;
+              }
+            }
+          }
           foreach ($methodAttributes as $attribute) {
             if ($attribute instanceof Hook) {
               self::checkForProceduralOnlyHooks($attribute, $class);

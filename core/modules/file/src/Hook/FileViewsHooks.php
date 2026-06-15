@@ -7,6 +7,7 @@ namespace Drupal\file\Hook;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Hook\Attribute\HookDependsOnModule;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\views\FieldViewsDataProvider;
@@ -14,6 +15,7 @@ use Drupal\views\FieldViewsDataProvider;
 /**
  * Hook implementations for file.
  */
+#[HookDependsOnModule('views')]
 class FileViewsHooks {
 
   use StringTranslationTrait;
@@ -21,7 +23,7 @@ class FileViewsHooks {
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly EntityFieldManagerInterface $entityFieldManager,
-    protected readonly ?FieldViewsDataProvider $fieldViewsDataProvider,
+    protected readonly FieldViewsDataProvider $fieldViewsDataProvider,
   ) {}
 
   /**
