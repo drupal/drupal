@@ -127,10 +127,5 @@ function search_schema(): array {
  * Install Search Node and Search and Node are installed.
  */
 function search_update_11400(): void {
-  $module_handler = \Drupal::moduleHandler();
-  if ($module_handler->moduleExists('node')) {
-    \Drupal::configFactory()->getEditable('core.entity_view_mode.node.search_index')->delete();
-    \Drupal::configFactory()->getEditable('core.entity_view_mode.node.search_result')->delete();
-    \Drupal::service('module_installer')->install(['search_node']);
-  }
+  // Moved to system_update_11401().
 }
