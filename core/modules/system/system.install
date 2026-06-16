@@ -181,3 +181,23 @@ function system_update_11400(): void {
     }
   }
 }
+
+/**
+ * Install Search node module if node and search are installed.
+ */
+function system_update_11401(): void {
+  $module_list = \Drupal::moduleHandler()->getModuleList();
+  if (!isset($module_list['node']) || !isset($module_list['search'])) {
+    return;
+  }
+
+  if (!isset($module_list['search_node'])) {
+    \Drupal::configFactory()->getEditable('core.entity_view_mode.node.search_index')->delete();
+    \Drupal::configFactory()->getEditable('core.entity_view_mode.node.search_result')->delete();
+    \Drupal::service('module_installer')->install(['search_node']);
+  }
+
+  /** @var \Drupal\search\SearchPageInterface|null $node_search_page */
+  $node_search_page = \Drupal::entityTypeManager()->getStorage('search_page')->load('node_search');
+  $node_search_page?->calculateDependencies()->save();
+}
