@@ -14,7 +14,7 @@
         "egulias/email-validator": "~4.0.4",
         "guzzlehttp/guzzle": "~7.10.6",
         "guzzlehttp/promises": "~2.4.1",
-        "guzzlehttp/psr7": "~2.10.4",
+        "guzzlehttp/psr7": "~2.11.0",
         "justinrainbow/json-schema": "~6.8.2",
         "marc-mabe/php-enum": "~v4.7.2",
         "masterminds/html5": "~2.10.0",
