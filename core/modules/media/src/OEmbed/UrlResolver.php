@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Site\Settings;
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 
@@ -93,6 +94,22 @@ class UrlResolver implements UrlResolverInterface {
    *   URL of the oEmbed endpoint, or FALSE if the discovery was unsuccessful.
    */
   protected function discoverResourceUrl($url) {
+    $patterns = \array_map(static fn ($hostPattern) => \sprintf('{%s}i', $hostPattern), Settings::get('media_oembed_discovery_trusted_host_patterns', []));
+    $host = \parse_url($url, \PHP_URL_HOST);
+    if (!$host) {
+      return FALSE;
+    }
+    $allowed = FALSE;
+    foreach ($patterns as $pattern) {
+      if (\preg_match($pattern, $host)) {
+        $allowed = TRUE;
+        break;
+      }
+    }
+    if (!$allowed) {
+      return FALSE;
+    }
+
     try {
       $response = $this->httpClient->get($url);
     }

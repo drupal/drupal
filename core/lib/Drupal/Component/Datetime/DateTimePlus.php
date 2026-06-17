@@ -124,10 +124,8 @@ class DateTimePlus {
 
   /**
    * The DateTime object.
-   *
-   * @var \DateTime
    */
-  protected $dateTimeObject = NULL;
+  protected ?\DateTimeInterface $dateTimeObject = NULL;
 
   /**
    * Creates a date object from an input date object.
