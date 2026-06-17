@@ -16,7 +16,7 @@
         "egulias/email-validator": "~4.0.4",
         "guzzlehttp/guzzle": "~7.9.3",
         "guzzlehttp/promises": "~2.2.0",
-        "guzzlehttp/psr7": "~2.7.1",
+        "guzzlehttp/psr7": "~2.10.4",
         "masterminds/html5": "~2.9.0",
         "mck89/peast": "~v1.17.0",
         "pear/archive_tar": "~1.5.0",

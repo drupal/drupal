@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Functional;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
 // cspell:ignore dailymotion
@@ -106,11 +107,11 @@ class UrlResolverTest extends MediaFunctionalTestBase {
     return [
       'JSON resource' => [
         'video_vimeo.html',
-        'https://vimeo.com/api/oembed.json?url=video_vimeo.html',
+        'https://vimeo.com/api/oembed.json?%s',
       ],
       'XML resource' => [
         'video_dailymotion.html',
-        'https://www.dailymotion.com/services/oembed?url=video_dailymotion.html',
+        'https://www.dailymotion.com/services/oembed?%s',
       ],
     ];
   }
@@ -129,10 +130,19 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    *
    * @dataProvider providerUrlDiscovery
    */
-  public function testUrlDiscovery($url, $resource_url): void {
+  public function testUrlDiscovery(string $url, string $resource_url): void {
+    $settings['settings']['media_oembed_discovery_trusted_host_patterns'] = (object) [
+      'value' => [
+        \preg_quote(\parse_url($this->baseUrl, \PHP_URL_HOST)),
+      ],
+      'required' => TRUE,
+    ];
+    $this->writeSettings($settings);
+    $this->rebuildAll();
+    $fully_qualified_url = $this->getFixturesUrl() . '/' . $url;
     $this->assertSame(
-      $this->container->get('media.oembed.url_resolver')->getResourceUrl($url),
-      $resource_url
+      \sprintf($resource_url, UrlHelper::buildQuery(['url' => $fully_qualified_url])),
+      $this->container->get('media.oembed.url_resolver')->getResourceUrl($fully_qualified_url)
     );
   }
 
