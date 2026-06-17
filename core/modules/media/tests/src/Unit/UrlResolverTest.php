@@ -6,6 +6,7 @@ namespace Drupal\Tests\media\Unit;
 
 use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\media\OEmbed\ProviderRepositoryInterface;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolver;
@@ -23,6 +24,16 @@ use PHPUnit\Framework\Attributes\Group;
 #[CoversClass(UrlResolver::class)]
 #[Group('media')]
 class UrlResolverTest extends UnitTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    new Settings(
+      ['media_oembed_discovery_trusted_host_patterns' => ['example\.com']],
+    );
+  }
 
   /**
    * Creates a UrlResolver with exposed protected methods for testing.
