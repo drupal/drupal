@@ -26,7 +26,7 @@ class PrimitiveDataNormalizer extends NormalizerBase {
     if ($parent instanceof FieldItemInterface && $object->getValue()) {
       $serialized_property_names = $this->getCustomSerializedPropertyNames($parent);
       if (in_array($object->getName(), $serialized_property_names, TRUE)) {
-        return unserialize($object->getValue());
+        return unserialize($object->getValue(), ['allowed_classes' => FALSE]);
       }
     }
 
