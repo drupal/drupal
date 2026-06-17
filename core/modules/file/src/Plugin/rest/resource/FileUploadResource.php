@@ -20,6 +20,7 @@ use Drupal\file\Upload\InputStreamFileWriterInterface;
 use Drupal\file\Upload\InputStreamUploadedFile;
 use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\file\Validation\FileValidatorSettingsTrait;
+use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\rest\Attribute\RestResource;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
@@ -143,6 +144,10 @@ class FileUploadResource extends ResourceBase {
 
     $settings = $field_definition->getSettings();
     $validators = $this->getFileUploadValidators($settings);
+    if (\is_a($field_definition->getItemDefinition()->getClass(), ImageItem::class, TRUE)  && !array_key_exists('FileIsImage', $validators)) {
+      $validators['FileIsImage'] = [];
+    }
+
     if (!array_key_exists('FileExtension', $validators) && $settings['file_extensions'] === '') {
       // An empty string means 'all file extensions' but the FileUploadHandler
       // needs the FileExtension entry to be present and empty in order for this
