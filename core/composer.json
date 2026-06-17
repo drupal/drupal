@@ -41,7 +41,7 @@
         "doctrine/lexer": "^2 || ^3",
         "drupal/core-composer-scaffold": "self.version",
         "guzzlehttp/guzzle": "^7.10",
-        "guzzlehttp/psr7": "^2.8.0",
+        "guzzlehttp/psr7": "^2.10.2",
         "egulias/email-validator": "^3.2.1|^4.0",
         "masterminds/html5": "^2.7",
         "symfony/psr-http-message-bridge": "^7.4",
