@@ -149,7 +149,7 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
     // get the bundle value from the parent 'Bundle' key.
     $bundle = $this->definition['constraints']['Bundle']['bundle'] ?? NULL;
     if (($bundle === NULL) && isset($this->definition['constraints']['Bundle'])) {
-      @trigger_error('Adding the "Bundle" constraint with options missing the "bundle" key is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746');
+      @trigger_error('Adding the "Bundle" constraint with options missing the "bundle" key is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746', E_USER_DEPRECATED);
       $bundle = $this->definition['constraints']['Bundle'];
     }
     return is_string($bundle) ? [$bundle] : $bundle;

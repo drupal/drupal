@@ -346,7 +346,9 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
     $complex_data_constraint = $this->getItemDefinition()->getConstraint('ComplexData') ?: [];
     $item_constraints = $complex_data_constraint['properties'] ?? NULL;
     if ($item_constraints === NULL) {
-      @trigger_error('Adding the "ComplexData" constraint with options missing the "properties" key is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746');
+      if ($complex_data_constraint !== []) {
+        @trigger_error('Adding the "ComplexData" constraint with options missing the "properties" key is deprecated in drupal:11.4.0 and will not be supported in drupal:12.0.0. See https://www.drupal.org/node/3554746', E_USER_DEPRECATED);
+      }
       $item_constraints = $complex_data_constraint;
     }
     if (isset($item_constraints[$name])) {
