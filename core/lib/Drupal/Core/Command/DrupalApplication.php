@@ -113,7 +113,7 @@ class DrupalApplication extends Application {
       // @see https://www.drupal.org/node/2690035
       // Define the DRUPAL_TEST_IN_CHILD_SITE based on if we're inside a test.
       DrupalKernel::setupDrupalTestInChildSite($kernel->getAppRoot());
-      $sitePath = DrupalKernel::findSitePath($request, TRUE);
+      $sitePath = getenv('DRUPAL_DEV_SITE_PATH') ?: DrupalKernel::findSitePath($request, TRUE);
       $kernel->setSitePath($sitePath);
       Settings::initialize($kernel->getAppRoot(), $kernel->getSitePath(), $this->classloader);
       $kernel->boot();
