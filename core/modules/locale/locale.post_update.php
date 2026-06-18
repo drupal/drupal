@@ -8,6 +8,7 @@
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\locale\LocaleSource;
 
 /**
  * Implements hook_removed_post_updates().
@@ -37,4 +38,11 @@ function locale_post_update_clear_translation_path_config(): ?TranslatableMarkup
     }
   }
   return NULL;
+}
+
+/**
+ * Clear locale source information.
+ */
+function locale_post_update_clear_sources(): void {
+  \Drupal::service(LocaleSource::class)->clearSources();
 }
