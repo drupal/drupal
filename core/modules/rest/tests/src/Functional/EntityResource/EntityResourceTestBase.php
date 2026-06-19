@@ -761,6 +761,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     $this->resourceConfigStorage->load(static::$resourceConfigId)->delete();
     $this->refreshTestStateAfterRestConfigChange();
+    $this->entityStorage = $this->container->get('entity_type.manager')->getStorage(static::$entityTypeId);
     $this->entity = $this->entityStorage->loadUnchanged($this->entity->id());
     $this->revokeAllPermissions();
   }
