@@ -233,19 +233,18 @@ class CommentStatistics implements CommentStatisticsInterface {
         ->range(0, 1)
         ->execute()
         ->fetchObject();
-      // Use merge here because entity could be created before comment field.
-      $this->database->merge('comment_entity_statistics')
+      // Use upsert here because entity could be created before comment field.
+      $this->database->upsert('comment_entity_statistics')
+        ->key(['entity_id', 'entity_type', 'field_name'])
         ->fields([
+          'entity_id' => $comment->getCommentedEntityId(),
+          'entity_type' => $comment->getCommentedEntityTypeId(),
+          'field_name' => $comment->getFieldName(),
           'cid' => $last_reply->cid,
           'comment_count' => $count,
           'last_comment_timestamp' => $last_reply->changed,
           'last_comment_name' => $last_reply->uid ? '' : $last_reply->name,
           'last_comment_uid' => $last_reply->uid,
-        ])
-        ->keys([
-          'entity_id' => $comment->getCommentedEntityId(),
-          'entity_type' => $comment->getCommentedEntityTypeId(),
-          'field_name' => $comment->getFieldName(),
         ])
         ->execute();
     }
