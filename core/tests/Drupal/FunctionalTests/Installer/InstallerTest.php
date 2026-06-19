@@ -73,18 +73,13 @@ class InstallerTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpProfile(): void {
+  protected function prepareEnvironment(): void {
+    parent::prepareEnvironment();
+
     $settings_services_file = DRUPAL_ROOT . '/sites/default/default.services.yml';
     // Copy the testing-specific service overrides in place.
     copy($settings_services_file, $this->siteDirectory . '/services.yml');
     PerformanceTestRecorder::registerService($this->siteDirectory . '/services.yml', TRUE);
-    // Assert that the expected title is present.
-    $this->assertEquals('Select an installation profile', $this->cssSelect('main h2')[0]->getText());
-    // Verify that Title/Label are not displayed when '#title_display' =>
-    // 'invisible' attribute is set.
-    $this->assertSession()->elementsCount('xpath', "//span[contains(@class, 'visually-hidden') and contains(text(), 'Select an installation profile')]", 1);
-
-    parent::setUpProfile();
   }
 
   /**
@@ -121,8 +116,8 @@ class InstallerTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller(): void {
-    parent::visitInstaller();
+  protected function visitInstaller(array $query = []): void {
+    parent::visitInstaller($query);
 
     // Assert the title is correct and has the title suffix.
     $this->assertSession()->titleEquals('Choose language | Drupal');

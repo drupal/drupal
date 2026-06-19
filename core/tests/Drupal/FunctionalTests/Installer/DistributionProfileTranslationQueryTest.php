@@ -37,6 +37,11 @@ class DistributionProfileTranslationQueryTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $profile = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
     $this->info = [
@@ -64,12 +69,12 @@ class DistributionProfileTranslationQueryTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller(): void {
+  protected function visitInstaller(array $query = []): void {
     // Pass a different language code than the one set in the distribution
     // profile. This distribution language should still be used.
     // The unrouted URL assembler does not exist at this point, so we build the
     // URL ourselves.
-    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php?langcode=fr');
+    parent::visitInstaller(['langcode' => 'fr']);
   }
 
   /**
@@ -78,13 +83,6 @@ class DistributionProfileTranslationQueryTest extends InstallerTestBase {
   protected function setUpLanguage(): void {
     // This step is skipped, because the distribution profile uses a fixed
     // language.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpProfile(): void {
-    // This step is skipped, because there is a distribution profile.
   }
 
   /**

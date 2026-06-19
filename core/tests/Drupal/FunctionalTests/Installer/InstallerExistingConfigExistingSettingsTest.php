@@ -41,4 +41,13 @@ class InstallerExistingConfigExistingSettingsTest extends InstallerExistingConfi
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpLanguage(): void {
+    // This step is skipped, because we are installing from the configuration of
+    // a site that was originally installed in French. The installer will detect
+    // that, based on the language set in the `system.site` config.
+  }
+
 }

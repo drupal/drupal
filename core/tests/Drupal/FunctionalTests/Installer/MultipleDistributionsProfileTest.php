@@ -69,13 +69,6 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUpProfile(): void {
-    // This step is skipped, because there is a distribution profile.
-  }
-
-  /**
    * Confirms that the installation succeeded.
    */
   public function testInstalled(): void {

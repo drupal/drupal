@@ -51,14 +51,6 @@ PO;
   /**
    * {@inheritdoc}
    */
-  protected function setUpProfile(): void {
-    // Do nothing, because this test only tests the language installation
-    // step's results.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUpSettings(): void {
     // Do nothing, because this test only tests the language installation
     // step's results.

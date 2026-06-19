@@ -27,6 +27,11 @@ class DistributionProfileTest extends InstallerTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected $profile = NULL;
+
   protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
     $this->info = [
@@ -37,7 +42,7 @@ class DistributionProfileTest extends InstallerTestBase {
         'name' => 'My Distribution',
         'install' => [
           'theme' => 'test_installer_theme',
-          'finish_url' => '/root-user',
+          'finish_url' => 'root-user',
         ],
       ],
     ];
@@ -66,13 +71,6 @@ class DistributionProfileTest extends InstallerTestBase {
     $this->assertSession()->pageTextNotContains('profile');
 
     parent::setUpLanguage();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpProfile(): void {
-    // This step is skipped, because there is a distribution profile.
   }
 
   /**

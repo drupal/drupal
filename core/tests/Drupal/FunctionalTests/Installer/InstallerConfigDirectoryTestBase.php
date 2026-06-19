@@ -6,7 +6,6 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Installer\Form\SelectProfileForm;
 
 /**
  * Provides a base class for testing installing from existing configuration.
@@ -153,6 +152,26 @@ abstract class InstallerConfigDirectoryTestBase extends InstallerTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function visitInstaller(array $query = []): void {
+    if ($this->existingSyncDirectory) {
+      $query['existing_config'] = TRUE;
+    }
+    parent::visitInstaller($query);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpLanguage(): void {
+    if ($this->existingSyncDirectory) {
+      return;
+    }
+    parent::setUpLanguage();
+  }
+
+  /**
    * Confirms that the installation installed the configuration correctly.
    */
   public function testConfigSync(): void {
@@ -167,21 +186,6 @@ abstract class InstallerConfigDirectoryTestBase extends InstallerTestBase {
       'rename' => [],
     ];
     $this->assertEquals($expected, $change_list);
-  }
-
-  /**
-   * Installer step: Select installation profile.
-   */
-  protected function setUpProfile(): void {
-    if ($this->existingSyncDirectory) {
-      $edit = [
-        'profile' => SelectProfileForm::CONFIG_INSTALL_PROFILE_KEY,
-      ];
-      $this->submitForm($edit, $this->translations['Save and continue']);
-    }
-    else {
-      parent::setUpProfile();
-    }
   }
 
 }

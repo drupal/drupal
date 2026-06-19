@@ -31,14 +31,14 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller(): void {
+  protected function visitInstaller(array $query = []): void {
     // Place a custom local translation in the translations directory.
     mkdir($this->root . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
     file_put_contents($this->root . '/' . $this->siteDirectory . '/files/translations/drupal-' . \Drupal::VERSION . '.de.po', $this->getPo('de'));
 
     // The unrouted URL assembler does not exist at this point, so we build the
     // URL ourselves.
-    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php?langcode=' . $this->langcode);
+    parent::visitInstaller(['langcode' => $this->langcode]);
 
     // The language should have been automatically detected, all following
     // screens should be translated already.

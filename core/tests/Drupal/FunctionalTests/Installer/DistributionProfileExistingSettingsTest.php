@@ -33,6 +33,11 @@ class DistributionProfileExistingSettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $profile = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
     $this->info = [
@@ -97,13 +102,6 @@ class DistributionProfileExistingSettingsTest extends InstallerTestBase {
     $this->assertSession()->pageTextNotContains('profile');
 
     parent::setUpLanguage();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpProfile(): void {
-    // This step is skipped, because there is a distribution profile.
   }
 
   /**

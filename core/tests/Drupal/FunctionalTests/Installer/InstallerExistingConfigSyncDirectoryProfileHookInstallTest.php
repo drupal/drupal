@@ -32,7 +32,9 @@ class InstallerExistingConfigSyncDirectoryProfileHookInstallTest extends Install
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller(): void {
+  protected function prepareEnvironment(): void {
+    parent::prepareEnvironment();
+
     // Create an .install file with a hook_install() implementation.
     $path = $this->siteDirectory . '/profiles/' . $this->profile;
     $contents = <<<EOF
@@ -42,15 +44,6 @@ function testing_config_install_multilingual_install() {
 }
 EOF;
     file_put_contents("$path/{$this->profile}.install", $contents);
-    parent::visitInstaller();
-  }
-
-  /**
-   * Installer step: Select installation profile.
-   */
-  protected function setUpProfile(): void {
-    // This is the form we are testing so wait until the test method to do
-    // assertions.
   }
 
   /**
@@ -85,15 +78,14 @@ EOF;
    * Tests installing from config is not available due to hook_INSTALL().
    */
   public function testConfigSync(): void {
-    $this->assertSession()->titleEquals('Select an installation profile | Drupal');
-    $this->assertSession()->responseNotContains('Use existing configuration');
+    $this->assertSession()->titleEquals('Requirements problem | Drupal');
+    $this->assertSession()->pageTextContains('The selected profile has a hook_install() implementation and therefore can not be installed from configuration.');
 
     // Remove the install hook and the option to install from existing
     // configuration will be available.
     unlink("{$this->siteDirectory}/profiles/{$this->profile}/{$this->profile}.install");
     $this->getSession()->reload();
-    $this->assertSession()->titleEquals('Select an installation profile | Drupal');
-    $this->assertSession()->responseContains('Use existing configuration');
+    $this->assertSession()->titleEquals('Database configuration | Drupal');
   }
 
 }

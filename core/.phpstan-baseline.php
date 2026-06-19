@@ -7700,12 +7700,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Installer/Form/SelectLanguageForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Installer\\\\Form\\\\SelectProfileForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Installer/Form/SelectProfileForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Installer\\\\Form\\\\SiteConfigureForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -33134,6 +33128,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Tests/DrupalSelenium2DriverTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Installer\\\\InstallerTestBase\\:\\:setUpProfile\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerTestBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\FunctionalTests\\\\MailCaptureTest\\:\\:assertMailPattern\\(\\) has no return type specified\\.$#',

@@ -48,7 +48,10 @@ abstract class InstallerTestBase extends BrowserTestBase {
   /**
    * The installation profile to install.
    *
-   * @var string
+   * If NULL, the installer will automatically choose a profile -- useful for
+   * testing distributions.
+   *
+   * @var string|null
    */
   protected $profile = 'testing';
 
@@ -163,9 +166,6 @@ abstract class InstallerTestBase extends BrowserTestBase {
     // Select language.
     $this->setUpLanguage();
 
-    // Select profile.
-    $this->setUpProfile();
-
     // Address the requirements problem screen, if any.
     $this->setUpRequirementsProblem();
 
@@ -225,9 +225,23 @@ abstract class InstallerTestBase extends BrowserTestBase {
 
   /**
    * Visits the interactive installer.
+   *
+   * @param array $query
+   *   Query parameters to pass to install.php.
    */
-  protected function visitInstaller(): void {
-    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php');
+  protected function visitInstaller(array $query = []): void {
+    $url = $GLOBALS['base_url'] . '/core/install.php';
+
+    // We must explicitly tell the installer which profile to use, or it will
+    // default to Standard.
+    // @see install_select_profile()
+    if (isset($this->profile)) {
+      $query['profile'] = (string) $this->profile;
+    }
+    if ($query) {
+      $url .= '?' . http_build_query($query);
+    }
+    $this->drupalGet($url);
   }
 
   /**
@@ -246,11 +260,8 @@ abstract class InstallerTestBase extends BrowserTestBase {
   /**
    * Installer step: Select installation profile.
    */
-  protected function setUpProfile(): void {
-    $edit = [
-      'profile' => $this->profile,
-    ];
-    $this->submitForm($edit, $this->translations['Save and continue']);
+  protected function setUpProfile() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3520028', E_USER_DEPRECATED);
   }
 
   /**

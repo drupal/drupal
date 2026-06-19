@@ -50,13 +50,6 @@ class SingleVisibleProfileTest extends InstallerTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUpProfile(): void {
-    // This step is skipped, because there is only one visible profile.
-  }
-
-  /**
    * Confirms that the installation succeeded.
    */
   public function testInstalled(): void {

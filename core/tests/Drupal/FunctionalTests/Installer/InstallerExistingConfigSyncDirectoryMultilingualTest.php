@@ -33,16 +33,6 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerConf
   protected $existingSyncDirectory = TRUE;
 
   /**
-   * Installer step: Select installation profile.
-   */
-  protected function setUpProfile(): void {
-    // Ensure the site name 'Multilingual' appears as expected in the 'Use
-    // existing configuration' radio description.
-    $this->assertSession()->pageTextContains('Install Multilingual using existing configuration.');
-    parent::setUpProfile();
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function getConfigLocation(): string {

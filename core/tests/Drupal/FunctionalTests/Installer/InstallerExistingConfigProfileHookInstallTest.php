@@ -22,7 +22,9 @@ class InstallerExistingConfigProfileHookInstallTest extends InstallerConfigDirec
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller(): void {
+  protected function prepareEnvironment(): void {
+    parent::prepareEnvironment();
+
     // Create an .install file with a hook_install() implementation.
     $path = $this->siteDirectory . '/profiles/' . $this->profile;
     $contents = <<<EOF
@@ -32,7 +34,6 @@ function config_profile_with_hook_install_install() {
 }
 EOF;
     file_put_contents("$path/{$this->profile}.install", $contents);
-    parent::visitInstaller();
   }
 
   /**

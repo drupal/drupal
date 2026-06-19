@@ -28,6 +28,11 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
   protected $langcode = 'de';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $profile = NULL;
+
+  /**
    * The distribution profile info.
    *
    * @var array
@@ -69,13 +74,6 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
   protected function setUpLanguage(): void {
     // This step is skipped, because the distribution profile uses a fixed
     // language.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpProfile(): void {
-    // This step is skipped, because there is a distribution profile.
   }
 
   /**

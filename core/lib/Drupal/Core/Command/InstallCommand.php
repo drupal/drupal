@@ -287,7 +287,6 @@ class InstallCommand extends Command {
    *   The selected install profile.
    *
    * @see _install_select_profile()
-   * @see \Drupal\Core\Installer\Form\SelectProfileForm
    */
   protected function selectProfile(SymfonyStyle $io) {
     $profiles = $this->getProfiles();

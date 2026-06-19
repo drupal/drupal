@@ -18,22 +18,26 @@ class InstallerExistingConfigTest extends InstallerConfigDirectoryTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage(): void {
+  protected function prepareEnvironment(): void {
+    parent::prepareEnvironment();
+
     // Place a custom local translation in the translations directory.
     mkdir($this->root . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
     file_put_contents($this->root . '/' . $this->siteDirectory . '/files/translations/drupal-' . \Drupal::VERSION . '.fr.po', "msgid \"\"\nmsgstr \"\"\nmsgid \"Save and continue\"\nmsgstr \"Enregistrer et continuer\"");
-    parent::setUpLanguage();
+
+    // The configuration is from a site installed in French. The installer
+    // therefore detects that the site must be installed in French, thus we
+    // change the button translation.
+    $this->translations['Save and continue'] = 'Enregistrer et continuer';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setUpSettings(): void {
-    // The configuration is from a site installed in French.
-    // So after selecting the profile the installer detects that the site must
-    // be installed in French, thus we change the button translation.
-    $this->translations['Save and continue'] = 'Enregistrer et continuer';
-    parent::setUpSettings();
+  protected function setUpLanguage(): void {
+    // This step gets skipped because the config we're installing from was
+    // created from a site installed in French, and the installer automatically
+    // detects that.
   }
 
   /**

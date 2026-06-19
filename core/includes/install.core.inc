@@ -777,8 +777,6 @@ function install_tasks($install_state): array {
       'run' => $needs_download ? INSTALL_TASK_RUN_IF_REACHED : INSTALL_TASK_SKIP,
     ],
     'install_select_profile' => [
-      'display_name' => t('Choose profile'),
-      'display' => empty($install_state['profile_info']['distribution']['name']) && count($install_state['profiles']) != 1,
       'run' => INSTALL_TASK_RUN_IF_REACHED,
     ],
     'install_load_profile' => [
@@ -1238,12 +1236,10 @@ function install_database_errors($database, $settings_file) {
  *   profile will be added here, if it was not already selected previously, as
  *   will a list of all available profiles.
  *
- * @return array|null
- *   For interactive installations, a form allowing the profile to be selected,
- *   if the user has a choice that needs to be made. Otherwise, an exception is
- *   thrown if a profile cannot be chosen automatically.
+ * @throws \Drupal\Core\Installer\Exception\InstallerException
+ *   Thrown if a profile cannot be chosen automatically.
  */
-function install_select_profile(&$install_state) {
+function install_select_profile(&$install_state): void {
   if (!array_key_exists('profile', $install_state['parameters'])) {
     // If there are no profiles at all, installation cannot proceed.
     if (empty($install_state['profiles'])) {
@@ -1258,8 +1254,8 @@ function install_select_profile(&$install_state) {
       if (!$install_state['interactive']) {
         throw new InstallerException('Missing profile parameter.');
       }
-      // Otherwise, display a form to select a profile.
-      return install_get_form('Drupal\Core\Installer\Form\SelectProfileForm', $install_state);
+      // Fall back to the Standard profile.
+      $install_state['parameters']['profile'] ??= 'standard';
     }
   }
 }

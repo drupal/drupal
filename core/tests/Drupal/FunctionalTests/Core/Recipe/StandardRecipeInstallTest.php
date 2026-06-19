@@ -50,9 +50,12 @@ class StandardRecipeInstallTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller(): void {
+  protected function visitInstaller(array $query = []): void {
     // Use a URL to install from a recipe.
-    $this->drupalGet($GLOBALS['base_url'] . '/core/install.php?profile=&recipe=core/recipes/standard');
+    parent::visitInstaller([
+      'profile' => '',
+      'recipe' => 'core/recipes/standard',
+    ]);
   }
 
   /**
@@ -83,13 +86,6 @@ class StandardRecipeInstallTest extends InstallerTestBase {
     $this->drupalLogout();
 
     $this->doTestStandard();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUpProfile(): void {
-    // Noop. This form is skipped due the parameters set on the URL.
   }
 
   /**
