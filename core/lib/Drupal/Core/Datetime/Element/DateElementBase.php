@@ -35,9 +35,11 @@ abstract class DateElementBase extends FormElementBase {
     $this_year = $datetime->format('Y');
     [$min_year, $max_year] = explode(':', $string);
 
-    // Valid patterns would be -5:+5, 0:+1, 2008:2010.
+    // Valid patterns would be -5:+5, +0:+1, 2008:2010, 1:9999.
+    // Note that year 0 is 0 while current year is: +0.
+    // Due to the +/- logic we can't support years BC (<0).
     $plus_pattern = '@[\+|\-][0-9]{1,4}@';
-    $year_pattern = '@^[0-9]{4}@';
+    $year_pattern = '@^[0-9]{1,4}@';
     if (!preg_match($year_pattern, $min_year, $matches)) {
       if (preg_match($plus_pattern, $min_year, $matches)) {
         $min_year = $this_year + $matches[0];
