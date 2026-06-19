@@ -1523,7 +1523,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             // For each column declared by the field, populate the item from
             // the prefixed database column.
             foreach ($field_definition_columns[$field_name] as $column => $attributes) {
-              $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
+              $column_name = $field_columns[$field_name][$column];
               // Unserialize the value if specified in the column schema.
               $item[$column] = (!empty($attributes['serialize'])) ? $this->handleNullableFieldUnserialize($row[$column_name]) : $row[$column_name];
             }
@@ -1629,7 +1629,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             // For each column declared by the field, populate the item from
             // the prefixed database column.
             foreach ($field_definition_columns[$field_name] as $column => $attributes) {
-              $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
+              $column_name = $field_columns[$field_name][$column];
               // Unserialize the value if specified in the column schema.
               $item[$column] = (!empty($attributes['serialize'])) ? $this->handleNullableFieldUnserialize($row[$column_name]) : $row[$column_name];
             }
