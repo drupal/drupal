@@ -36,7 +36,7 @@
         "twig/twig": "^3.27.0",
         "doctrine/lexer": "^2",
         "guzzlehttp/guzzle": "^7.5",
-        "guzzlehttp/psr7": "^2.10.2",
+        "guzzlehttp/psr7": "^2.4.5",
         "egulias/email-validator": "^3.2.1|^4.0",
         "masterminds/html5": "^2.7",
         "symfony/psr-http-message-bridge": "^2.1|^6.4",

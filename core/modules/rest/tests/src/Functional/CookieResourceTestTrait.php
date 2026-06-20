@@ -82,9 +82,12 @@ trait CookieResourceTestTrait {
    * {@inheritdoc}
    */
   protected function getAuthenticationRequestOptions($method) {
-    $request_options[RequestOptions::HEADERS]['Cookie'] = $this->sessionCookie;
+    $request_options = [];
+    if (isset($this->sessionCookie)) {
+      $request_options[RequestOptions::HEADERS]['Cookie'] = $this->sessionCookie;
+    }
     // @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
-    if (!in_array($method, ['HEAD', 'GET', 'OPTIONS', 'TRACE'])) {
+    if (isset($this->csrfToken) && !in_array($method, ['HEAD', 'GET', 'OPTIONS', 'TRACE'])) {
       $request_options[RequestOptions::HEADERS]['X-CSRF-Token'] = $this->csrfToken;
     }
     return $request_options;
