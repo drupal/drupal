@@ -1,10 +1,14 @@
 variables:
+  aggregate_target:
+    css: 'claro'
   version: VERSION
   css:
     base:
       css/base/variables.css: { }
 
 global-styling:
+  aggregate_target:
+    css: claro
   version: VERSION
   css:
     base:

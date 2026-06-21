@@ -173,7 +173,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['config:system.menu.main'],
         ['config:user.role.anonymous'],
       ],
-      'StylesheetCount' => 1,
+      'StylesheetCount' => 2,
       'StylesheetBytes' => 1450,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -361,7 +361,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ],
         ['config:core.extension', 'views_data'],
       ],
-      'StylesheetCount' => 1,
+      'StylesheetCount' => 2,
       'StylesheetBytes' => 1300,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -415,7 +415,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame($expected_queries, $recorded_queries);
     $expected = [
       'ScriptBytes' => 6500,
-      'ScriptCount' => 1,
+      'ScriptCount' => 2,
       'StylesheetBytes' => 1429,
       'StylesheetCount' => 1,
       'QueryCount' => 15,
@@ -575,9 +575,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 6,
-      'ScriptCount' => 3,
+      'ScriptCount' => 9,
       'ScriptBytes' => 141352,
-      'StylesheetCount' => 2,
+      'StylesheetCount' => 3,
       'StylesheetBytes' => 42533,
     ];
     $this->assertMetrics($expected, $performance_data);

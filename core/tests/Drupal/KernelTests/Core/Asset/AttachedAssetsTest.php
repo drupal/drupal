@@ -188,10 +188,12 @@ class AttachedAssetsTest extends KernelTestBase {
     [$header_js, $footer_js] = $this->assetResolver->getJsAssets($assets, TRUE, \Drupal::languageManager()->getCurrentLanguage());
     $this->assertEquals([], \Drupal::service('asset.js.collection_renderer')->render($header_js), 'There are 0 JavaScript assets in the header.');
     $rendered_footer_js = \Drupal::service('asset.js.collection_renderer')->render($footer_js);
-    $this->assertCount(3, $rendered_footer_js, 'There are 3 JavaScript assets in the footer.');
-    $this->assertEquals('drupal-settings-json', $rendered_footer_js[0]['#attributes']['data-drupal-selector'], 'The first of the two JavaScript assets in the footer has drupal settings.');
-    $this->assertStringContainsString('jquery.min.js', $rendered_footer_js[1]['#attributes']['src'], 'The second of the two JavaScript assets in the footer is jquery.min.js.');
-    $this->assertStringStartsWith(base_path(), $rendered_footer_js[2]['#attributes']['src'], 'The third of the two JavaScript assets in the footer has the sole aggregated JavaScript asset.');
+    $this->assertCount(5, $rendered_footer_js, 'There are 5 JavaScript assets in the footer.');
+    $this->assertEquals('drupal-settings-json', $rendered_footer_js[0]['#attributes']['data-drupal-selector'], 'The first of the five JavaScript assets in the footer has drupal settings.');
+    $this->assertStringContainsString('jquery.min.js', $rendered_footer_js[1]['#attributes']['src'], 'The second of the five JavaScript assets in the footer is jquery.min.js.');
+    $this->assertStringContainsString('once.min.js', $rendered_footer_js[2]['#attributes']['src'], 'The third of the five JavaScript assets in the footer is once.min.js.');
+    $this->assertStringStartsWith(base_path(), $rendered_footer_js[3]['#attributes']['src'], 'The fourth of the five JavaScript assets in the footer has an aggregated JavaScript asset.');
+    $this->assertStringStartsWith(base_path(), $rendered_footer_js[4]['#attributes']['src']);
   }
 
   /**

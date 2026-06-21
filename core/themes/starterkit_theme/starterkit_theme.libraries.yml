@@ -1,5 +1,7 @@
 base:
   version: VERSION
+  aggregate_target:
+    css: true
   css:
     component:
       css/components/action-links.css:

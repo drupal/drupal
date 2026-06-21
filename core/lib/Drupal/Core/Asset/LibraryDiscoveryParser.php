@@ -117,6 +117,13 @@ class LibraryDiscoveryParser {
         ];
       }
 
+      // Default aggregate_target to FALSE if it's not set.
+      foreach (['css', 'js'] as $type) {
+        if (!isset($library['aggregate_target'][$type])) {
+          $library['aggregate_target'][$type] = FALSE;
+        }
+      }
+
       foreach (['js', 'css', 'fonts'] as $type) {
         // Prepare (flatten) the SMACSS-categorized definitions.
         // @todo After Asset(ic) changes, retain the definitions as-is and
@@ -134,6 +141,7 @@ class LibraryDiscoveryParser {
               }
               // Apply the corresponding weight defined by CSS_* constants.
               $options['weight'] += constant($category_weight);
+              $options['category'] = $category;
               $library[$type][$source] = $options;
             }
             unset($library[$type][$category]);
@@ -278,6 +286,13 @@ class LibraryDiscoveryParser {
    *   - The root libraries directory.
    *   - A libraries directory in the selected installation profile, for
    *     example: profiles/my_install_profile/libraries.
+   * - aggregate_target: an array with css and js keys, that creates a unique
+   *   CSS or JavaScript aggregate, either for the individual library when set
+   *   to TRUE, or when set to an arbitrary string, or for any libraries where
+   *   the aggregate_target string matches. This allows the aggregate to be
+   *   loaded in isolation from other libraries on the page, improving browser
+   *   and CDN cache hit rates. The CSS and JavaScript keys function
+   *   independently so that the behavior can be set per asset type.
    * - dependencies: A list of libraries this library depends on.
    * - version: The library version. The string "VERSION" can be used to mean
    *   the current Drupal core version.
