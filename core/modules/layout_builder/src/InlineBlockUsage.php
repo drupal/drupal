@@ -31,12 +31,14 @@ class InlineBlockUsage implements InlineBlockUsageInterface {
    * {@inheritdoc}
    */
   public function addUsage($block_content_id, EntityInterface $entity) {
-    $this->database->merge('inline_block_usage')
-      ->keys([
+    $this->database->upsert('inline_block_usage')
+      ->key('block_content_id')
+      ->fields([
         'block_content_id' => $block_content_id,
         'layout_entity_id' => $entity->id(),
         'layout_entity_type' => $entity->getEntityTypeId(),
-      ])->execute();
+      ])
+      ->execute();
   }
 
   /**

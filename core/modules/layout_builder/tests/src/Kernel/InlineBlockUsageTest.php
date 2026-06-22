@@ -83,12 +83,14 @@ class InlineBlockUsageTest extends KernelTestBase {
     $this->inlineBlockUsage->addUsage('1', $this->entity);
     $this->assertEmpty($this->inlineBlockUsage->getUnused());
     // Add an invalid usage.
-    $this->database->merge('inline_block_usage')
-      ->keys([
+    $this->database->upsert('inline_block_usage')
+      ->key(['block_content_id'])
+      ->fields([
         'block_content_id' => 2,
         'layout_entity_id' => NULL,
         'layout_entity_type' => NULL,
-      ])->execute();
+      ])
+      ->execute();
     $this->assertCount(1, $this->inlineBlockUsage->getUnused());
   }
 

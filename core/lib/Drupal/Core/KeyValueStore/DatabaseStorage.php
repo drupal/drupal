@@ -150,12 +150,13 @@ class DatabaseStorage extends StorageBase {
    *   The data to store.
    */
   protected function doSet($key, $value) {
-    $this->connection->merge($this->table)
-      ->keys([
-        'name' => $key,
+    $this->connection->upsert($this->table)
+      ->key(['collection', 'name'])
+      ->fields([
         'collection' => $this->collection,
+        'name' => $key,
+        'value' => $this->serializer->encode($value),
       ])
-      ->fields(['value' => $this->serializer->encode($value)])
       ->execute();
   }
 
@@ -178,16 +179,56 @@ class DatabaseStorage extends StorageBase {
   }
 
   /**
+   * Saves key/value pairs.
+   *
+   * This will be called by ::setMultiple() within a try block.
+   *
+   * @param array $data
+   *   An associative array of key/value pairs.
+   */
+  protected function doSetMultiple(array $data): void {
+    $query = $this->connection->upsert($this->table)
+      ->key(['collection', 'name']);
+
+    $fieldsSet = FALSE;
+    foreach ($data as $key => $value) {
+      if (!$fieldsSet) {
+        $query->fields([
+          'collection' => $this->collection,
+          'name' => $key,
+          'value' => $this->serializer->encode($value),
+        ]);
+        $fieldsSet = TRUE;
+        continue;
+      }
+      $query->values([
+        'collection' => $this->collection,
+        'name' => $key,
+        'value' => $this->serializer->encode($value),
+      ]);
+    }
+
+    $query->execute();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function setMultiple(array $data): void {
-    $transaction = $this->connection->startTransaction();
-    try {
-      parent::setMultiple($data);
-      $transaction->commitOrRelease();
+    if (empty($data)) {
+      return;
     }
-    catch (\Exception) {
-      $transaction->rollback();
+    try {
+      $this->doSetMultiple($data);
+    }
+    catch (\Exception $e) {
+      // If there was an exception, try to create the table.
+      if ($this->ensureTableExists()) {
+        $this->doSetMultiple($data);
+      }
+      else {
+        throw $e;
+      }
     }
   }
 

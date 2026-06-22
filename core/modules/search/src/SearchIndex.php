@@ -269,9 +269,12 @@ class SearchIndex implements SearchIndexInterface {
           ->fetchField();
         // Apply Zipf's law to equalize the probability distribution.
         $total = log10(1 + 1 / (max(1, $total)));
-        $this->connection->merge('search_total')
-          ->key('word', $word)
-          ->fields(['count' => $total])
+        $this->connection->upsert('search_total')
+          ->key('word')
+          ->fields([
+            'word' => $word,
+            'count' => $total,
+          ])
           ->execute();
       }
       // Find words that were deleted from search_index, but are still in
