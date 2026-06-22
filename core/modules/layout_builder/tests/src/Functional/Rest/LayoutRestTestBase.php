@@ -114,7 +114,7 @@ abstract class LayoutRestTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response): void {}
+  protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response) {}
 
   /**
    * {@inheritdoc}
@@ -124,7 +124,7 @@ abstract class LayoutRestTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options): void {}
+  protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options) {}
 
   /**
    * {@inheritdoc}
