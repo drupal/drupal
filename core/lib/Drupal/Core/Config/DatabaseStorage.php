@@ -164,9 +164,13 @@ class DatabaseStorage implements StorageInterface {
    *   TRUE when the write was successful, FALSE otherwise.
    */
   protected function doWrite($name, $data) {
-    return (bool) $this->connection->merge($this->table, $this->options)
-      ->keys(['collection', 'name'], [$this->collection, $name])
-      ->fields(['data' => $data])
+    return (bool) $this->connection->upsert($this->table, $this->options)
+      ->key(['collection', 'name'])
+      ->fields([
+        'collection' => $this->collection,
+        'name' => $name,
+        'data' => $data,
+      ])
       ->execute();
   }
 

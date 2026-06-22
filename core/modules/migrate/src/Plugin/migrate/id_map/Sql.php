@@ -704,10 +704,11 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       return;
     }
     $fields['last_imported'] = time();
+    $fields[$this::SOURCE_IDS_HASH] = $this->getSourceIdsHash($source_id_values);
     // Notify anyone listening of the map row we're about to save.
     $this->eventDispatcher->dispatch(new MigrateMapSaveEvent($this, $fields), MigrateEvents::MAP_SAVE);
-    $this->getDatabase()->merge($this->mapTableName())
-      ->key($this::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values))
+    $this->getDatabase()->upsert($this->mapTableName())
+      ->key($this::SOURCE_IDS_HASH)
       ->fields($fields)
       ->execute();
   }

@@ -66,16 +66,16 @@ class SessionHandler extends AbstractSessionHandler implements \SessionHandlerIn
   public function doWrite(#[\SensitiveParameter] string $sessionId, string $data): bool {
     $try_again = FALSE;
     $request = $this->requestStack->getCurrentRequest();
-    $fields = [
-      'uid' => $request->getSession()->get('uid', 0),
-      'hostname' => $request->getClientIP(),
-      'session' => $data,
-      'timestamp' => $this->time->getRequestTime(),
-    ];
     $doWrite = fn() =>
-      $this->connection->merge('sessions')
-        ->keys(['sid' => Crypt::hashBase64($sessionId)])
-        ->fields($fields)
+      $this->connection->upsert('sessions')
+        ->key('sid')
+        ->fields([
+          'sid' => Crypt::hashBase64($sessionId),
+          'uid' => $request->getSession()->get('uid', 0),
+          'hostname' => $request->getClientIP(),
+          'session' => $data,
+          'timestamp' => $this->time->getRequestTime(),
+        ])
         ->execute();
     try {
       $doWrite();

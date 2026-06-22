@@ -66,9 +66,9 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     // Checking whether an existing name exists returns TRUE.
     $this->assertTrue($this->storage->exists($name));
 
-    // Writing the identical data again still returns TRUE.
-    $result = $this->storage->write($name, $data);
-    $this->assertTrue($result);
+    // Writing and re-reading the identical data again still returns it.
+    $this->storage->write($name, $data);
+    $this->assertSame($data, $this->read($name));
 
     // Listing all names returns all.
     $this->storage->write('system.performance', []);
