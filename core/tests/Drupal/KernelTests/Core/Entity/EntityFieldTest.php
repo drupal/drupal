@@ -152,14 +152,24 @@ class EntityFieldTest extends EntityKernelTestBase {
     $entity->field_test_text->value = 'bar';
     $entity->save();
 
+    // The updated field value should have correctly saved as 'bar'.
+    $pending_revision = $storage->loadRevision($entity->getRevisionId());
+    $this->assertEquals('bar', $pending_revision->get('field_test_text')->value);
+
     // Now save the pending revision as the default one, without creating a new
     // revision.
     $entity->isDefaultRevision(TRUE);
+    $entity->get('field_test_text')->value = 'baz';
     $entity->save();
 
-    // The updated field value should have correctly saved as 'bar'.
+    // The updated field value should have correctly saved as 'baz'.
     $default_revision = $storage->loadUnchanged($entity->id());
-    $this->assertEquals('bar', $default_revision->field_test_text->value);
+    $this->assertEquals('baz', $default_revision->get('field_test_text')->value);
+
+    // Also verify that this is consistent when loading by revision.
+    $storage->resetCache([$entity->id()]);
+    $default_revision = $storage->loadRevision($entity->getRevisionId());
+    $this->assertEquals('baz', $default_revision->get('field_test_text')->value);
   }
 
   /**
