@@ -1673,17 +1673,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $definitions = array_intersect_key($definitions, array_flip($names));
     }
 
-    $save_to_base_table = $entity->isDefaultRevision();
-
-    // When changing a pending revision to be the default one, or when rolling
-    // back the default revision to a past revision, we need to ensure that the
-    // base field table is updated.
-    $enforce_save_to_base_table = $original && $entity->isDefaultRevision() !== $original->isDefaultRevision();
-
-    // When we're not creating a new revision, or when updating only the field's
-    // base table, we can skip writing to the field's revision table.
-    $save_to_revision_table = $this->entityType->isRevisionable() && ($entity->isNewRevision() || !$enforce_save_to_base_table);
-
     foreach ($definitions as $field_name => $field_definition) {
       $storage_definition = $field_definition->getFieldStorageDefinition();
       if (!$table_mapping->requiresDedicatedTableStorage($storage_definition)) {
@@ -1693,9 +1682,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // When updating an existing revision, keep the existing records if the
       // field values did not change or if we're not re-saving a pending
       // revision as the default one.
-      if (!$enforce_save_to_base_table
-        && !$entity->isNewRevision()
+      if (!$entity->isNewRevision()
         && $original
+        && $entity->isDefaultRevision() === $original->isDefaultRevision()
         && !$this->hasFieldValueChanged($field_definition, $entity, $original)
       ) {
         continue;
@@ -1708,12 +1697,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if ($update) {
         // Only overwrite the field's base table if saving the default revision
         // of an entity.
-        if ($save_to_base_table) {
+        if ($entity->isDefaultRevision()) {
           $this->database->delete($table_name)
             ->condition('entity_id', $id)
             ->execute();
         }
-        if ($save_to_revision_table) {
+        if ($this->entityType->isRevisionable()) {
           $this->database->delete($revision_name)
             ->condition('entity_id', $id)
             ->condition('revision_id', $vid)
@@ -1727,10 +1716,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       foreach ($storage_definition->getColumns() as $column => $attributes) {
         $columns[] = $table_mapping->getFieldColumnName($storage_definition, $column);
       }
-      if ($save_to_base_table) {
-        $query = $this->database->insert($table_name)->fields($columns);
-      }
-      if ($save_to_revision_table) {
+      $query = $this->database->insert($table_name)->fields($columns);
+      if ($this->entityType->isRevisionable()) {
         $revision_query = $this->database->insert($revision_name)->fields($columns);
       }
 
@@ -1758,10 +1745,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             }
             $record[$column_name] = SqlContentEntityStorageSchema::castValue($attributes, $value);
           }
-          if (isset($query)) {
-            $query->values($record);
-          }
-          if (isset($revision_query)) {
+          $query->values($record);
+          if ($this->entityType->isRevisionable()) {
             $revision_query->values($record);
           }
 
@@ -1775,10 +1760,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       if ($do_insert) {
         // Only overwrite the field's base table if saving the default revision
         // of an entity.
-        if (isset($query)) {
+        if ($entity->isDefaultRevision()) {
           $query->execute();
         }
-        if (isset($revision_query)) {
+        if ($this->entityType->isRevisionable()) {
           $revision_query->execute();
         }
       }
