@@ -240,7 +240,7 @@ function node_is_page(NodeInterface $node) {
  * @see https://www.drupal.org/node/3533060
  */
 function template_preprocess_node_add_list(&$variables): void {
-  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service(NodeThemeHooks::class)->preprocessNodeAddList($variables); instead. See https://www.drupal.org/node/3533060', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service(NodeThemeHooks::class)->preprocessNodeAddList($variables); instead. See https://www.drupal.org/node/3533060', E_USER_DEPRECATED);
   \Drupal::service(NodeThemeHooks::class)->preprocessNodeAddList($variables);
 }
 
@@ -274,7 +274,7 @@ function template_preprocess_node_add_list(&$variables): void {
  * @see \Drupal\Core\Field\BaseFieldDefinition::setDisplayConfigurable()
  */
 function template_preprocess_node(&$variables): void {
-  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service(NodeThemeHooks::class)->preprocessNode($variables); instead. See https://www.drupal.org/node/3533060', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. Use \Drupal::service(NodeThemeHooks::class)->preprocessNode($variables); instead. See https://www.drupal.org/node/3533060', E_USER_DEPRECATED);
   \Drupal::service(NodeThemeHooks::class)->preprocessNode($variables);
 }
 

@@ -195,7 +195,7 @@ function user_login_finalize(UserInterface $account): void {
  * @see https://www.drupal.org/node/3581062
  */
 function user_pass_reset_url($account, $options = []) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\user\OneTimeAuthentication::generateOneTimeLoginUrl() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\user\OneTimeAuthentication::generateOneTimeLoginUrl() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
   return \Drupal::service(OneTimeAuthentication::class)->generateOneTimeLoginUrl($account, $options)->toString();
 }
 
@@ -221,7 +221,7 @@ function user_pass_reset_url($account, $options = []) {
  * @see https://www.drupal.org/node/3581062
  */
 function user_cancel_url(UserInterface $account, $options = []) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\user\OneTimeAuthentication::generateCancelConfirmUrl() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\user\OneTimeAuthentication::generateCancelConfirmUrl() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
   return \Drupal::service(OneTimeAuthentication::class)->generateCancelConfirmUrl($account, $options)->toString();
 }
 
@@ -251,7 +251,7 @@ function user_cancel_url(UserInterface $account, $options = []) {
  * @see https://www.drupal.org/node/3581062
  */
 function user_pass_rehash(UserInterface $account, $timestamp) {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\user\OneTimeAuthentication::generateHmac() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\user\OneTimeAuthentication::generateHmac() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
   return \Drupal::service(OneTimeAuthentication::class)->generateHmac($account, $timestamp);
 }
 
@@ -467,7 +467,7 @@ function user_cancel_methods(): array {
  * @see https://www.drupal.org/node/3581062
  */
 function user_mail_tokens(&$replacements, $data, $options): void {
-  @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\user\OneTimeAuthentication::tokens() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\user\OneTimeAuthentication::tokens() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
   $bubbleableMetadata = new BubbleableMetadata();
   \Drupal::service(OneTimeAuthentication::class)->tokens($replacements, $data, $options, $bubbleableMetadata);
 }

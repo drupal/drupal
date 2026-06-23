@@ -38,7 +38,7 @@ function ckeditor5_filter_format_edit_form_submit(array $form, FormStateInterfac
  * @see \Drupal\editor\Hook\EditorHooks::editorFormFilterAdminFormAjax()
  */
 function _update_ckeditor5_html_filter(array $form, FormStateInterface $form_state) {
-  @trigger_error(__FUNCTION__ . 'is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\ckeditor5\Hook\Ckeditor5Hooks::updateCkeditor5HtmlFilter() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\ckeditor5\Hook\Ckeditor5Hooks::updateCkeditor5HtmlFilter() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   return \Drupal::service(Ckeditor5Hooks::class)->updateCkeditor5HtmlFilter($form, $form_state);
 }
 

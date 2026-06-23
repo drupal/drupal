@@ -550,7 +550,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @see https://www.drupal.org/node/3586362
    */
   protected function loadFromSharedTables(array &$values, array &$translations, $load_from_revision) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3586362');
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3586362');
     $record_key = !$load_from_revision ? $this->idKey : $this->revisionKey;
     if ($this->dataTable) {
       // If a revision table is available, we need all the properties of the

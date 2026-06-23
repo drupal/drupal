@@ -27,8 +27,8 @@ class FileReferencesDeprecationTest extends FileManagedUnitTestBase {
    * Tests basic file reference cases.
    */
   public function testFileReferences(): void {
-    $this->expectUserDeprecationMessage('file_get_file_references is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\Drupal\file\FileReferenceResolver::class)->getReferences($file) instead. See https://www.drupal.org/node/3573884');
-    $this->expectUserDeprecationMessage('file_field_find_file_reference_column is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3573884');
+    $this->expectUserDeprecationMessage('file_get_file_references() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\Drupal\file\FileReferenceResolver::class)->getReferences($file) instead. See https://www.drupal.org/node/3573884');
+    $this->expectUserDeprecationMessage('file_field_find_file_reference_column() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3573884');
 
     $this->enableModules(['node']);
     $this->installEntitySchema('node');

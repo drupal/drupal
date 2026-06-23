@@ -18,7 +18,7 @@ class ThemeAccessCheck implements AccessInterface {
    */
   public function __construct(protected $themes) {
     if (!is_array($themes)) {
-      @trigger_error('Passing ThemeHandlerInterface to ' . __METHOD__ . ' is deprecated in drupal::11.4.0 and is removed from drupal:12.0.0. Pass theme info from the "container.themes" container parameter instead. See https://www.drupal.org/project/drupal/issues/2538970');
+      @trigger_error('Passing ThemeHandlerInterface to ' . __METHOD__ . '() is deprecated in drupal::11.4.0 and is removed from drupal:12.0.0. Pass theme info from the "container.themes" container parameter instead. See https://www.drupal.org/project/drupal/issues/2538970');
       $this->themes = \Drupal::getContainer()->getParameter('container.themes');
     }
   }

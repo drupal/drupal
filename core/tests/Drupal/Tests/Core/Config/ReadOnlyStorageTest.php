@@ -111,7 +111,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
       $this->fail("exception not thrown");
     }
     catch (\BadMethodCallException $exception) {
-      $this->assertEquals(ReadOnlyStorage::class . '::' . $method . ' is not allowed on a ReadOnlyStorage', $exception->getMessage());
+      $this->assertEquals(ReadOnlyStorage::class . '::' . $method . '() is not allowed on a ReadOnlyStorage', $exception->getMessage());
     }
 
     // Assert that the memory storage has not been altered.
