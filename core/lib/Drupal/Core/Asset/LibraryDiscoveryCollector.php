@@ -198,7 +198,7 @@ class LibraryDiscoveryCollector extends CacheCollector implements LibraryDiscove
    * @see https://www.drupal.org/node/3462970
    */
   public function clearCachedDefinitions() {
-    @trigger_error(__METHOD__ . 'is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Use ::clear() instead. See https://www.drupal.org/node/3462970', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Use ::clear() instead. See https://www.drupal.org/node/3462970', E_USER_DEPRECATED);
     $this->clear();
   }
 

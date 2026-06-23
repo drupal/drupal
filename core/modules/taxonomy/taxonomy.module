@@ -36,7 +36,7 @@ use Drupal\taxonomy\Hook\TaxonomyThemeHooks;
  * @see https://www.drupal.org/node/3542527
  */
 function template_preprocess_taxonomy_term(&$variables): void {
-  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use \Drupal::service(TaxonomyThemeHooks::class)->preprocessTaxonomyTerm($variables); instead. See https://www.drupal.org/node/3542527', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use \Drupal::service(TaxonomyThemeHooks::class)->preprocessTaxonomyTerm($variables); instead. See https://www.drupal.org/node/3542527', E_USER_DEPRECATED);
   \Drupal::service(TaxonomyThemeHooks::class)->preprocessTaxonomyTerm($variables);
 }
 

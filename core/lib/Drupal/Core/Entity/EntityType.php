@@ -873,7 +873,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * {@inheritdoc}
    */
   public function setUriCallback($callback) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use link templates or a route provider to specify entity URIs. See https://www.drupal.org/node/3575062', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use link templates or a route provider to specify entity URIs. See https://www.drupal.org/node/3575062', E_USER_DEPRECATED);
     $this->uri_callback = $callback;
     return $this;
   }

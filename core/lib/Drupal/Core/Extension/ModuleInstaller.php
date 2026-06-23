@@ -113,7 +113,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
    * {@inheritdoc}
    */
   public function addUninstallValidator(ModuleUninstallValidatorInterface $uninstall_validator) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject the uninstall validators into the constructor instead. See https://www.drupal.org/node/3432595', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject the uninstall validators into the constructor instead. See https://www.drupal.org/node/3432595', E_USER_DEPRECATED);
   }
 
   /**

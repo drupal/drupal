@@ -109,7 +109,7 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
    * @see https://www.drupal.org/node/3573884
    */
   protected function getFileReferences(FileInterface $file) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\Drupal\file\FileReferenceResolver::class) instead. See https://www.drupal.org/node/3573884', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\Drupal\file\FileReferenceResolver::class) instead. See https://www.drupal.org/node/3573884', E_USER_DEPRECATED);
     return file_get_file_references($file, NULL, EntityStorageInterface::FIELD_LOAD_REVISION, NULL);
   }
 

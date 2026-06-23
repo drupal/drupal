@@ -343,7 +343,7 @@ class UserController extends ControllerBase {
    * @see https://www.drupal.org/node/3581062
    */
   protected function validatePathParameters(UserInterface $user, int $timestamp, string $hash, int $timeout = 0): bool {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\user\OneTimeAuthentication::verifyHmac() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\user\OneTimeAuthentication::verifyHmac() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
     return $this->oneTimeAuthentication->verifyHmac($user, $timestamp, $hash, $timeout);
   }
 

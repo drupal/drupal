@@ -467,28 +467,28 @@ final class CheckpointStorage implements CheckpointStorageInterface, EventSubscr
    * {@inheritdoc}
    */
   public function write($name, array $data): never {
-    throw new \BadMethodCallException(__METHOD__ . ' is not allowed on a CheckpointStorage');
+    throw new \BadMethodCallException(__METHOD__ . '() is not allowed on a CheckpointStorage');
   }
 
   /**
    * {@inheritdoc}
    */
   public function delete($name): never {
-    throw new \BadMethodCallException(__METHOD__ . ' is not allowed on a CheckpointStorage');
+    throw new \BadMethodCallException(__METHOD__ . '() is not allowed on a CheckpointStorage');
   }
 
   /**
    * {@inheritdoc}
    */
   public function rename($name, $new_name): never {
-    throw new \BadMethodCallException(__METHOD__ . ' is not allowed on a CheckpointStorage');
+    throw new \BadMethodCallException(__METHOD__ . '() is not allowed on a CheckpointStorage');
   }
 
   /**
    * {@inheritdoc}
    */
   public function deleteAll($prefix = ''): never {
-    throw new \BadMethodCallException(__METHOD__ . ' is not allowed on a CheckpointStorage');
+    throw new \BadMethodCallException(__METHOD__ . '() is not allowed on a CheckpointStorage');
   }
 
 }

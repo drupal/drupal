@@ -78,7 +78,7 @@ class ProcessField extends ProcessPluginBase implements ContainerFactoryPluginIn
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->fieldPluginManager = $field_plugin_manager;
     $this->migration = $migration;
-    @trigger_error(__CLASS__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533566', E_USER_DEPRECATED);
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3533566', E_USER_DEPRECATED);
   }
 
   /**

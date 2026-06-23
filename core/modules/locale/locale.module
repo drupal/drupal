@@ -440,7 +440,7 @@ function locale_is_translatable($langcode) {
  * @see https://www.drupal.org/node/3571594
  */
 function locale_system_file_system_settings_submit(&$form, FormStateInterface $form_state): void {
-  @trigger_error(__FUNCTION__ . 'is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3571594', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3571594', E_USER_DEPRECATED);
   if ($form['translation_path']['#default_value'] != $form_state->getValue('translation_path')) {
     \Drupal::service(LocaleSource::class)->clearSources();
   }
