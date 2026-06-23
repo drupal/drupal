@@ -14,6 +14,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests Drupal\Core\State\State.
@@ -242,8 +243,8 @@ class StateTest extends UnitTestCase {
     $this->setUpStateWithMockStorage();
 
     $this->keyValueStorage->expects($this->once())
-      ->method('set')
-      ->with('key', 'value');
+      ->method('setMultiple')
+      ->with(['key' => 'value']);
 
     $this->state->set('key', 'value');
     return $this->state;
@@ -281,6 +282,47 @@ class StateTest extends UnitTestCase {
 
     $this->state->setMultiple($values);
     return $this->state;
+  }
+
+  /**
+   * Tests setMultiple() method with different lock behavior.
+   */
+  #[TestWith([TRUE])]
+  #[TestWith([FALSE])]
+  public function testSetMultipleLock(bool $lock_acquired): void {
+    $this->keyValueStorage = $this->createMock(KeyValueStoreInterface::class);
+    $factory = $this->createMock(KeyValueFactoryInterface::class);
+    $factory->expects($this->once())
+      ->method('get')
+      ->with('state')
+      ->willReturn($this->keyValueStorage);
+    $lock = $this->createMock(LockBackendInterface::class);
+    $cache = $this->createMock(CacheBackendInterface::class);
+    if ($lock_acquired) {
+      $lock->expects($this->once())
+        ->method('acquire')
+        ->willReturn(TRUE);
+      $lock->expects($this->once())
+        ->method('release');
+      $cache->expects($this->once())
+        ->method('set');
+    }
+    else {
+      $lock->expects($this->exactly(2))
+        ->method('acquire')
+        ->willReturn(FALSE);
+      $cache->expects($this->exactly(2))
+        ->method('set');
+      $lock->expects($this->never())
+        ->method('release');
+    }
+    $state = new State($factory, $cache, $lock);
+    $values = ['key1' => 'value1', 'key2' => 'value2', 'key3' => 'value3'];
+    $this->keyValueStorage->expects($this->once())
+      ->method('setMultiple')
+      ->with($values);
+
+    $state->setMultiple($values);
   }
 
   /**

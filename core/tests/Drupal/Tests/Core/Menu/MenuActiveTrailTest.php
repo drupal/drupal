@@ -356,9 +356,6 @@ class MenuActiveTrailTest extends UnitTestCase {
       ->method('set')
       // Ensure we normalize the serialized data by sorting them.
       ->with('active-trail:route:baby_llama:route_parameters:' . serialize(['a' => 0, 'b' => 1]));
-    $this->lock
-      ->method('acquire')
-      ->willReturn(TRUE);
     $this->menuActiveTrail->destruct();
   }
 
