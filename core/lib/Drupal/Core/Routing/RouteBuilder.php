@@ -184,7 +184,7 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
    * @see https://www.drupal.org/node/3324758
    */
   protected function getRouteDefinitions() {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. This code has moved to \Drupal\Core\Routing\YamlRouteDiscovery. See https://www.drupal.org/node/3324758', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. This code has moved to \Drupal\Core\Routing\YamlRouteDiscovery. See https://www.drupal.org/node/3324758', E_USER_DEPRECATED);
     // Always instantiate a new YamlDiscovery object so that we always search on
     // the up-to-date list of modules.
     $discovery = new YamlDiscovery('routing', $this->moduleHandler->getModuleDirectories());

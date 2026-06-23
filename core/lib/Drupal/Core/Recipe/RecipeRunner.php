@@ -275,7 +275,7 @@ final class RecipeRunner {
    * @see https://www.drupal.org/node/3579527
    */
   public static function installModule(string $module, StorageInterface|Recipe $recipeConfigStorage, ?array &$context = NULL): void {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\Core\Recipe\RecipeRunner::installModules() instead. See https://www.drupal.org/node/3579527', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\Core\Recipe\RecipeRunner::installModules() instead. See https://www.drupal.org/node/3579527', E_USER_DEPRECATED);
     static::installModules([$module], $recipeConfigStorage, $context);
   }
 

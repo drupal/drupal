@@ -180,7 +180,7 @@ class CheckpointStorageTest extends UnitTestCase {
       $this->fail("exception not thrown");
     }
     catch (\BadMethodCallException $exception) {
-      $this->assertEquals(CheckpointStorage::class . '::' . $method . ' is not allowed on a CheckpointStorage', $exception->getMessage());
+      $this->assertEquals(CheckpointStorage::class . '::' . $method . '() is not allowed on a CheckpointStorage', $exception->getMessage());
     }
 
     // Assert that the memory storage has not been altered.

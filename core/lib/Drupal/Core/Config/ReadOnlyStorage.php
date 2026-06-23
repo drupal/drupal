@@ -49,21 +49,21 @@ class ReadOnlyStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function write($name, array $data) {
-    throw new \BadMethodCallException(__METHOD__ . ' is not allowed on a ReadOnlyStorage');
+    throw new \BadMethodCallException(__METHOD__ . '() is not allowed on a ReadOnlyStorage');
   }
 
   /**
    * {@inheritdoc}
    */
   public function delete($name) {
-    throw new \BadMethodCallException(__METHOD__ . ' is not allowed on a ReadOnlyStorage');
+    throw new \BadMethodCallException(__METHOD__ . '() is not allowed on a ReadOnlyStorage');
   }
 
   /**
    * {@inheritdoc}
    */
   public function rename($name, $new_name) {
-    throw new \BadMethodCallException(__METHOD__ . ' is not allowed on a ReadOnlyStorage');
+    throw new \BadMethodCallException(__METHOD__ . '() is not allowed on a ReadOnlyStorage');
   }
 
   /**
@@ -91,7 +91,7 @@ class ReadOnlyStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function deleteAll($prefix = '') {
-    throw new \BadMethodCallException(__METHOD__ . ' is not allowed on a ReadOnlyStorage');
+    throw new \BadMethodCallException(__METHOD__ . '() is not allowed on a ReadOnlyStorage');
   }
 
   /**

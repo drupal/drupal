@@ -73,7 +73,7 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
     $this->setCacheBackend($cache_backend, 'image_toolkit_operation_plugins');
 
     if ($logger instanceof LoggerInterface) {
-      @trigger_error('The $logger argument of ' . __METHOD__ . ' is deprecated in drupal:11.4.0 and the argument is removed from drupal:13.0.0. See https://www.drupal.org/node/3562304', E_USER_DEPRECATED);
+      @trigger_error('The $logger argument of ' . __METHOD__ . '() is deprecated in drupal:11.4.0 and the argument is removed from drupal:13.0.0. See https://www.drupal.org/node/3562304', E_USER_DEPRECATED);
       // @phpstan-ignore property.deprecated
       $this->logger = $logger;
       $this->toolkitManager = $toolkit_manager;

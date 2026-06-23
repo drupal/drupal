@@ -58,7 +58,7 @@ class AliasManager implements AliasManagerInterface {
    * @see https://www.drupal.org/node/3532412
    */
   public function setCacheKey($key) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3532412', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3532412', E_USER_DEPRECATED);
   }
 
   /**
@@ -69,7 +69,7 @@ class AliasManager implements AliasManagerInterface {
    * @see https://www.drupal.org/node/3532412
    */
   public function writeCache() {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3532412', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3532412', E_USER_DEPRECATED);
   }
 
   /**

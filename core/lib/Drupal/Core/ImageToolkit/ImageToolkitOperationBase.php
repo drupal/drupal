@@ -53,7 +53,7 @@ abstract class ImageToolkitOperationBase extends PluginBase implements ImageTool
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     if ($toolkit instanceof ImageToolkitInterface) {
-      @trigger_error('The $toolkit argument of ' . __METHOD__ . ' is deprecated in drupal:11.4.0 and the argument is removed from drupal:13.0.0. Use ::setToolkit() instead. See https://www.drupal.org/node/3562304', E_USER_DEPRECATED);
+      @trigger_error('The $toolkit argument of ' . __METHOD__ . '() is deprecated in drupal:11.4.0 and the argument is removed from drupal:13.0.0. Use ::setToolkit() instead. See https://www.drupal.org/node/3562304', E_USER_DEPRECATED);
       $this->toolkit = $toolkit;
       $this->logger = $logger;
     }
