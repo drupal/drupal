@@ -445,12 +445,17 @@ class ExtensionVersionTest extends UnitTestCase {
    *   as a single item array
    */
   protected static function createKeyedTestCases(array $test_arguments): array {
-    return array_combine(
+    $return = array_combine(
       $test_arguments,
       array_map(function ($test_argument) {
         return [$test_argument];
       }, $test_arguments)
     );
+    if (isset($return[''])) {
+      $return['empty_string'] = $return[''];
+      unset($return['']);
+    }
+    return $return;
   }
 
 }
