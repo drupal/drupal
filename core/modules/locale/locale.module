@@ -23,6 +23,7 @@ use Drupal\locale\LocaleFetch;
 use Drupal\locale\File\LocaleFileManager;
 use Drupal\locale\LocaleConfigBatch;
 use Drupal\locale\CurrentImportStorage;
+use Drupal\locale\Hook\LocaleFormHooks;
 use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleSource;
 
@@ -203,8 +204,15 @@ function locale_get_plural($count, $langcode = NULL) {
 
 /**
  * Updates default configuration when new modules or themes are installed.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service('locale.config_manager')->updateDefaultConfigLangcodes()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3595086
  */
 function locale_system_set_config_langcodes(): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service("locale.config_manager")->updateDefaultConfigLangcodes() instead. See https://www.drupal.org/node/3595086', E_USER_DEPRECATED);
   \Drupal::service('locale.config_manager')->updateDefaultConfigLangcodes();
 }
 
@@ -217,8 +225,14 @@ function locale_system_set_config_langcodes(): void {
  * @param array $components
  *   An array of arrays of component (theme and/or module) names to import
  *   translations for, indexed by type.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There
+ *   is no replacement.
+ *
+ * @see https://www.drupal.org/node/3595086
  */
 function locale_system_update(array $components): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3595086', E_USER_DEPRECATED);
   $components += ['module' => [], 'theme' => []];
   $list = array_merge($components['module'], $components['theme']);
 
@@ -265,8 +279,14 @@ function locale_system_update(array $components): void {
  * @param array $components
  *   An array of arrays of component (theme and/or module) names to import
  *   translations for, indexed by type.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There
+ *   is no replacement.
+ *
+ * @see https://www.drupal.org/node/3595086
  */
 function locale_system_remove($components): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3595086', E_USER_DEPRECATED);
   $components += ['module' => [], 'theme' => []];
   $list = array_merge($components['module'], $components['theme']);
   if (locale_translatable_language_list()) {
@@ -366,40 +386,32 @@ function locale_js_translate(array $files = [], $language_interface = NULL) {
  * Form submission handler for language_admin_add_form().
  *
  * Set a batch for a newly-added language.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleFormHooks::class)
+ *   ->formLanguageAdminAddFormAlterSubmit() instead.
+ *
+ * @see https://www.drupal.org/node/3595086
  */
 function locale_form_language_admin_add_form_alter_submit($form, FormStateInterface $form_state): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleFormHooks::class)->formLanguageAdminAddFormAlterSubmit() instead. See https://www.drupal.org/node/3595086', E_USER_DEPRECATED);
   \Drupal::moduleHandler()->loadInclude('locale', 'fetch.inc');
-  $options = LocaleDefaultOptions::updateOptions();
-
-  if ($form_state->isValueEmpty('predefined_langcode') || $form_state->getValue('predefined_langcode') == 'custom') {
-    $langcode = $form_state->getValue('langcode');
-  }
-  else {
-    $langcode = $form_state->getValue('predefined_langcode');
-  }
-
-  if (\Drupal::config('locale.settings')->get('translation.import_enabled')) {
-    // Download and import translations for the newly added language.
-    $batch = \Drupal::service(LocaleFetch::class)->buildUpdateBatch([], [$langcode], $options);
-    batch_set($batch);
-  }
-
-  // Create or update all configuration translations for this language. If we
-  // are adding English then we need to run this even if import is not enabled,
-  // because then we extract English sources from shipped configuration.
-  if (\Drupal::config('locale.settings')->get('translation.import_enabled') || $langcode == 'en') {
-    \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
-    if ($batch = \Drupal::service(LocaleConfigBatch::class)->buildBatch($options, [$langcode])) {
-      batch_set($batch);
-    }
-  }
+  \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+  \Drupal::service(LocaleFormHooks::class)->formLanguageAdminAddFormAlterSubmit($form, $form_state);
 }
 
 /**
  * Form submission handler for language_admin_edit_form().
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleFormHooks::class)
+ *   ->formLanguageAdminEditFormAlterSubmit() instead.
+ *
+ * @see https://www.drupal.org/node/3595086
  */
 function locale_form_language_admin_edit_form_alter_submit($form, FormStateInterface $form_state): void {
-  \Drupal::configFactory()->getEditable('locale.settings')->set('translate_english', intval($form_state->getValue('locale_translate_english')))->save();
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleFormHooks::class)->formLanguageAdminEditFormAlterSubmit() instead. See https://www.drupal.org/node/3595086', E_USER_DEPRECATED);
+  \Drupal::service(LocaleFormHooks::class)->formLanguageAdminEditFormAlterSubmit($form, $form_state);
 }
 
 /**
