@@ -3,5 +3,7 @@ type: module
 description: 'Defines a field type for telephone numbers.'
 package: Field types
 version: VERSION
+lifecycle: deprecated
+lifecycle_link: https://www.drupal.org/node/3223395#s-telephone
 dependencies:
   - drupal:field
