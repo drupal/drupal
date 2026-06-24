@@ -16,8 +16,8 @@
   position: absolute;
   max-width: 100%;
   margin-block-end: 0.15rem;
-  color: var(--gin-color-primary);
-  font-size: var(--font-size-xxs);
+  color: var(--admin-color-primary);
+  font-size: var(--admin-font-size-2xs);
   font-weight: bold;
   line-height: calc(18rem / 16);
   inset-inline-end: 0;
@@ -35,8 +35,8 @@
       content: "";
       animation: gin-throbber 1s linear infinite;
       text-align: end;
-      border: 2px solid var(--gin-bg-input);
-      border-block-start: 2px solid var(--gin-color-primary);
+      border: 2px solid var(--admin-color-bg-input);
+      border-block-start: 2px solid var(--admin-color-primary);
       border-radius: 50%;
       inset-block-start: 35px;
       inset-inline-end: 12px;
@@ -60,13 +60,13 @@
 
 /* <ul> dropdown */
 .ui-autocomplete {
-  color: var(--gin-color-text);
-  border-radius: 0 0 var(--gin-border-m) var(--gin-border-m);
-  background: var(--gin-bg-input);
+  color: var(--admin-color-text);
+  border-radius: 0 0 var(--admin-radius-m) var(--admin-radius-m);
+  background: var(--admin-color-bg-input);
 
   .ui-menu-item-wrapper.ui-state-active {
-    color: var(--gin-color-primary-hover);
-    background-color: var(--gin-bg-item-hover);
+    color: var(--admin-color-primary-hover);
+    background-color: var(--admin-color-bg-item-hover);
 
     @media (forced-colors: active) {
       outline: solid 2px transparent;
@@ -75,11 +75,11 @@
   }
 
   .ui-menu-item a {
-    color: var(--gin-color-text);
+    color: var(--admin-color-text);
 
     &:hover {
-      color: var(--gin-color-primary-hover);
-      background-color: var(--gin-bg-item-hover);
+      color: var(--admin-color-primary-hover);
+      background-color: var(--admin-color-bg-item-hover);
     }
   }
 }

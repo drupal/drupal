@@ -17,14 +17,14 @@
   cursor: pointer;
   border-radius: 50%;
   margin-block: 0.1rem 0;
-  margin-inline: 0.3rem var(--space-m);
+  margin-inline: 0.3rem var(--admin-space-m);
 
   &::before {
     display: block;
     width: 100%;
     height: 100%;
     content: "";
-    background-color: var(--gin-icon-color);
+    background-color: var(--admin-color-icon);
     mask-image: url("../../migration/media/icons/toolbar/help.svg");
     mask-repeat: no-repeat;
     mask-position: center center;
@@ -32,7 +32,7 @@
   }
 
   &:hover::before {
-    background-color: var(--gin-color-primary);
+    background-color: var(--admin-color-primary);
   }
 
   .field-group-details.help-icon__description-container & {
@@ -47,8 +47,8 @@
 
   :is(.system-modules, .system-modules-uninstall) .table-filter .form-type--search & {
     position: absolute;
-    inset-inline-end: calc(var(--space-xs) * -1);
-    inset-block-start: var(--space-m);
+    inset-inline-end: calc(var(--admin-space-xs) * -1);
+    inset-block-start: var(--admin-space-m);
   }
 }
 
@@ -73,10 +73,10 @@
   .field-group-fieldset > &,
   fieldset.media-library-widget &,
   .field--type-datetime fieldset & {
-    padding-inline-start: var(--space-m);
+    padding-inline-start: var(--admin-space-m);
 
     @media (--admin-small) {
-      padding-inline-start: var(--space-l);
+      padding-inline-start: var(--admin-space-l);
     }
   }
 }

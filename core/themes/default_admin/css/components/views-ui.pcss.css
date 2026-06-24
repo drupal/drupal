@@ -132,7 +132,7 @@
 
     &::before {
       content: "+";
-      font-size: var(--gin-font-size);
+      font-size: var(--admin-font-size-m);
       line-height: 0.1;
     }
   }
@@ -154,7 +154,7 @@
   }
 
   .container-inline .form-item {
-    margin-block: var(--gin-spacing-density-s);
+    margin-block: var(--admin-space-density-s);
   }
 
   .form-type-checkbox {
@@ -204,16 +204,16 @@
     .form-actions,
     .field-actions {
       margin-top: 0;
-      padding: var(--space-s) var(--space-m);
-      border-right: 1px solid var(--color-gray-200-o-80);
-      border-bottom: 1px solid var(--color-gray-200-o-80);
-      border-left: 1px solid var(--color-gray-200-o-80);
-      background-color: var(--color-gray-050);
+      padding: var(--admin-space-s) var(--admin-space-m);
+      border-right: 1px solid var(--admin-color-border);
+      border-bottom: 1px solid var(--admin-color-border);
+      border-left: 1px solid var(--admin-color-border);
+      background-color: var(--admin-color-bg-surface-nested);
     }
   }
 
   .label--separator.label--separator {
-    margin-inline: var(--space-xs);
+    margin-inline: var(--admin-space-xs);
   }
 
   /* Filter rearrange grouping */
@@ -238,7 +238,7 @@
     bottom: -13px;
     padding: 0.5px 6px;
     text-transform: uppercase;
-    border: 1px solid var(--color-gray-200);
+    border: 1px solid var(--admin-color-border);
     background: #fff;
     font-weight: bold;
     font-style: italic;
@@ -356,8 +356,8 @@
 
 .views-displays {
   padding-bottom: 36px;
-  border: 1px solid var(--gin-border-color);
-  border-radius: var(--gin-border-l);
+  border: 1px solid var(--admin-color-border);
+  border-radius: var(--admin-radius-l);
 }
 
 .views-display-top {
@@ -365,20 +365,20 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding-block: var(--gin-spacing-m) var(--gin-spacing-xs);
-  padding-inline: var(--space-s);
+  padding-block: var(--admin-space-m) var(--admin-space-xs);
+  padding-inline: var(--admin-space-s);
   border: 0 none;
-  border-radius: var(--gin-border-l);
-  background-color: var(--gin-bg-header);
+  border-radius: var(--admin-radius-l);
+  background-color: var(--admin-color-bg-header);
 
   .dropbutton-wrapper {
     inset-block-start: 20px;
-    inset-inline-end: var(--gin-spacing-l);
+    inset-inline-end: var(--admin-space-l);
   }
 }
 
 .edit-display-settings {
-  margin: var(--space-l) var(--space-l) 0 var(--space-l);
+  margin: var(--admin-space-l) var(--admin-space-l) 0 var(--admin-space-l);
 }
 
 .edit-display-settings-top.views-ui-display-tab-bucket {
@@ -386,7 +386,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: 0 0 var(--space-l);
+  margin: 0 0 var(--admin-space-l);
   padding: 0;
   border-bottom: none;
   line-height: 20px;
@@ -398,8 +398,8 @@
 
 .views-display-column {
   box-sizing: border-box;
-  border: 1px solid var(--color-gray-200-o-80);
-  border-radius: var(--base-border-radius);
+  border: 1px solid var(--admin-color-border);
+  border-radius: var(--admin-radius-2xs);
   box-shadow: var(--details-box-shadow);
 
   & + & {
@@ -432,11 +432,11 @@
 
   .unit-title {
     margin-block-start: 0;
-    margin-block-end: var(--gin-spacing-m);
+    margin-block-end: var(--admin-space-m);
     /* Duplicated from h1/h2/h3 styles in _body.scss (was @extend h2). */
     letter-spacing: -0.025em;
-    font-size: var(--gin-font-size-h2);
-    font-weight: var(--gin-font-weight-normal);
+    font-size: var(--admin-font-size-h2);
+    font-weight: var(--admin-font-weight-normal);
   }
 
   &.disabled {
@@ -458,8 +458,8 @@
 .views-ui-display-tab-bucket {
   position: relative;
   margin: 0;
-  padding-block: 0 var(--space-xs);
-  border-bottom: 1px solid var(--gin-border-color);
+  padding-block: 0 var(--admin-space-xs);
+  border-bottom: 1px solid var(--admin-color-border);
   line-height: 20px;
 
   &:last-of-type {
@@ -489,19 +489,19 @@
 
   .views-ui-display-tab-bucket__title {
     margin: 0;
-    padding: var(--gin-spacing-m);
+    padding: var(--admin-space-m);
     text-transform: none;
-    color: var(--gin-color-title);
-    font-size: var(--gin-font-size-xl);
-    font-weight: var(--gin-font-weight-semibold);
+    color: var(--admin-color-text-loud);
+    font-size: var(--admin-font-size-xl);
+    font-weight: var(--admin-font-weight-semibold);
   }
 
   .views-display-setting {
     display: flex;
     flex-wrap: wrap;
-    padding: var(--gin-spacing-xs) var(--gin-spacing-m);
-    color: var(--gin-color-text);
-    font-size: var(--font-size-s);
+    padding: var(--admin-space-xs) var(--admin-space-m);
+    color: var(--admin-color-text);
+    font-size: var(--admin-font-size-s);
   }
 
   .views-group-text {
@@ -510,7 +510,7 @@
 
   .dropbutton-wrapper {
     inset-block-start: 14px;
-    inset-inline-end: var(--gin-spacing-m);
+    inset-inline-end: var(--admin-space-m);
   }
 }
 
@@ -530,7 +530,7 @@
 }
 
 .views-display-setting .label {
-  margin-inline-end: var(--space-xs);
+  margin-inline-end: var(--admin-space-xs);
   white-space: nowrap;
 }
 
@@ -543,17 +543,17 @@
  */
 .edit-display-settings-top.views-ui-display-tab-bucket .dropbutton-wrapper {
   top: 0.8125rem;
-  inset-inline-end: var(--space-s);
+  inset-inline-end: var(--admin-space-s);
 }
 
 /* Styles on devices with touchevents. */
 html:not(.no-touchevents) {
   .views-ui-display-tab-bucket__header--actions {
-    padding: var(--space-l) var(--space-xs);
+    padding: var(--admin-space-l) var(--admin-space-xs);
   }
 
   .edit-display-settings-top.views-ui-display-tab-bucket {
-    padding: var(--space-m) var(--space-xs);
+    padding: var(--admin-space-m) var(--admin-space-xs);
   }
 }
 
@@ -589,7 +589,7 @@ html:not(.no-touchevents) {
     border-bottom: 0;
 
     &:first-of-type {
-      border-top: 0.0625rem solid var(--color-gray-200);
+      border-top: 0.0625rem solid var(--admin-color-border);
     }
 
     &:not(.draggable):hover {
@@ -619,7 +619,7 @@ html:not(.no-touchevents) {
     }
 
     &[rowspan] {
-      border: 1px solid var(--color-gray-200);
+      border: 1px solid var(--admin-color-border);
     }
   }
 
@@ -629,7 +629,7 @@ html:not(.no-touchevents) {
 
   .draggable td {
     vertical-align: middle;
-    border-bottom: 0.0625rem solid var(--color-gray-200);
+    border-bottom: 0.0625rem solid var(--admin-color-border);
   }
 
   .group-empty {
@@ -684,25 +684,25 @@ html:not(.no-touchevents) {
   }
 
   .form-item--view-args {
-    margin-top: var(--space-m);
+    margin-top: var(--admin-space-m);
   }
 
   .arguments-preview,
   .form-item--view-args {
-    margin-inline: var(--space-m);
+    margin-inline: var(--admin-space-m);
   }
 
   .form-item--live-preview {
     position: static !important;
     top: 0.6875rem;
-    inset-inline-end: var(--space-s);
-    margin-block-start: var(--gin-spacing-l);
+    inset-inline-end: var(--admin-space-s);
+    margin-block-start: var(--admin-space-l);
     margin-inline-start: 2px;
   }
 
   .preview-section {
-    padding: var(--gin-spacing-m);
-    border: 1px dashed var(--gin-border-color-layer2);
+    padding: var(--admin-space-m);
+    border: 1px dashed var(--admin-color-border);
   }
 
   .view-filters .preview-section {
@@ -739,14 +739,14 @@ html:not(.no-touchevents) {
   .section-title {
     display: inline-block;
     margin-block: 0;
-    color: var(--gin-color-text);
+    color: var(--admin-color-text);
     font-size: 13px;
     font-weight: normal;
     line-height: 1.6154;
   }
 
   .view > * {
-    margin-top: var(--space-m);
+    margin-top: var(--admin-space-m);
   }
 
   .preview-section {
@@ -765,7 +765,7 @@ html:not(.no-touchevents) {
   }
 
   .gin-layer-wrapper {
-    border-color: var(--gin-border-color);
+    border-color: var(--admin-color-border);
   }
 }
 
@@ -779,14 +779,15 @@ html:not(.no-touchevents) {
     margin: 10px 0;
     border-spacing: 1px;
     border-collapse: separate;
-    border-color: var(--color-bg);
+    /* Fills the 1px cell spacing as a subtle grid; was white (harsh in dark mode). */
+    border-color: var(--admin-color-bg-surface);
     border-radius: 7px;
 
     tr {
-      background-color: var(--gin-bg-layer2);
+      background-color: var(--admin-color-bg-surface-nested);
 
       td {
-        color: var(--gin-color-text);
+        color: var(--admin-color-text);
 
         &:last-child {
           border: 0;
@@ -796,8 +797,8 @@ html:not(.no-touchevents) {
 
     th,
     td {
-      padding: var(--space-xs) var(--space-l);
-      font-size: var(--font-size-s);
+      padding: var(--admin-space-xs) var(--admin-space-l);
+      font-size: var(--admin-font-size-s);
     }
   }
 }
@@ -854,7 +855,7 @@ html:not(.no-touchevents) {
 
   /* Form items */
   .form-item {
-    margin-block: var(--space-m);
+    margin-block: var(--admin-space-m);
   }
 
   .form-item-selected {
@@ -863,15 +864,15 @@ html:not(.no-touchevents) {
   }
 
   .form-item:first-of-type.description {
-    margin: 0 0 var(--space-l) 0;
-    padding-bottom: var(--space-s);
-    border-bottom: 0.0625rem solid var(--color-gray-200);
+    margin: 0 0 var(--admin-space-l) 0;
+    padding-bottom: var(--admin-space-s);
+    border-bottom: 0.0625rem solid var(--admin-color-border);
     font-weight: bold;
   }
 
   .form-item--fields-area-text-custom-removed {
     display: inline-block;
-    margin-inline-end: var(--gin-spacing-xxs);
+    margin-inline-end: var(--admin-space-2xs);
   }
 
   /* Form fields */
@@ -952,8 +953,8 @@ html:not(.no-touchevents) {
   /* Top offset banner */
   .views-offset-top:not(:empty) {
     position: relative;
-    padding: var(--space-s) var(--space-m) var(--space-xs);
-    background-color: var(--color-gray-050);
+    padding: var(--admin-space-s) var(--admin-space-m) var(--admin-space-xs);
+    background-color: var(--admin-color-bg-surface-nested);
 
     &::after {
       position: absolute;
@@ -973,13 +974,13 @@ html:not(.no-touchevents) {
 
     .form-item {
       max-width: 40%;
-      margin: 0 var(--space-s) var(--space-s) 0;
+      margin: 0 var(--admin-space-s) var(--admin-space-s) 0;
     }
   }
 
   /* Misc */
   .tabledrag-toggle-weight-wrapper {
-    margin: 0 0 var(--space-m) 0;
+    margin: 0 0 var(--admin-space-m) 0;
   }
 
   details .item-list {
@@ -988,7 +989,7 @@ html:not(.no-touchevents) {
 
   .views-override:not(:empty) {
     border-block-end: 0 none;
-    background-color: var(--gin-bg-app);
+    background-color: var(--admin-color-bg);
   }
 
   .views-filterable-options {
@@ -1067,13 +1068,13 @@ details.fieldset-no-legend {
 }
 
 .views-display-top__extra-actions-wrapper {
-  margin: 0 var(--space-xs);
+  margin: 0 var(--admin-space-xs);
 }
 
 /* @group Attachment details */
 
 #edit-display-settings-title {
-  color: var(--color-blue-400);
+  color: var(--admin-color-primary);
 }
 
 #edit-displays {
@@ -1085,7 +1086,7 @@ details.fieldset-no-legend {
 
 .edit-display-settings {
   margin: 0;
-  padding: var(--gin-spacing-l);
+  padding: var(--admin-space-l);
 }
 
 /* @group Attachment details tabs
@@ -1102,7 +1103,7 @@ details.fieldset-no-legend {
   overflow: visible;
   flex-wrap: wrap;
   margin: 0;
-  margin-inline-end: var(--space-l);
+  margin-inline-end: var(--admin-space-l);
   padding: 0;
   list-style: none;
   text-align: end;
@@ -1140,20 +1141,20 @@ details.fieldset-no-legend {
 
   a {
     display: inline-block;
-    padding: var(--gin-spacing-xs) var(--gin-spacing-m);
+    padding: var(--admin-space-xs) var(--admin-space-m);
     border: var(--input-border-size) solid #cbcbcb;
     border-radius: 7px;
     font-size: small;
     line-height: 1.3333;
 
     &.views-display-disabled-link {
-      padding-inline-start: var(--gin-spacing-l);
+      padding-inline-start: var(--admin-space-l);
 
       &::before {
         display: inline-block;
-        width: var(--gin-spacing-l);
-        height: var(--gin-spacing-s);
-        margin-inline-start: calc(var(--gin-spacing-m) * -1);
+        width: var(--admin-space-l);
+        height: var(--admin-space-s);
+        margin-inline-start: calc(var(--admin-space-m) * -1);
         content: "";
         background-color: currentColor;
         mask-image: var(--admin-icon-hide);
@@ -1180,13 +1181,13 @@ details.fieldset-no-legend {
   }
 
   li a {
-    padding: var(--gin-spacing-xs) var(--gin-spacing-m);
-    color: var(--gin-color-primary);
-    border: 2px solid var(--gin-color-primary);
-    border-radius: var(--gin-border-xs);
+    padding: var(--admin-space-xs) var(--admin-space-m);
+    color: var(--admin-color-primary);
+    border: 2px solid var(--admin-color-primary);
+    border-radius: var(--admin-radius-xs);
     background: transparent;
-    font-size: var(--gin-font-size-xs);
-    font-weight: var(--gin-font-weight-heavy);
+    font-size: var(--admin-font-size-xs);
+    font-weight: var(--admin-font-weight-heavy);
 
     .icon.add {
       display: block;
@@ -1196,46 +1197,46 @@ details.fieldset-no-legend {
   li a:hover,
   li.is-active a,
   li.is-active a.is-active {
-    color: var(--gin-bg-app);
+    color: var(--admin-color-bg);
     border-color: transparent;
-    background: var(--gin-color-primary);
+    background: var(--admin-color-primary);
   }
 
   .add {
     position: relative;
 
     a {
-      padding: var(--gin-spacing-xs) var(--gin-spacing-m);
-      color: var(--gin-color-primary);
-      border: 2px solid var(--gin-color-primary);
-      border-radius: var(--gin-border-xs);
+      padding: var(--admin-space-xs) var(--admin-space-m);
+      color: var(--admin-color-primary);
+      border: 2px solid var(--admin-color-primary);
+      border-radius: var(--admin-radius-xs);
       background: transparent;
-      font-size: var(--gin-font-size-xs);
-      font-weight: var(--gin-font-weight-heavy);
+      font-size: var(--admin-font-size-xs);
+      font-weight: var(--admin-font-weight-heavy);
 
       &:hover,
       &:focus {
-        color: var(--gin-bg-app);
+        color: var(--admin-color-bg);
         border-color: transparent;
-        background: var(--gin-color-primary);
+        background: var(--admin-color-primary);
       }
 
       &:focus {
         outline: none;
         box-shadow:
-          0 0 0 1px var(--gin-color-focus-border),
-          0 0 0 4px var(--gin-color-focus);
+          0 0 0 1px var(--admin-color-focus-border),
+          0 0 0 4px var(--admin-color-focus);
       }
     }
 
     &.open a {
-      color: var(--gin-color-primary);
-      background: var(--gin-bg-layer2);
+      color: var(--admin-color-primary);
+      background: var(--admin-color-bg-surface-nested);
 
       &:hover,
       &:focus,
       &:active {
-        color: var(--gin-color-primary);
+        color: var(--admin-color-primary);
       }
     }
 
@@ -1249,8 +1250,8 @@ details.fieldset-no-legend {
     position: absolute;
     z-index: 50;
     margin: 0;
-    background: var(--gin-bg-layer3);
-    box-shadow: 0 1px 2px var(--gin-shadow-button);
+    background: var(--admin-color-bg-raised);
+    box-shadow: 0 1px 2px var(--admin-color-shadow-button);
     inset-block-start: 36px;
     inset-inline-start: -2px;
 
@@ -1273,18 +1274,18 @@ details.fieldset-no-legend {
       &:active {
         &,
         input.button {
-          color: var(--gin-color-button-text);
-          background: var(--gin-color-primary);
+          color: var(--admin-color-text-on-primary);
+          background: var(--admin-color-primary);
         }
       }
     }
 
     li:first-child {
       border-width: 1px 1px 0;
-      border-radius: 0 var(--base-border-radius) 0 0; /* LTR */
+      border-radius: 0 var(--admin-radius-2xs) 0 0; /* LTR */
 
       &:dir(rtl) {
-        border-radius: 0 0 0 var(--base-border-radius);
+        border-radius: 0 0 0 var(--admin-radius-2xs);
       }
     }
   }
@@ -1294,14 +1295,14 @@ details.fieldset-no-legend {
 .views-displays .action-list li:last-child {
   padding-bottom: 0.4rem;
   border-width: 0 1px 1px;
-  border-bottom-right-radius: var(--gin-border-l);
-  border-bottom-left-radius: var(--gin-border-l);
+  border-bottom-right-radius: var(--admin-radius-l);
+  border-bottom-left-radius: var(--admin-radius-l);
 }
 
 .views-tabs__action-list-button {
   width: 100%;
   margin: 0;
-  padding: var(--space-s) var(--space-l);
+  padding: var(--admin-space-s) var(--admin-space-l);
   text-align: left;
   border: medium none;
   border-radius: 0;
@@ -1310,8 +1311,10 @@ details.fieldset-no-legend {
 
   &.button:hover,
   &.button:focus {
-    color: var(--color-white);
-    background-color: var(--color-absolutezero);
+    /* Fixed white: text on the blue (--admin-color-link) button fill — readable
+       in both modes, so not a mode-aware surface token. */
+    color: var(--admin-color-white);
+    background-color: var(--admin-color-link);
   }
 
   /* Remove outline provided by default styling */
@@ -1353,22 +1356,22 @@ details.fieldset-no-legend {
   justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
-  padding-block: var(--gin-spacing-m) var(--gin-spacing-xs);
+  padding-block: var(--admin-space-m) var(--admin-space-xs);
   padding-inline: 0;
 
   .views-ui-display-tab-bucket__title {
-    padding: 0 var(--gin-spacing-m);
+    padding: 0 var(--admin-space-m);
   }
 
   .views-ui-display-tab-bucket__actions {
-    margin-inline-start: var(--space-xs);
-    margin-inline-end: var(--gin-spacing-m);
+    margin-inline-start: var(--admin-space-xs);
+    margin-inline-end: var(--admin-space-m);
   }
 }
 
 .views-ui-display-tab-actions {
   .views-ui-display-tab-setting {
-    padding: var(--gin-spacing-m);
+    padding: var(--admin-space-m);
   }
 }
 
@@ -1398,19 +1401,19 @@ details.fieldset-no-legend {
  */
 .views-config-group-region {
   display: table;
-  margin: var(--space-l) 0;
-  border: 0.0625rem solid var(--color-gray-200);
+  margin: var(--admin-space-l) 0;
+  border: 0.0625rem solid var(--admin-color-border);
   border-collapse: collapse;
 
   .views-group-box {
     position: relative;
     display: table-cell;
-    padding: var(--space-l);
-    border: 0.0625rem solid var(--color-gray-200);
+    padding: var(--admin-space-l);
+    border: 0.0625rem solid var(--admin-color-border);
   }
 
   .views-group-box--operator {
-    padding-inline-end: var(--space-xxl);
+    padding-inline-end: var(--admin-space-2xl);
     border-inline-end-width: 0;
   }
 
@@ -1419,7 +1422,7 @@ details.fieldset-no-legend {
     border-inline-start-width: 0;
 
     > .form-item {
-      margin-inline: var(--space-xxl) var(--space-l);
+      margin-inline: var(--admin-space-2xl) var(--admin-space-l);
 
       &::before {
         position: absolute;
@@ -1428,23 +1431,23 @@ details.fieldset-no-legend {
         width: 0.0625rem;
         height: 100%;
         content: "";
-        border-inline-start: 0.0625rem solid var(--color-gray-200);
+        border-inline-start: 0.0625rem solid var(--admin-color-border);
       }
 
       &::after {
         position: absolute;
         z-index: 1;
         top: 3.8rem;
-        inset-inline-start: calc(var(--space-m) * -1);
+        inset-inline-start: calc(var(--admin-space-m) * -1);
         padding-block: 0 0.3rem;
         padding-inline: 0.4rem 0.3rem;
         content: ">";
-        color: var(--color-gray-600);
-        border: 0.0625rem solid var(--color-gray-200);
+        color: var(--admin-color-text-soft);
+        border: 0.0625rem solid var(--admin-color-border);
         background: #fff;
-        font-size: var(--font-size-h1);
+        font-size: var(--admin-font-size-h1);
         font-weight: bold;
-        line-height: var(--font-size-h1);
+        line-height: var(--admin-font-size-h1);
       }
     }
   }
@@ -1452,14 +1455,14 @@ details.fieldset-no-legend {
 
 .views-display-column,
 .edit-display-settings-top.views-ui-display-tab-bucket {
-  margin-block-end: var(--gin-spacing-m);
-  border-color: var(--gin-border-color);
-  border-radius: var(--gin-border-m);
+  margin-block-end: var(--admin-space-m);
+  border-color: var(--admin-color-border);
+  border-radius: var(--admin-radius-m);
   box-shadow: none;
 }
 
 a.views-field-excluded {
-  color: var(--gin-color-disabled);
+  color: var(--admin-color-text-disabled);
 }
 
 .views-filterable-options {
@@ -1472,7 +1475,7 @@ a.views-field-excluded {
 
 .views-display-columns {
   display: grid;
-  gap: var(--space-xl);
+  gap: var(--admin-space-xl);
 
   .details-wrapper {
     margin: 0;
@@ -1489,7 +1492,7 @@ a.views-field-excluded {
 .locale-translation-status-form {
   tr.even,
   tr.odd {
-    border-block-start: 1px solid var(--gin-border-color);
+    border-block-start: 1px solid var(--admin-color-border);
     border-block-end: none;
     background: none;
   }
@@ -1497,7 +1500,7 @@ a.views-field-excluded {
 
 .system-modules td {
   height: auto;
-  padding: var(--gin-spacing-m);
+  padding: var(--admin-space-m);
 
   details summary {
     background-color: transparent;
@@ -1505,15 +1508,15 @@ a.views-field-excluded {
 }
 
 .machine-name-label {
-  color: var(--gin-color-text);
+  color: var(--admin-color-text);
 }
 
 .machine-name-value {
-  color: var(--gin-color-title);
+  color: var(--admin-color-text-loud);
 }
 
 .view-header {
-  margin-block-end: var(--gin-spacing-l);
+  margin-block-end: var(--admin-space-l);
 }
 
 .form-item--options-value-all {

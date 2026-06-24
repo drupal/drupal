@@ -4,7 +4,7 @@
  */
 
 :root {
-  --card-list-spacing: var(--space-m);
+  --card-list-spacing: var(--admin-space-m);
   --cards-two-cols-width: calc(((100% + var(--card-list-spacing)) / 2) - var(--card-list-spacing));
   --cards-three-cols-width: calc(((100% + var(--card-list-spacing)) / 3) - var(--card-list-spacing));
   --cards-four-cols-width: calc(((100% + var(--card-list-spacing)) / 4) - var(--card-list-spacing));

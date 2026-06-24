@@ -13,19 +13,19 @@
 .help {
   max-width: 64rem;
   margin: 0;
-  font-size: var(--gin-font-size-s);
+  font-size: var(--admin-font-size-s);
 
   &:has(*:not(.region-help)) {
-    margin-block-end: var(--gin-spacing-m);
+    margin-block-end: var(--admin-space-m);
   }
 
   p {
     margin: 0 0 0.625rem;
-    color: var(--gin-color-text-light);
+    color: var(--admin-color-text-soft);
   }
 }
 
 #edit-help {
-  color: var(--gin-color-text-light);
-  font-size: var(--gin-font-size-s);
+  color: var(--admin-color-text-soft);
+  font-size: var(--admin-font-size-s);
 }

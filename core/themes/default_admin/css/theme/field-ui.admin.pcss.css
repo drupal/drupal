@@ -7,7 +7,7 @@
 .field-ui-overview {
   /* Extra specificity to override tabledrag CSS. */
   &[class] td {
-    padding-block: var(--gin-spacing-s);
+    padding-block: var(--admin-space-s);
   }
 
   .region-title td {
@@ -28,19 +28,19 @@
 
   align-items: baseline;
   padding: 0;
-  border: 1px solid var(--gin-border-color);
-  border-radius: var(--gin-border-m);
+  border: 1px solid var(--admin-color-border);
+  border-radius: var(--admin-radius-m);
   background-color: transparent;
-  gap: var(--gin-spacing-m);
+  gap: var(--admin-space-m);
 
   .field-option__thumb {
     border-radius: 0;
-    background-color: var(--gin-bg-layer2);
-    border-start-start-radius: var(--gin-border-s);
-    border-end-start-radius: var(--gin-border-s);
+    background-color: var(--admin-color-bg-surface-nested);
+    border-start-start-radius: var(--admin-radius-s);
+    border-end-start-radius: var(--admin-radius-s);
 
     .add-field-container & {
-      background-color: var(--gin-bg-layer2);
+      background-color: var(--admin-color-bg-surface-nested);
     }
   }
 
@@ -53,28 +53,28 @@
   }
 
   .field-option__words {
-    padding-block: var(--gin-spacing-s);
+    padding-block: var(--admin-space-s);
 
     .field-option__label {
       display: block;
-      margin-block-end: var(--gin-spacing-xxs);
-      font-weight: var(--gin-font-weight-semibold);
+      margin-block-end: var(--admin-space-2xs);
+      font-weight: var(--admin-font-weight-semibold);
     }
   }
 
   .field-option__item {
     column-gap: 0;
-    padding-block: var(--gin-spacing-s);
+    padding-block: var(--admin-space-s);
 
     .form-item__label {
-      margin-block-end: var(--gin-spacing-xxs);
-      font-weight: var(--gin-font-weight-semibold);
+      margin-block-end: var(--admin-space-2xs);
+      font-weight: var(--admin-font-weight-semibold);
     }
   }
 
   .field-option__description {
-    color: var(--gin-color-text-light);
-    font-size: var(--gin-font-size-xs);
+    color: var(--admin-color-text-soft);
+    font-size: var(--admin-font-size-xs);
     line-height: 1.3;
   }
 
@@ -85,10 +85,10 @@
   &.selected,
   &:focus-within,
   &:has(.field-option-radio:checked) {
-    background-color: var(--gin-bg-layer2);
+    background-color: var(--admin-color-bg-surface-nested);
 
     .field-option__thumb {
-      background-color: var(--gin-color-primary);
+      background-color: var(--admin-color-primary);
     }
 
     .field-option__icon {
@@ -103,7 +103,7 @@
   &:focus-within,
   &:focus-within:has(.field-option-radio:checked) {
     .field-option__thumb {
-      background-color: var(--gin-color-primary-active);
+      background-color: var(--admin-color-primary-active);
     }
   }
 }
@@ -111,8 +111,8 @@
 /* 'Manage form display' and 'Manage display' overview */
 .field-plugin-summary {
   float: inline-start;
-  color: var(--gin-color-text-light);
-  font-size: var(--gin-font-size-xs);
+  color: var(--admin-color-text-soft);
+  font-size: var(--admin-font-size-xs);
 }
 
 .field-plugin-summary-cell .warning {
@@ -136,7 +136,7 @@
 }
 
 .field-plugin-settings-edit {
-  width: var(--space-m);
+  width: var(--admin-space-m);
   margin: 0;
   padding: 1px 8px;
 }
@@ -153,19 +153,19 @@
   /* Settings editing subform. */
   &.draggable,
   &.draggable.drag-previous {
-    background: var(--gin-bg-app);
+    background: var(--admin-color-bg);
   }
 }
 
 .field-plugin-settings-edit-form {
-  margin-block-start: var(--gin-spacing-xs);
+  margin-block-start: var(--admin-space-xs);
 
   .form-item {
-    margin-block: var(--gin-spacing-m);
+    margin-block: var(--admin-space-m);
   }
 
   .form-boolean-group .form-item {
-    margin-block: var(--gin-spacing-xs);
+    margin-block: var(--admin-space-xs);
   }
 
   .plugin-name {
@@ -212,7 +212,7 @@
 
 .field-ui-secondary-text {
   margin-block-start: 0;
-  color: var(--color-gray-600);
+  color: var(--admin-color-text-soft);
   font-size: 0.75rem;
   font-weight: 400;
 }
@@ -234,27 +234,27 @@
   display: inline-block;
   padding: 0.25rem 0.75rem;
   letter-spacing: 0.025em;
-  color: var(--color-gray-700);
-  border: 1px solid var(--color-gray-300);
+  color: var(--admin-color-text-soft);
+  border: 1px solid var(--admin-color-border);
   border-radius: 0.75rem;
-  background-color: var(--color-white);
+  background-color: var(--admin-color-bg-surface);
   font-size: 0.75rem;
   font-weight: 600;
   line-height: 1;
 }
 
 .subfield-option {
-  border: 1px solid var(--gin-border-color);
-  border-radius: var(--gin-border-m);
+  border: 1px solid var(--admin-color-border);
+  border-radius: var(--admin-radius-m);
 
   .item-list {
-    margin-block-start: var(--gin-spacing-xs);
-    color: var(--gin-color-text-light);
-    font-size: var(--gin-font-size-xs);
+    margin-block-start: var(--admin-space-xs);
+    color: var(--admin-color-text-soft);
+    font-size: var(--admin-font-size-xs);
   }
 
   &.selected,
   &:focus-within {
-    background-color: var(--gin-bg-layer2);
+    background-color: var(--admin-color-bg-surface-nested);
   }
 }

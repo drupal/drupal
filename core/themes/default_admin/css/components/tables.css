@@ -11,19 +11,19 @@
  */
 
 table {
-  --cell-padding-y: var(--gin-spacing-density-m);
-  --cell-padding-x: var(--gin-spacing-m);
+  --cell-padding-y: var(--admin-space-density-m);
+  --cell-padding-x: var(--admin-space-m);
 
   width: 100%;
-  margin-block: var(--space-l);
+  margin-block: var(--admin-space-l);
   border-collapse: collapse;
 
   thead {
-    border-radius: var(--gin-border-m);
+    border-radius: var(--admin-radius-m);
     background: transparent;
 
     tr {
-      border-block-end: 2px solid var(--gin-border-color-table-header);
+      border-block-end: 2px solid var(--admin-color-border-loud);
 
       &:hover {
         background: transparent;
@@ -32,19 +32,19 @@ table {
   }
 
   th {
-    background: var(--gin-bg-layer);
-    font-size: var(--gin-font-size-s);
-    font-weight: var(--gin-font-weight-bold);
+    background: var(--admin-color-bg-surface);
+    font-size: var(--admin-font-size-s);
+    font-weight: var(--admin-font-weight-bold);
 
     &,
     .form-item__label {
-      color: var(--gin-color-title);
+      color: var(--admin-color-text-loud);
     }
   }
 
   tbody {
     tr {
-      border-block-end: 1px solid var(--gin-border-color-table);
+      border-block-end: 1px solid var(--admin-color-border-table);
     }
 
     td {
@@ -56,12 +56,12 @@ table {
   tr,
   tr:focus-within,
   .draggable-table.tabledrag-disabled tr {
-    color: var(--gin-color-text);
+    color: var(--admin-color-text);
     background-color: transparent;
 
     &:hover {
-      color: var(--gin-color-text);
-      background: var(--gin-bg-item);
+      color: var(--admin-color-text);
+      background: var(--admin-color-bg-item);
     }
 
     &.selected:hover {
@@ -75,7 +75,7 @@ table {
     }
 
     td {
-      background-color: var(--gin-bg-item-hover);
+      background-color: var(--admin-color-bg-item-hover);
     }
   }
 
@@ -87,12 +87,12 @@ table {
       &:hover {
         -webkit-text-decoration: underline;
         text-decoration: underline;
-        text-decoration-style: var(--gin-link-decoration-style);
+        text-decoration-style: var(--admin-link-decoration-style);
       }
     }
 
     .group-label {
-      color: var(--gin-color-title);
+      color: var(--admin-color-text-loud);
     }
   }
 
@@ -102,8 +102,8 @@ table {
     visibility: hidden;
     overflow: hidden;
     width: auto !important;
-    margin-block-start: calc(var(--gin-spacing-xs) * -1);
-    inset-block-start: calc(var(--gin-toolbar-y-offset) + var(--gin-height-sticky) - 1px);
+    margin-block-start: calc(var(--admin-space-xs) * -1);
+    inset-block-start: calc(var(--admin-theme-toolbar-y-offset) + var(--admin-theme-height-sticky) - 1px);
 
     tr {
       display: block;
@@ -145,11 +145,11 @@ caption {
 th {
   position: relative;
   box-sizing: border-box;
-  height: var(--space-xxl);
-  padding: var(--space-xs) var(--space-m);
+  height: var(--admin-space-2xl);
+  padding: var(--admin-space-xs) var(--admin-space-m);
   text-align: start;
-  color: var(--color-text);
-  background: var(--color-gray-050);
+  color: var(--admin-color-text);
+  background: var(--admin-color-bg-surface-nested);
   line-height: 1.25rem;
   /* 20px */
 }
@@ -157,18 +157,18 @@ th {
 table th {
   @media (min-width: 61em) {
     height: auto;
-    padding: var(--gin-spacing-m);
+    padding: var(--admin-space-m);
   }
 }
 
 /* The actual sort link. */
 
 .sortable-heading {
-  padding: var(--gin-spacing-xs) var(--gin-spacing-m);
+  padding: var(--admin-space-xs) var(--admin-space-m);
 
   & > a {
     display: block;
-    padding-block: var(--space-xs);
+    padding-block: var(--admin-space-xs);
     padding-inline: 0 1.5rem;
     -webkit-text-decoration: none;
     text-decoration: none;
@@ -210,7 +210,7 @@ table th {
       margin-block-start: -0.5rem;
       content: "";
       opacity: 0.5;
-      background: var(--gin-color-text-light);
+      background: var(--admin-color-text-soft);
       background-size: contain;
       mask-image: var(--admin-icon-sort);
       mask-repeat: no-repeat;
@@ -235,14 +235,14 @@ table th {
   }
 
   &.is-active > a {
-    color: var(--color-absolutezero);
+    color: var(--admin-color-link);
 
     &::before {
-      /* border-bottom: 0.1875rem solid var(--color-absolutezero); */
-      border-block-end: 0.1875rem solid var(--gin-color-primary-active);
-      background-color: var(--gin-bg-item);
-      border-start-start-radius: var(--gin-border-s);
-      border-start-end-radius: var(--gin-border-s);
+      /* border-bottom: 0.1875rem solid var(--admin-color-link); */
+      border-block-end: 0.1875rem solid var(--admin-color-primary-active);
+      background-color: var(--admin-color-bg-item);
+      border-start-start-radius: var(--admin-radius-s);
+      border-start-end-radius: var(--admin-radius-s);
     }
 
     &::after {
@@ -252,7 +252,7 @@ table th {
     &,
     &:hover,
     &:active {
-      color: var(--gin-color-primary-active);
+      color: var(--admin-color-primary-active);
     }
   }
 
@@ -264,31 +264,31 @@ table th {
 }
 
 tr {
-  border-bottom: 0.0625rem solid var(--color-gray-200);
+  border-bottom: 0.0625rem solid var(--admin-color-border);
 
   &:hover,
   &:focus-within {
-    color: var(--color-text);
-    background: var(--color-bgblue-hover);
+    color: var(--admin-color-text);
+    background: var(--admin-color-bg-item-hover);
   }
 
   &.color-warning:hover,
   &.color-warning:focus {
-    color: var(--color-text);
+    color: var(--admin-color-text);
     background: #fdf8ed;
   }
 
   &.color-error:hover,
   &.color-error:focus {
-    color: var(--color-text);
+    color: var(--admin-color-text);
     background: #fcf4f2;
   }
 }
 
 tr,
 .draggable-table.tabledrag-disabled tr {
-  color: var(--color-text);
-  background: var(--color-white);
+  color: var(--admin-color-text);
+  background: var(--admin-color-bg-disabled);
 }
 
 thead tr {
@@ -298,7 +298,7 @@ thead tr {
 td {
   box-sizing: border-box;
   height: 4rem;
-  padding: var(--space-xs) var(--space-m);
+  padding: var(--admin-space-xs) var(--admin-space-m);
   text-align: start;
 
   & .item-list ul {
@@ -322,12 +322,12 @@ td {
   }
 
   & > .form-item > .form-item__prefix {
-    margin-inline-end: var(--space-xs);
+    margin-inline-end: var(--admin-space-xs);
     white-space: nowrap;
   }
 
   & > .form-item > .form-item__suffix {
-    margin-inline-start: var(--space-xs);
+    margin-inline-start: var(--admin-space-xs);
     white-space: nowrap;
   }
 
@@ -350,7 +350,7 @@ td {
 /* Win over table-file-multiple-widget. */
 
 th.is-disabled.is-disabled {
-  color: var(--input--disabled-fg-color);
+  color: var(--admin-color-text-disabled);
 }
 
 /* Force browsers to calculate the width of a 'select all' <th> element. */
@@ -377,7 +377,9 @@ tfoot {
     }
 
     &:first-child td {
-      border-top: 0.0625rem solid var(--color-gray-500);
+      /* Intentionally a stronger divider than --admin-color-border; kept on the
+         gray ramp so it isn't lightened to the default border tint. */
+      border-top: 0.0625rem solid var(--admin-color-gray-500);
     }
   }
 }
@@ -412,12 +414,12 @@ td.priority-medium {
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;
-  margin-block-start: calc(var(--gin-spacing-xs) * -1);
+  margin-block-start: calc(var(--admin-space-xs) * -1);
 }
 
 .gin-horizontal-scroll-shadow {
-  background-color: var(--gin-bg-layer);
-  background-image: linear-gradient(to right, var(--gin-bg-layer), var(--gin-bg-layer)), linear-gradient(to right, var(--gin-bg-layer), var(--gin-bg-layer)), linear-gradient(to right, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0)), linear-gradient(to left, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0));
+  background-color: var(--admin-color-bg-surface);
+  background-image: linear-gradient(to right, var(--admin-color-bg-surface), var(--admin-color-bg-surface)), linear-gradient(to right, var(--admin-color-bg-surface), var(--admin-color-bg-surface)), linear-gradient(to right, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0)), linear-gradient(to left, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0));
   background-repeat: no-repeat;
   background-attachment: local, local, scroll, scroll;
   background-position:
@@ -432,7 +434,7 @@ td.priority-medium {
     0.75rem 100%;
 
   &:dir(rtl) {
-    background-image: linear-gradient(to left, var(--gin-bg-layer), var(--gin-bg-layer)), linear-gradient(to left, var(--gin-bg-layer), var(--gin-bg-layer)), linear-gradient(to left, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0)), linear-gradient(to right, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0));
+    background-image: linear-gradient(to left, var(--admin-color-bg-surface), var(--admin-color-bg-surface)), linear-gradient(to left, var(--admin-color-bg-surface), var(--admin-color-bg-surface)), linear-gradient(to left, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0)), linear-gradient(to right, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0));
     background-position:
       right center,
       left center,
@@ -442,7 +444,7 @@ td.priority-medium {
 }
 
 .tablesort {
-  background-color: var(--gin-color-primary-active);
+  background-color: var(--admin-color-primary-active);
   background-image: none;
   mask-image: var(--admin-icon-sort);
   mask-repeat: no-repeat;
@@ -474,13 +476,13 @@ td.priority-medium {
 }
 
 .region-title {
-  border-block-end: 2px solid var(--gin-color-text);
+  border-block-end: 2px solid var(--admin-color-text);
 }
 
 .field-multiple-table {
   th {
-    padding-block: var(--gin-spacing-xs);
-    padding-inline: var(--gin-spacing-l) var(--gin-spacing-m);
+    padding-block: var(--admin-space-xs);
+    padding-inline: var(--admin-space-l) var(--admin-space-m);
     border-block-end: 0;
     background: transparent;
 
@@ -492,18 +494,18 @@ td.priority-medium {
 
   thead {
     th {
-      background: var(--gin-bg-header);
+      background: var(--admin-color-bg-header);
 
       &:first-of-type {
-        border-start-start-radius: var(--gin-border-m);
-        border-end-start-radius: var(--gin-border-m);
+        border-start-start-radius: var(--admin-radius-m);
+        border-end-start-radius: var(--admin-radius-m);
       }
     }
 
     &:not(:has(th:last-of-type:not([style*="display: none"]))) th:nth-last-of-type(2),
     th:last-of-type:not([style*="display: none"]) {
-      border-start-end-radius: var(--gin-border-m);
-      border-end-end-radius: var(--gin-border-m);
+      border-start-end-radius: var(--admin-radius-m);
+      border-end-end-radius: var(--admin-radius-m);
     }
 
     tr {
@@ -514,17 +516,17 @@ td.priority-medium {
     .form-item__label--multiple-value-form {
       display: inline-block;
       margin: 0;
-      padding: var(--gin-spacing-xs) 0;
+      padding: var(--admin-space-xs) 0;
       letter-spacing: -0.025em;
-      color: var(--gin-color-primary-active);
-      font-size: var(--gin-font-size-l);
-      font-weight: var(--gin-font-weight-bold);
+      color: var(--admin-color-primary-active);
+      font-size: var(--admin-font-size-l);
+      font-weight: var(--admin-font-weight-bold);
       line-height: 1.33333em;
     }
   }
 
   tr .form-item:not(:last-of-type) {
-    margin-block-end: var(--gin-spacing-m);
+    margin-block-end: var(--admin-space-m);
   }
 
   /* Fixes paragraphs extending beyond layout */

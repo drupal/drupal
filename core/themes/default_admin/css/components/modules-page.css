@@ -60,15 +60,15 @@
 .system-modules,
 .system-modules-uninstall {
   label {
-    color: var(--gin-color-title);
+    color: var(--admin-color-text-loud);
   }
 
   details {
-    color: var(--gin-color-text);
+    color: var(--admin-color-text);
   }
 }
 
 .admin-requirements,
 .admin-required {
-  color: var(--gin-color-text-light);
+  color: var(--admin-color-text-soft);
 }

@@ -14,12 +14,12 @@
   display: flex;
   flex-wrap: wrap;
   box-sizing: border-box;
-  padding: var(--gin-spacing-xs) var(--gin-spacing-s) var(--gin-spacing-s);
-  border: 1px solid var(--gin-border-color-layer);
-  border-radius: var(--gin-border-l);
-  background: var(--gin-bg-layer);
-  box-shadow: var(--gin-shadow-l1);
-  margin-block: 0 var(--space-l);
+  padding: var(--admin-space-xs) var(--admin-space-s) var(--admin-space-s);
+  border: 1px solid var(--admin-color-border-soft);
+  border-radius: var(--admin-radius-l);
+  background: var(--admin-color-bg-surface);
+  box-shadow: var(--admin-shadow-1);
+  margin-block: 0 var(--admin-space-l);
 
   /* Remove extra spacing on top of form. */
   > .form-wrapper:first-of-type .form-item,
@@ -28,7 +28,7 @@
   }
 
   .gin--dark-mode & {
-    box-shadow: 0 6px 16px var(--gin-border-color-layer);
+    box-shadow: 0 6px 16px var(--admin-color-border-soft);
   }
 
   .gin--high-contrast-mode & {
@@ -41,13 +41,13 @@
 
   .form-type--boolean .form-boolean {
     margin-inline-start: 0;
-    margin-inline-end: var(--gin-spacing-xs);
+    margin-inline-end: var(--admin-space-xs);
   }
 
   /* Single on/off checkbox (through Better Exposed Filters) */
   .form-type--boolean.form-type--checkbox {
     margin-block-start: auto;
-    margin-block-end: var(--gin-spacing-s);
+    margin-block-end: var(--admin-space-s);
 
     .form-item__label {
       margin-block-end: 0;
@@ -55,56 +55,56 @@
   }
 
   .fieldset--group {
-    margin-block-start: var(--gin-spacing-s);
+    margin-block-start: var(--admin-space-s);
   }
 
   /* Exposed filter with fieldgroup */
   fieldset {
     margin-block-end: 0.4rem;
-    margin-inline-end: var(--gin-spacing-s);
+    margin-inline-end: var(--admin-space-s);
 
     > .fieldset__legend > .fieldset__label {
-      margin-block-end: var(--gin-spacing-xxs);
-      padding: 0 var(--gin-spacing-xs);
-      font-size: var(--gin-font-size-s);
+      margin-block-end: var(--admin-space-2xs);
+      padding: 0 var(--admin-space-xs);
+      font-size: var(--admin-font-size-s);
     }
 
     .fieldset__wrapper {
       display: flex;
       margin: 0;
-      margin-inline-start: var(--gin-spacing-xs);
+      margin-inline-start: var(--admin-space-xs);
     }
 
     .form-item {
-      margin-block: 0 var(--gin-spacing-xs);
-      margin-inline: 0 var(--gin-spacing-xs);
+      margin-block: 0 var(--admin-space-xs);
+      margin-inline: 0 var(--admin-space-xs);
     }
   }
 
   .form-datetime-wrapper {
     margin-block-end: 0;
-    margin-inline-end: var(--gin-spacing-xs);
+    margin-inline-end: var(--admin-space-xs);
   }
 
   @media (min-width: 48em) {
-    padding: var(--gin-spacing-xs) var(--gin-spacing-l) var(--gin-spacing-l);
+    padding: var(--admin-space-xs) var(--admin-space-l) var(--admin-space-l);
   }
 }
 
 .views-exposed-form--preview {
-  border-color: var(--gin-border-color);
-  border-radius: var(--gin-border-l);
+  border-color: var(--admin-color-border);
+  border-radius: var(--admin-radius-l);
   background: none;
 }
 
 .views-exposed-form__item {
   max-width: 100%;
-  margin-block: var(--space-s) 0;
-  margin-inline: 0 var(--space-xs);
+  margin-block: var(--admin-space-s) 0;
+  margin-inline: 0 var(--admin-space-xs);
 }
 
 .views-exposed-form__item--preceding-actions {
-  margin-inline-end: var(--gin-spacing-xs);
+  margin-inline-end: var(--admin-space-xs);
 }
 
 .views-exposed-form__item--actions .button {
@@ -117,6 +117,6 @@
 
 .views-exposed-form .form-item--no-label,
 .views-exposed-form__item.views-exposed-form__item--actions {
-  margin-block: var(--gin-spacing-s) 0;
+  margin-block: var(--admin-space-s) 0;
   align-self: flex-end;
 }

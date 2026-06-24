@@ -7,7 +7,7 @@
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
   .gin-sticky-form-actions {
     display: flex;
-    gap: var(--space-xs);
+    gap: var(--admin-space-xs);
 
     > * {
       margin: 0 !important;
@@ -55,18 +55,18 @@
 [data-drupal-selector="gin-sticky-edit-preview"],
 [data-drupal-selector="gin-sticky-edit-delete"] {
   background-repeat: no-repeat;
-  background-position: var(--space-xs) center;
+  background-position: var(--admin-space-xs) center;
 }
 
 body:has([data-drupal-selector="edit-save"] + .ajax-progress) :where([data-drupal-selector="gin-sticky-edit-save"]),
 body:has([data-drupal-selector="edit-preview"] + .ajax-progress) :where([data-drupal-selector="gin-sticky-edit-preview"]),
 body:has([data-drupal-selector="edit-delete"] + .ajax-progress) :where([data-drupal-selector="gin-sticky-edit-delete"]) {
-  padding-inline-start: var(--space-xl);
+  padding-inline-start: var(--admin-space-xl);
   animation: gin-pseudo-throbber 1s linear infinite;
   background-image: url("../../migration/media/icons/general/loader.svg");
 
   &:dir(rtl) {
     padding-inline-start: unset;
-    padding-inline-end: var(--space-xl);
+    padding-inline-end: var(--admin-space-xl);
   }
 }

@@ -57,7 +57,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  margin-block-start: var(--space-m); /* Bottom margin will be added by the child elements: because of we use flex display here, our margins won't collapse. */
+  margin-block-start: var(--admin-space-m); /* Bottom margin will be added by the child elements: because of we use flex display here, our margins won't collapse. */
 
   & .form-element {
     width: 100%;
@@ -68,14 +68,14 @@
    */
   & .form-item {
     max-width: var(--file-widget-form-item-max-width);
-    margin-block: 0 var(--space-m); /* Top margin is added by the parent element */
+    margin-block: 0 var(--admin-space-m); /* Top margin is added by the parent element */
 
     /**
      * Reduce the bottom margin of the last 'meta' form-item for field multiple
      * tables.
      */
     &:last-child {
-      margin-block-end: var(--space-xs);
+      margin-block-end: var(--admin-space-xs);
     }
   }
 
@@ -96,11 +96,11 @@
 .form-managed-file__image-preview {
   flex: 0 0 auto;
   max-width: 100%;
-  margin-block-end: var(--space-m);
+  margin-block-end: var(--admin-space-m);
 
   .form-managed-file.has-meta & {
     /* Add some 'end' margin if there are other meta inputs. */
-    margin-inline-end: var(--space-m);
+    margin-inline-end: var(--admin-space-m);
   }
 
   /**
@@ -108,7 +108,7 @@
    * title, we have to reduce the amount of the bottom margin.
    */
   td .form-managed-file.no-meta & {
-    margin-block-end: var(--space-xs);
+    margin-block-end: var(--admin-space-xs);
   }
 }
 
@@ -144,8 +144,8 @@
 
   & .file {
     flex: 1 1 auto;
-    margin-block: var(--space-xs);
-    margin-inline: 0 var(--space-m);
+    margin-block: var(--admin-space-xs);
+    margin-inline: 0 var(--admin-space-m);
   }
 
   /* The file upload input. */
@@ -165,7 +165,7 @@
 
   /* Add some bottom margin for single widgets if no meta is present. */
   .form-managed-file.is-single.has-value &:last-child {
-    margin-block-end: var(--space-m);
+    margin-block-end: var(--admin-space-m);
   }
 
   .draggable .form-managed-file.has-value & {
@@ -181,5 +181,5 @@
  * Add side margins if a table precedes the managed file form element.
  */
 .file-widget-multiple.has-table .form-type--managed-file {
-  margin-inline: var(--space-m);
+  margin-inline: var(--admin-space-m);
 }

@@ -4,14 +4,14 @@
  */
 
 :root {
-  --module-table-cell-padding-vertical: var(--space-m);
-  --module-table-cell-padding-horizontal: calc(var(--space-m) - (var(--input-border-size) * 2));
+  --module-table-cell-padding-vertical: var(--admin-space-m);
+  --module-table-cell-padding-horizontal: calc(var(--admin-space-m) - (var(--input-border-size) * 2));
 }
 
 .modules-table-filter,
 .permissions-table-filter {
-  padding: 0.25rem var(--space-l);
-  border: 1px solid var(--color-gray-200);
+  padding: 0.25rem var(--admin-space-l);
+  border: 1px solid var(--admin-color-border);
   border-radius: 2px 2px 0 0;
   box-shadow: 0 2px 4px rgb(0, 0, 0, 0.1);
 
@@ -48,8 +48,8 @@
 }
 
 .module-list__module {
-  color: var(--color-text);
-  border-block-end: 1px solid var(--gin-border-color);
+  color: var(--admin-color-text);
+  border-block-end: 1px solid var(--admin-color-border);
   background: none;
 
   &:hover {
@@ -102,12 +102,12 @@ td.module-list__description {
   line-height: var(--details-line-height);
 
   &::before {
-    top: calc(var(--space-m) + var(--space-s));
+    top: calc(var(--admin-space-m) + var(--admin-space-s));
   }
 }
 
 .module-details__description {
-  font-size: var(--space-s);
+  font-size: var(--admin-space-s);
   line-height: 0.9375rem;
 }
 
@@ -116,14 +116,14 @@ td.module-list__description {
 }
 
 .module-details__requirements {
-  margin-bottom: var(--space-m);
+  margin-bottom: var(--admin-space-m);
 }
 
 .module-details__links {
   position: relative;
   /* Negative margin matches the value of action link's top padding. */
-  margin-top: calc((var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) * -1);
-  margin-bottom: var(--space-m);
+  margin-top: calc((var(--admin-space-s) - ((var(--admin-space-l) - var(--admin-space-s)) / 2)) * -1);
+  margin-bottom: var(--admin-space-m);
 
   & .action-link + .action-link {
     margin-inline-start: 0;
@@ -131,7 +131,7 @@ td.module-list__description {
 }
 
 .gin-details .tableresponsive-toggle {
-  padding: var(--space-m) var(--space-m) var(--space-m) 0;
+  padding: var(--admin-space-m) var(--admin-space-m) var(--admin-space-m) 0;
 
   &::before {
     /* This adjustment is necessary for better alignment with the adjacent
@@ -139,7 +139,7 @@ td.module-list__description {
     position: relative;
     top: -1px;
     display: inline-block;
-    width: calc(var(--space-m) * 2);
+    width: calc(var(--admin-space-m) * 2);
     height: 1.25rem;
     content: "";
     cursor: pointer;
@@ -149,8 +149,8 @@ td.module-list__description {
   }
 
   &:hover {
-    color: var(--color-absolutezero-hover);
-    background-color: var(--color-bgblue-hover);
+    color: var(--admin-color-link-hover);
+    background-color: var(--admin-color-bg-item-hover);
 
     &::before {
       background-image: url(../../images/icons/0036b1/plus.svg);
@@ -159,12 +159,12 @@ td.module-list__description {
 }
 
 .gin-details .tableresponsive-toggle-columns button {
-  margin-top: var(--space-xs);
+  margin-top: var(--admin-space-xs);
   text-decoration: none;
-  color: var(--color-gray-800);
+  color: var(--admin-color-text-soft);
   font-weight: bold;
 }
 
 .gin-details .admin-missing {
-  color: var(--color-maximumred);
+  color: var(--admin-color-text-error);
 }

@@ -51,7 +51,7 @@
   width: 1.125rem;
   height: 1.125rem;
   animation: claro-throbber 0.75s linear infinite;
-  border: 2px solid var(--color-absolutezero);
+  border: 2px solid var(--admin-color-link);
   border-right: 2px dotted transparent;
   border-radius: 50%;
 }
@@ -59,7 +59,7 @@
 .ajax-progress__message {
   display: inline-block;
   padding-inline-start: var(--ajax-progress-margin-horizontal);
-  font-size: var(--font-size-label);
+  font-size: var(--admin-font-size-label);
 }
 
 /**
@@ -77,7 +77,7 @@
   margin: -1.75rem;
   border: var(--input-border-size) solid var(--jui-dropdown-border-color);
   border-radius: 3.5rem;
-  background: var(--color-white);
+  background: var(--admin-color-bg-raised);
   box-shadow: 0 0.25rem 0.625rem var(--jui-dropdown-shadow-color);
 }
 .ajax-progress__throbber--fullscreen,
@@ -89,7 +89,7 @@
   height: 1.75rem; /* 28px */
   margin: -0.875rem;
   content: "";
-  border: 3px solid var(--color-absolutezero);
+  border: 3px solid var(--admin-color-link);
   border-right: 3px dotted transparent;
 }
 
@@ -124,22 +124,22 @@
 .ajax-progress__throbber--fullscreen,
 .ui-dialog .ajax-progress__throbber,
 .media-library-item .ajax-progress__throbber {
-  border: 3px solid var(--gin-color-primary);
+  border: 3px solid var(--admin-color-primary);
   border-inline-end: 3px dotted transparent;
 }
 
 .ajax-progress .ajax-progress__message {
-  color: var(--gin-color-text);
+  color: var(--admin-color-text);
 }
 
 [dir].gin--dark-mode .ajax-progress--fullscreen {
   border-color: transparent;
-  background-color: var(--gin-color-primary);
-  box-shadow: 0 2px 6px 0 var(--gin-bg-app);
+  background-color: var(--admin-color-primary);
+  box-shadow: 0 2px 6px 0 var(--admin-color-bg);
 
   .ajax-progress__throbber,
   .ajax-progress__throbber--fullscreen {
-    border: 3px solid var(--gin-bg-app);
+    border: 3px solid var(--admin-color-bg);
     border-inline-end: 3px dotted transparent;
   }
 }
@@ -147,22 +147,22 @@
 .media-library-widget {
   .ajax-progress__throbber,
   .ajax-progress__throbber--fullscreen {
-    border: 2px solid var(--gin-color-primary);
+    border: 2px solid var(--admin-color-primary);
     border-inline-end: 2px dotted transparent;
   }
 }
 
 .ui-dialog .ajax-progress-throbber {
-  padding: var(--space-xs);
+  padding: var(--admin-space-xs);
   border: 1px solid rgb(216, 217, 224, 0.8);
   border-radius: 50%;
-  background: var(--gin-bg-app);
+  background: var(--admin-color-bg);
   box-shadow: 0 2px 6px 0 rgb(34, 35, 48, 0.1);
 
   .gin--dark-mode & {
     border-color: transparent;
-    background-color: var(--gin-color-primary);
-    box-shadow: 0 2px 6px 0 var(--gin-bg-app);
+    background-color: var(--admin-color-primary);
+    box-shadow: 0 2px 6px 0 var(--admin-color-bg);
   }
 
   &::before {
@@ -172,18 +172,18 @@
     height: 1.125rem;
     content: "";
     animation: gin-throbber 0.75s linear infinite;
-    border: 2px solid var(--gin-color-primary);
+    border: 2px solid var(--admin-color-primary);
     border-inline-end: 2px dotted transparent;
     border-radius: 50%;
-    inset-block-start: var(--space-xs);
-    inset-inline-start: var(--space-xs);
+    inset-block-start: var(--admin-space-xs);
+    inset-inline-start: var(--admin-space-xs);
   }
 }
 
 .gin--dark-mode .ui-dialog .ajax-progress,
 .gin--dark-mode .media-library-item .ajax-progress.ajax-progress.ajax-progress {
-  border-color: var(--gin-bg-app);
-  background-color: var(--gin-bg-app);
+  border-color: var(--admin-color-bg);
+  background-color: var(--admin-color-bg);
 }
 
 .contextual-links li {
@@ -193,7 +193,7 @@
 .contextual-links .ajax-progress-throbber {
   position: absolute;
   inset-block-start: 0;
-  inset-inline-end: var(--space-xxs);
+  inset-inline-end: var(--admin-space-2xs);
   width: 24px;
   height: 24px;
 

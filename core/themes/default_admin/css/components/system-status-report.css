@@ -11,13 +11,13 @@
  */
 
 :root {
-  --system-admin-status-report-border-color: var(--color-gray-200);
+  --system-admin-status-report-border-color: var(--admin-color-border);
 }
 
 .system-status-report {
   position: relative;
-  margin-block-start: var(--gin-spacing-l);
-  padding: var(--gin-spacing-m);
+  margin-block-start: var(--admin-space-l);
+  padding: var(--admin-space-m);
 
   h3 + .divider,
   .divider:last-child {
@@ -34,9 +34,9 @@
   box-sizing: border-box;
   width: 100%;
   vertical-align: top;
-  color: var(--gin-color-title);
+  color: var(--admin-color-text-loud);
   background-color: transparent;
-  font-weight: var(--gin-font-weight-semibold);
+  font-weight: var(--admin-font-weight-semibold);
   padding-block: 1em;
   padding-inline: 3em 1em;
 
@@ -48,7 +48,7 @@
     height: 1.5rem;
     margin-inline-end: 0.625rem;
     content: "";
-    background-color: var(--gin-color-green);
+    background-color: var(--admin-color-success);
     background-image: none;
     mask-image: var(--admin-icon-status);
     mask-repeat: no-repeat;
@@ -96,7 +96,7 @@
 .system-status-report__status-icon--checked {
   &::before,
   .details-title::before {
-    background-color: var(--gin-color-green);
+    background-color: var(--admin-color-success);
     mask-image: var(--admin-icon-status);
   }
 }
@@ -104,7 +104,7 @@
 .system-status-report__status-icon--error {
   &::before,
   .details-title::before {
-    background-color: var(--gin-color-danger);
+    background-color: var(--admin-color-error);
     mask-image: var(--admin-icon-error);
   }
 }
@@ -112,20 +112,20 @@
 .system-status-report__status-icon--warning {
   &::before,
   .details-title::before {
-    background-color: var(--gin-color-warning);
+    background-color: var(--admin-color-warning);
     mask-image: var(--admin-icon-warning);
   }
 }
 
 .cron-description__run-cron {
   display: block;
-  margin-block-start: var(--gin-spacing-m);
+  margin-block-start: var(--admin-space-m);
 }
 
 .system-status-report__row {
   display: flex;
   border-bottom: 1px solid var(--system-admin-status-report-border-color);
-  border-block-end: 1px solid var(--gin-border-color);
+  border-block-end: 1px solid var(--admin-color-border);
 
   &:last-of-type {
     border-bottom: none;
@@ -133,7 +133,7 @@
 }
 
 .system-status-report__requirements-group {
-  padding: var(--gin-spacing-m);
+  padding: var(--admin-space-m);
 
   h3 {
     margin-block-start: 0;
@@ -145,15 +145,15 @@
   }
 
   & > h3 {
-    padding: var(--gin-spacing-m) var(--gin-spacing-l);
+    padding: var(--admin-space-m) var(--admin-space-l);
     text-transform: none;
-    color: var(--gin-color-primary-active);
+    color: var(--admin-color-primary-active);
     border: 0 none;
-    border-radius: var(--gin-border-m);
-    background: var(--gin-bg-header);
-    font-size: var(--gin-font-size-l);
-    font-weight: var(--gin-font-weight-bold);
-    margin-block: 0 var(--gin-spacing-m);
+    border-radius: var(--admin-radius-m);
+    background: var(--admin-color-bg-header);
+    font-size: var(--admin-font-size-l);
+    font-weight: var(--admin-font-weight-bold);
+    margin-block: 0 var(--admin-space-m);
     margin-inline: 0;
   }
 }
@@ -192,7 +192,7 @@
   box-sizing: border-box;
   padding-block: 0 1em;
   padding-inline: 3em 1em;
-  font-size: var(--font-size-s);
+  font-size: var(--admin-font-size-s);
 
   @media screen and (min-width: 48em) {
     display: block;

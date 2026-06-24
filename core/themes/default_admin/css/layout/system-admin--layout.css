@@ -11,7 +11,7 @@
  */
 
 .layout-container {
-  margin-inline: var(--gin-spacing-m);
+  margin-inline: var(--admin-space-m);
 
   &::after {
     display: table;
@@ -20,7 +20,7 @@
   }
 
   @media screen and (min-width: 60em) {
-    margin-inline: var(--gin-spacing-xl);
+    margin-inline: var(--admin-space-xl);
   }
 }
 

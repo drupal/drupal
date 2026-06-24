@@ -16,10 +16,10 @@
   min-height: calc((var(--input-padding-vertical) * 2) + var(--input-line-height));
   padding-block: calc(var(--input-padding-vertical) - 1px);
   padding-inline: var(--input-padding-horizontal);
-  color: var(--gin-color-text);
-  border: 1px solid var(--gin-border-color-form-element);
-  border-radius: var(--gin-border-m);
-  background-color: var(--gin-bg-input);
+  color: var(--admin-color-text);
+  border: 1px solid var(--admin-color-border-input);
+  border-radius: var(--admin-radius-m);
+  background-color: var(--admin-color-bg-input);
   font-size: var(--input-font-size);
   line-height: var(--input-line-height);
   appearance: none; /* Being able to control inner box shadow on iOS. */
@@ -32,8 +32,8 @@
   }
 
   &:hover {
-    border-color: var(--gin-color-text);
-    box-shadow: inset 0 0 0 1px var(--gin-color-text);
+    border-color: var(--admin-color-text);
+    box-shadow: inset 0 0 0 1px var(--admin-color-text);
   }
 
   &.error {
@@ -49,9 +49,9 @@
     &,
     &:hover {
       cursor: not-allowed;
-      color: var(--gin-color-disabled);
-      border-color: var(--gin-color-disabled-border);
-      background-color: var(--gin-color-disabled-bg) !important;
+      color: var(--input--disabled-fg-color);
+      border-color: var(--admin-color-border-disabled);
+      background-color: var(--admin-color-bg-disabled) !important;
       box-shadow: none;
       /* https://stackoverflow.com/q/262158#answer-23511280 */
       -webkit-text-fill-color: var(--input--disabled-fg-color);
@@ -63,7 +63,7 @@
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    transition: var(--gin-transition);
+    transition: var(--admin-transition);
   }
 
   /**
@@ -85,14 +85,14 @@
 
 .form-element--small,
 .form-element--extrasmall {
-  border-radius: var(--gin-border-s);
-  font-size: var(--gin-font-size-s);
+  border-radius: var(--admin-radius-s);
+  font-size: var(--admin-font-size-s);
   line-height: 1.5;
 }
 
 .form-textarea-wrapper {
   /* box-shadow: 0 1px 2px rgba(0, 0, 0, .15); */
-  border-radius: var(--gin-border-m);
+  border-radius: var(--admin-radius-m);
 
   textarea {
     max-width: 100%;

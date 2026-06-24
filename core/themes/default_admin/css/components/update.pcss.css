@@ -13,8 +13,8 @@
 
 .project-update__details {
   padding: 0;
-  color: var(--gin-color-text-light);
-  font-size: var(--gin-font-size-s);
+  color: var(--admin-color-text-soft);
+  font-size: var(--admin-font-size-s);
 }
 
 .project-update__status {
@@ -37,20 +37,20 @@
 }
 
 .project-update__status--security-error {
-  color: var(--gin-color-danger);
+  color: var(--admin-color-error);
 }
 
 .color-success,
 tr.color-success,
 .color-checked,
 .drupal-upgrade-status-summary-form tr.no-known-error {
-  border-inline-start: var(--gin-border-xs) solid var(--gin-color-green);
+  border-inline-start: var(--admin-radius-xs) solid var(--admin-color-success);
   background-color: transparent;
 
   &:hover,
   &:active,
   &:focus {
-    background-color: var(--gin-bg-green-light);
+    background-color: var(--admin-color-bg-success);
   }
 }
 
@@ -58,16 +58,16 @@ tr.color-success,
 tr.color-warning,
 .upgrade-status-next-step-remove tr,
 .drupal-upgrade-status-summary-form tr.known-warnings {
-  border-inline-start: var(--gin-border-xs) solid var(--gin-color-warning);
+  border-inline-start: var(--admin-radius-xs) solid var(--admin-color-warning);
   background-color: transparent;
 
   &:hover,
   &:active,
   &:focus {
-    background-color: var(--gin-bg-warning-light);
+    background-color: var(--admin-color-bg-warning);
 
     .gin--dark-mode & {
-      color: var(--gin-color-warning);
+      color: var(--admin-color-warning);
     }
   }
 }
@@ -75,16 +75,16 @@ tr.color-warning,
 .color-error,
 tr.color-error,
 .drupal-upgrade-status-summary-form tr.known-errors {
-  border-inline-start: var(--gin-border-xs) solid var(--gin-color-danger);
+  border-inline-start: var(--admin-radius-xs) solid var(--admin-color-error);
   background-color: transparent;
 
   &:hover,
   &:active,
   &:focus {
-    background-color: var(--gin-bg-danger-light);
+    background-color: var(--admin-color-bg-error);
 
     .gin--dark-mode & {
-      color: var(--gin-color-danger);
+      color: var(--admin-color-error);
     }
   }
 }
@@ -94,7 +94,7 @@ tr.color-error,
 .color-error,
 .color-checked {
   box-sizing: border-box;
-  color: var(--gin-color-text);
+  color: var(--admin-color-text);
 }
 
 .update {
@@ -109,5 +109,5 @@ tr.color-error,
 }
 
 #update-status > p {
-  margin-block-end: var(--gin-spacing-xl);
+  margin-block-end: var(--admin-space-xl);
 }

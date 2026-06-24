@@ -38,17 +38,17 @@
 
 :root {
   --size-summary-border-radius: calc(var(--details-border-size-radius) - var(--details-border-size));
-  --summary-accordion-padding-vertical: calc(var(--space-l) + ((var(--space-m) - var(--space-l)) / 2));
-  --summary-accordion-line-height: var(--space-l);
+  --summary-accordion-padding-vertical: calc(var(--admin-space-l) + ((var(--admin-space-m) - var(--admin-space-l)) / 2));
+  --summary-accordion-line-height: var(--admin-space-l);
 }
 
 .gin-details {
   display: block;
-  margin-block: var(--space-m);
-  color: var(--color-text);
+  margin-block: var(--admin-space-m);
+  color: var(--admin-color-text);
   border: var(--details-border-size) solid var(--details-border-color);
-  border-radius: var(--gin-border-m);
-  background-color: var(--color-white);
+  border-radius: var(--admin-radius-m);
+  background-color: var(--admin-color-bg-surface);
   box-shadow: var(--details-box-shadow);
 
   /*
@@ -63,11 +63,11 @@
   }
 
   &.error {
-    border: 2px solid var(--gin-color-danger);
+    border: 2px solid var(--admin-color-error);
   }
 
   .gin--dark-mode & {
-    border-color: var(--gin-border-color);
+    border-color: var(--admin-color-border);
     background-color: transparent;
   }
 }
@@ -101,13 +101,13 @@
   list-style: none;
   cursor: pointer;
   transition: background-color var(--details-bg-color-transition-duration) ease-in-out;
-  color: var(--gin-color-text);
+  color: var(--admin-color-text);
   border-radius: var(--size-summary-border-radius);
   background-color: transparent;
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--space-m);
-  padding-block: calc(var(--space-l) - var(--space-xxs));
-  padding-inline: 2.75rem var(--space-m);
+  font-weight: var(--admin-font-weight-semibold);
+  line-height: var(--admin-space-m);
+  padding-block: calc(var(--admin-space-l) - var(--admin-space-2xs));
+  padding-inline: 2.75rem var(--admin-space-m);
 
   &:not(.form-required) .required-mark {
     display: none;
@@ -124,14 +124,14 @@
     inset-block-start: 50%;
     inset-inline-start: 1.125rem;
     display: inline-block;
-    inline-size: var(--space-m);
-    block-size: var(--space-m);
-    margin-block-start: calc(var(--space-m) / -2);
+    inline-size: var(--admin-space-m);
+    block-size: var(--admin-space-m);
+    margin-block-start: calc(var(--admin-space-m) / -2);
     content: "";
     transition: transform var(--details-transform-transition-duration) ease-in 0s;
     transform: rotate(90deg);
     text-align: center;
-    background: var(--gin-color-text);
+    background: var(--admin-color-text);
     mask-image: url("data:image/svg+xml,%3csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3e  %3cg fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e    %3cpath d='M8 20L16 12L8 4' /%3e  %3c/g%3e%3c/svg%3e");
     mask-repeat: no-repeat;
     mask-position: center center;
@@ -174,8 +174,8 @@
   }
 
   &:hover {
-    color: var(--gin-color-primary-hover);
-    background-color: var(--gin-bg-item-hover);
+    color: var(--admin-color-primary-hover);
+    background-color: var(--admin-color-bg-item-hover);
   }
 
   &:hover::before,
@@ -194,8 +194,8 @@
 .gin-details__summary--accordion-item,
 .gin-details__summary--vertical-tabs-item {
   padding-block: var(--summary-accordion-padding-vertical);
-  padding-inline: 2.75rem var(--space-l);
-  background: var(--color-white);
+  padding-inline: 2.75rem var(--admin-space-l);
+  background: var(--admin-color-bg-surface);
   line-height: var(--summary-accordion-line-height);
 
   .gin--dark-mode & {
@@ -233,8 +233,8 @@
 [open] .gin-details__summary--accordion,
 [open] .gin-details__summary--accordion-item,
 [open] .gin-details__summary--vertical-tabs-item {
-  color: var(--gin-color-primary);
-  text-decoration-style: var(--gin-link-decoration-style);
+  color: var(--admin-color-primary);
+  text-decoration-style: var(--admin-link-decoration-style);
 }
 
 .gin-details[open] > .gin-details__summary {
@@ -285,16 +285,16 @@
 
 .gin-details__wrapper,
 .gin-details__content {
-  margin-block: var(--gin-spacing-m);
-  margin-inline: calc(var(--gin-spacing-l) - var(--gin-spacing-xxs));
+  margin-block: var(--admin-space-m);
+  margin-inline: calc(var(--admin-space-l) - var(--admin-space-2xs));
 }
 
 .gin-details__wrapper--accordion,
 .gin-details__wrapper--accordion-item,
 .gin-details__wrapper--vertical-tabs-item {
   margin: 0;
-  border-block-start: 1px solid var(--gin-border-color);
-  background: var(--gin-bg-app);
+  border-block-start: 1px solid var(--admin-color-border);
+  background: var(--admin-color-bg);
 
   &::before,
   &::after {
@@ -320,24 +320,24 @@
 .gin-details__content--accordion,
 .gin-details__content--accordion-item,
 .gin-details__content--vertical-tabs-item {
-  margin-block: var(--space-m) var(--space-l);
-  margin-inline: var(--space-m);
+  margin-block: var(--admin-space-m) var(--admin-space-l);
+  margin-inline: var(--admin-space-m);
 }
 
 @media screen and (min-width: 85em) {
   .vertical-tabs .gin-details__content--vertical-tabs-item {
-    margin: var(--space-l);
+    margin: var(--admin-space-l);
   }
 }
 
 /* Description. */
 
 .gin-details__description {
-  margin-block-end: var(--space-m);
-  color: var(--gin-color-text-light);
-  font-size: var(--font-size-xs); /* ~13px */
+  margin-block-end: var(--admin-space-m);
+  color: var(--admin-color-text-soft);
+  font-size: var(--admin-font-size-xs); /* ~13px */
   line-height: calc(17rem / 16); /* 17px */
-  max-inline-size: var(--gin-max-line-length);
+  max-inline-size: var(--admin-max-line-length);
 
   &.is-disabled {
     color: var(--input--disabled-fg-color);
@@ -347,8 +347,8 @@
 .gin-details__summary-summary {
   display: block;
   opacity: 0.8;
-  color: var(--gin-color-text-light);
-  font-size: var(--font-size-s);
+  color: var(--admin-color-text-soft);
+  font-size: var(--admin-font-size-s);
   font-weight: normal;
 }
 
@@ -369,6 +369,6 @@
 .gin-details.gin-details--package-listing,
 .gin-details.module-list__module-details,
 .system-status-report .gin-details {
-  border: 1px solid var(--gin-border-color);
-  border-radius: var(--gin-border-m);
+  border: 1px solid var(--admin-color-border);
+  border-radius: var(--admin-radius-m);
 }

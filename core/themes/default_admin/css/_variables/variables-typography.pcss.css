@@ -1,0 +1,72 @@
+/* cspell:ignore blinkmacsystemfont, ginter */
+
+/**
+ * @file
+ * Typography custom properties — the canonical `--admin-font-*` token API.
+ *
+ * Consolidated from the former Claro `--font-*` and Gin `--gin-font-*` systems
+ * The two scales agreed on the body sizes (2xs/xs/s/m) and the
+ * weights, so those merged 1:1. Where they rendered different sizes under the same
+ * name on different elements, the canonical value is what those elements render:
+ *   - heading scale h1–h6 = the generic <h1>–<h6> sizes (a Claro/Gin mix), rounded
+ *     to whole px. The old values were a rounded 1.125-ratio modular scale, so this
+ *     drops sub-pixel fractions (e.g. h1 was 2.027rem ≈ 32.43px → 32px);
+ *   - --admin-font-size-2xl (36px) = the old Claro --font-size-xl display size;
+ *   - --admin-font-size-page-title = Gin's responsive H1 (distinct from the generic
+ *     h1), used by the page title only.
+ * (The Claro modular-scale h3 at 1.602rem is install/maintenance-only and off the
+ * admin scale, so it stays an inline literal in those two files.)
+ *
+ * Sizes are authored in px; the build's px-to-rem step converts them.
+ */
+
+@import "../base/media-queries.pcss.css";
+
+:root {
+  /* Font families. */
+  --admin-font-family: ginter, inter, "Helvetica Neue", blinkmacsystemfont, -apple-system, "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, sans-serif;
+  --admin-font-family-serif: "Times New Roman", times, serif;
+
+  /* Line heights. (Unitless ratios are not lengths; -label is a fixed 18px.) */
+  --admin-line-height: 1.5;
+  --admin-line-height-heading: 1.3;
+  --admin-line-height-label: 18px;
+
+  /*
+   * Font sizes — body scale (2xs…2xl), element-mapped heading scale (h1…h6), plus
+   * the page-title and quote sizes.
+   */
+  --admin-font-size-2xs: 12px;
+  --admin-font-size-xs: 13px;
+  --admin-font-size-s: 14px;
+  --admin-font-size-m: 16px; /* base */
+  --admin-font-size-l: 18px;
+  --admin-font-size-xl: 20px;
+  --admin-font-size-2xl: 36px; /* display (install/maintenance site name) */
+  --admin-font-size-label: var(--admin-font-size-s);
+  --admin-font-size-h1: 32px;
+  --admin-font-size-h2: 28px;
+  --admin-font-size-h3: 24px;
+  --admin-font-size-h4: 23px;
+  --admin-font-size-h5: 20px;
+  --admin-font-size-h6: var(--admin-font-size-l);
+
+  /* Page title - distinct from the generic h1 above. */
+  --admin-font-size-page-title: 26px;
+  --admin-font-size-quote: 1.1em;
+
+  /* Font weights (values tuned for Inter). */
+  --admin-font-weight-normal: 400;
+  --admin-font-weight-semibold: 525;
+  --admin-font-weight-bold: 575;
+  --admin-font-weight-heavy: 625;
+
+  @media (--admin-medium) {
+    --admin-font-size-page-title: 29px;
+    --admin-font-size-quote: 1.2em;
+  }
+
+  @media (--admin-widest) {
+    --admin-font-size-page-title: 34px;
+  }
+}

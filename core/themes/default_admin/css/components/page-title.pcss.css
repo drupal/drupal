@@ -6,7 +6,7 @@
 @import "../base/media-queries.pcss.css";
 
 .block-page-title-block {
-  margin-block: var(--gin-spacing-s);
+  margin-block: var(--admin-space-s);
 }
 
 .page-title {
@@ -18,9 +18,9 @@
   white-space: nowrap;
   letter-spacing: -0.05em;
   text-overflow: ellipsis;
-  color: var(--gin-color-title);
-  font-size: var(--gin-font-size-h1);
-  font-weight: var(--gin-font-weight-bold);
+  color: var(--admin-color-text-loud);
+  font-size: var(--admin-font-size-page-title);
+  font-weight: var(--admin-font-weight-bold);
   line-height: normal;
   -webkit-font-smoothing: antialiased;
 
@@ -30,7 +30,7 @@
      *
      * @see Drupal\system\Controller\BatchController::batchPage()
      */
-    margin-block: var(--breadcrumb-height) var(--space-l);
+    margin-block: var(--breadcrumb-height) var(--admin-space-l);
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -39,7 +39,7 @@
 
   @media (--admin-large) {
     .region-sticky--is-sticky & {
-      font-size: var(--gin-font-size-h3);
+      font-size: var(--admin-font-size-h3);
     }
   }
 }
@@ -47,7 +47,7 @@
 .page-title__language {
   display: block;
   letter-spacing: normal;
-  color: var(--gin-color-text);
-  font-size: var(--gin-font-size-xs);
-  font-weight: var(--gin-font-weight-normal);
+  color: var(--admin-color-text);
+  font-size: var(--admin-font-size-xs);
+  font-weight: var(--admin-font-weight-normal);
 }

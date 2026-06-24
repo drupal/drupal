@@ -5,16 +5,21 @@ global-styling:
       preload: true
   css:
     base:
+      css/_variables/variables-color-accent.css: {}
+      css/_variables/variables-color.css: {}
+      css/_variables/variables-spacing.css: {}
+      css/_variables/variables-typography.css: {}
+      css/_variables/variables-misc.css: {}
+      css/_variables/variables-components.css: {}
       css/base/font.css: {}
-      css/base/accents.css: {}
-      css/base/variables.css: {}
       css/base/icons.css: {}
       css/base/elements.css: {}
       css/base/typography.css: {}
       css/base/print.css: {}
     component:
       css/components/accordion.css: {}
-      css/components/action-link.css: {}
+      # Ensure action-link.css is loaded after button.css.
+      css/components/action-link.css: { weight: 10 }
       css/components/batch.css: {}
       css/components/blocks.css: {}
       css/components/content-header.css: {}

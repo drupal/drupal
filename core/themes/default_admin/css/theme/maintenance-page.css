@@ -14,52 +14,52 @@
 
 .maintenance-page {
   min-height: 100%;
-  background-color: var(--color-gray-100);
+  background-color: var(--admin-color-bg-sunken);
 }
 
 h1,
 h2 {
-  font-size: var(--font-size-h3);
+  font-size: 1.602rem;
 }
 
 h3 {
-  font-size: var(--font-size-h4);
+  font-size: var(--admin-font-size-h4);
 }
 
 .site-name {
-  margin-top: var(--space-s);
+  margin-top: var(--admin-space-s);
   word-wrap: break-word;
-  color: var(--color-gray);
-  font-size: var(--font-size-xl);
+  color: var(--admin-color-text);
+  font-size: var(--admin-font-size-2xl);
 }
 
 .site-name--subtle {
-  margin-top: var(--space-s);
-  color: var(--color-gray-800);
-  font-size: var(--font-size-h4);
+  margin-top: var(--admin-space-s);
+  color: var(--admin-color-text-soft);
+  font-size: var(--admin-font-size-h4);
 }
 
 .title {
   margin-top: 0;
-  font-size: var(--font-size-h3);
+  font-size: 1.602rem;
 }
 
 .title--broad {
-  font-size: var(--font-size-h1);
+  font-size: var(--admin-font-size-h1);
 }
 
 .site-name,
 .title {
-  margin-bottom: var(--space-l);
+  margin-bottom: var(--admin-space-l);
 }
 
 .content {
-  margin-bottom: var(--space-m);
-  color: var(--color-gray);
+  margin-bottom: var(--admin-space-m);
+  color: var(--admin-color-text);
 }
 
 .content--subtle {
-  color: var(--color-gray-800);
+  color: var(--admin-color-text-soft);
 }
 
 .site-name,
@@ -110,7 +110,7 @@ h3 {
   .task-list li {
     padding: 1rem 1rem 1rem 3rem; /* LTR */
     counter-increment: steps;
-    color: var(--color-gray);
+    color: var(--admin-color-text);
     border-radius: 0 2rem 2rem 0 /* LTR */;
     font-weight: 500;
   }
@@ -128,13 +128,16 @@ h3 {
   }
 
   .task-list .is-active {
-    color: var(--color-absolutezero);
+    color: var(--admin-color-link);
     border: 1px solid transparent; /* Required for forced-colors mode. */
-    background: var(--color-bgblue-active);
+    /* Fixed blue tint, not the accent-derived --admin-color-bg-item: the
+       maintenance/install page has no [data-gin-accent] context, so accent
+       tokens are undefined here. */
+    background: var(--admin-color-blue-050);
     font-weight: 500;
   }
   .task-list .done {
-    color: var(--color-gray-700);
+    color: var(--admin-color-text-soft);
   }
 }
 
@@ -146,7 +149,7 @@ h3 {
   width: auto;
   margin-right: 1.25em;
   margin-left: 1.25em;
-  padding: var(--space-xxl);
+  padding: var(--admin-space-2xl);
   border: 1px solid transparent; /* Required for forced-colors mode. */
   border-radius: 0.5rem;
   background: #fff;
@@ -164,7 +167,7 @@ h3 {
   /* 768px */
   .layout-container {
     margin: 1.25em;
-    padding: var(--space-m) var(--space-l);
+    padding: var(--admin-space-m) var(--admin-space-l);
   }
 
   .layout-sidebar-first {
@@ -239,8 +242,8 @@ h3 {
 .system-status-report__status-title {
   float: none;
   width: 100%;
-  color: var(--gin-color-title);
-  font-weight: var(--gin-font-weight-semibold);
+  color: var(--admin-color-text-loud);
+  font-weight: var(--admin-font-weight-semibold);
 }
 
 .system-status-report__entry__value {
@@ -262,10 +265,10 @@ h3 {
 .update-results {
   overflow: auto; /* Required to prevent text clipping. */
   margin-top: 0;
-  padding: var(--space-s);
-  border: 1px solid var(--color-gray-100);
-  border-radius: var(--base-border-radius);
-  background: var(--color-gray-050);
+  padding: var(--admin-space-s);
+  border: 1px solid var(--admin-color-border);
+  border-radius: var(--admin-radius-2xs);
+  background: var(--admin-color-bg-surface-nested);
 }
 
 .update-results > h3:first-child {
@@ -273,11 +276,11 @@ h3 {
 }
 
 .update-results .failure strong {
-  color: var(--color-maximumred);
+  color: var(--admin-color-text-error);
 }
 
 .item-list > h3 {
-  font-size: var(--font-size-h5);
+  font-size: var(--admin-font-size-h5);
 }
 
 .item-list > ul {

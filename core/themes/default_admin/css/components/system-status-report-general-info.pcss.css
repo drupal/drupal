@@ -4,7 +4,7 @@
  */
 
 .system-status-general-info {
-  padding: var(--gin-spacing-m);
+  padding: var(--admin-space-m);
 
   h3 + .divider,
   .divider:last-child {
@@ -18,15 +18,15 @@
 }
 
 .system-status-general-info__header {
-  padding: var(--gin-spacing-m) var(--gin-spacing-l);
+  padding: var(--admin-space-m) var(--admin-space-l);
   text-transform: none;
-  color: var(--gin-color-primary-active);
+  color: var(--admin-color-primary-active);
   border: 0 none;
-  border-radius: var(--gin-border-m);
-  background: var(--gin-bg-header);
-  font-size: var(--gin-font-size-l);
-  font-weight: var(--gin-font-weight-bold);
-  margin-block: 0 var(--gin-spacing-xs);
+  border-radius: var(--admin-radius-m);
+  background: var(--admin-color-bg-header);
+  font-size: var(--admin-font-size-l);
+  font-weight: var(--admin-font-weight-bold);
+  margin-block: 0 var(--admin-space-xs);
   margin-inline: 0;
 
   @media screen and (max-width: 48em) {
@@ -38,8 +38,8 @@
   display: block;
   overflow-x: auto;
   box-sizing: border-box;
-  margin-block-end: var(--space-l);
-  padding: var(--gin-spacing-m);
+  margin-block-end: var(--admin-space-l);
+  padding: var(--admin-space-m);
   border: 0 none;
   background: transparent;
   box-shadow: none;
@@ -65,7 +65,7 @@
     height: 100%;
     content: "";
     border-radius: 42px;
-    background-color: var(--gin-color-primary);
+    background-color: var(--admin-color-primary);
     mask-repeat: no-repeat;
     mask-position: center center;
     mask-size: 32px 32px;
@@ -98,20 +98,20 @@
   box-sizing: border-box;
   width: calc(100% - 60px);
   padding-inline-start: 10px;
-  font-size: var(--font-size-s);
+  font-size: var(--admin-font-size-s);
 }
 
 .system-status-general-info__item-title {
   margin: 0 0 8px;
-  color: var(--gin-color-title);
-  font-size: var(--gin-font-size);
-  font-weight: var(--gin-font-weight-semibold);
+  color: var(--admin-color-text-loud);
+  font-size: var(--admin-font-size-m);
+  font-weight: var(--admin-font-weight-semibold);
 }
 
 .system-status-general-info__sub-item-title {
   margin: 14px 0 0;
   font-size: 14px;
-  font-weight: var(--gin-font-weight-bold);
+  font-weight: var(--admin-font-weight-bold);
 
   &::after {
     content: ":\00a0";
@@ -135,7 +135,7 @@
 }
 
 .system-status-general-info__items {
-  margin-block: var(--gin-spacing-m) 0;
+  margin-block: var(--admin-space-m) 0;
   margin-inline: 0;
   border-block-end: 0 none;
 

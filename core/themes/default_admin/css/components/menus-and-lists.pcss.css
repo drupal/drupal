@@ -6,8 +6,8 @@
 
 .item-list,
 .menu-item {
-  --item-list-spacing-l: var(--space-l);
-  --item-list-spacing-m: var(--space-m);
+  --item-list-spacing-l: var(--admin-space-l);
+  --item-list-spacing-m: var(--admin-space-m);
 }
 
 .item-list ul {

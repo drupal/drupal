@@ -11,11 +11,11 @@
 
   /* Override specificity of .gin-layer-wrapper in layers.css. */
   &[class] {
-    padding: var(--gin-spacing-s) 0;
+    padding: var(--admin-space-s) 0;
   }
 
   .panel & {
-    margin: var(--gin-spacing-s) 0;
+    margin: var(--admin-space-s) 0;
     padding: 0;
     border: 0 none;
     box-shadow: none;
@@ -31,20 +31,20 @@
  */
 .admin-item {
   position: relative;
-  margin: var(--gin-spacing-l) var(--gin-spacing-s);
-  padding-block: var(--gin-spacing-density-s);
-  padding-inline: var(--gin-spacing-l) calc(var(--gin-spacing-xs) + var(--gin-spacing-xl));
+  margin: var(--admin-space-l) var(--admin-space-s);
+  padding-block: var(--admin-space-density-s);
+  padding-inline: var(--admin-space-l) calc(var(--admin-space-xs) + var(--admin-space-xl));
 
   &:not(:last-child)::after {
     position: absolute;
     display: block;
-    width: calc(100% + var(--gin-spacing-l));
+    width: calc(100% + var(--admin-space-l));
     height: 1px;
     content: "";
     opacity: 0.75;
-    border-block-end: 1px solid var(--gin-border-color-table);
-    inset-inline-start: calc(var(--gin-spacing-s) * -1);
-    inset-block-end: calc(var(--gin-spacing-s) * -1);
+    border-block-end: 1px solid var(--admin-color-border-table);
+    inset-inline-start: calc(var(--admin-space-s) * -1);
+    inset-block-end: calc(var(--admin-space-s) * -1);
   }
 
   &:first-child {
@@ -58,12 +58,12 @@
 
 .admin-item--panel {
   margin-block: 0;
-  margin-inline: calc(var(--gin-spacing-l) * -1);
+  margin-inline: calc(var(--admin-space-l) * -1);
 }
 
 .admin-item__title {
-  font-size: var(--gin-font-size);
-  font-weight: var(--gin-font-weight-semibold);
+  font-size: var(--admin-font-size-m);
+  font-weight: var(--admin-font-weight-semibold);
 }
 
 .admin-item__link {
@@ -80,12 +80,12 @@
 
   &:hover,
   &:focus {
-    border-radius: var(--gin-border-m);
-    background: var(--gin-color-primary-light);
+    border-radius: var(--admin-radius-m);
+    background: var(--admin-color-primary-soft);
 
     ~ .admin-item__title,
     ~ .admin-item__description {
-      color: var(--gin-color-primary);
+      color: var(--admin-color-primary);
     }
   }
 
@@ -95,13 +95,13 @@
   &::before {
     position: absolute;
     inset-block-start: 50%;
-    inset-inline-end: var(--gin-spacing-m);
+    inset-inline-end: var(--admin-space-m);
     display: block;
     width: 1em;
     height: 1.5em;
     content: "";
     transform: translateY(-50%);
-    background-color: var(--gin-color-primary);
+    background-color: var(--admin-color-primary);
     mask-image: var(--admin-icon-handle);
     mask-size: 1em 1em;
     mask-repeat: no-repeat;
@@ -120,6 +120,6 @@
 .admin-item__description {
   margin-block: 0.5em 0.25em;
   margin-inline: 0;
-  color: var(--gin-color-text-light);
-  font-size: var(--gin-font-size-s);
+  color: var(--admin-color-text-soft);
+  font-size: var(--admin-font-size-s);
 }

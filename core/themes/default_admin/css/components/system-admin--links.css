@@ -17,7 +17,7 @@
 .compact-link {
   margin: 0 0 0.5em 0;
   text-align: end;
-  font-size: var(--gin-font-size-s);
+  font-size: var(--admin-font-size-s);
 }
 
 /**

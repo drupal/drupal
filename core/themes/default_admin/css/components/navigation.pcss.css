@@ -8,26 +8,26 @@
 @import "../base/media-queries.pcss.css";
 
 :root {
-  --gin-toolbar-height: 48px;
-  --gin-toolbar-secondary-height: 48px;
-  --gin-scroll-offset: 72px;
-  --gin-toolbar-y-offset: var(--gin-toolbar-height);
-  --gin-toolbar-x-offset: 0px;
-  --gin-sticky-offset: 0px;
-  --gin-icon-size-toolbar: 20px;
+  --admin-theme-toolbar-height: 48px;
+  --admin-theme-toolbar-secondary-height: 48px;
+  --admin-theme-scroll-offset: 72px;
+  --admin-theme-toolbar-y-offset: var(--admin-theme-toolbar-height);
+  --admin-theme-toolbar-x-offset: 0px;
+  --admin-theme-sticky-offset: 0px;
+  --admin-icon-size-toolbar: 20px;
 
   @media (--admin-medium) {
-    --gin-toolbar-height: 0px;
-    --gin-toolbar-secondary-height: 52px;
-    --gin-toolbar-x-offset: var(--drupal-displace-offset-left, 64px);
-    --gin-scroll-offset: 130px;
-    --gin-sticky-offset: var(--gin-height-sticky);
+    --admin-theme-toolbar-height: 0px;
+    --admin-theme-toolbar-secondary-height: 52px;
+    --admin-theme-toolbar-x-offset: var(--drupal-displace-offset-left, 64px);
+    --admin-theme-scroll-offset: 130px;
+    --admin-theme-sticky-offset: var(--admin-theme-height-sticky);
   }
 }
 
 html.admin-toolbar-expanded {
   @media (--admin-medium) {
-    --gin-toolbar-x-offset: var(--drupal-displace-offset-left, 264px);
+    --admin-theme-toolbar-x-offset: var(--drupal-displace-offset-left, 264px);
   }
 }
 
@@ -44,18 +44,27 @@ body.gin--navigation {
 }
 
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
-  --admin-toolbar-font-family: var(--gin-font);
-  --admin-toolbar-color-white: var(--gin-bg-layer);
-  --admin-toolbar-color-gray-050: var(--gin-bg-layer2);
-  --admin-toolbar-color-gray-100: var(--gin-border-color-layer);
-  --admin-toolbar-color-gray-200: var(--gin-border-color-layer2);
-  --admin-toolbar-color-gray-800: var(--gin-color-text);
-  --admin-toolbar-color-gray-990: var(--gin-color-primary-active);
-  --toolbar-button-has-active-child-color: var(--gin-color-primary);
-  --toolbar-button-current-color: var(--gin-color-primary);
-  --toolbar-button-focus-color: var(--gin-color-primary);
-  --admin-toolbar-color-focus: var(--gin-color-focus);
-  --admin-toolbar-color-expanded: var(--gin-bg-layer2);
+  --admin-toolbar-font-family: var(--admin-font-family);
+  --admin-toolbar-color-white: var(--admin-color-bg-surface);
+  --admin-toolbar-color-gray-050: var(--admin-color-bg-surface-nested);
+  --admin-toolbar-color-gray-100: var(--admin-color-border-soft);
+  --admin-toolbar-color-gray-200: var(--admin-color-border);
+  --admin-toolbar-color-gray-800: var(--admin-color-text);
+  --admin-toolbar-color-gray-990: var(--admin-color-primary-active);
+  --toolbar-button-has-active-child-color: var(--admin-color-primary);
+  --toolbar-button-current-color: var(--admin-color-primary);
+  --toolbar-button-focus-color: var(--admin-color-primary);
+  --admin-toolbar-color-focus: var(--admin-color-focus);
+  --admin-toolbar-color-expanded: var(--admin-color-bg-surface-nested);
+
+  &.admin-toolbar-control-bar {
+    background: var(--admin-color-bg-surface-nested);
+  }
+
+  /* Fix Control Bar hamburger button in dark mode. */
+  .admin-toolbar-control-bar__burger path {
+    stroke: currentColor;
+  }
 }
 
 /* Workspaces. */
@@ -69,19 +78,19 @@ body.gin--navigation {
 
 .toolbar-button--workspaces--live {
   .gin--dark-mode & {
-    --toolbar-button-bg: var(--gin-color-green-light);
+    --toolbar-button-bg: #32cea4;
     --toolbar-button-color: #222330;
     --toolbar-button-hover-color: var(--toolbar-button-color);
     --toolbar-button-focus-color: var(--toolbar-button-color);
-    --toolbar-button-hover-bg: var(--gin-color-green-light);
-    --toolbar-button-current-bg: var(--gin-color-green-light);
+    --toolbar-button-hover-bg: #32cea4;
+    --toolbar-button-current-bg: #32cea4;
   }
 }
 
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
   .toolbar-menu__link {
     &:hover {
-      color: var(--gin-color-primary);
+      color: var(--admin-color-primary);
     }
   }
 }

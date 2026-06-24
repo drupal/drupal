@@ -13,9 +13,12 @@
  */
 
 :root {
-  --skip-link-bg-color: var(--color-gray-800);
-  --skip-link-color: var(--color-white);
-  --skip-link-active-bg-color: var(--color-gray);
+  /* Dark chrome pill with light text — kept on the gray ramp directly: no
+     semantic surface token matches these mid/near-black bg values, and the skip
+     link is a self-contained always-dark component (not mode-aware). */
+  --skip-link-bg-color: var(--admin-color-gray-800);
+  --skip-link-color: var(--admin-color-white); /* Fixed: light text on the always-dark pill. */
+  --skip-link-active-bg-color: var(--admin-color-gray-950);
 }
 
 .skip-link {
@@ -27,8 +30,8 @@
   border-radius: 0 0 0.625rem 0; /* LTR */
   background: var(--skip-link-bg-color);
   box-shadow:
-    0 0 0 2px var(--color-white),
-    0 0 0 5px var(--color-focus);
+    0 0 0 2px var(--admin-color-bg-surface),
+    0 0 0 5px var(--admin-color-focus);
   font-size: 0.94em;
   &:hover,
   &:active {
