@@ -11,11 +11,11 @@
  */
 
 .accordion {
-  --accordion-color: var(--color-text);
+  --accordion-color: var(--admin-color-text);
   --accordion-border-size: var(--details-border-size);
   --accordion-border-color: var(--details-border-color);
   --accordion-border-radius: var(--details-accordion-border-size-radius);
-  --accordion-bg-color: var(--color-white);
+  --accordion-bg-color: var(--admin-color-bg-surface);
   --accordion-box-shadow: var(--details-box-shadow);
 
   color: var(--accordion-color);
@@ -48,7 +48,7 @@
   }
 
   & .gin-details__summary .summary {
-    --accordion-summary-color: var(--color-gray-800);
+    --accordion-summary-color: var(--admin-color-text-soft);
 
     display: block;
     color: var(--accordion-summary-color);

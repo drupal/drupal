@@ -9,9 +9,9 @@
   width: var(--vertical-tabs-menu-width);
   margin: 0;
   list-style: none;
-  color: var(--color-text);
-  border-color: var(--gin-border-color);
-  background-color: var(--gin-bg-app);
+  color: var(--admin-color-text);
+  border-color: var(--admin-color-border);
+  background-color: var(--admin-color-bg);
 }
 
 .media-library-menu__item {
@@ -39,11 +39,11 @@
   position: relative;
   display: block;
   margin-block-start: calc(var(--vertical-tabs-border-size) * -1);
-  padding: var(--space-s);
-  padding-inline-start: calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size));
+  padding: var(--admin-space-s);
+  padding-inline-start: calc(var(--admin-space-l) - var(--vertical-tabs-menu-link--active-border-size));
   text-decoration: none;
-  color: var(--gin-color-text);
-  border: var(--vertical-tabs-border-size) solid var(--gin-border-color);
+  color: var(--admin-color-text);
+  border: var(--vertical-tabs-border-size) solid var(--admin-color-border);
   border-inline-end-width: 0;
   border-inline-start-width: var(--vertical-tabs-menu-link--active-border-size);
   border-start-start-radius: var(--vertical-tabs-border-radius);
@@ -61,10 +61,10 @@
 
   &:hover {
     text-decoration: none;
-    color: var(--color-absolutezero);
+    color: var(--admin-color-link);
     /* These borders are necessary to replace the dividing lines while in the hover state. */
     border-block: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
-    background: var(--color-bgblue-hover);
+    background: var(--admin-color-bg-item-hover);
   }
 
   /* This pseudo element provides the background for the hover state. */
@@ -87,7 +87,7 @@
     margin-inline: calc(var(--vertical-tabs-menu-link--active-border-size) * -1) 0;
     content: "";
     pointer-events: none;
-    border: var(--gin-border-xs) solid var(--gin-color-focus);
+    border: var(--admin-radius-xs) solid var(--admin-color-focus);
     border-inline-end: 0;
     border-radius: var(--vertical-tabs-border-radius);
   }
@@ -95,23 +95,23 @@
   &.active {
     z-index: calc(var(--vertical-tabs-menu--z-index) + 2);
     /* The selected menu link should be on a higher level than the white masking line that hides the gray separator. */
-    color: var(--color-absolutezero);
+    color: var(--admin-color-link);
     border-color: var(--vertical-tabs-border-color) transparent;
-    background-color: var(--color-white);
+    background-color: var(--admin-color-bg-surface);
     box-shadow: var(--vertical-tabs-shadow);
 
     &:hover {
-      color: var(--color-absolutezero-hover);
-      background-color: var(--color-bgblue-hover);
+      color: var(--admin-color-link-hover);
+      background-color: var(--admin-color-bg-item-hover);
     }
 
     &::before {
       z-index: 1;
       /* The blue active-tab indication should be on a higher level than the green focus border. */
       border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
-      border-inline-start-color: var(--gin-color-primary);
-      border-start-start-radius: var(--base-border-radius);
-      border-end-start-radius: var(--base-border-radius);
+      border-inline-start-color: var(--admin-color-primary);
+      border-start-start-radius: var(--admin-radius-2xs);
+      border-end-start-radius: var(--admin-radius-2xs);
     }
 
     &:hover::before {
@@ -127,10 +127,10 @@
   &:hover:focus,
   &.active:hover,
   &.active:focus {
-    color: var(--gin-color-primary);
+    color: var(--admin-color-primary);
     border-inline-end: 0 none;
-    border-block-end: 1px solid var(--gin-border-color);
-    background-color: var(--gin-bg-layer);
+    border-block-end: 1px solid var(--admin-color-border);
+    background-color: var(--admin-color-bg-surface);
     box-shadow: none;
     text-shadow: none;
   }

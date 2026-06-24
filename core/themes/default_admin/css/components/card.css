@@ -11,16 +11,13 @@
  */
 
 :root {
-  --card-bg-color: var(--color-white);
   --card-border-size: 1px;
-  --card-border-color: var(--color-gray-200-o-80);
-  --card-border-radius-size: var(--base-border-radius);
+  --card-border-radius-size: var(--admin-radius-2xs);
   --card-image-border-radius-size: calc(var(--card-border-radius-size) - var(--card-border-size));
-  --card-box-shadow: 0 0.25rem 0.625rem rgb(0, 0, 0, 0.1);
 }
 
 .card-list {
-  margin-block-end: var(--gin-spacing-xl);
+  margin-block-end: var(--admin-space-xl);
 }
 
 .card {
@@ -30,8 +27,8 @@
   align-items: stretch;
   justify-items: flex-start;
   padding: 0;
-  border: 1px solid var(--gin-border-color-layer2);
-  border-radius: var(--gin-border-m);
+  border: 1px solid var(--admin-color-border);
+  border-radius: var(--admin-radius-m);
 }
 
 /* 588px theme screenshot width. 53.75rem is screenshot image width + toolbar width (15rem) + 2rem of margins. */
@@ -55,7 +52,7 @@
 
     /* Card content with image. */
     .card__image ~ .card__content-wrapper {
-      padding-inline-start: var(--space-m);
+      padding-inline-start: var(--admin-space-m);
     }
   }
 
@@ -76,11 +73,11 @@
 
 .card__image {
   overflow: hidden;
-  border-radius: var(--gin-border-m) var(--gin-border-m) 0 0;
+  border-radius: var(--admin-radius-m) var(--admin-radius-m) 0 0;
   line-height: 0;
 
   @media (--admin-xsmall) {
-    border-radius: var(--gin-border-m) 0 0 var(--gin-border-m);
+    border-radius: var(--admin-radius-m) 0 0 var(--admin-radius-m);
   }
 }
 
@@ -94,16 +91,16 @@
   flex-grow: 1;
   flex-shrink: 0;
   box-sizing: border-box;
-  padding: var(--space-l);
-  border-radius: 0 0 var(--gin-border-xs) var(--gin-border-xs);
-  background-color: var(--gin-bg-layer);
+  padding: var(--admin-space-l);
+  border-radius: 0 0 var(--admin-radius-xs) var(--admin-radius-xs);
+  background-color: var(--admin-color-bg-surface);
 
   .gin--dark-mode & {
-    background-color: var(--gin-bg-layer2);
+    background-color: var(--admin-color-bg-surface-nested);
   }
 
   @media (--admin-xsmall) {
-    border-radius: 0 var(--gin-border-xs) var(--gin-border-xs) 0;
+    border-radius: 0 var(--admin-radius-xs) var(--admin-radius-xs) 0;
   }
 }
 
@@ -116,7 +113,7 @@
  */
 
 .card__content-item {
-  margin-block: 0 var(--space-m);
+  margin-block: 0 var(--admin-space-m);
 
   &:last-child {
     margin-block-end: 0;
@@ -129,7 +126,7 @@
 
 .card__footer {
   order: 100;
-  margin-block-start: var(--space-l);
+  margin-block-start: var(--admin-space-l);
 
   .action-links {
     margin-block: 0;

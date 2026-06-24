@@ -13,18 +13,20 @@
 
 .ui-dialog {
   position: absolute;
-  border-radius: var(--gin-border-m);
+  border-radius: var(--admin-radius-m);
   outline: none;
-  background: var(--gin-bg-layer);
-  box-shadow: var(--gin-shadow-l1);
-  font-family: var(--gin-font);
+  background: var(--admin-color-bg-surface);
+  box-shadow: var(--admin-shadow-1);
+  font-family: var(--admin-font-family);
 
   .ui-dialog-titlebar {
     position: relative;
-    padding: var(--space-m) var(--space-l);
-    color: var(--color-white);
+    padding: var(--admin-space-m) var(--admin-space-l);
+    /* Fixed white (not a surface token): text sits on the always-dark titlebar
+       (background #1b1b1d below), so it must stay light in both modes. */
+    color: var(--admin-color-white);
     border: 0 none;
-    border-radius: var(--gin-border-m) var(--gin-border-m) 0 0;
+    border-radius: var(--admin-radius-m) var(--admin-radius-m) 0 0;
     background: #1b1b1d;
     line-height: 1.2;
 
@@ -37,7 +39,7 @@
     position: absolute;
     width: 2rem;
     height: 2rem;
-    margin: 0 var(--space-m);
+    margin: 0 var(--admin-space-m);
     transform: translateY(-50%);
     opacity: 0.8;
     color: inherit;
@@ -59,7 +61,7 @@
       transform: none;
       background: currentColor;
       mask-image: url("data:image/svg+xml,%3csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3e  %3cg fill='none' stroke='currentColor' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3e    %3cpath d='M20 4L4 20' /%3e    %3cpath d='M4 4L20 20' /%3e  %3c/g%3e%3c/svg%3e");
-      mask-size: var(--gin-icon-size-close) var(--gin-icon-size-close);
+      mask-size: var(--admin-icon-size-close) var(--admin-icon-size-close);
       mask-repeat: no-repeat;
       mask-position: center;
 
@@ -70,22 +72,22 @@
   }
 
   .ui-dialog-title {
-    padding-inline-end: var(--space-xl);
-    font-size: var(--font-size-h6);
+    padding-inline-end: var(--admin-space-xl);
+    font-size: var(--admin-font-size-h6);
   }
 
   .ui-dialog-content {
-    color: var(--gin-color-text);
+    color: var(--admin-color-text);
 
     &:first-of-type {
-      border-start-start-radius: var(--gin-border-m);
-      border-start-end-radius: var(--gin-border-m);
+      border-start-start-radius: var(--admin-radius-m);
+      border-start-end-radius: var(--admin-radius-m);
     }
   }
 
   .ui-widget-content {
-    padding-inline: var(--space-l);
-    background: var(--gin-bg-layer);
+    padding-inline: var(--admin-space-l);
+    background: var(--admin-color-bg-surface);
 
     &.ui-dialog-content {
       overflow: auto;
@@ -93,13 +95,13 @@
   }
 
   .ui-widget-content.ui-dialog-buttonpane {
-    padding: var(--space-s) var(--space-l);
-    border-block-start: 1px solid var(--gin-border-color-layer);
-    background: var(--gin-bg-app);
+    padding: var(--admin-space-s) var(--admin-space-l);
+    border-block-start: 1px solid var(--admin-color-border-soft);
+    background: var(--admin-color-bg);
 
     .button {
-      padding-block: calc(var(--space-s) - 2px);
-      padding-inline: var(--space-m);
+      padding-block: calc(var(--admin-space-s) - 2px);
+      padding-inline: var(--admin-space-m);
       margin-block: 0;
 
       &:last-of-type {
@@ -113,13 +115,13 @@
   }
 
   [data-drupal-selector*="-remove-form"] .button.button--danger {
-    border-color: var(--gin-color-danger) !important;
+    border-color: var(--admin-color-error) !important;
   }
 
   .gin--dark-mode & {
     .views-exposed-form,
     .views-form {
-      background: var(--gin-bg-layer2);
+      background: var(--admin-color-bg-surface-nested);
     }
   }
 
@@ -137,7 +139,7 @@
   .layout-region-node-actions {
     position: absolute;
     inset-block-end: 0;
-    inset-inline-start: var(--space-m);
+    inset-inline-start: var(--admin-space-m);
     inset-block-start: auto;
     inset-inline-end: auto;
   }
@@ -147,12 +149,12 @@
   }
 
   .gin-layer-wrapper {
-    margin-block: var(--space-l);
+    margin-block: var(--admin-space-l);
   }
 
   .gin-confirm-form {
-    margin-block-start: var(--space-m);
-    margin-block-end: var(--space-s);
+    margin-block-start: var(--admin-space-m);
+    margin-block-end: var(--admin-space-s);
   }
 
   @media (--admin-to-small) {
@@ -163,12 +165,12 @@
 
 .ui-widget-overlay {
   opacity: 0.9;
-  background: var(--gin-bg-layer2);
+  background: var(--admin-color-bg-surface-nested);
 }
 
 .ui-widget.ui-widget-content {
   padding: 0;
-  border: 1px solid var(--gin-border-color);
+  border: 1px solid var(--admin-color-border);
 }
 
 #drupal-modal .gin-sticky-form-actions.form-actions {

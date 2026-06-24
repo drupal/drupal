@@ -13,9 +13,9 @@
   /**
   * Dropbutton
   */
-  --dropbutton-spacing-size: var(--space-m);
-  --dropbutton-font-size: var(--font-size-base);
-  --dropbutton-line-height: var(--space-m);
+  --dropbutton-spacing-size: var(--admin-space-m);
+  --dropbutton-font-size: var(--admin-font-size-m);
+  --dropbutton-line-height: var(--admin-space-m);
   --dropbutton-toggle-size: 3rem;
   --dropbutton-border-size: 1px;
   --dropbutton-toggle-size-spacing: var(--dropbutton-border-size);
@@ -23,12 +23,12 @@
   --dropbutton-item-max-width: 12.5rem;
   /* Variant variables: small. */
   --dropbutton-small-spacing-size: 0.625rem;
-  --dropbutton-small-font-size: var(--font-size-xs);
+  --dropbutton-small-font-size: var(--admin-font-size-xs);
   --dropbutton-small-line-height: 0.75rem;
   --dropbutton-small-toggle-size: calc((2 * var(--dropbutton-small-spacing-size)) + var(--dropbutton-small-line-height));
   /* Variant variables: extra small. */
   --dropbutton-extrasmall-spacing-size: 0.375rem;
-  --dropbutton-extrasmall-font-size: var(--font-size-xs);
+  --dropbutton-extrasmall-font-size: var(--admin-font-size-xs);
   --dropbutton-extrasmall-line-height: 0.75rem;
   --dropbutton-extrasmall-toggle-size: calc((2 * var(--dropbutton-extrasmall-spacing-size)) + var(--dropbutton-extrasmall-line-height));
 }
@@ -41,8 +41,8 @@
 
 .form-actions .dropbutton-wrapper,
 .field-actions .dropbutton-wrapper {
-  margin-block: var(--space-xs);
-  margin-inline: 0 var(--space-m);
+  margin-block: var(--admin-space-xs);
+  margin-inline: 0 var(--admin-space-m);
 }
 
 .dropbutton-widget {
@@ -67,20 +67,20 @@
   height: var(--dropbutton-toggle-size);
   margin: 0;
   list-style: none;
-  border: 2px solid var(--gin-color-primary);
-  border-radius: var(--gin-border-m);
-  box-shadow: 0 1px 2px var(--gin-color-primary-light);
+  border: 2px solid var(--admin-color-primary);
+  border-radius: var(--admin-radius-m);
+  box-shadow: 0 1px 2px var(--admin-color-primary-soft);
 
   .gin--dark-mode & {
-    box-shadow: 0 4px 18px var(--gin-shadow-button);
+    box-shadow: 0 4px 18px var(--admin-color-shadow-button);
   }
 
   &:hover {
-    border-color: var(--gin-color-primary);
+    border-color: var(--admin-color-primary);
   }
 
   &:active {
-    border-color: var(--gin-color-primary-active);
+    border-color: var(--admin-color-primary-active);
   }
 
   .dropbutton__items {
@@ -89,9 +89,9 @@
     margin: 0;
     padding: 0.5em;
     list-style: none;
-    border-radius: var(--gin-border-l);
-    background: var(--gin-bg-layer3);
-    box-shadow: var(--gin-shadow-l2);
+    border-radius: var(--admin-radius-l);
+    background: var(--admin-color-bg-raised);
+    box-shadow: var(--admin-shadow-2);
     inset-inline-end: 0;
 
     .node-form & {
@@ -108,7 +108,7 @@
     > a,
     > input,
     > .button {
-      border-radius: var(--gin-border-s) var(--gin-border-s) 0 0;
+      border-radius: var(--admin-radius-s) var(--admin-radius-s) 0 0;
     }
   }
 
@@ -122,7 +122,7 @@
   .dropbutton__items > .dropbutton__item,
   .dropbutton__items > .dropbutton__item ~ .dropbutton__item {
     border: 0 none;
-    background-color: var(--gin-bg-app);
+    background-color: var(--admin-color-bg);
     box-shadow: none;
 
     &:first-of-type {
@@ -132,7 +132,7 @@
     /* Multiple Dropbutton only has one item */
     &:first-of-type:last-of-type > * {
       .js .dropbutton--multiple & {
-        border-radius: var(--gin-border-s);
+        border-radius: var(--admin-radius-s);
       }
     }
 
@@ -148,12 +148,12 @@
       text-align: start;
       white-space: nowrap;
       text-overflow: ellipsis;
-      color: var(--gin-color-primary);
+      color: var(--admin-color-primary);
       border: 0 none !important;
       border-radius: 0;
-      background: var(--gin-bg-layer3);
+      background: var(--admin-color-bg-raised);
       box-shadow: none;
-      font-weight: var(--gin-font-weight-heavy);
+      font-weight: var(--admin-font-weight-heavy);
 
       &:focus {
         outline-offset: -2px;
@@ -161,9 +161,9 @@
 
       &:hover,
       &:active {
-        color: var(--gin-color-button-text);
-        border-radius: var(--gin-border-s);
-        background: var(--gin-color-primary);
+        color: var(--admin-color-text-on-primary);
+        border-radius: var(--admin-radius-s);
+        background: var(--admin-color-primary);
       }
     }
   }
@@ -174,19 +174,19 @@
     > .button {
       &:hover,
       &:active {
-        color: var(--gin-color-button-text);
-        background: var(--gin-color-primary);
+        color: var(--admin-color-text-on-primary);
+        background: var(--admin-color-primary);
       }
     }
   }
 
   .dropbutton__items > .dropbutton__item {
-    border-radius: var(--gin-border-s);
+    border-radius: var(--admin-radius-s);
   }
 
   /* Shadow for pseudo dropdown on views page */
   &:not(.dropbutton--gin) > .dropbutton__item.secondary-action {
-    box-shadow: var(--gin-shadow-l2);
+    box-shadow: var(--admin-shadow-2);
   }
 
   &:not(.dropbutton--gin) > .dropbutton__item:not(:first-of-type),
@@ -196,7 +196,7 @@
     > input,
     > .button {
       padding: 0.75em 1em !important;
-      font-size: var(--gin-font-size-s) !important;
+      font-size: var(--admin-font-size-s) !important;
     }
   }
 }
@@ -217,11 +217,11 @@
   height: 100%;
   margin-right: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing));
   white-space: nowrap;
-  border-inline-end: 1px solid var(--gin-color-primary-light-active);
+  border-inline-end: 1px solid var(--admin-color-primary-soft-active);
 
   input {
     height: 100%;
-    color: var(--gin-color-primary);
+    color: var(--admin-color-primary);
     border: 0 none !important;
     border-radius: 0 !important;
     background-color: transparent;
@@ -268,18 +268,18 @@
   inset-block-start: 2px;
   inset-inline-end: 2px;
   bottom: 0;
-  width: calc(var(--gin-spacing-xxl) + 1px);
+  width: calc(var(--admin-space-2xl) + 1px);
   height: 2.75rem;
   white-space: nowrap;
   border: var(--dropbutton-border-size) solid transparent !important;
   /* 1 */
-  border-inline-start: var(--dropbutton-border-size, 1px) solid var(--gin-color-primary) !important;
+  border-inline-start: var(--dropbutton-border-size, 1px) solid var(--admin-color-primary) !important;
   border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0;
   /* LTR */
   background: none;
   box-shadow: none;
-  font-size: var(--gin-font-size-s);
-  font-weight: var(--gin-font-weight-semibold);
+  font-size: var(--admin-font-size-s);
+  font-weight: var(--admin-font-weight-semibold);
   appearance: none;
 
   [dir="rtl"] & {
@@ -302,8 +302,8 @@
 
   /* Toggler states. */
   &:hover {
-    color: var(--gin-color-button-text);
-    background-color: var(--gin-color-primary);
+    color: var(--admin-color-text-on-primary);
+    background-color: var(--admin-color-primary);
     box-shadow: 0 2px 4px rgb(0, 0, 0, 0.25);
   }
 
@@ -312,16 +312,16 @@
   }
 
   &:active {
-    color: var(--gin-color-button-text);
+    color: var(--admin-color-text-on-primary);
     background-color: var(--button--active-bg-color);
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    transition: var(--gin-transition);
+    transition: var(--admin-transition);
   }
 
   @media (--admin-wide) {
-    font-size: var(--gin-font-size);
+    font-size: var(--admin-font-size-m);
   }
 
   @media (forced-colors: active) {
@@ -330,7 +330,7 @@
 
   @media not (forced-colors: active) {
     &::before {
-      background-color: var(--gin-color-primary);
+      background-color: var(--admin-color-primary);
       background-image: none;
       mask-image: var(--admin-icon-drop);
       mask-repeat: no-repeat;
@@ -340,7 +340,7 @@
 
     &:hover::before,
     &:active::before {
-      background-color: var(--gin-color-button-text);
+      background-color: var(--admin-color-text-on-primary);
     }
   }
 }
@@ -417,19 +417,19 @@
     align-items: center;
     box-sizing: border-box;
     margin: 0;
-    padding: calc(0.875rem - 1px) calc(var(--gin-spacing-l) - 1px);
+    padding: calc(0.875rem - 1px) calc(var(--admin-space-l) - 1px);
     cursor: pointer;
     text-align: center;
     white-space: nowrap;
     text-decoration: none;
-    color: var(--gin-color-primary);
+    color: var(--admin-color-primary);
     border: var(--dropbutton-border-size) solid transparent !important;
     /* 1 */
     border-radius: var(--button-border-radius-size);
     background: none;
     box-shadow: none;
-    font-size: var(--gin-font-size-s);
-    font-weight: var(--gin-font-weight-semibold);
+    font-size: var(--admin-font-size-s);
+    font-weight: var(--admin-font-weight-semibold);
     line-height: var(--dropbutton-line-height);
     appearance: none;
     -webkit-font-smoothing: antialiased;
@@ -437,28 +437,28 @@
     /* This is a fix for when an <input> is the first item within a dropdown.
     This can be replicated using the theming_tools development contrib module. */
     &:not(:is(:hover)) {
-      color: var(--gin-color-primary) !important;
+      color: var(--admin-color-primary) !important;
     }
 
     &:hover {
-      background-color: var(--gin-color-primary-hover);
+      background-color: var(--admin-color-primary-hover);
     }
 
     &:active {
-      background-color: var(--gin-color-primary-active);
+      background-color: var(--admin-color-primary-active);
     }
 
     &:hover,
     &:active {
-      color: var(--gin-color-button-text);
+      color: var(--admin-color-text-on-primary);
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      transition: var(--gin-transition);
+      transition: var(--admin-transition);
     }
 
     @media (--admin-wide) {
-      font-size: var(--gin-font-size);
+      font-size: var(--admin-font-size-m);
     }
 
     @media (forced-colors: active) {
@@ -512,7 +512,7 @@
   }
 
   & ~ .dropbutton__item__item ~ .dropbutton__item:last-child {
-    border-color: var(--gin-color-primary);
+    border-color: var(--admin-color-primary);
   }
 
   [dir="rtl"] .dropbutton--multiple & > * {
@@ -549,7 +549,7 @@
  */
 .dropbutton__item:first-of-type ~ .dropbutton__item {
   max-width: unset;
-  border: var(--dropbutton-border-size) solid var(--gin-color-primary);
+  border: var(--dropbutton-border-size) solid var(--admin-color-primary);
   border-bottom: 0;
   box-shadow: 0 2px 10px rgb(0, 0, 0, 0.15);
 
@@ -558,12 +558,12 @@
   }
 
   & > *:hover {
-    background-color: var(--gin-bg-layer3);
+    background-color: var(--admin-color-bg-raised);
   }
 }
 
 .dropbutton__item ~ .dropbutton__item:last-child {
-  border-bottom: var(--dropbutton-border-size) solid var(--color-gray-200);
+  border-bottom: var(--dropbutton-border-size) solid var(--admin-color-border);
   border-radius: 0 0 var(--dropbutton-border-radius-size) var(--dropbutton-border-radius-size);
 }
 
@@ -580,11 +580,11 @@
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
   white-space: normal;
   text-decoration: none;
-  color: var(--color-gray-800);
+  color: var(--admin-color-text-soft);
   border: var(--dropbutton-border-size) solid transparent !important;
   /* 1 */
   border-radius: var(--dropbutton-border-radius-size);
-  background: var(--color-white);
+  background: var(--admin-color-bg-raised);
   box-shadow: none;
   font-size: var(--dropbutton-font-size);
   font-weight: normal;
@@ -622,8 +622,8 @@
   }
 
   &:first-of-type ~ & > *:hover {
-    color: var(--color-text);
-    background: var(--color-gray-050);
+    color: var(--admin-color-text);
+    background: var(--admin-color-bg-surface-nested);
   }
 
   & > .button:not(:focus) {
@@ -631,11 +631,11 @@
   }
 
   &:first-of-type ~ & > *:focus {
-    border-color: var(--color-focus) !important;
+    border-color: var(--admin-color-focus) !important;
     /* 1 */
     box-shadow:
-      inset 0 0 0 1px var(--color-focus),
-      0 0 0 1px var(--color-focus);
+      inset 0 0 0 1px var(--admin-color-focus),
+      0 0 0 1px var(--admin-color-focus);
   }
 }
 
@@ -648,7 +648,7 @@ html.js {
     }
 
     .dropbutton {
-      background: var(--gin-bg-layer3);
+      background: var(--admin-color-bg-raised);
     }
   }
 
@@ -686,18 +686,18 @@ html.js.no-touchevents {
   }
 
   .dropbutton--multiple.dropbutton--small > .dropbutton__item:first-of-type {
-    margin-inline-end: var(--gin-spacing-xl);
+    margin-inline-end: var(--admin-space-xl);
   }
 
   .dropbutton--multiple.dropbutton--extrasmall > .dropbutton__item:first-of-type {
-    margin-inline-end: var(--gin-spacing-l);
+    margin-inline-end: var(--admin-space-l);
   }
 
   .dropbutton--small {
     min-width: 0;
     height: 2.25rem;
     min-height: 2.25rem;
-    border-radius: var(--gin-border-s);
+    border-radius: var(--admin-radius-s);
 
     .dropbutton__toggle {
       width: calc(var(--dropbutton-small-toggle-size, 2rem) + 1px);
@@ -708,14 +708,14 @@ html.js.no-touchevents {
     min-width: 0;
     height: 1.75rem;
     min-height: 1.75rem;
-    border-radius: var(--gin-border-s);
+    border-radius: var(--admin-radius-s);
 
     .dropbutton__toggle {
       width: calc(var(--dropbutton-extrasmall-toggle-size, 1.5rem) + 1px);
     }
 
     .dropbutton__item:first-of-type > * {
-      padding-inline: var(--gin-spacing-s);
+      padding-inline: var(--admin-space-s);
     }
   }
 

@@ -20,77 +20,77 @@
   cursor: pointer;
   text-align: center;
   text-decoration: none;
-  color: var(--gin-color-primary);
-  border: 2px solid var(--gin-color-primary);
-  border-radius: var(--gin-border-m);
+  color: var(--admin-color-primary);
+  border: 2px solid var(--admin-color-primary);
+  border-radius: var(--admin-radius-m);
   background-color: transparent;
-  box-shadow: 0 1px 2px var(--gin-color-primary-light);
-  font-size: var(--gin-font-size-s);
-  font-weight: var(--gin-font-weight-semibold);
+  box-shadow: 0 1px 2px var(--admin-color-primary-soft);
+  font-size: var(--admin-font-size-s);
+  font-weight: var(--admin-font-weight-semibold);
   line-height: 1;
-  margin-block: var(--space-m);
-  margin-inline: 0 var(--space-s);
-  padding-block: calc(var(--gin-spacing-s) - 2px);
-  padding-inline: var(--gin-spacing-m);
+  margin-block: var(--admin-space-m);
+  margin-inline: 0 var(--admin-space-s);
+  padding-block: calc(var(--admin-space-s) - 2px);
+  padding-inline: var(--admin-space-m);
   appearance: none;
 
   &:hover {
     text-decoration: none;
-    color: var(--gin-color-button-text);
-    border-color: var(--gin-color-primary-hover);
-    background-color: var(--gin-color-primary-hover);
+    color: var(--admin-color-text-on-primary);
+    border-color: var(--admin-color-primary-hover);
+    background-color: var(--admin-color-primary-hover);
   }
 
   &:active {
-    color: var(--gin-color-button-text);
-    border-color: var(--gin-color-primary-active);
-    background-color: var(--gin-color-primary-active);
+    color: var(--admin-color-text-on-primary);
+    border-color: var(--admin-color-primary-active);
+    background-color: var(--admin-color-primary-active);
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    transition: var(--gin-transition);
+    transition: var(--admin-transition);
   }
 }
 
 .form-actions .button {
-  margin-inline-end: var(--gin-spacing-xs);
+  margin-inline-end: var(--admin-space-xs);
 }
 
 /* Common styles for small buttons. */
 .no-touchevents {
   & .button--small {
     min-height: 2rem;
-    font-size: var(--font-size-xs);
-    margin-block: var(--space-s);
-    margin-inline: 0 var(--space-xs);
-    padding-block: var(--space-xs);
-    padding-inline: var(--space-s);
+    font-size: var(--admin-font-size-xs);
+    margin-block: var(--admin-space-s);
+    margin-inline: 0 var(--admin-space-xs);
+    padding-block: var(--admin-space-xs);
+    padding-inline: var(--admin-space-s);
   }
 
   /* Common styles for extra small buttons. */
   & .button--extrasmall {
     min-height: 1.5rem;
-    font-size: var(--font-size-xxs);
-    margin-block: var(--space-xs);
-    margin-inline: 0 var(--space-xs);
-    padding-block: var(--space-xxs);
-    padding-inline: var(--space-xs);
+    font-size: var(--admin-font-size-2xs);
+    margin-block: var(--admin-space-xs);
+    margin-inline: 0 var(--admin-space-xs);
+    padding-block: var(--admin-space-2xs);
+    padding-inline: var(--admin-space-xs);
   }
 }
 
 .button.button--small {
-  border-radius: var(--gin-border-s);
-  font-size: var(--gin-font-size-xxs);
-  padding-block: calc(var(--gin-spacing-xxs) + 2px);
-  padding-inline: var(--gin-spacing-s);
+  border-radius: var(--admin-radius-s);
+  font-size: var(--admin-font-size-2xs);
+  padding-block: calc(var(--admin-space-2xs) + 2px);
+  padding-inline: var(--admin-space-s);
 }
 
 /* Common styles for extra small buttons. */
 .button.button--extrasmall {
-  border-radius: var(--gin-border-s);
-  font-size: var(--gin-font-size-xxs);
-  padding-block: var(--gin-spacing-xxs);
-  padding-inline: var(--gin-spacing-s);
+  border-radius: var(--admin-radius-s);
+  font-size: var(--admin-font-size-2xs);
+  padding-block: var(--admin-space-2xs);
+  padding-inline: var(--admin-space-s);
 }
 
 /* Styles for action link buttons. */
@@ -110,23 +110,23 @@
 .button--primary,
 .button--primary:not(:focus),
 .ief-entity-submit {
-  background: var(--gin-color-primary);
-  box-shadow: 0.1em 0.25em 0.5em var(--gin-color-primary-light);
+  background: var(--admin-color-primary);
+  box-shadow: 0.1em 0.25em 0.5em var(--admin-color-primary-soft);
 
   &:hover {
-    color: var(--gin-color-button-text);
-    background-color: var(--gin-color-primary-hover);
+    color: var(--admin-color-text-on-primary);
+    background-color: var(--admin-color-primary-hover);
   }
 
   &:active {
-    color: var(--gin-color-button-text);
-    background-color: var(--gin-color-primary-active);
+    color: var(--admin-color-text-on-primary);
+    background-color: var(--admin-color-primary-active);
   }
 
   &,
   &:hover,
   &:active {
-    color: var(--gin-color-button-text);
+    color: var(--admin-color-text-on-primary);
   }
 }
 
@@ -137,20 +137,20 @@
 
   &:is(:hover, :active) {
     color: var(--button-fg-color--danger);
-    border-color: var(--gin-color-danger);
+    border-color: var(--admin-color-error);
     background-color: var(--button--hover-bg-color--danger);
   }
 }
 
 a.button:hover,
 a.button:active {
-  color: var(--gin-color-button-text);
+  color: var(--admin-color-text-on-primary);
 }
 
 a.button--primary:hover,
 a.button--primary:active {
   .gin--dark-mode & {
-    color: var(--gin-bg-app);
+    color: var(--admin-color-bg);
   }
 }
 
@@ -164,8 +164,8 @@ a.button--primary:active {
   &,
   &:hover,
   &:active {
-    color: var(--gin-color-disabled);
-    border: 2px solid var(--gin-color-disabled-border) !important;
+    color: var(--admin-color-text-disabled);
+    border: 2px solid var(--admin-color-border-disabled) !important;
     background: transparent;
     box-shadow: none;
   }
@@ -182,8 +182,8 @@ a.button--primary:active {
   &,
   &:hover,
   &:active {
-    color: var(--gin-color-disabled);
-    background-color: var(--gin-color-disabled-bg);
+    color: var(--admin-color-text-disabled);
+    background-color: var(--admin-color-bg-disabled);
   }
 }
 

@@ -17,25 +17,25 @@
   inset-inline-start: 0;
 
   &:hover {
-    background-color: var(--gin-border-color-table);
+    background-color: var(--admin-color-border-table);
   }
 
   &:active {
-    background-color: var(--gin-border-color);
+    background-color: var(--admin-color-border);
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    transition: var(--gin-transition-fast);
+    transition: var(--admin-transition-slow);
   }
 }
 
 .layout-region--secondary {
   @media (prefers-reduced-motion: no-preference) {
-    transition: transform var(--gin-transition-fast);
+    transition: transform var(--admin-transition-slow);
   }
 
   @media (--admin-to-medium) {
-    --gin-sidebar-width: var(--gin-sidebar-small-width);
+    --admin-theme-sidebar-width: var(--admin-theme-sidebar-small-width);
   }
 
   @media (--admin-to-large) {
@@ -45,14 +45,14 @@
 }
 
 body[data-meta-sidebar="closed"] {
-  --gin-sidebar-offset: 0px;
+  --admin-theme-sidebar-offset: 0px;
 
   .layout-region--secondary {
     visibility: hidden;
-    transform: translateX(var(--gin-sidebar-width));
+    transform: translateX(var(--admin-theme-sidebar-width));
 
     &:dir(rtl) {
-      transform: translateX(calc(var(--gin-sidebar-width) * -1));
+      transform: translateX(calc(var(--admin-theme-sidebar-width) * -1));
     }
   }
 }
@@ -71,7 +71,7 @@ body[data-meta-sidebar="open"] {
   width: 32px;
   height: 32px;
   cursor: pointer;
-  border-radius: var(--gin-border-m);
+  border-radius: var(--admin-radius-m);
   background: transparent;
 
   &::before {
@@ -79,30 +79,30 @@ body[data-meta-sidebar="open"] {
     width: 100%;
     height: 100%;
     content: "";
-    background-color: var(--gin-icon-color);
+    background-color: var(--admin-color-icon);
     mask-repeat: no-repeat;
     mask-position: center center;
   }
 
   &:hover,
   &:focus {
-    background-color: var(--gin-color-primary-light);
+    background-color: var(--admin-color-primary-soft);
 
     &::before {
-      background-color: var(--gin-color-primary);
+      background-color: var(--admin-color-primary);
     }
   }
 
   &.is-active {
-    background-color: var(--gin-color-primary-light-hover);
+    background-color: var(--admin-color-primary-soft-hover);
 
     &::before {
-      background-color: var(--gin-color-primary-active);
+      background-color: var(--admin-color-primary-active);
     }
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    transition: background var(--gin-transition-fast);
+    transition: background var(--admin-transition-slow);
   }
 }
 
@@ -112,7 +112,7 @@ body[data-meta-sidebar="open"] {
   width: 32px;
   height: 32px;
   cursor: pointer;
-  border-radius: var(--gin-border-m);
+  border-radius: var(--admin-radius-m);
   background: transparent;
 
   &::before {
@@ -121,30 +121,30 @@ body[data-meta-sidebar="open"] {
     height: 100%;
     content: "";
     border-radius: 50%;
-    background-color: var(--gin-icon-color);
+    background-color: var(--admin-color-icon);
     mask-repeat: no-repeat;
     mask-position: center center;
     mask-image: url("../../migration/media/icons/general/sidebar.svg");
-    mask-size: var(--gin-icon-size-sidebar-toggle) var(--gin-icon-size-sidebar-toggle);
+    mask-size: var(--admin-icon-size-sidebar-toggle) var(--admin-icon-size-sidebar-toggle);
   }
 
   &:hover,
   &:focus,
   &.is-active,
   &.is-active:hover {
-    background-color: var(--gin-color-primary-light);
+    background-color: var(--admin-color-primary-soft);
 
     &::before {
-      background-color: var(--gin-color-primary);
+      background-color: var(--admin-color-primary);
     }
   }
 
   &.is-active {
-    background-color: var(--gin-bg-item-hover);
+    background-color: var(--admin-color-bg-item-hover);
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    transition: background var(--gin-transition-fast);
+    transition: background var(--admin-transition-slow);
   }
 }
 
@@ -153,7 +153,7 @@ body[data-meta-sidebar="open"] {
   position: absolute;
   z-index: 104;
   inset-block-start: 18px;
-  inset-inline-end: var(--space-m);
+  inset-inline-end: var(--admin-space-m);
 
   &::before {
     mask-image: url("../../migration/media/icons/general/close.svg");
@@ -173,7 +173,7 @@ body[data-meta-sidebar="open"] {
   width: 100%;
   height: 100%;
   opacity: 0;
-  background: var(--gin-bg-layer2);
+  background: var(--admin-color-bg-surface-nested);
   inset-block-start: 0;
   inset-inline-start: 0;
 

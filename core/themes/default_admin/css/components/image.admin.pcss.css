@@ -4,7 +4,7 @@
  */
 
 .image-anchor td:not(:hover) {
-  background-color: var(--color-white);
+  background-color: var(--admin-color-bg-surface);
 }
 
 .image-anchor td:hover > div {

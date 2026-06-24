@@ -14,12 +14,12 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  padding-block-start: var(--gin-spacing-m);
+  padding-block-start: var(--admin-space-m);
 
   .form-item,
   .form-actions {
-    margin-block: var(--gin-spacing-xs);
-    margin-inline: 0 var(--gin-spacing-xs);
+    margin-block: var(--admin-space-xs);
+    margin-inline: 0 var(--admin-space-xs);
     align-self: flex-start;
   }
 
@@ -29,6 +29,6 @@
   }
 
   .field-add-more-submit {
-    margin-block-start: var(--gin-spacing-s);
+    margin-block-start: var(--admin-space-s);
   }
 }

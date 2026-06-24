@@ -12,7 +12,7 @@
 
 .breadcrumb {
   padding: 0;
-  color: var(--color-text);
+  color: var(--admin-color-text);
   font-size: 0.79rem;
 }
 
@@ -28,7 +28,7 @@
   display: inline-block;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: var(--color-text);
+  color: var(--admin-color-text);
   font-weight: bold;
   line-height: 1.5rem;
 }
@@ -64,7 +64,7 @@
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
   .gin-breadcrumb {
     padding: 0;
-    color: var(--gin-color-text);
+    color: var(--admin-color-text);
   }
 
   .gin-breadcrumb-wrapper {
@@ -76,9 +76,9 @@
     width: auto;
     margin: 0;
     margin-block-start: 0;
-    margin-inline-start: calc(var(--space-xxs) * -1);
+    margin-inline-start: calc(var(--admin-space-2xs) * -1);
     padding: 0;
-    padding-inline-start: var(--space-xxs);
+    padding-inline-start: var(--admin-space-2xs);
     list-style-type: none;
     text-overflow: ellipsis;
   }
@@ -90,8 +90,8 @@
     vertical-align: middle;
     -webkit-text-decoration: none;
     text-decoration: none;
-    color: var(--gin-color-text-light);
-    font-weight: var(--font-weight-normal);
+    color: var(--admin-color-text-soft);
+    font-weight: var(--admin-font-weight-normal);
   }
 
   .gin-breadcrumb__item {
@@ -104,7 +104,7 @@
       vertical-align: middle;
       opacity: 0.3;
       background: none;
-      font-size: var(--font-size-xs);
+      font-size: var(--admin-font-size-xs);
 
       @media (forced-colors: active) {
         opacity: 1;
@@ -118,11 +118,11 @@
       &::before {
         position: absolute;
         display: inline-block;
-        width: var(--gin-icon-size-toolbar-secondary);
-        height: var(--gin-icon-size-toolbar-secondary);
+        width: var(--admin-icon-size-toolbar-secondary);
+        height: var(--admin-icon-size-toolbar-secondary);
         content: "";
         transform: translateY(-50%);
-        background-color: var(--gin-icon-color);
+        background-color: var(--admin-color-icon);
         inset-block-start: calc(50% - 1px);
         inset-inline-start: 0;
         /* cspell:disable-next-line */
@@ -136,7 +136,7 @@
       }
 
       &:hover::before {
-        background-color: var(--gin-color-primary);
+        background-color: var(--admin-color-primary);
 
         @media (forced-colors: active) {
           background: linktext;
@@ -152,7 +152,7 @@
       padding-inline-end: 0;
       content: "";
       opacity: 0.3;
-      border-inline-end: 1px solid var(--gin-color-text);
+      border-inline-end: 1px solid var(--admin-color-text);
 
       @media (forced-colors: active) {
         opacity: 1;
@@ -162,8 +162,8 @@
 
   .gin-breadcrumb__link,
   .gin-breadcrumb__text {
-    border-radius: var(--gin-border-xxs);
-    font-size: var(--font-size-xs);
+    border-radius: var(--admin-radius-2xs);
+    font-size: var(--admin-font-size-xs);
     line-height: 2;
   }
 
@@ -179,8 +179,8 @@
   .gin-breadcrumb__text em,
   .gin-breadcrumb__text em:link,
   .gin-breadcrumb__text em:visited {
-    color: var(--gin-color-text-light);
-    font-weight: var(--font-weight-normal);
+    color: var(--admin-color-text-soft);
+    font-weight: var(--admin-font-weight-normal);
   }
 
   .gin-breadcrumb__link em,
@@ -190,6 +190,6 @@
 
   .gin-breadcrumb__link:hover,
   .gin-breadcrumb__link:hover em {
-    color: var(--gin-color-primary-hover);
+    color: var(--admin-color-primary-hover);
   }
 }

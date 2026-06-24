@@ -11,7 +11,7 @@ th.checkbox {
 }
 
 tr.selected td {
-  background-color: var(--color-bgblue-active);
+  background-color: var(--admin-color-bg-item-hover);
 }
 
 .views-bulk-actions {
@@ -19,11 +19,14 @@ tr.selected td {
   display: flex;
   flex: 1;
   flex-wrap: wrap;
-  padding: var(--space-m);
-  color: var(--color-white);
+  padding: var(--admin-space-m);
+  /* Fixed white: text on the always-dark inverse toolbar below. */
+  color: var(--admin-color-white);
   border: var(--details-border-size) solid var(--details-border-color);
   border-radius: 4px;
-  background-color: var(--color-text);
+  /* Inverse bar. Was --admin-color-text, which inverts to light in dark mode and
+     made the white text vanish; bg-inverse stays dark in both modes. */
+  background-color: var(--admin-color-bg-inverse);
 
   &[data-drupal-sticky-vbo="true"] {
     position: sticky;
@@ -56,14 +59,14 @@ tr.selected td {
 
 .views-bulk-actions__item {
   align-self: center;
-  margin-block: 0 var(--space-s);
-  margin-inline: 0 var(--space-l);
-  margin-inline-end: var(--space-xs);
-  color: var(--gin-color-text);
-  font-weight: var(--font-weight-semibold);
+  margin-block: 0 var(--admin-space-s);
+  margin-inline: 0 var(--admin-space-l);
+  margin-inline-end: var(--admin-space-xs);
+  color: var(--admin-color-text);
+  font-weight: var(--admin-font-weight-semibold);
 
   &:has(+ .views-bulk-actions__item.form-actions) {
-    margin-inline-end: var(--space-xs);
+    margin-inline-end: var(--admin-space-xs);
   }
 
   &:last-of-type {
@@ -76,20 +79,20 @@ tr.selected td {
     }
   }
   & .button--primary:not(:disabled, .is-disabled) {
-    background-color: var(--gin-color-primary);
+    background-color: var(--admin-color-primary);
     &:hover {
-      background-color: var(--gin-color-primary-hover);
+      background-color: var(--admin-color-primary-hover);
     }
     &:focus {
       background: var(--button--focus-bg-color--primary);
     }
     &:active {
-      background-color: var(--gin-color-primary-active);
+      background-color: var(--admin-color-primary-active);
     }
   }
   & .form-item__label {
     display: inline;
-    padding-inline-end: var(--space-xs);
+    padding-inline-end: var(--admin-space-xs);
     &::after {
       content: ":";
     }
@@ -98,7 +101,7 @@ tr.selected td {
     min-height: 2rem;
     padding-block: calc(0.5rem - 1px);
     padding-inline: calc(1rem - 1px) calc(2.25rem - 1px);
-    font-size: var(--font-size-xs);
+    font-size: var(--admin-font-size-xs);
     line-height: 1rem;
   }
   & input,
@@ -112,17 +115,17 @@ tr.selected td {
 }
 .views-bulk-actions__item--status {
   width: 100%;
-  margin-inline-end: var(--space-l);
+  margin-inline-end: var(--admin-space-l);
   white-space: nowrap;
-  color: var(--gin-color-text-light);
-  font-size: var(--font-size-xs);
+  color: var(--admin-color-text-soft);
+  font-size: var(--admin-font-size-xs);
   font-weight: bold;
 }
 
 .views-field__skip-to-bulk-actions {
   display: block;
   white-space: nowrap;
-  font-size: var(--font-size-xs);
+  font-size: var(--admin-font-size-xs);
 }
 
 @media screen and (min-width: 61rem) {
@@ -167,12 +170,12 @@ tr.selected td {
 
 .block-system > .views-form [data-drupal-selector*="edit-header"] > .form-wrapper,
 .view-content .views-form [data-drupal-selector*="edit-header"] > .form-wrapper {
-  padding: var(--space-m);
+  padding: var(--admin-space-m);
 }
 
 .block-system > .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] > *,
 .view-content .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] > * {
-  margin-inline-end: var(--space-xs);
+  margin-inline-end: var(--admin-space-xs);
 }
 
 .block-system > .views-form [data-drupal-selector*="edit-header"] [data-drupal-selector*="edit-views-bulk-operations-bulk-form"] .form-type--select,
@@ -198,8 +201,8 @@ tr.selected td {
   display: block;
   float: inline-start;
   inset-block-start: 2px;
-  margin-block-start: var(--space-xxs);
-  margin-inline-end: var(--space-m);
+  margin-block-start: var(--admin-space-2xs);
+  margin-inline-end: var(--admin-space-m);
   line-height: 1.75;
 }
 
@@ -224,13 +227,15 @@ tr.selected td {
 .view-content .views-form [data-drupal-selector*="edit-header"],
 .view-content .views-form .views-bulk-actions {
   border: 0 none;
-  border-radius: var(--gin-border-m);
-  background: rgb(var(--gin-color-sticky-rgb), 0.95);
+  border-radius: var(--admin-radius-m);
+  /* stylelint-disable-next-line color-function-notation */
+  background: rgb(from var(--admin-color-bg-sticky) r g b / 0.95);
 
   @supports (backdrop-filter: blur()) {
     opacity: 0.999;
     /* Fix Chrome issue with mask */
-    background: rgb(var(--gin-color-sticky-rgb), 0.9);
+    /* stylelint-disable-next-line color-function-notation */
+    background: rgb(from var(--admin-color-bg-sticky) r g b / 0.9);
     backdrop-filter: blur(12px);
 
     .gin--dark-mode & {
@@ -247,5 +252,5 @@ tr.selected td {
   opacity: 1;
   box-shadow: 0 2px 6px 2px rgb(0, 0, 0, 0.03);
   inset-inline-start: 0;
-  inset-block-end: var(--space-xs);
+  inset-block-end: var(--admin-space-xs);
 }

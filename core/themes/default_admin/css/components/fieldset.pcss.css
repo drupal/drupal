@@ -5,19 +5,19 @@
 
 .fieldset {
   min-width: 0;
-  margin: var(--space-m) 0;
+  margin: var(--admin-space-m) 0;
   padding: 0;
-  color: var(--color-text);
+  color: var(--admin-color-text);
   border: var(--details-border-size) solid var(--details-border-color);
-  border-radius: var(--base-border-radius);
-  background-color: var(--color-white);
+  border-radius: var(--admin-radius-2xs);
+  background-color: var(--admin-color-bg-surface);
   box-shadow: var(--details-box-shadow);
 
   &:not(.fieldgroup) {
-    padding-block-start: var(--gin-spacing-xs);
-    color: var(--gin-color-text-light);
-    border-color: var(--gin-border-color);
-    border-radius: var(--gin-border-m);
+    padding-block-start: var(--admin-space-xs);
+    color: var(--admin-color-text-soft);
+    border-color: var(--admin-color-border);
+    border-radius: var(--admin-radius-m);
     background: transparent;
     box-shadow: none;
     padding-inline: 0;
@@ -31,7 +31,7 @@
     }
 
     &.error {
-      border: 2px solid var(--gin-color-danger);
+      border: 2px solid var(--admin-color-error);
     }
   }
 }
@@ -51,21 +51,21 @@
   display: contents; /* For Firefox. */
   float: left; /* iOS Safari, Android Chrome, Edge. */
   width: 100%; /* iOS Safari, Android Chrome, Edge. */
-  margin-block-end: var(--space-m);
-  color: var(--color-gray-800);
+  margin-block-end: var(--admin-space-m);
+  color: var(--admin-color-text-soft);
   font-weight: bold;
 
   @media screen and (min-width: 48em) {
-    margin-bottom: var(--space-l);
+    margin-bottom: var(--admin-space-l);
   }
 }
 
 .fieldset__legend--composite {
   float: none;
   width: auto;
-  margin-block: calc(var(--space-xs) / 2); /* 4px */
+  margin-block: calc(var(--admin-space-xs) / 2); /* 4px */
   color: inherit;
-  font-size: var(--font-size-s); /* 14px */
+  font-size: var(--admin-font-size-s); /* 14px */
   line-height: calc(18rem / 16); /* 18px */
 }
 
@@ -78,12 +78,12 @@
 .fieldset__label {
   display: block;
   margin-block-start: 0;
-  margin-block-end: var(--gin-spacing-xs);
-  padding: var(--space-m);
-  color: var(--gin-color-title);
-  font-size: var(--gin-font-size-s);
-  font-weight: var(--gin-font-weight-semibold);
-  line-height: var(--space-m);
+  margin-block-end: var(--admin-space-xs);
+  padding: var(--admin-space-m);
+  color: var(--admin-color-text-loud);
+  font-size: var(--admin-font-size-s);
+  font-weight: var(--admin-font-weight-semibold);
+  line-height: var(--admin-space-m);
 
   &.is-disabled {
     color: var(--input--disabled-fg-color);
@@ -94,17 +94,17 @@
   }
 
   @media screen and (min-width: 48em) {
-    padding-inline: var(--space-l);
+    padding-inline: var(--admin-space-l);
   }
 }
 
 .fieldset__label--group {
   margin-block-start: 0;
-  margin-block-end: var(--gin-spacing-xs);
+  margin-block-end: var(--admin-space-xs);
   padding: 0;
-  color: var(--gin-color-title);
-  font-size: var(--gin-font-size-s);
-  font-weight: var(--gin-font-weight-semibold);
+  color: var(--admin-color-text-loud);
+  font-size: var(--admin-font-size-s);
+  font-weight: var(--admin-font-weight-semibold);
   line-height: inherit;
 
   @media screen and (min-width: 48em) {
@@ -113,9 +113,9 @@
 }
 
 .fieldset__description {
-  max-width: var(--gin-max-line-length);
-  color: var(--gin-color-text-light);
-  font-size: var(--font-size-xs); /* ~13px */
+  max-width: var(--admin-max-line-length);
+  color: var(--admin-color-text-soft);
+  font-size: var(--admin-font-size-xs); /* ~13px */
   line-height: calc(17rem / 16); /* 17px */
   margin-block: calc(6rem / 16); /* 6px */
 
@@ -128,13 +128,13 @@
 .fieldset__error-message {
   margin-block: calc(6rem / 16); /* 6px */
   color: var(--input--error-color);
-  font-size: var(--font-size-xs); /* ~13px */
+  font-size: var(--admin-font-size-xs); /* ~13px */
   font-weight: normal;
   line-height: calc(17rem / 16); /* 17px */
 }
 
 .fieldset__wrapper {
-  margin: var(--space-m);
+  margin: var(--admin-space-m);
 
   /**
    * Remove the extra padding of container-inline wrapper if it's used inside a fieldset
@@ -144,7 +144,7 @@
   }
 
   @media screen and (min-width: 48em) {
-    margin: var(--space-l) var(--space-l) calc(var(--space-m) + var(--space-s));
+    margin: var(--admin-space-l) var(--admin-space-l) calc(var(--admin-space-m) + var(--admin-space-s));
   }
 }
 

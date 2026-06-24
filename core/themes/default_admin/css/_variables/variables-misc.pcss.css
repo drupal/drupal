@@ -1,0 +1,76 @@
+/**
+ * @file
+ * Miscellaneous global custom properties.
+ *
+ * Motion (easing/transition), radii & border widths, focus rings, icon sizes,
+ * and other global tokens that are neither color, spacing, nor typography.
+ * Split out of the former css/base/variables.pcss.css as part of
+ * https://www.drupal.org/i/3582351 (relocation only — no value changes).
+ */
+
+@import "../base/media-queries.pcss.css";
+
+:root {
+  /*
+   * Common.
+   */
+  --transition: all var(--admin-duration-fast) var(--admin-easing); /* Claro 'all' composite, kept for the shortcut module's Claro backport. */
+  --focus-border-size: calc(var(--admin-radius-2xs) - 1px);
+  --focus-border-offset-size: 0px;
+  --outline-size: 4px;
+  --focus-outline: var(--outline-size) solid var(--admin-color-focus);
+  --focus-box-shadow: 0 0 0 var(--focus-border-offset-size) var(--admin-color-bg-surface), 0 0 0 calc(var(--focus-border-size) + var(--focus-border-offset-size)) var(--admin-color-focus);
+
+  /**
+   * Shadows.
+   */
+  --shadow-z3: 0 14px 30px rgb(0, 0, 0, 0.1);
+
+  /*
+   * Pattern.
+   */
+  --admin-pattern-square: 0.5rem;
+
+  /*
+   * Icon sizes.
+   */
+  --admin-icon-size-close: 20px;
+  --admin-icon-size-toolbar-secondary: 17px;
+  --admin-icon-size-toolbar: 17px;
+  --admin-icon-size-sidebar-toggle: 21px;
+
+  /*
+   * Corner radii. Canonical --admin-radius-* scale; the former Gin
+   * --gin-border-* scale and Claro --base-border-radius (2px) are folded in here
+   * — the Claro base radius became --admin-radius-2xs. Authored in px; the build's
+   * px-to-rem step converts them.
+   */
+  --admin-radius-2xs: 2px;
+  --admin-radius-xs: 4px;
+  --admin-radius-s: 6px;
+  --admin-radius-m: 8px;
+  --admin-radius-l: 12px;
+  --admin-radius-xl: 16px;
+  --size-summary-border-radius: calc(var(--admin-radius-m) - 1px);
+
+  /*
+   * Motion. Duration split from easing. The old Gin --gin-transition-fast
+   * (0.3s) was misnamed — 0.3s is the SLOW one, so it became --admin-transition-slow.
+   * The duplicate Claro --easing + Gin --gin-easing (identical) folded into --admin-easing.
+   */
+  --admin-duration-fast: 0.15s;
+  --admin-duration-slow: 0.3s;
+  --admin-easing: cubic-bezier(0.19, 1, 0.22, 1);
+  --admin-transition: var(--admin-duration-fast) var(--admin-easing);
+  --admin-transition-slow: var(--admin-duration-slow) var(--admin-easing);
+
+  /*
+   * Misc.
+   */
+  --admin-link-decoration-style: dotted;
+  --admin-max-line-length: 80ch;
+
+  @media (--admin-medium) {
+    --admin-icon-size-toolbar: 20px;
+  }
+}

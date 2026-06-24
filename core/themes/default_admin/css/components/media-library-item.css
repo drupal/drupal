@@ -26,7 +26,7 @@
     transform: translateY(-50%);
     border: var(--input-border-size) solid var(--jui-dropdown-border-color);
     border-radius: 3.5rem;
-    background: var(--color-white);
+    background: var(--admin-color-bg-raised);
     box-shadow: 0 0.25rem 0.625rem var(--jui-dropdown-shadow-color);
     inset-block-start: 50%;
     inset-inline-start: 50%;
@@ -39,7 +39,7 @@
     width: 1.75rem;
     height: 1.75rem;
     margin: -0.875rem;
-    border: 3px solid var(--color-absolutezero);
+    border: 3px solid var(--admin-color-link);
     border-inline-end: 0.1875rem dotted transparent;
   }
 
@@ -52,7 +52,7 @@
   }
 
   .form-item {
-    margin: var(--space-xs);
+    margin: var(--admin-space-xs);
   }
 }
 
@@ -69,7 +69,7 @@
   box-sizing: border-box;
   padding: 0.5rem;
   vertical-align: top;
-  border-radius: var(--gin-border-xl);
+  border-radius: var(--admin-radius-xl);
   outline: none;
 
   /**
@@ -104,7 +104,7 @@
 .media-library-item__edit.button,
 .media-library-item__remove,
 .media-library-item__remove.button {
-  border-color: var(--gin-border-color);
+  border-color: var(--admin-color-border);
 
   &:focus {
     outline: var(--focus-outline);
@@ -144,7 +144,7 @@
   .form-boolean {
     width: 1.8125rem;
     height: 1.8125rem;
-    border-radius: var(--gin-border-xs);
+    border-radius: var(--admin-radius-xs);
     box-shadow: 0 2px 4px rgb(0, 0, 0, 0.15);
 
     &:hover,
@@ -153,8 +153,8 @@
     }
 
     &:checked {
-      border-color: var(--gin-color-primary);
-      background-color: var(--gin-color-primary);
+      border-color: var(--admin-color-primary);
+      background-color: var(--admin-color-primary);
     }
   }
 }
@@ -175,17 +175,17 @@
 .media-library-item__preview {
   position: relative;
   overflow: clip;
-  border: 1px solid var(--gin-border-color);
-  border-radius: var(--gin-border-xl);
+  border: 1px solid var(--admin-color-border);
+  border-radius: var(--admin-radius-xl);
   aspect-ratio: 1;
-  background-color: var(--gin-pattern-fallback);
-  background-image: linear-gradient(-45deg, var(--gin-pattern) 25%, transparent 26%), linear-gradient(-45deg, var(--gin-pattern) 25%, transparent 26%), linear-gradient(135deg, var(--gin-pattern) 25%, transparent 26%), linear-gradient(135deg, var(--gin-pattern) 25%, transparent 26%);
+  background-color: var(--admin-color-bg-surface-nested);
+  background-image: linear-gradient(-45deg, var(--admin-color-border) 25%, transparent 26%), linear-gradient(-45deg, var(--admin-color-border) 25%, transparent 26%), linear-gradient(135deg, var(--admin-color-border) 25%, transparent 26%), linear-gradient(135deg, var(--admin-color-border) 25%, transparent 26%);
   background-position:
     0 0,
-    var(--gin-pattern-square) var(--gin-pattern-square),
-    var(--gin-pattern-square) var(--gin-pattern-square),
+    var(--admin-pattern-square) var(--admin-pattern-square),
+    var(--admin-pattern-square) var(--admin-pattern-square),
     0 0;
-  background-size: calc(var(--gin-pattern-square) * 2) calc(var(--gin-pattern-square) * 2);
+  background-size: calc(var(--admin-pattern-square) * 2) calc(var(--admin-pattern-square) * 2);
 
   svg,
   img {
@@ -198,18 +198,18 @@
   }
 
   .media-library-item.is-hover & {
-    border-color: var(--gin-color-text);
-    box-shadow: 0 0 0 2px var(--gin-color-text);
+    border-color: var(--admin-color-text);
+    box-shadow: 0 0 0 2px var(--admin-color-text);
 
     .gin--dark-mode & {
-      border-color: var(--gin-border-color);
+      border-color: var(--admin-color-border);
     }
   }
 
   .media-library-item.checked &,
   .media-library-item.is-active & {
-    border-color: var(--gin-color-primary);
-    box-shadow: 0 0 0 2px var(--gin-color-primary);
+    border-color: var(--admin-color-primary);
+    box-shadow: 0 0 0 2px var(--admin-color-primary);
   }
 }
 
@@ -231,12 +231,12 @@
 }
 
 .media-library-item__attributes {
-  padding: var(--space-xs);
+  padding: var(--admin-space-xs);
 }
 
 .media-library-item__name {
   text-wrap: pretty;
-  color: var(--gin-color-text);
+  color: var(--admin-color-text);
   font-size: 0.875rem;
 }
 
@@ -295,7 +295,7 @@
 
 .media-library-item__edit {
   inset-inline-end: 2.5rem;
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid var(--admin-color-border);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg fill='%23545560'%3e%3cpath d='M14.545 3.042l-1.586-1.585a1.003 1.003 0 00-1.414 0L10.252 2.75l3 3 1.293-1.293a1.004 1.004 0 000-1.415zM5.25 13.751l-3-3 6.998-6.998 3 3zM.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: center;
@@ -314,7 +314,7 @@
 .media-library-item__remove.button:hover,
 .media-library-item__remove.button:focus {
   inset-inline-end: 0.625rem;
-  border: 1px solid var(--color-gray-200);
+  border: 1px solid var(--admin-color-border);
   background-image: url("data:image/svg+xml,%3csvg width='16' height='16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M2.344 2.343l11.313 11.313M2.344 13.657L13.657 2.343' stroke='%2355565B' stroke-width='3'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: center;
@@ -324,6 +324,6 @@
 .media-library-item__remove:active,
 .media-library-item__remove.button:active,
 .media-library-item__remove.button:disabled:active {
-  border-color: var(--color-absolutezero);
+  border-color: var(--admin-color-link);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cpath fill='%23ffffff' d='M3.51 13.925c.194.194.512.195.706.001l3.432-3.431c.194-.194.514-.194.708 0l3.432 3.431c.192.194.514.193.707-.001l1.405-1.417c.191-.195.189-.514-.002-.709l-3.397-3.4c-.192-.193-.192-.514-.002-.708l3.401-3.43c.189-.195.189-.515 0-.709l-1.407-1.418c-.195-.195-.513-.195-.707-.001l-3.43 3.431c-.195.194-.516.194-.708 0l-3.432-3.431c-.195-.195-.512-.194-.706.001l-1.407 1.417c-.194.195-.194.515 0 .71l3.403 3.429c.193.195.193.514-.001.708l-3.4 3.399c-.194.195-.195.516-.001.709l1.406 1.419z'/%3e%3c/svg%3e");
 }

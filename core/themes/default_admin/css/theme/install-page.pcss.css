@@ -8,30 +8,30 @@
 
 .install-page {
   min-height: 100%;
-  background-color: var(--color-gray-100);
+  background-color: var(--admin-color-bg-sunken);
 
   & h1,
   & h2 {
-    font-size: var(--font-size-h3);
+    font-size: 1.602rem;
   }
 
   & h3 {
-    font-size: var(--font-size-h4);
+    font-size: var(--admin-font-size-h4);
   }
 
   & .site-name {
-    margin-top: var(--space-s);
-    color: var(--color-gray);
-    font-size: var(--font-size-xl);
+    margin-top: var(--admin-space-s);
+    color: var(--admin-color-text);
+    font-size: var(--admin-font-size-2xl);
   }
 
   & .title {
     margin-top: 0;
-    font-size: var(--font-size-h3);
+    font-size: 1.602rem;
   }
 
   & .content {
-    color: var(--color-gray);
+    color: var(--admin-color-text);
   }
 
   & .site-name,
@@ -58,7 +58,7 @@
 
 .install-page .site-version {
   vertical-align: super;
-  color: var(--color-gray-500);
+  color: var(--admin-color-text-soft);
   font-size: 0.5em;
   font-weight: 500;
 }

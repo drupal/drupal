@@ -34,7 +34,7 @@
   margin: 0;
   padding-block-start: var(--vertical-tabs-menu-item-shadow-extraspace);
   list-style: none;
-  color: var(--color-text);
+  color: var(--admin-color-text);
 }
 
 /**
@@ -55,7 +55,7 @@
     display: block;
     inline-size: 100%;
     margin-block-start: calc(var(--vertical-tabs-menu-separator-size) * -1);
-    border-block-start: var(--vertical-tabs-menu-separator-size) solid var(--gin-border-color);
+    border-block-start: var(--vertical-tabs-menu-separator-size) solid var(--admin-color-border);
   }
 
   /**
@@ -64,7 +64,14 @@
    */
   &::after {
     z-index: 2;
-    border-color: var(--color-white);
+    /* Must match the active item's background so the separator is hidden: that
+       item is --admin-color-bg-surface in light but blends into the canvas in
+       dark (see the .is-selected dark override below), so mirror it here. */
+    border-color: var(--admin-color-bg-surface);
+
+    .gin--dark-mode & {
+      border-color: var(--admin-color-bg);
+    }
   }
 
   /* Only show a separator after an unhidden menu item. */
@@ -99,10 +106,10 @@
   position: relative;
   display: block;
   margin-block-start: calc(var(--vertical-tabs-border-size) * -1);
-  padding-block: var(--space-s);
-  padding-inline: calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)) var(--space-s);
+  padding-block: var(--admin-space-s);
+  padding-inline: calc(var(--admin-space-l) - var(--vertical-tabs-menu-link--active-border-size)) var(--admin-space-s);
   text-decoration: none;
-  color: var(--color-text);
+  color: var(--admin-color-text);
   border: var(--vertical-tabs-border-size) solid transparent;
   border-block-width: var(--vertical-tabs-border-size);
   border-inline-width: var(--vertical-tabs-menu-link--active-border-size) 0;
@@ -117,10 +124,10 @@
 
   &:hover {
     text-decoration: none;
-    color: var(--gin-color-primary);
+    color: var(--admin-color-primary);
 
     &::before {
-      background: var(--gin-bg-item-hover);
+      background: var(--admin-color-bg-item-hover);
     }
   }
 
@@ -135,43 +142,43 @@
   }
 
   .gin--dark-mode & {
-    color: var(--gin-color-text);
+    color: var(--admin-color-text);
   }
 
   .vertical-tabs__menu-item.is-selected & {
     z-index: 3; /* Above the white masking line that hides the gray separator. */
     width: calc(100% + var(--outline-size)); /* Larger width will intentionally cut off the right focus line. */
-    color: var(--gin-color-primary);
-    text-decoration-style: var(--gin-link-decoration-style);
+    color: var(--admin-color-primary);
+    text-decoration-style: var(--admin-link-decoration-style);
     border-block-color: var(--vertical-tabs-border-color);
     border-inline-color: transparent;
-    background-color: var(--color-white);
+    background-color: var(--admin-color-bg-surface);
     box-shadow: var(--vertical-tabs-shadow);
 
     &:hover {
-      color: var(--gin-color-primary);
-      background-color: var(--color-bgblue-hover);
+      color: var(--admin-color-primary);
+      background-color: var(--admin-color-bg-item-hover);
 
       &::before {
-        background: var(--gin-bg-item-hover);
+        background: var(--admin-color-bg-item-hover);
       }
     }
 
     &::before {
       z-index: 1; /* Blue active-tab indicator above the green focus border. */
-      border-color: var(--gin-color-primary);
+      border-color: var(--admin-color-primary);
       border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
-      border-start-start-radius: var(--base-border-radius);
+      border-start-start-radius: var(--admin-radius-2xs);
       border-start-end-radius: 0;
       border-end-end-radius: 0;
-      border-end-start-radius: var(--base-border-radius);
+      border-end-start-radius: var(--admin-radius-2xs);
 
       &:hover {
-        border-color: var(--gin-color-primary-hover);
+        border-color: var(--admin-color-primary-hover);
       }
 
       &:active {
-        border-color: var(--gin-color-primary-active);
+        border-color: var(--admin-color-primary-active);
       }
 
       @media (forced-colors: active) {
@@ -184,8 +191,8 @@
     }
 
     .gin--dark-mode & {
-      border-color: var(--gin-border-color);
-      background: var(--gin-bg-app);
+      border-color: var(--admin-color-border);
+      background: var(--admin-color-bg);
     }
   }
 
@@ -207,12 +214,12 @@
  */
 .vertical-tabs__menu-link-summary {
   display: block;
-  color: var(--color-gray-800);
-  font-size: var(--font-size-s);
+  color: var(--admin-color-text-soft);
+  font-size: var(--admin-font-size-s);
   font-weight: normal;
 
   .gin--dark-mode & {
-    color: var(--gin-color-text-light);
+    color: var(--admin-color-text-soft);
   }
 }
 
@@ -222,15 +229,15 @@
 .vertical-tabs__items {
   box-sizing: border-box;
   margin-block: var(--vertical-tabs-margin-vertical);
-  color: var(--color-text);
+  color: var(--admin-color-text);
   border: var(--vertical-tabs-border);
-  border-radius: var(--gin-border-m);
-  background-color: var(--color-white);
+  border-radius: var(--admin-radius-m);
+  background-color: var(--admin-color-bg-surface);
   box-shadow: var(--vertical-tabs-shadow);
 
   .gin--dark-mode & {
-    border-color: var(--gin-border-color);
-    background: var(--gin-bg-app);
+    border-color: var(--admin-color-border);
+    background: var(--admin-color-bg);
   }
 
   @media (--admin-large) {
@@ -305,28 +312,28 @@
   }
 
   @media (--admin-wider) {
-    border-start-end-radius: var(--gin-border-m);
-    border-end-end-radius: var(--gin-border-m);
-    border-end-start-radius: var(--gin-border-m);
+    border-start-end-radius: var(--admin-radius-m);
+    border-end-end-radius: var(--admin-radius-m);
+    border-end-start-radius: var(--admin-radius-m);
 
     & ~ .vertical-tabs__item {
-      border-start-start-radius: var(--gin-border-m);
+      border-start-start-radius: var(--admin-radius-m);
     }
   }
 
   @media (--admin-large) {
     .gin-details__summary {
-      padding-inline-start: var(--space-xxl);
+      padding-inline-start: var(--admin-space-2xl);
 
       &::before {
-        inset-inline-start: var(--space-m);
+        inset-inline-start: var(--admin-space-m);
       }
     }
   }
 }
 
 .vertical-tabs__menu-item-title {
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--admin-font-weight-bold);
 }
 
 [open] > .gin-details__summary--vertical-tabs-item:not(:focus, :active)::after {
