@@ -147,7 +147,11 @@ class MenuLinkContentHooks {
       ->getStorage('menu_link_content')
       ->loadByProperties(['link.uri' => 'internal:' . $path]);
     foreach ($entities as $menu_link) {
-      $this->menuLinkManager->updateDefinition($menu_link->getPluginId(), $menu_link->getPluginDefinition(), FALSE);
+      // An entity can exist while its definition is absent from the menu tree;
+      // only refresh definitions that are actually present.
+      if ($this->menuLinkManager->hasDefinition($menu_link->getPluginId())) {
+        $this->menuLinkManager->updateDefinition($menu_link->getPluginId(), $menu_link->getPluginDefinition(), FALSE);
+      }
     }
   }
 

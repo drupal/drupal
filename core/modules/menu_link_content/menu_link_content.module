@@ -24,6 +24,10 @@ function _menu_link_content_update_path_alias($path): void {
     ->getStorage('menu_link_content')
     ->loadByProperties(['link.uri' => 'internal:' . $path]);
   foreach ($entities as $menu_link) {
-    $menu_link_manager->updateDefinition($menu_link->getPluginId(), $menu_link->getPluginDefinition(), FALSE);
+    // An entity can exist while its definition is absent from the menu tree;
+    // only refresh definitions that are actually present.
+    if ($menu_link_manager->hasDefinition($menu_link->getPluginId())) {
+      $menu_link_manager->updateDefinition($menu_link->getPluginId(), $menu_link->getPluginDefinition(), FALSE);
+    }
   }
 }
