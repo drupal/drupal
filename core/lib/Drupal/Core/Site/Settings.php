@@ -103,11 +103,17 @@ final class Settings {
    *   The value of the setting, the provided default if not set.
    */
   public static function get($name, $default = NULL) {
-    // If the caller is asking for the value of a deprecated setting, trigger a
-    // deprecation message about it.
     if (isset(self::$deprecatedSettings[$name])) {
-      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
-      @trigger_error(self::$deprecatedSettings[$name]['message'], E_USER_DEPRECATED);
+      $deprecation = self::$deprecatedSettings[$name];
+      // Only trigger a deprecation warning if the setting has a replacement
+      // (calling code must be updated to use the new key) or if the setting is
+      // actually configured (the user must remove it from settings.php).
+      // Settings with no replacement that are not configured do not trigger a
+      // warning, to avoid spurious deprecations when the feature is simply not
+      // in use.
+      if (!empty($deprecation['replacement']) || array_key_exists($name, self::$instance->storage)) {
+        @trigger_error($deprecation['message'], E_USER_DEPRECATED);
+      }
     }
     return self::$instance->storage[$name] ?? $default;
   }
@@ -222,12 +228,12 @@ final class Settings {
       if (!empty($settings[$legacy])) {
         @trigger_error($deprecation['message'], E_USER_DEPRECATED);
         // Set the new key if needed.
-        if (!isset($settings[$deprecation['replacement']])) {
+        if (!empty($deprecation['replacement']) && !isset($settings[$deprecation['replacement']])) {
           $settings[$deprecation['replacement']] = $settings[$legacy];
         }
       }
       // Ensure that both keys have the same value.
-      if (isset($settings[$deprecation['replacement']])) {
+      if (!empty($deprecation['replacement']) && isset($settings[$deprecation['replacement']])) {
         $settings[$legacy] = $settings[$deprecation['replacement']];
       }
     }
