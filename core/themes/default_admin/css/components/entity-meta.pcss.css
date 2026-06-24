@@ -6,16 +6,15 @@
  */
 
 .entity-meta {
-  --entity-meta-spacing-xs: var(--space-xs);
-  --entity-meta-spacing-l: var(--space-l);
-  --entity-meta-spacing-m: var(--space-m);
-  --entity-meta-color-fg: var(--color-fg);
-  --entity-meta-color-bg: var(--color-bg);
-  --entity-meta-color-white: var(--color-white);
+  --entity-meta-spacing-xs: var(--admin-space-xs);
+  --entity-meta-spacing-l: var(--admin-space-l);
+  --entity-meta-spacing-m: var(--admin-space-m);
+  --entity-meta-color-fg: var(--admin-color-text);
+  --entity-meta-color-bg: var(--admin-color-bg-surface);
   --entity-meta-border-size: var(--details-border-size);
   --entity-meta-border-color: var(--details-border-color);
   --entity-meta-border-size-radius: var(--details-accordion-border-size-radius);
-  --entity-meta-font-size-base: var(--font-size-base);
+  --entity-meta-font-size-base: var(--admin-font-size-m);
 }
 
 .entity-meta__header {
@@ -46,7 +45,8 @@
 
 .entity-meta__title {
   margin: 0.25em 0;
-  text-shadow: 0 1px 0 var(--entity-meta-color-white);
+  /* Emboss highlight matches the surface; adapts in dark mode (was fixed white). */
+  text-shadow: 0 1px 0 var(--admin-color-bg-surface);
   font-size: 1.231em;
   font-weight: bold;
 }

@@ -4,7 +4,7 @@
  */
 
 .field-multiple-table {
-  margin-block: var(--space-m);
+  margin-block: var(--admin-space-m);
 }
 
 .form-item--multiple .field-add-more-submit {

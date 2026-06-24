@@ -16,9 +16,9 @@
   .trigger {
     overflow: clip;
     text-indent: -999px;
-    border: 1px solid var(--gin-border-color-layer2);
+    border: 1px solid var(--admin-color-border);
     border-radius: 50%;
-    background: var(--gin-bg-layer3);
+    background: var(--admin-color-bg-raised);
     box-shadow: 0 2px 4px rgb(0, 0, 0, 0.15);
 
     &,
@@ -34,10 +34,10 @@
       height: 0.75rem;
       margin: auto;
       content: "";
-      background: var(--gin-color-primary);
+      background: var(--admin-color-primary);
       inset: 0;
       mask-image: url("../../migration/media/icons/media-library/media-edit.svg");
-      mask-size: var(--space-s);
+      mask-size: var(--admin-space-s);
       mask-position: 100% 100%;
 
       @media (forced-colors: active) {
@@ -47,8 +47,8 @@
 
     &:hover {
       box-shadow:
-        0 0 0 1px var(--gin-color-focus-border),
-        0 0 0 4px var(--gin-color-focus);
+        0 0 0 1px var(--admin-color-focus-border),
+        0 0 0 4px var(--admin-color-focus);
     }
   }
 
@@ -63,28 +63,28 @@
   margin: 0;
   padding: 0.5em;
   border: 1px solid transparent;
-  border-radius: var(--gin-border-l);
-  background: var(--gin-bg-layer3);
-  box-shadow: var(--gin-shadow-l2);
-  inset-block-start: var(--space-xxs);
+  border-radius: var(--admin-radius-l);
+  background: var(--admin-color-bg-raised);
+  box-shadow: var(--admin-shadow-2);
+  inset-block-start: var(--admin-space-2xs);
 
   li {
     background: transparent;
 
     a {
       margin: 0;
-      padding: var(--space-xs) var(--space-m);
+      padding: var(--admin-space-xs) var(--admin-space-m);
       white-space: nowrap;
-      color: var(--gin-color-primary);
-      border-radius: var(--gin-border-s);
+      color: var(--admin-color-primary);
+      border-radius: var(--admin-radius-s);
       background: transparent;
-      font-family: var(--gin-font);
+      font-family: var(--admin-font-family);
       line-height: 1;
 
       &:hover,
       &:active {
-        color: var(--gin-color-button-text);
-        background: var(--gin-color-primary);
+        color: var(--admin-color-text-on-primary);
+        background: var(--admin-color-primary);
 
         @media (forced-colors: active) {
           text-decoration: underline;
@@ -94,8 +94,8 @@
       .no-touchevents & {
         &:hover,
         &:active {
-          color: var(--gin-color-button-text);
-          background: var(--gin-color-primary);
+          color: var(--admin-color-text-on-primary);
+          background: var(--admin-color-primary);
         }
       }
     }
@@ -103,7 +103,7 @@
 
   .ajax-progress-throbber {
     border-radius: 50%;
-    background: var(--gin-color-primary);
+    background: var(--admin-color-primary);
     inset-block-start: 0.125rem;
 
     &::before {
@@ -113,11 +113,11 @@
       height: 1.125rem;
       content: "";
       animation: gin-throbber 0.75s linear infinite;
-      border: 2px solid var(--gin-color-primary);
+      border: 2px solid var(--admin-color-primary);
       border-inline-end: 2px dotted transparent;
       border-radius: 50%;
-      inset-block-start: var(--space-xs);
-      inset-inline-start: var(--space-xs);
+      inset-block-start: var(--admin-space-xs);
+      inset-inline-start: var(--admin-space-xs);
     }
   }
 }

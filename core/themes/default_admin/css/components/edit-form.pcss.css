@@ -8,7 +8,7 @@
 .gin--edit-form {
   .dialog-off-canvas-main-canvas {
     @media (--admin-large) and (prefers-reduced-motion: no-preference) {
-      transition: padding-inline-start var(--gin-transition-fast);
+      transition: padding-inline-start var(--admin-transition-slow);
     }
   }
 
@@ -89,14 +89,14 @@
       z-index: 103;
       overflow-x: hidden;
       overflow-y: auto;
-      width: var(--gin-sidebar-width);
-      min-width: var(--gin-sidebar-min-width);
-      max-width: var(--gin-sidebar-max-width);
-      height: calc(100% - var(--gin-toolbar-y-offset));
+      width: var(--admin-theme-sidebar-width);
+      min-width: var(--admin-theme-sidebar-min-width);
+      max-width: var(--admin-theme-sidebar-max-width);
+      height: calc(100% - var(--admin-theme-toolbar-y-offset));
       margin: 0;
-      border-inline-start: 1px solid var(--gin-border-color-layer);
-      background: var(--gin-bg-layer);
-      inset-block-start: var(--gin-toolbar-y-offset);
+      border-inline-start: 1px solid var(--admin-color-border-soft);
+      background: var(--admin-color-bg-surface);
+      inset-block-start: var(--admin-theme-toolbar-y-offset);
       inset-inline-end: 0;
 
       .gin--dark-mode & {
@@ -107,14 +107,14 @@
         margin: 0;
 
         .action-link {
-          margin-block-start: var(--space-xs);
+          margin-block-start: var(--admin-space-xs);
           margin-block-end: 0;
         }
       }
 
       .field--name-revision-log,
       .field--name-revision-log-message {
-        margin-block-start: var(--space-s);
+        margin-block-start: var(--admin-space-s);
       }
 
       .accordion {
@@ -124,46 +124,46 @@
       }
 
       .entity-meta__header {
-        padding: var(--space-m) 1.5rem;
-        color: var(--gin-color-text);
+        padding: var(--admin-space-m) 1.5rem;
+        color: var(--admin-color-text);
         border: 0 none;
-        background-color: var(--gin-bg-layer);
+        background-color: var(--admin-color-bg-surface);
 
         .form-type--item,
         .form-item__label {
-          font-size: var(--font-size-s);
+          font-size: var(--admin-font-size-s);
         }
 
         .form-item {
-          margin-block: var(--space-xxs);
+          margin-block: var(--admin-space-2xs);
         }
 
         @media (--admin-to-medium) {
-          padding-block-start: calc(var(--space-l) - var(--space-xxs));
-          padding-inline-end: var(--space-l);
+          padding-block-start: calc(var(--admin-space-l) - var(--admin-space-2xs));
+          padding-inline-end: var(--admin-space-l);
         }
       }
 
       .entity-meta__title {
-        color: var(--gin-color-title);
+        color: var(--admin-color-text-loud);
         text-shadow: none;
-        font-weight: var(--font-weight-semibold);
+        font-weight: var(--admin-font-weight-semibold);
       }
 
       .entity-meta__revision {
-        margin-block-start: var(--space-m);
+        margin-block-start: var(--admin-space-m);
       }
 
       .entity-meta__last-saved,
       .entity-meta__author {
-        margin-block: var(--space-xxs);
+        margin-block: var(--admin-space-2xs);
       }
 
       .entity-meta__last-saved,
       .entity-meta__last-saved .form-item__label,
       .entity-meta__author,
       .entity-meta__author .form-item__label {
-        font-size: var(--font-size-s);
+        font-size: var(--admin-font-size-s);
       }
 
       .entity-meta > .accordion > .accordion__item,
@@ -172,25 +172,25 @@
       }
 
       @media (prefers-reduced-motion: no-preference) {
-        transition: all var(--gin-transition-fast);
+        transition: all var(--admin-transition-slow);
       }
     }
   }
 
   .revision-current {
-    background-color: var(--gin-color-primary-light-active);
+    background-color: var(--admin-color-primary-soft-active);
   }
 
   .field--name-title .form-element {
     width: 100%;
     letter-spacing: -0.025em;
-    font-size: var(--gin-font-size-h3);
+    font-size: var(--admin-font-size-h3);
     font-weight: 475;
     line-height: normal;
-    padding-block: var(--space-s);
+    padding-block: var(--admin-space-s);
   }
   @media (--admin-large) {
-    padding-inline-end: var(--gin-sidebar-offset);
+    padding-inline-end: var(--admin-theme-sidebar-offset);
   }
 }
 
@@ -198,17 +198,17 @@
 .gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item {
   margin: 0;
   border: 0 none;
-  border-block-end: 1px solid var(--gin-border-color-layer);
+  border-block-end: 1px solid var(--admin-color-border-soft);
   border-radius: 0;
 
   .gin--dark-mode & {
-    border-color: var(--gin-border-color);
+    border-color: var(--admin-color-border);
   }
 
   > .gin-details__summary {
     display: block;
     padding-inline-start: 3rem;
-    font-size: var(--font-size-s);
+    font-size: var(--admin-font-size-s);
 
     .details-title {
       position: static;
@@ -216,7 +216,7 @@
     }
 
     &::before {
-      inset-block-start: var(--gin-spacing-density-xl, var(--space-xl));
+      inset-block-start: var(--admin-space-density-xl, var(--admin-space-xl));
       inset-inline-start: 1.5rem;
     }
 
@@ -229,7 +229,7 @@
     margin-inline: 1.5rem;
 
     .gin-details__wrapper {
-      margin: var(--space-l);
+      margin: var(--admin-space-l);
     }
   }
 
@@ -262,7 +262,7 @@
 
       &:first-of-type {
         @media (--admin-tiny) {
-          margin-inline-end: var(--space-xs);
+          margin-inline-end: var(--admin-space-xs);
         }
 
         @media (--admin-large) and (--admin-to-wide) {

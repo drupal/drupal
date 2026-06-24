@@ -8,15 +8,15 @@
 /* cspell:ignore imageapi */
 @import "../base/media-queries.pcss.css";
 .gin-layer-wrapper {
-  padding: var(--gin-spacing-s);
+  padding: var(--admin-space-s);
 
   & + .gin-layer-wrapper {
-    margin-block-start: var(--gin-spacing-l);
+    margin-block-start: var(--admin-space-l);
   }
 
   & + h2,
   & + h3 {
-    margin-block-start: var(--gin-spacing-xl);
+    margin-block-start: var(--admin-space-xl);
   }
 
   .responsive-enabled {
@@ -24,7 +24,7 @@
   }
 
   @media (--admin-medium) {
-    padding: var(--gin-spacing-l);
+    padding: var(--admin-space-l);
   }
 }
 
@@ -39,11 +39,11 @@
 .user-admin-permissions,
 .field-config-form {
   margin-block-start: 0;
-  border-radius: var(--gin-border-l);
-  box-shadow: var(--gin-shadow-l1);
+  border-radius: var(--admin-radius-l);
+  box-shadow: var(--admin-shadow-1);
 
   .gin--dark-mode & {
-    box-shadow: 0 6px 16px var(--gin-border-color-layer);
+    box-shadow: 0 6px 16px var(--admin-color-border-soft);
   }
 
   .gin--high-contrast-mode & {
@@ -75,9 +75,9 @@
 .field-config-form {
   box-sizing: border-box;
   width: 100%;
-  padding: var(--gin-spacing-s);
-  border: 1px solid var(--gin-border-color-layer);
-  background: var(--gin-bg-layer);
+  padding: var(--admin-space-s);
+  border: 1px solid var(--admin-color-border-soft);
+  background: var(--admin-color-bg-surface);
 
   /* Remove extra spacing on top of form. */
   > .form-wrapper:first-of-type .form-item,
@@ -86,7 +86,7 @@
   }
 
   @media (--admin-small) {
-    padding: var(--gin-spacing-l);
+    padding: var(--admin-space-l);
   }
 }
 
@@ -96,18 +96,18 @@
 
 #system-clear-cache + #system-performance-settings,
 .gin-layer-wrapper + .imageapi-optimize-default-pipeline {
-  margin-block-start: var(--gin-spacing-l);
+  margin-block-start: var(--admin-space-l);
 }
 
 /* Unpublished node */
 .node--unpublished {
-  background-color: var(--gin-bg-unpublished);
+  background-color: var(--admin-color-bg-unpublished);
 }
 
 /* Has table filter */
 .block-system-main-block > form:has(.table-filter) {
   .table-filter {
-    margin-block-end: var(--gin-spacing-l);
+    margin-block-end: var(--admin-space-l);
     padding: 0;
     border: none;
     background: none;
@@ -124,7 +124,7 @@
 
     .table-filter-text {
       margin-block-start: 0;
-      padding: var(--gin-spacing-m);
+      padding: var(--admin-space-m);
     }
   }
 }

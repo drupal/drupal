@@ -13,7 +13,7 @@
 [data-drupal-selector="edit-preset-accent-color"] .form-radios {
   display: flex;
   flex-wrap: wrap;
-  margin-block-start: var(--space-xs);
+  margin-block-start: var(--admin-space-xs);
 
   .form-item--preset-accent-color {
     position: relative;
@@ -21,10 +21,10 @@
     input {
       width: 2rem;
       height: 2rem;
-      margin-inline-end: var(--space-xs);
+      margin-inline-end: var(--admin-space-xs);
       cursor: pointer;
       border-color: transparent;
-      inset-block-start: var(--space-m);
+      inset-block-start: var(--admin-space-m);
 
       &:hover {
         box-shadow: none;
@@ -34,17 +34,17 @@
       &:focus,
       &:focus:hover,
       &:checked {
-        border-color: var(--gin-color-primary);
+        border-color: var(--admin-color-primary);
       }
 
       &:focus:checked,
       &:focus,
       &:checked {
-        background-color: var(--gin-color-primary);
+        background-color: var(--admin-color-primary);
       }
 
       &[data-gin-accent="custom"] {
-        border-color: var(--gin-border-color);
+        border-color: var(--admin-color-border);
         background-color: #fff;
         background-image: url(../../images/settings/custom-color.jpg);
         background-repeat: no-repeat;
@@ -52,7 +52,7 @@
 
         &:checked {
           border-width: 1px;
-          border-color: var(--gin-border-color);
+          border-color: var(--admin-color-border);
           background-color: #fff;
         }
       }
@@ -60,19 +60,19 @@
 
     input,
     .gin--dark-mode & input {
-      background-color: var(--gin-color-primary);
+      background-color: var(--admin-color-primary);
     }
 
     .form-item__label {
       position: absolute;
       z-index: 1;
-      display: none;
-      visibility: hidden;
-      padding: var(--space-xs);
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px);
+      width: 1px;
+      height: 1px;
+      padding: var(--admin-space-xs);
       transform: translateX(-50%);
-      color: var(--gin-color-contextual-text);
-      border-radius: var(--gin-border-xs);
-      background: var(--gin-color-contextual);
+      background: var(--admin-color-bg-surface-nested);
       inset-block-start: 100%;
       inset-inline-start: -0.625rem;
 
@@ -84,8 +84,10 @@
     &:hover .form-item__label,
     input:active ~ .form-item__label,
     input:focus ~ .form-item__label {
-      display: block;
-      visibility: visible;
+      overflow: revert;
+      clip: revert;
+      width: max-content;
+      height: revert;
     }
   }
 }
@@ -96,12 +98,12 @@
 [data-drupal-selector="edit-focus-group"] .form-type--textfield {
   float: inline-start;
   margin: 0;
-  margin-block-end: var(--space-xs);
+  margin-block-end: var(--admin-space-xs);
 }
 
 [data-drupal-selector="edit-accent-group"] .form-type--color,
 [data-drupal-selector="edit-focus-group"] .form-type--color {
-  margin-inline-end: var(--space-xs);
+  margin-inline-end: var(--admin-space-xs);
 }
 
 [data-drupal-selector="edit-accent-group"] .fieldset__description,
@@ -112,12 +114,12 @@
 [data-drupal-selector="edit-enable-dark-mode"] .form-radios {
   display: inline-flex;
   flex-wrap: wrap;
-  padding: 0 var(--space-xxs);
-  border: 1px solid var(--gin-border-color-form-element);
-  border-radius: var(--space-xl);
+  padding: 0 var(--admin-space-2xs);
+  border: 1px solid var(--admin-color-border-input);
+  border-radius: var(--admin-space-xl);
 
   .gin--dark-mode & {
-    background: var(--gin-bg-layer2);
+    background: var(--admin-color-bg-surface-nested);
   }
 
   .form-type--radio {
@@ -128,14 +130,14 @@
   .form-item__label {
     display: inline-block;
     box-sizing: border-box;
-    margin: var(--space-xxs) 0;
-    padding: 0.375rem var(--space-m);
+    margin: var(--admin-space-2xs) 0;
+    padding: 0.375rem var(--admin-space-m);
     border: 2px solid transparent;
-    border-radius: var(--gin-border-xl);
+    border-radius: var(--admin-radius-xl);
 
     &:hover {
-      color: var(--gin-color-primary);
-      background: var(--gin-color-primary-light-hover);
+      color: var(--admin-color-primary);
+      background: var(--admin-color-primary-soft-hover);
     }
   }
 
@@ -148,8 +150,8 @@
     border: 0;
 
     &:checked + .form-item__label {
-      color: var(--gin-color-button-text);
-      background: var(--gin-color-primary);
+      color: var(--admin-color-text-on-primary);
+      background: var(--admin-color-primary);
     }
 
     &:focus + .form-item__label {
@@ -161,7 +163,7 @@
 [data-drupal-selector="edit-layout-density"] .form-radios {
   display: flex;
   flex-wrap: wrap;
-  margin-block-start: var(--space-xs);
+  margin-block-start: var(--admin-space-xs);
 
   .form-item {
     position: relative;
@@ -169,7 +171,7 @@
     flex-wrap: wrap;
     width: 8.75rem;
     margin: 0;
-    margin-inline-end: var(--space-s);
+    margin-inline-end: var(--admin-space-s);
 
     input {
       position: static;
@@ -178,13 +180,13 @@
       margin-inline-start: 0;
       cursor: pointer;
       transform: none;
-      border-radius: var(--gin-border-l);
+      border-radius: var(--admin-radius-l);
       background-repeat: no-repeat;
       background-size: 100% 100%;
 
       &:checked {
-        border-color: var(--gin-color-primary);
-        box-shadow: inset 0 0 0 1px var(--gin-color-primary);
+        border-color: var(--admin-color-primary);
+        box-shadow: inset 0 0 0 1px var(--admin-color-primary);
       }
 
       &[data-drupal-selector="edit-layout-density-default"] {
@@ -216,9 +218,9 @@
 
     .form-item__label {
       display: block;
-      margin-block-start: var(--space-xs);
-      margin-block-end: var(--space-m);
-      font-size: var(--font-size-xxs);
+      margin-block-start: var(--admin-space-xs);
+      margin-block-end: var(--admin-space-m);
+      font-size: var(--admin-font-size-2xs);
     }
   }
 }

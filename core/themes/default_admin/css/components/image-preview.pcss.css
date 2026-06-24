@@ -4,7 +4,7 @@
  */
 
 :root {
-  --color-pattern: var(--color-gray-200);
+  --color-pattern: var(--admin-color-border);
   --size-pattern-square: calc(7rem / 16);
 }
 
@@ -15,21 +15,21 @@
   line-height: 0;
 
   & img {
-    background-color: var(--gin-pattern-fallback);
-    background-image: linear-gradient(-45deg, var(--gin-pattern) 25%, transparent 26%), linear-gradient(-45deg, var(--gin-pattern) 25%, transparent 26%), linear-gradient(135deg, var(--gin-pattern) 25%, transparent 26%), linear-gradient(135deg, var(--gin-pattern) 25%, transparent 26%);
+    background-color: var(--admin-color-bg-surface-nested);
+    background-image: linear-gradient(-45deg, var(--admin-color-border) 25%, transparent 26%), linear-gradient(-45deg, var(--admin-color-border) 25%, transparent 26%), linear-gradient(135deg, var(--admin-color-border) 25%, transparent 26%), linear-gradient(135deg, var(--admin-color-border) 25%, transparent 26%);
     background-position:
       0 0,
-      var(--gin-pattern-square) var(--gin-pattern-square),
-      var(--gin-pattern-square) var(--gin-pattern-square),
+      var(--admin-pattern-square) var(--admin-pattern-square),
+      var(--admin-pattern-square) var(--admin-pattern-square),
       0 0;
-    background-size: calc(var(--gin-pattern-square) * 2) calc(var(--gin-pattern-square) * 2);
+    background-size: calc(var(--admin-pattern-square) * 2) calc(var(--admin-pattern-square) * 2);
   }
 }
 
 .image-preview__img-wrapper {
   display: inline-block;
   max-width: 100%;
-  background-color: var(--color-white);
+  background-color: var(--admin-color-bg-surface-nested);
   box-shadow: inset 0 0 var(--size-pattern-square) var(--color-pattern);
 }
 

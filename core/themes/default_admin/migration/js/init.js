@@ -41,7 +41,7 @@ ginInitDarkMode();
 // Sidebar checks.
 if (localStorage.getItem('Drupal.gin.sidebarWidth')) {
   const sidebarWidth = localStorage.getItem('Drupal.gin.sidebarWidth');
-  document.documentElement.style.setProperty('--gin-sidebar-width', sidebarWidth);
+  document.documentElement.style.setProperty('--admin-theme-sidebar-width', sidebarWidth);
 }
 
 if (localStorage.getItem('Drupal.gin.sidebarExpanded.desktop')) {
@@ -52,13 +52,13 @@ if (localStorage.getItem('Drupal.gin.sidebarExpanded.desktop')) {
   if (window.innerWidth < 1024 || localStorage.getItem('Drupal.gin.sidebarExpanded.desktop') === 'false') {
     style.innerHTML = `
     body {
-      --gin-sidebar-offset: 0px;
+      --admin-theme-sidebar-offset: 0px;
       padding-inline-end: 0;
       transition: none;
     }
 
     .layout-region--secondary {
-      transform: translateX(var(--gin-sidebar-width, 360px));
+      transform: translateX(var(--admin-theme-sidebar-width, 360px));
       transition: none;
     }
 

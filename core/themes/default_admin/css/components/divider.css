@@ -11,5 +11,5 @@
 
 .divider {
   height: 1px;
-  background-color: var(--gin-border-color);
+  background-color: var(--admin-color-border);
 }

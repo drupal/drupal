@@ -4,7 +4,7 @@
  */
 
 .form-element--type-select {
-  padding-inline-end: calc(var(--gin-spacing-xs) + var(--gin-spacing-xl) - 1px);
+  padding-inline-end: calc(var(--admin-space-xs) + var(--admin-space-xl) - 1px);
   background-image: url(../../images/icons/545560/chevron-down.svg);
   background-repeat: no-repeat;
   background-position: 100% 50%;
@@ -34,7 +34,7 @@
       min-height: 1.75rem;
       padding-inline-end: calc(1.5rem - var(--input-border-size));
       background-size: 1.75rem 0.4375rem; /* w: 14px + (2 * 7px), h: 7px */
-      font-size: var(--gin-font-size-s);
+      font-size: var(--admin-font-size-s);
       line-height: 1.5;
     }
   }
@@ -53,7 +53,7 @@
 .form-element--type-select--small {
   min-height: 2.25rem;
   background-position: 100% 52%;
-  font-size: var(--gin-font-size-xs);
+  font-size: var(--admin-font-size-xs);
   line-height: 1.4;
   padding-block: 0.474rem;
   /* 0.79rem * 1.2 / 2 */

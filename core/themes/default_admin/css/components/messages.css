@@ -25,19 +25,20 @@
 
 .messages {
   --messages-bg-color: #353641;
-  --messages-fg-color: var(--color-white);
+  /* Fixed white: text on the always-dark message banner (--messages-bg-color). */
+  --messages-fg-color: var(--admin-color-white);
   --messages-icon: none;
 
   position: relative;
   overflow: auto; /* Required to prevent text clipping. */
   box-sizing: border-box;
-  padding: var(--gin-spacing-m);
+  padding: var(--admin-space-m);
   opacity: 1;
   color: var(--messages-fg-color);
   border: 2px solid transparent;
-  border-radius: var(--gin-border-l);
+  border-radius: var(--admin-radius-l);
   background-color: var(--messages-bg-color);
-  margin-block: 0 var(--space-m);
+  margin-block: 0 var(--admin-space-m);
 
   a {
     &,
@@ -52,7 +53,7 @@
   }
 
   .gin--dark-mode & {
-    box-shadow: 0 6px 16px var(--gin-border-color-layer);
+    box-shadow: 0 6px 16px var(--admin-color-border-soft);
   }
 
   /* If Layout Builder form is active, remove background images. */
@@ -65,12 +66,12 @@
     position: absolute;
     width: 1.8125rem;
     height: 1.8125rem;
-    margin: var(--gin-spacing-s);
+    margin: var(--admin-space-s);
     padding: 0;
     text-indent: -6249.9375rem;
     color: transparent;
     border-color: transparent;
-    border-radius: var(--gin-border-m);
+    border-radius: var(--admin-radius-m);
     box-shadow: none;
     inset-block-start: 0;
     inset-inline-end: 0;
@@ -103,51 +104,59 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      transition: var(--gin-transition);
+      transition: var(--admin-transition);
     }
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    transition: opacity var(--gin-transition-fast);
+    transition: opacity var(--admin-transition-slow);
   }
 }
 
+/*
+ * Message banners use a dark-tinted background with a light status-colored
+ * foreground (same in light and dark mode). These specific tints are scoped to
+ * the component rather than the global token API — only messages use this
+ * dark-banner treatment. The global status semantics (light tint + dark text)
+ * are --admin-color-bg-* / --admin-color-text-*.
+ */
+
 .messages--error {
-  --messages-bg-color: var(--gin-bg-danger);
-  --messages-fg-color: var(--gin-color-danger-light);
+  --messages-bg-color: #583333;
+  --messages-fg-color: #f39b9d;
   --messages-icon: var(--admin-icon-error);
 }
 
 .messages--status {
-  --messages-bg-color: var(--gin-bg-green);
-  --messages-fg-color: var(--gin-color-green-light);
+  --messages-bg-color: #145242;
+  --messages-fg-color: #32cea4;
   --messages-icon: var(--admin-icon-status);
 }
 
 .messages--warning {
-  --messages-bg-color: var(--gin-bg-warning);
-  --messages-fg-color: var(--gin-color-warning-light);
+  --messages-bg-color: #483e1e;
+  --messages-fg-color: #efcf64;
   --messages-icon: var(--admin-icon-warning);
 }
 
 .messages--info {
-  --messages-bg-color: var(--gin-bg-info);
-  --messages-fg-color: var(--gin-color-info-light);
+  --messages-bg-color: #122b3c;
+  --messages-fg-color: #589ac5;
   --messages-icon: var(--admin-icon-info);
 }
 
 .messages__title {
   margin-block: 0;
   margin-inline: 2.125rem 0;
-  font-size: var(--font-size-base);
-  font-weight: var(--gin-font-weight-bold);
+  font-size: var(--admin-font-size-m);
+  font-weight: var(--admin-font-weight-bold);
 }
 
 .messages__header {
   position: relative;
   display: flex;
   align-items: center;
-  margin-block-end: var(--gin-spacing-xs);
+  margin-block-end: var(--admin-space-xs);
   margin-inline-end: 1.5em;
 
   &::before {
@@ -189,5 +198,5 @@
 }
 
 .messages__item + .messages__item {
-  margin-block-start: var(--space-s);
+  margin-block-start: var(--admin-space-s);
 }

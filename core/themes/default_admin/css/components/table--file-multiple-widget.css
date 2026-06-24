@@ -31,11 +31,11 @@
     float: left;
   }
   & .tabledrag-changed {
-    line-height: calc(var(--tabledrag-handle-icon-size) + calc(var(--space-xs) * 2));
+    line-height: calc(var(--tabledrag-handle-icon-size) + calc(var(--admin-space-xs) * 2));
   }
   & td {
-    height: calc(var(--space-m) * 3);
-    padding-block: var(--space-m);
+    height: calc(var(--admin-space-m) * 3);
+    padding-block: var(--admin-space-m);
     & > :first-child,
     & > :last-child {
       margin-block: 0;
@@ -45,16 +45,16 @@
     margin: 0;
   }
   & th {
-    height: calc(var(--space-m) * 2);
-    color: var(--color-gray-800);
-    background: var(--color-gray-050);
-    font-size: var(--font-size-s);
+    height: calc(var(--admin-space-m) * 2);
+    color: var(--admin-color-text-soft);
+    background: var(--admin-color-bg-surface-nested);
+    font-size: var(--admin-font-size-s);
   }
   & .tabledrag-cell {
-    padding-block: var(--space-xs);
+    padding-block: var(--admin-space-xs);
   }
   & .checkbox .form-type--boolean {
-    line-height: calc(var(--space-m) * 3);
+    line-height: calc(var(--admin-space-m) * 3);
   }
 }
 
@@ -66,7 +66,7 @@
 }
 
 .no-touchevents .table-file-multiple-widget .checkbox .form-type--boolean {
-  line-height: var(--line-height);
+  line-height: var(--admin-line-height);
 }
 
 /**
@@ -93,9 +93,9 @@
 
 @media screen and (max-width: 37.5em) {
   .gin-details__wrapper .file-widget-multiple__table-wrapper {
-    margin-inline: calc(var(--space-m) * -1);
+    margin-inline: calc(var(--admin-space-m) * -1);
     & > :not(table) {
-      margin-inline: var(--space-m);
+      margin-inline: var(--admin-space-m);
     }
   }
 }

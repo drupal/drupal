@@ -8,7 +8,7 @@
  */
 .form-type--boolean {
   margin-inline-start: var(--input--label-spacing);
-  line-height: var(--space-l);
+  line-height: var(--admin-space-l);
 }
 
 .form-boolean {
@@ -17,8 +17,8 @@
   width: 21px;
   height: 21px;
   vertical-align: text-bottom;
-  border: 1px solid var(--gin-border-color-form-element);
-  border-radius: var(--gin-border-xs);
+  border: 1px solid var(--admin-color-border-input);
+  border-radius: var(--admin-radius-xs);
   background: var(--input-bg-color) no-repeat 50% 50%;
   background-size: 100% 100%;
   appearance: none;
@@ -33,7 +33,7 @@
     box-shadow: inset 0 0 0 1px var(--input-fg-color);
 
     .gin--dark-mode & {
-      border-color: var(--gin-color-text);
+      border-color: var(--admin-color-text);
       box-shadow: none;
     }
   }
@@ -43,7 +43,7 @@
    */
   .form-type--boolean & {
     position: relative;
-    inset-block-start: calc(var(--space-l) / 2);
+    inset-block-start: calc(var(--admin-space-l) / 2);
     float: inline-start;
     margin-inline-start: calc(var(--input--label-spacing) * -1);
     transform: translateY(-50%);
@@ -68,7 +68,7 @@
 .form-radios,
 .form-checkboxes {
   .form-type--boolean {
-    margin-block: var(--gin-spacing-xs);
+    margin-block: var(--admin-space-xs);
   }
 }
 
@@ -82,35 +82,35 @@
   &:active,
   &:focus,
   &:hover:focus {
-    border-color: var(--gin-border-color-form-element);
+    border-color: var(--admin-color-border-input);
     border-radius: 50%;
-    background-color: var(--gin-bg-input);
+    background-color: var(--admin-color-bg-input);
   }
 
   &:hover {
-    box-shadow: inset 0 0 0 1px var(--gin-border-color-layer2);
+    box-shadow: inset 0 0 0 1px var(--admin-color-border);
 
     &,
     .gin--dark-mode & {
-      border-color: var(--gin-color-text);
+      border-color: var(--admin-color-text);
     }
   }
 
   &:checked:not(:disabled) {
     &,
     &:hover {
-      background-color: var(--gin-bg-layer);
-      box-shadow: inset 0 0 0 5px var(--gin-color-primary);
+      background-color: var(--admin-color-bg-surface);
+      box-shadow: inset 0 0 0 5px var(--admin-color-primary);
     }
 
     &:active,
     &:focus,
     &:hover:focus {
-      border-color: var(--gin-color-focus-border);
+      border-color: var(--admin-color-focus-border);
       box-shadow:
-        inset 0 0 0 5px var(--gin-color-primary),
-        0 0 0 1px var(--gin-color-focus-border),
-        0 0 0 4px var(--gin-color-focus);
+        inset 0 0 0 5px var(--admin-color-primary),
+        0 0 0 1px var(--admin-color-focus-border),
+        0 0 0 4px var(--admin-color-focus);
     }
   }
 
@@ -118,16 +118,16 @@
     &,
     &:hover {
       cursor: not-allowed;
-      border-color: var(--gin-color-disabled-border);
-      background: var(--gin-color-disabled-bg);
+      border-color: var(--admin-color-border-disabled);
+      background: var(--admin-color-bg-disabled);
     }
   }
 
   &:checked:disabled {
     &,
     &:hover {
-      background: var(--gin-color-disabled);
-      box-shadow: inset 0 0 0 5px var(--gin-color-disabled-bg);
+      background: var(--admin-color-text-disabled);
+      box-shadow: inset 0 0 0 5px var(--admin-color-bg-disabled);
     }
   }
 }
@@ -138,13 +138,13 @@
 .form-boolean--type-checkbox {
   &:not(:checked) {
     .gin--dark-mode & {
-      background: var(--gin-bg-input);
+      background: var(--admin-color-bg-input);
     }
   }
 
   &:checked {
-    border-color: var(--gin-color-primary);
-    background-color: var(--gin-color-primary);
+    border-color: var(--admin-color-primary);
+    background-color: var(--admin-color-primary);
     background-image: url(../../images/icons/ffffff/checkmark-sm.svg);
 
     &:not(:disabled) {
@@ -154,13 +154,13 @@
     }
 
     &:hover {
-      border-color: var(--gin-color-primary-hover);
-      background-color: var(--gin-color-primary-hover);
+      border-color: var(--admin-color-primary-hover);
+      background-color: var(--admin-color-primary-hover);
     }
 
     &:active {
-      border-color: var(--gin-color-primary-active);
-      background-color: var(--gin-color-primary-active);
+      border-color: var(--admin-color-primary-active);
+      background-color: var(--admin-color-primary-active);
     }
   }
 
@@ -168,12 +168,12 @@
     &,
     &:hover {
       cursor: not-allowed;
-      border-color: var(--gin-color-disabled-border);
-      background-color: var(--gin-color-disabled-bg);
+      border-color: var(--admin-color-border-disabled);
+      background-color: var(--admin-color-bg-disabled);
 
       &:checked {
-        border-color: var(--gin-color-disabled-border);
-        background-color: var(--gin-color-disabled-bg);
+        border-color: var(--admin-color-border-disabled);
+        background-color: var(--admin-color-bg-disabled);
         box-shadow: none;
       }
     }
@@ -195,8 +195,8 @@
   &:focus:active,
   &:focus:hover {
     box-shadow:
-      0 0 0 2px var(--color-white),
-      0 0 0 5px var(--color-focus),
+      0 0 0 2px var(--admin-color-bg-input),
+      0 0 0 5px var(--admin-color-focus),
       inset 0 0 0 1px var(--input--error-border-color);
   }
   &:checked:active,
@@ -217,8 +217,8 @@
 }
 .form-boolean--type-radio.error:checked:focus {
   box-shadow:
-    0 0 0 2px var(--color-white),
-    0 0 0 5px var(--color-focus),
+    0 0 0 2px var(--admin-color-bg-input),
+    0 0 0 5px var(--admin-color-focus),
     inset 0 0 0 1px var(--input--error-border-color);
 }
 

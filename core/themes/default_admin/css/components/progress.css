@@ -13,12 +13,12 @@
  */
 
 :root {
-  --progress-bar-bg-color: var(--gin-color-primary);
-  --progress-bar-border-color: var(--gin-color-primary);
-  --progress-bar-label-font-size: var(--font-size-base);
-  --progress-bar-small-label-font-size: var(--font-size-label);
-  --progress-bar-default-size: calc(var(--space-m) - (2 * var(--progress-bar-border-size)));
-  --progress-bar-default-size-radius: var(--space-m);
+  --progress-bar-bg-color: var(--admin-color-primary);
+  --progress-bar-border-color: var(--admin-color-primary);
+  --progress-bar-label-font-size: var(--admin-font-size-m);
+  --progress-bar-small-label-font-size: var(--admin-font-size-label);
+  --progress-bar-default-size: calc(var(--admin-space-m) - (2 * var(--progress-bar-border-size)));
+  --progress-bar-default-size-radius: var(--admin-space-m);
 }
 
 .progress::after {
@@ -46,10 +46,10 @@
 .progress__track {
   height: var(--progress-bar-default-size);
   margin-block-start: 0;
-  padding: var(--gin-spacing-xs);
-  border: var(--progress-bar-border-size) var(--gin-border-color) solid;
+  padding: var(--admin-space-xs);
+  border: var(--progress-bar-border-size) var(--admin-color-border) solid;
   border-radius: var(--progress-bar-default-size-radius);
-  background-color: var(--gin-bg-layer3);
+  background-color: var(--admin-color-bg-raised);
 }
 
 .progress__bar {
@@ -63,8 +63,8 @@
   border-radius: var(--progress-bar-default-size-radius);
   background-color: var(--progress-bar-bg-color);
   box-shadow:
-    0 0.125em 0.25em var(--gin-color-primary-light),
-    1.25em 0.9375em 2em var(--gin-color-primary-light);
+    0 0.125em 0.25em var(--admin-color-primary-soft),
+    1.25em 0.9375em 2em var(--admin-color-primary-soft);
 
   @media screen and (prefers-reduced-motion: reduce) {
     transition: none;
@@ -85,6 +85,6 @@
 .progress__percentage {
   overflow: hidden;
   margin-block-start: var(--progress-bar-spacing-size);
-  color: var(--gin-color-text);
+  color: var(--admin-color-text);
   font-size: var(--progress-bar-description-font-size);
 }

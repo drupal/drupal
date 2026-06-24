@@ -15,7 +15,7 @@
       width: 1px;
       height: 100%;
       content: "";
-      border-inline-start: 6px solid var(--gin-color-green);
+      border-inline-start: 6px solid var(--admin-color-success);
       inset-block-start: 0;
       inset-inline-start: 0;
     }

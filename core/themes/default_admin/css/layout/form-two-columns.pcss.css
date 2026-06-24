@@ -6,7 +6,7 @@
 }
 
 .layout-region--footer .layout-region__content {
-  margin-top: var(--space-l);
+  margin-top: var(--admin-space-l);
 }
 
 /**
@@ -17,7 +17,7 @@
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: minmax(0, 3fr) minmax(360px, 1fr);
-    gap: var(--space-l);
+    gap: var(--admin-space-l);
   }
 
   .layout-region--main,
@@ -36,6 +36,6 @@
   /* Push sidebar down to horizontal align with form section. */
   .layout-region--secondary {
     grid-row: span 2;
-    margin-block-start: var(--space-l);
+    margin-block-start: var(--admin-space-l);
   }
 }

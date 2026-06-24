@@ -1,0 +1,105 @@
+/**
+ * @file
+ * Spacing & layout-dimension custom properties.
+ *
+ * The canonical --admin-space-* scale, the density-aware --admin-space-density-*
+ * scale ([data-gin-layout-density]), and layout dimensions/offsets (toolbar,
+ * sidebar, sticky). Consolidated from the former --space-* / --gin-spacing-* /
+ * --gin-spacing-density-* systems as part of
+ * https://www.drupal.org/i/3582351. The theme is alpha; the old token
+ * names are removed outright with no deprecation aliases.
+ *
+ * Values are authored in px; the build's px-to-rem step converts them.
+ */
+
+@import "../base/media-queries.pcss.css";
+
+:root {
+  /**
+   * Spacing scale.
+   */
+  --admin-space-3xs: 2px;
+  --admin-space-2xs: 4px;
+  --admin-space-xs: 8px;
+  --admin-space-s: 12px;
+  --admin-space-m: 16px;
+  --admin-space-l: 24px;
+  --admin-space-xl: 32px;
+  --admin-space-2xl: 48px;
+  --admin-space-3xl: 64px;
+
+  /*
+   * Layout dimensions & offsets.
+   *
+   * Namespaced --admin-theme-* (not --admin-toolbar-*) on purpose: core's
+   * navigation / admin_toolbar module already owns the --admin-toolbar-* token
+   * family (--admin-toolbar-color-*, --admin-toolbar-sidebar-width, …). These
+   * are *this theme's* layout-geometry tokens, so they get their own
+   * --admin-theme-* namespace to keep ownership unambiguous in the public API.
+   *
+   * --admin-theme-sidebar-width is written by the theme's JS at runtime
+   * (migration/js/init.js, sidebar.js); the toolbar offsets derive in CSS from
+   * core's --drupal-displace-offset-* (see navigation.pcss.css). Values declared
+   * here are only the initial/fallback.
+   */
+  --admin-theme-height-sticky: 60px;
+  --admin-theme-toolbar-height: 0px;
+  --admin-theme-toolbar-secondary-height: 0px;
+  --admin-theme-toolbar-y-offset: 0px;
+  --admin-theme-toolbar-x-offset: 0px;
+  --admin-theme-scroll-offset: 0px;
+  --admin-theme-sticky-offset: 0px;
+  --admin-theme-sidebar-small-width: 320px;
+  --admin-theme-sidebar-min-width: 240px;
+  --admin-theme-sidebar-width: 320px;
+  --admin-theme-sidebar-max-width: 560px;
+  --admin-theme-sidebar-offset: var(--admin-theme-sidebar-width);
+
+  @media (--admin-large) {
+    --admin-theme-sticky-offset: var(--admin-theme-height-sticky);
+  }
+
+  @media (--admin-wide) {
+    --admin-theme-sidebar-width: 360px;
+  }
+}
+
+/**
+ * Density-aware spacing scale.
+ *
+ * The [data-gin-layout-density] attribute re-declares this scale; the static
+ * --admin-space-* scale above is intentionally NOT density-aware.
+ */
+
+:root {
+  --admin-space-density-2xs: 4px;
+  --admin-space-density-xs: 8px;
+  --admin-space-density-s: 12px;
+  --admin-space-density-m: 16px;
+  --admin-space-density-l: 24px;
+  --admin-space-density-xl: 32px;
+  --admin-space-density-2xl: 48px;
+  --admin-space-density-3xl: 64px;
+
+  &[data-gin-layout-density="small"] {
+    --admin-space-density-2xs: 0.15625rem; /* 2.5px — authored in rem: below the build's 3px px-to-rem floor. */
+    --admin-space-density-xs: 5px;
+    --admin-space-density-s: 7.5px;
+    --admin-space-density-m: 10px;
+    --admin-space-density-l: 15px;
+    --admin-space-density-xl: 20px;
+    --admin-space-density-2xl: 30px;
+    --admin-space-density-3xl: 40px;
+  }
+
+  &[data-gin-layout-density="medium"] {
+    --admin-space-density-2xs: 3px;
+    --admin-space-density-xs: 6px;
+    --admin-space-density-s: 9px;
+    --admin-space-density-m: 12px;
+    --admin-space-density-l: 18px;
+    --admin-space-density-xl: 24px;
+    --admin-space-density-2xl: 36px;
+    --admin-space-density-3xl: 48px;
+  }
+}

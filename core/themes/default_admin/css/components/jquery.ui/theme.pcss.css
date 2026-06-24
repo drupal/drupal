@@ -680,7 +680,7 @@
 .ui-widget-overlay {
   z-index: calc(var(--jui-dialog-z-index) - 1);
   opacity: 0.7;
-  background: var(--color-text);
+  background: var(--admin-color-text);
 }
 
 /**
@@ -716,7 +716,7 @@
 }
 .ui-progressbar .ui-progressbar-value {
   height: 1.5em;
-  background: var(--color-blue-600) url(../../../../misc/progress.gif);
+  background: var(--admin-color-primary) url(../../../../misc/progress.gif);
 }
 
 /**
@@ -753,7 +753,7 @@
 .ui-autocomplete .ui-menu-item.ui-state-focus,
 .autocomplete .ui-menu-item.ui-state-hover {
   margin: 0;
-  background: var(--color-blue-600);
+  background: var(--admin-color-primary);
 }
 .ui-autocomplete .ui-state-focus a,
 .autocomplete .ui-state-hover a {

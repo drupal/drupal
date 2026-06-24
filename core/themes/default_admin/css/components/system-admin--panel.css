@@ -12,7 +12,7 @@
 
 .panel {
   margin-block: 1em 3em;
-  border-block-end: calc(1em / 16) solid var(--color-gray-200);
+  border-block-end: calc(1em / 16) solid var(--admin-color-border);
 
   /* Override specificity from .gin-layer-wrapper in layers.css. */
   &[class] {
@@ -21,13 +21,13 @@
 }
 
 .panel__title {
-  margin: var(--gin-spacing-s);
-  padding: var(--gin-spacing-m) var(--gin-spacing-l);
-  color: var(--gin-color-primary-active);
-  border-radius: var(--gin-border-m);
-  background: var(--gin-bg-header);
-  font-size: var(--gin-font-size-l);
-  font-weight: var(--gin-font-weight-bold);
+  margin: var(--admin-space-s);
+  padding: var(--admin-space-m) var(--admin-space-l);
+  color: var(--admin-color-primary-active);
+  border-radius: var(--admin-radius-m);
+  background: var(--admin-color-bg-header);
+  font-size: var(--admin-font-size-l);
+  font-weight: var(--admin-font-weight-bold);
   line-height: calc(24em / 18);
 }
 

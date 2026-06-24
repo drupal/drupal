@@ -3,12 +3,12 @@
  */
 
 .content-header {
-  margin-bottom: var(--space-s);
+  margin-bottom: var(--admin-space-s);
 
   /* Normalize whitespace if empty. */
   @media (--admin-small) {
     &:not(:has(.layout-container *)) {
-      margin-block-start: calc(var(--gin-spacing-m) * -1);
+      margin-block-start: calc(var(--admin-space-m) * -1);
     }
   }
 }

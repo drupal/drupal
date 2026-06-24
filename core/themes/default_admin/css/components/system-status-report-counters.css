@@ -14,8 +14,8 @@
   width: 100%;
   margin-block: 0.625rem;
   margin-inline: 0;
-  border: 1px solid var(--gin-border-color-layer);
-  box-shadow: var(--gin-shadow-l1);
+  border: 1px solid var(--admin-color-border-soft);
+  box-shadow: var(--admin-shadow-1);
 
   @media screen and (min-width: 60em) {
     margin-block-end: 1.25rem;

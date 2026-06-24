@@ -3,16 +3,14 @@
  * Styles for the system status counter component.
  */
 .system-status-counter {
-  --system-status-counter-status-icon: #e6e4df;
-
   display: inline-block;
   overflow-y: hidden;
   box-sizing: border-box;
   height: auto;
-  padding: var(--gin-spacing-m) 0;
+  padding: var(--admin-space-m) 0;
   white-space: nowrap;
-  border-radius: var(--gin-border-m);
-  background: var(--gin-bg-layer);
+  border-radius: var(--admin-radius-m);
+  background: var(--admin-color-bg-surface);
   inline-size: 100%;
 }
 
@@ -48,17 +46,17 @@
 }
 
 .system-status-counter__status-icon--error::before {
-  background-color: var(--gin-color-danger);
+  background-color: var(--admin-color-error);
   mask-image: var(--admin-icon-error);
 }
 
 .system-status-counter__status-icon--warning::before {
-  background-color: var(--gin-color-warning);
+  background-color: var(--admin-color-warning);
   mask-image: var(--admin-icon-warning);
 }
 
 .system-status-counter__status-icon--checked::before {
-  background-color: var(--gin-color-green);
+  background-color: var(--admin-color-success);
   mask-image: var(--admin-icon-status);
 }
 
@@ -75,13 +73,13 @@
 .system-status-counter__title-count {
   display: block;
   margin-block-end: 8px;
-  font-weight: var(--gin-font-weight-semibold);
+  font-weight: var(--admin-font-weight-semibold);
 }
 
 .system-status-counter__details {
   display: block;
   text-transform: none;
-  font-size: var(--font-size-s);
+  font-size: var(--admin-font-size-s);
   font-weight: normal;
   line-height: 1.5;
 }

@@ -1,6 +1,9 @@
 /*
  * @file
  * Single checkbox: show as toggle.
+ *
+ * @todo Background color should use relative color notation, with lightness
+ * hard coded while in dark mode.
  */
 
 :not(.form-checkboxes, td, .tabledrag-cell-content__item, .media-library-item__click-to-select-checkbox, .field-content, .ajax-new-content, .tablesaw-cell-content) > .form-type--checkbox {
@@ -19,12 +22,12 @@
     cursor: pointer;
     vertical-align: top;
     border: 3px solid transparent;
-    border-radius: var(--gin-border-l);
-    background-color: var(--gin-color-disabled);
-    clip-path: circle(var(--gin-spacing-l) at 50% 50%); /* Fix Safari bug */
+    border-radius: var(--admin-radius-l);
+    background-color: var(--admin-color-text-disabled);
+    clip-path: circle(var(--admin-space-l) at 50% 50%); /* Fix Safari bug */
 
     .gin--dark-mode & {
-      background-color: var(--gin-bg-input);
+      background-color: var(--admin-color-bg-input);
     }
 
     &::before {
@@ -41,7 +44,7 @@
       }
 
       .gin--dark-mode & {
-        background-color: var(--gin-border-color-form-element);
+        background-color: var(--admin-color-border-input);
       }
 
       @media (prefers-reduced-motion: no-preference) {
@@ -68,16 +71,17 @@
     &:active,
     &:focus {
       box-shadow:
-        0 0 0 1px var(--gin-color-focus-border),
-        0 0 0 4px var(--gin-color-focus);
+        0 0 0 1px var(--admin-color-focus-border),
+        0 0 0 4px var(--admin-color-focus);
     }
 
     /* Active state */
     &:checked {
-      background-color: var(--gin-switch);
+      background-color: var(--admin-color-switch);
 
-      .gin--dark-mode & {
-        background-color: var(--gin-color-primary-light-active);
+      /* @todo refactor out this specificity. Win over form--checkbox-radio.css. */
+      &[class] {
+        background-image: none;
       }
 
       &::before {
@@ -89,15 +93,15 @@
         }
 
         .gin--dark-mode & {
-          background-color: var(--gin-color-primary-hover);
+          background-color: var(--admin-color-primary-hover);
         }
 
         .gin--high-contrast-mode & {
-          background-color: var(--gin-border-color);
+          background-color: var(--admin-color-border);
         }
 
         @media (forced-colors: active) {
-          padding-inline-start: var(--gin-spacing-xs);
+          padding-inline-start: var(--admin-space-xs);
           background-color: LinkText !important;
         }
       }
@@ -118,7 +122,7 @@
     /* Disabled state */
     &:disabled {
       opacity: 0.75;
-      background-color: var(--gin-color-disabled);
+      background-color: var(--admin-color-text-disabled);
       box-shadow: none;
 
       &::before {
@@ -159,7 +163,7 @@
     position: relative;
     z-index: 1;
     padding-block-end: 0;
-    padding-inline-start: var(--gin-spacing-xxs);
-    color: var(--gin-color-text);
+    padding-inline-start: var(--admin-space-2xs);
+    color: var(--admin-color-text);
   }
 }

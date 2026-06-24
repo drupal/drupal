@@ -64,9 +64,9 @@
  * Filter guidelines.
  */
 .filter-guidelines__item {
-  max-width: var(--gin-max-line-length);
+  max-width: var(--admin-max-line-length);
   margin-top: 0.5em; /* (6 / 12) */
-  color: var(--gin-color-text-light);
+  color: var(--admin-color-text-soft);
   font-size: 0.75em; /* (12 / 16) */
 }
 

@@ -15,15 +15,15 @@
   .admin-toolbar__tooltip {
     position: absolute;
     z-index: 601;
-    padding: var(--space-xs) var(--space-s);
+    padding: var(--admin-space-xs) var(--admin-space-s);
     white-space: nowrap;
     color: white;
-    border-radius: var(--gin-border-s);
-    background-color: var(--gin-tooltip-bg);
-    box-shadow: var(--gin-shadow-l2);
-    font-size: var(--font-size-xxs);
-    font-weight: var(--font-weight-semibold);
-    inset-block-start: var(--space-xs);
+    border-radius: var(--admin-radius-s);
+    background-color: var(--admin-color-bg-inverse);
+    box-shadow: var(--admin-shadow-2);
+    font-size: var(--admin-font-size-2xs);
+    font-weight: var(--admin-font-weight-semibold);
+    inset-block-start: var(--admin-space-xs);
     font-variation-settings: initial;
   }
 
