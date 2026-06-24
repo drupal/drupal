@@ -50,7 +50,7 @@ class LocaleUpdateDevelopmentReleaseTest extends BrowserTestBase {
    */
   public function testLocaleUpdateDevelopmentRelease(): void {
     $projects = \Drupal::service(LocaleProjectRepository::class)->buildProjects();
-    $this->assertEquals('8.0.x', $projects['drupal']->info['version'], 'The branch of the core dev release.');
+    $this->assertEquals('8.0.0-alpha102-dev', $projects['drupal']->info['version'], 'The branch of the core dev release.');
     $this->assertEquals('12.x-10.x', $projects['contrib']->info['version'], 'The branch of the contrib module dev release.');
   }
 
