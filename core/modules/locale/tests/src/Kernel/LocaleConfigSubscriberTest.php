@@ -67,10 +67,9 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
     // Simulate this hook invoked which would happen if in a non-kernel test
     // or normal environment.
     // @see locale_modules_installed()
-    // @see locale_system_update()
-    locale_system_set_config_langcodes();
-    $langcodes = array_keys(\Drupal::languageManager()->getLanguages());
     $locale_config_manager = \Drupal::service('locale.config_manager');
+    $locale_config_manager->updateDefaultConfigLangcodes();
+    $langcodes = array_keys(\Drupal::languageManager()->getLanguages());
     $names = $locale_config_manager->getComponentNames();
     $locale_config_manager->updateConfigTranslations($names, $langcodes);
 
