@@ -1890,13 +1890,6 @@ function install_check_translations($langcode, $server_pattern): array {
   }
 
   $version = \Drupal::VERSION;
-  // For dev releases, remove the '-dev' part and trust the translation server
-  // to fall back to the latest stable release for that branch.
-  // @see \Drupal\locale\LocaleProjectRepository::buildProjects()
-  if (preg_match("/^(\d+\.\d+\.).*-dev$/", $version, $matches)) {
-    // Example match: 8.0.0-dev => 8.0.x (Drupal core)
-    $version = $matches[1] . 'x';
-  }
 
   // Build URL for the translation file and the translation server.
   $variables = [
