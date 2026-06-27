@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\update;
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -20,7 +19,6 @@ class MailHandler {
   public function __construct(
     protected readonly EntityTypeManagerInterface $entityTypeManager,
     protected readonly LanguageManagerInterface $languageManager,
-    protected readonly TimeInterface $time,
     /**
      * @var \Closure(): \Drupal\Core\Mail\MailManagerInterface
      */
