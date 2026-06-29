@@ -854,10 +854,10 @@ htmx:
 
 internal.floating-ui:
   remote: https://github.com/floating-ui/floating-ui
-  version: "1.7.4"
+  version: "1.7.6"
   license:
     name: MIT
-    url: https://github.com/floating-ui/floating-ui/blob/@floating-ui/dom@1.7.4/LICENSE
+    url: https://github.com/floating-ui/floating-ui/blob/@floating-ui/dom@1.7.6/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/floating-ui/floating-ui.core.umd.min.js: { minified: true }

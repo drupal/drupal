@@ -5,10 +5,10 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@acemir/cssom@npm:^0.9.19":
-  version: 0.9.19
-  resolution: "@acemir/cssom@npm:0.9.19"
-  checksum: 10c0/baef216086b4c6d32ac02fff6621e5343969710d8262be3a84494564754424f60d3add8313c05a76465310e02bf72faa65abcb9febee15c2dc01d9b08c044d5a
+"@acemir/cssom@npm:^0.9.28":
+  version: 0.9.31
+  resolution: "@acemir/cssom@npm:0.9.31"
+  checksum: 10c0/cbfff98812642104ec3b37de1ad3a53f216ddc437e7b9276a23f46f2453844ea3c3f46c200bc4656a2f747fb26567560b3cc5183d549d119a758926551b5f566
   languageName: node
   linkType: hard
 
@@ -25,29 +25,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@asamuzakjp/css-color@npm:^4.0.3":
-  version: 4.0.5
-  resolution: "@asamuzakjp/css-color@npm:4.0.5"
+"@asamuzakjp/css-color@npm:^4.1.1":
+  version: 4.1.2
+  resolution: "@asamuzakjp/css-color@npm:4.1.2"
   dependencies:
-    "@csstools/css-calc": "npm:^2.1.4"
-    "@csstools/css-color-parser": "npm:^3.1.0"
-    "@csstools/css-parser-algorithms": "npm:^3.0.5"
-    "@csstools/css-tokenizer": "npm:^3.0.4"
-    lru-cache: "npm:^11.2.1"
-  checksum: 10c0/0683266cfb58ea96c01af04d4c030f55bc51bf600a24e3fbaee74276916f588993696b874dff05d3d6742bc20a7b2f0affe9b0593d67308d18737b5f41b14a1f
+    "@csstools/css-calc": "npm:^3.0.0"
+    "@csstools/css-color-parser": "npm:^4.0.1"
+    "@csstools/css-parser-algorithms": "npm:^4.0.0"
+    "@csstools/css-tokenizer": "npm:^4.0.0"
+    lru-cache: "npm:^11.2.5"
+  checksum: 10c0/e432fdef978b37654a2ca31169a149b9173e708f70c82612acb123a36dbc7dd99913c48cbf2edd6fe3652cc627d4bc94bf87571463da0b788f15b973d4ce5b0f
   languageName: node
   linkType: hard
 
-"@asamuzakjp/dom-selector@npm:^6.7.3":
-  version: 6.7.4
-  resolution: "@asamuzakjp/dom-selector@npm:6.7.4"
+"@asamuzakjp/dom-selector@npm:^6.7.6":
+  version: 6.8.1
+  resolution: "@asamuzakjp/dom-selector@npm:6.8.1"
   dependencies:
     "@asamuzakjp/nwsapi": "npm:^2.3.9"
     bidi-js: "npm:^1.0.3"
     css-tree: "npm:^3.1.0"
     is-potential-custom-element-name: "npm:^1.0.1"
-    lru-cache: "npm:^11.2.2"
-  checksum: 10c0/73e70d8d660a0d7257828064f83772c6773ed9688186590eefc1a8320a0af9cce74e966d4d4c4cc451481f5fd5c8ca429c6e01c1383106eed64c0a2b1b7ab36e
+    lru-cache: "npm:^11.2.6"
+  checksum: 10c0/635de2c3b11971c07e2d491fd2833d2499bafbab05b616f5d38041031718879c404456644f60c45e9ba4ca2423e5bb48bf3c46179b0c58a0ea68eaae8c61e85f
   languageName: node
   linkType: hard
 
@@ -993,108 +993,125 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/cspell-bundled-dicts@npm:9.2.2":
-  version: 9.2.2
-  resolution: "@cspell/cspell-bundled-dicts@npm:9.2.2"
+"@cspell/cspell-bundled-dicts@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/cspell-bundled-dicts@npm:9.8.0"
   dependencies:
     "@cspell/dict-ada": "npm:^4.1.1"
     "@cspell/dict-al": "npm:^1.1.1"
-    "@cspell/dict-aws": "npm:^4.0.15"
-    "@cspell/dict-bash": "npm:^4.2.1"
-    "@cspell/dict-companies": "npm:^3.2.6"
-    "@cspell/dict-cpp": "npm:^6.0.12"
+    "@cspell/dict-aws": "npm:^4.0.17"
+    "@cspell/dict-bash": "npm:^4.2.2"
+    "@cspell/dict-companies": "npm:^3.2.11"
+    "@cspell/dict-cpp": "npm:^7.0.2"
     "@cspell/dict-cryptocurrencies": "npm:^5.0.5"
-    "@cspell/dict-csharp": "npm:^4.0.7"
-    "@cspell/dict-css": "npm:^4.0.18"
-    "@cspell/dict-dart": "npm:^2.3.1"
-    "@cspell/dict-data-science": "npm:^2.0.10"
-    "@cspell/dict-django": "npm:^4.1.5"
-    "@cspell/dict-docker": "npm:^1.1.16"
-    "@cspell/dict-dotnet": "npm:^5.0.10"
+    "@cspell/dict-csharp": "npm:^4.0.8"
+    "@cspell/dict-css": "npm:^4.1.1"
+    "@cspell/dict-dart": "npm:^2.3.2"
+    "@cspell/dict-data-science": "npm:^2.0.13"
+    "@cspell/dict-django": "npm:^4.1.6"
+    "@cspell/dict-docker": "npm:^1.1.17"
+    "@cspell/dict-dotnet": "npm:^5.0.13"
     "@cspell/dict-elixir": "npm:^4.0.8"
-    "@cspell/dict-en-common-misspellings": "npm:^2.1.6"
-    "@cspell/dict-en-gb-mit": "npm:^3.1.10"
-    "@cspell/dict-en_us": "npm:^4.4.20"
-    "@cspell/dict-filetypes": "npm:^3.0.14"
+    "@cspell/dict-en-common-misspellings": "npm:^2.1.12"
+    "@cspell/dict-en-gb-mit": "npm:^3.1.22"
+    "@cspell/dict-en_us": "npm:^4.4.33"
+    "@cspell/dict-filetypes": "npm:^3.0.18"
     "@cspell/dict-flutter": "npm:^1.1.1"
-    "@cspell/dict-fonts": "npm:^4.0.5"
+    "@cspell/dict-fonts": "npm:^4.0.6"
     "@cspell/dict-fsharp": "npm:^1.1.1"
-    "@cspell/dict-fullstack": "npm:^3.2.7"
+    "@cspell/dict-fullstack": "npm:^3.2.9"
     "@cspell/dict-gaming-terms": "npm:^1.1.2"
-    "@cspell/dict-git": "npm:^3.0.7"
-    "@cspell/dict-golang": "npm:^6.0.23"
+    "@cspell/dict-git": "npm:^3.1.0"
+    "@cspell/dict-golang": "npm:^6.0.26"
     "@cspell/dict-google": "npm:^1.0.9"
     "@cspell/dict-haskell": "npm:^4.0.6"
-    "@cspell/dict-html": "npm:^4.0.12"
-    "@cspell/dict-html-symbol-entities": "npm:^4.0.4"
+    "@cspell/dict-html": "npm:^4.0.15"
+    "@cspell/dict-html-symbol-entities": "npm:^4.0.5"
     "@cspell/dict-java": "npm:^5.0.12"
     "@cspell/dict-julia": "npm:^1.1.1"
     "@cspell/dict-k8s": "npm:^1.0.12"
     "@cspell/dict-kotlin": "npm:^1.1.1"
-    "@cspell/dict-latex": "npm:^4.0.4"
+    "@cspell/dict-latex": "npm:^5.1.0"
     "@cspell/dict-lorem-ipsum": "npm:^4.0.5"
     "@cspell/dict-lua": "npm:^4.0.8"
     "@cspell/dict-makefile": "npm:^1.0.5"
-    "@cspell/dict-markdown": "npm:^2.0.12"
-    "@cspell/dict-monkeyc": "npm:^1.0.11"
-    "@cspell/dict-node": "npm:^5.0.8"
-    "@cspell/dict-npm": "npm:^5.2.18"
-    "@cspell/dict-php": "npm:^4.0.15"
+    "@cspell/dict-markdown": "npm:^2.0.16"
+    "@cspell/dict-monkeyc": "npm:^1.0.12"
+    "@cspell/dict-node": "npm:^5.0.9"
+    "@cspell/dict-npm": "npm:^5.2.38"
+    "@cspell/dict-php": "npm:^4.1.1"
     "@cspell/dict-powershell": "npm:^5.0.15"
-    "@cspell/dict-public-licenses": "npm:^2.0.15"
-    "@cspell/dict-python": "npm:^4.2.20"
+    "@cspell/dict-public-licenses": "npm:^2.0.16"
+    "@cspell/dict-python": "npm:^4.2.26"
     "@cspell/dict-r": "npm:^2.1.1"
-    "@cspell/dict-ruby": "npm:^5.0.9"
-    "@cspell/dict-rust": "npm:^4.0.12"
-    "@cspell/dict-scala": "npm:^5.0.8"
-    "@cspell/dict-shell": "npm:^1.1.1"
-    "@cspell/dict-software-terms": "npm:^5.1.9"
+    "@cspell/dict-ruby": "npm:^5.1.1"
+    "@cspell/dict-rust": "npm:^4.1.2"
+    "@cspell/dict-scala": "npm:^5.0.9"
+    "@cspell/dict-shell": "npm:^1.1.2"
+    "@cspell/dict-software-terms": "npm:^5.2.2"
     "@cspell/dict-sql": "npm:^2.2.1"
     "@cspell/dict-svelte": "npm:^1.0.7"
     "@cspell/dict-swift": "npm:^2.0.6"
     "@cspell/dict-terraform": "npm:^1.1.3"
     "@cspell/dict-typescript": "npm:^3.2.3"
     "@cspell/dict-vue": "npm:^3.0.5"
-  checksum: 10c0/a5a3234234860988f3665a7b25cdf1430cb5a91d93099b2dc55c20feb0136b873861ce5d7c370f1a343820dee030873d9b1c76565a45f96cf71457417d1f8647
+    "@cspell/dict-zig": "npm:^1.0.0"
+  checksum: 10c0/1f1dc8004511105db5b7065c049e4132955011dac6e7991ab2fa2e0cc78634c80d42913876beea7c924699aa3fec071f7058cb1144fe40f0a9794ebbf28e0df4
   languageName: node
   linkType: hard
 
-"@cspell/cspell-json-reporter@npm:9.2.2":
-  version: 9.2.2
-  resolution: "@cspell/cspell-json-reporter@npm:9.2.2"
+"@cspell/cspell-json-reporter@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/cspell-json-reporter@npm:9.8.0"
   dependencies:
-    "@cspell/cspell-types": "npm:9.2.2"
-  checksum: 10c0/4f4b62055d3dc0cac4005b467a9bb8246823d5887bfe75af6c260186b25bdb373de0bc6b8677a46369b4a874215ea34d40819503b69702051de25e7dc1d85197
+    "@cspell/cspell-types": "npm:9.8.0"
+  checksum: 10c0/1759a9b52de971e0b6993554d20e4a32304a8267334b79133c7e1ac403e9c5f32ba0024968a71c94be0956d7c2fce3d8255f384f0629d3f37134ef53f8ff1b3a
   languageName: node
   linkType: hard
 
-"@cspell/cspell-pipe@npm:9.2.2":
-  version: 9.2.2
-  resolution: "@cspell/cspell-pipe@npm:9.2.2"
-  checksum: 10c0/636dad76645f960154ae5fb54dbad8c8ac7d0ba370554255c625497bdc0e9e8c714aad180b322394818b9706eeba35e6b52e8157884353510fd76d7ef277d7d0
+"@cspell/cspell-performance-monitor@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/cspell-performance-monitor@npm:9.8.0"
+  checksum: 10c0/be8ca2ace9a5ea2a3226ae744a8256dc9e0540d8b2dfaadfc5895a8e0cc920912a2b431379b4c51393e7482a07c5729ddccc034bba22251bb62e759b7af98d02
   languageName: node
   linkType: hard
 
-"@cspell/cspell-resolver@npm:9.2.2":
-  version: 9.2.2
-  resolution: "@cspell/cspell-resolver@npm:9.2.2"
+"@cspell/cspell-pipe@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/cspell-pipe@npm:9.8.0"
+  checksum: 10c0/796c34f1a571953d86cbeca63675312bdc9c42c499aaa02b42dfdbd05440e8f5462d0a1ddcb10234c25152117afc9b66e9f5f67670fc065603a2daa0f72b09be
+  languageName: node
+  linkType: hard
+
+"@cspell/cspell-resolver@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/cspell-resolver@npm:9.8.0"
   dependencies:
-    global-directory: "npm:^4.0.1"
-  checksum: 10c0/a0b2f5c1533c28ae159781c01e0458129b7749c57038666152a8aaf6daef9e1fbe1e0b9b624c4faefb82504759b4b48407f444bc98ac3da6adbf1d2d9516d176
+    global-directory: "npm:^5.0.0"
+  checksum: 10c0/b95a6c6f8921a33d2877e8e0beba6baddefe4fa75b67f26e5211477f787c2f846822e127c0e82570de710595246af3af4eb67998bdcde81735b723ecf02c1cf8
   languageName: node
   linkType: hard
 
-"@cspell/cspell-service-bus@npm:9.2.2":
-  version: 9.2.2
-  resolution: "@cspell/cspell-service-bus@npm:9.2.2"
-  checksum: 10c0/b10f2f03011d6848c6ada2e204a3a7ed59dba1f0e9cefb0ed2934fa9af14e79b5f6aaacdd4e159427fa35251bb3d5b20a6ffd7676566ac2d7c4d262bca8d5593
+"@cspell/cspell-service-bus@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/cspell-service-bus@npm:9.8.0"
+  checksum: 10c0/23d8fdfd0f25d741119ea550a39a5c865ac80ed6e9be6c69691a93158e519bd1445a4e9fb9730f70158a5025016ab860a44e6cedae41a420b90c08cb233adf83
   languageName: node
   linkType: hard
 
-"@cspell/cspell-types@npm:9.2.2":
-  version: 9.2.2
-  resolution: "@cspell/cspell-types@npm:9.2.2"
-  checksum: 10c0/42acbd76cbbd9f84dcda654ba411cfad3cc71d13652d91ddb72fb2dad863a95d3903ea2601a9a4aa2b5fac2a1981c1914f18bd60034e7738d932ed341f7c3220
+"@cspell/cspell-types@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/cspell-types@npm:9.8.0"
+  checksum: 10c0/bd7b509398cc7bcc1333c90e85fa9e9726aa8b7cc6a061d00bf143bc806a5a1e170d2ecd380772c02566978cb9f859170e8c7a7bcb194e460f8d4d6c446b2d8d
+  languageName: node
+  linkType: hard
+
+"@cspell/cspell-worker@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/cspell-worker@npm:9.8.0"
+  dependencies:
+    cspell-lib: "npm:9.8.0"
+  checksum: 10c0/231359c459eb60d7687c73ddd51b5655626cf08c244da5c3817df41996cced97f47d2ab27c8b23d24bcb76248928ec280875bc6afd566464e80711d0424bdb5e
   languageName: node
   linkType: hard
 
@@ -1112,33 +1129,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-aws@npm:^4.0.15":
-  version: 4.0.15
-  resolution: "@cspell/dict-aws@npm:4.0.15"
-  checksum: 10c0/c5983f2e5ce3dd23d5b8ebc818cc963d9b2c91d9b8436b40491a46ebca4cb1bc7875237c443f6e883488ca66174e84bb804f8b6e37439b4ba6c2b52a146eaa20
+"@cspell/dict-aws@npm:^4.0.17":
+  version: 4.0.17
+  resolution: "@cspell/dict-aws@npm:4.0.17"
+  checksum: 10c0/d421a78aee8cc3db78a0bdffad2ceda9ca8e476498398809f2975bae9f03233df1112e713f2d699239600a9019d5e8f11ca60dfcb49fdce56815d5e794285c7b
   languageName: node
   linkType: hard
 
-"@cspell/dict-bash@npm:^4.2.1":
-  version: 4.2.2
-  resolution: "@cspell/dict-bash@npm:4.2.2"
+"@cspell/dict-bash@npm:^4.2.2":
+  version: 4.2.3
+  resolution: "@cspell/dict-bash@npm:4.2.3"
   dependencies:
-    "@cspell/dict-shell": "npm:1.1.2"
-  checksum: 10c0/51b0552319cf190ab75841e7ea5d8919ecb2f165d8c1b9d3b26c90c5e30b9769e6a21212194b20db64a03a4c3f084d17be1f9957ecd733e90b2770e011d0e89b
+    "@cspell/dict-shell": "npm:1.2.0"
+  checksum: 10c0/b8402dbe76da463c66124140d8ff1e017775402f489cac11d59b2fcd6be8d03b0588ba571c7ff7b851ce88a9bc83a0f098d14454a208a5135aed062b24c0b5bf
   languageName: node
   linkType: hard
 
-"@cspell/dict-companies@npm:^3.2.6":
-  version: 3.2.7
-  resolution: "@cspell/dict-companies@npm:3.2.7"
-  checksum: 10c0/ba2e73974560dc61742c05c00ef75719a31f24e05ad7cfe01ed8eb4a614f8f0a4bb3a0b6cfd9bec6d02e746c490d5de4a3310cfc176461bb4d6de0751c868515
+"@cspell/dict-companies@npm:^3.2.11":
+  version: 3.2.11
+  resolution: "@cspell/dict-companies@npm:3.2.11"
+  checksum: 10c0/9aa941967bbc48e171cb862b250d274fdc4234449a96f146b4814b0927897af827a056adb244ab110ca9a4ea5837819a4031eef2c7de0f0791a4d30a408b16a6
   languageName: node
   linkType: hard
 
-"@cspell/dict-cpp@npm:^6.0.12":
-  version: 6.0.14
-  resolution: "@cspell/dict-cpp@npm:6.0.14"
-  checksum: 10c0/d109ced99c9b673c57145bbcb4c20a471aac267edd9c418fefb49c78675f3c8e24a2d99834525055e80d2825ee932966edebd2e6641824261837a02e650f8bed
+"@cspell/dict-cpp@npm:^7.0.2":
+  version: 7.0.2
+  resolution: "@cspell/dict-cpp@npm:7.0.2"
+  checksum: 10c0/a2926a6e896f04aa795edcd5fe3ac72cf1e05b97719946388cf31cf91737cfee816ffdd220e1960af60d7049daa37262787e76534afa5479fe10691af096b54c
   languageName: node
   linkType: hard
 
@@ -1149,52 +1166,52 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-csharp@npm:^4.0.7":
-  version: 4.0.7
-  resolution: "@cspell/dict-csharp@npm:4.0.7"
-  checksum: 10c0/93afd6cfc973a5543120d1de2ee9cafbcbe64af6743e2ba3a8cfb0965fe19c85c6dee5a32c99a156cc979c8a89803b684e324ca92065b3a32faa7db786072e5e
+"@cspell/dict-csharp@npm:^4.0.8":
+  version: 4.0.8
+  resolution: "@cspell/dict-csharp@npm:4.0.8"
+  checksum: 10c0/b55dbe323b973e0e98d76a17205b103fbb52dec01d45d55aa06a14f1acc6c8bec259f7923bbe6138d1af2b11463969d920214ce0fc6e89eaf6fa08f86b10184e
   languageName: node
   linkType: hard
 
-"@cspell/dict-css@npm:^4.0.18":
-  version: 4.0.18
-  resolution: "@cspell/dict-css@npm:4.0.18"
-  checksum: 10c0/6d27fab2c1d2b023bdca93c2b013f69b2e782e2df444fed9406a0f9c1f2c84e6da5bfa9b7ae4c4e235498bbfd06a8822a6d6b228b5d3444fda8499d7a81dddfe
+"@cspell/dict-css@npm:^4.1.1":
+  version: 4.1.2
+  resolution: "@cspell/dict-css@npm:4.1.2"
+  checksum: 10c0/55d376c7a4cb879191281dcd1b2951488187d0ce9b50e94b120c2e6dabf47e1d12d243a94238e15245b70c13b3647b19bc28fdd9c778a32315b120cfb10ceb78
   languageName: node
   linkType: hard
 
-"@cspell/dict-dart@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "@cspell/dict-dart@npm:2.3.1"
-  checksum: 10c0/40bbb2e20b761da0be513d3476db054211bfa5a514860569c0d46f3b869b782ef8d8118b4a30aa10b51dde280d22d5199988c9a89d2495742e660de8b5bb6792
+"@cspell/dict-dart@npm:^2.3.2":
+  version: 2.3.2
+  resolution: "@cspell/dict-dart@npm:2.3.2"
+  checksum: 10c0/1c0842ff09785aaf2bc2e68f4c05ec5e20331f3fce1503ef5a87305feb223f6e23404c68e4991bb90c6473825a7f8cd65b3ed86eef0d8032d43b13558ddb1753
   languageName: node
   linkType: hard
 
-"@cspell/dict-data-science@npm:^2.0.10, @cspell/dict-data-science@npm:^2.0.11":
-  version: 2.0.11
-  resolution: "@cspell/dict-data-science@npm:2.0.11"
-  checksum: 10c0/b273db0ce3306355ff75963610810055c517d2aa45ebd12a45b64e8b11de548e53ff980be7e7496c4f9b438a9737142399ff528c8cf1ffc22798fcc4f3fff42c
+"@cspell/dict-data-science@npm:^2.0.13, @cspell/dict-data-science@npm:^2.0.14":
+  version: 2.0.14
+  resolution: "@cspell/dict-data-science@npm:2.0.14"
+  checksum: 10c0/de373b506465b6433a4321289dd9e5d338cfde6b42c5e306e40b7a4ab11f32860e8ec79a887d962c09c7f36794852e4ad6f7c05541ab817ee5f33e063bd63287
   languageName: node
   linkType: hard
 
-"@cspell/dict-django@npm:^4.1.5":
-  version: 4.1.5
-  resolution: "@cspell/dict-django@npm:4.1.5"
-  checksum: 10c0/df51162b33c31ead2a983dc26face4b2d563382b082cbf13971593cec3687552d4e4e4af444beecb3b00baf1c28b5cb92944dba04de303d0864f7656a11b8921
+"@cspell/dict-django@npm:^4.1.6":
+  version: 4.1.6
+  resolution: "@cspell/dict-django@npm:4.1.6"
+  checksum: 10c0/76f71cba5a692df48554a3cd7cff7e27df85ab826e2cddf0594c21062e5c96de3090508314659a9ec708913a4afd61afb0f044ae8c41a1ec573583d516056f2d
   languageName: node
   linkType: hard
 
-"@cspell/dict-docker@npm:^1.1.16":
-  version: 1.1.16
-  resolution: "@cspell/dict-docker@npm:1.1.16"
-  checksum: 10c0/0e2c211da4a8d6e23311bc41c4041bf447c5c7a4ab84afe3a0229d11fc0af19ec1f6f8fcfd9c6b6793b538a81026d3957e86f3999baba973520ffe84a9420014
+"@cspell/dict-docker@npm:^1.1.17":
+  version: 1.1.17
+  resolution: "@cspell/dict-docker@npm:1.1.17"
+  checksum: 10c0/1aaa4ffba7842b9044d1c4c6ae704907e6be3d8407c7feb986b3b7efa2e0139fc2ea3c3ad955d7ba4c92b5f577e05648ffc00a2a27b76d2bb93acde431452e58
   languageName: node
   linkType: hard
 
-"@cspell/dict-dotnet@npm:^5.0.10":
-  version: 5.0.10
-  resolution: "@cspell/dict-dotnet@npm:5.0.10"
-  checksum: 10c0/ddb368955d86059d6d59a82263769af832c90028e20c61cdc1e9ba25ac7de8465fd4da2f1966c4683d870720ef7138b937bdde994ac5e991aafc84e236f218b9
+"@cspell/dict-dotnet@npm:^5.0.13":
+  version: 5.0.13
+  resolution: "@cspell/dict-dotnet@npm:5.0.13"
+  checksum: 10c0/b34792ea2b1258f4e215487c4ff61de2fb3c9c6e0381fec03c4fb8132f2decd2b7b73a6450c507e8a3211e616282a3ace94e7d99363503e0efa4ef2cb6f2fcca
   languageName: node
   linkType: hard
 
@@ -1205,31 +1222,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-en-common-misspellings@npm:^2.1.6":
-  version: 2.1.8
-  resolution: "@cspell/dict-en-common-misspellings@npm:2.1.8"
-  checksum: 10c0/8a9a98216c81f018aa24e76e0e997ceeaff57f5bc97c2831c072085347f403fa2809ad6c6bc298b9127444155d83ac8da9d156df98f4f5313f1d978fddb1bb27
+"@cspell/dict-en-common-misspellings@npm:^2.1.12":
+  version: 2.1.12
+  resolution: "@cspell/dict-en-common-misspellings@npm:2.1.12"
+  checksum: 10c0/5b7acd175ba76f164dcb5f5b7e910511dbd005bbab77fb5ae082603b01112d352af84bcd8d3ddef020db187b51056c4ce6a02dab8aebfcf0aa0dc416a66729a5
   languageName: node
   linkType: hard
 
-"@cspell/dict-en-gb-mit@npm:^3.1.10":
-  version: 3.1.14
-  resolution: "@cspell/dict-en-gb-mit@npm:3.1.14"
-  checksum: 10c0/44f6f77bacbf8932470eeb75756cc68829be36dc19eddca2b91512fa57ddfb64e18f3a0b282cd20e496aba68b297cd962713ecf68811a7cac619652b2a5ecaad
+"@cspell/dict-en-gb-mit@npm:^3.1.22":
+  version: 3.1.24
+  resolution: "@cspell/dict-en-gb-mit@npm:3.1.24"
+  checksum: 10c0/b7b329e80bf12d61bc7f5a1081bfcf403f653db01c778c0056f653ca8f2e01252c636d55591dc2674a38bbbcd19ae66b4d031afd1dcad48bc1910f4b41a00cf8
   languageName: node
   linkType: hard
 
-"@cspell/dict-en_us@npm:^4.4.20":
-  version: 4.4.24
-  resolution: "@cspell/dict-en_us@npm:4.4.24"
-  checksum: 10c0/bf38bc74753439265e80741a2312b539a36623d38ec816b0698e8e667ad291f6d3b1d4700121aab8539639a5a5f26e138f1e02a1864c72a04306bb6dd23dc3e5
+"@cspell/dict-en_us@npm:^4.4.33":
+  version: 4.4.35
+  resolution: "@cspell/dict-en_us@npm:4.4.35"
+  checksum: 10c0/655debb38d2960cff7c729fb2985c97ba832715913ef48e8ead59f6d67220fc032f1adaef45e93b4d14590e1fda73f5a08f76296e6f8f0503638c4b18ee4d356
   languageName: node
   linkType: hard
 
-"@cspell/dict-filetypes@npm:^3.0.14":
-  version: 3.0.14
-  resolution: "@cspell/dict-filetypes@npm:3.0.14"
-  checksum: 10c0/cc51a1099e331021b2be77f7aaa554a6e4e3d9af9443c48a59903867f44ea4553056b130c965d4b599191b7c9a72d86aa151f6a76bdcdad7004d34a3050a8ab5
+"@cspell/dict-filetypes@npm:^3.0.18":
+  version: 3.0.18
+  resolution: "@cspell/dict-filetypes@npm:3.0.18"
+  checksum: 10c0/b7a223eacef51770ed844b48b64d92b05b41a0a2ecbb6856ba8758fe8e444ca5f4252ecc511ac00ec1d12c1b12aef1198865f612cceaaf6d304c92b049a739cb
   languageName: node
   linkType: hard
 
@@ -1240,10 +1257,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-fonts@npm:^4.0.5":
-  version: 4.0.5
-  resolution: "@cspell/dict-fonts@npm:4.0.5"
-  checksum: 10c0/5ed1886fabe245e1abeb7da2b0d6a534ddf204666ecd5d7d153a422dfbb93854456025b1894bc61e7c21915116d06b177e3012bc7a969307c8797baac2380f6f
+"@cspell/dict-fonts@npm:^4.0.6":
+  version: 4.0.6
+  resolution: "@cspell/dict-fonts@npm:4.0.6"
+  checksum: 10c0/73095a5bb3ec6ca24c7f01298b8344646005c0c05857b24ae106d7f795acf0b7107f4aaa677224c899d7aad7d0383f9f82dddd11a6b4cf3b26e3e5166b222674
   languageName: node
   linkType: hard
 
@@ -1254,10 +1271,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-fullstack@npm:^3.2.7":
-  version: 3.2.7
-  resolution: "@cspell/dict-fullstack@npm:3.2.7"
-  checksum: 10c0/81e19f537553f243fa2ede72cbaf727f71c64ea769952c6bea20d82492b9199761677e1107683abd225dcbd6233bf0502c8faf7ec9be65538fdca2a7138bdf3f
+"@cspell/dict-fullstack@npm:^3.2.9":
+  version: 3.2.9
+  resolution: "@cspell/dict-fullstack@npm:3.2.9"
+  checksum: 10c0/a13d08099d1048797fe37d2a654846ff5086193bd29d57b62423ebc74f6c08c9f3b52c49f08b73d6bd09cdb393b70351f85f151893a20a5f8c858e474dd42e75
   languageName: node
   linkType: hard
 
@@ -1268,17 +1285,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-git@npm:^3.0.7":
-  version: 3.0.7
-  resolution: "@cspell/dict-git@npm:3.0.7"
-  checksum: 10c0/db22c7a8eeca4c36fba9fdeae440bfdf0d4fd7ca2aaebe06b8b895273ea93eb48f00bb3216146e2d8e595226ad96668095f6ffa0f80f88ccdd450054aca5f12c
+"@cspell/dict-git@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@cspell/dict-git@npm:3.1.0"
+  checksum: 10c0/161a9bd35f44173993c84ec2bc394c5fab4fe7d69070daa170be4922e295d60a3e34cecb04869a8b685b761c7ace83241ff4d60db93d2850368d769733a58de9
   languageName: node
   linkType: hard
 
-"@cspell/dict-golang@npm:^6.0.23":
-  version: 6.0.24
-  resolution: "@cspell/dict-golang@npm:6.0.24"
-  checksum: 10c0/2d6e63e606215db7c29fe312d2414da585372d7c994ce1ba2808a4bf13c5410b0e4318efda9b2ccaab020a3bbc6d8f06c910dbd1a5cc24946ff7e378ffbb591b
+"@cspell/dict-golang@npm:^6.0.26":
+  version: 6.0.26
+  resolution: "@cspell/dict-golang@npm:6.0.26"
+  checksum: 10c0/514c54dc72620975e552ad91ecc8d98143611224e7fe3606fc6041f3248e9f9457be1f25027ff1d9bc2961459c5759dff3a01251054aab83bbcc9f927648b755
   languageName: node
   linkType: hard
 
@@ -1296,17 +1313,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-html-symbol-entities@npm:^4.0.4":
-  version: 4.0.4
-  resolution: "@cspell/dict-html-symbol-entities@npm:4.0.4"
-  checksum: 10c0/ff6be66c36845409622b732f010c5c7a3680c759fba55d136be5556f505bd7e7daee85834b2b9aae54c90a6f6b4055a1b39d49a5976c04226fa80f9238fa48a1
+"@cspell/dict-html-symbol-entities@npm:^4.0.5":
+  version: 4.0.5
+  resolution: "@cspell/dict-html-symbol-entities@npm:4.0.5"
+  checksum: 10c0/8278b8cca06e6d3654e81b1809227ff1d64e053f79308966ea601194ce51fa3a385dde6844509b26223de70d034e60a85c604a729f021c0de63f8a5e6f29b0ce
   languageName: node
   linkType: hard
 
-"@cspell/dict-html@npm:^4.0.12":
-  version: 4.0.12
-  resolution: "@cspell/dict-html@npm:4.0.12"
-  checksum: 10c0/de3d7197859502e2bb7be4206a881cd53bc6b30516cd181116bbe83c9698da34ebaf7e8da2d62afe925bd0cc3a8abb16aea3794eb3a916a83dc1e915c7b6b49f
+"@cspell/dict-html@npm:^4.0.15":
+  version: 4.0.15
+  resolution: "@cspell/dict-html@npm:4.0.15"
+  checksum: 10c0/0812ae7f11ea2160ab4df8039b0f5af023c102d8806dc6ea9b8a90f96cc564b00dad167c3eb1a6685a244980ac203cc168438b352c84918a215147ef632aca10
   languageName: node
   linkType: hard
 
@@ -1338,10 +1355,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-latex@npm:^4.0.4":
-  version: 4.0.4
-  resolution: "@cspell/dict-latex@npm:4.0.4"
-  checksum: 10c0/5050b8b8bede9970224a12ac1b613acf735ef36121acad61a891f28ff2aa5e60ffc2392ad502f7de107a2af485f8fb73e611ba6ac169b41f06101bffd4897aca
+"@cspell/dict-latex@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@cspell/dict-latex@npm:5.1.0"
+  checksum: 10c0/e806722c0ff1581a069245cb297b954f8e24fb6e1942f2547b0fee7783fc9b59d08fe2d2c7ddf3f7f9eef60d783ac9a4290f37956b9723b13e21c9422d7962b0
   languageName: node
   linkType: hard
 
@@ -1366,43 +1383,43 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-markdown@npm:^2.0.12":
-  version: 2.0.12
-  resolution: "@cspell/dict-markdown@npm:2.0.12"
+"@cspell/dict-markdown@npm:^2.0.16":
+  version: 2.0.17
+  resolution: "@cspell/dict-markdown@npm:2.0.17"
   peerDependencies:
-    "@cspell/dict-css": ^4.0.18
-    "@cspell/dict-html": ^4.0.12
-    "@cspell/dict-html-symbol-entities": ^4.0.4
+    "@cspell/dict-css": ^4.1.2
+    "@cspell/dict-html": ^4.0.15
+    "@cspell/dict-html-symbol-entities": ^4.0.5
     "@cspell/dict-typescript": ^3.2.3
-  checksum: 10c0/f6d53e71525dff0832950345118abcb2c2ca01aaff51922c5c18f7c3bc0d84a2168bb9bb3e400fe6b91312a5892d0b608db6ea590e2a785474ad355e60d9b535
+  checksum: 10c0/d49bb1523a40e42d4185a349bbce7a93e87634e1e7a75694ffc666cbeb81d0eb1395150cbcd65bf1b1109f224cdee9bf9fadbf8c3f1b9ea93daaffe65e705083
   languageName: node
   linkType: hard
 
-"@cspell/dict-monkeyc@npm:^1.0.11":
-  version: 1.0.11
-  resolution: "@cspell/dict-monkeyc@npm:1.0.11"
-  checksum: 10c0/856b7107b2eb70925bf7388f6961548c205b9580298ce28352644b5d20b4779b7d0f8d3ea6888f15aceb124c4bafd51ec896cc55d73cea6853c01a37ee4b97b6
+"@cspell/dict-monkeyc@npm:^1.0.12":
+  version: 1.0.12
+  resolution: "@cspell/dict-monkeyc@npm:1.0.12"
+  checksum: 10c0/97250565f808cbf37d66f2585db7accf449bc1836c72b3fac0449896fe17b8dfa3e5dc15f27f4e5cbe61dc7c24e9b17c1d7f475c934cd7c68b1aa597386a5bc0
   languageName: node
   linkType: hard
 
-"@cspell/dict-node@npm:^5.0.8":
-  version: 5.0.8
-  resolution: "@cspell/dict-node@npm:5.0.8"
-  checksum: 10c0/aaca1c73dc9451171716dbbff0e243a4f4bcba7260875b50a582cca5db70415b7cddaf60443814880da59967433b5934b4a830b9dc69c90fa4f9c06b2f2d8063
+"@cspell/dict-node@npm:^5.0.9":
+  version: 5.0.9
+  resolution: "@cspell/dict-node@npm:5.0.9"
+  checksum: 10c0/129fa7cd204e26769829912a8a64225af45b5cf0438f597329966e1c3db5ffca04b4c426d9cee594f271d14500e11319bc7ed371207cb18d73966000303e3072
   languageName: node
   linkType: hard
 
-"@cspell/dict-npm@npm:^5.2.18":
-  version: 5.2.20
-  resolution: "@cspell/dict-npm@npm:5.2.20"
-  checksum: 10c0/cf06d77311d3c8665140ec7a8f7cdf23fbc049385d687acf689231548e68dd629ce107e3f8f4f7a99e3d8fdaf58c1a2a3e6e20a30c5d41752c7494500953f274
+"@cspell/dict-npm@npm:^5.2.38":
+  version: 5.2.41
+  resolution: "@cspell/dict-npm@npm:5.2.41"
+  checksum: 10c0/997b4f4ae46f1e9f212da4772f32de5f3595600e53c12315916a2e1fcc6cb92cc8059c862da3cd48b27a39bffc381482c1ead5eccf009eb5e66f9c9cce263641
   languageName: node
   linkType: hard
 
-"@cspell/dict-php@npm:^4.0.15":
-  version: 4.1.0
-  resolution: "@cspell/dict-php@npm:4.1.0"
-  checksum: 10c0/ff9227e9ada98f949d543ffd653b88638079b429040a6b1ef69ff7845dcaf4d4854d5303459e32a5aa306d0f87871848db72ed8ec335ede30bfae642c65e4e66
+"@cspell/dict-php@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "@cspell/dict-php@npm:4.1.1"
+  checksum: 10c0/e11e2a3799b2c9ea590ce8b2e69838965f3d8f83020961720afde9c9c57b6ccdb013d54346900766ccf422c548c916dd2aaa890563d36cf12498ad3ddfe67d7a
   languageName: node
   linkType: hard
 
@@ -1413,19 +1430,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-public-licenses@npm:^2.0.15":
-  version: 2.0.15
-  resolution: "@cspell/dict-public-licenses@npm:2.0.15"
-  checksum: 10c0/ff3f159b00668f0714c0bc8c2492fb72aaedce5464baf0a4c60dd4a3348f9a3d15f7b63e4ed0f6e7124ba552701c14f2d10769cc1a4d593c82c460fbb3bbf84a
+"@cspell/dict-public-licenses@npm:^2.0.16":
+  version: 2.0.16
+  resolution: "@cspell/dict-public-licenses@npm:2.0.16"
+  checksum: 10c0/473a29eb6fa8cf0d64fffcac0a686c492777dca9a0d6be4c890bcb0e98cb2f01a4afbbfcb88e903a5895593567ec6f2646097f07b0453b689fd70272088aa2a0
   languageName: node
   linkType: hard
 
-"@cspell/dict-python@npm:^4.2.20":
-  version: 4.2.21
-  resolution: "@cspell/dict-python@npm:4.2.21"
+"@cspell/dict-python@npm:^4.2.26":
+  version: 4.2.27
+  resolution: "@cspell/dict-python@npm:4.2.27"
   dependencies:
-    "@cspell/dict-data-science": "npm:^2.0.11"
-  checksum: 10c0/138818ba2890983d0a96eda2ac659edc459b051f8d89889e3f3b0104c13aa4f02e1848200fe4d952e8b39d05cf179faabf600306e5a7e870146d05fe89fd3131
+    "@cspell/dict-data-science": "npm:^2.0.14"
+  checksum: 10c0/41f3cee064998376e149dbb65fae24a203d69258c3035f501aa0b72bd4143b4bddf15d39c14daf58e84d68a4d788f8f96327c0cfb31203019d79878b608fa7da
   languageName: node
   linkType: hard
 
@@ -1436,38 +1453,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-ruby@npm:^5.0.9":
+"@cspell/dict-ruby@npm:^5.1.1":
+  version: 5.1.1
+  resolution: "@cspell/dict-ruby@npm:5.1.1"
+  checksum: 10c0/ec23c736a4e5588c8c55a44b5c31eb7238a199ac4f2a84fd9aa6558a80f6416c42d7eaa7337e30590b66bbaac5523b6d64519f7e33eadc4cf1d878f20bb86fc0
+  languageName: node
+  linkType: hard
+
+"@cspell/dict-rust@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "@cspell/dict-rust@npm:4.1.2"
+  checksum: 10c0/ccee1ef1652f8855f2fee1c5b7c173eda9660f0c7f1eadb550ab2e4e8e2ee2e31eee903e294a32052996fed4045907b0a53383f6fe74d28a04de94a4ac69a29d
+  languageName: node
+  linkType: hard
+
+"@cspell/dict-scala@npm:^5.0.9":
   version: 5.0.9
-  resolution: "@cspell/dict-ruby@npm:5.0.9"
-  checksum: 10c0/7a63495fd12d787de9f4f72f070110b26fc3709394fb19bdcac44354ef886c0ff998ad03b90d0d3b252019d112ef34ebf99c94329070978f7d92fd4642dda4b5
+  resolution: "@cspell/dict-scala@npm:5.0.9"
+  checksum: 10c0/f6b214f4cebcb68a270f4e5cb4163fdd59b58afb28894ac6f523025f411792454c6645c0c616d00af10ea541d5fbd25d34ad7986ddef1bb2181003e39140abbe
   languageName: node
   linkType: hard
 
-"@cspell/dict-rust@npm:^4.0.12":
-  version: 4.0.12
-  resolution: "@cspell/dict-rust@npm:4.0.12"
-  checksum: 10c0/023f9844e32e6d22aaaf0f23a9744671a66f1d46c47f08efbe7a74e7a6e1e8671a7c394e1fb15d2b840fdbf605c55b693c539b29ad0eb10908c4bd6f7f4b2231
+"@cspell/dict-shell@npm:1.2.0, @cspell/dict-shell@npm:^1.1.2":
+  version: 1.2.0
+  resolution: "@cspell/dict-shell@npm:1.2.0"
+  checksum: 10c0/dd62330908f1d70744178365b36b82e031bb967bd6002fe34ba86863a26fddfdd075e364b397b2404123cd435be8261fc5809068d89027bbf7eb246daf1b491f
   languageName: node
   linkType: hard
 
-"@cspell/dict-scala@npm:^5.0.8":
-  version: 5.0.8
-  resolution: "@cspell/dict-scala@npm:5.0.8"
-  checksum: 10c0/9ae598e1dbd49554df8e6b22f8590393408690ae644ece4c28ec05c267d11cf90a6f25e088eca5a666e7e56fcd165c20511dd51ec8370a038d8bd485b77e0758
-  languageName: node
-  linkType: hard
-
-"@cspell/dict-shell@npm:1.1.2, @cspell/dict-shell@npm:^1.1.1":
-  version: 1.1.2
-  resolution: "@cspell/dict-shell@npm:1.1.2"
-  checksum: 10c0/5c05d24e6944abee63f6726630967691d175376152c98f8ed82a149d8f2065b507dd1fbbb542b8df01c19280b23737ed786c9c527d6a3b3386f525ec6478eafc
-  languageName: node
-  linkType: hard
-
-"@cspell/dict-software-terms@npm:^5.1.9":
-  version: 5.1.11
-  resolution: "@cspell/dict-software-terms@npm:5.1.11"
-  checksum: 10c0/a997043e401c444762c4cfdbe0093d8155c02360338f62bb26b0b5a3ae5341eaa942edbb750f694a8023b322855abb6d36a464d538d3d71939dec5c9c08e1635
+"@cspell/dict-software-terms@npm:^5.2.2":
+  version: 5.2.2
+  resolution: "@cspell/dict-software-terms@npm:5.2.2"
+  checksum: 10c0/eca6c5ee91a21c76b9d735c5777521287c896bd03e448c8512b61b75e926a269aef5e03dd0ea3cd2b8291ea56e6f140742f4a4826045603fffdeaba228272557
   languageName: node
   linkType: hard
 
@@ -1513,34 +1530,48 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dynamic-import@npm:9.2.2":
-  version: 9.2.2
-  resolution: "@cspell/dynamic-import@npm:9.2.2"
+"@cspell/dict-zig@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@cspell/dict-zig@npm:1.0.0"
+  checksum: 10c0/bc302e117002c9d6ebfb5d3e085d9a6f2e65d63440deb9f137dce1d8a75650593f5b83d47488ab394cfbc173be032661dc36bc74c85b9826f60a7d2fc7955ffc
+  languageName: node
+  linkType: hard
+
+"@cspell/dynamic-import@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/dynamic-import@npm:9.8.0"
   dependencies:
-    "@cspell/url": "npm:9.2.2"
+    "@cspell/url": "npm:9.8.0"
     import-meta-resolve: "npm:^4.2.0"
-  checksum: 10c0/333d05e1952e37414af65bdcb0db32afb7c36ab44221bdeebb03ce244e74ea1c4e799fadccae9080397771e08e6fbc353c103439caeb57bd67e6764ddb32b51c
+  checksum: 10c0/257fda196cee869cc041aed0206b0c754e42dba0bbb9a0ac207b09ed38fefe5a11879b4d87b055d69b65e1431ed92e3d13897293fc4a1efb8318c68ce633572c
   languageName: node
   linkType: hard
 
-"@cspell/filetypes@npm:9.2.2":
-  version: 9.2.2
-  resolution: "@cspell/filetypes@npm:9.2.2"
-  checksum: 10c0/a9cf71dc6aef40616ed1746536733fd5be9edfeb8bc04f232555b9166f6ed79fc2f4e461bd5c2faf37b4a86fd1c028cb44aff22232bf83fb066975dc5b84c6c1
+"@cspell/filetypes@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/filetypes@npm:9.8.0"
+  checksum: 10c0/15104dc46721a33ec9af722cca35d3efbb33502d15f2fe03145ddc19335115aff1e8c15208ec844d56257fb8f3bb298497ffd26b0ecdcadd2f6dce912f794f83
   languageName: node
   linkType: hard
 
-"@cspell/strong-weak-map@npm:9.2.2":
-  version: 9.2.2
-  resolution: "@cspell/strong-weak-map@npm:9.2.2"
-  checksum: 10c0/a86de960f6542820170c718e55e0f71ab556a0c65c91b62b52c4222f7373a5400ed0ae7e9ad0f061961b7c7cd097986110d5c1f1d1ca5e1b748b9f41c4fd78b9
+"@cspell/rpc@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/rpc@npm:9.8.0"
+  checksum: 10c0/c79c6c5d4696dd275e11b8dab494e5b83be163e089b7bc562e270c7a376070947e2d5b2206b92d4a4a8f39020c76ac324f4eab641319fada0561f951f7880598
   languageName: node
   linkType: hard
 
-"@cspell/url@npm:9.2.2":
-  version: 9.2.2
-  resolution: "@cspell/url@npm:9.2.2"
-  checksum: 10c0/b8ccf05781be2ee0c49e9f83bf596a9c972c300036d3ede7afe214d2aac62e44c8a8a3c14405079600a1928f3ce1738a57f18872e7a4f39b5b62ee2907d9f9b9
+"@cspell/strong-weak-map@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/strong-weak-map@npm:9.8.0"
+  checksum: 10c0/f267d079e600536b016b9ac6c94e40af9a11b2850ae03224b68b2abc6cc6fc34782a2ac1b3623183b74bc40fad331d13f9e7dc7bf85c08941846779710bd0bd0
+  languageName: node
+  linkType: hard
+
+"@cspell/url@npm:9.8.0":
+  version: 9.8.0
+  resolution: "@cspell/url@npm:9.8.0"
+  checksum: 10c0/c914602b72433b69c66cd802e1e2482e55ea82e2149f3342f9c5d6761b8cc5d23663c24496a93d36da7b20df3f19fde81029f77c9751301d9470d02778d1eba6
   languageName: node
   linkType: hard
 
@@ -1568,6 +1599,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@csstools/color-helpers@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "@csstools/color-helpers@npm:6.1.0"
+  checksum: 10c0/ebb71eebcd6dde16a89d687c30d4c7f315f9079ec803497ebac0528d0a9ef09847eaf167b4565c4919f156e32e7ca2167199ac2d2020f184f7888551a3b4712b
+  languageName: node
+  linkType: hard
+
 "@csstools/css-calc@npm:^2.1.3":
   version: 2.1.3
   resolution: "@csstools/css-calc@npm:2.1.3"
@@ -1585,6 +1623,16 @@ __metadata:
     "@csstools/css-parser-algorithms": ^3.0.5
     "@csstools/css-tokenizer": ^3.0.4
   checksum: 10c0/42ce5793e55ec4d772083808a11e9fb2dfe36db3ec168713069a276b4c3882205b3507c4680224c28a5d35fe0bc2d308c77f8f2c39c7c09aad8747708eb8ddd8
+  languageName: node
+  linkType: hard
+
+"@csstools/css-calc@npm:^3.0.0, @csstools/css-calc@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "@csstools/css-calc@npm:3.2.1"
+  peerDependencies:
+    "@csstools/css-parser-algorithms": ^4.0.0
+    "@csstools/css-tokenizer": ^4.0.0
+  checksum: 10c0/0191c8d1cd4dffa0d3b6bfd1e78a721934b1d7a6c972966e4fdaa72208c6789e8ff443ee81764a32f1e6107825695b5524ef2b4dc1681b5b29230f2a1277e5df
   languageName: node
   linkType: hard
 
@@ -1614,6 +1662,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@csstools/css-color-parser@npm:^4.0.1":
+  version: 4.1.9
+  resolution: "@csstools/css-color-parser@npm:4.1.9"
+  dependencies:
+    "@csstools/color-helpers": "npm:^6.1.0"
+    "@csstools/css-calc": "npm:^3.2.1"
+  peerDependencies:
+    "@csstools/css-parser-algorithms": ^4.0.0
+    "@csstools/css-tokenizer": ^4.0.0
+  checksum: 10c0/d9330a1d5b207230e97a522c9b73c1b625dbfbca7a91ac8888e05917efb01c6aa4075153e5af6ce028c3848660d3f24cf7b0f0760a080361089e1a3841e586c7
+  languageName: node
+  linkType: hard
+
 "@csstools/css-parser-algorithms@npm:^3.0.4":
   version: 3.0.4
   resolution: "@csstools/css-parser-algorithms@npm:3.0.4"
@@ -1632,10 +1693,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@csstools/css-syntax-patches-for-csstree@npm:^1.0.14":
-  version: 1.0.15
-  resolution: "@csstools/css-syntax-patches-for-csstree@npm:1.0.15"
-  checksum: 10c0/67949c5a09b8144ae5e87334c1698add2e1e2cfee4e4b43396905c7fbb74bdf759ca0300ba909f8946b3111036a8c863903fa46f1a880992b248306d6cd8b126
+"@csstools/css-parser-algorithms@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@csstools/css-parser-algorithms@npm:4.0.0"
+  peerDependencies:
+    "@csstools/css-tokenizer": ^4.0.0
+  checksum: 10c0/94558c2428d6ef0ddef542e86e0a8376aa1263a12a59770abb13ba50d7b83086822c75433f32aa2e7fef00555e1cc88292f9ca5bce79aed232bb3fed73b1528d
+  languageName: node
+  linkType: hard
+
+"@csstools/css-syntax-patches-for-csstree@npm:^1.0.21":
+  version: 1.1.6
+  resolution: "@csstools/css-syntax-patches-for-csstree@npm:1.1.6"
+  peerDependencies:
+    css-tree: ^3.2.1
+  peerDependenciesMeta:
+    css-tree:
+      optional: true
+  checksum: 10c0/4f1322833df87dfb19ec5b23cba5475ceeff8391940dd0eeaf9b28df362f23c354c31f704c4bdef9bd749ae5f0825ded022df3fea1fab39af9b6aab42370ba53
   languageName: node
   linkType: hard
 
@@ -1650,6 +1725,13 @@ __metadata:
   version: 3.0.4
   resolution: "@csstools/css-tokenizer@npm:3.0.4"
   checksum: 10c0/3b589f8e9942075a642213b389bab75a2d50d05d203727fcdac6827648a5572674caff07907eff3f9a2389d86a4ee47308fafe4f8588f4a77b7167c588d2559f
+  languageName: node
+  linkType: hard
+
+"@csstools/css-tokenizer@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@csstools/css-tokenizer@npm:4.0.0"
+  checksum: 10c0/669cf3d0f9c8e1ffdf8c9955ad8beba0c8cfe03197fe29a4fcbd9ee6f7a18856cfa42c62670021a75183d9ab37f5d14a866e6a9df753a6c07f59e36797a9ea9f
   languageName: node
   linkType: hard
 
@@ -1984,14 +2066,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@csstools/postcss-normalize-display-values@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@csstools/postcss-normalize-display-values@npm:4.0.0"
+"@csstools/postcss-normalize-display-values@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@csstools/postcss-normalize-display-values@npm:4.0.1"
   dependencies:
     postcss-value-parser: "npm:^4.2.0"
   peerDependencies:
     postcss: ^8.4
-  checksum: 10c0/d3a3a362b532163bd791f97348ef28b7a43baf01987c7702b06285e751cdc5ea3e3a2553f088260515b4d28263d5c475923d4d4780ecb4078ec66dff50c9e638
+  checksum: 10c0/5d19364bad8554b047cebd94ad7e203723ed76abaf690e4b92c74e6fc7c3642cb8858ade3263da61aff26d97bb258af567b1036e97865b7aa3b17522241fd1e1
   languageName: node
   linkType: hard
 
@@ -2010,6 +2092,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@csstools/postcss-position-area-property@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@csstools/postcss-position-area-property@npm:1.0.0"
+  peerDependencies:
+    postcss: ^8.4
+  checksum: 10c0/38f770454d46bfed01d43a3f5e7ac07d3111399b374a7198ae6503cdb6288e410c7b4199f5a7af8f16aeb688216445ade97be417c084313d6c56f55e50d34559
+  languageName: node
+  linkType: hard
+
 "@csstools/postcss-progressive-custom-properties@npm:^4.2.1":
   version: 4.2.1
   resolution: "@csstools/postcss-progressive-custom-properties@npm:4.2.1"
@@ -2018,6 +2109,18 @@ __metadata:
   peerDependencies:
     postcss: ^8.4
   checksum: 10c0/56e9a147799719fd5c550c035437693dd50cdfef46d66a4f2ce8f196e1006a096aa47d412710a89c3dc9808068a0a101c7f607a507ed68e925580c6f921e84d5
+  languageName: node
+  linkType: hard
+
+"@csstools/postcss-property-rule-prelude-list@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@csstools/postcss-property-rule-prelude-list@npm:1.0.0"
+  dependencies:
+    "@csstools/css-parser-algorithms": "npm:^3.0.5"
+    "@csstools/css-tokenizer": "npm:^3.0.4"
+  peerDependencies:
+    postcss: ^8.4
+  checksum: 10c0/ae8bbca3a77ca59c21c11899a904f9d9417a19a3359d01dee042e0489b7ddfe7cea13ae275b7e7936d9b0b99c0a13f7f685f962cd63ca3d3d2b6e5eacc293a0d
   languageName: node
   linkType: hard
 
@@ -2083,6 +2186,29 @@ __metadata:
   peerDependencies:
     postcss: ^8.4
   checksum: 10c0/f143ca06338c30abb2aa37adc3d7e43a78f3b4493093160cb5babe3ec8cf6b86d83876746ee8e162db87b5e9af6e0066958d89fe8b4a503a29568e5c57c1bf8a
+  languageName: node
+  linkType: hard
+
+"@csstools/postcss-syntax-descriptor-syntax-production@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@csstools/postcss-syntax-descriptor-syntax-production@npm:1.0.1"
+  dependencies:
+    "@csstools/css-tokenizer": "npm:^3.0.4"
+  peerDependencies:
+    postcss: ^8.4
+  checksum: 10c0/b9b3d84a50b86b1af1b8b7e56a64d5eebc1c89c323a5263306c5c69ddb05a4d468d7072a7786b0ea6601629035df0089565e9d98d55d0f4eb7201cf7ed1bb3e9
+  languageName: node
+  linkType: hard
+
+"@csstools/postcss-system-ui-font-family@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@csstools/postcss-system-ui-font-family@npm:1.0.0"
+  dependencies:
+    "@csstools/css-parser-algorithms": "npm:^3.0.5"
+    "@csstools/css-tokenizer": "npm:^3.0.4"
+  peerDependencies:
+    postcss: ^8.4
+  checksum: 10c0/6a81761ae3cae643659b1416a7a892cf1505474896193b8abc26cff319cb6b1a20b64c5330d64019fba458e058da3abc9407d0ebf0c102289c0b79ef99b4c6d6
   languageName: node
   linkType: hard
 
@@ -2230,29 +2356,41 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/core@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "@floating-ui/core@npm:1.7.3"
-  dependencies:
-    "@floating-ui/utils": "npm:^0.2.10"
-  checksum: 10c0/edfc23800122d81df0df0fb780b7328ae6c5f00efbb55bd48ea340f4af8c5b3b121ceb4bb81220966ab0f87b443204d37105abdd93d94846468be3243984144c
+"@exodus/bytes@npm:^1.6.0":
+  version: 1.15.1
+  resolution: "@exodus/bytes@npm:1.15.1"
+  peerDependencies:
+    "@noble/hashes": ^1.8.0 || ^2.0.0
+  peerDependenciesMeta:
+    "@noble/hashes":
+      optional: true
+  checksum: 10c0/333056a6953bbf875d9f3b86c32314de29458d842e5f56f6ef8034b18c2d9660184550093d1bae5de0064043d5e23f54cc03148798d9d29cf5167ac03f2e9f8c
   languageName: node
   linkType: hard
 
-"@floating-ui/dom@npm:^1.7.4":
-  version: 1.7.4
-  resolution: "@floating-ui/dom@npm:1.7.4"
+"@floating-ui/core@npm:^1.7.5":
+  version: 1.7.5
+  resolution: "@floating-ui/core@npm:1.7.5"
   dependencies:
-    "@floating-ui/core": "npm:^1.7.3"
-    "@floating-ui/utils": "npm:^0.2.10"
-  checksum: 10c0/da6166c25f9b0729caa9f498685a73a0e28251613b35d27db8de8014bc9d045158a23c092b405321a3d67c2064909b6e2a7e6c1c9cc0f62967dca5779f5aef30
+    "@floating-ui/utils": "npm:^0.2.11"
+  checksum: 10c0/f9c52205e198b231d63a387b09c659aab08c46a1899e0b0bbe147b8b4f048b546f15ba17cb5d2a471da9534f1883d979425e13e5c4ceee67be63e4b0abd4db5d
   languageName: node
   linkType: hard
 
-"@floating-ui/utils@npm:^0.2.10":
-  version: 0.2.10
-  resolution: "@floating-ui/utils@npm:0.2.10"
-  checksum: 10c0/e9bc2a1730ede1ee25843937e911ab6e846a733a4488623cd353f94721b05ec2c9ec6437613a2ac9379a94c2fd40c797a2ba6fa1df2716f5ce4aa6ddb1cf9ea4
+"@floating-ui/dom@npm:^1.7.6":
+  version: 1.7.6
+  resolution: "@floating-ui/dom@npm:1.7.6"
+  dependencies:
+    "@floating-ui/core": "npm:^1.7.5"
+    "@floating-ui/utils": "npm:^0.2.11"
+  checksum: 10c0/5c098e0d7b58c9bc769f276cca1766994c2c9c70c92d091a61bba8b3e9be53c011e0a79a8457fc2fb2f3d91697a26eb52e0a4962ef936dc963b45f58613c212f
+  languageName: node
+  linkType: hard
+
+"@floating-ui/utils@npm:^0.2.11":
+  version: 0.2.11
+  resolution: "@floating-ui/utils@npm:0.2.11"
+  checksum: 10c0/f4bcea1559bdbb721ecc8e8ead423ac58d6a5b6e70b602cf0810ba6ad4ed1c77211b207faa88b278a9042f0c743133de08a203ed6741c1b6443423332884d5b3
   languageName: node
   linkType: hard
 
@@ -2707,33 +2845,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint-scope@npm:^3.7.7":
-  version: 3.7.7
-  resolution: "@types/eslint-scope@npm:3.7.7"
-  dependencies:
-    "@types/eslint": "npm:*"
-    "@types/estree": "npm:*"
-  checksum: 10c0/a0ecbdf2f03912679440550817ff77ef39a30fa8bfdacaf6372b88b1f931828aec392f52283240f0d648cf3055c5ddc564544a626bcf245f3d09fcb099ebe3cc
-  languageName: node
-  linkType: hard
-
-"@types/eslint@npm:*":
-  version: 9.6.1
-  resolution: "@types/eslint@npm:9.6.1"
-  dependencies:
-    "@types/estree": "npm:*"
-    "@types/json-schema": "npm:*"
-  checksum: 10c0/69ba24fee600d1e4c5abe0df086c1a4d798abf13792d8cfab912d76817fe1a894359a1518557d21237fbaf6eda93c5ab9309143dee4c59ef54336d1b3570420e
-  languageName: node
-  linkType: hard
-
-"@types/estree@npm:*":
-  version: 1.0.7
-  resolution: "@types/estree@npm:1.0.7"
-  checksum: 10c0/be815254316882f7c40847336cd484c3bc1c3e34f710d197160d455dc9d6d050ffbf4c3bc76585dba86f737f020ab20bdb137ebe0e9116b0c86c7c0342221b8c
-  languageName: node
-  linkType: hard
-
 "@types/estree@npm:^1.0.8":
   version: 1.0.8
   resolution: "@types/estree@npm:1.0.8"
@@ -2750,7 +2861,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-schema@npm:*, @types/json-schema@npm:^7.0.15, @types/json-schema@npm:^7.0.9":
+"@types/json-schema@npm:^7.0.15, @types/json-schema@npm:^7.0.9":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
   checksum: 10c0/a996a745e6c5d60292f36731dd41341339d4eeed8180bb09226e5c8d23759067692b1d88e5d91d72ee83dfc00d3aca8e7bd43ea120516c17922cbcb7c3e252db
@@ -3056,13 +3167,13 @@ __metadata:
     "@ckeditor/ckeditor5-style": "npm:~47.6.2"
     "@ckeditor/ckeditor5-table": "npm:~47.6.2"
     "@drupal/once": "npm:^1.0.1"
-    "@floating-ui/dom": "npm:^1.7.4"
+    "@floating-ui/dom": "npm:^1.7.6"
     "@gitlab-formatters/stylelint-formatter-gitlab": "npm:^1.0.2"
     backbone: "npm:^1.6.1"
     chokidar: "npm:^4.0.3"
     ckeditor5: "npm:~47.6.2"
-    cspell: "npm:^9.2.2"
-    dotenv: "npm:^17.2.3"
+    cspell: "npm:^9.8.0"
+    dotenv: "npm:^17.4.2"
     dotenv-safe: "npm:^9.1.0"
     eslint: "npm:^8.57.1"
     eslint-config-airbnb-base: "npm:^15.0.0"
@@ -3074,22 +3185,22 @@ __metadata:
     eslint-plugin-prettier: "npm:^5.5.4"
     eslint-plugin-yml: "npm:^1.19.0"
     glob: "npm:^11.1.0"
-    htmx.org: "npm:2.0.8"
+    htmx.org: "npm:2.0.10"
     jquery: "npm:^4.0.0"
-    jquery-ui: "npm:^1.14.1"
+    jquery-ui: "npm:^1.14.2"
     js-cookie: "npm:^3.0.5"
-    jsdom: "npm:^27.1.0"
+    jsdom: "npm:^27.4.0"
     loadjs: "npm:^4.3.0"
     minimist: "npm:^1.2.8"
     mkdirp: "npm:^3.0.1"
     nightwatch: "npm:^3.12.3"
     normalize.css: "npm:^8.0.1"
-    postcss: "npm:^8.5.6"
+    postcss: "npm:^8.5.16"
     postcss-header: "npm:^3.0.3"
     postcss-import: "npm:^16.1.1"
-    postcss-preset-env: "npm:^10.4.0"
+    postcss-preset-env: "npm:^10.6.1"
     postcss-pxtorem: "npm:^6.1.0"
-    postcss-url: "npm:^10.1.3"
+    postcss-url: "npm:^10.1.4"
     prettier: "npm:^3.6.2"
     sortablejs: "npm:^1.15.6"
     stylelint: "npm:^16.25.0"
@@ -3098,12 +3209,12 @@ __metadata:
     stylelint-order: "npm:^7.0.0"
     stylelint-prettier: "npm:^5.0.3"
     tabbable: "npm:^6.3.0"
-    terser: "npm:^5.44.1"
-    terser-webpack-plugin: "npm:^5.3.14"
+    terser: "npm:^5.48.0"
+    terser-webpack-plugin: "npm:^5.6.1"
     transliteration: "npm:^2.3.5"
     tua-body-scroll-lock: "npm:^1.6.0"
     underscore: "npm:^1.13.8"
-    webpack: "npm:^5.102.1"
+    webpack: "npm:^5.108.1"
     webpack-cli: "npm:^6.0.1"
   languageName: unknown
   linkType: soft
@@ -3148,6 +3259,15 @@ __metadata:
   bin:
     acorn: bin/acorn
   checksum: 10c0/dec73ff59b7d6628a01eebaece7f2bdb8bb62b9b5926dcad0f8931f2b8b79c2be21f6c68ac095592adb5adb15831a3635d9343e6a91d028bbe85d564875ec3ec
+  languageName: node
+  linkType: hard
+
+"acorn@npm:^8.16.0":
+  version: 8.17.0
+  resolution: "acorn@npm:8.17.0"
+  bin:
+    acorn: bin/acorn
+  checksum: 10c0/5dcefea5f8f023b6cc24cbe71fb5a8112b601d36c4fa07d14e4e6ffc2ee47383332c46b36c766d9437725aa6660156eae50efa0c838719823b50d7c327c4ed42
   languageName: node
   linkType: hard
 
@@ -3234,6 +3354,13 @@ __metadata:
   version: 6.1.0
   resolution: "ansi-regex@npm:6.1.0"
   checksum: 10c0/a91daeddd54746338478eef88af3439a7edf30f8e23196e2d6ed182da9add559c601266dbef01c2efa46a958ad6f1f8b176799657616c702b5b02e799e7fd8dc
+  languageName: node
+  linkType: hard
+
+"ansi-regex@npm:^6.2.2":
+  version: 6.2.2
+  resolution: "ansi-regex@npm:6.2.2"
+  checksum: 10c0/05d4acb1d2f59ab2cf4b794339c7b168890d44dda4bf0ce01152a8da0213aca207802f930442ce8cd22d7a92f44907664aac6508904e75e038fa944d2601b30f
   languageName: node
   linkType: hard
 
@@ -3477,21 +3604,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:^10.4.21":
-  version: 10.4.21
-  resolution: "autoprefixer@npm:10.4.21"
+"autoprefixer@npm:^10.4.23":
+  version: 10.5.2
+  resolution: "autoprefixer@npm:10.5.2"
   dependencies:
-    browserslist: "npm:^4.24.4"
-    caniuse-lite: "npm:^1.0.30001702"
-    fraction.js: "npm:^4.3.7"
-    normalize-range: "npm:^0.1.2"
+    browserslist: "npm:^4.28.4"
+    caniuse-lite: "npm:^1.0.30001799"
+    fraction.js: "npm:^5.3.4"
     picocolors: "npm:^1.1.1"
     postcss-value-parser: "npm:^4.2.0"
   peerDependencies:
     postcss: ^8.1.0
   bin:
     autoprefixer: bin/autoprefixer
-  checksum: 10c0/de5b71d26d0baff4bbfb3d59f7cf7114a6030c9eeb66167acf49a32c5b61c68e308f1e0f869d92334436a221035d08b51cd1b2f2c4689b8d955149423c16d4d4
+  checksum: 10c0/588fec73c061da8a95f6a7f4f0cde811a581087852325564d2d8f15c9356b204db50c1566c57e06dc0b1bcdf2b8ff10f85e89ef08d94c10f0e5ba187a4c52690
   languageName: node
   linkType: hard
 
@@ -3548,12 +3674,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"baseline-browser-mapping@npm:^2.8.19":
-  version: 2.8.23
-  resolution: "baseline-browser-mapping@npm:2.8.23"
+"baseline-browser-mapping@npm:^2.10.38":
+  version: 2.10.40
+  resolution: "baseline-browser-mapping@npm:2.10.40"
   bin:
-    baseline-browser-mapping: dist/cli.js
-  checksum: 10c0/5a63c1c241d288e5c79aa32a1cbea335b5af899172161aa9f9701a67c5b9b55ea3b3945a70a842385374627dde1de27504641bc95257d8c2e81f0c593c719121
+    baseline-browser-mapping: dist/cli.cjs
+  checksum: 10c0/5d3547aa9333b71f6239db89ef9d4aaf32ec0ee6cfa307025842722b5d225026995185ae4fc1e12e84a22199c905411bf3cce8076ae0a445b342982eb025171e
   languageName: node
   linkType: hard
 
@@ -3642,32 +3768,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.24.4":
-  version: 4.24.5
-  resolution: "browserslist@npm:4.24.5"
+"browserslist@npm:^4.28.1, browserslist@npm:^4.28.4":
+  version: 4.28.4
+  resolution: "browserslist@npm:4.28.4"
   dependencies:
-    caniuse-lite: "npm:^1.0.30001716"
-    electron-to-chromium: "npm:^1.5.149"
-    node-releases: "npm:^2.0.19"
-    update-browserslist-db: "npm:^1.1.3"
+    baseline-browser-mapping: "npm:^2.10.38"
+    caniuse-lite: "npm:^1.0.30001799"
+    electron-to-chromium: "npm:^1.5.376"
+    node-releases: "npm:^2.0.48"
+    update-browserslist-db: "npm:^1.2.3"
   bin:
     browserslist: cli.js
-  checksum: 10c0/f4c1ce1a7d8fdfab5e5b88bb6e93d09e8a883c393f86801537a252da0362dbdcde4dbd97b318246c5d84c6607b2f6b47af732c1b000d6a8a881ee024bad29204
-  languageName: node
-  linkType: hard
-
-"browserslist@npm:^4.26.0, browserslist@npm:^4.26.3":
-  version: 4.27.0
-  resolution: "browserslist@npm:4.27.0"
-  dependencies:
-    baseline-browser-mapping: "npm:^2.8.19"
-    caniuse-lite: "npm:^1.0.30001751"
-    electron-to-chromium: "npm:^1.5.238"
-    node-releases: "npm:^2.0.26"
-    update-browserslist-db: "npm:^1.1.4"
-  bin:
-    browserslist: cli.js
-  checksum: 10c0/395611e54374da9171cdbe7e3704ab426e0f1d622751392df6d6cbf60c539bf06cf2407e9dd769bc01ee2abca6a14af6509a2e0bbb448ba75a054db6c1840643
+  checksum: 10c0/d86f7319c0e3243ca5122335a98b9de8e007fb10fb5643e5f3ed69428fe81ee8646cf1a7663bcfb65bdfddbe505d39406da7ce30052e65c99df9d02336635a7c
   languageName: node
   linkType: hard
 
@@ -3775,10 +3887,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001702, caniuse-lite@npm:^1.0.30001716, caniuse-lite@npm:^1.0.30001751":
-  version: 1.0.30001753
-  resolution: "caniuse-lite@npm:1.0.30001753"
-  checksum: 10c0/730344b6c54769f544f1d4bd7f99a122cd5f6e964e482adbcb18b63cda56e9c40aca1e3ab47c7154098803c9ba3772cca0aba936d1c924e67e8db8345712e5a8
+"caniuse-lite@npm:^1.0.30001799":
+  version: 1.0.30001799
+  resolution: "caniuse-lite@npm:1.0.30001799"
+  checksum: 10c0/f24f9834edc7b60188f368ce44714695c3901bc4acb7f2a977dd9b7b697e39ddc0f9947fad6224a955b789f36a73432cb888d620aa7280d728f582d3bd8927a7
   languageName: node
   linkType: hard
 
@@ -4141,10 +4253,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^14.0.1":
-  version: 14.0.2
-  resolution: "commander@npm:14.0.2"
-  checksum: 10c0/245abd1349dbad5414cb6517b7b5c584895c02c4f7836ff5395f301192b8566f9796c82d7bd6c92d07eba8775fe4df86602fca5d86d8d10bcc2aded1e21c2aeb
+"commander@npm:^14.0.3":
+  version: 14.0.3
+  resolution: "commander@npm:14.0.3"
+  checksum: 10c0/755652564bbf56ff2ff083313912b326450d3f8d8c85f4b71416539c9a05c3c67dbd206821ca72635bf6b160e2afdefcb458e86b317827d5cb333b69ce7f1a24
   languageName: node
   linkType: hard
 
@@ -4155,14 +4267,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"comment-json@npm:^4.4.1":
-  version: 4.4.1
-  resolution: "comment-json@npm:4.4.1"
+"comment-json@npm:^4.6.2":
+  version: 4.6.2
+  resolution: "comment-json@npm:4.6.2"
   dependencies:
     array-timsort: "npm:^1.0.3"
-    core-util-is: "npm:^1.0.3"
     esprima: "npm:^4.0.1"
-  checksum: 10c0/be6a197132543a3c286c725af412d582882c1eaf450cb124e4148e7542449f216aa717e7be81989f8b8cfe3e38a6f9bc06d209351b8ea82514cafc8feec11a2d
+  checksum: 10c0/8965ec6c40612aa0cc66d4324ff5819cf205c997f3a84dd82dffe4e6398449e37bbc5765184bc9149e95d15994f0c2740cee82284828fa1c0f733a669022d3dd
   languageName: node
   linkType: hard
 
@@ -4199,7 +4310,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-util-is@npm:^1.0.3, core-util-is@npm:~1.0.0":
+"core-util-is@npm:~1.0.0":
   version: 1.0.3
   resolution: "core-util-is@npm:1.0.3"
   checksum: 10c0/90a0e40abbddfd7618f8ccd63a74d88deea94e77d0e8dbbea059fa7ebebb8fbb4e2909667fe26f3a467073de1a542ebe6ae4c73a73745ac5833786759cd906c9
@@ -4253,142 +4364,146 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cspell-config-lib@npm:9.2.2":
-  version: 9.2.2
-  resolution: "cspell-config-lib@npm:9.2.2"
+"cspell-config-lib@npm:9.8.0":
+  version: 9.8.0
+  resolution: "cspell-config-lib@npm:9.8.0"
   dependencies:
-    "@cspell/cspell-types": "npm:9.2.2"
-    comment-json: "npm:^4.4.1"
-    smol-toml: "npm:^1.4.2"
-    yaml: "npm:^2.8.1"
-  checksum: 10c0/9def10264f95767050dd07e6d440fb0b3f2e607c546e5da9e2909e2e1d7fa4136e12a74a345f4ec27b9405ee7971839a729283de76c0da82ab51e7dc022e28ff
+    "@cspell/cspell-types": "npm:9.8.0"
+    comment-json: "npm:^4.6.2"
+    smol-toml: "npm:^1.6.1"
+    yaml: "npm:^2.8.3"
+  checksum: 10c0/45d429df87672c1db585597396f70c1c0edd2ca0cfe74a44201b75248cb4d858fb22a5be831106b7f0fdd03a69cd85bb67aadd41af4837a9877ae5475d2081bb
   languageName: node
   linkType: hard
 
-"cspell-dictionary@npm:9.2.2":
-  version: 9.2.2
-  resolution: "cspell-dictionary@npm:9.2.2"
+"cspell-dictionary@npm:9.8.0":
+  version: 9.8.0
+  resolution: "cspell-dictionary@npm:9.8.0"
   dependencies:
-    "@cspell/cspell-pipe": "npm:9.2.2"
-    "@cspell/cspell-types": "npm:9.2.2"
-    cspell-trie-lib: "npm:9.2.2"
-    fast-equals: "npm:^5.3.2"
-  checksum: 10c0/bdb626713208976bf627561c9a79076aaac5cdc60e81109d267c23e11cae1c5894385a85f70644fd0321b9c4ae64419b79beeaf80005996b62e43dd4090d3813
+    "@cspell/cspell-performance-monitor": "npm:9.8.0"
+    "@cspell/cspell-pipe": "npm:9.8.0"
+    "@cspell/cspell-types": "npm:9.8.0"
+    cspell-trie-lib: "npm:9.8.0"
+    fast-equals: "npm:^6.0.0"
+  checksum: 10c0/eda488577e23be3d47bc4afb0f0a78cd882211eb827bf947f942be8474934c1c9359f98b72342138bb2b52e6ff2285f44e1e3824692796d35588e13533422703
   languageName: node
   linkType: hard
 
-"cspell-gitignore@npm:9.2.2":
-  version: 9.2.2
-  resolution: "cspell-gitignore@npm:9.2.2"
+"cspell-gitignore@npm:9.8.0":
+  version: 9.8.0
+  resolution: "cspell-gitignore@npm:9.8.0"
   dependencies:
-    "@cspell/url": "npm:9.2.2"
-    cspell-glob: "npm:9.2.2"
-    cspell-io: "npm:9.2.2"
+    "@cspell/url": "npm:9.8.0"
+    cspell-glob: "npm:9.8.0"
+    cspell-io: "npm:9.8.0"
   bin:
     cspell-gitignore: bin.mjs
-  checksum: 10c0/e58e2645c5011d9e3f68defa557f718057e449a925782d973e3a3af25cd50fbc60af5996fee8261550ec716c55deaf6bbe45a7a5ef5ca5cb52610a84da8b084d
+  checksum: 10c0/d01e7cbaf7950b07670c9daec73b26ca3f171dabd554373572f1ea64bebaf57d5f1753fc4744bfed3335a4965f3c56232fd8189e68339eff7b545304ed7a0dd3
   languageName: node
   linkType: hard
 
-"cspell-glob@npm:9.2.2":
-  version: 9.2.2
-  resolution: "cspell-glob@npm:9.2.2"
+"cspell-glob@npm:9.8.0":
+  version: 9.8.0
+  resolution: "cspell-glob@npm:9.8.0"
   dependencies:
-    "@cspell/url": "npm:9.2.2"
-    picomatch: "npm:^4.0.3"
-  checksum: 10c0/e4d54b3cb0c463e0b340a78670e66ec53d752de9b6a8a63af3bbba81bb9cb4cb17f4bffc4057a4058532bdceaac043a4ef960b56e28fd04949afb1bea8243609
+    "@cspell/url": "npm:9.8.0"
+    picomatch: "npm:^4.0.4"
+  checksum: 10c0/09b7ce77be7d76863e20e72650c02c44a771d5abf3381335d7f7dbcc250173458866deee756c1e431674117efc76d6cbbe0a49a7eecac5bb1cc9705acbdb2d26
   languageName: node
   linkType: hard
 
-"cspell-grammar@npm:9.2.2":
-  version: 9.2.2
-  resolution: "cspell-grammar@npm:9.2.2"
+"cspell-grammar@npm:9.8.0":
+  version: 9.8.0
+  resolution: "cspell-grammar@npm:9.8.0"
   dependencies:
-    "@cspell/cspell-pipe": "npm:9.2.2"
-    "@cspell/cspell-types": "npm:9.2.2"
+    "@cspell/cspell-pipe": "npm:9.8.0"
+    "@cspell/cspell-types": "npm:9.8.0"
   bin:
     cspell-grammar: bin.mjs
-  checksum: 10c0/61ea28a1d5152aaebec76bb71773fbc866a638c78590b99377fa8f03cba225b843d0ce6338c1e3827d29b7b488324c4d6b18bb5ea7dd75513b34e83506363592
+  checksum: 10c0/1259a9127790e71f27ecb551e1ae5cc30eb90af13900daf18c652de09e998798f883e9f72680a7e42d4d5007aa5ec326af3a35d35245cb1b5a2e2014a772ba1d
   languageName: node
   linkType: hard
 
-"cspell-io@npm:9.2.2":
-  version: 9.2.2
-  resolution: "cspell-io@npm:9.2.2"
+"cspell-io@npm:9.8.0":
+  version: 9.8.0
+  resolution: "cspell-io@npm:9.8.0"
   dependencies:
-    "@cspell/cspell-service-bus": "npm:9.2.2"
-    "@cspell/url": "npm:9.2.2"
-  checksum: 10c0/6295b2e5ab9f54bd284ae545b559446ea29de7c570aca4937716a8a0b7c501a2f4fba4856c7e89c89ac38df4628f79a1c4e9e88963fbdc3f044171030c43d3a3
+    "@cspell/cspell-service-bus": "npm:9.8.0"
+    "@cspell/url": "npm:9.8.0"
+  checksum: 10c0/24530cddb81c9c4371930138b3d7d6537342adeda6d35c1ca30b54703571f360f3311af40bc5f4bde37c5c2e9ce8108caa59dafa92397404622ebf89c3c1e67b
   languageName: node
   linkType: hard
 
-"cspell-lib@npm:9.2.2":
-  version: 9.2.2
-  resolution: "cspell-lib@npm:9.2.2"
+"cspell-lib@npm:9.8.0":
+  version: 9.8.0
+  resolution: "cspell-lib@npm:9.8.0"
   dependencies:
-    "@cspell/cspell-bundled-dicts": "npm:9.2.2"
-    "@cspell/cspell-pipe": "npm:9.2.2"
-    "@cspell/cspell-resolver": "npm:9.2.2"
-    "@cspell/cspell-types": "npm:9.2.2"
-    "@cspell/dynamic-import": "npm:9.2.2"
-    "@cspell/filetypes": "npm:9.2.2"
-    "@cspell/strong-weak-map": "npm:9.2.2"
-    "@cspell/url": "npm:9.2.2"
+    "@cspell/cspell-bundled-dicts": "npm:9.8.0"
+    "@cspell/cspell-performance-monitor": "npm:9.8.0"
+    "@cspell/cspell-pipe": "npm:9.8.0"
+    "@cspell/cspell-resolver": "npm:9.8.0"
+    "@cspell/cspell-types": "npm:9.8.0"
+    "@cspell/dynamic-import": "npm:9.8.0"
+    "@cspell/filetypes": "npm:9.8.0"
+    "@cspell/rpc": "npm:9.8.0"
+    "@cspell/strong-weak-map": "npm:9.8.0"
+    "@cspell/url": "npm:9.8.0"
     clear-module: "npm:^4.1.2"
-    cspell-config-lib: "npm:9.2.2"
-    cspell-dictionary: "npm:9.2.2"
-    cspell-glob: "npm:9.2.2"
-    cspell-grammar: "npm:9.2.2"
-    cspell-io: "npm:9.2.2"
-    cspell-trie-lib: "npm:9.2.2"
-    env-paths: "npm:^3.0.0"
-    gensequence: "npm:^7.0.0"
+    cspell-config-lib: "npm:9.8.0"
+    cspell-dictionary: "npm:9.8.0"
+    cspell-glob: "npm:9.8.0"
+    cspell-grammar: "npm:9.8.0"
+    cspell-io: "npm:9.8.0"
+    cspell-trie-lib: "npm:9.8.0"
+    env-paths: "npm:^4.0.0"
+    gensequence: "npm:^8.0.8"
     import-fresh: "npm:^3.3.1"
     resolve-from: "npm:^5.0.0"
     vscode-languageserver-textdocument: "npm:^1.0.12"
     vscode-uri: "npm:^3.1.0"
     xdg-basedir: "npm:^5.1.0"
-  checksum: 10c0/60e1087b26a30b69c3fa3cb09dffc108c0a9747031eab2660618449f6f97a59511b9d696a90f7b9765dfa08f5e2e25739b4f6a6b162fada942f822a1f0cea5e6
+  checksum: 10c0/7f2d56dd3c9be3fe10bbacc2bda6dcd831f252ed2ecb2c8b1915b55f89f9f920400e248fd402421e1b2f2e812d60789df5d1570418cc8134ebdd419bb5ffec51
   languageName: node
   linkType: hard
 
-"cspell-trie-lib@npm:9.2.2":
-  version: 9.2.2
-  resolution: "cspell-trie-lib@npm:9.2.2"
-  dependencies:
-    "@cspell/cspell-pipe": "npm:9.2.2"
-    "@cspell/cspell-types": "npm:9.2.2"
-    gensequence: "npm:^7.0.0"
-  checksum: 10c0/4a888e5fad40113bc9198810740e18f0febdbc06fa9cfe5478cc75f6111f3ba8a03faa2cb8e3fe7da5d2889716e5307ff169a01b150257bd50d17bb694dceae3
+"cspell-trie-lib@npm:9.8.0":
+  version: 9.8.0
+  resolution: "cspell-trie-lib@npm:9.8.0"
+  peerDependencies:
+    "@cspell/cspell-types": 9.8.0
+  checksum: 10c0/2d9a94281a7ae2d5896713aafa650ad75a5f24e8ba18b2c2710b6626753454aae452218b1339e33c33064a7f122baca3d72070ece617112358e2da6884f46e4b
   languageName: node
   linkType: hard
 
-"cspell@npm:^9.2.2":
-  version: 9.2.2
-  resolution: "cspell@npm:9.2.2"
+"cspell@npm:^9.8.0":
+  version: 9.8.0
+  resolution: "cspell@npm:9.8.0"
   dependencies:
-    "@cspell/cspell-json-reporter": "npm:9.2.2"
-    "@cspell/cspell-pipe": "npm:9.2.2"
-    "@cspell/cspell-types": "npm:9.2.2"
-    "@cspell/dynamic-import": "npm:9.2.2"
-    "@cspell/url": "npm:9.2.2"
+    "@cspell/cspell-json-reporter": "npm:9.8.0"
+    "@cspell/cspell-performance-monitor": "npm:9.8.0"
+    "@cspell/cspell-pipe": "npm:9.8.0"
+    "@cspell/cspell-types": "npm:9.8.0"
+    "@cspell/cspell-worker": "npm:9.8.0"
+    "@cspell/dynamic-import": "npm:9.8.0"
+    "@cspell/url": "npm:9.8.0"
+    ansi-regex: "npm:^6.2.2"
     chalk: "npm:^5.6.2"
     chalk-template: "npm:^1.1.2"
-    commander: "npm:^14.0.1"
-    cspell-config-lib: "npm:9.2.2"
-    cspell-dictionary: "npm:9.2.2"
-    cspell-gitignore: "npm:9.2.2"
-    cspell-glob: "npm:9.2.2"
-    cspell-io: "npm:9.2.2"
-    cspell-lib: "npm:9.2.2"
+    commander: "npm:^14.0.3"
+    cspell-config-lib: "npm:9.8.0"
+    cspell-dictionary: "npm:9.8.0"
+    cspell-gitignore: "npm:9.8.0"
+    cspell-glob: "npm:9.8.0"
+    cspell-io: "npm:9.8.0"
+    cspell-lib: "npm:9.8.0"
     fast-json-stable-stringify: "npm:^2.1.0"
-    flatted: "npm:^3.3.3"
-    semver: "npm:^7.7.3"
+    flatted: "npm:^3.4.2"
+    semver: "npm:^7.7.4"
     tinyglobby: "npm:^0.2.15"
   bin:
     cspell: bin.mjs
     cspell-esm: bin.mjs
-  checksum: 10c0/7c6de2a211098bee8cae4ff3c448b5ada89c496c7a2dac21455f4b099b59dd8c1593dda655b0f53605e7d128a1b6e906096c0849a6f281491413b5434f86b48d
+  checksum: 10c0/9fa1f04a6f526e69912561123a6bd836cf84a61af02e4a94161f2bae59cb0b7cec2821f13e09b0dfc84b81102e4dfc97eac00d89a9a8c6b8dbedec93bdae4ae6
   languageName: node
   linkType: hard
 
@@ -4442,10 +4557,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cssdb@npm:^8.4.2":
-  version: 8.4.2
-  resolution: "cssdb@npm:8.4.2"
-  checksum: 10c0/3c88610ba9e3f87f9ecf068b72261e90de8bb1f5d1dceefc79ff42b2e19f5814135937ad057b7f8c4bf58212f911e5f9d2f6f0910af3da127170009f1f75689c
+"cssdb@npm:^8.6.0":
+  version: 8.9.0
+  resolution: "cssdb@npm:8.9.0"
+  checksum: 10c0/25c32279ca7741c94305d164d528c56cbd2c1162f8ea9d126490b9c8da273198c2dce7f4d8b602db5e045857d953a4553c4d2787d50db7ae71ffc6a19f0e2512
   languageName: node
   linkType: hard
 
@@ -4468,14 +4583,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cssstyle@npm:^5.3.2":
-  version: 5.3.2
-  resolution: "cssstyle@npm:5.3.2"
+"cssstyle@npm:^5.3.4":
+  version: 5.3.7
+  resolution: "cssstyle@npm:5.3.7"
   dependencies:
-    "@asamuzakjp/css-color": "npm:^4.0.3"
-    "@csstools/css-syntax-patches-for-csstree": "npm:^1.0.14"
+    "@asamuzakjp/css-color": "npm:^4.1.1"
+    "@csstools/css-syntax-patches-for-csstree": "npm:^1.0.21"
     css-tree: "npm:^3.1.0"
-  checksum: 10c0/513f0bd5d80fa91beadd24a9f4d4705f1f7e783acd90049ba6ceaf452101326208dd0d1d088d3565c4df94e4730582bf3857ea0fd3e733d10b6141be6eb68e40
+    lru-cache: "npm:^11.2.4"
+  checksum: 10c0/9330f014f4209df06305264b92b8e963dfef636fdc2ae7d13f24ea7da6468aba1dc5eb13082621258bdd22cbd7fb7cb291894e188a3cdf660e8b79cd2c5e5e0e
   languageName: node
   linkType: hard
 
@@ -4788,10 +4904,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^17.2.3":
-  version: 17.2.3
-  resolution: "dotenv@npm:17.2.3"
-  checksum: 10c0/c884403209f713214a1b64d4d1defa4934c2aa5b0002f5a670ae298a51e3c3ad3ba79dfee2f8df49f01ae74290fcd9acdb1ab1d09c7bfb42b539036108bb2ba0
+"dotenv@npm:^17.4.2":
+  version: 17.4.2
+  resolution: "dotenv@npm:17.4.2"
+  checksum: 10c0/164f8e77a646c8446867d5b588d26ea6005c8ea7c5eb41cf926f6113d23f2191355f6e0cfd95ea9bab98394a5b0a3f1e51a8399711b666fe55cc7b0bd745f942
   languageName: node
   linkType: hard
 
@@ -4824,17 +4940,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.5.149":
-  version: 1.5.155
-  resolution: "electron-to-chromium@npm:1.5.155"
-  checksum: 10c0/aee32a0b03282e488352370f6a910de37788b814031020a0e244943450e844e8a41f741d6e5ec70d553dfa4382ef80088034ddc400b48f45de95de331b9ec178
-  languageName: node
-  linkType: hard
-
-"electron-to-chromium@npm:^1.5.238":
-  version: 1.5.244
-  resolution: "electron-to-chromium@npm:1.5.244"
-  checksum: 10c0/a3cbc8c9c9415234f97e92724924f943fcb82494b3a2f9ae998954d22496e86f7eaf5e2fceca8aa8be098b0693f508332ec2d3b4b39a42cd2de1fac4d048a19f
+"electron-to-chromium@npm:^1.5.376":
+  version: 1.5.380
+  resolution: "electron-to-chromium@npm:1.5.380"
+  checksum: 10c0/9132e2d69a1829708894507bacf59f02d881b95113eb9139fcb27c92d026f4504dd1b2a74f024224641d1fb6112b0fcb914ce27acfef9aeb150cdb4c8ae35895
   languageName: node
   linkType: hard
 
@@ -4870,13 +4979,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"enhanced-resolve@npm:^5.17.3":
-  version: 5.18.3
-  resolution: "enhanced-resolve@npm:5.18.3"
+"enhanced-resolve@npm:^5.22.2":
+  version: 5.24.1
+  resolution: "enhanced-resolve@npm:5.24.1"
   dependencies:
     graceful-fs: "npm:^4.2.4"
-    tapable: "npm:^2.2.0"
-  checksum: 10c0/d413c23c2d494e4c1c9c9ac7d60b812083dc6d446699ed495e69c920988af0a3c66bf3f8d0e7a45cb1686c2d4c1df9f4e7352d973f5b56fe63d8d711dd0ccc54
+    tapable: "npm:^2.3.3"
+  checksum: 10c0/8716005cfe61b9fd528881d4ff59298c26aeae04184f2f8ae4145886dec71295eaee40a22485e70dd70d1a1b0ef01ae143dffa10c7c0d5f71648398bc0d666ba
   languageName: node
   linkType: hard
 
@@ -4901,10 +5010,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"env-paths@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "env-paths@npm:3.0.0"
-  checksum: 10c0/76dec878cee47f841103bacd7fae03283af16f0702dad65102ef0a556f310b98a377885e0f32943831eb08b5ab37842a323d02529f3dfd5d0a40ca71b01b435f
+"env-paths@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "env-paths@npm:4.0.0"
+  dependencies:
+    is-safe-filename: "npm:^0.1.0"
+  checksum: 10c0/13ee7fa4047786ca28f1fbf2239606f8a53304bdf71bfc426e95f806e429060181205316f2c45b4ac560e81c854ded5a45fd9dc3105414c01d504b3469a1294b
   languageName: node
   linkType: hard
 
@@ -5094,10 +5205,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"es-module-lexer@npm:^1.2.1":
-  version: 1.7.0
-  resolution: "es-module-lexer@npm:1.7.0"
-  checksum: 10c0/4c935affcbfeba7fb4533e1da10fa8568043df1e3574b869385980de9e2d475ddc36769891936dbb07036edb3c3786a8b78ccf44964cd130dedc1f2c984b6c7b
+"es-module-lexer@npm:^2.1.0":
+  version: 2.2.0
+  resolution: "es-module-lexer@npm:2.2.0"
+  checksum: 10c0/a20547903d389031f383afe2c4770e5402f70afb8e5c69562427cb4c384bfb806aa24e8b719b75f432bae327c9db2abb1f227c907bb3bc3d9d9350d42d6f91a3
   languageName: node
   linkType: hard
 
@@ -5533,10 +5644,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-equals@npm:^5.3.2":
-  version: 5.3.2
-  resolution: "fast-equals@npm:5.3.2"
-  checksum: 10c0/babadb98fb93c693ee3c8eecbc980ed52fa7be7508eca9b68d8c899bc48e2e47af6d30160187358f7987e54440b6fd21ecd3c6e48ebeb15e1875d6a2ac7e1421
+"fast-equals@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "fast-equals@npm:6.0.0"
+  checksum: 10c0/aae54699ce848726679a947c8bbea78f2ea0384e4e1ee213c98f10881a17bb376bd11085eda4d6c89db5285635ee2f809b126d773532fcf602be355008a9d5ed
   languageName: node
   linkType: hard
 
@@ -5708,6 +5819,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"flatted@npm:^3.4.2":
+  version: 3.4.2
+  resolution: "flatted@npm:3.4.2"
+  checksum: 10c0/a65b67aae7172d6cdf63691be7de6c5cd5adbdfdfe2e9da1a09b617c9512ed794037741ee53d93114276bff3f93cd3b0d97d54f9b316e1e4885dde6e9ffdf7ed
+  languageName: node
+  linkType: hard
+
 "for-each@npm:^0.3.3, for-each@npm:^0.3.5":
   version: 0.3.5
   resolution: "for-each@npm:0.3.5"
@@ -5740,10 +5858,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fraction.js@npm:^4.3.7":
-  version: 4.3.7
-  resolution: "fraction.js@npm:4.3.7"
-  checksum: 10c0/df291391beea9ab4c263487ffd9d17fed162dbb736982dee1379b2a8cc94e4e24e46ed508c6d278aded9080ba51872f1bc5f3a5fd8d7c74e5f105b508ac28711
+"fraction.js@npm:^5.3.4":
+  version: 5.3.4
+  resolution: "fraction.js@npm:5.3.4"
+  checksum: 10c0/f90079fe9bfc665e0a07079938e8ff71115bce9462f17b32fc283f163b0540ec34dc33df8ed41bb56f028316b04361b9a9995b9ee9258617f8338e0b05c5f95a
   languageName: node
   linkType: hard
 
@@ -5824,10 +5942,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gensequence@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "gensequence@npm:7.0.0"
-  checksum: 10c0/d446772a795d8a50d70d87e87b827591ccd599c267acce9c2e1f17e4df6c04e6d47661b2ddf5d0144d026c1e3ac71eca917c171e594c3daf6a87aeabbe1d7a3d
+"gensequence@npm:^8.0.8":
+  version: 8.0.8
+  resolution: "gensequence@npm:8.0.8"
+  checksum: 10c0/a1315a9c366c4becda7720c8ecb986cbab912352e8fe25fdb57325d4a8fb3cce816cc227acd7bf2141283656f1e04229655240a2cc70d75836eec13ed8a96425
   languageName: node
   linkType: hard
 
@@ -5902,13 +6020,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob-to-regexp@npm:^0.4.1":
-  version: 0.4.1
-  resolution: "glob-to-regexp@npm:0.4.1"
-  checksum: 10c0/0486925072d7a916f052842772b61c3e86247f0a80cc0deb9b5a3e8a1a9faad5b04fb6f58986a09f34d3e96cd2a22a24b7e9882fb1cf904c31e9a310de96c429
-  languageName: node
-  linkType: hard
-
 "glob@npm:7.2.3, glob@npm:^7.1.3, glob@npm:^7.1.4, glob@npm:^7.2.3":
   version: 7.2.3
   resolution: "glob@npm:7.2.3"
@@ -5968,12 +6079,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"global-directory@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "global-directory@npm:4.0.1"
+"global-directory@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "global-directory@npm:5.0.0"
   dependencies:
-    ini: "npm:4.1.1"
-  checksum: 10c0/f9cbeef41db4876f94dd0bac1c1b4282a7de9c16350ecaaf83e7b2dd777b32704cc25beeb1170b5a63c42a2c9abfade74d46357fe0133e933218bc89e613d4b2
+    ini: "npm:6.0.0"
+  checksum: 10c0/2b90eea8975bb332db7e8c9096ff310f0deb617d17e47e93b921d1c69f7677c1759a07009f2581f050d3ea08a3e079bf4ffdb9c34c94d48dc369c6577b3d45f4
   languageName: node
   linkType: hard
 
@@ -6309,6 +6420,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"html-encoding-sniffer@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "html-encoding-sniffer@npm:6.0.0"
+  dependencies:
+    "@exodus/bytes": "npm:^1.6.0"
+  checksum: 10c0/66dc3f6f5539cc3beb814fcbfae7eacf4ec38cf824d6e1425b72039b51a40f4456bd8541ba66f4f4fe09cdf885ab5cd5bae6ec6339d6895a930b2fdb83c53025
+  languageName: node
+  linkType: hard
+
 "html-entities@npm:^2.6.0":
   version: 2.6.0
   resolution: "html-entities@npm:2.6.0"
@@ -6330,10 +6450,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"htmx.org@npm:2.0.8":
-  version: 2.0.8
-  resolution: "htmx.org@npm:2.0.8"
-  checksum: 10c0/7f866a705d2f1d8bf8a1e0743cb2d6f2d8bb7635d6de85165ef6cc4d87d7210ee6cdf9b411497d1fc58aadae99a69f11266013f68092764cfffde23a44e9681f
+"htmx.org@npm:2.0.10":
+  version: 2.0.10
+  resolution: "htmx.org@npm:2.0.10"
+  checksum: 10c0/cff6824820446a29e3b3e81f4e98704a0e2a5e60106ab3d1e0f4b1e4770a489de45c4032d6da87519d833d1d4c282e08f6163b3fc29012833b2c6a3ddebbee30
   languageName: node
   linkType: hard
 
@@ -6454,10 +6574,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ini@npm:4.1.1":
-  version: 4.1.1
-  resolution: "ini@npm:4.1.1"
-  checksum: 10c0/7fddc8dfd3e63567d4fdd5d999d1bf8a8487f1479d0b34a1d01f28d391a9228d261e19abc38e1a6a1ceb3400c727204fce05725d5eb598dfcf2077a1e3afe211
+"ini@npm:6.0.0":
+  version: 6.0.0
+  resolution: "ini@npm:6.0.0"
+  checksum: 10c0/9a7f55f306e2b25b41ae67c8b526e8f4673f057b70852b9025816ef4f15f07bf1ba35ed68ea4471ff7b31718f7ef1bc50d709f8d03cb012e10a3135eb99c7206
   languageName: node
   linkType: hard
 
@@ -6749,6 +6869,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-safe-filename@npm:^0.1.0":
+  version: 0.1.1
+  resolution: "is-safe-filename@npm:0.1.1"
+  checksum: 10c0/45c35d2253b96348e2c26590e14feed51d1e6b72aaa567930ccb34e68c0eef00ebcf3b7e01b46bf45e578a27355cd8f5bc12f7d6d79a34d33dc93d4560c0f6b6
+  languageName: node
+  linkType: hard
+
 "is-set@npm:^2.0.2, is-set@npm:^2.0.3":
   version: 2.0.3
   resolution: "is-set@npm:2.0.3"
@@ -6919,12 +7046,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery-ui@npm:^1.14.1":
-  version: 1.14.1
-  resolution: "jquery-ui@npm:1.14.1"
+"jquery-ui@npm:^1.14.2":
+  version: 1.14.2
+  resolution: "jquery-ui@npm:1.14.2"
   dependencies:
     jquery: "npm:>=1.12.0 <5.0.0"
-  checksum: 10c0/cf7a3c0aac369e513d78bc5864bbafb6ddf85a43513ca5d00b11d65e2890a6618ff2ef5b8cb2925db9a6b7d0c2482d717fb10cc813e419024ae8bc457e18f51d
+  checksum: 10c0/83b65744c4f4f2e9fa12833feb76c964f9565ef8301ef4e224e93e6c867e10a45d7da3e93bc7bcaec5227a61e09a2a6d1ce0198d9c38de08e4ada3d53a628615
   languageName: node
   linkType: hard
 
@@ -7015,16 +7142,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsdom@npm:^27.1.0":
-  version: 27.1.0
-  resolution: "jsdom@npm:27.1.0"
+"jsdom@npm:^27.4.0":
+  version: 27.4.0
+  resolution: "jsdom@npm:27.4.0"
   dependencies:
-    "@acemir/cssom": "npm:^0.9.19"
-    "@asamuzakjp/dom-selector": "npm:^6.7.3"
-    cssstyle: "npm:^5.3.2"
+    "@acemir/cssom": "npm:^0.9.28"
+    "@asamuzakjp/dom-selector": "npm:^6.7.6"
+    "@exodus/bytes": "npm:^1.6.0"
+    cssstyle: "npm:^5.3.4"
     data-urls: "npm:^6.0.0"
     decimal.js: "npm:^10.6.0"
-    html-encoding-sniffer: "npm:^4.0.0"
+    html-encoding-sniffer: "npm:^6.0.0"
     http-proxy-agent: "npm:^7.0.2"
     https-proxy-agent: "npm:^7.0.6"
     is-potential-custom-element-name: "npm:^1.0.1"
@@ -7034,7 +7162,6 @@ __metadata:
     tough-cookie: "npm:^6.0.0"
     w3c-xmlserializer: "npm:^5.0.0"
     webidl-conversions: "npm:^8.0.0"
-    whatwg-encoding: "npm:^3.1.1"
     whatwg-mimetype: "npm:^4.0.0"
     whatwg-url: "npm:^15.1.0"
     ws: "npm:^8.18.3"
@@ -7044,7 +7171,7 @@ __metadata:
   peerDependenciesMeta:
     canvas:
       optional: true
-  checksum: 10c0/b3da39ab7c858df28a2300362924925327f5bff5727371523b99cac7f51bc2891c4b8516205c9acbd34430819f7e69f7790a2092a965359ed65d8111b3a79507
+  checksum: 10c0/291bb71a611dbaed81ce516587b71a5ffd9d43337d65bbd0731e7924cd7018f5871cf66614facadfd0dffec2b23a0fc57b2ee36b5a39e20f0f569e2949b3418c
   languageName: node
   linkType: hard
 
@@ -7055,7 +7182,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-parse-even-better-errors@npm:^2.3.0, json-parse-even-better-errors@npm:^2.3.1":
+"json-parse-even-better-errors@npm:^2.3.0":
   version: 2.3.1
   resolution: "json-parse-even-better-errors@npm:2.3.1"
   checksum: 10c0/140932564c8f0b88455432e0f33c4cb4086b8868e37524e07e723f4eaedb9425bdc2bafd71bd1d9765bd15fd1e2d126972bc83990f55c467168c228c24d665f3
@@ -7173,10 +7300,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loader-runner@npm:^4.2.0":
-  version: 4.3.0
-  resolution: "loader-runner@npm:4.3.0"
-  checksum: 10c0/a44d78aae0907a72f73966fe8b82d1439c8c485238bd5a864b1b9a2a3257832effa858790241e6b37876b5446a78889adf2fcc8dd897ce54c089ecc0a0ce0bf0
+"loader-runner@npm:^4.3.2":
+  version: 4.3.2
+  resolution: "loader-runner@npm:4.3.2"
+  checksum: 10c0/35297f2d1cadcef8995c4ba2c4e27ef397f508014c5cdcdae43456ed27d07d3bfc3e81a5460857184517a02576917363f5f8f98cb22500c124f00c33eb6ec7b1
   languageName: node
   linkType: hard
 
@@ -7301,10 +7428,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:^11.2.1, lru-cache@npm:^11.2.2":
-  version: 11.2.2
-  resolution: "lru-cache@npm:11.2.2"
-  checksum: 10c0/72d7831bbebc85e2bdefe01047ee5584db69d641c48d7a509e86f66f6ee111b30af7ec3bd68a967d47b69a4b1fa8bbf3872630bd06a63b6735e6f0a5f1c8e83d
+"lru-cache@npm:^11.2.4, lru-cache@npm:^11.2.5, lru-cache@npm:^11.2.6":
+  version: 11.5.1
+  resolution: "lru-cache@npm:11.5.1"
+  checksum: 10c0/7b341cea79a8efe9c6a6f20c8757a77eca5b25d7ff983ccf4e11e547b81f6787824baa1c84705251dff84ab4ffac85717ac354b9d02e465f86a9f8b166409979
   languageName: node
   linkType: hard
 
@@ -7912,7 +8039,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime-types@npm:^2.1.12, mime-types@npm:^2.1.27":
+"mime-db@npm:^1.54.0":
+  version: 1.54.0
+  resolution: "mime-db@npm:1.54.0"
+  checksum: 10c0/8d907917bc2a90fa2df842cdf5dfeaf509adc15fe0531e07bb2f6ab15992416479015828d6a74200041c492e42cce3ebf78e5ce714388a0a538ea9c53eece284
+  languageName: node
+  linkType: hard
+
+"mime-types@npm:^2.1.12":
   version: 2.1.35
   resolution: "mime-types@npm:2.1.35"
   dependencies:
@@ -7964,6 +8098,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:^3.1.5":
+  version: 3.1.5
+  resolution: "minimatch@npm:3.1.5"
+  dependencies:
+    brace-expansion: "npm:^1.1.7"
+  checksum: 10c0/2ecbdc0d33f07bddb0315a8b5afbcb761307a8778b48f0b312418ccbced99f104a2d17d8aca7573433c70e8ccd1c56823a441897a45e384ea76ef401a26ace70
+  languageName: node
+  linkType: hard
+
 "minimatch@npm:^5.0.1, minimatch@npm:^5.1.0":
   version: 5.1.6
   resolution: "minimatch@npm:5.1.6"
@@ -7982,15 +8125,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:~3.0.4":
-  version: 3.0.8
-  resolution: "minimatch@npm:3.0.8"
-  dependencies:
-    brace-expansion: "npm:^1.1.7"
-  checksum: 10c0/72b226f452dcfb5075255f53534cb83fc25565b909e79b9be4fad463d735cb1084827f7013ff41d050e77ee6e474408c6073473edd2fb72c2fd630cfb0acc6ad
-  languageName: node
-  linkType: hard
-
 "minimist@npm:1.2.6":
   version: 1.2.6
   resolution: "minimist@npm:1.2.6"
@@ -8002,6 +8136,45 @@ __metadata:
   version: 1.2.8
   resolution: "minimist@npm:1.2.8"
   checksum: 10c0/19d3fcdca050087b84c2029841a093691a91259a47def2f18222f41e7645a0b7c44ef4b40e88a1e58a40c84d2ef0ee6047c55594d298146d0eb3f6b737c20ce6
+  languageName: node
+  linkType: hard
+
+"minimizer-webpack-plugin@npm:^5.6.1":
+  version: 5.6.1
+  resolution: "minimizer-webpack-plugin@npm:5.6.1"
+  dependencies:
+    "@jridgewell/trace-mapping": "npm:^0.3.25"
+    jest-worker: "npm:^27.4.5"
+    schema-utils: "npm:^4.3.0"
+    terser: "npm:^5.31.1"
+  peerDependencies:
+    webpack: ^5.1.0
+  peerDependenciesMeta:
+    "@minify-html/node":
+      optional: true
+    "@swc/core":
+      optional: true
+    "@swc/css":
+      optional: true
+    "@swc/html":
+      optional: true
+    clean-css:
+      optional: true
+    cssnano:
+      optional: true
+    csso:
+      optional: true
+    esbuild:
+      optional: true
+    html-minifier-terser:
+      optional: true
+    lightningcss:
+      optional: true
+    postcss:
+      optional: true
+    uglify-js:
+      optional: true
+  checksum: 10c0/4bf4e8bc2827e3724a53e04465493ee4b52f2a4a18e89e23c72905462557107bc9f5396035841fb5e4f86630c8a783eb4f13c26a3b1544f621b75ea8bedca3f2
   languageName: node
   linkType: hard
 
@@ -8144,6 +8317,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanoid@npm:^3.3.12":
+  version: 3.3.15
+  resolution: "nanoid@npm:3.3.15"
+  bin:
+    nanoid: bin/nanoid.cjs
+  checksum: 10c0/e0b12e3a1d361f74150fa4b25631d0ae29f7162dab01a12f0f1be1f53b7a2a219f9b729504e474d4821207d0fe349bd3c97569ab5cf7ec2fff6aa94711956c93
+  languageName: node
+  linkType: hard
+
 "natural-compare@npm:^1.4.0":
   version: 1.4.0
   resolution: "natural-compare@npm:1.4.0"
@@ -8247,17 +8429,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-releases@npm:^2.0.19":
-  version: 2.0.19
-  resolution: "node-releases@npm:2.0.19"
-  checksum: 10c0/52a0dbd25ccf545892670d1551690fe0facb6a471e15f2cfa1b20142a5b255b3aa254af5f59d6ecb69c2bec7390bc643c43aa63b13bf5e64b6075952e716b1aa
-  languageName: node
-  linkType: hard
-
-"node-releases@npm:^2.0.26":
-  version: 2.0.27
-  resolution: "node-releases@npm:2.0.27"
-  checksum: 10c0/f1e6583b7833ea81880627748d28a3a7ff5703d5409328c216ae57befbced10ce2c991bea86434e8ec39003bd017f70481e2e5f8c1f7e0a7663241f81d6e00e2
+"node-releases@npm:^2.0.48":
+  version: 2.0.50
+  resolution: "node-releases@npm:2.0.50"
+  checksum: 10c0/ac75ed433864114cfd9862034960bb4f49838343dc9fc31dc7d5be8189ce5f39510ad0bb3a697efe3193d50ab6921e7a3a6ce3aae2a6f8abe62719ffd40a4cac
   languageName: node
   linkType: hard
 
@@ -8276,13 +8451,6 @@ __metadata:
   version: 3.0.0
   resolution: "normalize-path@npm:3.0.0"
   checksum: 10c0/e008c8142bcc335b5e38cf0d63cfd39d6cf2d97480af9abdbe9a439221fd4d749763bab492a8ee708ce7a194bb00c9da6d0a115018672310850489137b3da046
-  languageName: node
-  linkType: hard
-
-"normalize-range@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "normalize-range@npm:0.1.2"
-  checksum: 10c0/bf39b73a63e0a42ad1a48c2bd1bda5a07ede64a7e2567307a407674e595bcff0fa0d57e8e5f1e7fa5e91000797c7615e13613227aaaa4d6d6e87f5bd5cc95de6
   languageName: node
   linkType: hard
 
@@ -8681,6 +8849,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"picomatch@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "picomatch@npm:4.0.4"
+  checksum: 10c0/e2c6023372cc7b5764719a5ffb9da0f8e781212fa7ca4bd0562db929df8e117460f00dff3cb7509dacfc06b86de924b247f504d0ce1806a37fac4633081466b0
+  languageName: node
+  linkType: hard
+
 "pify@npm:^2.3.0":
   version: 2.3.0
   resolution: "pify@npm:2.3.0"
@@ -8997,9 +9172,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-preset-env@npm:^10.4.0":
-  version: 10.4.0
-  resolution: "postcss-preset-env@npm:10.4.0"
+"postcss-preset-env@npm:^10.6.1":
+  version: 10.6.1
+  resolution: "postcss-preset-env@npm:10.6.1"
   dependencies:
     "@csstools/postcss-alpha-function": "npm:^1.0.1"
     "@csstools/postcss-cascade-layers": "npm:^5.0.2"
@@ -9026,23 +9201,27 @@ __metadata:
     "@csstools/postcss-media-minmax": "npm:^2.0.9"
     "@csstools/postcss-media-queries-aspect-ratio-number-values": "npm:^3.0.5"
     "@csstools/postcss-nested-calc": "npm:^4.0.0"
-    "@csstools/postcss-normalize-display-values": "npm:^4.0.0"
+    "@csstools/postcss-normalize-display-values": "npm:^4.0.1"
     "@csstools/postcss-oklab-function": "npm:^4.0.12"
+    "@csstools/postcss-position-area-property": "npm:^1.0.0"
     "@csstools/postcss-progressive-custom-properties": "npm:^4.2.1"
+    "@csstools/postcss-property-rule-prelude-list": "npm:^1.0.0"
     "@csstools/postcss-random-function": "npm:^2.0.1"
     "@csstools/postcss-relative-color-syntax": "npm:^3.0.12"
     "@csstools/postcss-scope-pseudo-class": "npm:^4.0.1"
     "@csstools/postcss-sign-functions": "npm:^1.1.4"
     "@csstools/postcss-stepped-value-functions": "npm:^4.0.9"
+    "@csstools/postcss-syntax-descriptor-syntax-production": "npm:^1.0.1"
+    "@csstools/postcss-system-ui-font-family": "npm:^1.0.0"
     "@csstools/postcss-text-decoration-shorthand": "npm:^4.0.3"
     "@csstools/postcss-trigonometric-functions": "npm:^4.0.9"
     "@csstools/postcss-unset-value": "npm:^4.0.0"
-    autoprefixer: "npm:^10.4.21"
-    browserslist: "npm:^4.26.0"
+    autoprefixer: "npm:^10.4.23"
+    browserslist: "npm:^4.28.1"
     css-blank-pseudo: "npm:^7.0.1"
     css-has-pseudo: "npm:^7.0.3"
     css-prefers-color-scheme: "npm:^10.0.0"
-    cssdb: "npm:^8.4.2"
+    cssdb: "npm:^8.6.0"
     postcss-attribute-case-insensitive: "npm:^7.0.1"
     postcss-clamp: "npm:^4.1.0"
     postcss-color-functional-notation: "npm:^7.0.12"
@@ -9070,7 +9249,7 @@ __metadata:
     postcss-selector-not: "npm:^8.0.1"
   peerDependencies:
     postcss: ^8.4
-  checksum: 10c0/3c081a66ebde19ae2f915f4eb103b85097085799b43103e5dd1699ed807bd54c80d633c7d4b525badaf21e9d0b217e6ca169ee306e2b720bb70b7414ad375387
+  checksum: 10c0/e8da96f208918ebc0dc9acc8ba8961a92569f1d130b29abe25adaf7dbd56ef29fc6f778b75964c80fe7f3469012c763ea9447e5c2f559a002a155bc0462cce35
   languageName: node
   linkType: hard
 
@@ -9149,17 +9328,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-url@npm:^10.1.3":
-  version: 10.1.3
-  resolution: "postcss-url@npm:10.1.3"
+"postcss-url@npm:^10.1.4":
+  version: 10.1.4
+  resolution: "postcss-url@npm:10.1.4"
   dependencies:
     make-dir: "npm:~3.1.0"
     mime: "npm:~2.5.2"
-    minimatch: "npm:~3.0.4"
+    minimatch: "npm:^3.1.5"
     xxhashjs: "npm:~0.2.2"
   peerDependencies:
     postcss: ^8.0.0
-  checksum: 10c0/8ac985e58d544ce986cdbe41ecbe1c179b5ca3f71cf97179d02d019817d4a80aa3758ec5c9cc8343f95583682addf448ba6bcbc2d4f4c01b4fb269e217c4ef24
+  checksum: 10c0/7bb5ac1b6ae6f7d99705408ee1cd1d6dca5b74922f8f1bd53fa076d3306df5f77215b15a3c93dde30569d305ec15df918cffdd2f4d5c120e6c19d78a7021f565
   languageName: node
   linkType: hard
 
@@ -9167,6 +9346,17 @@ __metadata:
   version: 4.2.0
   resolution: "postcss-value-parser@npm:4.2.0"
   checksum: 10c0/f4142a4f56565f77c1831168e04e3effd9ffcc5aebaf0f538eee4b2d465adfd4b85a44257bb48418202a63806a7da7fe9f56c330aebb3cac898e46b4cbf49161
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.5.16":
+  version: 8.5.16
+  resolution: "postcss@npm:8.5.16"
+  dependencies:
+    nanoid: "npm:^3.3.12"
+    picocolors: "npm:^1.1.1"
+    source-map-js: "npm:^1.2.1"
+  checksum: 10c0/625de7a02f662f3a340964d14b487bd5097adf16f5f171e257d19005ba37aea8768ee446557500e88e91ca46b4d14d6cb4a0bf033c6ec0c8c0b660d85719f1ef
   languageName: node
   linkType: hard
 
@@ -9774,21 +9964,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"semver@npm:^7.7.4":
+  version: 7.8.5
+  resolution: "semver@npm:7.8.5"
+  bin:
+    semver: bin/semver.js
+  checksum: 10c0/b1f3127a5be8125a94f37188b361c212466c292c6910adce3ec106cff5dc211ccaedc4739c11bb70fda59d6fc1f040a9bca289f4e093451521a2372e5231fe0c
+  languageName: node
+  linkType: hard
+
 "serialize-javascript@npm:6.0.0":
   version: 6.0.0
   resolution: "serialize-javascript@npm:6.0.0"
   dependencies:
     randombytes: "npm:^2.1.0"
   checksum: 10c0/73104922ef0a919064346eea21caab99de1a019a1f5fb54a7daa7fcabc39e83b387a2a363e52a889598c3b1bcf507c4b2a7b26df76e991a310657af20eea2e7c
-  languageName: node
-  linkType: hard
-
-"serialize-javascript@npm:^6.0.2":
-  version: 6.0.2
-  resolution: "serialize-javascript@npm:6.0.2"
-  dependencies:
-    randombytes: "npm:^2.1.0"
-  checksum: 10c0/2dd09ef4b65a1289ba24a788b1423a035581bef60817bea1f01eda8e3bda623f86357665fe7ac1b50f6d4f583f97db9615b3f07b2a2e8cbcb75033965f771dd2
   languageName: node
   linkType: hard
 
@@ -9948,10 +10138,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"smol-toml@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "smol-toml@npm:1.4.2"
-  checksum: 10c0/e01e5f249b1ad852d09aa22f338a6cb3896ac35c92bf0d35744ce1b1e2f4b67901d4a0e886027617a2a8aa9f1a6c67c919c41b544c4aec137b6ebe042ca10d36
+"smol-toml@npm:^1.6.1":
+  version: 1.7.0
+  resolution: "smol-toml@npm:1.7.0"
+  checksum: 10c0/8eef246b9b96f278a181f6dd2a90c754304cb4cf92ccdfe1d2f714fb980fb3f539ba00283609e8fd2fbcf7c0d48a4ae76b36bc0de556ed286b2c865827a778e8
   languageName: node
   linkType: hard
 
@@ -10372,17 +10562,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tapable@npm:^2.2.0":
-  version: 2.2.2
-  resolution: "tapable@npm:2.2.2"
-  checksum: 10c0/8ad130aa705cab6486ad89e42233569a1fb1ff21af115f59cebe9f2b45e9e7995efceaa9cc5062510cdb4ec673b527924b2ab812e3579c55ad659ae92117011e
-  languageName: node
-  linkType: hard
-
 "tapable@npm:^2.3.0":
   version: 2.3.0
   resolution: "tapable@npm:2.3.0"
   checksum: 10c0/cb9d67cc2c6a74dedc812ef3085d9d681edd2c1fa18e4aef57a3c0605fdbe44e6b8ea00bd9ef21bc74dd45314e39d31227aa031ebf2f5e38164df514136f2681
+  languageName: node
+  linkType: hard
+
+"tapable@npm:^2.3.3":
+  version: 2.3.3
+  resolution: "tapable@npm:2.3.3"
+  checksum: 10c0/47992e861053f861154e92fb4a98ac4ab47b6463717e60792dd1e8c755da0c4964cd8bb68c308a9066d6da89000b6310457b4d5d985c30de4ccc29066068cc17
   languageName: node
   linkType: hard
 
@@ -10413,25 +10603,42 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser-webpack-plugin@npm:^5.3.11, terser-webpack-plugin@npm:^5.3.14":
-  version: 5.3.14
-  resolution: "terser-webpack-plugin@npm:5.3.14"
+"terser-webpack-plugin@npm:^5.6.1":
+  version: 5.6.1
+  resolution: "terser-webpack-plugin@npm:5.6.1"
   dependencies:
     "@jridgewell/trace-mapping": "npm:^0.3.25"
     jest-worker: "npm:^27.4.5"
     schema-utils: "npm:^4.3.0"
-    serialize-javascript: "npm:^6.0.2"
     terser: "npm:^5.31.1"
   peerDependencies:
     webpack: ^5.1.0
   peerDependenciesMeta:
+    "@minify-html/node":
+      optional: true
     "@swc/core":
+      optional: true
+    "@swc/css":
+      optional: true
+    "@swc/html":
+      optional: true
+    clean-css:
+      optional: true
+    cssnano:
+      optional: true
+    csso:
       optional: true
     esbuild:
       optional: true
+    html-minifier-terser:
+      optional: true
+    lightningcss:
+      optional: true
+    postcss:
+      optional: true
     uglify-js:
       optional: true
-  checksum: 10c0/9b060947241af43bd6fd728456f60e646186aef492163672a35ad49be6fbc7f63b54a7356c3f6ff40a8f83f00a977edc26f044b8e106cc611c053c8c0eaf8569
+  checksum: 10c0/841674dab9b58ee242a64a548f2797f83eca3debc010afb2aa1a4be7149e7195a6a546a746324803ba05f72d0c9dc4357e34f17e4b6d6c054bd49a0913c413b9
   languageName: node
   linkType: hard
 
@@ -10449,9 +10656,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser@npm:^5.44.1":
-  version: 5.44.1
-  resolution: "terser@npm:5.44.1"
+"terser@npm:^5.48.0":
+  version: 5.48.0
+  resolution: "terser@npm:5.48.0"
   dependencies:
     "@jridgewell/source-map": "npm:^0.3.3"
     acorn: "npm:^8.15.0"
@@ -10459,7 +10666,7 @@ __metadata:
     source-map-support: "npm:~0.5.20"
   bin:
     terser: bin/terser
-  checksum: 10c0/ee7a76692cb39b1ed22c30ff366c33ff3c977d9bb769575338ff5664676168fcba59192fb5168ef80c7cd901ef5411a1b0351261f5eaa50decf0fc71f63bde75
+  checksum: 10c0/d6ee713ea09a2b83b461ccbf1b76bd673a5090b3076ec13db7edc6d6470ab940d21c87b8d1ad82523b7cf02d9be07393fcdd334bde8f589e9bc3804da6fc32d2
   languageName: node
   linkType: hard
 
@@ -10853,9 +11060,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"update-browserslist-db@npm:^1.1.3":
-  version: 1.1.3
-  resolution: "update-browserslist-db@npm:1.1.3"
+"update-browserslist-db@npm:^1.2.3":
+  version: 1.2.3
+  resolution: "update-browserslist-db@npm:1.2.3"
   dependencies:
     escalade: "npm:^3.2.0"
     picocolors: "npm:^1.1.1"
@@ -10863,21 +11070,7 @@ __metadata:
     browserslist: ">= 4.21.0"
   bin:
     update-browserslist-db: cli.js
-  checksum: 10c0/682e8ecbf9de474a626f6462aa85927936cdd256fe584c6df2508b0df9f7362c44c957e9970df55dfe44d3623807d26316ea2c7d26b80bb76a16c56c37233c32
-  languageName: node
-  linkType: hard
-
-"update-browserslist-db@npm:^1.1.4":
-  version: 1.1.4
-  resolution: "update-browserslist-db@npm:1.1.4"
-  dependencies:
-    escalade: "npm:^3.2.0"
-    picocolors: "npm:^1.1.1"
-  peerDependencies:
-    browserslist: ">= 4.21.0"
-  bin:
-    update-browserslist-db: cli.js
-  checksum: 10c0/db0c9aaecf1258a6acda5e937fc27a7996ccca7a7580a1b4aa8bba6a9b0e283e5e65c49ebbd74ec29288ef083f1b88d4da13e3d4d326c1e5fc55bf72d7390702
+  checksum: 10c0/13a00355ea822388f68af57410ce3255941d5fb9b7c49342c4709a07c9f230bbef7f7499ae0ca7e0de532e79a82cc0c4edbd125f1a323a1845bf914efddf8bec
   languageName: node
   linkType: hard
 
@@ -10966,13 +11159,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"watchpack@npm:^2.4.4":
-  version: 2.4.4
-  resolution: "watchpack@npm:2.4.4"
+"watchpack@npm:^2.5.2":
+  version: 2.5.2
+  resolution: "watchpack@npm:2.5.2"
   dependencies:
-    glob-to-regexp: "npm:^0.4.1"
     graceful-fs: "npm:^4.1.2"
-  checksum: 10c0/6c0901f75ce245d33991225af915eea1c5ae4ba087f3aee2b70dd377d4cacb34bef02a48daf109da9d59b2d31ec6463d924a0d72f8618ae1643dd07b95de5275
+  checksum: 10c0/8290e89f03e1e7136e1ef9b8d04bd03822963fa4b442781a40999e7b9ba29ab333a7a5285312b2d4f3e91bc8c5c526cf1f91f5ce0e857dafe56db28ab1c17dca
   languageName: node
   linkType: hard
 
@@ -11047,48 +11239,45 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-sources@npm:^3.3.3":
-  version: 3.3.3
-  resolution: "webpack-sources@npm:3.3.3"
-  checksum: 10c0/ab732f6933b513ba4d505130418995ddef6df988421fccf3289e53583c6a39e205c4a0739cee98950964552d3006604912679c736031337fb4a9d78d8576ed40
+"webpack-sources@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "webpack-sources@npm:3.5.0"
+  checksum: 10c0/f186eb66ffe245479e7f78c1c202d79584d5b65cc2bc4a6175ff952cdc8840872b1a95e6305078b1286324a19527213935e7d10b53192a9f74c0e0e148e55cb0
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.102.1":
-  version: 5.102.1
-  resolution: "webpack@npm:5.102.1"
+"webpack@npm:^5.108.1":
+  version: 5.108.1
+  resolution: "webpack@npm:5.108.1"
   dependencies:
-    "@types/eslint-scope": "npm:^3.7.7"
     "@types/estree": "npm:^1.0.8"
     "@types/json-schema": "npm:^7.0.15"
     "@webassemblyjs/ast": "npm:^1.14.1"
     "@webassemblyjs/wasm-edit": "npm:^1.14.1"
     "@webassemblyjs/wasm-parser": "npm:^1.14.1"
-    acorn: "npm:^8.15.0"
+    acorn: "npm:^8.16.0"
     acorn-import-phases: "npm:^1.0.3"
-    browserslist: "npm:^4.26.3"
+    browserslist: "npm:^4.28.1"
     chrome-trace-event: "npm:^1.0.2"
-    enhanced-resolve: "npm:^5.17.3"
-    es-module-lexer: "npm:^1.2.1"
+    enhanced-resolve: "npm:^5.22.2"
+    es-module-lexer: "npm:^2.1.0"
     eslint-scope: "npm:5.1.1"
     events: "npm:^3.2.0"
-    glob-to-regexp: "npm:^0.4.1"
     graceful-fs: "npm:^4.2.11"
-    json-parse-even-better-errors: "npm:^2.3.1"
-    loader-runner: "npm:^4.2.0"
-    mime-types: "npm:^2.1.27"
+    loader-runner: "npm:^4.3.2"
+    mime-db: "npm:^1.54.0"
+    minimizer-webpack-plugin: "npm:^5.6.1"
     neo-async: "npm:^2.6.2"
     schema-utils: "npm:^4.3.3"
     tapable: "npm:^2.3.0"
-    terser-webpack-plugin: "npm:^5.3.11"
-    watchpack: "npm:^2.4.4"
-    webpack-sources: "npm:^3.3.3"
+    watchpack: "npm:^2.5.2"
+    webpack-sources: "npm:^3.5.0"
   peerDependenciesMeta:
     webpack-cli:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 10c0/74c3afeef50a5414e58399f1c0123fe5cdb3d8d081c206fae74b8334097d5ff6b729147154dbb4af48e662ba756a89e06d550b3390917153fa1d7ce285f96777
+  checksum: 10c0/40309a92fac7a5e539442f534da48f684bae3e9ccd17069100862301e4d2efc92e8133df6374d3b1dc115dbdc0fd5d2518729acd5e8c3b791737ae41db7ac1c3
   languageName: node
   linkType: hard
 
@@ -11391,12 +11580,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.8.1":
-  version: 2.8.1
-  resolution: "yaml@npm:2.8.1"
+"yaml@npm:^2.8.3":
+  version: 2.9.0
+  resolution: "yaml@npm:2.9.0"
   bin:
     yaml: bin.mjs
-  checksum: 10c0/7c587be00d9303d2ae1566e03bc5bc7fe978ba0d9bf39cc418c3139d37929dfcb93a230d9749f2cb578b6aa5d9ebebc322415e4b653cb83acd8bc0bc321707f3
+  checksum: 10c0/f340718df45e97a9551b9bf9dac61c80050bc464513b710debfb5067c380c8472e3b67809cffacb4ab5ffb5e66ef9310816c88b05f371cec60abfedd8c88e0a2
   languageName: node
   linkType: hard
 
