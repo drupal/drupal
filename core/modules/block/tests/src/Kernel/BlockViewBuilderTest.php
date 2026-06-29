@@ -146,6 +146,37 @@ class BlockViewBuilderTest extends KernelTestBase {
   }
 
   /**
+   * Tests that #attributes are pulled up when no #type or #theme is set.
+   *
+   * This covers the BC case where a block plugin returns a plain render array
+   * (no #type, no #theme) with #attributes at the top level. Those attributes
+   * must be hoisted to the block wrapper element.
+   *
+   * @see \Drupal\block\BlockViewBuilder::preRender()
+   */
+  public function testAttributesPulledUpWithoutTypeOrTheme(): void {
+    \Drupal::keyValue('block_test')->set('content', 'Block content');
+    \Drupal::keyValue('block_test')->set('attributes', ['class' => ['my-wrapper-class'], 'data-foo' => 'bar']);
+
+    $entity = $this->controller->create([
+      'id' => 'test_block_attrs',
+      'theme' => 'stark',
+      'plugin' => 'test_html',
+    ]);
+    $entity->save();
+
+    $builder = \Drupal::entityTypeManager()->getViewBuilder('block');
+    $output = $builder->view($entity, 'block');
+    $rendered = (string) $this->renderer->renderRoot($output);
+
+    // The wrapper <div> must carry the plugin's #attributes.
+    $this->assertStringContainsString('my-wrapper-class', $rendered);
+    $this->assertStringContainsString('data-foo="bar"', $rendered);
+    // The inner content must still be present.
+    $this->assertStringContainsString('Block content', $rendered);
+  }
+
+  /**
    * Tests block render cache handling.
    */
   public function testBlockViewBuilderCache(): void {
