@@ -12,9 +12,6 @@
         "composer/semver": "~3.4.4",
         "doctrine/lexer": "~3.0.1",
         "egulias/email-validator": "~4.0.4",
-        "guzzlehttp/guzzle": "~7.12.1",
-        "guzzlehttp/promises": "~2.5.0",
-        "guzzlehttp/psr7": "~2.12.1",
         "justinrainbow/json-schema": "~6.8.2",
         "marc-mabe/php-enum": "~v4.7.2",
         "masterminds/html5": "~2.10.0",
@@ -43,15 +40,6 @@
         "symfony/http-kernel": "~v7.4.13",
         "symfony/mailer": "~v7.4.12",
         "symfony/mime": "~v7.4.13",
-        "symfony/polyfill-ctype": "~v1.37.0",
-        "symfony/polyfill-iconv": "~v1.37.0",
-        "symfony/polyfill-intl-grapheme": "~v1.38.1",
-        "symfony/polyfill-intl-idn": "~v1.38.1",
-        "symfony/polyfill-intl-normalizer": "~v1.38.0",
-        "symfony/polyfill-mbstring": "~v1.38.1",
-        "symfony/polyfill-php84": "~v1.38.1",
-        "symfony/polyfill-php85": "~v1.38.1",
-        "symfony/polyfill-php86": "~v1.38.0",
         "symfony/process": "~v7.4.13",
         "symfony/psr-http-message-bridge": "~v7.4.8",
         "symfony/routing": "~v7.4.13",
@@ -63,9 +51,7 @@
         "symfony/validator": "~v7.4.10",
         "symfony/var-dumper": "~v7.4.8",
         "symfony/var-exporter": "~v7.4.9",
-        "symfony/yaml": "~v7.4.13",
-        "twig/html-extra": "~v3.24.0",
-        "twig/twig": "~v3.27.1"
+        "symfony/yaml": "~v7.4.13"
     },
     "extra": {
         "branch-alias": {
