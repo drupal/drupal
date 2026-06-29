@@ -242,6 +242,12 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
         $build['#attributes'] += $content['#wrapper_attributes'];
         unset($content['#wrapper_attributes']);
       }
+      // For BC, if wrapper attributes are not set, and the top-level render
+      // element has neither type nor theme, still pull up the attributes.
+      elseif (!isset($content['#type']) && !isset($content['#theme']) && isset($content['#attributes'])) {
+        $build['#attributes'] += $content['#attributes'];
+        unset($content['#attributes']);
+      }
       $build['content'] = $content;
     }
     // Either the block's content is completely empty, or it consists only of
