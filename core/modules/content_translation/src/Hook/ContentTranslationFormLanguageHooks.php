@@ -104,7 +104,13 @@ class ContentTranslationFormLanguageHooks {
                 '#default_value' => $definition->isTranslatable(),
               ];
               // Display the column translatability configuration widget.
-              $column_element = $this->fieldSyncWidget->widget($definition, "settings[{$entity_type_id}][{$bundle}][columns][{$field_name}]");
+              // Base field definitions do not carry third-party settings.
+              // Use the bundle-level config wrapper so sync options are
+              // available even before a BaseFieldOverride is explicitly saved.
+              $field_for_sync_widget = $definition->getFieldStorageDefinition()->isBaseField()
+                ? $definition->getConfig($bundle)
+                : $definition;
+              $column_element = $this->fieldSyncWidget->widget($field_for_sync_widget, "settings[{$entity_type_id}][{$bundle}][columns][{$field_name}]");
               if ($column_element) {
                 $form['settings'][$entity_type_id][$bundle]['columns'][$field_name] = $column_element;
               }
