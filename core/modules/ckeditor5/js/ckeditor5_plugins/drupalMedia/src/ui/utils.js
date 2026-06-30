@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
-import { BalloonPanelView } from 'ckeditor5/src/ui';
+import { BalloonPanelView } from 'ckeditor5';
 import { getClosestSelectedDrupalMediaWidget } from '../utils';
 
 /**

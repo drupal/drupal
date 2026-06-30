@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { Plugin } from 'ckeditor5/src/core';
+import { Plugin } from 'ckeditor5';
 
 /**
  * Provides a toolbar item for inserting images.

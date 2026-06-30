@@ -1,9 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:ignore drupallinkmediaediting linkediting linkimageediting linkcommand */
-import { Plugin } from 'ckeditor5/src/core';
-import { Matcher } from 'ckeditor5/src/engine';
-import { toMap } from 'ckeditor5/src/utils';
-
+import { Plugin, Matcher, toMap } from 'ckeditor5';
 /**
  * Returns the first drupal-media element in a given view element.
  *

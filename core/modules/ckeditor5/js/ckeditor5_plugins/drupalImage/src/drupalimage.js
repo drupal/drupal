@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:ignore drupalimageediting drupalimagealternativetext */
 
-import { Plugin } from 'ckeditor5/src/core';
+import { Plugin } from 'ckeditor5';
 import DrupalImageEditing from './drupalimageediting';
 import DrupalImageAlternativeText from './drupalimagealternativetext';
 

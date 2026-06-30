@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { Plugin } from 'ckeditor5/src/core';
+import { Plugin } from 'ckeditor5';
 
 /**
  * Adds Drupal-specific attributes to the CKEditor 5 image element.

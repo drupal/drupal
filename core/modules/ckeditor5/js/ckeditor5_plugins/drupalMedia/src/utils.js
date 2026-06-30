@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 // cspell:ignore documentselection
-import { isWidget } from 'ckeditor5/src/widget';
+import { isWidget } from 'ckeditor5';
 
 /**
  * Checks if the provided model element is `drupalMedia`.

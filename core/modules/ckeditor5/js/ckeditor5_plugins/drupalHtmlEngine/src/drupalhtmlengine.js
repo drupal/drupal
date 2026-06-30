@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 // cspell:ignore drupalhtmlwriter
-import { Plugin } from 'ckeditor5/src/core';
+import { Plugin } from 'ckeditor5';
 import DrupalHtmlWriter from './drupalhtmlwriter';
 
 /**

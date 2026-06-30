@@ -3,8 +3,7 @@
 /* cspell:ignore imagetextalternative insertdrupalmedia */
 /* cspell:ignore insertdrupalmediacommand mediaimagetextalternative */
 
-import { Plugin } from 'ckeditor5/src/core';
-import { toWidget, Widget } from 'ckeditor5/src/widget';
+import { Plugin, toWidget, Widget } from 'ckeditor5';
 
 import InsertDrupalMediaCommand from './insertdrupalmedia';
 import { getPreviewContainer, isDrupalMedia } from './utils';

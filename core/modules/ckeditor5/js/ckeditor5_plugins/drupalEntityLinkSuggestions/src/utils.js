@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { findAttributeRange } from 'ckeditor5/src/typing';
+import { findAttributeRange } from 'ckeditor5';
 
 /**
  * Returns a link range based on selection from

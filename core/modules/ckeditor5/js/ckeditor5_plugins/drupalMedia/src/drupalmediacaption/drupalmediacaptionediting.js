@@ -1,8 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:ignore insertdrupalmedia JSONified drupalmediacaptioncommand downcasted */
-import { Plugin } from 'ckeditor5/src/core';
-import { ModelElement, enableViewPlaceholder } from 'ckeditor5/src/engine';
-import { toWidgetEditable } from 'ckeditor5/src/widget';
+import {
+  Plugin,
+  ModelElement,
+  enableViewPlaceholder,
+  toWidgetEditable,
+} from 'ckeditor5';
 import { isDrupalMedia } from '../utils';
 import ToggleDrupalMediaCaptionCommand from './drupalmediacaptioncommand';
 

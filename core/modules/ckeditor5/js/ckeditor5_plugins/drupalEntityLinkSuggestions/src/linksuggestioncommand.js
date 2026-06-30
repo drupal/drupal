@@ -1,7 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
-import { Command } from 'ckeditor5/src/core';
-import { first } from 'ckeditor5/src/utils';
+import { Command, first } from 'ckeditor5';
 
 export default class DrupalEntityLinkSuggestionMetadataCommand extends Command {
   refresh() {

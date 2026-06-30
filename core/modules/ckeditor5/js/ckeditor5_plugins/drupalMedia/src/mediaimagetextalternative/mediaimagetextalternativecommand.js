@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { Command } from 'ckeditor5/src/core';
+import { Command } from 'ckeditor5';
 import { getClosestSelectedDrupalMediaElement } from '../utils';
 import { METADATA_ERROR } from './utils';
 

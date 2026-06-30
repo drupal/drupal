@@ -1,9 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:ignore uploadurl drupalimageuploadadapter  */
 
-import { Plugin } from 'ckeditor5/src/core';
-import { FileRepository } from 'ckeditor5/src/upload';
-import { logWarning } from 'ckeditor5/src/utils';
+import { Plugin, logWarning, FileRepository } from 'ckeditor5';
 import DrupalImageUploadAdapter from './drupalimageuploadadapter';
 
 /**

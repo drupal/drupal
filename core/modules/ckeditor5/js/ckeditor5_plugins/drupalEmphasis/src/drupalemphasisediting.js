@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { Plugin } from 'ckeditor5/src/core';
+import { Plugin } from 'ckeditor5';
 
 /**
  * Alters the italic command to output `<em>` instead of `<i>`.

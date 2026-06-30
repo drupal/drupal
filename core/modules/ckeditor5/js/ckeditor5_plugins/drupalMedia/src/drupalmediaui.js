@@ -1,8 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 // cspell:ignore medialibrary
 
-import { Plugin } from 'ckeditor5/src/core';
-import { ButtonView } from 'ckeditor5/src/ui';
+import { Plugin, ButtonView } from 'ckeditor5';
 // cspell:ignore medialibrary
 import mediaIcon from '../theme/icons/medialibrary.svg';
 

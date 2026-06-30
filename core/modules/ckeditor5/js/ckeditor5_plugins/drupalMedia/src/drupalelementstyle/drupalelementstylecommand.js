@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:ignore drupalelementstyle drupalelementstylecommand */
-import { Command } from 'ckeditor5/src/core';
+import { Command } from 'ckeditor5';
 import { getClosestElementWithElementStyleAttribute } from './utils';
 import { groupNameToModelAttributeKey } from '../utils';
 

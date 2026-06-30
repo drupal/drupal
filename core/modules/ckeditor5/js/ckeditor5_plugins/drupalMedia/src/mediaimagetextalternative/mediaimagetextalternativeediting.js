@@ -3,8 +3,7 @@
 /* cspell:ignore mediaimagetextalternative mediaimagetextalternativecommand */
 /* cspell:ignore mediaimagetextalternativeediting */
 
-import { Plugin } from 'ckeditor5/src/core';
-import { Template } from 'ckeditor5/src/ui';
+import { Plugin, Template } from 'ckeditor5';
 import MediaImageTextAlternativeCommand from './mediaimagetextalternativecommand';
 import DrupalMediaMetadataRepository from '../drupalmediametadatarepository';
 import { METADATA_ERROR } from './utils';

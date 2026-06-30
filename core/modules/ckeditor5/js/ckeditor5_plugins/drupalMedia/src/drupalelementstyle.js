@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:ignore drupalelementstyle drupalelementstyleui drupalelementstyleediting imagestyle drupalmediatoolbar drupalmediaediting */
-import { Plugin } from 'ckeditor5/src/core';
+import { Plugin } from 'ckeditor5';
 import DrupalElementStyleUi from './drupalelementstyle/drupalelementstyleui';
 import DrupalElementStyleEditing from './drupalelementstyle/drupalelementstyleediting';
 

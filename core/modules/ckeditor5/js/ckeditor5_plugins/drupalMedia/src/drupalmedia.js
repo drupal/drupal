@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:ignore drupalmediaediting drupalmediageneralhtmlsupport drupalmediaui drupalmediatoolbar mediaimagetextalternative */
 
-import { Plugin } from 'ckeditor5/src/core';
+import { Plugin } from 'ckeditor5';
 import DrupalMediaEditing from './drupalmediaediting';
 import DrupalMediaUI from './drupalmediaui';
 import DrupalMediaToolbar from './drupalmediatoolbar';
