@@ -1,6 +1,6 @@
 # Schema for the Content Translation module.
 
-field.field.*.*.*.third_party.content_translation:
+content_translation_field_third_party_settings:
   type: mapping
   label: 'Content translation field settings'
   mapping:
@@ -10,6 +10,12 @@ field.field.*.*.*.third_party.content_translation:
       sequence:
         type: string
         label: 'Field column for which to synchronize translations'
+
+core.base_field_override.*.*.*.third_party.content_translation:
+  type: content_translation_field_third_party_settings
+
+field.field.*.*.*.third_party.content_translation:
+  type: content_translation_field_third_party_settings
 
 language.content_settings.*.*.third_party.content_translation:
   type: mapping
