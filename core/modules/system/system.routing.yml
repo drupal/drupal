@@ -7,14 +7,6 @@ system.cron:
   requirements:
     _access_system_cron: 'TRUE'
 
-system.site_information_settings:
-  path: '/admin/config/system/site-information'
-  defaults:
-    _form: '\Drupal\system\Form\SiteInformationForm'
-    _title: 'Basic site settings'
-  requirements:
-    _permission: 'administer site configuration'
-
 system.cron_settings:
   path: '/admin/config/system/cron'
   defaults:

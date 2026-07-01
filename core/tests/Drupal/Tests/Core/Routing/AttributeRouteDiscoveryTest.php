@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Routing;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Core\Routing\AttributeRouteDiscovery;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\router_test\Controller\TestAttributes;
 use Drupal\router_test\Controller\TestClassAttribute;
+use Drupal\router_test\Form\TestRouteAttributeForm;
 use Drupal\Tests\UnitTestCase;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
@@ -67,6 +70,74 @@ class AttributeRouteDiscoveryTest extends UnitTestCase {
     $this->assertSame('/test_method_attribute-other-path', $route3->getPath());
     $this->assertSame(TestAttributes::class . '::attributeMethod', $route3->getDefault('_controller'));
     $this->assertSame("TRUE", $route3->getRequirement('_access'));
+
+    $formRoute = $this->routeCollection->get('router_test.form_route');
+    $this->assertNotNull($formRoute);
+    $this->assertSame('/test-form-route', $formRoute->getPath());
+    $this->assertSame(TestRouteAttributeForm::class, $formRoute->getDefault('_form'));
+    $this->assertSame('router_test.form_route', $this->routeCollection->getAlias(TestRouteAttributeForm::class)->getId());
+
+    $this->assertNull($this->routeCollection->get('router_test.invalid_controller_route'));
+
+    // Since Route attributes on form class methods are not supported, add a
+    // virtual form class that has a Route attribute on a method to confirm
+    // there that there is an AssertionError thrown.
+    vfsStream::setup('router_test_invalid');
+    vfsStream::create([
+      'src' => [
+        'Form' => [
+          'TestRouteInvalidAttributeForm.php' => '',
+        ],
+      ],
+    ]);
+
+    file_put_contents('vfs://router_test_invalid/src/Form/TestRouteInvalidAttributeForm.php', <<<'EOF'
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\router_test_invalid\Form;
+
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\Routing\Attribute\Route;
+
+class TestRouteInvalidAttributeForm extends FormBase {
+
+  public function getFormId(): string {
+    return 'invalid_router_test';
+  }
+
+  public function buildForm(array $form, FormStateInterface $form_state): array {
+    return $form;
+  }
+
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  }
+
+  #[Route(
+    path: '/invalid-form-method-route',
+    name: 'router_test.invalid_form_method_route',
+  )]
+  public function invalidFormMethodRoute(): array {
+    return [];
+  }
+
+}
+
+EOF
+    );
+    $event = new RouteBuildEvent(new RouteCollection());
+    $namespaces = new \ArrayObject([
+      'Drupal\router_test_invalid' => vfsStream::url('router_test_invalid/src'),
+    ]);
+    $additionalClassLoader = new ClassLoader();
+    $additionalClassLoader->addPsr4("Drupal\\router_test_invalid\\", vfsStream::url('router_test_invalid/src'));
+    $additionalClassLoader->register(TRUE);
+    $discovery = new AttributeRouteDiscovery($namespaces);
+    $this->expectException(\AssertionError::class);
+    $this->expectExceptionMessage('Route attributes can not target methods on class Drupal\router_test_invalid\Form\TestRouteInvalidAttributeForm. Use the attribute on the form class itself.');
+    $discovery->onRouteBuild($event);
   }
 
   /**
