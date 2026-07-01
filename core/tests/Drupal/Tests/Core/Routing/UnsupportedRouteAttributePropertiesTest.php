@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Routing;
 
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\AttributeRouteDiscovery;
 use Drupal\Core\Routing\UnsupportedRouteAttributePropertyException;
 use Drupal\Tests\UnitTestCase;
@@ -23,13 +25,13 @@ class UnsupportedRouteAttributePropertiesTest extends UnitTestCase {
    * @legacy-covers ::createRouteCollection
    */
   #[DataProvider('providerTestException')]
-  public function testException(string $class, string $message): void {
+  public function testException(string $class, string $message, bool $isForm = FALSE): void {
     $discovery = new AttributeRouteDiscovery(new \ArrayIterator());
     $reflection = new \ReflectionClass($discovery);
-    $method = $reflection->getMethod('createRouteCollection');
+    $method = $reflection->getMethod($isForm ? 'createFormRouteCollection' : 'createControllerRouteCollection');
     $this->expectException(UnsupportedRouteAttributePropertyException::class);
     $this->expectExceptionMessage($message);
-    $method->invoke($discovery, $class);
+    $method->invoke($discovery, new \ReflectionClass($class));
   }
 
   public static function providerTestException(): array {
@@ -61,6 +63,26 @@ class UnsupportedRouteAttributePropertiesTest extends UnitTestCase {
       'class: condition' => [
         ClassRouteCondition::class,
         'The "condition" route attribute is not supported in class "Drupal\Tests\Core\Routing\ClassRouteCondition"',
+      ],
+      'form_class: name' => [
+        FormClassMissingName::class,
+        'The Route attribute on "Drupal\Tests\Core\Routing\FormClassMissingName" is missing a required "name" property.',
+        TRUE,
+      ],
+      'form_class: locale' => [
+        FormClassRouteLocale::class,
+        'The "locale" route attribute is not supported on route "form_class_route_locale" in "Drupal\Tests\Core\Routing\FormClassRouteLocale"',
+        TRUE,
+      ],
+      'form_class: localized_paths' => [
+        FormClassRouteLocalizedPaths::class,
+        'The "path" route attribute does not support arrays on route "form_class_route_localized_paths" in "Drupal\Tests\Core\Routing\FormClassRouteLocalizedPaths"',
+        TRUE,
+      ],
+      'form_class: condition' => [
+        FormClassRouteCondition::class,
+        'The "condition" route attribute is not supported on route "form_class_route_condition" in "Drupal\Tests\Core\Routing\FormClassRouteCondition"',
+        TRUE,
       ],
     ];
   }
@@ -151,6 +173,127 @@ class MethodRouteMissingName {
   #[Route('/test_method_attribute')]
   public function attributeMethod(): array {
     return ['#markup' => 'Testing method with a Route attribute'];
+  }
+
+}
+
+/**
+ * Test class.
+ */
+#[Route('/no-route-name')]
+class FormClassMissingName extends FormBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId(): string {
+    return '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  }
+
+}
+
+/**
+ * Test class.
+ */
+#[Route(
+  name: 'form_class_route_locale',
+  locale: 'de',
+)]
+class FormClassRouteLocale extends FormBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId(): string {
+    return '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  }
+
+}
+
+/**
+ * Test class.
+ */
+#[Route(
+  path: ['de' => 'prefix/'],
+  name: 'form_class_route_localized_paths',
+)]
+class FormClassRouteLocalizedPaths extends FormBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId(): string {
+    return '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
+  }
+
+}
+
+/**
+ * Test class.
+ */
+#[Route(
+  name: 'form_class_route_condition',
+  condition: "context.getMethod() == 'GET'"),
+]
+class FormClassRouteCondition extends FormBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId(): string {
+    return '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
   }
 
 }

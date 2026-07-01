@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Routing;
 
+use Drupal\Component\Assertion\Inspector;
+use Drupal\Core\Form\FormInterface;
 use Symfony\Component\Routing\Attribute\DeprecatedAlias;
 use Symfony\Component\Routing\Attribute\Route as RouteAttribute;
 use Symfony\Component\Routing\Exception\InvalidArgumentException;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -37,24 +38,34 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
    * {@inheritdoc}
    */
   protected function collectRoutes(): iterable {
+    $routeTypes = [
+      'Controller' => $this->createControllerRouteCollection(...),
+      'Form' => $this->createFormRouteCollection(...),
+    ];
+
     foreach ($this->namespaces as $namespace => $directory) {
-      $directory .= '/Controller';
-      $namespace .= '\\Controller';
-      if (is_dir($directory)) {
-        $iterator = new \RecursiveIteratorIterator(
-          new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
-        );
-        foreach ($iterator as $fileinfo) {
-          if ($fileinfo->getExtension() == 'php') {
-            // Skip files that do not contain a Route attribute.
-            $contents = file_get_contents($fileinfo->getPathname());
-            if (!str_contains($contents, '#[Route') && !str_contains($contents, 'Routing\\Attribute\\Route')) {
-              continue;
+      foreach ($routeTypes as $routeType => $factory) {
+        $routeDirectory = $directory . '/' . $routeType;
+        $routeNamespace = $namespace . '\\' . $routeType;
+        if (is_dir($routeDirectory)) {
+          $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($routeDirectory, \RecursiveDirectoryIterator::SKIP_DOTS)
+          );
+          foreach ($iterator as $fileinfo) {
+            if ($fileinfo->getExtension() == 'php') {
+              // Skip files that do not contain a Route attribute.
+              $contents = file_get_contents($fileinfo->getPathname());
+              if (!str_contains($contents, '#[Route') && !str_contains($contents, 'Routing\\Attribute\\Route')) {
+                continue;
+              }
+              $subPath = $iterator->getSubIterator()->getSubPath();
+              $subPath = $subPath ? str_replace(DIRECTORY_SEPARATOR, '\\', $subPath) . '\\' : '';
+              $class = $routeNamespace . '\\' . $subPath . $fileinfo->getBasename('.php');
+              $reflectionClass = $this->getReflectionClass($class);
+              if ($reflectionClass !== NULL) {
+                yield $factory($reflectionClass);
+              }
             }
-            $subPath = $iterator->getSubIterator()->getSubPath();
-            $subPath = $subPath ? str_replace(DIRECTORY_SEPARATOR, '\\', $subPath) . '\\' : '';
-            $class = $namespace . '\\' . $subPath . $fileinfo->getBasename('.php');
-            yield $this->createRouteCollection($class);
           }
         }
       }
@@ -62,34 +73,16 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
   }
 
   /**
-   * Creates a route collection from a class's attributed methods.
+   * Creates a route collection from a controller class's attributed methods.
    *
-   * @param class-string $className
-   *   The class to generate a route collection for.
+   * @param \ReflectionClass<object> $class
+   *   The reflection object of the class to generate a route collection for.
    *
    * @return \Symfony\Component\Routing\RouteCollection
    *   The route collection.
    */
-  private function createRouteCollection(string $className): RouteCollection {
+  private function createControllerRouteCollection(\ReflectionClass $class): RouteCollection {
     $collection = new RouteCollection();
-
-    try {
-      if (!class_exists($className)) {
-        // In Symfony code this triggers an exception. It is removed here
-        // because Drupal already has traits, interfaces and other things in
-        // this folder. Alternatively, we could remove this if clause and then
-        // check what the resulting reflection object is.
-        return $collection;
-      }
-    }
-    catch (\Error) {
-      return $collection;
-    }
-    $class = new \ReflectionClass($className);
-    if ($class->isAbstract()) {
-      return $collection;
-    }
-
     $globals = $this->getGlobals($class);
     $fqcnAlias = FALSE;
 
@@ -104,10 +97,13 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
     foreach ($class->getMethods() as $method) {
       $routeNamesBefore = array_keys($collection->all());
       foreach ($this->getAttributes($method) as $attribute) {
-        $this->addRoute($collection, $attribute, $globals, $class, $method);
+        $controllerName = $class->getName() . '::' . $method->getName();
         if ($method->name === '__invoke') {
           $fqcnAlias = TRUE;
+          $controllerName = $class->getName();
         }
+        $attribute->defaults = ['_controller' => $controllerName] + $attribute->defaults;
+        $this->addRoute($collection, $attribute, $globals, $class, $method);
       }
 
       if ($collection->count() - \count($routeNamesBefore) === 1) {
@@ -119,9 +115,10 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
     }
 
     // See https://symfony.com/doc/current/controller/service.html#invokable-controllers.
-    if ($collection->count() && $class->hasMethod('__invoke') === 0) {
+    if ($collection->count() === 0 && $class->hasMethod('__invoke')) {
       $globals = $this->resetGlobals();
       foreach ($this->getAttributes($class) as $attribute) {
+        $attribute->defaults = ['_controller' => $class->getName()] + $attribute->defaults;
         $this->addRoute($collection, $attribute, $globals, $class, $class->getMethod('__invoke'));
         $fqcnAlias = TRUE;
       }
@@ -139,6 +136,37 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
     }
 
     return $collection;
+  }
+
+  /**
+   * Gets a reflection class from the class name.
+   *
+   * @param class-string $className
+   *   The class to reflect.
+   *
+   * @return \ReflectionClass<object>|null
+   *   The Reflection class, is the class is a valid to check for routes,
+   *   otherwise NULL. A class is invalid if there is an error on Reflection or
+   *   if it is abstract.
+   */
+  private function getReflectionClass(string $className): ?\ReflectionClass {
+    try {
+      $exists = class_exists($className);
+    }
+    catch (\Error) {
+      // Ignore errors if a class extends a missing class, interface,
+      // or trait.
+      return NULL;
+    }
+
+    if ($exists) {
+      $class = new \ReflectionClass($className);
+      if (!$class->isAbstract()) {
+        return $class;
+      }
+    }
+
+    return NULL;
   }
 
   /**
@@ -185,11 +213,11 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
         }
       }
 
-      if ($attribute->schemes !== NULL) {
+      if (!empty($attribute->schemes)) {
         $globals['schemes'] = $attribute->schemes;
       }
 
-      if ($attribute->methods !== NULL) {
+      if (!empty($attribute->methods)) {
         $globals['methods'] = $attribute->methods;
       }
 
@@ -214,40 +242,87 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
   }
 
   /**
+   * Creates a route collection from a form class's attributed methods.
+   *
+   * @param \ReflectionClass<object> $class
+   *   The reflection object of the class to generate a route collection for.
+   *
+   * @return \Symfony\Component\Routing\RouteCollection
+   *   The route collection.
+   */
+  private function createFormRouteCollection(\ReflectionClass $class): RouteCollection {
+    $collection = new RouteCollection();
+    if (!$class->implementsInterface(FormInterface::class)) {
+      return $collection;
+    }
+
+    foreach ($this->getAttributes($class) as $attribute) {
+      $attribute->defaults = ['_form' => $class->getName()] + $attribute->defaults;
+      $this->addRoute($collection, $attribute, $this->resetGlobals(), $class);
+      $formRouteName = $attribute->name;
+    }
+    // If there is only one route defined for the form class, add the class name
+    // as an alias for the route.
+    if (count($collection) === 1 && isset($formRouteName)) {
+      $collection->addAlias($class->getName(), $formRouteName);
+    }
+
+    // Route attributes on form class methods are not supported.
+    assert(
+      Inspector::assertAll(
+        fn($method) => $this->getAttributes($method)->key() === NULL,
+        $class->getMethods()
+      ),
+      sprintf('Route attributes can not target methods on class %s. Use the attribute on the form class itself.', $class->getName())
+    );
+
+    return $collection;
+  }
+
+  /**
    * Adds a route to the provided route collection.
    *
    * @param \Symfony\Component\Routing\RouteCollection $collection
    *   The route collection to add the route to.
-   * @param \Symfony\Component\Routing\Annotation\Route $attribute
+   * @param \Symfony\Component\Routing\Attribute\Route $attribute
    *   The attribute object that describes the route.
    * @param array $globals
    *   The defaults for the class.
    * @param \ReflectionClass $class
    *   The class.
-   * @param \ReflectionMethod $method
+   * @param \ReflectionMethod|null $method
    *   The attributed method.
    */
-  private function addRoute(RouteCollection $collection, RouteAttribute $attribute, array $globals, \ReflectionClass $class, \ReflectionMethod $method): void {
+  private function addRoute(RouteCollection $collection, RouteAttribute $attribute, array $globals, \ReflectionClass $class, ?\ReflectionMethod $method = NULL): void {
+    if ($class->implementsInterface(FormInterface::class)) {
+      $classMethod = $class->getName();
+    }
+    elseif ($method !== NULL) {
+      $classMethod = $class->getName() . '::' . $method->getName() . '()';
+    }
+    else {
+      throw new \InvalidArgumentException('Method must be specified on non-form routes.');
+    }
     if ($attribute->name === NULL) {
-      throw new UnsupportedRouteAttributePropertyException(sprintf('The Route attribute on "%s::%s()" is missing a required "name" property.', $class->getName(), $method->getName()));
+      throw new UnsupportedRouteAttributePropertyException(sprintf('The Route attribute on "%s" is missing a required "name" property.', $classMethod));
     }
     $name = $globals['name'] . $attribute->name;
 
     if (is_array($attribute->path)) {
-      throw new UnsupportedRouteAttributePropertyException(sprintf('The "%s" route attribute does not support arrays on route "%s" in "%s::%s()"', "path", $name, $class->getName(), $method->getName()));
+      throw new UnsupportedRouteAttributePropertyException(sprintf('The "%s" route attribute does not support arrays on route "%s" in "%s"', "path", $name, $classMethod));
     }
     if (!empty($attribute->defaults['_locale'])) {
-      throw new UnsupportedRouteAttributePropertyException(sprintf('The "%s" route attribute is not supported on route "%s" in "%s::%s()"', "locale", $name, $class->getName(), $method->getName()));
+      throw new UnsupportedRouteAttributePropertyException(sprintf('The "%s" route attribute is not supported on route "%s" in "%s"', "locale", $name, $classMethod));
     }
     if ($attribute->condition !== NULL) {
-      throw new UnsupportedRouteAttributePropertyException(sprintf('The "%s" route attribute is not supported on route "%s" in "%s::%s()"', "condition", $name, $class->getName(), $method->getName()));
+      throw new UnsupportedRouteAttributePropertyException(sprintf('The "%s" route attribute is not supported on route "%s" in "%s"', "condition", $name, $classMethod));
     }
 
     $requirements = $attribute->requirements;
 
     foreach ($requirements as $placeholder => $requirement) {
       if (\is_int($placeholder)) {
-        throw new \InvalidArgumentException(sprintf('A placeholder name must be a string (%d given). Did you forget to specify the placeholder key for the requirement "%s" of route "%s" in "%s::%s()"?', $placeholder, $requirement, $name, $class->getName(), $method->getName()));
+        throw new \InvalidArgumentException(sprintf('A placeholder name must be a string (%d given). Did you forget to specify the placeholder key for the requirement "%s" of route "%s" in "%s"?', $placeholder, $requirement, $name, $classMethod));
       }
     }
 
@@ -264,7 +339,6 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
     $prefix = $globals['path'];
 
     $route = $this->createRoute($prefix . $path, $defaults, $requirements, $options, $host, $schemes, $methods, NULL);
-    $this->configureRoute($route, $class, $method);
     $collection->add($name, $route, $priority);
     foreach ($attribute->aliases as $aliasAttribute) {
       if ($aliasAttribute instanceof DeprecatedAlias) {
@@ -290,28 +364,9 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
    * @return iterable<int, RouteAttribute>
    *   The attributes.
    */
-  private function getAttributes(\ReflectionClass|\ReflectionMethod $reflection): iterable {
+  private function getAttributes(\ReflectionClass|\ReflectionMethod $reflection): \Generator {
     foreach ($reflection->getAttributes(RouteAttribute::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
       yield $attribute->newInstance();
-    }
-  }
-
-  /**
-   * Configures the _controller default parameter of a given Route instance.
-   *
-   * @param \Symfony\Component\Routing\Route $route
-   *   The route to configure.
-   * @param \ReflectionClass $class
-   *   The class.
-   * @param \ReflectionMethod $method
-   *   The method.
-   */
-  private function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method): void {
-    if ($method->getName() === '__invoke') {
-      $route->setDefault('_controller', $class->getName());
-    }
-    else {
-      $route->setDefault('_controller', $class->getName() . '::' . $method->getName());
     }
   }
 
