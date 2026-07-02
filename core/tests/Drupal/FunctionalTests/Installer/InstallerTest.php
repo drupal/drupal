@@ -46,6 +46,7 @@ class InstallerTest extends InstallerTestBase {
     $module_extension_list = \Drupal::service('extension.list.module');
     $extensions = $module_extension_list->getList();
 
+    // By default, the profile should remain installed.
     $this->assertArrayHasKey('testing', $extensions);
     $this->assertEquals(1000, $extensions['testing']->weight);
     // Ensures that router is not rebuilt unnecessarily during the install.

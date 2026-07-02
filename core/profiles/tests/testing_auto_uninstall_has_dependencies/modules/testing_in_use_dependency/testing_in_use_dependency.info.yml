@@ -1,0 +1,4 @@
+name: Testing profile-provided module that prevents automatic uninstall
+type: module
+package: Testing
+version: VERSION

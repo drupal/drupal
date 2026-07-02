@@ -1,0 +1,6 @@
+name: 'Testing - Automatic uninstall'
+type: profile
+description: 'A profile that opts to be automatically uninstalled.'
+hidden: true
+version: VERSION
+keep_profile: false
