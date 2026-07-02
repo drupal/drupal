@@ -1803,8 +1803,14 @@ function install_finish_translations(&$install_state): array {
 function install_finished(&$install_state): void {
   $profile = $install_state['parameters']['profile'];
 
-  // Installation profiles are always loaded last.
-  module_set_weight($profile, 1000);
+  // If the profile has asked to be automatically uninstalled, do that.
+  if ($install_state['profile_info']['keep_profile'] ?? TRUE) {
+    // Installation profiles are always loaded last.
+    module_set_weight($profile, 1000);
+  }
+  else {
+    \Drupal::service('module_installer')->uninstall([$profile]);
+  }
 
   // Build the router once after installing all modules.
   // This would normally happen upon KernelEvents::TERMINATE, but since the

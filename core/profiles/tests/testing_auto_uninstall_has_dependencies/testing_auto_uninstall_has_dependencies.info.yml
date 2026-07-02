@@ -1,0 +1,8 @@
+name: 'Testing - Automatic uninstall failure'
+type: profile
+description: 'A profile that opts to be automatically uninstalled, but includes in-use dependencies.'
+hidden: true
+version: VERSION
+install:
+  - testing_in_use_dependency
+keep_profile: false
