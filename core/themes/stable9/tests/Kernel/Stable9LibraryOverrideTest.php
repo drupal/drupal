@@ -34,7 +34,6 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
     'link/drupal.link-icon',
     'media/drupal.media-icon',
     'options/drupal.options-icon',
-    'telephone/drupal.telephone-icon',
     // This library will be changed in https://www.drupal.org/i/3096017.
     'workspaces_ui/drupal.workspaces_ui.off-canvas',
     'workspaces_ui/drupal.workspaces_ui.toolbar',
