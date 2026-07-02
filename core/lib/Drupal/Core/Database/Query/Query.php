@@ -104,14 +104,6 @@ abstract class Query implements PlaceholderInterface {
   }
 
   /**
-   * Runs the query against the database.
-   *
-   * @return \Drupal\Core\Database\StatementInterface|null
-   *   A prepared statement, or NULL if the query is not valid.
-   */
-  abstract protected function execute();
-
-  /**
    * Implements PHP magic __toString method to convert the query to a string.
    *
    * The toString operation is how we compile a query object to a prepared
