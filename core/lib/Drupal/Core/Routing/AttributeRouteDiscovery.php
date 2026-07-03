@@ -18,9 +18,9 @@ use Symfony\Component\Routing\RouteCollection;
 class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
 
   /**
-   * @param \Traversable<string, string> $namespaces
-   *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Traversable<string, string|array<int, string>> $namespaces
+   *   An object implementing \Traversable containing root paths keyed by the
+   *   corresponding namespace to look for controller implementations.
    */
   public function __construct(
     protected readonly \Traversable $namespaces,
@@ -37,24 +37,26 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
    * {@inheritdoc}
    */
   protected function collectRoutes(): iterable {
-    foreach ($this->namespaces as $namespace => $directory) {
-      $directory .= '/Controller';
+    foreach ($this->namespaces as $namespace => $directories) {
       $namespace .= '\\Controller';
-      if (is_dir($directory)) {
-        $iterator = new \RecursiveIteratorIterator(
-          new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
-        );
-        foreach ($iterator as $fileinfo) {
-          if ($fileinfo->getExtension() == 'php') {
-            // Skip files that do not contain a Route attribute.
-            $contents = file_get_contents($fileinfo->getPathname());
-            if (!str_contains($contents, '#[Route') && !str_contains($contents, 'Routing\\Attribute\\Route')) {
-              continue;
+      foreach ((array) $directories as $directory) {
+        $directory .= '/Controller';
+        if (is_dir($directory)) {
+          $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
+          );
+          foreach ($iterator as $fileinfo) {
+            if ($fileinfo->getExtension() == 'php') {
+              // Skip files that do not contain a Route attribute.
+              $contents = file_get_contents($fileinfo->getPathname());
+              if (!str_contains($contents, '#[Route') && !str_contains($contents, 'Routing\\Attribute\\Route')) {
+                continue;
+              }
+              $subPath = $iterator->getSubIterator()->getSubPath();
+              $subPath = $subPath ? str_replace(DIRECTORY_SEPARATOR, '\\', $subPath) . '\\' : '';
+              $class = $namespace . '\\' . $subPath . $fileinfo->getBasename('.php');
+              yield $this->createRouteCollection($class);
             }
-            $subPath = $iterator->getSubIterator()->getSubPath();
-            $subPath = $subPath ? str_replace(DIRECTORY_SEPARATOR, '\\', $subPath) . '\\' : '';
-            $class = $namespace . '\\' . $subPath . $fileinfo->getBasename('.php');
-            yield $this->createRouteCollection($class);
           }
         }
       }
