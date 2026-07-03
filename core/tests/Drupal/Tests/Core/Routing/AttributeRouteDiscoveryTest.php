@@ -48,6 +48,26 @@ class AttributeRouteDiscoveryTest extends UnitTestCase {
   /**
    * @legacy-covers ::onRouteBuild
    */
+  public function testOnRouteBuildWithArrayNamespaceDirectories(): void {
+    $event = new RouteBuildEvent(new RouteCollection());
+    $namespaces = new \ArrayObject([
+      'Drupal\router_test' => [
+        $this->root . '/core/modules/system/tests/modules/router_test_directory/missing',
+        $this->root . '/core/modules/system/tests/modules/router_test_directory/src',
+      ],
+    ]);
+    $discovery = new AttributeRouteDiscovery($namespaces);
+    $discovery->onRouteBuild($event);
+
+    $route = $event->getRouteCollection()->get('router_test.method_attribute');
+    $this->assertNotNull($route);
+    $this->assertSame('/test_method_attribute', $route->getPath());
+    $this->assertSame(TestAttributes::class . '::attributeMethod', $route->getDefault('_controller'));
+  }
+
+  /**
+   * @legacy-covers ::onRouteBuild
+   */
   public function testOnRouteBuild(): void {
     $this->assertNotEmpty($this->routeCollection);
 

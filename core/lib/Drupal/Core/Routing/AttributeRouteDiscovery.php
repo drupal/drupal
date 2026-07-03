@@ -19,9 +19,9 @@ use Symfony\Component\Routing\RouteCollection;
 class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
 
   /**
-   * @param \Traversable<string, string> $namespaces
-   *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Traversable<string, string|array<int, string>> $namespaces
+   *   An object implementing \Traversable containing root paths keyed by the
+   *   corresponding namespace to look for controller implementations.
    */
   public function __construct(
     protected readonly \Traversable $namespaces,
@@ -43,27 +43,29 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
       'Form' => $this->createFormRouteCollection(...),
     ];
 
-    foreach ($this->namespaces as $namespace => $directory) {
-      foreach ($routeTypes as $routeType => $factory) {
-        $routeDirectory = $directory . '/' . $routeType;
-        $routeNamespace = $namespace . '\\' . $routeType;
-        if (is_dir($routeDirectory)) {
-          $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($routeDirectory, \RecursiveDirectoryIterator::SKIP_DOTS)
-          );
-          foreach ($iterator as $fileinfo) {
-            if ($fileinfo->getExtension() == 'php') {
-              // Skip files that do not contain a Route attribute.
-              $contents = file_get_contents($fileinfo->getPathname());
-              if (!str_contains($contents, '#[Route') && !str_contains($contents, 'Routing\\Attribute\\Route')) {
-                continue;
-              }
-              $subPath = $iterator->getSubIterator()->getSubPath();
-              $subPath = $subPath ? str_replace(DIRECTORY_SEPARATOR, '\\', $subPath) . '\\' : '';
-              $class = $routeNamespace . '\\' . $subPath . $fileinfo->getBasename('.php');
-              $reflectionClass = $this->getReflectionClass($class);
-              if ($reflectionClass !== NULL) {
-                yield $factory($reflectionClass);
+    foreach ($this->namespaces as $namespace => $directories) {
+      foreach ((array) $directories as $directory) {
+        foreach ($routeTypes as $routeType => $factory) {
+          $routeDirectory = $directory . '/' . $routeType;
+          $routeNamespace = $namespace . '\\' . $routeType;
+          if (is_dir($routeDirectory)) {
+            $iterator = new \RecursiveIteratorIterator(
+              new \RecursiveDirectoryIterator($routeDirectory, \RecursiveDirectoryIterator::SKIP_DOTS)
+            );
+            foreach ($iterator as $fileinfo) {
+              if ($fileinfo->getExtension() == 'php') {
+                // Skip files that do not contain a Route attribute.
+                $contents = file_get_contents($fileinfo->getPathname());
+                if (!str_contains($contents, '#[Route') && !str_contains($contents, 'Routing\\Attribute\\Route')) {
+                  continue;
+                }
+                $subPath = $iterator->getSubIterator()->getSubPath();
+                $subPath = $subPath ? str_replace(DIRECTORY_SEPARATOR, '\\', $subPath) . '\\' : '';
+                $class = $routeNamespace . '\\' . $subPath . $fileinfo->getBasename('.php');
+                $reflectionClass = $this->getReflectionClass($class);
+                if ($reflectionClass !== NULL) {
+                  yield $factory($reflectionClass);
+                }
               }
             }
           }
