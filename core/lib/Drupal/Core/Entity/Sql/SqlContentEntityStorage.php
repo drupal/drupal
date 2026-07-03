@@ -1329,16 +1329,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
 
     if ($multiple_cardinality_fields) {
-      if (count($multiple_cardinality_fields) > static::FIELD_MINIMUM_CHUNK_SIZE) {
-        $chunks = array_chunk($multiple_cardinality_fields, static::FIELD_MINIMUM_CHUNK_SIZE, TRUE);
-        $last_chunk = array_pop($chunks);
-        $last_key = array_key_last($chunks);
-        $chunks[$last_key] = array_merge($chunks[$last_key], $last_chunk);
-      }
-      else {
-        $chunks = [$multiple_cardinality_fields];
-      }
-      foreach ($chunks as $fields) {
+      foreach ($multiple_cardinality_fields as $field_name => $storage_definition) {
+        $fields = [$field_name => $storage_definition];
         $this->loadMultipleCardinalityFields($values, $base_query, $base_table, $id_key, $base_id_key, $base_langcode_alias, $load_from_revision, $fields, $definitions, $field_columns, $field_definition_columns, $default_langcodes);
       }
       // Ensure that all of the deltas from all of the multiple cardinality
@@ -1587,10 +1579,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // If the entity is translatable, add the langcode to the join and
       // a condition on valid langcodes.
       if ($this->langcodeKey) {
-        $query->leftJoin($table, $table, "[$table].[$id_key] = [$base_table].[$base_id_key] AND [$table].[langcode] = [$base_table].[$this->langcodeKey] AND [$table].[deleted] = 0");
+        $query->join($table, $table, "[$table].[$id_key] = [$base_table].[$base_id_key] AND [$table].[langcode] = [$base_table].[$this->langcodeKey] AND [$table].[deleted] = 0");
       }
       else {
-        $query->leftJoin($table, $table, "[$table].[$id_key] = [$base_table].[$base_id_key] AND [$table].[deleted] = 0");
+        $query->join($table, $table, "[$table].[$id_key] = [$base_table].[$base_id_key] AND [$table].[deleted] = 0");
       }
       $query->fields($table, $field_columns[$field_name]);
       $delta_keys[$field_name] = $query->addField($table, 'delta', $field_name . '_delta');
