@@ -1,0 +1,42 @@
+name: 'Article tags'
+description: 'Provides tags on article content.'
+type: 'Content field'
+recipes:
+  - article_content_type
+  - tags_taxonomy
+install:
+  - views
+config:
+  strict:
+    # Treat field storages strictly, since they influence the database layout.
+    - field.storage.node.field_tags
+  import:
+    taxonomy:
+      - views.view.taxonomy_term
+  actions:
+    core.entity_form_display.node.article.default:
+      setComponent:
+        name: field_tags
+        options:
+          type: entity_reference_autocomplete_tags
+          weight: 3
+          region: content
+          settings:
+            match_operator: CONTAINS
+            match_limit: 10
+            size: 60
+            placeholder: ''
+          third_party_settings: {  }
+    core.entity_view_display.node.article.teaser: &entity_view_display_node_article_teaser
+      setComponent:
+        name: field_tags
+        options:
+          type: entity_reference_label
+          label: above
+          settings:
+            link: true
+          third_party_settings: {  }
+          weight: 10
+          region: content
+    core.entity_view_display.node.article.default:
+      <<: *entity_view_display_node_article_teaser

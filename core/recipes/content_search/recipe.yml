@@ -1,0 +1,17 @@
+name: 'Content search'
+type: Search
+description: 'Adds a page that can search site content.'
+install:
+  - node
+  - search
+config:
+  import:
+    node:
+      - core.entity_view_mode.node.search_index
+      - core.entity_view_mode.node.search_result
+      - search.page.node_search
+  actions:
+    user.role.anonymous:
+      grantPermission: 'search content'
+    user.role.authenticated:
+      grantPermission: 'search content'
