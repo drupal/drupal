@@ -202,25 +202,40 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
    * {@inheritdoc}
    */
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = []) {
-    // Setting a cache item on the consistent backend requires invalidating the
-    // fast backend. In a cold cache situation, there can be thousands of cache
-    // sets. However, because each cache set invalidates every previous set,
-    // only the item(s) from the last one will be valid. Therefore, don't write
-    // to the fast backend, this avoids lock/write contention on the fast
-    // backend, for cache items which may not be requested immediately anyway,
-    // e.g. when higher level caches are warmed at the same time. The fast
-    // backend will be populated via the logic in ::get() instead when cache
-    // items are actually requested.
+
+    // When setting a cache item, if the cache item already exists in the
+    // consistent backend then the fast backend must be invalidated. However,
+    // if the item does not exist in the consistent backend at all, it will also
+    // be new on the fast backend and we can skip invalidating the entire bin.
+    //
+    // Because there is no way inherently to know whether an item is being added
+    // or updated when it is set, first get the item from the persistent backend
+    // then act based on that. There will be a small window between getting the
+    // item and setting it where another process may have set a value, but that
+    // process will also have previously got an empty cache item so the risk of
+    // a race condition resulting in different values is extremely low.
+    //
+    // In both cases, don't bother writing back to the fast backend - the next
+    // call to ::get() with this cache ID will do that.
+    $cached = $this->consistentBackend->get($cid);
     $this->consistentBackend->set($cid, $data, $expire, $tags);
-    $this->markAsOutdated();
+    if ($cached) {
+      $this->markAsOutdated();
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function setMultiple(array $items) {
+    $cids = array_keys($items);
+
+    $cached = $this->consistentBackend->getMultiple($cids);
     $this->consistentBackend->setMultiple($items);
-    $this->markAsOutdated();
+
+    if (count($cached)) {
+      $this->markAsOutdated();
+    }
   }
 
   /**
