@@ -273,7 +273,7 @@
     let indicatorClass;
     let weaknesses = 0;
     let strength = 100;
-    let msg = [];
+    const msg = [];
 
     const hasLowercase = /[a-z]/.test(password);
     const hasUppercase = /[A-Z]/.test(password);
@@ -355,10 +355,6 @@
 
     // Assemble the final message while keeping the original message array.
     const messageTips = msg;
-    msg = `${passwordSettings.hasWeaknesses}<ul><li>${msg.join(
-      '</li><li>',
-    )}</li></ul>`;
-
     return {
       strength,
       indicatorText,
