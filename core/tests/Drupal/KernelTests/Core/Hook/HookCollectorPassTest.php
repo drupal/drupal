@@ -62,6 +62,31 @@ class HookCollectorPassTest extends KernelTestBase {
   }
 
   /**
+   * Tests ignoring of directories when collecting hooks using the file_scan_ignore_directories setting.
+   */
+  public function testIgnoreDirectories(): void {
+    $container = new ContainerBuilder();
+    $module_filenames = [
+      'ignored_directories_hook_collector_test' => ['pathname' => "core/modules/system/tests/modules/HookCollector/ignored_directories_hook_collector_test/ignored_directories_hook_collector_test.info.yml"],
+    ];
+    $container->setParameter('container.modules', $module_filenames);
+    (new HookCollectorPass())->process($container);
+    $implementations = $container->getParameter('.hook_data')['hook_list'];
+    $this->assertSame([
+      'ignored_alter' => [
+        'ignored_directories_hook_collector_test_ignored_alter' => 'ignored_directories_hook_collector_test',
+      ],
+    ], $implementations);
+
+    // After setting the ignored directory the hook in ignored directory should
+    // no longer be registered.
+    $this->setSetting('file_scan_ignore_directories', ['ignored_directory']);
+    (new HookCollectorPass())->process($container);
+    $implementations = $container->getParameter('.hook_data')['hook_list'];
+    $this->assertSame([], $implementations);
+  }
+
+  /**
    * Test that ordering works.
    */
   public function testOrdering(): void {

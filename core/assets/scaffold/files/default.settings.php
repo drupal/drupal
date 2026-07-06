@@ -778,11 +778,11 @@ $settings['container_yamls'][] = $app_root . '/' . $site_path . '/services.yml';
 # $settings['trusted_host_patterns'] = [];
 
 /**
- * The default list of directories that will be ignored by Drupal's file API.
+ * Directories that will be ignored by Drupal's file API and when scanning for
+ * extensions and hooks.
  *
- * By default ignore node_modules and bower_components folders to avoid issues
- * with common frontend tools and recursive scanning of directories looking for
- * extensions.
+ * By default, node_modules and bower_components are ignored to speed up scanning
+ * by skipping folders containing non-PHP build dependencies.
  *
  * @see \Drupal\Core\File\FileSystemInterface::scanDirectory()
  * @see \Drupal\Core\Extension\ExtensionDiscovery::scanDirectory()
