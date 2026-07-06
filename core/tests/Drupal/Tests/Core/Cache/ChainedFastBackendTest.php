@@ -112,7 +112,41 @@ class ChainedFastBackendTest extends UnitTestCase {
   /**
    * Tests that sets only get written to the consistent backend.
    */
-  public function testSet(): void {
+  public function testSetEmptyConsistent(): void {
+    $consistent_cache = $this->createMock(CacheBackendInterface::class);
+    $fast_cache = $this->createMock(CacheBackendInterface::class);
+
+    // The initial write to the fast backend should result in two writes to the
+    // consistent backend, once to invalidate the last write timestamp and once
+    // for the item itself. However subsequent writes during the same second
+    // should only write to the cache item without further invalidations.
+
+    $consistent_cache->expects($this->exactly(4))
+      ->method('set');
+    $consistent_cache->expects($this->exactly(4))
+      ->method('get')
+      ->willReturn(FALSE);
+
+    $fast_cache->expects($this->never())
+      ->method('set');
+    $fast_cache->expects($this->never())
+      ->method('setMultiple');
+
+    $chained_fast_backend = new ChainedFastBackend(
+      $consistent_cache,
+      $fast_cache,
+      'foo'
+    );
+    $chained_fast_backend->set('foo', TRUE);
+    $chained_fast_backend->set('bar', TRUE);
+    $chained_fast_backend->set('baz', TRUE);
+    $chained_fast_backend->set('zoo', TRUE);
+  }
+
+  /**
+   * Tests that sets only get written to the consistent backend.
+   */
+  public function testSetFullConsistent(): void {
     $consistent_cache = $this->createMock(CacheBackendInterface::class);
     $fast_cache = $this->createMock(CacheBackendInterface::class);
 
@@ -123,6 +157,18 @@ class ChainedFastBackendTest extends UnitTestCase {
 
     $consistent_cache->expects($this->exactly(5))
       ->method('set');
+    $consistent_cache->expects($this->exactly(5))
+      ->method('get')
+      ->willReturnCallback(function ($cid) {
+        if ($cid === 'last_write_timestamp_cache_foo') {
+          return FALSE;
+        }
+        return (object) [
+          'cid' => $cid,
+          'data' => 'foo',
+        ];
+      });
+
     $fast_cache->expects($this->never())
       ->method('set');
     $fast_cache->expects($this->never())
