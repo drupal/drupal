@@ -1314,13 +1314,17 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // combine the last two chunks. This means that 26 fields end up in a single
     // chunk of 26, instead of chunks of 25 and 1.
     $load_shared_table_fields = TRUE;
+    $chunks = [];
     if (count($single_cardinality_fields) > static::FIELD_MINIMUM_CHUNK_SIZE) {
       $chunks = array_chunk($single_cardinality_fields, static::FIELD_MINIMUM_CHUNK_SIZE, TRUE);
       $last_chunk = array_pop($chunks);
       $last_key = array_key_last($chunks);
       $chunks[$last_key] = array_merge($chunks[$last_key], $last_chunk);
     }
-    else {
+    // If there are no fields, no data table and no revision tables, there
+    // is nothing additional to load, the empty chunks array will skip the loop
+    // below.
+    elseif ($single_cardinality_fields || $this->dataTable || $this->revisionTable || $this->revisionDataTable) {
       $chunks = [$single_cardinality_fields];
     }
     foreach ($chunks as $fields) {
