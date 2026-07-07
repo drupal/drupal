@@ -81,6 +81,9 @@ const LOCALE_TRANSLATION_SOURCE_COMPARE_GT = 1;
  */
 function locale_translation_get_projects(array $project_names = []) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleProjectRepository::class)->getAll() or \Drupal::service(LocaleProjectRepository::class)->getMultiple($project_names) instead. See https://www.drupal.org/node/3569330', E_USER_DEPRECATED);
+  if (empty($project_names)) {
+    return \Drupal::service(LocaleProjectRepository::class)->getAll();
+  }
   return \Drupal::service(LocaleProjectRepository::class)->getMultiple($project_names);
 }
 
