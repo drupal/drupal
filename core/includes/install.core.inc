@@ -450,7 +450,7 @@ function install_begin_request($class_loader, &$install_state): void {
   }
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = $container->get('file_system');
-  $container->set('string_translator.file_translation', new FileTranslation($directory, $file_system));
+  $container->set('string_translator.file_translation', new FileTranslation($directory, $file_system, $install_state['parameters']['profile'] ?? NULL));
   $container->get('string_translation')
     ->addTranslator($container->get('string_translator.file_translation'));
 
@@ -1404,14 +1404,23 @@ function install_select_language(&$install_state) {
  */
 function install_download_translation(&$install_state) {
   // Check whether all conditions are met to download. Download the translation
-  // if possible.
+  // for core if possible.
   $requirements = install_check_translations($install_state['parameters']['langcode'], $install_state['server_pattern']);
   // Render requirements if any warnings or errors returned.
   if ($output = install_display_requirements($install_state, $requirements)) {
     return $output;
   }
 
-  // The download was successful, reload the page in the new language.
+  $profile = $install_state['parameters']['profile'] ?? NULL;
+  $profile_path = $install_state['profiles'][$profile]?->getPath();
+  $profile_version = $install_state['profiles'][$profile]?->info['version'] ?? NULL;
+  // If we're using a custom profile and we know its version, try to download
+  // that translation too. If we can't, proceed without it.
+  if (isset($profile, $profile_path, $profile_version) && !str_starts_with($profile_path, 'core/')) {
+    install_check_translations($install_state['parameters']['langcode'], $install_state['server_pattern'], $profile, $profile_version);
+  }
+
+  // At least one download was successful, reload the page in the new language.
   $install_state['translations'][$install_state['parameters']['langcode']] = TRUE;
   if ($install_state['interactive']) {
     install_goto(install_redirect_url($install_state));
@@ -1846,12 +1855,18 @@ function _install_module_batch(array $modules, array $module_names, array &$cont
  *   Language code to check for download.
  * @param string $server_pattern
  *   Server access pattern (to replace language code, version number, etc. in).
+ * @param string $project
+ *   (optional) The name of the project for which to download translations.
+ *   Defaults to `drupal` (i.e., core).
+ * @param string $version
+ *   (optional) The version of the project for which to download translations.
+ *   Defaults to \Drupal::VERSION.
  *
  * @return array
  *   Requirements compliance array. If the translation cannot be downloaded this
  *   will contain a requirements error with detailed information.
  */
-function install_check_translations($langcode, $server_pattern): array {
+function install_check_translations($langcode, $server_pattern, string $project = 'drupal', string $version = \Drupal::VERSION): array {
   $requirements = [];
 
   $readable = FALSE;
@@ -1878,11 +1893,9 @@ function install_check_translations($langcode, $server_pattern): array {
     $translations_directory_exists = TRUE;
   }
 
-  $version = \Drupal::VERSION;
-
   // Build URL for the translation file and the translation server.
   $variables = [
-    '%project' => 'drupal',
+    '%project' => $project,
     '%version' => $version,
     '%core' => 'all',
     '%language' => $langcode,
