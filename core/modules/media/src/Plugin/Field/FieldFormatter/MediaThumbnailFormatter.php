@@ -42,9 +42,13 @@ class MediaThumbnailFormatter extends ImageFormatter {
     ImageStyleStorageInterface $image_style_storage,
     FileUrlGeneratorInterface $file_url_generator,
     protected RendererInterface $renderer,
-    protected ImageDerivativeUtilities $imageDerivativeUtilities,
+    protected ?ImageDerivativeUtilities $imageDerivativeUtilities,
   ) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $current_user, $image_style_storage, $file_url_generator, $imageDerivativeUtilities);
+    if (!$imageDerivativeUtilities) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $imageDerivativeUtilities argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3567619', E_USER_DEPRECATED);
+      $this->imageDerivativeUtilities = \Drupal::service(ImageDerivativeUtilities::class);
+    }
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $current_user, $image_style_storage, $file_url_generator, $this->imageDerivativeUtilities);
   }
 
   /**
