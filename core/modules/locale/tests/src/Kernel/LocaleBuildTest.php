@@ -43,6 +43,7 @@ class LocaleBuildTest extends KernelTestBase {
     $projects = \Drupal::service(LocaleProjectRepository::class)->buildProjects();
     $this->assertSame('locale_test', $projects['locale_test']->name);
     $this->assertSame('all', $projects['locale_test']->core);
+    $this->assertSame(0, $projects['locale_test']->getWeight());
 
     $projects['locale_test']->setLangcode('de');
     $this->assertSame('/all/locale_test/locale_test-1.2.de.po', \Drupal::service(LocaleSource::class)->buildServerPattern($projects['locale_test'], '/%core/%project/%project-%version.%language.po'));
@@ -64,6 +65,10 @@ class LocaleBuildTest extends KernelTestBase {
 
     $projects['locale_test']->setLangcode('de');
     $this->assertSame('/all/locale_test/locale_test-1.2.de.po', \Drupal::service(LocaleSource::class)->buildServerPattern($projects['locale_test'], '/%core/%project/%project-%version.%language.po'));
+
+    \Drupal::state()->set('locale.test_projects_alter.weight', TRUE);
+    $projects = \Drupal::service(LocaleProjectRepository::class)->buildProjects();
+    $this->assertSame(100, $projects['locale_test']->getWeight());
   }
 
   /**
