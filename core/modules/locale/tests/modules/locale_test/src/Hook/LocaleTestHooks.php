@@ -153,6 +153,9 @@ class LocaleTestHooks {
         ],
       ];
     }
+    if (\Drupal::state()->get('locale.test_projects_alter.weight')) {
+      $projects['locale_test']['weight'] = 100;
+    }
   }
 
   /**

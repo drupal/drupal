@@ -164,6 +164,7 @@ readonly class LocaleProjectRepository {
         // gettext file. Use the default if not.
         server_pattern: !empty($data['info']['interface translation server pattern']) ? $data['info']['interface translation server pattern'] : $pattern,
         info: $data['info'] ?? [],
+        weight: $data['weight'] ?? 0,
         status: TRUE,
       );
 
