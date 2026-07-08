@@ -43,10 +43,14 @@ class ImageUrlFormatter extends ImageFormatterBase {
     array $third_party_settings,
     EntityTypeManagerInterface $entity_type_manager,
     protected AccountInterface $currentUser,
-    protected readonly ImageDerivativeUtilities $imageDerivativeUtilities,
+    protected ?ImageDerivativeUtilities $imageDerivativeUtilities,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->imageStyleStorage = $entity_type_manager->getStorage('image_style');
+    if (!$imageDerivativeUtilities) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $imageDerivativeUtilities argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3567619', E_USER_DEPRECATED);
+      $this->imageDerivativeUtilities = \Drupal::service(ImageDerivativeUtilities::class);
+    }
   }
 
   /**
