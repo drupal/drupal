@@ -60,22 +60,47 @@ class ReplaceOp extends AbstractOperation {
   public function process(ScaffoldFilePath $destination, IOInterface $io, ScaffoldOptions $options) {
     $fs = new Filesystem();
     $destination_path = $destination->fullPath();
+    $interpolator = $destination->getInterpolator();
     // Do nothing if overwrite is 'false' and a file already exists at the
     // destination.
     if ($this->overwrite === FALSE && file_exists($destination_path)) {
-      $interpolator = $destination->getInterpolator();
       $io->write($interpolator->interpolate("  - Skip <info>[dest-rel-path]</info> because it already exists and overwrite is <comment>false</comment>."));
       return new ScaffoldResult($destination, FALSE);
     }
 
-    // Get rid of the destination if it exists, and make sure that
-    // the directory where it's going to be placed exists.
-    $fs->remove($destination_path);
-    $fs->ensureDirectoryExists(dirname($destination_path));
-    if ($options->symlink()) {
-      return $this->symlinkScaffold($destination, $io);
+    $destination_directory = dirname($destination_path);
+    $reset_directory_perms = FALSE;
+    // Capture perms before any changes. NULL means the path does not exist yet.
+    $original_directory_perms = file_exists($destination_directory) ? (fileperms($destination_directory) ?: NULL) : NULL;
+    $original_file_perms = file_exists($destination_path) ? (fileperms($destination_path) ?: NULL) : NULL;
+
+    if ($original_directory_perms !== NULL && !is_writable($destination_directory)) {
+      if (!$this->makeWritable($destination_directory)) {
+        throw new \RuntimeException($interpolator->interpolate("Failed to make the directory containing <info>[dest-rel-path]</info> writable."));
+      }
+      $reset_directory_perms = TRUE;
     }
-    return $this->copyScaffold($destination, $io);
+
+    try {
+      // Remove the destination if it exists,
+      // and ensure the destination directory exists.
+      $fs->remove($destination_path);
+      $fs->ensureDirectoryExists($destination_directory);
+
+      if ($options->symlink()) {
+        return $this->symlinkScaffold($destination, $io);
+      }
+
+      return $this->copyScaffold($destination, $io);
+    }
+    finally {
+      if ($reset_directory_perms && $original_directory_perms !== NULL) {
+        @chmod($destination_directory, $original_directory_perms);
+      }
+      if ($original_file_perms !== NULL && !$options->symlink() && file_exists($destination_path)) {
+        @chmod($destination_path, $original_file_perms);
+      }
+    }
   }
 
   /**
