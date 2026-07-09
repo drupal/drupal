@@ -50,4 +50,24 @@ abstract class AbstractOperation implements OperationInterface {
     return $this;
   }
 
+  /**
+   * Adds the owner write permission bit to the path.
+   *
+   * @param string $filepath
+   *   Path to the file or directory.
+   *
+   * @return bool
+   *   TRUE on success, FALSE if the path does not exist or chmod failed.
+   */
+  protected function makeWritable(string $filepath): bool {
+    if (!file_exists($filepath)) {
+      return FALSE;
+    }
+    $mod = fileperms($filepath);
+    if ($mod === FALSE) {
+      return FALSE;
+    }
+    return @chmod($filepath, ($mod & 0777) | 0200);
+  }
+
 }
