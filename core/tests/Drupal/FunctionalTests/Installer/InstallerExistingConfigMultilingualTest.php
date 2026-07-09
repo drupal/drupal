@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -30,6 +31,35 @@ class InstallerExistingConfigMultilingualTest extends InstallerConfigDirectoryTe
   /**
    * {@inheritdoc}
    */
+  protected function prepareEnvironment(): void {
+    parent::prepareEnvironment();
+    mkdir(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
+
+    // Test that contrib translations are not installed by
+    // install_import_translations(). If they are then the translation from
+    // locale_test_additional will not be overwritten by the translation from
+    // locale_test_extra.
+    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/locale_test_additional-1.0.es.po', <<<PO
+msgid ""
+msgstr ""
+
+msgid "Test string"
+msgstr "Test string wrong"
+PO
+    );
+    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/locale_test_extra-1.0.es.po', <<<PO
+msgid ""
+msgstr ""
+
+msgid "Test string"
+msgstr "Test string correct"
+PO
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function testConfigSync(): void {
     parent::testConfigSync();
 
@@ -41,6 +71,8 @@ class InstallerExistingConfigMultilingualTest extends InstallerConfigDirectoryTe
     // Ensure the correct message is logged from \Drupal\locale\LocaleConfigBatch::batchFinished().
     $count = (int) \Drupal::database()->select('watchdog', 'w')->fields('w')->condition('message', 'The configuration was successfully updated. %number configuration objects updated.')->countQuery()->execute()->fetchField();
     $this->assertSame(1, $count);
+
+    $this->assertEquals('Test string correct', (string) new TranslatableMarkup('Test string', [], ['langcode' => 'es']));
   }
 
   /**

@@ -1,0 +1,7 @@
+name: 'Locale test additional'
+type: module
+description: 'Additional test module for locale translation testing.'
+package: Testing
+version: '1.0'
+hidden: true
+'interface translation project': locale_test_additional
