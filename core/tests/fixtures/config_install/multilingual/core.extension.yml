@@ -10,6 +10,8 @@ module:
   filter: 0
   language: 0
   locale: 0
+  locale_test_additional: 0
+  locale_test_extra: 0
   node: 0
   page_cache: 0
   path_alias: 0
