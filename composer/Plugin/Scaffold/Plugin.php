@@ -103,6 +103,47 @@ class Plugin implements PluginInterface, EventSubscriberInterface, Capable {
    */
   public function postCmd(Event $event) {
     $this->handler()->scaffold();
+    $this->ensureAutoloadRuntimeFile();
+  }
+
+  /**
+   * Generates autoload_runtime.php when Handler::scaffold() did not.
+   *
+   * When this plugin package is itself updated during a Composer command,
+   * the Handler class may already have been loaded from the previous version
+   * of the plugin (via postPackage()) before the plugin files were replaced
+   * on disk. PHP keeps the loaded class for the rest of the process, so
+   * Handler::scaffold() then runs the old code, which does not generate the
+   * autoload_runtime.php file (introduced in Drupal 11.4.0).
+   *
+   * Composer reloads this Plugin class from the new plugin code after the
+   * plugin package is updated. It must only use other classes of this plugin
+   * through APIs that exist in every version of the plugin that can be updated
+   * from, because those classes may still be loaded from a previous version.
+   *
+   * @todo Remove after upgrades from Drupal 11.3 are no longer supported.
+   *
+   * @see \Composer\Plugin\PluginManager::registerPackage()
+   * @see https://www.drupal.org/project/drupal/issues/3607866
+   */
+  protected function ensureAutoloadRuntimeFile(): void {
+    $manage_options = new ManageOptions($this->composer);
+    $allowed_packages = (new AllowedPackages($this->composer, $this->io, $manage_options))->getAllowedPackages();
+    if (empty($allowed_packages)) {
+      return;
+    }
+
+    $web_root = $manage_options->getOptions()->getLocation('web-root');
+    if (file_exists($web_root . '/autoload_runtime.php')) {
+      return;
+    }
+
+    $vendor_dir = $this->composer->getConfig()->get('vendor-dir');
+    $vendor_path = (new Filesystem())->normalizePath(realpath($vendor_dir));
+    $package_name = $this->composer->getPackage()->getName();
+    $result = GenerateAutoloadRuntimeReferenceFile::generateAutoloadRuntime($this->io, $package_name, $web_root, $vendor_path);
+    $git_ignore_manager = new ManageGitIgnore($this->io, getcwd());
+    $git_ignore_manager->manageIgnored([$result], $manage_options->getOptions());
   }
 
   /**
