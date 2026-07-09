@@ -1758,7 +1758,7 @@ function install_import_translations(&$install_state) {
   // should import translations.
   $languages = \Drupal::languageManager()->getLanguages();
   if (count($languages) > 1 || !isset($languages['en'])) {
-    return \Drupal::service(LocaleFetch::class)->buildUpdateBatch();
+    return \Drupal::service(LocaleFetch::class)->buildUpdateBatch(['drupal']);
   }
 }
 
