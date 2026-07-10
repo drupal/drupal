@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -134,13 +135,19 @@ class SearchHelpSearch extends SearchPluginBase implements AccessibleInterface, 
     if (!$this->account->hasPermission('access help pages')) {
       return NULL;
     }
-    $permissions = $this->database
-      ->select('help_search_items', 'hsi')
-      ->distinct()
-      ->fields('hsi', ['permission'])
-      ->condition('permission', '', '<>')
-      ->execute()
-      ->fetchCol();
+    try {
+      $permissions = $this->database
+        ->select('help_search_items', 'hsi')
+        ->distinct()
+        ->fields('hsi', ['permission'])
+        ->condition('permission', '', '<>')
+        ->execute()
+        ->fetchCol();
+    }
+    catch (\Exception) {
+      // If the table doesn't exist yet, there are no search results.
+      return [];
+    }
     $denied_permissions = array_filter($permissions, function ($permission) {
       return !$this->account->hasPermission($permission);
     });
@@ -315,11 +322,24 @@ class SearchHelpSearch extends SearchPluginBase implements AccessibleInterface, 
    * Rebuilds the database table containing topics to be indexed.
    */
   public function updateTopicList(): void {
-    // Start by fetching the existing list, so we can remove items not found
-    // at the end.
-    $old_list = $this->database->select('help_search_items', 'hsi')
-      ->fields('hsi', ['sid', 'topic_id', 'section_plugin_id', 'permission'])
-      ->execute();
+    try {
+      // Start by fetching the existing list, so we can remove items not found
+      // at the end.
+      $old_list = $this->database->select('help_search_items', 'hsi')
+        ->fields('hsi', ['sid', 'topic_id', 'section_plugin_id', 'permission'])
+        ->execute();
+    }
+    catch (\Exception $e) {
+      if ($this->ensureTableExists()) {
+        $old_list = $this->database->select('help_search_items', 'hsi')
+          ->fields('hsi', ['sid', 'topic_id', 'section_plugin_id', 'permission'])
+          ->execute();
+      }
+      else {
+        throw $e;
+      }
+    }
+
     $old_list_ordered = [];
     $sids_to_remove = [];
     foreach ($old_list as $item) {
@@ -451,6 +471,70 @@ class SearchHelpSearch extends SearchPluginBase implements AccessibleInterface, 
     $section_plugin = $this->helpSectionManager->createInstance($section_plugin_id);
     // Intentionally return boolean to allow caching of results.
     return $section_plugin instanceof SearchableHelpInterface ? $section_plugin : FALSE;
+  }
+
+  /**
+   * Check if the help_search_items table exists and create it if not.
+   */
+  protected function ensureTableExists(): bool {
+    try {
+      $database_schema = $this->database->schema();
+      if (!$database_schema->tableExists('help_search_items')) {
+        $schema_definition = $this->schemaDefinition();
+        $database_schema->createTable('help_search_items', $schema_definition);
+        return TRUE;
+      }
+    }
+    // If another process has already created the cache table, attempting to
+    // recreate it will throw an exception. In this case just catch the
+    // exception and do nothing.
+    catch (DatabaseException) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Provides the schema definition for the help_search_items table.
+   */
+  protected function schemaDefinition(): array {
+    return [
+      'description' => 'Stores information about indexed help search items',
+      'fields' => [
+        'sid' => [
+          'description' => 'Numeric index of this item in the search index',
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ],
+        'section_plugin_id' => [
+          'description' => 'The help section the item comes from',
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'permission' => [
+          'description' => 'The permission needed to view this item',
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+        'topic_id' => [
+          'description' => 'The topic ID of the item',
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+        ],
+      ],
+      'primary key' => ['sid'],
+      'indexes' => [
+        'section_plugin_id' => ['section_plugin_id'],
+        'topic_id' => ['topic_id'],
+      ],
+    ];
   }
 
 }

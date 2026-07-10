@@ -168,36 +168,13 @@ function system_update_11300(): TranslatableMarkup|null {
 }
 
 /**
- * Install Help Search module if the Search and Help modules are installed.
+ * Moved to search_update_11401().
  */
 function system_update_11400(): void {
-  // This needs to be a system update so it runs before other updates in order
-  // to get the new help_search plugin in place as early as possible.
-  $module_handler = \Drupal::moduleHandler();
-  if ($module_handler->moduleExists('help')) {
-    \Drupal::database()->schema()->dropTable('help_search_items');
-    if (\Drupal::moduleHandler()->moduleExists('search')) {
-      \Drupal::service('module_installer')->install(['search_help']);
-    }
-  }
 }
 
 /**
- * Install Search node module if node and search are installed.
+ * Moved to search_update_11402().
  */
 function system_update_11401(): void {
-  $module_list = \Drupal::moduleHandler()->getModuleList();
-  if (!isset($module_list['node']) || !isset($module_list['search'])) {
-    return;
-  }
-
-  if (!isset($module_list['search_node'])) {
-    \Drupal::configFactory()->getEditable('core.entity_view_mode.node.search_index')->delete();
-    \Drupal::configFactory()->getEditable('core.entity_view_mode.node.search_result')->delete();
-    \Drupal::service('module_installer')->install(['search_node']);
-  }
-
-  /** @var \Drupal\search\SearchPageInterface|null $node_search_page */
-  $node_search_page = \Drupal::entityTypeManager()->getStorage('search_page')->load('node_search');
-  $node_search_page?->calculateDependencies()->save();
 }

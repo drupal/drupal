@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('node')]
 #[CoversFunction('node_post_update_add_rebuild_permission_to_roles')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class NodeRebuildPermissionUpdateTest extends UpdatePathTestBase {
 
   /**
