@@ -11,3 +11,15 @@
 function help_update_last_removed(): int {
   return 10200;
 }
+
+/**
+ * Remove the help_search_items table.
+ */
+function help_update_11400(): void {
+  // Drop the help_search_items table if search module is not installed.
+  if (!\Drupal::moduleHandler()->moduleExists('search')) {
+    if (\Drupal::database()->schema()->tableExists('help_search_items')) {
+      \Drupal::database()->schema()->dropTable('help_search_items');
+    }
+  }
+}

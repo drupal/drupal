@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Functional;
+namespace Drupal\Tests\search\Functional;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('help')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class HelpSearchHelpUpgradeTest extends UpdatePathTestBase {
 
   /**
@@ -30,9 +32,9 @@ class HelpSearchHelpUpgradeTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests system_update_11400() and help_post_update_search_help_dependencies().
+   * Tests search_update_11401() and help_post_update_search_help_dependencies().
    *
-   * @see system_update_11400()
+   * @see search_update_11401()
    * @see help_post_update_search_help_dependencies()
    */
   public function testSearchHelpInstall(): void {

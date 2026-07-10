@@ -7,6 +7,7 @@ namespace Drupal\Tests\olivero\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('olivero')]
 #[Group('Update')]
 #[Group('#slow')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 #[CoversFunction('olivero_post_update_remove_shortcut_settings_if_not_installed')]
 class OliveroPostUpdateTest extends UpdatePathTestBase {
