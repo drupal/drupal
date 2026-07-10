@@ -122,14 +122,14 @@ class ComponentMetadataTest extends UnitTestCase {
             'additionalProperties' => FALSE,
             'properties' => [
               'text' => [
-                'type' => ['string', 'object'],
+                'type' => 'string',
                 'title' => 'Title',
                 'description' => 'The title for the button',
                 'minLength' => 2,
                 'examples' => ['Press', 'Submit now'],
               ],
               'iconType' => [
-                'type' => ['string', 'object'],
+                'type' => 'string',
                 'title' => 'Icon Type',
                 'enum' => [
                   'power',
@@ -198,14 +198,14 @@ class ComponentMetadataTest extends UnitTestCase {
             'additionalProperties' => FALSE,
             'properties' => [
               'text' => [
-                'type' => ['string', 'object'],
+                'type' => 'string',
                 'title' => 'Title',
                 'description' => 'The title for the button',
                 'minLength' => 2,
                 'examples' => ['Press', 'Submit now'],
               ],
               'iconType' => [
-                'type' => ['string', 'object'],
+                'type' => 'string',
                 'title' => 'Icon Type',
                 'enum' => [
                   'power',
@@ -262,7 +262,7 @@ class ComponentMetadataTest extends UnitTestCase {
             'additionalProperties' => FALSE,
             'properties' => [
               'col' => [
-                'type' => ['string', 'object'],
+                'type' => 'string',
                 'title' => 'Column',
                 'enum' => [
                   1,
@@ -331,14 +331,14 @@ class ComponentMetadataTest extends UnitTestCase {
             'additionalProperties' => FALSE,
             'properties' => [
               'text' => [
-                'type' => ['string', 'object'],
+                'type' => 'string',
                 'title' => 'Title',
                 'description' => 'The title for the button',
                 'minLength' => 2,
                 'examples' => ['Press', 'Submit now'],
               ],
               'iconType' => [
-                'type' => ['string', 'object'],
+                'type' => 'string',
                 'title' => 'Icon Type',
                 'enum' => [
                   'power',
@@ -408,14 +408,14 @@ class ComponentMetadataTest extends UnitTestCase {
             'additionalProperties' => FALSE,
             'properties' => [
               'text' => [
-                'type' => ['string', 'object'],
+                'type' => 'string',
                 'title' => 'Title',
                 'description' => 'The title for the button',
                 'minLength' => 2,
                 'examples' => ['Press', 'Submit now'],
               ],
               'iconType' => [
-                'type' => ['string', 'object'],
+                'type' => 'string',
                 'title' => 'Icon Type',
                 'enum' => [
                   'power',
@@ -484,14 +484,14 @@ class ComponentMetadataTest extends UnitTestCase {
             'additionalProperties' => FALSE,
             'properties' => [
               'text' => [
-                'type' => ['string', 'object'],
+                'type' => 'string',
                 'title' => 'Title',
                 'description' => 'The title for the button',
                 'minLength' => 2,
                 'examples' => ['Press', 'Submit now'],
               ],
               'target' => [
-                'type' => ['string', 'object'],
+                'type' => 'string',
                 'title' => 'Icon Type',
                 'enum' => [
                   '',
