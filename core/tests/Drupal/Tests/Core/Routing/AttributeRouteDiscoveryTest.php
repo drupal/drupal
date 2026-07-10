@@ -10,6 +10,7 @@ use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\router_test\Controller\TestAttributes;
 use Drupal\router_test\Controller\TestClassAttribute;
+use Drupal\router_test\Controller\TestClassAttributeClassOnly;
 use Drupal\router_test\Form\TestRouteAttributeForm;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
@@ -194,6 +195,19 @@ EOF
 
     // Auto-generated class::method alias.
     $this->assertSame($route, $this->routeCollection->get(TestAttributes::class . '::allProperties'));
+  }
+
+  /**
+   * Tests that class-only #[Route] registers a route for invokable controllers.
+   */
+  public function testClassOnlyRouteWithInvoke(): void {
+    $route = $this->routeCollection->get('router_test.class_only');
+    $this->assertNotNull($route);
+    $this->assertSame('/test_class_attribute_class_only', $route->getPath());
+    $this->assertSame(TestClassAttributeClassOnly::class, $route->getDefault('_controller'));
+    $this->assertSame('TRUE', $route->getRequirement('_access'));
+    // Aliases for invokable controllers must also be registered.
+    $this->assertSame($route, $this->routeCollection->get(TestClassAttributeClassOnly::class . '::__invoke'));
   }
 
   /**
