@@ -229,7 +229,7 @@ class ComponentPluginManager extends DefaultPluginManager implements Categorizin
   protected function getDiscovery(): DirectoryWithMetadataPluginDiscovery {
     if (!isset($this->discovery)) {
       $directories = $this->getScanDirectories();
-      $this->discovery = new DirectoryWithMetadataPluginDiscovery($directories, 'component');
+      $this->discovery = new DirectoryWithMetadataPluginDiscovery($directories, 'component', 'component');
     }
     return $this->discovery;
   }
