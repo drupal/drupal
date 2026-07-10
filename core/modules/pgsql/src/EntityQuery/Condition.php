@@ -15,6 +15,9 @@ class Condition extends BaseCondition {
    */
   public static function translateCondition(&$condition, SelectInterface $sql_query, $case_sensitive): void {
     if (is_array($condition['value']) && $case_sensitive === FALSE) {
+      if (!in_array($condition['operator'], ['IN', 'NOT IN'], TRUE)) {
+        throw new \InvalidArgumentException(sprintf('Invalid operator "%s" for a case-insensitive array condition. Allowed operators are "IN" and "NOT IN".', $condition['operator']));
+      }
       $condition['where'] = 'LOWER(' . $sql_query->escapeField($condition['real_field']) . ') ' . $condition['operator'] . ' (';
       $condition['where_args'] = [];
 
