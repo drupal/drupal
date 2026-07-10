@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\file;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\RevisionableStorageInterface;
@@ -40,7 +40,7 @@ class FileReferenceResolver {
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     #[Autowire(service: 'cache.memory')]
-    protected MemoryCacheInterface $memoryCache,
+    protected CacheBackendInterface $memoryCache,
     protected FileUsageInterface $fileUsage,
   ) {
 
