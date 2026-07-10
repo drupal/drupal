@@ -450,11 +450,11 @@ form_test.details_form:
   requirements:
     _access: 'TRUE'
 
-form_test.details_contains_required_textfield:
-  path: '/form_test/details-contains-required-textfield/{use_ajax}'
+form_test.details_contains_required_fields:
+  path: '/form_test/details-contains-required-fields/{use_ajax}'
   defaults:
-    _form: '\Drupal\form_test\Form\FormTestDetailsContainsRequiredTextfieldForm'
-    _title: 'Form details contains required textfield test'
+    _form: '\Drupal\form_test\Form\FormTestDetailsContainsRequiredFieldsForm'
+    _title: 'Form details contains required fields test'
     use_ajax: FALSE
   requirements:
     _access: 'TRUE'
