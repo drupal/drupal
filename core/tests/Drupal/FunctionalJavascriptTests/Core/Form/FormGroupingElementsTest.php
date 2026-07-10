@@ -171,49 +171,76 @@ class FormGroupingElementsTest extends WebDriverTestBase {
    * Tests form submit with a required field in closed details element.
    */
   public function testDetailsContainsRequiredTextfield(): void {
-    $this->drupalGet('form_test/details-contains-required-textfield');
+    $this->drupalGet('form_test/details-contains-required-fields');
     $details = $this->assertSession()->elementExists('css', 'details[data-drupal-selector="edit-meta"]');
+    $details2 = $this->assertSession()->elementExists('css', 'details[data-drupal-selector="edit-meta2"]');
+    $details3 = $this->assertSession()->elementExists('css', 'details[data-drupal-selector="edit-meta3"]');
 
     // Make sure details element is not open at the beginning.
     $this->assertFalse($details->hasAttribute('open'));
+    $this->assertFalse($details2->hasAttribute('open'));
+    $this->assertFalse($details3->hasAttribute('open'));
 
     $textfield = $this->assertSession()->elementExists('css', 'input[name="required_textfield_in_details"]');
+    $textarea = $this->assertSession()->elementExists('css', 'textarea[name="required_textarea_in_details"]');
+    $select = $this->assertSession()->elementExists('css', 'select[name="required_select_in_details"]');
 
-    // The text field inside the details element is not visible too.
+    // The fields inside the details elements are not visible too.
     $this->assertFalse($textfield->isVisible(), 'Text field is not visible');
+    $this->assertFalse($textarea->isVisible(), 'Text area field is not visible');
+    $this->assertFalse($select->isVisible(), 'Select field is not visible');
 
     // Submit the form with invalid data in the required fields.
     $this->assertSession()
       ->elementExists('css', 'input[data-drupal-selector="edit-submit"]')
       ->click();
-    // Confirm the required field is visible.
+    // Confirm the required fields are visible.
     $this->assertTrue($textfield->isVisible(), 'Text field is visible');
+    $this->assertTrue($textarea->isVisible(), 'Text area field is visible');
+    $this->assertTrue($select->isVisible(), 'Select field is visible');
   }
 
   /**
    * Tests required field in closed details element with ajax form.
    */
   public function testDetailsContainsRequiredTextfieldAjaxForm(): void {
-    $this->drupalGet('form_test/details-contains-required-textfield/true');
+    $this->drupalGet('form_test/details-contains-required-fields/true');
     $assert_session = $this->assertSession();
     $textfield = $assert_session->elementExists('css', 'input[name="required_textfield_in_details"]');
+    $textarea = $this->assertSession()->elementExists('css', 'textarea[name="required_textarea_in_details"]');
+    $select = $this->assertSession()->elementExists('css', 'select[name="required_select_in_details"]');
 
     // Submit the ajax form to open the details element at the first time.
     $assert_session->elementExists('css', 'input[value="Submit Ajax"]')
       ->click();
 
     $assert_session->waitForElementVisible('css', 'input[name="required_textfield_in_details"]');
+    $assert_session->waitForElementVisible('css', 'textarea[name="required_textarea_in_details"]');
+    $assert_session->waitForElementVisible('css', 'select[name="required_select_in_details"]');
 
-    // Close the details element.
-    $assert_session->elementExists('css', 'form summary')
-      ->click();
+    // Confirm the required fields are visible.
+    $this->assertTrue($textfield->isVisible(), 'Text field is visible');
+    $this->assertTrue($textarea->isVisible(), 'Text area field is visible');
+    $this->assertTrue($select->isVisible(), 'Select field is visible');
+
+    // Close the details elements.
+    $this->assertSession()->elementExists('css', 'details[data-drupal-selector="edit-meta"] summary')->click();
+    $this->assertSession()->elementExists('css', 'details[data-drupal-selector="edit-meta2"] summary')->click();
+    $this->assertSession()->elementExists('css', 'details[data-drupal-selector="edit-meta3"] summary')->click();
+
+    // The fields inside the details elements are not visible too.
+    $this->assertFalse($textfield->isVisible(), 'Text field is not visible');
+    $this->assertFalse($textarea->isVisible(), 'Text area field is not visible');
+    $this->assertFalse($select->isVisible(), 'Select field is not visible');
 
     // Submit the form with invalid data in the required fields without ajax.
     $assert_session->elementExists('css', 'input[data-drupal-selector="edit-submit"]')
       ->click();
 
-    // Confirm the required field is visible.
+    // Confirm the required fields are visible.
     $this->assertTrue($textfield->isVisible(), 'Text field is visible');
+    $this->assertTrue($textarea->isVisible(), 'Text area field is visible');
+    $this->assertTrue($select->isVisible(), 'Select field is visible');
   }
 
 }
