@@ -121,7 +121,7 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
     }
 
     // See https://symfony.com/doc/current/controller/service.html#invokable-controllers.
-    if ($collection->count() && $class->hasMethod('__invoke') === 0) {
+    if ($collection->count() === 0 && $class->hasMethod('__invoke')) {
       $globals = $this->resetGlobals();
       foreach ($this->getAttributes($class) as $attribute) {
         $this->addRoute($collection, $attribute, $globals, $class, $class->getMethod('__invoke'));
