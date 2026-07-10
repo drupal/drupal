@@ -6,6 +6,7 @@ namespace Drupal\Tests\path_alias\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('path_alias')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class PathAliasRevisionIndexesUpdatePathTest extends UpdatePathTestBase {
 
   /**

@@ -129,3 +129,31 @@ function search_schema(): array {
 function search_update_11400(): void {
   // Moved to system_update_11401().
 }
+
+/**
+ * Install Help Search module if the Search and Help modules are installed.
+ */
+function search_update_11401(): void {
+  $module_handler = \Drupal::moduleHandler();
+  // Search help may already have been installed by sites on 11.4.0 or 11.4.1.
+  if ($module_handler->moduleExists('search_help')) {
+    return;
+  }
+  if ($module_handler->moduleExists('help')) {
+    \Drupal::service('module_installer')->install(['search_help']);
+  }
+}
+
+/**
+ * Install Search node module if node is installed.
+ */
+function search_update_11402(): void {
+  if (\Drupal::moduleHandler()->moduleExists('node') && !\Drupal::moduleHandler()->moduleExists('search_node')) {
+    \Drupal::configFactory()->getEditable('core.entity_view_mode.node.search_index')->delete();
+    \Drupal::configFactory()->getEditable('core.entity_view_mode.node.search_result')->delete();
+    \Drupal::service('module_installer')->install(['search_node']);
+    /** @var \Drupal\search\SearchPageInterface|null $node_search_page */
+    $node_search_page = \Drupal::entityTypeManager()->getStorage('search_page')->load('node_search');
+    $node_search_page?->calculateDependencies()->save();
+  }
+}

@@ -8,6 +8,7 @@ use Drupal\block\Entity\Block;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('block')]
 #[CoversFunction('block_post_update_make_weight_integer')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class BlockWeightUpdateTest extends UpdatePathTestBase {
 
   /**

@@ -7,6 +7,7 @@ namespace Drupal\Tests\search\Functional\Update;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('search')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class SearchUpdateTest extends UpdatePathTestBase {
 
   /**
