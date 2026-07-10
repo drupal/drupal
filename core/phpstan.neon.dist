@@ -68,6 +68,29 @@ parameters:
     - "#^Class .* extends @internal class#"
     - identifier: missingType.iterableValue
 
+  disallowedFunctionCalls:
+    -
+       function: 'crc32()'
+       message: 'use hash() with an xxHash algorithm instead'
+       errorTip: 'See https://www.drupal.org/node/3581605'
+    -
+       function: 'md5()'
+       message: 'use hash() with an xxHash algorithm instead'
+       errorTip: 'See https://www.drupal.org/node/3581605'
+    -
+       function: 'sha1()'
+       message: 'use sha256() or hash() with an xxHash algorithm instead'
+       errorTip: 'See https://www.drupal.org/node/3581605'
+    -
+       function: 'hash()'
+       message: "with 'md5'|'sha1'|'crc32'|'crc32b' encryption algorithms. Use hash() with an xxHash algorithm instead"
+       errorTip: 'See https://www.drupal.org/node/3581605'
+       allowExceptCaseInsensitiveParams:
+         -
+            position: 1
+            name: 'algo'
+            typeString: "'md5'|'sha1'|'crc32'|'crc32b'"
+
 rules:
   # The rules below are Drupal custom ones.
   - Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest
