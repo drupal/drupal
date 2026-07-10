@@ -66,6 +66,10 @@ abstract class ConditionPluginBase extends ExecutablePluginBase implements Condi
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    // In the config schema, 'negate' is a boolean. However, some form elements
+    // such as checkbox return the value as 0/1. Cast here to ensure the data is
+    // in the expected type.
+    $form_state->setValue('negate', (bool) $form_state->getValue('negate'));
   }
 
   /**
