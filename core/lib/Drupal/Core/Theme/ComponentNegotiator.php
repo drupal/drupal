@@ -49,9 +49,8 @@ class ComponentNegotiator {
    */
   public function negotiate(string $component_id, array $all_definitions): ?string {
     $cache_key = $this->generateCacheKey($component_id);
-    $cached_data = $this->cache[$cache_key] ?? NULL;
-    if (isset($cached_data)) {
-      return $cached_data;
+    if (array_key_exists($cache_key, $this->cache)) {
+      return $this->cache[$cache_key];
     }
     $negotiated = $this->doNegotiate($component_id, $all_definitions);
     $this->cache[$cache_key] = $negotiated;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Components;
 
 use Drupal\Core\Theme\ComponentNegotiator;
+use Drupal\Core\Theme\ExtensionType;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -57,6 +58,27 @@ class ComponentNegotiatorTest extends ComponentKernelTestBase {
       );
       $this->assertSame($expected_id, $negotiated_id);
     });
+  }
+
+  /**
+   * Tests that negotiate() caches null results.
+   */
+  public function testNegotiateCachesNullResults(): void {
+    $definitions = $this->manager->getDefinitions();
+
+    // sdc_test:my-banner has no replacement: negotiate() returns null.
+    $this->assertNull($this->negotiator->negotiate('sdc_test:my-banner', $definitions));
+
+    // Add a fake replacement and call again. The null result must be served
+    // from cache. Definitions are immutable within a request, so this fake
+    // entry only serves to detect if doNegotiate() re-ran unexpectedly.
+    $definitions['fake:replacement'] = [
+      'id' => 'fake:replacement',
+      'replaces' => 'sdc_test:my-banner',
+      'extension_type' => ExtensionType::Module,
+      'provider' => 'sdc_test',
+    ];
+    $this->assertNull($this->negotiator->negotiate('sdc_test:my-banner', $definitions));
   }
 
   /**
