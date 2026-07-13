@@ -259,7 +259,7 @@ class UserController extends ControllerBase {
       '%name' => $user->getDisplayName(),
       '%timestamp' => $timestamp,
     ]);
-    $this->messenger()->addStatus($this->t('You have used a one-time login link. You can set your new password now.'));
+    $this->messenger()->addStatus($this->t('You have used a one-time login link.'));
     // Let the user's password be changed without the current password
     // check.
     $token = Crypt::randomBytesBase64(55);

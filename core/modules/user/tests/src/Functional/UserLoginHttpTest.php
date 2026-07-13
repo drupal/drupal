@@ -607,7 +607,7 @@ class UserLoginHttpTest extends BrowserTestBase {
     $resetURL = $urls[0];
     $this->drupalGet($resetURL);
     $this->submitForm([], 'Log in');
-    $this->assertSession()->pageTextContains('You have used a one-time login link. You can set your new password now.');
+    $this->assertSession()->pageTextContains('You have used a one-time login link.');
   }
 
 }
