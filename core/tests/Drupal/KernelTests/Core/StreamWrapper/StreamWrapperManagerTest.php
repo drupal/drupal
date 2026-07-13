@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\StreamWrapper;
 
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\stream_wrapper_service_test\StreamWrapper\ServiceDependencyStreamWrapper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -62,6 +63,20 @@ class StreamWrapperManagerTest extends KernelTestBase {
       FALSE,
     ];
     return $data;
+  }
+
+  /**
+   * Tests installing a module providing a stream wrapper using services.
+   */
+  public function testModuleInstallRegistration(): void {
+    $this->container->get('stream_wrapper_manager')->register();
+    $this->container->get('module_installer')->install(['stream_wrapper_service_test']);
+
+    $manager = \Drupal::service('stream_wrapper_manager');
+    $this->assertSame(ServiceDependencyStreamWrapper::class, $manager->getClass('test'));
+    $wrapper = $manager->getViaScheme('test');
+    $this->assertInstanceOf(ServiceDependencyStreamWrapper::class, $wrapper);
+    $this->assertSame($manager, $wrapper->streamWrapperManager);
   }
 
 }

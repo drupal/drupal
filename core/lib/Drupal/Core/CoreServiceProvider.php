@@ -21,6 +21,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterEventSubscribersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass;
 use Drupal\Core\DependencyInjection\Compiler\StackedKernelPass;
 use Drupal\Core\DependencyInjection\Compiler\StackedSessionHandlerPass;
+use Drupal\Core\DependencyInjection\Compiler\StreamWrapperClassesPass;
 use Drupal\Core\DependencyInjection\Compiler\SuperUserAccessPolicyPass;
 use Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass;
 use Drupal\Core\DependencyInjection\Compiler\TwigExtensionPass;
@@ -91,6 +92,8 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new StackedKernelPass());
 
     $container->addCompilerPass(new StackedSessionHandlerPass());
+
+    $container->addCompilerPass(new StreamWrapperClassesPass());
 
     // Collect and register Commands.
     $container->addCompilerPass(new ConsoleCompilerPass());
