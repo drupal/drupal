@@ -12,10 +12,12 @@ interface ClassResolverInterface {
    *
    * In contrast to controllers you don't specify a method.
    *
-   * @param string $definition
+   * @param class-string<T>|string $definition
    *   A class name or service name.
    *
-   * @return object
+   * @template T of object
+   *
+   * @return ($definition is class-string<T> ? T : object)
    *   The instance of the class.
    *
    * @throws \InvalidArgumentException
