@@ -64,17 +64,17 @@ abstract class StaticRouteDiscoveryBase implements EventSubscriberInterface {
    *   An array of options.
    * @param string|null $host
    *   The host pattern to match.
-   * @param array $schemes
-   *   An array of URI schemes.
-   * @param array $methods
-   *   An array of required HTTP methods.
+   * @param string|array $schemes
+   *   Required URI scheme or schemes.
+   * @param string|array $methods
+   *   Required HTTP method or methods.
    * @param string|null $condition
    *   A condition that should evaluate to true for the route to match.
    *
    * @return \Symfony\Component\Routing\Route
    *   The route.
    */
-  protected function createRoute(string $path, array $defaults, array $requirements, array $options, ?string $host, array $schemes, array $methods, ?string $condition): Route {
+  protected function createRoute(string $path, array $defaults, array $requirements, array $options, ?string $host, string|array $schemes, string|array $methods, ?string $condition): Route {
     // Ensure routes default to using Drupal's route compiler instead of
     // Symfony's.
     $options += [

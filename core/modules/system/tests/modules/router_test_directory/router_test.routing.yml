@@ -255,6 +255,15 @@ router_test.rejects_query_strings:
   requirements:
     _access: 'TRUE'
 
+router_test.string_method_scheme:
+  path: '/router_test/test_string_method_scheme'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+  methods: 'GET'
+  schemes: 'https'
+
 router_test.alias:
   alias: 'router_test.1'
 
