@@ -1,0 +1,5 @@
+name: 'Stream wrapper service test'
+type: module
+description: 'Provides a stream wrapper that depends on a module service.'
+package: Testing
+version: VERSION

@@ -18,10 +18,15 @@ class StreamWrapperManager implements StreamWrapperManagerInterface {
    *
    * @param \Symfony\Component\DependencyInjection\ServiceLocator $container
    *   A service locator containing stream wrapper services, keyed by scheme.
+   * @param array<string, class-string> $wrapperClasses
+   *   An associative array of stream wrapper class names, keyed by scheme.
+   *   Collected at compile time by
+   *   \Drupal\Core\DependencyInjection\Compiler\StreamWrapperClassesPass.
    */
   public function __construct(
     #[AutowireLocator('stream_wrapper', indexAttribute: 'scheme')]
     protected readonly ServiceLocator $container,
+    protected readonly array $wrapperClasses = [],
   ) {}
 
   /**
@@ -106,10 +111,7 @@ class StreamWrapperManager implements StreamWrapperManagerInterface {
    * {@inheritdoc}
    */
   public function getClass($scheme) {
-    if ($this->container->has($scheme)) {
-      return get_class($this->container->get($scheme));
-    }
-    return FALSE;
+    return $this->wrapperClasses[$scheme] ?? FALSE;
   }
 
   /**
@@ -137,10 +139,14 @@ class StreamWrapperManager implements StreamWrapperManagerInterface {
    * Registers the tagged stream wrappers.
    *
    * Internal use only.
+   *
+   * This must not instantiate the stream wrapper services: it can be called
+   * during a container rebuild, before the global container has been
+   * updated, while stream wrappers may access other services when they are
+   * constructed.
    */
   public function register() {
-    foreach (array_keys($this->container->getProvidedServices()) as $scheme) {
-      $class = $this->getClass($scheme);
+    foreach ($this->wrapperClasses as $scheme => $class) {
       $this->registerWrapper($scheme, $class, $class::getType());
     }
   }
