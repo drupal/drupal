@@ -12,6 +12,7 @@ locale.check_translation:
     _controller: '\Drupal\locale\Controller\LocaleController::checkTranslation'
   requirements:
     _permission: 'translate interface'
+    _csrf_token: 'TRUE'
 
 locale.translate_page:
   path: '/admin/config/regional/translate'

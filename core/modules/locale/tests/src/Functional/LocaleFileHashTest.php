@@ -50,9 +50,18 @@ class LocaleFileHashTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Check for available translations and update them via the UI.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->checkTranslations();
     $this->assertSession()->addressEquals('admin/reports/translations');
     $this->submitForm([], 'Update translations');
+  }
+
+  /**
+   * Check for translation updates via the UI.
+   */
+  protected function checkTranslations(): void {
+    $this->drupalGet('admin/reports/translations');
+    $this->clickLink('Check manually');
+    $this->checkForMetaRefresh();
   }
 
   /**
@@ -60,7 +69,7 @@ class LocaleFileHashTest extends LocaleUpdateBase {
    */
   public function testModifiedFileProducesDifferentHash(): void {
     // Check for translation updates via the UI.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->checkTranslations();
     // The translation status page should show no updates are available.
     $this->assertSession()->addressEquals('admin/reports/translations');
     $this->assertSession()->pageTextNotContains('Updates for:');
@@ -76,7 +85,7 @@ class LocaleFileHashTest extends LocaleUpdateBase {
     touch($uri, time() + 20000);
 
     // Run check again via the UI.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->checkTranslations();
     // The translation status page should show no updates are available.
     $this->assertSession()->addressEquals('admin/reports/translations');
     $this->assertSession()->pageTextNotContains('Updates for:');
@@ -89,7 +98,7 @@ class LocaleFileHashTest extends LocaleUpdateBase {
     touch($uri, filemtime($uri));
 
     // Run check again via the UI.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->checkTranslations();
     // The translation status page should show an update is available.
     $this->assertSession()->addressEquals('admin/reports/translations');
     $this->assertSession()->pageTextContains('Updates for: Contributed module two');
@@ -105,7 +114,7 @@ class LocaleFileHashTest extends LocaleUpdateBase {
     $this->assertHashes($expected_hash, $expected_hash, 'contrib_module_two', 'de');
 
     // Check for translation updates via the UI.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->checkTranslations();
     // The translation status page should show no updates are available.
     $this->assertSession()->addressEquals('admin/reports/translations');
     $this->assertSession()->pageTextNotContains('Updates for:');
@@ -120,7 +129,7 @@ class LocaleFileHashTest extends LocaleUpdateBase {
     \Drupal::keyValue('locale.translation_status')->set('contrib_module_two', $status['contrib_module_two']);
 
     // Test fallback to mtime if the hash is not available.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->checkTranslations();
     // The translation status page should show no updates are available.
     $this->assertSession()->addressEquals('admin/reports/translations');
     $this->assertSession()->pageTextContains('Updates for: Contributed module two');
