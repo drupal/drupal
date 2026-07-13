@@ -26,6 +26,7 @@ use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Test\TestRunResultsStorageInterface;
 use Drupal\TestTools\TestRunner\Configuration as Config;
+use Drupal\TestTools\TestRunner\MemoryTestRunResultsStorage;
 use Drupal\TestTools\TestRunner\WorkAllocator;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version;
@@ -443,21 +444,16 @@ function simpletest_script_setup_database(): void {
  * Sets up the test runs results storage.
  */
 function simpletest_script_setup_test_run_results_storage() {
-  $databases['default'] = Database::getConnectionInfo('default');
-
-  // If no --sqlite parameter has been passed, then the test runner database
-  // connection is the default database connection.
   $sqlite = Config::get('sqlite');
-  if (!$sqlite) {
-    $sqlite = FALSE;
-    $databases['test-runner']['default'] = $databases['default']['default'];
+
+  if ($sqlite === NULL) {
+    // If no --sqlite parameter has been passed, then use the in-memory storage
+    // for test results.
+    $inMemory = TRUE;
   }
-  // Otherwise, set up a SQLite connection for the test runner.
   else {
-    if ($sqlite === ':memory:') {
-      $sqlite = ':memory:';
-    }
-    elseif (is_string($sqlite) && !str_starts_with($sqlite, '/')) {
+    $inMemory = FALSE;
+    if ($sqlite !== ':memory:' && is_string($sqlite) && !str_starts_with($sqlite, '/')) {
       $sqlite = DRUPAL_ROOT . '/' . $sqlite;
     }
     $databases['test-runner']['default'] = [
@@ -472,36 +468,23 @@ function simpletest_script_setup_test_run_results_storage() {
       }
       touch($sqlite);
     }
+    // Add the test runner database connection.
+    Database::addConnectionInfo('test-runner', 'default', $databases['test-runner']['default']);
   }
 
-  // Add the test runner database connection.
-  Database::addConnectionInfo('test-runner', 'default', $databases['test-runner']['default']);
+  try {
+    $test_run_results_storage = $inMemory ?
+      new MemoryTestRunResultsStorage() :
+      new SimpletestTestRunResultsStorage(Database::getConnection('default', 'test-runner'));
 
-  // Create the test result schema.
-  try {
-    $test_run_results_storage = new SimpletestTestRunResultsStorage(Database::getConnection('default', 'test-runner'));
-  }
-  catch (\PDOException $e) {
-    simpletest_script_print_error($databases['test-runner']['default']['driver'] . ': ' . $e->getMessage());
-    exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
-  }
-  if ($sqlite) {
-    try {
-      $test_run_results_storage->buildTestingResultsEnvironment(Config::get('keep-results-table'));
-    }
-    catch (Exception $e) {
-      echo (string) $e;
-      exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
-    }
-  }
-  // Verify that the test result database schema exists by checking one table.
-  try {
+    $test_run_results_storage->buildTestingResultsEnvironment(Config::get('keep-results-table'));
+
     if (!$test_run_results_storage->validateTestingResultsEnvironment()) {
-      simpletest_script_print_error('Missing test result database schema. Use the --sqlite parameter.');
+      simpletest_script_print_error('The database is missing the test result tables required.');
       exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
     }
   }
-  catch (Exception $e) {
+  catch (\Exception $e) {
     echo (string) $e;
     exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
   }
