@@ -202,9 +202,7 @@ class LayoutBuilderHooks {
   #[Hook('entity_presave')]
   public function entityPresave(EntityInterface $entity): void {
     if (\Drupal::moduleHandler()->moduleExists('block_content')) {
-      /** @var \Drupal\layout_builder\InlineBlockEntityOperations $entity_operations */
-      $entity_operations = \Drupal::classResolver(InlineBlockEntityOperations::class);
-      $entity_operations->handlePreSave($entity);
+      \Drupal::classResolver(InlineBlockEntityOperations::class)->handlePreSave($entity);
     }
   }
 
@@ -214,9 +212,7 @@ class LayoutBuilderHooks {
   #[Hook('entity_delete')]
   public function entityDelete(EntityInterface $entity): void {
     if (\Drupal::moduleHandler()->moduleExists('block_content')) {
-      /** @var \Drupal\layout_builder\InlineBlockEntityOperations $entity_operations */
-      $entity_operations = \Drupal::classResolver(InlineBlockEntityOperations::class);
-      $entity_operations->handleEntityDelete($entity);
+      \Drupal::classResolver(InlineBlockEntityOperations::class)->handleEntityDelete($entity);
     }
   }
 
@@ -234,9 +230,7 @@ class LayoutBuilderHooks {
       // If an entity's field values change, and it also has a layout override
       // in the tempstore, the tempstore must be updated to reflect those new
       // values.
-      /** @var \Drupal\layout_builder\LayoutOverrideFieldHelper $override_field_helper */
-      $override_field_helper = \Drupal::classResolver(LayoutOverrideFieldHelper::class);
-      $override_field_helper->updateTempstoreEntityContext($entity);
+      \Drupal::classResolver(LayoutOverrideFieldHelper::class)->updateTempstoreEntityContext($entity);
     }
   }
 
@@ -246,9 +240,7 @@ class LayoutBuilderHooks {
   #[Hook('cron')]
   public function cron(): void {
     if (\Drupal::moduleHandler()->moduleExists('block_content')) {
-      /** @var \Drupal\layout_builder\InlineBlockEntityOperations $entity_operations */
-      $entity_operations = \Drupal::classResolver(InlineBlockEntityOperations::class);
-      $entity_operations->removeUnused();
+      \Drupal::classResolver(InlineBlockEntityOperations::class)->removeUnused();
     }
   }
 
