@@ -1,0 +1,7 @@
+services:
+  stream_wrapper_service_test.stream_wrapper:
+    class: Drupal\stream_wrapper_service_test\StreamWrapper\ServiceDependencyStreamWrapper
+    tags:
+      - { name: stream_wrapper, scheme: test }
+  stream_wrapper_service_test.dependency:
+    alias: stream_wrapper_manager
