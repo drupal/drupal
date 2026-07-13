@@ -237,7 +237,7 @@ class ParamConverterManagerTest extends UnitTestCase {
     $manager = new ParamConverterManager(new ServiceLocator(['test_convert' => fn() => $converter]));
 
     $this->expectException(ParamNotConvertedException::class);
-    $this->expectExceptionMessage('The "id" parameter was not converted for the path "/test/{id}" (route name: "test_route")');
+    $this->expectExceptionMessageIs('The "id" parameter was not converted for the path "/test/{id}" (route name: "test_route")');
     $manager->convert($defaults);
   }
 

@@ -82,7 +82,7 @@ class AddComponentTest extends KernelTestBase {
   public function testAddComponent(array $config_action_value, string $expected_region, int $added_component_expected_weight, int $existing_component_expected_weight, ?array $expected_error = NULL): void {
     if ($expected_error !== NULL) {
       $this->expectException($expected_error[0]);
-      $this->expectExceptionMessage($expected_error[1]);
+      $this->expectExceptionMessageIs($expected_error[1]);
     }
     $this->configActionManager->applyAction(
       'addComponentToLayout',
@@ -387,7 +387,7 @@ class AddComponentTest extends KernelTestBase {
    */
   public function testActionFailsIfEntityNotFound(): void {
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessage('No entity found for applying the addComponentToLayout action.');
+    $this->expectExceptionMessageIs('No entity found for applying the addComponentToLayout action.');
     $this->configActionManager->applyAction(
       'addComponentToLayout',
       'core.entity_view_display.entity_test.bundle_with_extra_fields.missing_view_mode',

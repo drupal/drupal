@@ -75,7 +75,7 @@ REGEXP
     file_put_contents($failure_marker->getPath(), 'message : something message : something1');
 
     $this->expectException(FailureMarkerExistsException::class);
-    $this->expectExceptionMessage('Failure marker file exists but cannot be decoded.');
+    $this->expectExceptionMessageIs('Failure marker file exists but cannot be decoded.');
     $failure_marker->assertNotExists();
   }
 

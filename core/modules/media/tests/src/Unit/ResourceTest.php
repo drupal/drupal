@@ -84,7 +84,7 @@ class ResourceTest extends UnitTestCase {
   public function testSetDimensions($factory, $width, $height, $exception = NULL, $expected_width = NULL, $expected_height = NULL): void {
     if ($exception) {
       $this->expectException(\InvalidArgumentException::class);
-      $this->expectExceptionMessage($exception);
+      $this->expectExceptionMessageIs($exception);
     }
     $resource = Resource::$factory('foo', $width, $height);
     $this->assertSame($expected_width ?: $width, $resource->getWidth());

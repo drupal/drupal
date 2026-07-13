@@ -1568,7 +1568,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    */
   public function testAccessCheckSpecified(): void {
     $this->expectException(QueryException::class);
-    $this->expectExceptionMessage('Entity queries must explicitly set whether the query should be access checked or not. See Drupal\Core\Entity\Query\QueryInterface::accessCheck().');
+    $this->expectExceptionMessageIs('Entity queries must explicitly set whether the query should be access checked or not. See Drupal\Core\Entity\Query\QueryInterface::accessCheck().');
     // We are purposely testing an entity query without access check, so we need
     // to tell PHPStan to ignore this.
     // @phpstan-ignore-next-line

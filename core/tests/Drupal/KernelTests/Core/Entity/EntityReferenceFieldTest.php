@@ -439,7 +439,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $this->entityTypeManager->clearCachedDefinitions();
 
     $this->expectException(FieldException::class);
-    $this->expectExceptionMessage("Field 'bad_reference' on entity type 'entity_test' references a target entity type 'made_up_entity_type' which does not exist.");
+    $this->expectExceptionMessageIs("Field 'bad_reference' on entity type 'entity_test' references a target entity type 'made_up_entity_type' which does not exist.");
 
     $this->installEntitySchema('entity_test');
   }

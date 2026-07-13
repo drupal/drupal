@@ -69,7 +69,7 @@ class CommentUninstallTest extends KernelTestBase {
 
     // Uninstall the comment module which should trigger an exception.
     $this->expectException(ModuleUninstallValidatorException::class);
-    $this->expectExceptionMessage('The following reasons prevent the modules from being uninstalled: The <em class="placeholder">Comments</em> field type is used in the following field: node.comment');
+    $this->expectExceptionMessageIs('The following reasons prevent the modules from being uninstalled: The <em class="placeholder">Comments</em> field type is used in the following field: node.comment');
     $this->container->get('module_installer')->uninstall(['comment']);
   }
 

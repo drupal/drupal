@@ -67,7 +67,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
     $this->assertIsCallable($controller);
 
     $this->expectException('\Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
-    $this->expectExceptionMessage('This resource is not available');
+    $this->expectExceptionMessageIs('This resource is not available');
     $request = new Request([
       'url' => 'https://example.com/path/to/resource',
       'hash' => $hash,

@@ -80,7 +80,7 @@ class ExtensionExistsConstraintValidatorTest extends KernelTestBase {
 
     // Anything but a module or theme should raise an exception.
     $definition->setConstraints(['ExtensionExists' => ['type' => 'profile']]);
-    $this->expectExceptionMessage("Unknown extension type: 'profile'");
+    $this->expectExceptionMessageIs("Unknown extension type: 'profile'");
     $data->validate();
   }
 

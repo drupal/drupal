@@ -28,7 +28,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
   public function testConstructor(array $elements, ?string $expected_exception_message): void {
     if ($expected_exception_message !== NULL) {
       $this->expectException(\InvalidArgumentException::class);
-      $this->expectExceptionMessage($expected_exception_message);
+      $this->expectExceptionMessageIs($expected_exception_message);
     }
     $restrictions = new HTMLRestrictions($elements);
     $this->assertIsArray($restrictions->getAllowedElements(FALSE));

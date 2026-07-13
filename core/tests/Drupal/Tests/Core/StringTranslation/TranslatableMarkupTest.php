@@ -35,7 +35,7 @@ class TranslatableMarkupTest extends UnitTestCase {
       ->willThrowException($exception);
 
     $this->expectException(\Exception::class);
-    $this->expectExceptionMessage($exception->getMessage());
+    $this->expectExceptionMessageIs($exception->getMessage());
     (string) $text;
   }
 
@@ -47,7 +47,7 @@ class TranslatableMarkupTest extends UnitTestCase {
   public function testIsStringAssertion(): void {
     $translation = $this->getStringTranslationStub();
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('$string ("foo") must be a string.');
+    $this->expectExceptionMessageIs('$string ("foo") must be a string.');
     // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     new TranslatableMarkup(new TranslatableMarkup('foo', [], [], $translation));
   }
@@ -60,7 +60,7 @@ class TranslatableMarkupTest extends UnitTestCase {
   public function testIsStringAssertionWithFormattableMarkup(): void {
     $formattable_string = new FormattableMarkup('@bar', ['@bar' => 'foo']);
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('$string ("foo") must be a string.');
+    $this->expectExceptionMessageIs('$string ("foo") must be a string.');
     // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     new TranslatableMarkup($formattable_string);
   }

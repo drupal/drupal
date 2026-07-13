@@ -273,7 +273,7 @@ class EntityConverterTest extends UnitTestCase {
    */
   public function testConvertWithInvalidDynamicEntityType(): void {
     $this->expectException(ParamNotConvertedException::class);
-    $this->expectExceptionMessage('The "foo" parameter was not converted because the "invalid_id" parameter is missing.');
+    $this->expectExceptionMessageIs('The "foo" parameter was not converted because the "invalid_id" parameter is missing.');
     $this->entityConverter->convert('id', ['type' => 'entity:{invalid_id}'], 'foo', ['foo' => 'id']);
   }
 

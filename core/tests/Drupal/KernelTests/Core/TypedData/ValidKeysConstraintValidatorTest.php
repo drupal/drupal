@@ -352,7 +352,7 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
     // `<infer>`.
     $config->getDataDefinition()
       ->addConstraint('ValidKeys', ['allowedKeys' => 'infer']);
-    $this->expectExceptionMessage("'infer' is not a valid set of allowed keys.");
+    $this->expectExceptionMessageIs("'infer' is not a valid set of allowed keys.");
     $config->validate();
   }
 

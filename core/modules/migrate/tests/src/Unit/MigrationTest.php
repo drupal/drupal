@@ -45,7 +45,7 @@ class MigrationTest extends UnitTestCase {
     $id_map_plugin_manager = $this->createMock('\Drupal\migrate\Plugin\MigratePluginManagerInterface');
 
     $this->expectException(InvalidPluginDefinitionException::class);
-    $this->expectExceptionMessage("Invalid migration dependencies configuration for migration test_migration");
+    $this->expectExceptionMessageIs("Invalid migration dependencies configuration for migration test_migration");
     new Migration($configuration, $plugin_id, [], $migration_plugin_manager, $source_plugin_manager, $process_plugin_manager, $destination_plugin_manager, $id_map_plugin_manager);
   }
 
@@ -67,7 +67,7 @@ class MigrationTest extends UnitTestCase {
     $migration->setDestinationPlugin($destination_plugin);
 
     $this->expectException(RequirementsException::class);
-    $this->expectExceptionMessage('Missing source requirement');
+    $this->expectExceptionMessageIs('Missing source requirement');
     $migration->checkRequirements();
   }
 
@@ -89,7 +89,7 @@ class MigrationTest extends UnitTestCase {
     $migration->setDestinationPlugin($destination_plugin);
 
     $this->expectException(RequirementsException::class);
-    $this->expectExceptionMessage('Missing destination requirement');
+    $this->expectExceptionMessageIs('Missing destination requirement');
     $migration->checkRequirements();
   }
 
@@ -134,7 +134,7 @@ class MigrationTest extends UnitTestCase {
       ->willReturn(['test_b' => $migration_b, 'test_c' => $migration_c, 'test_d' => $migration_d]);
 
     $this->expectException(RequirementsException::class);
-    $this->expectExceptionMessage('Missing migrations test_a, test_c');
+    $this->expectExceptionMessageIs('Missing migrations test_a, test_c');
     $migration->checkRequirements();
   }
 
@@ -201,7 +201,7 @@ class MigrationTest extends UnitTestCase {
     $migration->set('migration_dependencies', $dependencies);
 
     $this->expectException(InvalidPluginDefinitionException::class);
-    $this->expectExceptionMessage("Invalid migration dependencies configuration for migration {$plugin_id}");
+    $this->expectExceptionMessageIs("Invalid migration dependencies configuration for migration {$plugin_id}");
     $migration->getMigrationDependencies();
   }
 

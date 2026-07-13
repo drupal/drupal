@@ -172,7 +172,7 @@ YAML
     );
 
     $this->expectException(\ArgumentCountError::class);
-    $this->expectExceptionMessage('Argument #1 ($question) not passed');
+    $this->expectExceptionMessageIs('Argument #1 ($question) not passed');
     $recipe->input->collectAll($collector);
   }
 
@@ -217,7 +217,7 @@ YAML
     unset($recipe_data['input']['capital']['default']['fallback']);
     $recipe = $this->createRecipe($recipe_data);
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage("The 'foo.baz' config object does not exist.");
+    $this->expectExceptionMessageIs("The 'foo.baz' config object does not exist.");
     $recipe->input->collectAll($collector);
   }
 
@@ -324,7 +324,7 @@ YAML
     ]);
     $recipe->input->collectAll($collector);
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessage("The entity type for the config name 'node.\${anything}.test' could not be identified.");
+    $this->expectExceptionMessageIs("The entity type for the config name 'node.\${anything}.test' could not be identified.");
     RecipeRunner::processRecipe($recipe);
   }
 
@@ -437,7 +437,7 @@ YAML
     unset($recipe_data['input']['capital']['default']['fallback']);
     $recipe = $this->createRecipe($recipe_data);
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage("The 'NO_SUCH_THING' environment variable is not defined.");
+    $this->expectExceptionMessageIs("The 'NO_SUCH_THING' environment variable is not defined.");
     $recipe->input->collectAll($collector);
   }
 

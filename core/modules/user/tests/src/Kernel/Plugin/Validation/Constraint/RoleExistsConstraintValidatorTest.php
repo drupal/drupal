@@ -37,7 +37,7 @@ class RoleExistsConstraintValidatorTest extends KernelTestBase {
       ->addConstraint('RoleExists');
 
     $this->expectException(UnexpectedTypeException::class);
-    $this->expectExceptionMessage('Expected argument of type "string", "int" given');
+    $this->expectExceptionMessageIs('Expected argument of type "string", "int" given');
     $this->container->get('typed_data_manager')
       ->create($definition, 39)
       ->validate();

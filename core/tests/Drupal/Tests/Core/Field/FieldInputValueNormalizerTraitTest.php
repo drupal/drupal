@@ -95,7 +95,7 @@ class FieldInputValueNormalizerTraitTest extends UnitTestCase {
    */
   public function testScalarWithNoMainProperty(): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('A main property is required when normalizing scalar field values.');
+    $this->expectExceptionMessageIs('A main property is required when normalizing scalar field values.');
     $value = 'foo';
     $this->normalizeValue($value, NULL);
   }

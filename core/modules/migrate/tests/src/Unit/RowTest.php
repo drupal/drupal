@@ -147,7 +147,7 @@ class RowTest extends UnitTestCase {
     $row = new Row($this->testValues, $this->testSourceIds);
     $row->freezeSource();
     $this->expectException(\Exception::class);
-    $this->expectExceptionMessage("The source is frozen and can't be changed any more");
+    $this->expectExceptionMessageIs("The source is frozen and can't be changed any more");
     $row->setSourceProperty('title', 'new title');
   }
 

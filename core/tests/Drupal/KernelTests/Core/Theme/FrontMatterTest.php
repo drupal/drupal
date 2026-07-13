@@ -79,7 +79,7 @@ class FrontMatterTest extends KernelTestBase {
     $source = "---\ncollection:\n-  key: foo\n  foo: bar\n---\n" . ComponentFrontMatterTest::SOURCE;
     $file = $this->createTwigTemplate($source);
     $this->expectException(SyntaxError::class);
-    $this->expectExceptionMessage('An error occurred when attempting to parse front matter data on line 4 in ' . $file);
+    $this->expectExceptionMessageIs('An error occurred when attempting to parse front matter data on line 4 in ' . $file);
     $this->twig->getTemplateMetadata(basename($file));
   }
 

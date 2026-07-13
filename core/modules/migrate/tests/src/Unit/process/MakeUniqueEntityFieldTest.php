@@ -99,7 +99,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
     ];
     $plugin = new MakeUniqueEntityField($configuration, 'make_unique', [], $this->getMigration(), $this->entityTypeManager);
     $this->expectException('Drupal\migrate\MigrateException');
-    $this->expectExceptionMessage('The start position configuration key should be an integer. Omit this key to capture from the beginning of the string.');
+    $this->expectExceptionMessageIs('The start position configuration key should be an integer. Omit this key to capture from the beginning of the string.');
     $plugin->transform('test_start', $this->migrateExecutable, $this->row, 'foo');
   }
 
@@ -114,7 +114,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
     ];
     $plugin = new MakeUniqueEntityField($configuration, 'make_unique', [], $this->getMigration(), $this->entityTypeManager);
     $this->expectException('Drupal\migrate\MigrateException');
-    $this->expectExceptionMessage('The character length configuration key should be an integer. Omit this key to capture the entire string.');
+    $this->expectExceptionMessageIs('The character length configuration key should be an integer. Omit this key to capture the entire string.');
     $plugin->transform('test_length', $this->migrateExecutable, $this->row, 'foo');
   }
 

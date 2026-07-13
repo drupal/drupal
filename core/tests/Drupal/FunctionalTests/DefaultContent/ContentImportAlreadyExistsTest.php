@@ -99,7 +99,7 @@ class ContentImportAlreadyExistsTest extends BrowserTestBase {
 
     if ($existing === Existing::Error) {
       $this->expectException(ImportException::class);
-      $this->expectExceptionMessage('user 94503467-be7f-406c-9795-fc25baa22203 already exists.');
+      $this->expectExceptionMessageIs('user 94503467-be7f-406c-9795-fc25baa22203 already exists.');
     }
 
     $this->container->get(Importer::class)

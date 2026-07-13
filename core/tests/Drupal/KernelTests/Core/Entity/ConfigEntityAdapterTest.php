@@ -148,7 +148,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
    */
   public function testApplyDefaultValue(): void {
     $this->expectException(\BadMethodCallException::class);
-    $this->expectExceptionMessage('Method not supported');
+    $this->expectExceptionMessageIs('Method not supported');
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
     $adapter->applyDefaultValue();
   }

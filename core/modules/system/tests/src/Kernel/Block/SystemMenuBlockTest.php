@@ -467,7 +467,7 @@ class SystemMenuBlockTest extends KernelTestBase {
   public function testIgnoreActiveTrailConstraint(int $level, int $depth, bool $expand_all_items, ?bool $ignore_active_trail, bool $expect_exception): void {
     if ($expect_exception) {
       $this->expectException(SchemaIncompleteException::class);
-      $this->expectExceptionMessage('Schema errors for block.block.machine_name with the following errors: 0 [settings] The &quot;ignore_active_trail&quot; setting on a system menu block cannot be enabled if &quot;level&quot; is greater than 1 or &quot;expand_all_items&quot; is not enabled and &quot;depth&quot; is greater than 1.');
+      $this->expectExceptionMessageIs('Schema errors for block.block.machine_name with the following errors: 0 [settings] The &quot;ignore_active_trail&quot; setting on a system menu block cannot be enabled if &quot;level&quot; is greater than 1 or &quot;expand_all_items&quot; is not enabled and &quot;depth&quot; is greater than 1.');
     }
     \Drupal::service('theme_installer')->install(['stark']);
     $settings = [

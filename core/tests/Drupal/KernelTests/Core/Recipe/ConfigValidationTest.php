@@ -74,7 +74,7 @@ YAML;
     // data, we should get a validation error.
     $recipe = $this->createRecipeWithInvalidDataInFile('config_test.types.fully_validatable.yml');
     $this->expectException(InvalidConfigException::class);
-    $this->expectExceptionMessage('There were validation errors in config_test.types.fully_validatable');
+    $this->expectExceptionMessageIs('There were validation errors in config_test.types.fully_validatable');
     RecipeRunner::processRecipe($recipe);
   }
 

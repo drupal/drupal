@@ -109,7 +109,7 @@ class WorkspaceEntityDeleteTest extends KernelTestBase {
     $this->assertEmpty($workspace_tracker->getTrackedEntities('stage', 'node'));
     $this->assertEmpty($storage->loadMultiple([$published_stage->id(), $unpublished_stage->id()]));
 
-    $this->expectExceptionMessage('This content item can only be deleted in the Live workspace.');
+    $this->expectExceptionMessageIs('This content item can only be deleted in the Live workspace.');
     $this->assertFalse($published_live->access('delete'));
     $this->assertFalse($unpublished_live->access('delete'));
     $published_live->delete();

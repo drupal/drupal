@@ -59,7 +59,7 @@ class MigrateMissingDatabaseTest extends KernelTestBase {
     $this->assertInstanceOf(MigrationInterface::class, $migration);
     $this->assertInstanceOf(MigrateIdMapInterface::class, $migration->getIdMap());
     $this->expectException(RequirementsException::class);
-    $this->expectExceptionMessage('No database connection available for source plugin migrate_missing_database_test');
+    $this->expectExceptionMessageIs('No database connection available for source plugin migrate_missing_database_test');
     $migration->checkRequirements();
   }
 

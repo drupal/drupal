@@ -89,7 +89,7 @@ class ConfigActionsTest extends KernelTestBase {
   #[TestWith(["placeBlockInAdminTheme"])]
   public function testPlaceBlockActionOnlyWorksOnBlocks(string $action): void {
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage("The \"user_role\" entity does not support the \"$action\" config action.");
+    $this->expectExceptionMessageIs("The \"user_role\" entity does not support the \"$action\" config action.");
     $this->configActionManager->applyAction($action, 'user.role.anonymous', []);
   }
 
@@ -132,7 +132,7 @@ class ConfigActionsTest extends KernelTestBase {
     $this->assertSame($expected_region, $block->getRegion());
 
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessage('Cannot determine which region to place this block into, because no default region was provided.');
+    $this->expectExceptionMessageIs('Cannot determine which region to place this block into, because no default region was provided.');
     $this->configActionManager->applyAction($action, 'block.block.no_region', [
       'plugin' => 'system_powered_by_block',
       'region' => [],

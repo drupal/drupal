@@ -37,7 +37,7 @@ class ContainerBuilderTest extends UnitTestCase {
   public function testSetParameterException(): void {
     $container = new ContainerBuilder();
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Parameter names must be lowercase: Buzz');
+    $this->expectExceptionMessageIs('Parameter names must be lowercase: Buzz');
     $container->setParameter('Buzz', 'buzz');
   }
 

@@ -279,7 +279,7 @@ class EntityTypeManagerTest extends UnitTestCase {
     $this->setUpEntityTypeDefinitions([$entity_type_id => $entity]);
 
     $this->expectException(InvalidPluginDefinitionException::class);
-    $this->expectExceptionMessage($exception_message);
+    $this->expectExceptionMessageIs($exception_message);
     $this->entityTypeManager->getFormObject($entity_type_id, $operation);
   }
 
@@ -296,7 +296,7 @@ class EntityTypeManagerTest extends UnitTestCase {
       'donkey' => $donkey,
     ]);
     $this->expectException(InvalidPluginDefinitionException::class);
-    $this->expectExceptionMessage('The "default" form handler of the "donkey" entity type specifies a class "Drupal\Tests\Core\Entity\TestNotAnEntityForm" that does not extend "Drupal\Core\Entity\EntityFormInterface".');
+    $this->expectExceptionMessageIs('The "default" form handler of the "donkey" entity type specifies a class "Drupal\Tests\Core\Entity\TestNotAnEntityForm" that does not extend "Drupal\Core\Entity\EntityFormInterface".');
     $this->entityTypeManager->getFormObject('donkey', 'default');
   }
 
@@ -355,7 +355,7 @@ class EntityTypeManagerTest extends UnitTestCase {
     }
     $this->setUpEntityTypeDefinitions([$entity_type => $entity]);
     $this->expectException(InvalidPluginDefinitionException::class);
-    $this->expectExceptionMessage($exception_message);
+    $this->expectExceptionMessageIs($exception_message);
     $this->entityTypeManager->getHandler($entity_type, $handler_name);
   }
 
@@ -387,7 +387,7 @@ class EntityTypeManagerTest extends UnitTestCase {
 
     $definition = $apple->reveal();
     $this->expectException(InvalidLinkTemplateException::class);
-    $this->expectExceptionMessage("Link template 'canonical' for entity type 'apple' must start with a leading slash, the current link template is 'path/to/apple'");
+    $this->expectExceptionMessageIs("Link template 'canonical' for entity type 'apple' must start with a leading slash, the current link template is 'path/to/apple'");
     $this->entityTypeManager->processDefinition($definition, 'apple');
   }
 
@@ -433,7 +433,7 @@ class EntityTypeManagerTest extends UnitTestCase {
     $this->setUpEntityTypeDefinitions();
 
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage('The "pear" entity type does not exist.');
+    $this->expectExceptionMessageIs('The "pear" entity type does not exist.');
     $this->entityTypeManager->getDefinition('pear', TRUE);
   }
 

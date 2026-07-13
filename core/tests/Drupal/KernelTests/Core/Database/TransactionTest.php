@@ -1013,7 +1013,7 @@ class TransactionTest extends DatabaseTestBase {
     $this->assertSame('savepoint_1', $savepoint1->name());
 
     $this->expectException(TransactionNameNonUniqueException::class);
-    $this->expectExceptionMessage("savepoint_1 is already in use.");
+    $this->expectExceptionMessageIs("savepoint_1 is already in use.");
     $this->connection->startTransaction('savepoint_1');
   }
 
@@ -1030,7 +1030,7 @@ class TransactionTest extends DatabaseTestBase {
     $this->assertSame('Dipsy', $savepoint1->name());
 
     $this->expectException(TransactionNameNonUniqueException::class);
-    $this->expectExceptionMessage("Dipsy is already in use.");
+    $this->expectExceptionMessageIs("Dipsy is already in use.");
     $this->connection->startTransaction('Dipsy');
   }
 
@@ -1319,7 +1319,7 @@ class TransactionTest extends DatabaseTestBase {
     // that prevents the payload from executing is thrown, so we ignore
     // deprecations for this test.
     $this->expectException(\BadMethodCallException::class);
-    $this->expectExceptionMessage('Cannot unserialize Drupal\Core\Database\Transaction');
+    $this->expectExceptionMessageIs('Cannot unserialize Drupal\Core\Database\Transaction');
     unserialize($payload);
   }
 

@@ -45,7 +45,7 @@ class BaseThemeMissingTest extends KernelTestBase {
    */
   public function testMissingBaseThemeException(): void {
     $this->expectException(InfoParserException::class);
-    $this->expectExceptionMessage('Missing required key ("base theme") in core/tests/fixtures/test_missing_base_theme/test_missing_base_theme.info.yml, see https://www.drupal.org/node/3066038');
+    $this->expectExceptionMessageIs('Missing required key ("base theme") in core/tests/fixtures/test_missing_base_theme/test_missing_base_theme.info.yml, see https://www.drupal.org/node/3066038');
     $this->themeInstaller->install(['test_missing_base_theme']);
   }
 

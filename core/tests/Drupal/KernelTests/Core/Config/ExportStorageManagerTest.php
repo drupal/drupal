@@ -101,7 +101,7 @@ class ExportStorageManagerTest extends KernelTestBase {
     );
 
     $this->expectException(StorageTransformerException::class);
-    $this->expectExceptionMessage("Cannot acquire config export transformer lock.");
+    $this->expectExceptionMessageIs("Cannot acquire config export transformer lock.");
     $manager->getStorage();
   }
 

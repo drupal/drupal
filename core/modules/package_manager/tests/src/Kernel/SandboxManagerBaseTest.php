@@ -142,7 +142,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
    */
   public function testUncreatedGetSandboxDirectory(): void {
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage(SandboxManagerBase::class . '::getSandboxDirectory() cannot be called because the stage has not been created or claimed.');
+    $this->expectExceptionMessageIs(SandboxManagerBase::class . '::getSandboxDirectory() cannot be called because the stage has not been created or claimed.');
     $this->createStage()->getSandboxDirectory();
   }
 
@@ -314,7 +314,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
     // Claiming the first stage always fails in this test because it was
     // destroyed, but the exception message depends on why it was destroyed.
     $this->expectException(SandboxException::class);
-    $this->expectExceptionMessage($expected_exception_message);
+    $this->expectExceptionMessageIs($expected_exception_message);
     $stage->claim($stage_id);
   }
 
@@ -336,7 +336,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
     // \Drupal\package_manager\Stage::storeDestroyInfo() as we are deleting it
     // above.
     $this->expectException(SandboxException::class);
-    $this->expectExceptionMessage('Cannot claim the stage because no stage has been created.');
+    $this->expectExceptionMessageIs('Cannot claim the stage because no stage has been created.');
     $stage->claim($stage_id);
   }
 
@@ -436,7 +436,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
     $project_root = $this->container->get(PathLocator::class)->getProjectRoot();
     unlink($project_root . '/composer.json');
     $this->expectException(SandboxException::class);
-    $this->expectExceptionMessage("composer.json not found.");
+    $this->expectExceptionMessageIs("composer.json not found.");
     $this->createStage()->create();
   }
 
@@ -448,7 +448,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
     $stage->create();
     $stage->require(['drupal/random']);
     $this->expectException(SandboxException::class);
-    $this->expectExceptionMessage("composer.json not found.");
+    $this->expectExceptionMessageIs("composer.json not found.");
     unlink($stage->getSandboxDirectory() . '/composer.json');
     $stage->apply();
   }

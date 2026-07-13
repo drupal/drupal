@@ -83,7 +83,7 @@ class AddModerationConfigActionTest extends KernelTestBase {
 
     $recipe = $this->createRecipe($workflow->getConfigDependencyName());
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessage("The add_moderation:addNodeTypes config action only works with Content Moderation workflows.");
+    $this->expectExceptionMessageIs("The add_moderation:addNodeTypes config action only works with Content Moderation workflows.");
     RecipeRunner::processRecipe($recipe);
   }
 
@@ -93,7 +93,7 @@ class AddModerationConfigActionTest extends KernelTestBase {
   public function testActionOnlyTargetsWorkflows(): void {
     $recipe = $this->createRecipe('user.role.anonymous');
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage('The "user_role" entity does not support the "addNodeTypes" config action.');
+    $this->expectExceptionMessageIs('The "user_role" entity does not support the "addNodeTypes" config action.');
     RecipeRunner::processRecipe($recipe);
   }
 

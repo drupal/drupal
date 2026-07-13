@@ -98,7 +98,7 @@ class MachineNameTest extends MigrateProcessTestCase {
   public function testInvalidConfiguration(): void {
     $configuration['replace_pattern'] = 1;
     $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage('The replace pattern should be a string');
+    $this->expectExceptionMessageIs('The replace pattern should be a string');
     new MachineName($configuration, 'machine_name', [], $this->transliteration);
   }
 

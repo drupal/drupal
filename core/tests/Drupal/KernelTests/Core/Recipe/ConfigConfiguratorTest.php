@@ -163,7 +163,7 @@ class ConfigConfiguratorTest extends KernelTestBase {
     });
     // If we try to instantiate this recipe, we should an exception.
     $this->expectException(RecipePreExistingConfigException::class);
-    $this->expectExceptionMessage("The configuration 'block_content.type.basic' exists already and does not match the recipe's configuration");
+    $this->expectExceptionMessageIs("The configuration 'block_content.type.basic' exists already and does not match the recipe's configuration");
     Recipe::createFromDirectory($clone_dir);
   }
 

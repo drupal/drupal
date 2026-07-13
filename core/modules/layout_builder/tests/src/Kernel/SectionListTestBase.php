@@ -85,7 +85,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testGetSectionInvalidDelta(): void {
     $this->expectException(\OutOfBoundsException::class);
-    $this->expectExceptionMessage('Invalid section delta "2", there are 2 sections.');
+    $this->expectExceptionMessageIs('Invalid section delta "2", there are 2 sections.');
     $this->sectionList->getSection(2);
   }
 

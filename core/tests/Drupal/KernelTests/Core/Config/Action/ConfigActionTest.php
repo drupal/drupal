@@ -259,7 +259,7 @@ class ConfigActionTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
     $this->expectException(EntityMethodException::class);
-    $this->expectExceptionMessage('The pluralized entity method config action \'entity_method:config_test.dynamic:addToArrayMultipleTimes\' requires an array value in order to call Drupal\config_test\Entity\ConfigTest::addToArray() multiple times');
+    $this->expectExceptionMessageIs('The pluralized entity method config action \'entity_method:config_test.dynamic:addToArrayMultipleTimes\' requires an array value in order to call Drupal\config_test\Entity\ConfigTest::addToArray() multiple times');
     $manager->applyAction('entity_method:config_test.dynamic:addToArrayMultipleTimes', 'config_test.dynamic.dotted.default', 'Test value');
   }
 
@@ -275,7 +275,7 @@ class ConfigActionTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
     $this->expectException(EntityMethodException::class);
-    $this->expectExceptionMessage('Duplicate action can not be created for ID \'config_test.dynamic:testMethod\' for Drupal\config_test\ConfigActionErrorEntity\DuplicatePluralizedMethodName::testMethod(). The existing action is for the ::testMethod() method');
+    $this->expectExceptionMessageIs('Duplicate action can not be created for ID \'config_test.dynamic:testMethod\' for Drupal\config_test\ConfigActionErrorEntity\DuplicatePluralizedMethodName::testMethod(). The existing action is for the ::testMethod() method');
     $manager->getDefinitions();
   }
 
@@ -291,7 +291,7 @@ class ConfigActionTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
     $this->expectException(EntityMethodException::class);
-    $this->expectExceptionMessage('Duplicate action can not be created for ID \'config_test.dynamic:testMethod2\' for Drupal\config_test\ConfigActionErrorEntity\DuplicatePluralizedOtherMethodName::testMethod2(). The existing action is for the ::testMethod() method');
+    $this->expectExceptionMessageIs('Duplicate action can not be created for ID \'config_test.dynamic:testMethod2\' for Drupal\config_test\ConfigActionErrorEntity\DuplicatePluralizedOtherMethodName::testMethod2(). The existing action is for the ::testMethod() method');
     $manager->getDefinitions();
   }
 
@@ -305,7 +305,7 @@ class ConfigActionTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
     $this->expectException(EntityMethodException::class);
-    $this->expectExceptionMessage('Entity method config action \'entity_method:config_test.dynamic:concatProtectedProperty\' requires an array value. The number of parameters or required parameters for Drupal\config_test\Entity\ConfigTest::concatProtectedProperty() is not 1');
+    $this->expectExceptionMessageIs('Entity method config action \'entity_method:config_test.dynamic:concatProtectedProperty\' requires an array value. The number of parameters or required parameters for Drupal\config_test\Entity\ConfigTest::concatProtectedProperty() is not 1');
     $manager->applyAction('entity_method:config_test.dynamic:concatProtectedProperty', 'config_test.dynamic.dotted.default', 'Test value');
   }
 
@@ -383,7 +383,7 @@ class ConfigActionTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
     $this->expectException(DuplicateConfigActionIdException::class);
-    $this->expectExceptionMessage("The plugins 'entity_method:config_test.dynamic:setProtectedProperty' and 'config_action_duplicate_test:config_test.dynamic:setProtectedProperty' both resolve to the same shorthand action ID for the 'config_test' entity type");
+    $this->expectExceptionMessageIs("The plugins 'entity_method:config_test.dynamic:setProtectedProperty' and 'config_action_duplicate_test:config_test.dynamic:setProtectedProperty' both resolve to the same shorthand action ID for the 'config_test' entity type");
     $manager->applyAction(
       'createIfNotExists',
       'config_test.dynamic.action_test',

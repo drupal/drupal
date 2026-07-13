@@ -63,7 +63,7 @@ class EntityRevisionTest extends EntityTestBase {
       $this->prophesize(EntityTypeBundleInfoInterface::class)->reveal(),
     );
     $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage('The "foo" entity type does not support revisions.');
+    $this->expectExceptionMessageIs('The "foo" entity type does not support revisions.');
     $destination->getIds();
   }
 
@@ -93,7 +93,7 @@ class EntityRevisionTest extends EntityTestBase {
       $this->prophesize(EntityTypeBundleInfoInterface::class)->reveal(),
     );
     $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage('The "foo" entity type does not support translations.');
+    $this->expectExceptionMessageIs('The "foo" entity type does not support translations.');
     $destination->getIds();
   }
 

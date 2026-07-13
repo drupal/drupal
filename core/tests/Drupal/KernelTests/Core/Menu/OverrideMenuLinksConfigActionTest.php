@@ -33,7 +33,7 @@ final class OverrideMenuLinksConfigActionTest extends KernelTestBase {
    */
   public function testConfigName(): void {
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessage('This config action can only be used on the core.menu.static_menu_link_overrides config object.');
+    $this->expectExceptionMessageIs('This config action can only be used on the core.menu.static_menu_link_overrides config object.');
     $this->container->get('plugin.manager.config_action')
       ->applyAction(
         'overrideMenuLinks',

@@ -140,7 +140,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
     $reflection_method = $reflection_class->getMethod('getFields');
 
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage("The generated alias '{$field_name_list[1]}' for field name '{$field_name_list[0]}' conflicts with an existing field. Report this in the JSON:API issue queue!");
+    $this->expectExceptionMessageIs("The generated alias '{$field_name_list[1]}' for field name '{$field_name_list[0]}' conflicts with an existing field. Report this in the JSON:API issue queue!");
     $reflection_method->invokeArgs($this->resourceTypeRepository, [$field_name_list, $entity_type, $bundle]);
   }
 

@@ -280,7 +280,7 @@ class ConfigTest extends UnitTestCase {
 
     // Attempt to treat the single value as a nested item.
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Cannot create key "invalidOffset" on non-array value.');
+    $this->expectExceptionMessageIs('Cannot create key "invalidOffset" on non-array value.');
     $this->config->set('testData.invalidOffset', 1);
   }
 
@@ -425,7 +425,7 @@ class ConfigTest extends UnitTestCase {
   #[DataProvider('validateNameProvider')]
   public function testValidateNameException($name, $exception_message): void {
     $this->expectException('\Drupal\Core\Config\ConfigNameException');
-    $this->expectExceptionMessage($exception_message);
+    $this->expectExceptionMessageIs($exception_message);
     $this->config->validateName($name);
   }
 

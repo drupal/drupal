@@ -124,7 +124,7 @@ class QueryFactoryTest extends UnitTestCase {
 
     $method = new \ReflectionMethod($query_factory, 'getKeys');
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('test_config_entity_type lookup key test.* ends with a wildcard this can not be used as a lookup');
+    $this->expectExceptionMessageIs('test_config_entity_type lookup key test.* ends with a wildcard this can not be used as a lookup');
     $method->invoke($query_factory, $this->getConfigObject('test'), 'test.*', 'get', $config_entity_type);
   }
 

@@ -253,7 +253,7 @@ class TestDiscoveryTest extends UnitTestCase {
  */
 EOT;
     $this->expectException(MissingGroupException::class);
-    $this->expectExceptionMessage('Missing @group annotation in Drupal\KernelTests\field\BulkDeleteTest');
+    $this->expectExceptionMessageIs('Missing @group annotation in Drupal\KernelTests\field\BulkDeleteTest');
     TestDiscovery::getTestInfo($classname, $doc_comment);
   }
 

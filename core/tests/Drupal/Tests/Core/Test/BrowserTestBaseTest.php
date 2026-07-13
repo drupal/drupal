@@ -73,7 +73,7 @@ class BrowserTestBaseTest extends UnitTestCase {
     $reflected_get_http_client = new \ReflectionMethod($btb, 'getHttpClient');
 
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('The Mink client type stdClass does not support getHttpClient().');
+    $this->expectExceptionMessageIs('The Mink client type stdClass does not support getHttpClient().');
     $reflected_get_http_client->invoke($btb);
   }
 

@@ -732,7 +732,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
       'primary key' => ['test_field'],
     ];
     $this->expectException(SchemaException::class);
-    $this->expectExceptionMessage("The 'test_field' field specification does not define 'not null' as TRUE.");
+    $this->expectExceptionMessageIs("The 'test_field' field specification does not define 'not null' as TRUE.");
     $this->schema->createTable($table_name, $table_spec);
   }
 
@@ -810,7 +810,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $this->schema->createTable($table_name, $table_spec);
 
     $this->expectException(SchemaException::class);
-    $this->expectExceptionMessage("The 'new_test_field' field specification does not define 'not null' as TRUE.");
+    $this->expectExceptionMessageIs("The 'new_test_field' field specification does not define 'not null' as TRUE.");
     $this->schema->addField(
       $table_name,
       'new_test_field',
@@ -834,7 +834,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $this->schema->createTable($table_name, $table_spec);
 
     $this->expectException(SchemaException::class);
-    $this->expectExceptionMessage("The 'changed_test_field' field specification does not define 'not null' as TRUE.");
+    $this->expectExceptionMessageIs("The 'changed_test_field' field specification does not define 'not null' as TRUE.");
     $this->schema->dropPrimaryKey($table_name);
     $this->schema->changeField($table_name, 'test_field', 'changed_test_field', ['type' => 'int'], ['primary key' => ['changed_test_field']]);
   }

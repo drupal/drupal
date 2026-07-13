@@ -270,7 +270,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->willReturn($path);
 
     $this->expectException(IncompleteLibraryDefinitionException::class);
-    $this->expectExceptionMessage("Incomplete library definition for definition 'example' in extension 'example_module_missing_information'");
+    $this->expectExceptionMessageIs("Incomplete library definition for definition 'example' in extension 'example_module_missing_information'");
     $this->libraryDiscoveryParser->buildByExtension('example_module_missing_information');
   }
 
@@ -538,7 +538,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->willReturn($path);
 
     $this->expectException(LibraryDefinitionMissingLicenseException::class);
-    $this->expectExceptionMessage("Missing license information in library definition for definition 'no-license-info-but-remote' extension 'licenses_missing_information': it has a remote, but no license.");
+    $this->expectExceptionMessageIs("Missing license information in library definition for definition 'no-license-info-but-remote' extension 'licenses_missing_information': it has a remote, but no license.");
     $this->libraryDiscoveryParser->buildByExtension('licenses_missing_information');
   }
 
@@ -755,7 +755,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->willReturn($path);
 
     $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage($exception_message);
+    $this->expectExceptionMessageIs($exception_message);
     $this->libraryDiscoveryParser->buildByExtension($extension);
   }
 

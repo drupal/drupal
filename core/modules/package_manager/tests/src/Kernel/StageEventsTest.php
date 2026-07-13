@@ -183,7 +183,7 @@ class StageEventsTest extends PackageManagerKernelTestBase implements EventSubsc
     $event->addResult($error);
     $this->assertSame([$error], $event->getResults());
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Only errors are allowed.');
+    $this->expectExceptionMessageIs('Only errors are allowed.');
     $event->addResult($warning);
   }
 
@@ -216,7 +216,7 @@ class StageEventsTest extends PackageManagerKernelTestBase implements EventSubsc
     $this->addEventTestListener($listener, PreCreateEvent::class);
 
     $this->expectException(SandboxEventException::class);
-    $this->expectExceptionMessage('Event propagation stopped without any errors added to the event. This bypasses the package_manager validation system.');
+    $this->expectExceptionMessageIs('Event propagation stopped without any errors added to the event. This bypasses the package_manager validation system.');
     $stage = $this->createStage();
     $stage->create();
   }

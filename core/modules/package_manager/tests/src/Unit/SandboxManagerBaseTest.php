@@ -142,7 +142,7 @@ class SandboxManagerBaseTest extends UnitTestCase {
 
     $bad_grandchild = new class () extends ChildSandboxManager {};
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage(get_class($bad_grandchild) . ' must explicitly override the $type property.');
+    $this->expectExceptionMessageIs(get_class($bad_grandchild) . ' must explicitly override the $type property.');
     $bad_grandchild->getType();
   }
 

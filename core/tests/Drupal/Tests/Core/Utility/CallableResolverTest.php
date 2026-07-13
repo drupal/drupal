@@ -123,7 +123,7 @@ class CallableResolverTest extends UnitTestCase {
   #[DataProvider('callableResolverExceptionHandlingTestCases')]
   public function testCallbackResolverExceptionHandling($definition, $exception_class, $exception_message): void {
     $this->expectException($exception_class);
-    $this->expectExceptionMessage($exception_message);
+    $this->expectExceptionMessageIs($exception_message);
     $this->resolver->getCallableFromDefinition($definition);
   }
 

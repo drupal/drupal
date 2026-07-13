@@ -66,7 +66,7 @@ class AdminAccountSwitcherTest extends KernelTestBase {
     $this->assertSame(1, (int) $account->id());
 
     $this->expectException(AccessException::class);
-    $this->expectExceptionMessage("There are no user accounts with administrative roles.");
+    $this->expectExceptionMessageIs("There are no user accounts with administrative roles.");
     $this->container->get(AdminAccountSwitcher::class)->switchToAdministrator();
   }
 

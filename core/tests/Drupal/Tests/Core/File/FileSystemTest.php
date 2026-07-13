@@ -161,7 +161,7 @@ class FileSystemTest extends UnitTestCase {
     // cspell:disable-next-line
     $filename = "a\xFFsdf\x80€" . '.txt';
     $this->expectException(FileException::class);
-    $this->expectExceptionMessage("Invalid filename '$filename'");
+    $this->expectExceptionMessageIs("Invalid filename '$filename'");
     $this->fileSystem->createFilename($filename, 'vfs://dir');
   }
 

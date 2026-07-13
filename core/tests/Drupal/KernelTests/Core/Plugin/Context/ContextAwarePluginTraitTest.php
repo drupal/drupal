@@ -70,7 +70,7 @@ class ContextAwarePluginTraitTest extends KernelTestBase {
   public function testGetContextDefinition(): void {
     // The context is not defined, so an exception will be thrown.
     $this->expectException(ContextException::class);
-    $this->expectExceptionMessage('The person context is not a valid context.');
+    $this->expectExceptionMessageIs('The person context is not a valid context.');
     $this->plugin->getContextDefinition('person');
   }
 

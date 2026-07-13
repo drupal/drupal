@@ -1187,7 +1187,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   #[DataProvider('getHighestIdInvalidDataProvider')]
   public function testGetHighestIdInvalid(array $destination_ids): void {
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('To determine the highest migrated ID the first ID must be an integer');
+    $this->expectExceptionMessageIs('To determine the highest migrated ID the first ID must be an integer');
     $this->destinationIds = $destination_ids;
     $id_map = $this->getIdMap();
     $id_map->getHighestId();

@@ -28,7 +28,7 @@ class PathChangedHelperTest extends UnitTestCase {
     $route_match->getRouteName()->willReturn('path.changed.not-bc');
 
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Drupal\Core\Routing\PathChangedHelper expects a route name that ends with ".bc".');
+    $this->expectExceptionMessageIs('Drupal\Core\Routing\PathChangedHelper expects a route name that ends with ".bc".');
     new PathChangedHelper($route_match->reveal(), new Request());
   }
 

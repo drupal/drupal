@@ -56,7 +56,7 @@ class MigrateLookupTest extends MigrateTestCase {
     $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
     $migration_plugin_manager->createInstances($migrations)->willReturn([]);
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage($message);
+    $this->expectExceptionMessageIs($message);
     $lookup = new MigrateLookup($migration_plugin_manager->reveal());
     $lookup->lookup($migrations, [1]);
   }
@@ -85,7 +85,7 @@ class MigrateLookupTest extends MigrateTestCase {
     $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
     $migration_plugin_manager->createInstances($migrations)->willReturn([]);
     $this->expectException(PluginException::class);
-    $this->expectExceptionMessage($message);
+    $this->expectExceptionMessageIs($message);
     $lookup = new MigrateLookup($migration_plugin_manager->reveal());
     $lookup->lookup($migrations, [1]);
   }

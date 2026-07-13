@@ -107,7 +107,7 @@ YAML;
     $yaml_file_loader = new YamlFileLoader($builder);
 
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage($message);
+    $this->expectExceptionMessageIs($message);
     $yaml_file_loader->load('vfs://drupal/modules/example/example.yml');
   }
 

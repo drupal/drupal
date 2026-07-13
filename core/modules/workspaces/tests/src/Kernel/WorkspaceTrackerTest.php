@@ -382,7 +382,7 @@ class WorkspaceTrackerTest extends KernelTestBase {
     $workspace_tracker = \Drupal::service('workspaces.tracker');
 
     $this->expectException($exception_class);
-    $this->expectExceptionMessage($exception_message);
+    $this->expectExceptionMessageIs($exception_message);
 
     $workspace_tracker->moveTrackedEntities($source_workspace_id, $target_workspace_id, $entity_type_id, $entity_ids);
   }

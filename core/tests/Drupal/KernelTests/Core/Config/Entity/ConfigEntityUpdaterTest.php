@@ -123,7 +123,7 @@ class ConfigEntityUpdaterTest extends KernelTestBase {
   public function testUpdateException(): void {
     $this->enableModules(['user', 'entity_test']);
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('The provided entity type ID \'entity_test_mul_changed\' is not a configuration entity type');
+    $this->expectExceptionMessageIs('The provided entity type ID \'entity_test_mul_changed\' is not a configuration entity type');
     $updater = $this->container->get('class_resolver')->getInstanceFromDefinition(ConfigEntityUpdater::class);
     $sandbox = [];
     $updater->update($sandbox, 'entity_test_mul_changed');
@@ -134,7 +134,7 @@ class ConfigEntityUpdaterTest extends KernelTestBase {
    */
   public function testUpdateOncePerUpdateException(): void {
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('Updating multiple entity types in the same update function is not supported');
+    $this->expectExceptionMessageIs('Updating multiple entity types in the same update function is not supported');
     $updater = $this->container->get('class_resolver')->getInstanceFromDefinition(ConfigEntityUpdater::class);
     $sandbox = [];
     $updater->update($sandbox, 'config_test');

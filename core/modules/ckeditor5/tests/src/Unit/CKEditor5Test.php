@@ -64,7 +64,7 @@ class CKEditor5Test extends UnitTestCase {
   public function testPathsToFormNames(string $property_path, string $expected_form_item_name, bool $expect_exception = FALSE): void {
     $mapMethod = self::getMethod(CKEditor5::class, 'mapViolationPropertyPathsToFormNames');
     if ($expect_exception) {
-      $this->expectExceptionMessage('assert($shifted === \'settings\')');
+      $this->expectExceptionMessageIs('assert($shifted === \'settings\')');
     }
 
     $form_item_name = $mapMethod->invokeArgs(NULL, [$property_path, static::SIMULATED_FORM_STRUCTURE]);

@@ -178,7 +178,7 @@ class DirectoryTest extends FileTestBase {
 
     // Invalid UTF-8 causes an exception.
     $this->expectException(FileException::class);
-    $this->expectExceptionMessage("Invalid filename 'a\xFFtest\x80€.txt'");
+    $this->expectExceptionMessageIs("Invalid filename 'a\xFFtest\x80€.txt'");
     $file_system->getDestinationFilename("core/misc/a\xFFtest\x80€.txt", FileExists::Replace);
   }
 

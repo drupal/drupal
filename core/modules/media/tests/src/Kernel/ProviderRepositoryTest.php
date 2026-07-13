@@ -36,7 +36,7 @@ class ProviderRepositoryTest extends MediaKernelTestBase {
     $this->container->set('http_client', $client);
 
     $this->expectException(ProviderException::class);
-    $this->expectExceptionMessage('Remote oEmbed providers database returned invalid or empty list.');
+    $this->expectExceptionMessageIs('Remote oEmbed providers database returned invalid or empty list.');
     $this->container->get('media.oembed.provider_repository')->getAll();
   }
 
@@ -70,7 +70,7 @@ class ProviderRepositoryTest extends MediaKernelTestBase {
       ->save();
 
     $this->expectException(ProviderException::class);
-    $this->expectExceptionMessage($exception_message);
+    $this->expectExceptionMessageIs($exception_message);
     $this->container->get('media.oembed.provider_repository')->getAll();
   }
 

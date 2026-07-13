@@ -283,7 +283,7 @@ class UrlConversionTest extends UnitTestCase {
   #[DataProvider('providerInvalidArgumentsUrlConversion')]
   public function testGetInvalidArgumentExceptionInUrlConversion($url, $expected_exception_message): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage($expected_exception_message);
+    $this->expectExceptionMessageIs($expected_exception_message);
     Database::convertDbUrlToConnectionInfo($url);
   }
 
@@ -483,7 +483,7 @@ class UrlConversionTest extends UnitTestCase {
   public function testGetInvalidArgumentGetConnectionInfoAsUrl(array $connection_options, $expected_exception_message): void {
     Database::addConnectionInfo('default', 'default', $connection_options);
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage($expected_exception_message);
+    $this->expectExceptionMessageIs($expected_exception_message);
     Database::getConnectionInfoAsUrl();
   }
 
@@ -517,7 +517,7 @@ class UrlConversionTest extends UnitTestCase {
   public function testDriverModuleDoesNotExist(): void {
     $url = 'foo_bar_mysql://test_user:test_pass@test_host:3306/test_database?module=foo_bar';
     $this->expectException(UnknownExtensionException::class);
-    $this->expectExceptionMessage("The database_driver Drupal\\foo_bar\\Driver\\Database\\foo_bar_mysql does not exist.");
+    $this->expectExceptionMessageIs("The database_driver Drupal\\foo_bar\\Driver\\Database\\foo_bar_mysql does not exist.");
     Database::convertDbUrlToConnectionInfo($url, TRUE);
   }
 
@@ -529,7 +529,7 @@ class UrlConversionTest extends UnitTestCase {
   public function testModuleDriverDoesNotExist(): void {
     $url = 'driver_test_mysql://test_user:test_pass@test_host:3306/test_database?module=driver_test';
     $this->expectException(UnknownExtensionException::class);
-    $this->expectExceptionMessage("The database_driver Drupal\\driver_test\\Driver\\Database\\driver_test_mysql does not exist.");
+    $this->expectExceptionMessageIs("The database_driver Drupal\\driver_test\\Driver\\Database\\driver_test_mysql does not exist.");
     Database::convertDbUrlToConnectionInfo($url, TRUE);
   }
 

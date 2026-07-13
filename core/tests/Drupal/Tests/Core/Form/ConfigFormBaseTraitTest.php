@@ -52,7 +52,7 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
 
     // There is no config factory available this should result in an exception.
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('No config factory available for ConfigFormBaseTrait');
+    $this->expectExceptionMessageIs('No config factory available for ConfigFormBaseTrait');
     $config_method = new \ReflectionMethod($testObject, 'config');
     $config_method->invoke($testObject, 'editable.config');
   }
@@ -65,7 +65,7 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
 
     // There is no config factory available this should result in an exception.
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('No config factory available for ConfigFormBaseTrait');
+    $this->expectExceptionMessageIs('No config factory available for ConfigFormBaseTrait');
     $config_method = new \ReflectionMethod($testObject, 'config');
     $config_method->invoke($testObject, 'editable.config');
   }

@@ -101,7 +101,7 @@ class AcceptHeaderMatcherTest extends UnitTestCase {
     $request->headers->set('Accept', 'application/json, text/xml;q=0.9');
     $request->setRequestFormat('json');
     $this->expectException(NotAcceptableHttpException::class);
-    $this->expectExceptionMessage('No route found for the specified formats application/json text/xml');
+    $this->expectExceptionMessageIs('No route found for the specified formats application/json text/xml');
     $this->matcher->filter($routes, $request);
   }
 

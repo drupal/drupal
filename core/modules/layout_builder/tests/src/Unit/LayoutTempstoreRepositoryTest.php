@@ -87,7 +87,7 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
     $repository = new LayoutTempstoreRepository($tempstore_factory->reveal());
 
     $this->expectException(\UnexpectedValueException::class);
-    $this->expectExceptionMessage('The entry with storage type "my_storage_type" and ID "my_storage_id" is invalid');
+    $this->expectExceptionMessageIs('The entry with storage type "my_storage_type" and ID "my_storage_id" is invalid');
     $repository->get($section_storage->reveal());
   }
 

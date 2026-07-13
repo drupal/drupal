@@ -175,7 +175,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->moduleInstaller()->install([$name]);
     $message = "Theme name {$name} is already in use by an installed module.";
     $this->expectException(ExtensionNameReservedException::class);
-    $this->expectExceptionMessage($message);
+    $this->expectExceptionMessageIs($message);
     $this->themeInstaller()->install([$name]);
   }
 
@@ -188,7 +188,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $themes = $this->themeHandler()->listInfo();
     $this->assertEmpty($themes);
     $this->expectException(MissingDependencyException::class);
-    $this->expectExceptionMessage($message);
+    $this->expectExceptionMessageIs($message);
     $this->themeInstaller()->install([$theme_name]);
   }
 
@@ -259,7 +259,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $themes = $this->themeHandler()->listInfo();
     $this->assertArrayHasKey($name, $themes);
     $this->expectException(ModuleUninstallValidatorException::class);
-    $this->expectExceptionMessage('The following reasons prevent the modules from being uninstalled: Required by the theme: Test Theme Depending on Modules');
+    $this->expectExceptionMessageIs('The following reasons prevent the modules from being uninstalled: Required by the theme: Test Theme Depending on Modules');
     $this->moduleInstaller()->uninstall(['test_module_required_by_theme']);
   }
 

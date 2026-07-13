@@ -27,7 +27,7 @@ class TypeResolverTest extends UnitTestCase {
   // phpcs:enable
   public function testInvalidType(string $name, string $message, array $data = []): void {
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage($message);
+    $this->expectExceptionMessageIs($message);
     TypeResolver::resolveDynamicTypeName($name, $data);
   }
 

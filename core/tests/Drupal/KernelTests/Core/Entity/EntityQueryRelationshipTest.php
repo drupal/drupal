@@ -218,7 +218,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
    */
   public function testInvalidSpecifier(): void {
     $this->expectException(QueryException::class);
-    $this->expectExceptionMessage("Cannot determine entity type for relationship 'language' for field 'langcode.language.foo'");
+    $this->expectExceptionMessageIs("Cannot determine entity type for relationship 'language' for field 'langcode.language.foo'");
     $this->container
       ->get('entity_type.manager')
       ->getStorage('taxonomy_term')
@@ -234,7 +234,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
   #[DataProvider('providerTestInvalidFieldName')]
   public function testInvalidFieldName(string $field_name): void {
     $this->expectException(QueryException::class);
-    $this->expectExceptionMessage("'non_existent_field_name' not found");
+    $this->expectExceptionMessageIs("'non_existent_field_name' not found");
 
     // Check that non-existent field names in a complex relationship query
     // throws a meaningful exception.

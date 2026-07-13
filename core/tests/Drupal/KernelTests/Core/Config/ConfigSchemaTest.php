@@ -849,7 +849,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $config = \Drupal::configFactory()->getEditable('config_test.foo');
 
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('The LangcodeRequiredIfTranslatableValues constraint is applied to \'config_test.foo::broken_langcode_required\'. This constraint can only operate on the root object being validated.');
+    $this->expectExceptionMessageIs('The LangcodeRequiredIfTranslatableValues constraint is applied to \'config_test.foo::broken_langcode_required\'. This constraint can only operate on the root object being validated.');
 
     $config
       ->set('broken_langcode_required.foo', 'bar')

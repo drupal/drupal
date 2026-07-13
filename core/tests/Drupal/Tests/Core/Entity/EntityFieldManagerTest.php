@@ -403,7 +403,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->entityType->getLabel()->willReturn('Test');
 
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('The Test entity type cannot be translatable as it does not define a translatable "langcode" field.');
+    $this->expectExceptionMessageIs('The Test entity type cannot be translatable as it does not define a translatable "langcode" field.');
     $this->entityFieldManager->getBaseFieldDefinitions('test_entity_type');
   }
 

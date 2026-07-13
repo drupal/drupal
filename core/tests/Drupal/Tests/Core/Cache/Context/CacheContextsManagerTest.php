@@ -223,7 +223,7 @@ class CacheContextsManagerTest extends UnitTestCase {
     $cache_contexts_manager = new CacheContextsManager($container, ['foo', 'foo.bar', 'baz']);
     if ($expected_exception_message !== FALSE) {
       $this->expectException('LogicException');
-      $this->expectExceptionMessage($expected_exception_message);
+      $this->expectExceptionMessageIs($expected_exception_message);
     }
     // If it doesn't throw an exception, validateTokens() returns NULL.
     $this->assertNull($cache_contexts_manager->validateTokens($contexts));

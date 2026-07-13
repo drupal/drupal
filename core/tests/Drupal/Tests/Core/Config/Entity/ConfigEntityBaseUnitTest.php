@@ -813,7 +813,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->method('getClass')
       ->willReturn("FooConfigEntity");
     $this->expectException(SchemaIncompleteException::class);
-    $this->expectExceptionMessage("Entity type 'FooConfigEntity' is missing 'config_export' definition in its annotation");
+    $this->expectExceptionMessageIs("Entity type 'FooConfigEntity' is missing 'config_export' definition in its annotation");
     $this->entity->toArray();
   }
 

@@ -61,7 +61,7 @@ class RequiredStatesTest extends KernelTestBase {
     $workflow->save();
     // Ensure that required states can't be deleted.
     $this->expectException(RequiredStateMissingException::class);
-    $this->expectExceptionMessage("Required State Type Test' requires states with the ID 'fresh' in workflow 'test'");
+    $this->expectExceptionMessageIs("Required State Type Test' requires states with the ID 'fresh' in workflow 'test'");
     $workflow->getTypePlugin()->deleteState('fresh');
     $workflow->save();
   }
@@ -80,7 +80,7 @@ class RequiredStatesTest extends KernelTestBase {
       ],
     ]);
     $this->expectException(RequiredStateMissingException::class);
-    $this->expectExceptionMessage("Required State Type Test' requires states with the ID 'fresh', 'rotten' in workflow 'test'");
+    $this->expectExceptionMessageIs("Required State Type Test' requires states with the ID 'fresh', 'rotten' in workflow 'test'");
     $workflow->save();
   }
 

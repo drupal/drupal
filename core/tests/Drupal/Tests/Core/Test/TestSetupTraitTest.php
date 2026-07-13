@@ -53,6 +53,15 @@ class TestSetupTraitTest extends UnitTestCase {
         return 'test';
       }
 
+      /**
+       * Expects an exception message.
+       *
+       * @param string $message
+       *   The expected exception message.
+       */
+      protected function expectExceptionMessage(string $message): void {
+      }
+
     };
 
     $reflection = new \ReflectionClass($test_setup);

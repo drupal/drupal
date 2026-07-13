@@ -63,7 +63,7 @@ class ConfigTargetTest extends UnitTestCase {
     $form_state = new FormState();
 
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Two #config_targets both target "admin_compact_mode" in the "system.site" config: `$form[\'test\']` and `$form[\'duplicate\']`.');
+    $this->expectExceptionMessageIs('Two #config_targets both target "admin_compact_mode" in the "system.site" config: `$form[\'test\']` and `$form[\'duplicate\']`.');
     $test_form->storeConfigKeyToFormElementMap($form, $form_state);
   }
 
@@ -179,7 +179,7 @@ class ConfigTargetTest extends UnitTestCase {
   #[DataProvider('providerTestFromFormException')]
   public function testFromFormException(array $form, array $array_parents, string $exception_message): void {
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage($exception_message);
+    $this->expectExceptionMessageIs($exception_message);
     ConfigTarget::fromForm($array_parents, $form);
   }
 
@@ -231,7 +231,7 @@ class ConfigTargetTest extends UnitTestCase {
   #[DataProvider('providerMultiTargetWithoutCallables')]
   public function testMultiTargetWithoutCallables(...$arguments): void {
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('The $fromConfig and $toConfig arguments must be passed to Drupal\Core\Form\ConfigTarget::__construct() if multiple property paths are targeted.');
+    $this->expectExceptionMessageIs('The $fromConfig and $toConfig arguments must be passed to Drupal\Core\Form\ConfigTarget::__construct() if multiple property paths are targeted.');
     new ConfigTarget(...$arguments);
   }
 
@@ -248,7 +248,7 @@ class ConfigTargetTest extends UnitTestCase {
     $config->getName()->willReturn('bar.settings');
 
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Config target is associated with foo.settings but bar.settings given.');
+    $this->expectExceptionMessageIs('Config target is associated with foo.settings but bar.settings given.');
     $sut->getValue($config->reveal());
   }
 
@@ -259,7 +259,7 @@ class ConfigTargetTest extends UnitTestCase {
     $config->getName()->willReturn('bar.settings');
 
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Config target is associated with foo.settings but bar.settings given.');
+    $this->expectExceptionMessageIs('Config target is associated with foo.settings but bar.settings given.');
     $sut->setValue($config->reveal(), $this->randomString(), $this->prophesize(FormStateInterface::class)->reveal());
   }
 
@@ -390,7 +390,7 @@ class ConfigTargetTest extends UnitTestCase {
     $config->getName()->willReturn('foo.settings');
 
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage($expected_exception_message);
+    $this->expectExceptionMessageIs($expected_exception_message);
     $config_target->setValue($config->reveal(), '1988|1992', $this->prophesize(FormStateInterface::class)->reveal());
   }
 

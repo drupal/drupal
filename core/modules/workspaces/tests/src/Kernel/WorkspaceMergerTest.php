@@ -209,7 +209,7 @@ class WorkspaceMergerTest extends KernelTestBase {
     // Check that Local 1 can not be merged directly into Stage, since it can
     // only be merged into its direct parent.
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('The contents of a workspace can only be merged into its parent workspace.');
+    $this->expectExceptionMessageIs('The contents of a workspace can only be merged into its parent workspace.');
     $workspace_merger->merge();
   }
 
