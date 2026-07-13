@@ -427,7 +427,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   public function getAvailableGlobalTokens($prepared = FALSE, array $types = []) {
     $info = \Drupal::token()->getInfo();
     // Site and view tokens should always be available.
-    $types += ['site', 'view'];
+    $types = array_merge($types, ['site', 'view']);
     $available = array_intersect_key($info['tokens'], array_flip($types));
 
     // Construct the token string for each token.
