@@ -264,7 +264,7 @@ final class Configuration {
       'suppress-deprecations',
       NULL,
       InputOption::VALUE_NONE,
-      "Stops tests from failing if deprecation errors are triggered.\nIf this is not set the value specified in the SYMFONY_DEPRECATIONS_HELPER environment variable, or the value specified in core/phpunit.xml (if it exists) will be used.\nThe default is that any unexpected silenced deprecation error will fail tests.",
+      "Stops tests from failing if deprecation errors are triggered.\nThe default is that any unexpected silenced deprecation error will fail tests.",
     ));
     $inputDefinition->addOption(new InputOption(
       'xml',

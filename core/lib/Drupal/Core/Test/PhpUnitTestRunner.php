@@ -4,7 +4,6 @@ namespace Drupal\Core\Test;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -280,18 +279,14 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
       $command[] = '--colors=always';
     }
 
-    if ($suppressDeprecations) {
-      $process_environment_variables['SYMFONY_DEPRECATIONS_HELPER'] = 'disabled';
-    }
-    else {
+    if (!$suppressDeprecations) {
       // If the deprecation handler bridge is active, we need to fail when there
       // are deprecations that get reported (i.e. not ignored or expected).
-      $deprecationConfiguration = DeprecationHandler::getConfiguration();
-      if ($deprecationConfiguration !== FALSE) {
-        $command[] = '--fail-on-deprecation';
-        if ($deprecationConfiguration['failOnPhpunitDeprecation']) {
-          $command[] = '--fail-on-phpunit-deprecation';
-        }
+      $command[] = '--fail-on-deprecation';
+      $env = getenv('PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION');
+      $failOnPhpUnitDeprecation = filter_var(($env !== FALSE ? $env : TRUE), \FILTER_VALIDATE_BOOLEAN);
+      if ($failOnPhpUnitDeprecation) {
+        $command[] = '--fail-on-phpunit-deprecation';
       }
     }
 

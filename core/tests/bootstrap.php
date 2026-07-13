@@ -9,10 +9,8 @@
 
 declare(strict_types=1);
 
-use Drupal\TestTools\ErrorHandler\BootstrapErrorHandler;
-use Drupal\TestTools\ErrorHandler\DrupalDebugClassLoader;
 use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
-use PHPUnit\Runner\ErrorHandler as PhpUnitErrorHandler;
+use PHPUnit\TextUI\Configuration\Registry as PhpunitConfigurationRegistry;
 
 /**
  * Finds all valid extension directories recursively within a given directory.
@@ -163,18 +161,14 @@ mb_language('uni');
 // reduce the fragility of the testing system in general.
 date_default_timezone_set('Australia/Sydney');
 
-// Bootstrap the DeprecationHandler extension and the DebugClassloader to report
-// deprecations.
-if ($deprecationBridgeConfiguration = DeprecationHandler::getConfiguration()) {
-  DeprecationHandler::init($deprecationBridgeConfiguration['ignoreFile'] ?? NULL);
-
-  // Need to have an early error handler to manage deprecations triggered by
-  // DebugClassLoader, that occur before tests' setUp() methods are called.
-  // We pass an instance of the PHPUnit error handler to redirect any error not
-  // managed by our layer back to PHPUnit.
-  set_error_handler(new BootstrapErrorHandler(PhpUnitErrorHandler::instance()));
-
-  // Enable the DebugClassLoader to get deprecations for methods' signature
-  // changes.
-  DrupalDebugClassLoader::enable();
+// Get deprecation override handling as early as possible, depending on the
+// extension configuration.
+try {
+  DeprecationHandler::preBootstrap(PhpunitConfigurationRegistry::get());
+}
+catch (\AssertionError) {
+  // In case this script is executed outside of a PHPUnit test run, the
+  // configuration is not defined, so we cannot bootstrap the deprecation
+  // handler extension. In such case, do nothing.
+  // @see core/scripts/test-site.php for an example.
 }

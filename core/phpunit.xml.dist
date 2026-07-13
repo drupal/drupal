@@ -37,21 +37,6 @@
      reachable from your host machine here. This will allow you to follow them
      directly and view the output. -->
     <env name="BROWSERTEST_OUTPUT_BASE_URL" value=""/>
-    <!-- The environment variable SYMFONY_DEPRECATIONS_HELPER is used to configure
-      the behavior of the deprecation tests.
-      Drupal core's testing framework is setting this variable to its defaults.
-      Projects with their own requirements need to manage this variable
-      explicitly.
-    -->
-    <!-- To disable deprecation testing completely uncomment the next line. -->
-    <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/> -->
-    <!-- Deprecation errors can be selectively ignored by specifying a file of
-      regular expression patterns for exclusion.
-      Uncomment the line below to specify a custom deprecations ignore file.
-      NOTE: it may be required to specify the full path to the file to run tests
-      correctly.
-    -->
-    <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="ignoreFile=.deprecation-ignore.txt"/> -->
     <!-- Example for changing the driver class for mink tests MINK_DRIVER_CLASS value: 'Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver' -->
     <env name="MINK_DRIVER_CLASS" value=""/>
     <!-- Example for changing the driver args to mink tests MINK_DRIVER_ARGS value: '["http://127.0.0.1:8510"]' -->
@@ -60,6 +45,28 @@
     <env name="MINK_DRIVER_ARGS_WEBDRIVER" value=""/>
   </php>
   <extensions>
+    <!-- Deprecation handler.
+      This extension allows to ignore some deprecations on the project overall,
+      and/or to enable the Symfony debug classloader to trigger deprecations
+      while checking class parameters and return types at class loading time.
+      The configuration defined here can be overridden by defining the
+      environment variable DRUPAL_DEPRECATION_FILTER_CONFIG whose value must be
+      a JSON string containing an array with the same parameter names as keys.
+      For example,
+      DRUPAL_DEPRECATION_FILTER_CONFIG='{"enableDebugClassLoader":false}'
+    -->
+    <bootstrap class="Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler">
+      <!-- Set to true to enable project level deprecation ignore patterns.
+        The deprecations ignored with this mechanism are not relayed to PHPUnit
+        for processing. -->
+      <parameter name="enableProjectIgnores" value="true"/>
+      <!-- The path to a file containing the deprecation ignore patterns.
+        Relative paths are resolved against Drupal's root directory. -->
+      <parameter name="projectIgnoreFile" value="core/.deprecation-ignore.txt"/>
+      <!-- Set to true to enable Symfony's DebugClassLoader.
+        See https://github.com/symfony/error-handler -->
+      <parameter name="enableDebugClassLoader" value="true"/>
+    </bootstrap>
     <!-- Functional tests HTML output logging. -->
     <bootstrap class="Drupal\TestTools\Extension\HtmlLogging\HtmlOutputLogger">
       <!-- The directory where the browser output will be stored. If a relative
