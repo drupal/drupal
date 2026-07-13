@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests;
 
 use Drupal\TestTools\ErrorHandler\BootstrapErrorHandler;
-use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
+use Drupal\TestTools\Extension\DeprecationBridge\Configuration as DeprecationHandlerConfiguration;
 use Drupal\TestTools\Extension\Dump\DebugDump;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
@@ -67,6 +67,16 @@ trait DrupalTestCaseTrait {
   }
 
   /**
+   * Checks legacy SYMFONY_DEPRECATIONS_HELPER env variable is not used.
+   */
+  #[Before]
+  public function checkLegacySymfonyDeprecationHelperEnvVariable(): void {
+    if (getenv('SYMFONY_DEPRECATIONS_HELPER') !== FALSE) {
+      @trigger_error("Using the SYMFONY_DEPRECATIONS_HELPER environment variable to configure test runs is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3594014", E_USER_DEPRECATED);
+    }
+  }
+
+  /**
    * Checks the test error handler after test execution.
    */
   #[After]
@@ -74,7 +84,7 @@ trait DrupalTestCaseTrait {
     // We expect that the current error handler is the one set during the
     // PHPUnit bootstrap. If not, the error handler was changed during the test
     // execution but not properly restored during ::tearDown().
-    if (DeprecationHandler::isEnabled() && !get_error_handler() instanceof BootstrapErrorHandler) {
+    if (DeprecationHandlerConfiguration::instance()->projectIgnoresEnabled && !get_error_handler() instanceof BootstrapErrorHandler) {
       throw new \RuntimeException(sprintf('%s registered its own error handler without restoring the previous one before or during tear down. This can cause unpredictable test results. Ensure the test cleans up after itself.', $this->name()));
     }
   }
