@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
+use Drupal\Core\Utility\Token;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Tests\TestHelperPlugin;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests Drupal\views\Plugin\views\PluginBase.
@@ -32,6 +34,79 @@ class PluginBaseTest extends UnitTestCase {
     parent::setUp();
 
     $this->testHelperPlugin = new TestHelperPlugin([], 'default', []);
+  }
+
+  /**
+   * Tests the getAvailableGlobalTokens method.
+   */
+  #[DataProvider('providerTestGetAvailableGlobalTokens')]
+  public function testGetAvailableGlobalTokens($info, $types, $expected): void {
+    // Get the token service and set the container.
+    $token = $this->createStub(Token::class);
+    $token
+      ->method('getInfo')
+      ->willReturn($info);
+
+    $container = new ContainerBuilder();
+    $container->set('token', $token);
+    \Drupal::setContainer($container);
+
+    $prepared = FALSE;
+    $actual = $this->testHelperPlugin->getAvailableGlobalTokens($prepared, $types);
+    $this->assertEquals($expected, $actual);
+  }
+
+  /**
+   * Data provider for testGetAvailableGlobalTokens().
+   *
+   * @return array
+   *   - An associative array of token information.
+   *   - An array of additional token types.
+   *   - The expected tokens.
+   */
+  public static function providerTestGetAvailableGlobalTokens(): array {
+    return [
+      '0 global, 0 added' => [
+        ['tokens' => []],
+        [],
+        [],
+      ],
+      '0 global, 1 added' => [
+        ['tokens' => []],
+        ['date'],
+        [],
+      ],
+      '1 global, 1 added, same' => [
+        ['tokens' => ['date' => 'bar']],
+        ['date'],
+        ['date' => 'bar'],
+      ],
+      '1 global, 0 added' => [
+        ['tokens' => ['site' => 'foo']],
+        [],
+        ['site' => 'foo'],
+      ],
+      '1 global, 1 added' => [
+        ['tokens' => ['site' => 'foo']],
+        ['date'],
+        ['site' => 'foo'],
+      ],
+      '2 global, 1 added' => [
+        ['tokens' => ['site' => 'foo', 'date' => 'bar']],
+        ['date'],
+        ['site' => 'foo', 'date' => 'bar'],
+      ],
+      '3 global, 0 added' => [
+        ['tokens' => ['site' => 'foo', 'view' => 'baz', 'date' => 'bar']],
+        [],
+        ['site' => 'foo', 'view' => 'baz'],
+      ],
+      '3 global, 1 added' => [
+        ['tokens' => ['site' => 'foo', 'view' => 'baz', 'date' => 'bar']],
+        ['date'],
+        ['site' => 'foo', 'view' => 'baz', 'date' => 'bar'],
+      ],
+    ];
   }
 
   /**
