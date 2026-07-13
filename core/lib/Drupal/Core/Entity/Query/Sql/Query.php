@@ -327,11 +327,7 @@ class Query extends QueryBase implements QueryInterface {
   }
 
   /**
-   * Implements the magic __clone method.
-   *
-   * Reset SQL query and tables collected.
-   * Reset fields and GROUP BY.
-   * Ensure condition points to the new query.
+   * Resets cached SQL query state and re-parents conditions on clone.
    */
   public function __clone() {
     parent::__clone();
@@ -340,6 +336,9 @@ class Query extends QueryBase implements QueryInterface {
     $this->sqlFields = [];
     $this->sqlGroupBy = [];
     $this->condition->setQuery($this);
+    if (isset($this->conditionAggregate) && \method_exists($this->conditionAggregate, 'setQuery')) {
+      $this->conditionAggregate->setQuery($this);
+    }
   }
 
   /**
