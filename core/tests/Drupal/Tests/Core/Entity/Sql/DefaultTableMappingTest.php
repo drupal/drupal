@@ -310,7 +310,7 @@ class DefaultTableMappingTest extends UnitTestCase {
 
     $table_mapping = new TestDefaultTableMapping($this->entityType, $definitions);
     $this->expectException(SqlContentEntityStorageException::class);
-    $this->expectExceptionMessage("Column information not available for the 'test' field.");
+    $this->expectExceptionMessageIs("Column information not available for the 'test' field.");
     $table_mapping->getFieldColumnName($definitions['test'], $column);
   }
 
@@ -434,7 +434,7 @@ class DefaultTableMappingTest extends UnitTestCase {
   public function testGetFieldTableNameInvalid(): void {
     $table_mapping = new TestDefaultTableMapping($this->entityType, []);
     $this->expectException(SqlContentEntityStorageException::class);
-    $this->expectExceptionMessage("Table information not available for the 'invalid_field_name' field.");
+    $this->expectExceptionMessageIs("Table information not available for the 'invalid_field_name' field.");
     $table_mapping->getFieldTableName('invalid_field_name');
   }
 

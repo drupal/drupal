@@ -104,7 +104,7 @@ class CustomAccessCheckTest extends UnitTestCase {
     $request = Request::create('/foo?example=muh');
 
     $this->expectException(\BadMethodCallException::class);
-    $this->expectExceptionMessage('The "\Drupal\Tests\Core\Access\NonExistentController::nonExistentMethod" method is not callable as a _custom_access callback in route "/test-route"');
+    $this->expectExceptionMessageIs('The "\Drupal\Tests\Core\Access\NonExistentController::nonExistentMethod" method is not callable as a _custom_access callback in route "/test-route"');
 
     // Run the access check.
     $accessChecker->access($route, $route_match, $account, $request);

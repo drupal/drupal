@@ -144,7 +144,7 @@ class ViewElementTest extends ViewsKernelTestBase {
       '#embed' => FALSE,
     ];
     $this->expectException(ViewRenderElementException::class);
-    $this->expectExceptionMessage("Invalid View name ({$render_element['#name']}) given.");
+    $this->expectExceptionMessageIs("Invalid View name ({$render_element['#name']}) given.");
     $renderer->renderRoot($render_element);
   }
 

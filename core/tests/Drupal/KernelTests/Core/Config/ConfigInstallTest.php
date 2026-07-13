@@ -292,7 +292,7 @@ class ConfigInstallTest extends KernelTestBase {
    */
   public function testIdMisMatch(): void {
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('The configuration name "config_test.dynamic.no_id_match" does not match the ID "does_not_match"');
+    $this->expectExceptionMessageIs('The configuration name "config_test.dynamic.no_id_match" does not match the ID "does_not_match"');
     $this->installModules(['config_test_id_mismatch']);
   }
 

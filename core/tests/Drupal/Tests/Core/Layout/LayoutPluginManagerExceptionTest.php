@@ -30,7 +30,7 @@ class LayoutPluginManagerExceptionTest extends UnitTestCase {
    */
   public function testProcessDefinitionWithMissingLayoutLabel(): void {
     $this->expectException(InvalidPluginDefinitionException::class);
-    $this->expectExceptionMessage('The "test_layout" layout definition must have a label.');
+    $this->expectExceptionMessageIs('The "test_layout" layout definition must have a label.');
     $definition = new LayoutDefinition([
       'id' => 'a_label_less_layout',
       'class' => LayoutDefault::class,

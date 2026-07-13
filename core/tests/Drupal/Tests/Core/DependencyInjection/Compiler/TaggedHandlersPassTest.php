@@ -54,7 +54,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
 
     $handler_pass = new TaggedHandlersPass();
     $this->expectException(LogicException::class);
-    $this->expectExceptionMessage("At least one service tagged with 'consumer_id' is required.");
+    $this->expectExceptionMessageIs("At least one service tagged with 'consumer_id' is required.");
     $handler_pass->process($container);
   }
 
@@ -66,7 +66,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
    */
   public function testIdCollectorProcessRequiredHandlers(): void {
     $this->expectException(LogicException::class);
-    $this->expectExceptionMessage("At least one service tagged with 'consumer_id' is required.");
+    $this->expectExceptionMessageIs("At least one service tagged with 'consumer_id' is required.");
     $container = $this->buildContainer();
     $container
       ->register('consumer_id', __NAMESPACE__ . '\ValidConsumer')
@@ -92,7 +92,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
 
     $handler_pass = new TaggedHandlersPass();
     $this->expectException(LogicException::class);
-    $this->expectExceptionMessage("Service consumer 'consumer_id1' class method Drupal\Tests\Core\DependencyInjection\Compiler\InvalidConsumer::addHandler() has to type-hint an interface.");
+    $this->expectExceptionMessageIs("Service consumer 'consumer_id1' class method Drupal\Tests\Core\DependencyInjection\Compiler\InvalidConsumer::addHandler() has to type-hint an interface.");
     $handler_pass->process($container);
   }
 

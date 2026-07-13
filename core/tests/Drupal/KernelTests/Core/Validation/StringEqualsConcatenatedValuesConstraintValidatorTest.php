@@ -65,7 +65,7 @@ class StringEqualsConcatenatedValuesConstraintValidatorTest extends KernelTestBa
    * @see \Drupal\Core\Validation\Plugin\Validation\Constraint\StringEqualsConcatenatedValuesConstraint
    */
   public function testInvalidReferenceToProperties(): void {
-    $this->expectExceptionMessage('Schema errors for config_test.validation with the following errors: 0 [string_concat_values_invalid] This validation constraint is configured to inspect the properties &lt;em class=&quot;placeholder&quot;&gt;%parent.invalid, %parent.reference&lt;/em&gt;, but some do not exist: &lt;em class=&quot;placeholder&quot;&gt;%parent.invalid, %parent.reference&lt;/em&gt;.');
+    $this->expectExceptionMessageIs('Schema errors for config_test.validation with the following errors: 0 [string_concat_values_invalid] This validation constraint is configured to inspect the properties &lt;em class=&quot;placeholder&quot;&gt;%parent.invalid, %parent.reference&lt;/em&gt;, but some do not exist: &lt;em class=&quot;placeholder&quot;&gt;%parent.invalid, %parent.reference&lt;/em&gt;.');
 
     /** @var \Drupal\Core\Config\Config $editable_config */
     $editable_config = \Drupal::configFactory()->getEditable('config_test.validation');
@@ -85,7 +85,7 @@ class StringEqualsConcatenatedValuesConstraintValidatorTest extends KernelTestBa
     $editable_config->set('string_concat_values', 'test>>>value.llama');
     $editable_config->save();
 
-    $this->expectExceptionMessage('Schema errors for config_test.validation with the following errors: 0 [string_concat_values] Expected &#039;test&amp;gt;&amp;gt;&amp;gt;value.llama&#039;, not &#039;test|||value.llama&#039;. Format: &#039;&amp;lt;%parent.string_concat_value_1&amp;gt;.&amp;lt;%parent.string_concat_value_2&amp;gt;&#039;.');
+    $this->expectExceptionMessageIs('Schema errors for config_test.validation with the following errors: 0 [string_concat_values] Expected &#039;test&amp;gt;&amp;gt;&amp;gt;value.llama&#039;, not &#039;test|||value.llama&#039;. Format: &#039;&amp;lt;%parent.string_concat_value_1&amp;gt;.&amp;lt;%parent.string_concat_value_2&amp;gt;&#039;.');
 
     $editable_config->set('string_concat_values', 'test|||value.llama');
     $editable_config->save();
@@ -104,7 +104,7 @@ class StringEqualsConcatenatedValuesConstraintValidatorTest extends KernelTestBa
     $editable_config->set('string_concat_values', $result);
     $editable_config->save();
 
-    $this->expectExceptionMessage("Schema errors for config_test.validation with the following errors: 0 [string_concat_values] Expected &#039;$result&#039;, not &#039;$invalid_result&#039;. Format: &#039;&amp;lt;%parent.string_concat_value_1&amp;gt;.&amp;lt;%parent.string_concat_value_2&amp;gt;&#039;");
+    $this->expectExceptionMessageIs("Schema errors for config_test.validation with the following errors: 0 [string_concat_values] Expected &#039;$result&#039;, not &#039;$invalid_result&#039;. Format: &#039;&amp;lt;%parent.string_concat_value_1&amp;gt;.&amp;lt;%parent.string_concat_value_2&amp;gt;&#039;");
     $editable_config->set('string_concat_values', $invalid_result);
     $editable_config->save();
   }

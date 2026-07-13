@@ -50,7 +50,7 @@ class InfoParserUnitTest extends UnitTestCase {
   public function testInfoParserNonExisting(): void {
     vfsStream::setup('modules');
     $this->expectException('\Drupal\Core\Extension\InfoParserException');
-    $this->expectExceptionMessage('Unable to parse vfs://modules/does_not_exist.info.txt as it does not exist');
+    $this->expectExceptionMessageIs('Unable to parse vfs://modules/does_not_exist.info.txt as it does not exist');
     $this->infoParser->parse(vfsStream::url('modules') . '/does_not_exist.info.txt');
   }
 
@@ -81,7 +81,7 @@ class InfoParserUnitTest extends UnitTestCase {
     }
 
     $this->expectException(InfoParserException::class);
-    $this->expectExceptionMessage("$expected_exception_message vfs://modules/fixtures/broken-duplicate.info.txt");
+    $this->expectExceptionMessageIs("$expected_exception_message vfs://modules/fixtures/broken-duplicate.info.txt");
     $this->infoParser->parse(vfsStream::url("modules/fixtures/broken-duplicate.info.txt"));
   }
 
@@ -161,7 +161,7 @@ BROKEN_INFO;
     ]);
     $filename = vfsStream::url('modules/fixtures/broken.info.txt');
     $this->expectException('\Drupal\Core\Extension\InfoParserException');
-    $this->expectExceptionMessage('Unable to parse vfs://modules/fixtures/broken.info.txt');
+    $this->expectExceptionMessageIs('Unable to parse vfs://modules/fixtures/broken.info.txt');
     $this->infoParser->parse($filename);
   }
 
@@ -406,7 +406,7 @@ UNPARSABLE_CORE_VERSION_REQUIREMENT;
       ],
     ]);
     $this->expectException(InfoParserException::class);
-    $this->expectExceptionMessage("The 'core_version_requirement' constraint (not-this-version) is not a valid value in vfs://modules/fixtures/unparsable_core_version_requirement.info.txt");
+    $this->expectExceptionMessageIs("The 'core_version_requirement' constraint (not-this-version) is not a valid value in vfs://modules/fixtures/unparsable_core_version_requirement.info.txt");
     $this->infoParser->parse(vfsStream::url('modules/fixtures/unparsable_core_version_requirement.info.txt'));
   }
 
@@ -492,7 +492,7 @@ INFO;
       ],
     ]);
     $this->expectException('\Drupal\Core\Extension\InfoParserException');
-    $this->expectExceptionMessage($exception_message);
+    $this->expectExceptionMessageIs($exception_message);
     $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
     $this->assertEmpty($info_values);
   }
@@ -548,7 +548,7 @@ INFO;
     $path = vfsStream::url("modules/fixtures/$filename");
     if ($exception_message) {
       $this->expectException(InfoParserException::class);
-      $this->expectExceptionMessage(sprintf($exception_message, $path));
+      $this->expectExceptionMessageIs(sprintf($exception_message, $path));
     }
     $info_values = $this->infoParser->parse($path);
     $this->assertSame($lifecycle, $info_values[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]);

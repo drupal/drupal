@@ -92,7 +92,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
   public function testConstructorException(array $configuration, bool $is_valid): void {
     if (!$is_valid) {
       $this->expectException('TypeError');
-      $this->expectExceptionMessage('Cannot assign string to property ' . MenuLinkParent::class . '::$lookupMigrations of type array');
+      $this->expectExceptionMessageIs('Cannot assign string to property ' . MenuLinkParent::class . '::$lookupMigrations of type array');
     }
     $plugin = new MenuLinkParent($configuration, 'map', [], $this->migrateLookup->reveal(), $this->menuLinkManager->reveal(), $this->menuLinkStorage->reveal(), $this->migration->reveal());
     if ($is_valid) {
@@ -144,7 +144,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
     $this->migrateLookup->lookup(NULL, [1])->willReturn([]);
     $plugin = new MenuLinkParent([], 'map', [], $this->migrateLookup->reveal(), $this->menuLinkManager->reveal(), $this->menuLinkStorage->reveal(), $this->migration->reveal());
     $this->expectException(MigrateSkipRowException::class);
-    $this->expectExceptionMessage("No parent link found for plid '$parent_id' in menu '$menu_name'.");
+    $this->expectExceptionMessageIs("No parent link found for plid '$parent_id' in menu '$menu_name'.");
     $plugin->transform($source_value, $this->migrateExecutable, $this->row, 'destination');
   }
 

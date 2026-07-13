@@ -393,7 +393,7 @@ SQL,
     $this->assertSame(['foo'], $converter->getConvertedParameters());
 
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('Missing Positional Parameter 0');
+    $this->expectExceptionMessageIs('Missing Positional Parameter 0');
     $converter->parse('SELECT ?', []);
   }
 

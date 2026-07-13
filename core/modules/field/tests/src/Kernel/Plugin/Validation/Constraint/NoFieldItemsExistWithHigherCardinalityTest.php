@@ -51,7 +51,7 @@ class NoFieldItemsExistWithHigherCardinalityTest extends FieldKernelTestBase {
     $field_storage->set('cardinality', 1);
 
     $this->expectException(SchemaIncompleteException::class);
-    $this->expectExceptionMessage('Schema errors for field.storage.entity_test.field_int with the following errors: 0 [cardinality] The field &#039;field_int&#039; of entity type &#039;entity_test&#039; has more entries (2) than the cardinality (1) allows');
+    $this->expectExceptionMessageIs('Schema errors for field.storage.entity_test.field_int with the following errors: 0 [cardinality] The field &#039;field_int&#039; of entity type &#039;entity_test&#039; has more entries (2) than the cardinality (1) allows');
     $field_storage->save();
   }
 

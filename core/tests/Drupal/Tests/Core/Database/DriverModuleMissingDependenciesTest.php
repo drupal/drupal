@@ -56,7 +56,7 @@ class DriverModuleMissingDependenciesTest extends UnitTestCase {
     \Drupal::setContainer($container);
 
     $this->expectException(UnknownExtensionException::class);
-    $this->expectExceptionMessage("The database_driver a_really_missing_module\dependent_driver does not exist.");
+    $this->expectExceptionMessageIs("The database_driver a_really_missing_module\dependent_driver does not exist.");
     $container->get('extension.list.database_driver')
       ->includeTestDrivers(TRUE)
       ->get('a_really_missing_module\\dependent_driver')

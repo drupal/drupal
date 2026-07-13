@@ -622,7 +622,7 @@ class SelectTest extends DatabaseTestBase {
   #[DataProvider('providerNonArrayOperatorWithArrayValueCondition')]
   public function testNonArrayOperatorWithArrayValueCondition(?string $operator, string $operator_in_exception_message): void {
     $this->expectException(InvalidQueryException::class);
-    $this->expectExceptionMessage("Query condition 'age " . $operator_in_exception_message . " 26, 27' must have an array compatible operator.");
+    $this->expectExceptionMessageIs("Query condition 'age " . $operator_in_exception_message . " 26, 27' must have an array compatible operator.");
 
     $this->connection->select('test', 't')
       ->fields('t')

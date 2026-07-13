@@ -487,7 +487,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->keyValueStore->expects($this->never())
       ->method('delete');
     $this->expectException(EntityMalformedException::class);
-    $this->expectExceptionMessage('The entity does not have an ID.');
+    $this->expectExceptionMessageIs('The entity does not have an ID.');
     $this->entityStorage->save($entity);
   }
 
@@ -511,7 +511,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->keyValueStore->expects($this->never())
       ->method('delete');
     $this->expectException(EntityStorageException::class);
-    $this->expectExceptionMessage("'test_entity_type' entity with ID 'foo' already exists");
+    $this->expectExceptionMessageIs("'test_entity_type' entity with ID 'foo' already exists");
     $this->entityStorage->save($entity);
   }
 

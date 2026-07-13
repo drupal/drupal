@@ -165,7 +165,7 @@ class IconDefinitionTest extends UnitTestCase {
    */
   public function testCreateIconError(): void {
     $this->expectException(IconDefinitionInvalidDataException::class);
-    $this->expectExceptionMessage('Empty pack_id provided! Empty icon_id provided! Empty template provided!');
+    $this->expectExceptionMessageIs('Empty pack_id provided! Empty icon_id provided! Empty template provided!');
 
     IconDefinition::create('', '', '');
   }

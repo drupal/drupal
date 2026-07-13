@@ -40,7 +40,7 @@ class SectionDataTest extends KernelTestBase {
     $data->setValue([]);
     $this->assertInstanceOf(Section::class, $data->getValue());
     // Anything else should raise an exception.
-    $this->expectExceptionMessage('Value assigned to "test_section" is not a valid section');
+    $this->expectExceptionMessageIs('Value assigned to "test_section" is not a valid section');
     $data->setValue('[]');
   }
 

@@ -75,7 +75,7 @@ class MigrateLookupTest extends MigrateTestBase {
   public function testInvalidIdLookup(): void {
     $this->executeMigration('sample_lookup_migration');
     $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage("Extra unknown items for map migrate_map_sample_lookup_migration in source IDs: array (\n  'invalid_id' => 25,\n)");
+    $this->expectExceptionMessageIs("Extra unknown items for map migrate_map_sample_lookup_migration in source IDs: array (\n  'invalid_id' => 25,\n)");
 
     // Test invalidly indexed source id.
     $this->migrateLookup->lookup('sample_lookup_migration', ['invalid_id' => 25]);

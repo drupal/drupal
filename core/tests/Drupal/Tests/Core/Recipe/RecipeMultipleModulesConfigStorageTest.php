@@ -380,7 +380,7 @@ class RecipeMultipleModulesConfigStorageTest extends UnitTestCase {
    */
   public function testCreateFromModuleListEmpty(): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('At least one module must be provided.');
+    $this->expectExceptionMessageIs('At least one module must be provided.');
     RecipeMultipleModulesConfigStorage::createFromModuleList([], $this->extensionList);
   }
 

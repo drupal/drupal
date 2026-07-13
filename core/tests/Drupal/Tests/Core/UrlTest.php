@@ -466,7 +466,7 @@ class UrlTest extends UnitTestCase {
   public function testGetRouteParametersWithExternalUrl(): void {
     $url = Url::fromUri('http://example.com');
     $this->expectException(\UnexpectedValueException::class);
-    $this->expectExceptionMessage('http://example.com has no corresponding route.');
+    $this->expectExceptionMessageIs('http://example.com has no corresponding route.');
     $url->getRouteParameters();
   }
 
@@ -478,7 +478,7 @@ class UrlTest extends UnitTestCase {
   public function testSetRouteParametersWithUnroutedUrl(): void {
     $url = Url::fromUri('https://example.com');
     $this->expectException(\UnexpectedValueException::class);
-    $this->expectExceptionMessage('https://example.com has no corresponding route.');
+    $this->expectExceptionMessageIs('https://example.com has no corresponding route.');
     $url->setRouteParameters(['foo' => 'bar']);
   }
 
@@ -490,7 +490,7 @@ class UrlTest extends UnitTestCase {
   public function testSetRouteParameterWithUnroutedUrl(): void {
     $url = Url::fromUri('https://example.com');
     $this->expectException(\UnexpectedValueException::class);
-    $this->expectExceptionMessage('https://example.com has no corresponding route.');
+    $this->expectExceptionMessageIs('https://example.com has no corresponding route.');
     $url->setRouteParameter('foo', 'bar');
   }
 
@@ -891,7 +891,7 @@ class UrlTest extends UnitTestCase {
    */
   public function testFromRouteUriWithMissingRouteName(): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage("The route URI 'route:' is invalid.");
+    $this->expectExceptionMessageIs("The route URI 'route:' is invalid.");
     Url::fromUri('route:');
   }
 

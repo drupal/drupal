@@ -542,7 +542,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     // Make the update throw an exception during the entity save process.
     \Drupal::state()->set('entity_test_update.throw_exception', TRUE);
     $this->expectException(EntityStorageException::class);
-    $this->expectExceptionMessage('The entity update process failed while processing the entity type entity_test_update, ID: 1.');
+    $this->expectExceptionMessageIs('The entity update process failed while processing the entity type entity_test_update, ID: 1.');
 
     try {
       $updated_entity_type = $this->getUpdatedEntityTypeDefinition(TRUE, TRUE);

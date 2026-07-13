@@ -309,7 +309,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->with('revision')
       ->willReturn(FALSE);
     $this->expectException('LogicException');
-    $this->expectExceptionMessage('Entity type ' . $this->entityTypeId . ' does not support revisions.');
+    $this->expectExceptionMessageIs('Entity type ' . $this->entityTypeId . ' does not support revisions.');
     $this->entity->setNewRevision();
   }
 
@@ -538,7 +538,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     // results in an exception.
     $this->assertTrue($this->entity->isValidationRequired());
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Entity validation is required, but was skipped.');
+    $this->expectExceptionMessageIs('Entity validation is required, but was skipped.');
     $this->entity->save();
   }
 

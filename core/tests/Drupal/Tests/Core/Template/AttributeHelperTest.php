@@ -94,10 +94,10 @@ class AttributeHelperTest extends UnitTestCase {
   public function testMergeCollectionsArgumentException(): void {
     $attributes = new Attribute(['class' => ['example-class']]);
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Invalid collection argument');
+    $this->expectExceptionMessageIs('Invalid collection argument');
     AttributeHelper::mergeCollections($attributes, 'not an array');
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Invalid collection argument');
+    $this->expectExceptionMessageIs('Invalid collection argument');
     AttributeHelper::mergeCollections('not an array', $attributes);
   }
 

@@ -115,7 +115,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
     $request = Request::create('path/two', 'POST');
     $request->headers->set('Content-type', 'text/html');
     $this->expectException(UnsupportedMediaTypeHttpException::class);
-    $this->expectExceptionMessage('No route found that matches "Content-Type: text/html"');
+    $this->expectExceptionMessageIs('No route found that matches "Content-Type: text/html"');
     $matcher->filter($routes, $request);
   }
 
@@ -132,7 +132,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
     // Delete all request headers that Request::create() sets by default.
     $request->headers = new HeaderBag();
     $this->expectException(UnsupportedMediaTypeHttpException::class);
-    $this->expectExceptionMessage('No "Content-Type" request header specified');
+    $this->expectExceptionMessageIs('No "Content-Type" request header specified');
     $matcher->filter($routes, $request);
   }
 

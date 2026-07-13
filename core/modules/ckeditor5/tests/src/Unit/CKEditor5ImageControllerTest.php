@@ -79,7 +79,7 @@ final class CKEditor5ImageControllerTest extends UnitTestCase {
     $editor = $this->prophesize(EditorInterface::class);
     $request->attributes->set('editor', $editor->reveal());
     $this->expectException(HttpException::class);
-    $this->expectExceptionMessage('The file "foo.txt" exceeds the upload limit defined in your form.');
+    $this->expectExceptionMessageIs('The file "foo.txt" exceeds the upload limit defined in your form.');
     $controller->upload($request);
   }
 

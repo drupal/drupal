@@ -120,7 +120,7 @@ class TestDiscoveryTest extends UnitTestCase {
   #[RunInSeparateProcess]
   public function testTestInfoParserMissingGroup(): void {
     $this->expectException(MissingGroupException::class);
-    $this->expectExceptionMessage('Missing group metadata in test Drupal\\Tests\\Core\\Foo\\MissingAttributesTest::testNoMetadata');
+    $this->expectExceptionMessageIs('Missing group metadata in test Drupal\\Tests\\Core\\Foo\\MissingAttributesTest::testNoMetadata');
     $configurationFilePath = $this->root . \DIRECTORY_SEPARATOR . 'core';
     $phpUnitTestDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath($configurationFilePath);
     $phpUnitTestDiscovery->getTestClasses(NULL, [], $this->root . \DIRECTORY_SEPARATOR . 'core/tests/fixtures/test_driver/MissingAttributesTest.php');
@@ -132,7 +132,7 @@ class TestDiscoveryTest extends UnitTestCase {
   #[RunInSeparateProcess]
   public function testTestInfoParserMissingGroupWithDataProvider(): void {
     $this->expectException(MissingGroupException::class);
-    $this->expectExceptionMessage('Missing group metadata in test Drupal\\Tests\\Core\\Foo\\MissingAttributesWithDataProviderTest::testNoGroupMetadata#Test#1');
+    $this->expectExceptionMessageIs('Missing group metadata in test Drupal\\Tests\\Core\\Foo\\MissingAttributesWithDataProviderTest::testNoGroupMetadata#Test#1');
     $configurationFilePath = $this->root . \DIRECTORY_SEPARATOR . 'core';
     $phpUnitTestDiscovery = PhpUnitTestDiscovery::instance()->setConfigurationFilePath($configurationFilePath);
     $phpUnitTestDiscovery->getTestClasses(NULL, [], $this->root . \DIRECTORY_SEPARATOR . 'core/tests/fixtures/test_driver/MissingAttributesWithDataProviderTest.php');

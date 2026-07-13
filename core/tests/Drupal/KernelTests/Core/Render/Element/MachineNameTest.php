@@ -69,7 +69,7 @@ class MachineNameTest extends KernelTestBase implements FormInterface {
    */
   public function testMachineNameOrderException(): void {
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('The machine name element "test_machine_name" is defined before the source element "test_source", it must be defined after or the source element must specify an id.');
+    $this->expectExceptionMessageIs('The machine name element "test_machine_name" is defined before the source element "test_source", it must be defined after or the source element must specify an id.');
     $form = \Drupal::formBuilder()->getForm($this);
     $this->render($form);
   }

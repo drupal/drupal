@@ -79,7 +79,7 @@ class LinkFormatterTest extends UnitTestCase {
     $pathValidator = $this->createStub(PathValidatorInterface::class);
     $linkFormatter = new LinkFormatter('', [], $fieldDefinition, [], '', '', [], $pathValidator);
     $this->expectException(\Exception::class);
-    $this->expectExceptionMessage('Unexpected!!!');
+    $this->expectExceptionMessageIs('Unexpected!!!');
     $linkFormatter->viewElements($fieldList, 'fr');
   }
 

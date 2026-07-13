@@ -93,7 +93,7 @@ class AddNavigationBlockConfigActionTest extends KernelTestBase {
    */
   public function testActionOnlySupportsNavigationConfig(): void {
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessage('addNavigationBlock can only be executed for the navigation.block_layout config.');
+    $this->expectExceptionMessageIs('addNavigationBlock can only be executed for the navigation.block_layout config.');
     // Try to apply the Config Action against an unexpected config entity.
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');

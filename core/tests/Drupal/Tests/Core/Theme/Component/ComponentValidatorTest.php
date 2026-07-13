@@ -287,7 +287,7 @@ class ComponentValidatorTest extends UnitTestCase {
       $definition
     );
     $this->expectException(InvalidComponentException::class);
-    $this->expectExceptionMessage($expected_exception_message);
+    $this->expectExceptionMessageIs($expected_exception_message);
     $component_validator = new ComponentValidator();
     $component_validator->setValidator();
     $component_validator->validateProps($context, $component);

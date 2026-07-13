@@ -146,7 +146,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions);
 
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage('The "missing" plugin does not exist. Valid plugin IDs for Drupal\Tests\Core\Plugin\TestPluginManager are: apple, banana');
+    $this->expectExceptionMessageIs('The "missing" plugin does not exist. Valid plugin IDs for Drupal\Tests\Core\Plugin\TestPluginManager are: apple, banana');
     $plugin_manager->getDefinition('missing');
   }
 
@@ -308,7 +308,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
 
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions, $module_handler, NULL, FruitInterface::class);
     $this->expectException(PluginException::class);
-    $this->expectExceptionMessage('Plugin "kale" (Drupal\plugin_test\Plugin\plugin_test\fruit\Kale) must implement interface Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
+    $this->expectExceptionMessageIs('Plugin "kale" (Drupal\plugin_test\Plugin\plugin_test\fruit\Kale) must implement interface Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
     $plugin_manager->createInstance('kale');
   }
 

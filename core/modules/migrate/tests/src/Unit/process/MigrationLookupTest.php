@@ -71,7 +71,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
     $this->migrateStub->createStub('destination_migration', [1], [], FALSE)->willThrow(new $exception_class($exception_message));
     $migration = MigrationLookup::create($this->prepareContainer(), $configuration, '', [], $migration_plugin->reveal());
     $this->expectException($exception_class);
-    $this->expectExceptionMessage($expected_message);
+    $this->expectExceptionMessageIs($expected_message);
     $migration->transform(1, $this->migrateExecutable, $this->row, '');
 
   }

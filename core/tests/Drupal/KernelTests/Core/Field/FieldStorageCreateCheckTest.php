@@ -28,7 +28,7 @@ class FieldStorageCreateCheckTest extends KernelTestBase {
    */
   public function testFieldStorageCreateCheck(): void {
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Creating the "entity_test.field_test" field storage definition without the entity schema "entity_test" being installed is not allowed.');
+    $this->expectExceptionMessageIs('Creating the "entity_test.field_test" field storage definition without the entity schema "entity_test" being installed is not allowed.');
 
     FieldStorageConfig::create([
       'field_name' => 'field_test',

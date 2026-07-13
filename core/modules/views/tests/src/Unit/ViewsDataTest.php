@@ -676,7 +676,7 @@ class ViewsDataTest extends UnitTestCase {
   #[DataProvider('providerTestGetEmptyKey')]
   public function testGetEmptyKey(string|int|null $key): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('A valid cache entry key is required. Use getAll() to get all table data.');
+    $this->expectExceptionMessageIs('A valid cache entry key is required. Use getAll() to get all table data.');
 
     $this->viewsData->get($key);
   }

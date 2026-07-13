@@ -90,7 +90,7 @@ class CallbackTest extends MigrateProcessTestCase {
   #[DataProvider('providerCallbackExceptions')]
   public function testCallbackExceptions(string $message, array $configuration, string $class = 'InvalidArgumentException', ?string $args = NULL): void {
     $this->expectException($class);
-    $this->expectExceptionMessage($message);
+    $this->expectExceptionMessageIs($message);
     $this->plugin = new Callback($configuration, 'map', []);
     $this->plugin->transform($args, $this->migrateExecutable, $this->row, 'destination_property');
   }

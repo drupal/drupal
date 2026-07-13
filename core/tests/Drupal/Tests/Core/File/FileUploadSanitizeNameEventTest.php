@@ -38,7 +38,7 @@ class FileUploadSanitizeNameEventTest extends UnitTestCase {
     $event = new FileUploadSanitizeNameEvent('foo.txt', '');
     $this->assertSame('foo.txt', $event->getFilename());
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('$filename must be a filename with no path information, "bar/foo.html" provided');
+    $this->expectExceptionMessageIs('$filename must be a filename with no path information, "bar/foo.html" provided');
     $event->setFilename('bar/foo.html');
   }
 
@@ -50,7 +50,7 @@ class FileUploadSanitizeNameEventTest extends UnitTestCase {
    */
   public function testConstructorException(): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('$filename must be a filename with no path information, "bar/foo.txt" provided');
+    $this->expectExceptionMessageIs('$filename must be a filename with no path information, "bar/foo.txt" provided');
     new FileUploadSanitizeNameEvent('bar/foo.txt', '');
   }
 

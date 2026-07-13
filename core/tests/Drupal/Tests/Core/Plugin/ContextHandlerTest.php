@@ -372,7 +372,7 @@ class ContextHandlerTest extends UnitTestCase {
       ->willThrowException(new ContextException());
 
     $this->expectException(MissingValueContextException::class);
-    $this->expectExceptionMessage('Required contexts without a value: hit');
+    $this->expectExceptionMessageIs('Required contexts without a value: hit');
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }
 
@@ -442,7 +442,7 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('setContext');
 
     $this->expectException(MissingValueContextException::class);
-    $this->expectExceptionMessage('Required contexts without a value: hit');
+    $this->expectExceptionMessageIs('Required contexts without a value: hit');
     $this->contextHandler->applyContextMapping($plugin, $contexts);
   }
 
@@ -539,7 +539,7 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('setContext');
 
     $this->expectException(ContextException::class);
-    $this->expectExceptionMessage('Assigned contexts were not satisfied: miss');
+    $this->expectExceptionMessageIs('Assigned contexts were not satisfied: miss');
     $this->contextHandler->applyContextMapping($plugin, $contexts, ['miss' => 'name']);
   }
 

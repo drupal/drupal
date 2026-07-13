@@ -43,7 +43,7 @@ class FileStorageFactoryTest extends KernelTestBase {
 
     // On an empty settings there is an exception thrown.
     $this->expectException(ConfigDirectoryNotDefinedException::class);
-    $this->expectExceptionMessage('The config sync directory is not defined in $settings["config_sync_directory"]');
+    $this->expectExceptionMessageIs('The config sync directory is not defined in $settings["config_sync_directory"]');
     FileStorageFactory::getSync();
   }
 

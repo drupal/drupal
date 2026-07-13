@@ -96,7 +96,7 @@ class LinearHistoryTest extends UnitTestCase {
     // Add another checkpoint with the same ID and an exception should be
     // triggered.
     $this->expectException(CheckpointExistsException::class);
-    $this->expectExceptionMessage('Cannot create a checkpoint with the ID "hash1" as it already exists');
+    $this->expectExceptionMessageIs('Cannot create a checkpoint with the ID "hash1" as it already exists');
     $checkpoints->add('hash1', 'Label');
   }
 
@@ -164,7 +164,7 @@ class LinearHistoryTest extends UnitTestCase {
     $checkpoints = new LinearHistory($state->reveal(), $time->reveal());
 
     $this->expectException(UnknownCheckpointException::class);
-    $this->expectExceptionMessage('Cannot delete a checkpoint with the ID "foo" as it does not exist');
+    $this->expectExceptionMessageIs('Cannot delete a checkpoint with the ID "foo" as it does not exist');
 
     $checkpoints->delete('foo');
   }
@@ -202,7 +202,7 @@ class LinearHistoryTest extends UnitTestCase {
     $checkpoints = new LinearHistory($state->reveal(), $time->reveal());
 
     $this->expectException(UnknownCheckpointException::class);
-    $this->expectExceptionMessage('The checkpoint "hash3" does not exist');
+    $this->expectExceptionMessageIs('The checkpoint "hash3" does not exist');
     iterator_to_array($checkpoints->getParents('hash3'));
   }
 

@@ -41,7 +41,7 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
     $data = $this->container->get(TypedDataManagerInterface::class)
       ->create($definition, 39);
     $this->expectException(UnexpectedValueException::class);
-    $this->expectExceptionMessage('Expected argument of type "' . ConfigEntityInterface::class . '", "int" given');
+    $this->expectExceptionMessageIs('Expected argument of type "' . ConfigEntityInterface::class . '", "int" given');
     $data->validate();
   }
 
@@ -61,7 +61,7 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
       ->addConstraint('ImmutableProperties', ['properties' => ['non_existent']]);
 
     $this->expectException(LogicException::class);
-    $this->expectExceptionMessage("The entity does not have a 'non_existent' property.");
+    $this->expectExceptionMessageIs("The entity does not have a 'non_existent' property.");
     $this->container->get(TypedDataManagerInterface::class)
       ->create($definition, $entity)
       ->validate();
@@ -81,7 +81,7 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
     $data = $this->container->get(TypedDataManagerInterface::class)
       ->create($definition, $entity->reveal());
     $this->expectException(LogicException::class);
-    $this->expectExceptionMessage('The entity does not have an ID.');
+    $this->expectExceptionMessageIs('The entity does not have an ID.');
     $data->validate();
   }
 

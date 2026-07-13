@@ -53,7 +53,7 @@ class FileUploadHandlerTest extends KernelTestBase {
     $file_info->expects($this->once())->method('validate')->willReturn(new ConstraintViolationList());
 
     $this->expectException(LockAcquiringException::class);
-    $this->expectExceptionMessage(sprintf('File "temporary://%s" is already locked for writing.', $file_name));
+    $this->expectExceptionMessageIs(sprintf('File "temporary://%s" is already locked for writing.', $file_name));
 
     $fileUploadHandler->handleFileUpload(uploadedFile: $file_info);
   }

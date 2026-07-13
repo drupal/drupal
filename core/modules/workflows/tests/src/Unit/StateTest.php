@@ -74,7 +74,7 @@ class StateTest extends UnitTestCase {
    */
   public function testGetTransitionToException(): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage("Can not transition to 'published' state");
+    $this->expectExceptionMessageIs("Can not transition to 'published' state");
     $workflow_type = new TestType([], '', []);
     $workflow_type->addState('draft', 'Draft');
     $state = $workflow_type->getState('draft');

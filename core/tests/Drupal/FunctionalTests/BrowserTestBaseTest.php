@@ -232,7 +232,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
   public function testError(): void {
     $this->expectException('\Exception');
-    $this->expectExceptionMessage('User notice: foo');
+    $this->expectExceptionMessageIs('User notice: foo');
     $this->drupalGet('test-error');
   }
 
@@ -534,7 +534,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    */
   public function testProfileModules(): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('The module demo_umami_content does not exist.');
+    $this->expectExceptionMessageIs('The module demo_umami_content does not exist.');
     $this->assertFileExists('core/profiles/demo_umami/modules/demo_umami_content/demo_umami_content.info.yml');
     \Drupal::service('extension.list.module')->getPathname('demo_umami_content');
   }
@@ -659,7 +659,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   public function testSimpleTestBaseUrlValidation(): void {
     putenv('SIMPLETEST_BASE_URL=mysql://user:pass@localhost/database');
     $this->expectException(\Exception::class);
-    $this->expectExceptionMessage('You must provide valid scheme for the SIMPLETEST_BASE_URL environment variable. Valid schema are: http, https.');
+    $this->expectExceptionMessageIs('You must provide valid scheme for the SIMPLETEST_BASE_URL environment variable. Valid schema are: http, https.');
     $this->setupBaseUrl();
   }
 

@@ -345,7 +345,7 @@ class ConnectionTest extends UnitTestCase {
       'Truncate',
       'Schema',
       'Condition',
-      'Transaction' => $this->expectExceptionMessage('Calling Drupal\\Core\\Database\\Connection::getDriverClass() for \'' . $class . '\' is not supported. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534'),
+      'Transaction' => $this->expectExceptionMessageIs('Calling Drupal\\Core\\Database\\Connection::getDriverClass() for \'' . $class . '\' is not supported. Use standard autoloading in the methods that return database operations. See https://www.drupal.org/node/3217534'),
       default => NULL,
     };
     $this->assertEquals($expected, $connection->getDriverClass($class));
@@ -586,7 +586,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testIdentifierQuotesAssertCount(): void {
     $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
+    $this->expectExceptionMessageIs('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
     $mock_pdo = $this->createStub(StubPDO::class);
     new StubConnection($mock_pdo, [], ['"']);
   }
@@ -598,7 +598,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testIdentifierQuotesAssertString(): void {
     $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
+    $this->expectExceptionMessageIs('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
     $mock_pdo = $this->createStub(StubPDO::class);
     new StubConnection($mock_pdo, [], [0, '1']);
   }

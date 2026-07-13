@@ -51,7 +51,7 @@ class RecipeTest extends KernelTestBase {
     mkdir($dir);
 
     $this->expectException(RecipeFileException::class);
-    $this->expectExceptionMessage('There is no ' . $dir . '/recipe.yml file');
+    $this->expectExceptionMessageIs('There is no ' . $dir . '/recipe.yml file');
     Recipe::createFromDirectory($dir);
   }
 

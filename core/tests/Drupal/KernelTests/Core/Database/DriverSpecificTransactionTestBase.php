@@ -777,7 +777,7 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
     $this->assertSame('savepoint_1', $savepoint1->name());
 
     $this->expectException(TransactionNameNonUniqueException::class);
-    $this->expectExceptionMessage("savepoint_1 is already in use.");
+    $this->expectExceptionMessageIs("savepoint_1 is already in use.");
     $this->connection->startTransaction('savepoint_1');
   }
 

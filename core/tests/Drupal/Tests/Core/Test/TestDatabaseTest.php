@@ -26,7 +26,7 @@ class TestDatabaseTest extends UnitTestCase {
    */
   public function testConstructorException(): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage("Invalid database prefix: blah1253");
+    $this->expectExceptionMessageIs("Invalid database prefix: blah1253");
     new TestDatabase('blah1253');
   }
 

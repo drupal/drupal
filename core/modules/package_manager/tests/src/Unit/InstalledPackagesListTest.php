@@ -33,7 +33,7 @@ class InstalledPackagesListTest extends UnitTestCase {
   public function testImmutability(string $method, array $arguments): void {
     $list = new InstalledPackagesList(['existing' => 'thing']);
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Installed package lists cannot be modified.');
+    $this->expectExceptionMessageIs('Installed package lists cannot be modified.');
     $list->$method(...$arguments);
   }
 

@@ -267,7 +267,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
   public function testProcessDefinition(): void {
     $this->moduleHandler->alter('layout', Argument::type('array'))->shouldNotBeCalled();
     $this->expectException(InvalidPluginDefinitionException::class);
-    $this->expectExceptionMessage('The "module_a_derived_layout:array_based" layout definition must extend ' . LayoutDefinition::class);
+    $this->expectExceptionMessageIs('The "module_a_derived_layout:array_based" layout definition must extend ' . LayoutDefinition::class);
     $module_a_provided_layout = <<<'EOS'
 module_a_derived_layout:
   deriver: \Drupal\Tests\Core\Layout\LayoutDeriver

@@ -60,7 +60,7 @@ class InstalledPackageTest extends UnitTestCase {
    */
   public function testMetapackageWithAPath(): void {
     $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('Metapackage install path must be NULL.');
+    $this->expectExceptionMessageIs('Metapackage install path must be NULL.');
 
     InstalledPackage::createFromArray([
       'name' => 'vendor/test',

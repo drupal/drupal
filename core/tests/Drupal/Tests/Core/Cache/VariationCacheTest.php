@@ -411,7 +411,7 @@ class VariationCacheTest extends UnitTestCase {
     // something is wrong. There should always be at least one shared context at
     // the top level or else the cache cannot do its job.
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage("The complete set of cache contexts for a variation cache item must contain all of the initial cache contexts, missing: garden.type.");
+    $this->expectExceptionMessageIs("The complete set of cache contexts for a variation cache item must contain all of the initial cache contexts, missing: garden.type.");
 
     $this->housingType = 'house';
     $house_cacheability = (new CacheableMetadata())
@@ -438,7 +438,7 @@ class VariationCacheTest extends UnitTestCase {
     // a cache redirect should always be present on the redirect itself. In this
     // example, the final cache redirect should be for 'A,B:foo,B'.
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Trying to overwrite a cache redirect for "your:housing:situation:ht.house" with one that has nothing in common, old one at address "house.type" was pointing to "garden.type:zen", new one points to "garden.type".');
+    $this->expectExceptionMessageIs('Trying to overwrite a cache redirect for "your:housing:situation:ht.house" with one that has nothing in common, old one at address "house.type" was pointing to "garden.type:zen", new one points to "garden.type".');
 
     $this->housingType = 'house';
     $house_cacheability = (new CacheableMetadata())
@@ -470,7 +470,7 @@ class VariationCacheTest extends UnitTestCase {
     // previous redirects should always be present on the next redirect or item
     // you're trying to store.
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Trying to overwrite a cache redirect for "your:housing:situation:ht.house" with one that has nothing in common, old one at address "house.type" was pointing to "garden.type", new one points to "house.orientation".');
+    $this->expectExceptionMessageIs('Trying to overwrite a cache redirect for "your:housing:situation:ht.house" with one that has nothing in common, old one at address "house.type" was pointing to "garden.type", new one points to "house.orientation".');
 
     $this->housingType = 'house';
     $house_cacheability = (new CacheableMetadata())
@@ -497,7 +497,7 @@ class VariationCacheTest extends UnitTestCase {
   #[Depends('testIncompatibleRedirectsException')]
   public function testIncompatibleChainedRedirectsException(): void {
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Trying to overwrite a cache redirect for "your:housing:situation:gt.garden:ht.house" with one that has nothing in common, old one at address "house.type, garden.type" was pointing to "house.orientation", new one points to "solar.type".');
+    $this->expectExceptionMessageIs('Trying to overwrite a cache redirect for "your:housing:situation:gt.garden:ht.house" with one that has nothing in common, old one at address "house.type, garden.type" was pointing to "house.orientation", new one points to "solar.type".');
 
     $this->housingType = 'house';
     $house_cacheability = (new CacheableMetadata())
@@ -534,7 +534,7 @@ class VariationCacheTest extends UnitTestCase {
   #[Depends('testIncompatibleChainedRedirectsException')]
   public function testIncompatibleChainedRedirectsComplexException(): void {
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Trying to overwrite a cache redirect for "your:housing:situation:gt.garden:ht.house" with one that has nothing in common, old one at address "house.type, garden.type" was pointing to "house.orientation", new one points to "solar.type".');
+    $this->expectExceptionMessageIs('Trying to overwrite a cache redirect for "your:housing:situation:gt.garden:ht.house" with one that has nothing in common, old one at address "house.type, garden.type" was pointing to "house.orientation", new one points to "solar.type".');
 
     $this->housingType = 'house';
     $house_cacheability = (new CacheableMetadata())

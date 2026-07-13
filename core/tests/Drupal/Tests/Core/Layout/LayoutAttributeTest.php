@@ -21,7 +21,7 @@ class LayoutAttributeTest extends UnitTestCase {
    */
   public function testMissingProperties(): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('The "layout_without_label" layout plugin must have at least one of the label or deriver properties.');
+    $this->expectExceptionMessageIs('The "layout_without_label" layout plugin must have at least one of the label or deriver properties.');
     new Layout('layout_without_label');
   }
 

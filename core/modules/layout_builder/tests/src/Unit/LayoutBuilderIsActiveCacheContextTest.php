@@ -33,7 +33,7 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
     $route_match = $this->prophesize(RouteMatchInterface::class);
     $cache_context = new LayoutBuilderIsActiveCacheContext($route_match->reveal());
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Missing entity type ID');
+    $this->expectExceptionMessageIs('Missing entity type ID');
     $cache_context->getContext();
   }
 

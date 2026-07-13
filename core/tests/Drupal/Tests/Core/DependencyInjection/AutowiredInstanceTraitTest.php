@@ -71,7 +71,7 @@ class AutowiredInstanceTraitTest extends UnitTestCase {
     $container->method('has')->willReturn(FALSE);
 
     $this->expectException(AutowiringFailedException::class);
-    $this->expectExceptionMessage('Cannot autowire service "stdClass": argument "$service" of method "Drupal\Tests\Core\DependencyInjection\AutowireRequiredServiceTestClass::__construct()". Check that either the argument type is correct or the Autowire attribute is passed a valid identifier. Otherwise configure its value explicitly if possible.');
+    $this->expectExceptionMessageIs('Cannot autowire service "stdClass": argument "$service" of method "Drupal\Tests\Core\DependencyInjection\AutowireRequiredServiceTestClass::__construct()". Check that either the argument type is correct or the Autowire attribute is passed a valid identifier. Otherwise configure its value explicitly if possible.');
     AutowireRequiredServiceTestClass::createInstanceAutowired($container);
   }
 
@@ -83,7 +83,7 @@ class AutowiredInstanceTraitTest extends UnitTestCase {
     $container->method('hasParameter')->willReturn(FALSE);
 
     $this->expectException(AutowiringFailedException::class);
-    $this->expectExceptionMessage('Cannot autowire parameter "missing.parameter": argument "$parameter" of method "Drupal\Tests\Core\DependencyInjection\AutowireRequiredParameterTestClass::__construct()". Check that either the argument type is correct or the Autowire attribute is passed a valid identifier. Otherwise configure its value explicitly if possible.');
+    $this->expectExceptionMessageIs('Cannot autowire parameter "missing.parameter": argument "$parameter" of method "Drupal\Tests\Core\DependencyInjection\AutowireRequiredParameterTestClass::__construct()". Check that either the argument type is correct or the Autowire attribute is passed a valid identifier. Otherwise configure its value explicitly if possible.');
     AutowireRequiredParameterTestClass::createInstanceAutowired($container);
   }
 

@@ -193,7 +193,7 @@ class SubProcessTest extends MigrateProcessTestCase {
   public function testSourceNotArray(array $source_values, string $type): void {
     $process = new SubProcess(['process' => ['foo' => 'source_foo']], 'sub_process', []);
     $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage("Input array should hold elements of type array, instead element was of type '$type'");
+    $this->expectExceptionMessageIs("Input array should hold elements of type array, instead element was of type '$type'");
     $process->transform($source_values, $this->migrateExecutable, $this->row, 'destination_property');
   }
 

@@ -423,7 +423,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     $field_storage->save();
 
     $this->expectException(FieldException::class);
-    $this->expectExceptionMessage('Cannot change the field type for an existing field storage. The field storage entity_test.field_type has the type decimal.');
+    $this->expectExceptionMessageIs('Cannot change the field type for an existing field storage. The field storage entity_test.field_type has the type decimal.');
 
     $field_storage->set('type', 'foobar');
     $field_storage->save();
@@ -441,7 +441,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     $field_storage->save();
 
     $this->expectException(FieldException::class);
-    $this->expectExceptionMessage('Cannot change the entity type for an existing field storage. The field storage foobar.field_type has the type entity_test.');
+    $this->expectExceptionMessageIs('Cannot change the entity type for an existing field storage. The field storage foobar.field_type has the type entity_test.');
 
     $field_storage->set('entity_type', 'foobar');
     $field_storage->save();

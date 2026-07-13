@@ -39,7 +39,7 @@ class ComponentMetadataTest extends UnitTestCase {
   public function testMetadataEnforceSchema(array $metadata_info, array $expectations, bool $missing_schema): void {
     if ($missing_schema) {
       $this->expectException(InvalidComponentException::class);
-      $this->expectExceptionMessage('The component "' . $metadata_info['id'] . '" does not provide schema information. Schema definitions are mandatory for components declared in modules. For components declared in themes, schema definitions are only mandatory if the "enforce_prop_schemas" key is set to "true" in the theme info file.');
+      $this->expectExceptionMessageIs('The component "' . $metadata_info['id'] . '" does not provide schema information. Schema definitions are mandatory for components declared in modules. For components declared in themes, schema definitions are only mandatory if the "enforce_prop_schemas" key is set to "true" in the theme info file.');
       new ComponentMetadata($metadata_info, 'foo/', TRUE);
     }
     else {

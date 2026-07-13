@@ -144,7 +144,7 @@ class TransportTest extends KernelTestBase {
     $this->setUpMailerDsnConfigOverride('sendmail', 'default', options: [
       'command' => '/usr/bin/bc',
     ]);
-    $this->expectExceptionMessage('Unsafe sendmail command /usr/bin/bc');
+    $this->expectExceptionMessageIs('Unsafe sendmail command /usr/bin/bc');
     $this->container->get(TransportInterface::class);
   }
 
@@ -156,7 +156,7 @@ class TransportTest extends KernelTestBase {
   public function testMissingFactory(): void {
     $this->setUpMailerDsnConfigOverride('drupal.no-transport', 'default');
 
-    $this->expectExceptionMessage('The "drupal.no-transport" scheme is not supported');
+    $this->expectExceptionMessageIs('The "drupal.no-transport" scheme is not supported');
     $this->container->get(TransportInterface::class);
   }
 

@@ -75,7 +75,7 @@ class WebAssertTest extends UnitTestCase {
     $this->visit('', '', ['Null-Header' => '']);
     $this->assertSession()->responseHeaderExists('Null-Header');
     $this->expectException(AssertionFailedError::class);
-    $this->expectExceptionMessage("Failed asserting that the response has a 'does-not-exist' header.");
+    $this->expectExceptionMessageIs("Failed asserting that the response has a 'does-not-exist' header.");
     $this->assertSession()->responseHeaderExists('does-not-exist');
   }
 
@@ -87,7 +87,7 @@ class WebAssertTest extends UnitTestCase {
     $this->assertSession()->responseHeaderDoesNotExist('does-not-exist');
 
     $this->expectException(AssertionFailedError::class);
-    $this->expectExceptionMessage("Failed asserting that the response does not have a 'Null-Header' header.");
+    $this->expectExceptionMessageIs("Failed asserting that the response does not have a 'Null-Header' header.");
     $this->assertSession()->responseHeaderDoesNotExist('Null-Header');
   }
 
@@ -99,7 +99,7 @@ class WebAssertTest extends UnitTestCase {
     $this->assertSession()->pageTextMatchesCount(1, '/Test page text\./');
 
     $this->expectException(AssertionFailedError::class);
-    $this->expectExceptionMessage("Failed asserting that the page matches the pattern '/does-not-exist/' 1 time(s), 0 found.");
+    $this->expectExceptionMessageIs("Failed asserting that the page matches the pattern '/does-not-exist/' 1 time(s), 0 found.");
     $this->assertSession()->pageTextMatchesCount(1, '/does-not-exist/');
   }
 
@@ -111,7 +111,7 @@ class WebAssertTest extends UnitTestCase {
     $this->assertSession()->pageTextContainsOnce('Test page text.');
 
     $this->expectException(ResponseTextException::class);
-    $this->expectExceptionMessage("Failed asserting that the page matches the pattern '/does\\-not\\-exist/ui' 1 time(s), 0 found.");
+    $this->expectExceptionMessageIs("Failed asserting that the page matches the pattern '/does\\-not\\-exist/ui' 1 time(s), 0 found.");
     $this->assertSession()->pageTextContainsOnce('does-not-exist');
   }
 
@@ -123,7 +123,7 @@ class WebAssertTest extends UnitTestCase {
     $this->assertSession()->elementTextEquals('xpath', '//h1', 'Test page');
 
     $this->expectException(AssertionFailedError::class);
-    $this->expectExceptionMessage("Failed asserting that the text of the element identified by '//h1' equals 'Foo page'.");
+    $this->expectExceptionMessageIs("Failed asserting that the text of the element identified by '//h1' equals 'Foo page'.");
     $this->assertSession()->elementTextEquals('xpath', '//h1', 'Foo page');
   }
 
@@ -155,7 +155,7 @@ class WebAssertTest extends UnitTestCase {
     $this->assertSession()->addressNotEquals('other-page?a=b&c=d');
 
     $this->expectException(ExpectationException::class);
-    $this->expectExceptionMessage('Current page is "/test-page?a=b&c=d", but "/test-page?a=b&c=e" expected.');
+    $this->expectExceptionMessageIs('Current page is "/test-page?a=b&c=d", but "/test-page?a=b&c=e" expected.');
     $this->assertSession()->addressEquals('test-page?a=b&c=e');
   }
 
@@ -166,7 +166,7 @@ class WebAssertTest extends UnitTestCase {
     $this->visit('http://localhost/test-page?a=b&c=d');
 
     $this->expectException(ExpectationException::class);
-    $this->expectExceptionMessage('Current page is "/test-page?a=b&c=d", but should not be.');
+    $this->expectExceptionMessageIs('Current page is "/test-page?a=b&c=d", but should not be.');
     $this->assertSession()->addressNotEquals('test-page?a=b&c=d');
   }
 
@@ -198,7 +198,7 @@ class WebAssertTest extends UnitTestCase {
   public function testInvalidLinkExistsExact(): void {
     $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
     $this->expectException(ExpectationException::class);
-    $this->expectExceptionMessage('Link with label foo|bar not found');
+    $this->expectExceptionMessageIs('Link with label foo|bar not found');
     $this->assertSession()->linkExistsExact('foo|bar');
   }
 
@@ -219,7 +219,7 @@ class WebAssertTest extends UnitTestCase {
   public function testInvalidLinkNotExistsExact(): void {
     $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
     $this->expectException(ExpectationException::class);
-    $this->expectExceptionMessage('Link with label foo|bar|baz found');
+    $this->expectExceptionMessageIs('Link with label foo|bar|baz found');
     $this->assertSession()->linkNotExistsExact('foo|bar|baz');
     $this->addToAssertionCount(1);
   }
@@ -394,7 +394,7 @@ HTML);
       <h2 id="page-element">World</h2>
 HTML);
     $this->expectException(ExpectationException::class);
-    $this->expectExceptionMessage('The page contains a duplicate HTML ID "page-element".');
+    $this->expectExceptionMessageIs('The page contains a duplicate HTML ID "page-element".');
     $assert_session->pageContainsNoDuplicateId();
   }
 

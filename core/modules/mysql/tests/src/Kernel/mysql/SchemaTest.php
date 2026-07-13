@@ -307,7 +307,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
    */
   public function testSchemaTableColumnSizeTooLargeException(): void {
     $this->expectException(SchemaTableColumnSizeTooLargeException::class);
-    $this->expectExceptionMessage("Column length too big for column 'too_large' (max = 16383); use BLOB or TEXT instead");
+    $this->expectExceptionMessageIs("Column length too big for column 'too_large' (max = 16383); use BLOB or TEXT instead");
     $this->schema->createTable('test_schema', [
       'description' => 'Tests SchemaTableColumnSizeTooLargeException.',
       'fields' => [

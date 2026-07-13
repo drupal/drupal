@@ -122,7 +122,7 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
     ]);
 
     $this->expectException(InvalidConfigException::class);
-    $this->expectExceptionMessage("There were validation errors in editor.editor.filter_test:\n- settings.toolbar.items.3: The provided toolbar item <em class=\"placeholder\">bogus_item</em> is not valid.");
+    $this->expectExceptionMessageIs("There were validation errors in editor.editor.filter_test:\n- settings.toolbar.items.3: The provided toolbar item <em class=\"placeholder\">bogus_item</em> is not valid.");
     RecipeRunner::processRecipe($recipe);
   }
 
@@ -142,7 +142,7 @@ config:
 YAML;
 
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessage('The editor:addItemToToolbar config action only works with editors that use CKEditor 5.');
+    $this->expectExceptionMessageIs('The editor:addItemToToolbar config action only works with editors that use CKEditor 5.');
     RecipeRunner::processRecipe($this->createRecipe($recipe));
   }
 

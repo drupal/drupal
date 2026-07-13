@@ -140,7 +140,7 @@ class ExtractorTest extends UnitTestCase {
     );
 
     $this->expectException(IconPackConfigErrorException::class);
-    $this->expectExceptionMessage('Missing `template` in your definition, extractor test_extractor requires this value.');
+    $this->expectExceptionMessageIs('Missing `template` in your definition, extractor test_extractor requires this value.');
     $extractorPlugin->createIcon('foo');
   }
 
@@ -197,7 +197,7 @@ class ExtractorTest extends UnitTestCase {
     );
 
     $this->expectException(IconPackConfigErrorException::class);
-    $this->expectExceptionMessage('Missing or invalid `config: sources` in your definition, extractor test_extractor requires this value as array.');
+    $this->expectExceptionMessageIs('Missing or invalid `config: sources` in your definition, extractor test_extractor requires this value as array.');
     $extractorPlugin->discoverIcons();
   }
 
@@ -215,7 +215,7 @@ class ExtractorTest extends UnitTestCase {
     );
 
     $this->expectException(IconPackConfigErrorException::class);
-    $this->expectExceptionMessage('Missing or invalid `config: sources` in your definition, extractor test_extractor requires this value as array.');
+    $this->expectExceptionMessageIs('Missing or invalid `config: sources` in your definition, extractor test_extractor requires this value as array.');
     $pathExtractorPlugin->discoverIcons();
   }
 
@@ -236,7 +236,7 @@ class ExtractorTest extends UnitTestCase {
     );
 
     $this->expectException(IconPackConfigErrorException::class);
-    $this->expectExceptionMessage('Empty relative path for extractor test_extractor.');
+    $this->expectExceptionMessageIs('Empty relative path for extractor test_extractor.');
     $pathExtractorPlugin->discoverIcons();
   }
 

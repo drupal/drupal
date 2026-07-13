@@ -60,7 +60,7 @@ class FlattenTest extends MigrateProcessTestCase {
   public function testFlattenInvalid(string|int|float|bool|null $value): void {
     $this->expectException(MigrateException::class);
     $type = gettype($value);
-    $this->expectExceptionMessage(sprintf("Input should be an array or an object, instead it was of type '%s'", $type));
+    $this->expectExceptionMessageIs(sprintf("Input should be an array or an object, instead it was of type '%s'", $type));
     $this->plugin->transform($value, $this->migrateExecutable, $this->row, 'destination_property');
   }
 

@@ -42,7 +42,7 @@ class HelpTopicDiscoveryTest extends UnitTestCase {
     $discovery = new HelpTopicDiscovery(['test' => vfsStream::url('root/modules/test/help_topics')]);
 
     $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessage("vfs://root/modules/test/help_topics/test.topic.html.twig does not contain the required key with name='label'");
+    $this->expectExceptionMessageIs("vfs://root/modules/test/help_topics/test.topic.html.twig does not contain the required key with name='label'");
     $discovery->getDefinitions();
   }
 
@@ -72,7 +72,7 @@ EOF;
     $discovery = new HelpTopicDiscovery(['test' => vfsStream::url('root/modules/test/help_topics')]);
 
     $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessage("vfs://root/modules/test/help_topics/test.topic.html.twig contains invalid key='foo'");
+    $this->expectExceptionMessageIs("vfs://root/modules/test/help_topics/test.topic.html.twig contains invalid key='foo'");
     $discovery->getDefinitions();
   }
 
@@ -102,7 +102,7 @@ EOF;
     $discovery = new HelpTopicDiscovery(['test' => vfsStream::url('root/modules/test/help_topics')]);
 
     $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessage("vfs://root/modules/test/help_topics/test.topic.html.twig contains invalid value for 'top_level' key, the value must be a Boolean");
+    $this->expectExceptionMessageIs("vfs://root/modules/test/help_topics/test.topic.html.twig contains invalid value for 'top_level' key, the value must be a Boolean");
     $discovery->getDefinitions();
   }
 
@@ -132,7 +132,7 @@ EOF;
     $discovery = new HelpTopicDiscovery(['test' => vfsStream::url('root/modules/test/help_topics')]);
 
     $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessage("vfs://root/modules/test/help_topics/test.topic.html.twig contains invalid value for 'related' key, the value must be an array of strings");
+    $this->expectExceptionMessageIs("vfs://root/modules/test/help_topics/test.topic.html.twig contains invalid value for 'related' key, the value must be an array of strings");
     $discovery->getDefinitions();
   }
 
@@ -213,7 +213,7 @@ EOF;
     ]);
     $discovery = new HelpTopicDiscovery(['help' => vfsStream::url('root/modules/help/help_topics')]);
     $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessage("Malformed YAML in help topic \"vfs://root/modules/help/help_topics/core.topic.html.twig\":");
+    $this->expectExceptionMessageIs("Malformed YAML in help topic \"vfs://root/modules/help/help_topics/core.topic.html.twig\":");
     $discovery->getDefinitions();
   }
 

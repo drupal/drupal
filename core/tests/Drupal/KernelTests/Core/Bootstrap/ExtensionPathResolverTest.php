@@ -61,7 +61,7 @@ class ExtensionPathResolverTest extends KernelTestBase {
    */
   public function testExtensionPathResolvingWithNonExistingModule(): void {
     $this->expectException(UnknownExtensionException::class);
-    $this->expectExceptionMessage('The module there_is_a_module_for_that does not exist.');
+    $this->expectExceptionMessageIs('The module there_is_a_module_for_that does not exist.');
     $this->assertNull(\Drupal::service('extension.list.module')
       ->getPathname('there_is_a_module_for_that'), 'Searching for an item that does not exist returns NULL.');
   }
@@ -73,7 +73,7 @@ class ExtensionPathResolverTest extends KernelTestBase {
    */
   public function testExtensionPathResolvingWithNonExistingTheme(): void {
     $this->expectException(UnknownExtensionException::class);
-    $this->expectExceptionMessage('The theme there_is_a_theme_for_you does not exist.');
+    $this->expectExceptionMessageIs('The theme there_is_a_theme_for_you does not exist.');
     $this->assertNull(\Drupal::service('extension.list.theme')
       ->getPathname('there_is_a_theme_for_you'), 'Searching for an item that does not exist returns NULL.');
   }
@@ -85,7 +85,7 @@ class ExtensionPathResolverTest extends KernelTestBase {
    */
   public function testExtensionPathResolvingWithNonExistingProfile(): void {
     $this->expectException(UnknownExtensionException::class);
-    $this->expectExceptionMessage('The profile there_is_an_install_profile_for_you does not exist.');
+    $this->expectExceptionMessageIs('The profile there_is_an_install_profile_for_you does not exist.');
     $this->assertNull(\Drupal::service('extension.list.profile')
       ->getPathname('there_is_an_install_profile_for_you'), 'Searching for an item that does not exist returns NULL.');
   }
@@ -104,7 +104,7 @@ class ExtensionPathResolverTest extends KernelTestBase {
     );
 
     $this->expectException(UnknownExtensionTypeException::class);
-    $this->expectExceptionMessage('Extension type foo is unknown.');
+    $this->expectExceptionMessageIs('Extension type foo is unknown.');
     $resolver->getPath('foo', 'bar');
   }
 

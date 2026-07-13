@@ -81,7 +81,7 @@ class FileDeleteTest extends FileTestBase {
     symlink(\Drupal::service('file_system')->realpath($directory), \Drupal::service('file_system')->realpath($link));
     $this->assertDirectoryExists($link);
 
-    $this->expectExceptionMessage("Cannot delete '$link' because it is a directory. Use deleteRecursive() instead.");
+    $this->expectExceptionMessageIs("Cannot delete '$link' because it is a directory. Use deleteRecursive() instead.");
     $this->expectException(NotRegularFileException::class);
     \Drupal::service('file_system')->delete($link);
   }

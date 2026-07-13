@@ -155,7 +155,7 @@ class StageConflictTest extends PackageManagerKernelTestBase {
     $stage->require(['ext-json:*']);
     if ($expected_exception_message) {
       $this->expectException(SandboxException::class);
-      $this->expectExceptionMessage($expected_exception_message);
+      $this->expectExceptionMessageIs($expected_exception_message);
     }
     $stage->apply();
 
@@ -164,7 +164,7 @@ class StageConflictTest extends PackageManagerKernelTestBase {
     // the postApply() method should fail because the stage is not claimed.
     if ($stage->isAvailable()) {
       $this->expectException(\LogicException::class);
-      $this->expectExceptionMessage('Stage must be claimed before performing any operations on it.');
+      $this->expectExceptionMessageIs('Stage must be claimed before performing any operations on it.');
     }
     $stage->postApply();
   }

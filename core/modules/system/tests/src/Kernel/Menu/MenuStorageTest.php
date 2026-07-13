@@ -31,7 +31,7 @@ class MenuStorageTest extends KernelTestBase {
   public function testMaxIdLengthException(): void {
     $id = $this->randomMachineName(MenuStorage::MAX_ID_LENGTH + 1);
     $this->expectException(ConfigEntityIdLengthException::class);
-    $this->expectExceptionMessage(
+    $this->expectExceptionMessageIs(
       sprintf('Configuration entity ID %s exceeds maximum allowed length of %s characters.', $id, MenuStorage::MAX_ID_LENGTH)
     );
     Menu::create(['id' => $id])->save();

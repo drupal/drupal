@@ -198,7 +198,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   public function testDatetimeElementUntrustedCallbacks(string $date_callback = 'datetimeDateCallbackTrusted', string $time_callback = 'datetimeTimeCallbackTrusted', ?string $expected_exception = NULL) : void {
     if ($expected_exception) {
       $this->expectException(UntrustedCallbackException::class);
-      $this->expectExceptionMessage($expected_exception);
+      $this->expectExceptionMessageIs($expected_exception);
     }
     $form = \Drupal::formBuilder()->getForm($this, $date_callback, $time_callback);
     $this->render($form);

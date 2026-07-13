@@ -24,7 +24,7 @@ class ConfigActionAttributeTest extends UnitTestCase {
    */
   public function testNoLabelNoDeriver(): void {
     $this->expectException(InvalidPluginDefinitionException::class);
-    $this->expectExceptionMessage("The 'test' config action plugin must have either an admin label or a deriver");
+    $this->expectExceptionMessageIs("The 'test' config action plugin must have either an admin label or a deriver");
     new ConfigAction('test');
   }
 

@@ -161,7 +161,7 @@ class EntityFieldValueTraitTest extends KernelTestBase {
     assert($account instanceof User);
 
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Field nonexistent_field is unknown.');
+    $this->expectExceptionMessageIs('Field nonexistent_field is unknown.');
     $this->getFieldValue($account, 'nonexistent_field', 'value');
   }
 

@@ -123,7 +123,7 @@ class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
   #[DataProvider('providerTestInvalidCoreInstall')]
   public function testInvalidCoreInstall(string $module_name, bool $install_dependencies): void {
     $this->expectException(MissingDependencyException::class);
-    $this->expectExceptionMessage("Unable to install modules: module '$module_name' is incompatible with this version of Drupal core.");
+    $this->expectExceptionMessageIs("Unable to install modules: module '$module_name' is incompatible with this version of Drupal core.");
     $this->container->get('module_installer')->install([$module_name], $install_dependencies);
   }
 
@@ -150,7 +150,7 @@ class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
    */
   public function testDependencyInvalidCoreInstall(): void {
     $this->expectException(MissingDependencyException::class);
-    $this->expectExceptionMessage("Unable to install modules: module 'system_incompatible_core_version_dependencies_test'. Its dependency module 'system_core_incompatible_semver_test' is incompatible with this version of Drupal core.");
+    $this->expectExceptionMessageIs("Unable to install modules: module 'system_incompatible_core_version_dependencies_test'. Its dependency module 'system_core_incompatible_semver_test' is incompatible with this version of Drupal core.");
     $this->container->get('module_installer')->install(['system_incompatible_core_version_dependencies_test']);
   }
 
@@ -170,7 +170,7 @@ class ModuleInstallerTest extends KernelTestBase implements LoggerInterface {
    */
   public function testObsoleteInstall(): void {
     $this->expectException(ObsoleteExtensionException::class);
-    $this->expectExceptionMessage("Unable to install modules: module 'system_status_obsolete_test' is obsolete.");
+    $this->expectExceptionMessageIs("Unable to install modules: module 'system_status_obsolete_test' is obsolete.");
     $this->container->get('module_installer')->install(['system_status_obsolete_test']);
   }
 
