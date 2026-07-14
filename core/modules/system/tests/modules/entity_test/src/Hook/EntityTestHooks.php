@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -434,9 +433,7 @@ class EntityTestHooks {
     if (in_array($entity->getEntityTypeId(), $valid_entity_type_ids)) {
       if (\Drupal::service('router.route_provider')->getRouteByName("entity.{$entity->getEntityTypeId()}.test_operation")) {
         $operations['test_operation'] = [
-          'title' => new FormattableMarkup('Test Operation: @label', [
-            '@label' => $entity->label(),
-          ]),
+          'title' => "Test Operation: " . $entity->label(),
           'url' => Url::fromRoute("entity.{$entity->getEntityTypeId()}.test_operation", [
             $entity->getEntityTypeId() => $entity->id(),
           ]),

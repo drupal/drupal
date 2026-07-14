@@ -6,7 +6,6 @@ namespace Drupal\filter_test\Plugin\Filter;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
@@ -47,7 +46,7 @@ class FilterTestPlaceholders extends FilterBase implements TrustedCallbackInterf
    */
   public static function renderDynamicThing($thing) {
     return [
-      '#markup' => new FormattableMarkup('This is a dynamic @thing.', ['@thing' => $thing]),
+      '#markup' => "This is a dynamic $thing.",
     ];
   }
 

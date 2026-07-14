@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Config\Checkpoint;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
 use Drupal\Core\Config\Checkpoint\CheckpointExistsException;
@@ -13,6 +12,7 @@ use Drupal\Core\Config\Checkpoint\LinearHistory;
 use Drupal\Core\Config\Checkpoint\UnknownCheckpointException;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Lock\NullLockBackend;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\State\State;
 use Drupal\Core\State\StateInterface;
 use Drupal\Tests\UnitTestCase;
@@ -64,7 +64,7 @@ class LinearHistoryTest extends UnitTestCase {
     $this->assertSame('hash1', $checkpoints->getActiveCheckpoint()?->id);
 
     // Test that on the second call to add the ancestor is set correctly.
-    $checkpoint2 = $checkpoints->add('hash2', new FormattableMarkup('Another label', []));
+    $checkpoint2 = $checkpoints->add('hash2', Markup::create('Another label'));
     $this->assertSame('hash2', $checkpoint2->id);
     $this->assertSame('Another label', (string) $checkpoint2->label);
     $this->assertSame($checkpoint->id, $checkpoint2->parent);

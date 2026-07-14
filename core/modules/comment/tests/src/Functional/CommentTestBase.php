@@ -11,7 +11,6 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
 use Drupal\comment\FormLocation;
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
@@ -299,7 +298,8 @@ abstract class CommentTestBase extends BrowserTestBase {
       @trigger_error('Calling ' . __METHOD__ . ' with an integer $level parameter is deprecated in drupal:11.4.0 and it will be removed in drupal:13.0.0. Use the \Drupal\comment\AnonymousContact enum instead. See https://www.drupal.org/node/3547352', E_USER_DEPRECATED);
       $level = AnonymousContact::from($level);
     }
-    $this->setCommentSettings('anonymous', $level->value, new FormattableMarkup('Anonymous commenting set to level @level.', ['@level' => $level->value]));
+    $value = $level->value;
+    $this->setCommentSettings('anonymous', $value, "Anonymous commenting set to level $value.");
   }
 
   /**
@@ -312,7 +312,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   Defaults to 'comment'.
    */
   protected function setCommentsPerPage($number, $field_name = 'comment') {
-    $this->setCommentSettings('per_page', $number, new FormattableMarkup('Number of comments per page set to @number.', ['@number' => $number]), $field_name);
+    $this->setCommentSettings('per_page', $number, "Number of comments per page set to $number", $field_name);
   }
 
   /**

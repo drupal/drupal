@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
@@ -100,14 +99,9 @@ abstract class NodeTestBase extends BrowserTestBase {
    *   about the node access permission test that was performed.
    */
   public function nodeAccessAssertMessage($operation, $result, $langcode = NULL) {
-    return new FormattableMarkup(
-      'Node access returns @result with operation %op, language code %langcode.',
-      [
-        '@result' => $result ? 'true' : 'false',
-        '%op' => $operation,
-        '%langcode' => !empty($langcode) ? $langcode : 'empty',
-      ]
-    );
+    $result = $result ? 'true' : 'false';
+    $langcode = !empty($langcode) ? $langcode : 'empty';
+    return "Node access returns $result with operation $operation, language code $langcode.";
   }
 
 }

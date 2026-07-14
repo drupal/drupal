@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\session_test\Form;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -45,7 +44,7 @@ class SessionTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    $this->messenger()->addStatus(new FormattableMarkup('Ok: @input', ['@input' => $form_state->getValue('input')]));
+    $this->messenger()->addStatus("Ok: " . $form_state->getValue('input'));
   }
 
 }

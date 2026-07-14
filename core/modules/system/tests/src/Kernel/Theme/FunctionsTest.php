@@ -8,6 +8,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Element\Link;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
@@ -208,7 +209,7 @@ class FunctionsTest extends KernelTestBase {
         'title' => 'Plain "text"',
       ],
       'html text' => [
-        'title' => new FormattableMarkup('<span class="unescaped">@text</span>', ['@text' => 'potentially unsafe text that <should> be escaped']),
+        'title' => Markup::create('<span class="unescaped">potentially unsafe text that &lt;should&gt; be escaped</span>'),
       ],
       'front page' => [
         'title' => 'Front page',
