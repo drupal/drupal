@@ -9,6 +9,7 @@ use Drupal\Core\Config\ConfigCollectionEvents;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
+use Drupal\Core\Extension\ModuleWeight;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
@@ -846,7 +847,7 @@ class ConfigImporterTest extends KernelTestBase {
     // uninstalled.
     $extensions['module']['module_test'] = 0;
     $extensions['module']['system_test'] = 0;
-    $extensions['module'] = module_config_sort($extensions['module']);
+    $extensions['module'] = \Drupal::service(ModuleWeight::class)->sort($extensions['module']);
     $sync->write('core.extension', $extensions);
     $this->configImporter()->import();
 

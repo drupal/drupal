@@ -5,6 +5,7 @@
  * Installation functions for Content Translation module.
  */
 
+use Drupal\Core\Extension\ModuleWeight;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Url;
 
@@ -14,7 +15,7 @@ use Drupal\Core\Url;
 function content_translation_install(): void {
   // Assign a fairly low weight to ensure our Order directive is run among the
   // last ones.
-  module_set_weight('content_translation', 10);
+  \Drupal::service(ModuleWeight::class)->set('content_translation', 10);
 
   // Skip the guidance messages about enabling translation features if the
   // module was installed in the Drupal installation process.

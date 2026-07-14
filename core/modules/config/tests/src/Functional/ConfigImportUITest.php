@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Config\InstallStorage;
+use Drupal\Core\Extension\ModuleWeight;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
@@ -93,7 +94,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $core_extension = $this->config('core.extension')->get();
     $core_extension['module']['automated_cron'] = 0;
     $core_extension['module']['config_install_schema_test'] = 0;
-    $core_extension['module'] = module_config_sort($core_extension['module']);
+    $core_extension['module'] = \Drupal::service(ModuleWeight::class)->sort($core_extension['module']);
     $core_extension['theme']['olivero'] = 0;
     $sync->write('core.extension', $core_extension);
     // Olivero ships with configuration.
