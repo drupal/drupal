@@ -11,6 +11,7 @@ use Drupal\inline_form_errors\FormErrorHandler;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\inline_form_errors\FormErrorHandler.
@@ -28,17 +29,13 @@ class FormErrorHandlerTest extends UnitTestCase {
 
   /**
    * The messenger.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $messenger;
+  protected MessengerInterface&MockObject $messenger;
 
   /**
    * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $renderer;
+  protected RendererInterface&MockObject $renderer;
 
   /**
    * Form for testing.

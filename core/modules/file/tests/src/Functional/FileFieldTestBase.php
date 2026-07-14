@@ -114,7 +114,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * @return int
    *   The node id.
    */
-  public function uploadNodeFile(FileInterface $file, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
+  public function uploadNodeFile(FileInterface $file, string $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
     return $this->uploadNodeFiles([$file], $field_name, $nid_or_type, $new_revision, $extras);
   }
 

@@ -155,7 +155,7 @@ class ComponentAsFormElementTest extends ComponentKernelTestBase implements Form
    * @param array $complete_form
    *   The complete form structure.
    */
-  public static function customValidator(&$element, FormStateInterface $form_state, &$complete_form): void {
+  public static function customValidator(array &$element, FormStateInterface $form_state, &$complete_form): void {
     $input_exists = FALSE;
     $input = NestedArray::getValue($form_state->getValues(), $element['#parents'], $input_exists);
 

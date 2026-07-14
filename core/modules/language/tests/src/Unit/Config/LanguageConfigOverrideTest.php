@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Unit\Config;
 
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -11,6 +12,7 @@ use Drupal\language\Config\LanguageConfigOverride;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -51,10 +53,8 @@ class LanguageConfigOverrideTest extends UnitTestCase {
 
   /**
    * The mocked cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $cacheTagsInvalidator;
+  protected CacheTagsInvalidatorInterface&MockObject $cacheTagsInvalidator;
 
   /**
    * {@inheritdoc}

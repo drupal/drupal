@@ -194,7 +194,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *   The expected label for the newer version (for example 'Recommended
    *   version:' or 'Also available:').
    */
-  protected function confirmRevokedStatus($revoked_version, $newer_version, $new_version_label) {
+  protected function confirmRevokedStatus(string $revoked_version, string $newer_version, $new_version_label) {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
     $this->checkForMetaRefresh();

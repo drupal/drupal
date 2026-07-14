@@ -8,6 +8,7 @@ use Drupal\block\BlockForm;
 use Drupal\block\BlockRepository;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -19,6 +20,7 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\block\BlockForm.
@@ -36,10 +38,8 @@ class BlockFormTest extends UnitTestCase {
 
   /**
    * The block storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $storage;
+  protected EntityStorageInterface&MockObject $storage;
 
   /**
    * The language manager service.

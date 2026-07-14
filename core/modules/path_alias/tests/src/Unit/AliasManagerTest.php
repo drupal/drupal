@@ -8,12 +8,14 @@ use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\path_alias\AliasManager;
 use Drupal\path_alias\AliasPrefixListInterface;
 use Drupal\path_alias\AliasRepositoryInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\path_alias\AliasManager.
@@ -31,10 +33,8 @@ class AliasManagerTest extends UnitTestCase {
 
   /**
    * Alias repository.
-   *
-   * @var \Drupal\path_alias\AliasRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $aliasRepository;
+  protected AliasRepositoryInterface&MockObject $aliasRepository;
 
   /**
    * Alias prefix list.
@@ -45,10 +45,8 @@ class AliasManagerTest extends UnitTestCase {
 
   /**
    * Language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $languageManager;
+  protected LanguageManagerInterface&MockObject $languageManager;
 
   /**
    * Cache backend.

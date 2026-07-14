@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Unit;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Password\PasswordInterface;
@@ -17,6 +18,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\UserAuthentication;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -32,10 +34,8 @@ class UserAuthenticationTest extends UnitTestCase {
 
   /**
    * The mock user storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $userStorage;
+  protected EntityStorageInterface&MockObject $userStorage;
 
   /**
    * The mocked password service.

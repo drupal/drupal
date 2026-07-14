@@ -605,7 +605,7 @@ class UpdateContribTest extends UpdateTestBase {
    * @param string $fixture
    *   The fixture file to use.
    */
-  protected function doTestSecurityUpdateAvailability($module_version, array $expected_security_releases, $expected_update_message_type, $fixture): void {
+  protected function doTestSecurityUpdateAvailability($module_version, array $expected_security_releases, string $expected_update_message_type, $fixture): void {
     $this->mockInstalledExtensionsInfo([
       'aaa_update_test' => [
         'project' => 'aaa_update_test',

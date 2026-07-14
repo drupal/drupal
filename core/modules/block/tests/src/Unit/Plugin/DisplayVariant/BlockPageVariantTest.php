@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Unit\Plugin\DisplayVariant;
 
+use Drupal\block\BlockRepositoryInterface;
 use Drupal\block\Plugin\DisplayVariant\BlockPageVariant;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Block\MainContentBlockPluginInterface;
@@ -12,12 +13,14 @@ use Drupal\Core\Block\TitleBlockPluginInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
+use Drupal\Core\Entity\EntityViewBuilderInterface;
 use Drupal\Core\Render\PageDisplayVariantSelectionEvent;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\block\Plugin\DisplayVariant\BlockPageVariant.
@@ -28,17 +31,13 @@ class BlockPageVariantTest extends UnitTestCase {
 
   /**
    * The block repository.
-   *
-   * @var \Drupal\block\BlockRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $blockRepository;
+  protected BlockRepositoryInterface&MockObject $blockRepository;
 
   /**
    * The block view builder.
-   *
-   * @var \Drupal\Core\Entity\EntityViewBuilderInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $blockViewBuilder;
+  protected EntityViewBuilderInterface&MockObject $blockViewBuilder;
 
   /**
    * Sets up a display variant plugin for testing.

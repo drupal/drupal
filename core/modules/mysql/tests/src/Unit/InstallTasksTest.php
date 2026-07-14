@@ -64,7 +64,7 @@ class InstallTasksTest extends UnitTestCase {
       /**
        * {@inheritdoc}
        */
-      protected function getConnection() {
+      protected function getConnection(): Connection {
         return $this->connection;
       }
 

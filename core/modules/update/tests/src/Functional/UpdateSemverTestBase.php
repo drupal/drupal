@@ -50,7 +50,7 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function refreshUpdateStatus($xml_map, $url = 'update-test') {
+  protected function refreshUpdateStatus(array $xml_map, string $url = 'update-test') {
     if (!isset($xml_map['drupal'])) {
       $xml_map['drupal'] = '8.0.0';
     }

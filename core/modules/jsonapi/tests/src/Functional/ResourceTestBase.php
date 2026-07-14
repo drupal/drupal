@@ -413,7 +413,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function createAnotherEntity($key) {
+  protected function createAnotherEntity(string $key) {
     $duplicate = $this->getEntityDuplicate($this->entity, $key);
     // Some entity types are not stored, hence they cannot be reloaded.
     if (get_class($this->entityStorage) !== ContentEntityNullStorage::class) {

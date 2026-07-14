@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\update\Unit;
 
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Render\MetadataBubblingUrlGenerator;
 use Drupal\Core\Session\AccountProxy;
+use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\update\Hook\UpdateHooks;
 use Drupal\update\UpdateManagerInterface;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests text of update email.
@@ -36,24 +40,18 @@ class UpdateMailTest extends UnitTestCase {
 
   /**
    * Mocked language manager.
-   *
-   * @var \Drupal\language\ConfigurableLanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $languageManager;
+  protected ConfigurableLanguageManagerInterface&MockObject $languageManager;
 
   /**
    * Mocked config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactory|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $configFactory;
+  protected ConfigFactory&MockObject $configFactory;
 
   /**
    * Mocked URL generator.
-   *
-   * @var \Drupal\Core\Render\MetadataBubblingUrlGenerator|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $urlGenerator;
+  protected MetadataBubblingUrlGenerator&MockObject $urlGenerator;
 
   /**
    * {@inheritdoc}

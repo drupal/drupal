@@ -185,7 +185,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
    * @return array
    *   Return the request options.
    */
-  protected function createRequestOptions(array $request_body) {
+  protected function createRequestOptions(array $request_body): array {
     $request_options = $this->getAuthenticationRequestOptions('POST');
     $request_options[RequestOptions::BODY] = $this->serializer->encode($request_body, static::$format);
     $request_options[RequestOptions::HEADERS]['Content-Type'] = static::$mimeType;
@@ -232,7 +232,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   Return the Response.
    */
-  protected function registerRequest($name, $include_password = TRUE, $include_email = TRUE): ResponseInterface {
+  protected function registerRequest(string $name, $include_password = TRUE, $include_email = TRUE): ResponseInterface {
     $user_register_url = Url::fromRoute('user.register')
       ->setRouteParameter('_format', static::$format);
     $request_body = $this->createRequestBody($name, $include_password, $include_email);

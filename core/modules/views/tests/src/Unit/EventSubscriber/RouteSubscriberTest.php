@@ -7,6 +7,7 @@ namespace Drupal\Tests\views\Unit\EventSubscriber;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteBuildEvent;
+use Drupal\Core\State\StateInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\DisplayPluginCollection;
 use Drupal\views\Entity\View;
@@ -14,6 +15,7 @@ use Drupal\views\EventSubscriber\RouteSubscriber;
 use Drupal\views\ViewExecutable;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -26,10 +28,8 @@ class RouteSubscriberTest extends UnitTestCase {
 
   /**
    * The mocked entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\Stub
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface&MockObject $entityTypeManager;
 
   /**
    * The mocked config entity storage.
@@ -47,10 +47,8 @@ class RouteSubscriberTest extends UnitTestCase {
 
   /**
    * The mocked key value storage.
-   *
-   * @var \Drupal\Core\State\StateInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $state;
+  protected StateInterface&MockObject $state;
 
   /**
    * {@inheritdoc}

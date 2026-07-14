@@ -8,12 +8,15 @@ use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\locale\LocaleLookup;
+use Drupal\locale\StringStorageInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -26,17 +29,13 @@ class LocaleLookupTest extends UnitTestCase {
 
   /**
    * A mocked storage to use when instantiating LocaleTranslation objects.
-   *
-   * @var \Drupal\locale\StringStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $storage;
+  protected StringStorageInterface&MockObject $storage;
 
   /**
    * A mocked lock object.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $lock;
+  protected LockBackendInterface&MockObject $lock;
 
   /**
    * A mocked user object built from AccountInterface.

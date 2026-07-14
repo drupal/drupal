@@ -6,9 +6,11 @@ namespace Drupal\Tests\user\Unit;
 
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleExtensionList;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\PermissionHandler;
 use org\bovigo\vfs\vfsStream;
@@ -17,6 +19,7 @@ use org\bovigo\vfs\vfsStreamWrapper;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests the permission handler.
@@ -35,10 +38,8 @@ class PermissionHandlerTest extends UnitTestCase {
 
   /**
    * The mocked module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $moduleHandler;
+  protected ModuleHandlerInterface&MockObject $moduleHandler;
 
   /**
    * The mocked string translation.
@@ -49,10 +50,8 @@ class PermissionHandlerTest extends UnitTestCase {
 
   /**
    * The mocked callable resolver.
-   *
-   * @var \Drupal\Core\Utility\CallableResolver|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $callableResolver;
+  protected CallableResolver&MockObject $callableResolver;
 
   /**
    * {@inheritdoc}

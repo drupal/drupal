@@ -18,6 +18,7 @@ use Drupal\views\ViewExecutable;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -71,10 +72,8 @@ class EntityTest extends UnitTestCase {
 
   /**
    * The mocked view executable.
-   *
-   * @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $executable;
+  protected ViewExecutable&MockObject $executable;
 
   /**
    * The mocked display.
@@ -85,10 +84,8 @@ class EntityTest extends UnitTestCase {
 
   /**
    * The mocked style plugin.
-   *
-   * @var \Drupal\views\Plugin\views\style\StylePluginBase|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $stylePlugin;
+  protected StylePluginBase&MockObject $stylePlugin;
 
   /**
    * {@inheritdoc}

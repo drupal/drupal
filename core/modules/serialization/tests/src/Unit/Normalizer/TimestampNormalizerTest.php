@@ -174,8 +174,8 @@ class TimestampNormalizerTestDrupalDateTime extends DrupalDateTime {
   /**
    * Sets the timezone.
    */
-  public function setTimezone(\DateTimeZone $timezone) {
-    parent::setTimezone($timezone);
+  public function setTimezone(\DateTimeZone $timezone): static {
+    return parent::setTimezone($timezone);
   }
 
 }

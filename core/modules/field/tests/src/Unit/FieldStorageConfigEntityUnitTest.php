@@ -17,6 +17,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\field\Entity\FieldStorageConfig.
@@ -41,10 +42,8 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * The field type manager.
-   *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $fieldTypeManager;
+  protected FieldTypePluginManagerInterface&MockObject $fieldTypeManager;
 
   /**
    * {@inheritdoc}

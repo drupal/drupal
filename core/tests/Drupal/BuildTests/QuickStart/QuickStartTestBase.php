@@ -35,7 +35,7 @@ abstract class QuickStartTestBase extends BuildTestBase {
    *   (optional) A working directory relative to the workspace, within which to
    *   execute the command. Defaults to the workspace directory.
    */
-  public function installQuickStart(string $profile, $working_dir = NULL): void {
+  public function installQuickStart(string $profile, ?string $working_dir = NULL): void {
     $php_finder = new PhpExecutableFinder();
     $install_process = $this->executeCommand($php_finder->find() . ' ./vendor/bin/dr install ' . $profile, $working_dir);
     $this->assertCommandOutputContains('Username:');
@@ -55,7 +55,7 @@ abstract class QuickStartTestBase extends BuildTestBase {
    *   (optional) A working directory within which to login. Defaults to the
    *   workspace directory.
    */
-  public function formLogin($username, $password, $working_dir = NULL): void {
+  public function formLogin($username, $password, ?string $working_dir = NULL): void {
     $this->visit('/user/login', $working_dir);
     $assert = $this->getMink()->assertSession();
     $assert->statusCodeEquals(200);
