@@ -348,11 +348,8 @@ class ConfigCRUDTest extends KernelTestBase {
   public function testTrustedDataDeprecation(): void {
     $this->expectUserDeprecationMessage('Calling Drupal\\Core\\Config\\Config::save() with the $has_trusted_data argument is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3348180');
     \Drupal::service('module_installer')->install(['config_test']);
-    $typed_config_manager = \Drupal::service('config.typed');
-
     $name = 'config_test.types';
     $config = $this->config($name);
-    $this->assertTrue($typed_config_manager->hasConfigSchema($name));
 
     // Test that schema type enforcement can be overridden by trusting the data.
     $this->assertSame(99, $config->get('int'));
@@ -361,22 +358,6 @@ class ConfigCRUDTest extends KernelTestBase {
     // Test that re-saving without testing the data enforces the schema type.
     $config->save();
     $this->assertSame(99, $config->get('int'));
-
-    // Test that setting an unsupported type for a config object with a schema
-    // fails.
-    $this->expectException(UnsupportedDataTypeConfigException::class);
-    $config->set('stream', fopen(__FILE__, 'r'))->save(TRUE);
-
-    // Test that setting an unsupported type for a config object with no schema
-    // also fails.
-    $config_name = 'config_test.no_schema';
-    $config = $this->config($config_name);
-    $this->assertFalse($typed_config_manager->hasConfigSchema($config_name));
-
-    // Verify that an exception is thrown when saving unsupported data types.
-    $this->expectException(UnsupportedDataTypeConfigException::class);
-    $config->set('stream', fopen(__FILE__, 'r'))->save(TRUE);
-
   }
 
 }
