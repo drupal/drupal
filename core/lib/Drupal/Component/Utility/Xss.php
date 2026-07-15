@@ -218,6 +218,8 @@ class Xss {
             $skip = (
               in_array($attribute_name, ['style', 'srcdoc']) ||
               str_starts_with($attribute_name, 'on') ||
+              str_starts_with($attribute_name, 'data-hx') ||
+              str_starts_with($attribute_name, 'hx') ||
               str_starts_with($attribute_name, '-') ||
               // Ignore long attributes to avoid unnecessary processing
               // overhead.
