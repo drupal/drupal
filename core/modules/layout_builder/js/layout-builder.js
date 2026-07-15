@@ -454,9 +454,9 @@
     const contentPreviewPlaceholderLabel = document.createElement('div');
     contentPreviewPlaceholderLabel.className =
       'layout-builder-block__content-preview-placeholder-label js-layout-builder-content-preview-placeholder-label';
-    contentPreviewPlaceholderLabel.innerHTML = contentPreviewPlaceholderText;
+    contentPreviewPlaceholderLabel.textContent = contentPreviewPlaceholderText;
 
-    return `<div class="layout-builder-block__content-preview-placeholder-label js-layout-builder-content-preview-placeholder-label">${contentPreviewPlaceholderText}</div>`;
+    return contentPreviewPlaceholderLabel.outerHTML;
   };
 
   // Remove all contextual links outside the layout.
