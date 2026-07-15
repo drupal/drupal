@@ -155,15 +155,15 @@ class ImageStyleDownloadController extends FileDownloadController {
       throw new AccessDeniedHttpException("The scheme for this image doesn't match the scheme for the original image");
     }
 
-    if ($token_is_valid) {
-      $is_public = ($scheme !== 'private');
-    }
-    else {
-      $core_schemes = ['public', 'private', 'temporary'];
-      $additional_public_schemes = array_diff(Settings::get('file_additional_public_schemes', []), $core_schemes);
-      $public_schemes = array_merge(['public'], $additional_public_schemes);
-      $is_public = in_array($derivative_scheme, $public_schemes, TRUE);
-    }
+    $additional_public_schemes = array_diff(
+      Settings::get('file_additional_public_schemes', []),
+      ['public', 'private', 'temporary'],
+    );
+    $is_public = in_array(
+      $derivative_scheme,
+      array_merge(['public'], $additional_public_schemes),
+      TRUE,
+    );
 
     $headers = [];
 
