@@ -300,7 +300,7 @@ class StorageComparer implements StorageComparerInterface {
       $source_data = $this->getSourceStorage($collection)->read($name);
       $target_data = $this->getTargetStorage($collection)->read($name);
       if ($source_data !== $target_data) {
-        if (isset($source_data['uuid']) && $source_data['uuid'] !== $target_data['uuid']) {
+        if (isset($source_data['uuid']) && $source_data['uuid'] !== ($target_data['uuid'] ?? NULL)) {
           // The entity has the same file as an existing entity but the UUIDs do
           // not match. This means that the entity has been recreated so config
           // synchronization should do the same.
