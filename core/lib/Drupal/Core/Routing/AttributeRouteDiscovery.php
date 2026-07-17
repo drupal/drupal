@@ -83,7 +83,7 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
    * @return \Symfony\Component\Routing\RouteCollection
    *   The route collection.
    */
-  private function createControllerRouteCollection(\ReflectionClass $class): RouteCollection {
+  protected function createControllerRouteCollection(\ReflectionClass $class): RouteCollection {
     $collection = new RouteCollection();
     $globals = $this->getGlobals($class);
     $fqcnAlias = FALSE;
@@ -151,7 +151,7 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
    *   otherwise NULL. A class is invalid if there is an error on Reflection or
    *   if it is abstract.
    */
-  private function getReflectionClass(string $className): ?\ReflectionClass {
+  protected function getReflectionClass(string $className): ?\ReflectionClass {
     try {
       $exists = class_exists($className);
     }

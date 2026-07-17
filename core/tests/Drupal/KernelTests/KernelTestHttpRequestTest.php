@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Tests making HTTP requests in a kernel test.
@@ -21,7 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 #[RunTestsInSeparateProcesses]
 class KernelTestHttpRequestTest extends KernelTestBase {
 
-
   /**
    * {@inheritdoc}
    */
@@ -32,11 +32,11 @@ class KernelTestHttpRequestTest extends KernelTestBase {
   ];
 
   /**
-   * {@inheritdoc}
+   * Markup used in test controller response.
+   *
+   * @var string
    */
-  protected function setUp(): void {
-    parent::setUp();
-  }
+  protected string $testMarkup = '';
 
   /**
    * Tests making a request.
@@ -94,6 +94,39 @@ class KernelTestHttpRequestTest extends KernelTestBase {
     $this->drupalGet('test-page');
     $this->clickLink('Visually identical test links', 1);
     $this->assertStringContainsString('user/register', $this->getSession()->getCurrentUrl());
+  }
+
+  /**
+   * Test that kernel test classes can provide their own routes.
+   */
+  public function testKernelTestRoute(): void {
+    \Drupal::configFactory()->getEditable('system.site')
+      ->set('name', 'Drupal')
+      ->set('langcode', 'en')
+      ->save();
+    // Demonstrate that route markup can be set dynamically by class test
+    // property $testMarkup.
+    $this->testMarkup = $this->randomString();
+    $this->drupalGet('kernel-test-example');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->titleEquals('Example route | Drupal');
+    $this->assertSession()->pageTextContains($this->testMarkup);
+  }
+
+  /**
+   * Example of a route defined in a kernel test.
+   *
+   * @return string[]
+   *   The render array for the response.
+   */
+  #[Route(
+    path: '/kernel-test-example',
+    name: 'kernel_test.example',
+    requirements: ['_access' => 'TRUE'],
+    defaults: ['_title' => 'Example route'],
+  )]
+  public function exampleRoute(): array {
+    return ['#markup' => $this->testMarkup];
   }
 
 }

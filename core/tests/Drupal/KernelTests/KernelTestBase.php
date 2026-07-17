@@ -577,6 +577,12 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $definition = $container->register(static::class, static::class)->setSynthetic(TRUE);
     $container->set(static::class, $this);
     $container->addCompilerPass(new KernelTestCompilerPass($definition), priority: -100);
+
+    // Allow kernel tests to register routes.
+    $container
+      ->register(KernelTestAttributeRouteDiscovery::class, KernelTestAttributeRouteDiscovery::class)
+      ->addArgument(static::class)
+      ->addTag('event_subscriber');
   }
 
   /**
