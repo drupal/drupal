@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\Command;
 
+use Drupal\KernelTests\DrupalApplicationTesterTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Command\StatusCommand;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Tester\ApplicationTester;
 
 /**
  * Tests the 'system:status' command.
@@ -19,6 +19,7 @@ use Symfony\Component\Console\Tester\ApplicationTester;
 #[RunTestsInSeparateProcesses]
 #[CoversClass(StatusCommand::class)]
 class StatusCommandTest extends KernelTestBase {
+  use DrupalApplicationTesterTrait;
 
   /**
    * {@inheritdoc}
@@ -99,16 +100,6 @@ class StatusCommandTest extends KernelTestBase {
     $normalized_needle = preg_replace('/\s+/', ' ', trim($needle));
     $normalized_haystack = preg_replace('/\s+/', ' ', trim($haystack));
     $this->assertStringContainsString($normalized_needle, $normalized_haystack, $message ?? '');
-  }
-
-  /**
-   * Build our ApplicationTester.
-   */
-  private function applicationTester(array $context = []): ApplicationTester {
-    $application = include __DIR__ . '/../../../../../../../vendor/bin/dr';
-    $application = $application($context);
-    $application->setAutoExit(FALSE);
-    return new ApplicationTester($application);
   }
 
 }
