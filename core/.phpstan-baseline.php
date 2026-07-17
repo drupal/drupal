@@ -34082,13 +34082,13 @@ $ignoreErrors[] = [
 	'message' => '#^Calling md5\\(\\) is forbidden, use hash\\(\\) with an xxHash algorithm instead\\.$#',
 	'identifier' => 'disallowed.function',
 	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/ComposerIntegrationTest.php',
+	'path' => __DIR__ . '/tests/Drupal/Tests/Composer/ComposerIntegrationTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Calling sha1\\(\\) is forbidden, use sha256\\(\\) or hash\\(\\) with an xxHash algorithm instead\\.$#',
 	'identifier' => 'disallowed.function',
 	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/ComposerIntegrationTest.php',
+	'path' => __DIR__ . '/tests/Drupal/Tests/Composer/ComposerIntegrationTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Access\\\\TestAccessCheckInterface\\:\\:access\\(\\) has no return type specified\\.$#',
