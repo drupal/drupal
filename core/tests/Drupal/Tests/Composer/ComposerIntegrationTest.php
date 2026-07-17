@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests;
+namespace Drupal\Tests\Composer;
 
 use Drupal\Composer\Plugin\VendorHardening\Config;
-use Drupal\Tests\Composer\ComposerIntegrationTrait;
+use Drupal\Tests\UnitTestCase;
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Finder\Finder;
@@ -14,9 +16,157 @@ use Symfony\Component\Finder\Finder;
  * Tests Composer integration.
  */
 #[Group('Composer')]
+#[CoversTrait(ComposerIntegrationTrait::class)]
 class ComposerIntegrationTest extends UnitTestCase {
 
   use ComposerIntegrationTrait;
+
+  /**
+   * The original COMPOSER_BIN_DIR value, if any.
+   */
+  protected string|false $originalBinDirEnv;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->originalBinDirEnv = getenv('COMPOSER_BIN_DIR');
+    // Ensure a clean environment for every test.
+    putenv('COMPOSER_BIN_DIR');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown(): void {
+    if ($this->originalBinDirEnv === FALSE) {
+      putenv('COMPOSER_BIN_DIR');
+    }
+    else {
+      putenv('COMPOSER_BIN_DIR=' . $this->originalBinDirEnv);
+    }
+    parent::tearDown();
+  }
+
+  /**
+   * Creates a virtual project root with an optional composer.json.
+   *
+   * @param array|null $composer
+   *   The decoded composer.json contents, or NULL to omit the file.
+   *
+   * @return string
+   *   The URL of the virtual project root.
+   */
+  protected function createProjectRoot(?array $composer): string {
+    $structure = [];
+    if ($composer !== NULL) {
+      $structure['composer.json'] = json_encode($composer);
+    }
+    return vfsStream::setup('project', NULL, $structure)->url();
+  }
+
+  /**
+   * Tests bin dir resolution against composer.json contents.
+   *
+   * @param array|null $composer
+   *   The decoded composer.json contents, or NULL to omit the file.
+   * @param string $expected
+   *   The expected bin dir, relative to the project root.
+   */
+  #[DataProvider('providerBinDir')]
+  public function testBinDir(?array $composer, string $expected): void {
+    $root = $this->createProjectRoot($composer);
+    $this->assertSame($root . '/' . $expected, self::binDir($root));
+  }
+
+  /**
+   * Data provider for testBinDir().
+   */
+  public static function providerBinDir(): array {
+    return [
+      'no composer.json' => [
+        NULL,
+        'vendor/bin',
+      ],
+      'no config section' => [
+        ['name' => 'test/project'],
+        'vendor/bin',
+      ],
+      'empty config section' => [
+        ['config' => []],
+        'vendor/bin',
+      ],
+      'bin-dir set' => [
+        ['config' => ['bin-dir' => 'tools']],
+        'tools',
+      ],
+      'bin-dir nested' => [
+        ['config' => ['bin-dir' => 'build/bin']],
+        'build/bin',
+      ],
+      'vendor-dir set without bin-dir' => [
+        ['config' => ['vendor-dir' => 'deps']],
+        'deps/bin',
+      ],
+      'bin-dir wins over vendor-dir' => [
+        ['config' => ['vendor-dir' => 'deps', 'bin-dir' => 'tools']],
+        'tools',
+      ],
+    ];
+  }
+
+  /**
+   * Tests that an absolute bin-dir is returned unchanged.
+   */
+  public function testAbsoluteBinDir(): void {
+    $root = $this->createProjectRoot([
+      'config' => ['bin-dir' => '/opt/project/bin'],
+    ]);
+    $this->assertSame('/opt/project/bin', self::binDir($root));
+  }
+
+  /**
+   * Tests that a Windows-style absolute bin-dir is returned unchanged.
+   */
+  public function testWindowsAbsoluteBinDir(): void {
+    $root = $this->createProjectRoot([
+      'config' => ['bin-dir' => 'C:\\project\\bin'],
+    ]);
+    $this->assertSame('C:\\project\\bin', self::binDir($root));
+  }
+
+  /**
+   * Tests that the COMPOSER_BIN_DIR environment variable takes precedence.
+   */
+  public function testEnvironmentVariableOverride(): void {
+    $root = $this->createProjectRoot([
+      'config' => ['bin-dir' => 'tools'],
+    ]);
+    putenv('COMPOSER_BIN_DIR=env-bin');
+    $this->assertSame($root . '/env-bin', self::binDir($root));
+  }
+
+  /**
+   * Tests that an empty COMPOSER_BIN_DIR environment variable is ignored.
+   */
+  public function testEmptyEnvironmentVariableIgnored(): void {
+    $root = $this->createProjectRoot([
+      'config' => ['bin-dir' => 'tools'],
+    ]);
+    putenv('COMPOSER_BIN_DIR=');
+    $this->assertSame($root . '/tools', self::binDir($root));
+  }
+
+  /**
+   * Tests that malformed composer.json falls back to the default.
+   */
+  public function testMalformedComposerJson(): void {
+    $root = vfsStream::setup('project', NULL, [
+      'composer.json' => '{not valid json',
+    ])->url();
+    $this->assertSame($root . '/vendor/bin', self::binDir($root));
+  }
 
   /**
    * Tests composer.lock content-hash.
@@ -81,7 +231,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    */
   public static function providerTestComposerJson(): array {
     $data = [];
-    $composer_json_finder = self::getComposerJsonFinder(realpath(__DIR__ . '/../../../../'));
+    $composer_json_finder = self::getComposerJsonFinder(realpath(__DIR__ . '/../../../../../'));
     foreach ($composer_json_finder->getIterator() as $composer_json) {
       $data[$composer_json->getPathname()] = [$composer_json->getPathname()];
     }

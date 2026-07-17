@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests;
 
+use Drupal\Tests\Composer\ComposerIntegrationTrait;
 use Symfony\Component\Console\Tester\ApplicationTester;
 
 /**
@@ -11,11 +12,13 @@ use Symfony\Component\Console\Tester\ApplicationTester;
  */
 trait DrupalApplicationTesterTrait {
 
+  use ComposerIntegrationTrait;
+
   /**
    * Build our ApplicationTester.
    */
   private function applicationTester(array $context = []): ApplicationTester {
-    $application = include __DIR__ . '/../../../../vendor/bin/dr';
+    $application = include static::binDir() . '/dr';
     $context['kernel.environment'] = 'testing';
     $context['kernel.allow_dumping'] = FALSE;
     $application = $application($context);
