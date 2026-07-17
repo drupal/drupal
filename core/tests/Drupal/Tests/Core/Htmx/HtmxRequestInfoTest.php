@@ -8,6 +8,7 @@ use Drupal\Core\Htmx\HtmxRequestInfoTrait;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -83,13 +84,11 @@ class HtmxRequestInfoTest extends UnitTestCase {
   /**
    * Tests the getHtmxPrompt method.
    */
+  #[IgnoreDeprecations]
   public function testGetHtmxPrompt(): void {
     // Test with the header not present.
+    $this->expectUserDeprecationMessage('Drupal\Core\Htmx\HtmxRequestInfoTrait::getHtmxPrompt() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3583674');
     $this->assertEquals('', $this->getHtmxPrompt());
-
-    // Test with the header present.
-    $this->request->headers->set('HX-Prompt', 'Enter a value');
-    $this->assertEquals('Enter a value', $this->getHtmxPrompt());
   }
 
   /**
@@ -107,13 +106,11 @@ class HtmxRequestInfoTest extends UnitTestCase {
   /**
    * Tests the getHtmxTrigger method.
    */
+  #[IgnoreDeprecations]
   public function testGetHtmxTrigger(): void {
     // Test with the header not present.
+    $this->expectUserDeprecationMessage('Drupal\Core\Htmx\HtmxRequestInfoTrait::getHtmxTrigger() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3583674');
     $this->assertEquals('', $this->getHtmxTrigger());
-
-    // Test with the header present.
-    $this->request->headers->set('HX-Trigger', 'submit-button');
-    $this->assertEquals('submit-button', $this->getHtmxTrigger());
   }
 
   /**

@@ -11,6 +11,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Test all header-related Htmx public methods.
@@ -237,7 +238,9 @@ class HtmxHeadersTest extends UnitTestCase {
   /**
    * Test trigger header with simple data.
    */
+  #[IgnoreDeprecations]
   public function testTriggerAfterSettleHeader(): void {
+    $this->expectUserDeprecationMessage('Drupal\Core\Htmx\Htmx::triggerAfterSettleHeader() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use ::triggerHeader() instead. See https://www.drupal.org/node/3583674');
     $this->htmx->triggerAfterSettleHeader('foo');
     $render = $this->apply();
     $this->assertTrue(isset($render['#attached']['http_header']));
@@ -251,7 +254,9 @@ class HtmxHeadersTest extends UnitTestCase {
   /**
    * Test trigger after settle header is correctly set with provided parameters.
    */
+  #[IgnoreDeprecations]
   public function testTriggerAfterSettleHeaderComplex(): void {
+    $this->expectUserDeprecationMessage('Drupal\Core\Htmx\Htmx::triggerAfterSettleHeader() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use ::triggerHeader() instead. See https://www.drupal.org/node/3583674');
     $this->htmx->triggerAfterSettleHeader([
       'showMessage' => [
         'level' => 'info',
@@ -270,7 +275,9 @@ class HtmxHeadersTest extends UnitTestCase {
   /**
    * Test trigger header with simple data.
    */
+  #[IgnoreDeprecations]
   public function testTriggerAfterSwapHeader(): void {
+    $this->expectUserDeprecationMessage('Drupal\Core\Htmx\Htmx::triggerAfterSwapHeader() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use ::triggerHeader() instead. See https://www.drupal.org/node/3583674');
     $this->htmx->triggerAfterSwapHeader('foo');
     $render = $this->apply();
     $this->assertTrue(isset($render['#attached']['http_header']));
@@ -284,7 +291,9 @@ class HtmxHeadersTest extends UnitTestCase {
   /**
    * Test trigger after settle header is correctly set with provided parameters.
    */
+  #[IgnoreDeprecations]
   public function testTriggerAfterSwapHeaderComplex(): void {
+    $this->expectUserDeprecationMessage('Drupal\Core\Htmx\Htmx::triggerAfterSwapHeader() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use ::triggerHeader() instead. See https://www.drupal.org/node/3583674');
     $this->htmx->triggerAfterSwapHeader([
       'showMessage' => [
         'level' => 'info',

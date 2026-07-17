@@ -11,6 +11,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Test all attribute-related Htmx public methods.
@@ -196,8 +197,10 @@ class HtmxAttributesTest extends UnitTestCase {
   /**
    * Test request method.
    */
+  #[IgnoreDeprecations]
   public function testHxRequest(): void {
     $values = ['timeout' => 100, 'credentials' => FALSE];
+    $this->expectUserDeprecationMessage('Drupal\Core\Htmx\Htmx::request() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. The corresponding attribute is removed from htmx v.4. An alternate approach is available and outlined in the change record. See https://www.drupal.org/node/3583674');
     $this->htmx->request($values);
     $render = $this->apply();
     $this->assertTrue(isset($render['#attributes']['data-hx-request']));
@@ -258,8 +261,22 @@ class HtmxAttributesTest extends UnitTestCase {
   /**
    * Test remaining methods.
    */
+  #[IgnoreDeprecations]
   #[DataProvider('hxSimpleStringAttributesDataProvider')]
   public function testHxSimpleAttributes(string $method, null|string|array $value, string $attribute, string|bool $expected): void {
+    $expected_deprecation_message = match ($method) {
+      'disabledElt' => 'Drupal\Core\Htmx\Htmx::disabledElt() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Instead, use the approach given in the change record. See https://www.drupal.org/node/3583674',
+      'disinherit' => 'Drupal\Core\Htmx\Htmx::disinherit() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Instead, use the approach given in the change record. See https://www.drupal.org/node/3583674',
+      'ext' => 'Drupal\Core\Htmx\Htmx::ext() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Instead, use the approach given in the change record. See https://www.drupal.org/node/3583674',
+      'history' => 'Drupal\Core\Htmx\Htmx::history() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Instead, use the approach given in the change record. See https://www.drupal.org/node/3583674',
+      'inherit' => 'Drupal\Core\Htmx\Htmx::inherit() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Instead, use the approach given in the change record. See https://www.drupal.org/node/3583674',
+      'params' => 'Drupal\Core\Htmx\Htmx::params() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Instead, use the approach given in the change record. See https://www.drupal.org/node/3583674',
+      'prompt' => 'Drupal\Core\Htmx\Htmx::prompt() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Instead, use the approach given in the change record. See https://www.drupal.org/node/3583674',
+      default => NULL,
+    };
+    if ($expected_deprecation_message !== NULL) {
+      $this->expectUserDeprecationMessage($expected_deprecation_message);
+    }
     if (is_null($value)) {
       $this->htmx->$method();
     }
