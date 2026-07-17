@@ -8,10 +8,8 @@ use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\HandlerBase;
-use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore wõrd
@@ -64,19 +62,6 @@ class HandlerTest extends ViewTestBase {
     $data = parent::viewsData();
     // Override the name handler to be able to call placeholder() from outside.
     $data['views_test_data']['name']['field']['id'] = 'test_field';
-
-    // Setup one field with an access callback and one with an access callback
-    // and arguments.
-    $data['views_test_data']['access_callback'] = $data['views_test_data']['id'];
-    $data['views_test_data']['access_callback_arguments'] = $data['views_test_data']['id'];
-    foreach (ViewExecutable::getHandlerTypes() as $type => $info) {
-      if (isset($data['views_test_data']['access_callback'][$type]['id'])) {
-        $data['views_test_data']['access_callback'][$type]['access callback'] = 'views_test_data_handler_test_access_callback';
-
-        $data['views_test_data']['access_callback_arguments'][$type]['access callback'] = 'views_test_data_handler_test_access_callback_argument';
-      }
-    }
-
     return $data;
   }
 
@@ -364,46 +349,6 @@ class HandlerTest extends ViewTestBase {
     $this->assertEquals($string, $handler->getPlaceholder());
     $this->assertEquals($string . 1, $handler->getPlaceholder());
     $this->assertEquals($string . 2, $handler->getPlaceholder());
-  }
-
-  /**
-   * Tests access to a handler.
-   *
-   * @see views_test_data_handler_test_access_callback
-   */
-  #[IgnoreDeprecations]
-  public function testAccess(): void {
-    $this->expectUserDeprecationMessage('Passing the access callback using the array key is deprecated in drupal:11.3.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3539918');
-    $view = Views::getView('test_handler_test_access');
-    $views_data = $this->viewsData();
-    $views_data = $views_data['views_test_data'];
-
-    // Enable access to callback only field and deny for callback + arguments.
-    $this->config('views_test_data.tests')->set('handler_access_callback', TRUE)->save();
-    $this->config('views_test_data.tests')->set('handler_access_callback_argument', FALSE)->save();
-    $view->initDisplay();
-    $view->initHandlers();
-
-    foreach ($views_data['access_callback'] as $type => $info) {
-      if (!in_array($type, ['title', 'help'])) {
-        $this->assertInstanceOf(HandlerBase::class, $view->field['access_callback']);
-        $this->assertFalse(isset($view->field['access_callback_arguments']), 'Make sure the user got no access to the access_callback_arguments field ');
-      }
-    }
-
-    // Enable access to the callback + argument handlers and deny for callback.
-    $this->config('views_test_data.tests')->set('handler_access_callback', FALSE)->save();
-    $this->config('views_test_data.tests')->set('handler_access_callback_argument', TRUE)->save();
-    $view->destroy();
-    $view->initDisplay();
-    $view->initHandlers();
-
-    foreach ($views_data['access_callback'] as $type => $info) {
-      if (!in_array($type, ['title', 'help'])) {
-        $this->assertFalse(isset($view->field['access_callback']), 'Make sure the user got no access to the access_callback field ');
-        $this->assertInstanceOf(HandlerBase::class, $view->field['access_callback_arguments']);
-      }
-    }
   }
 
 }

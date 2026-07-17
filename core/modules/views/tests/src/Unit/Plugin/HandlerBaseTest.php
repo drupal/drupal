@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin;
 
+use Drupal\Core\Access\AccessException;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -92,6 +94,18 @@ class HandlerBaseTest extends UnitTestCase {
     $handler->setViewsData($viewsData);
 
     $this->assertEquals('test_other_entity_type', $handler->getEntityType());
+  }
+
+  /**
+   * Tests that access throws AccessException when access callback is set.
+   */
+  public function testAccessThrowsExceptionWithAccessCallback(): void {
+    $definition = ['access callback' => 'test_callback'];
+    $handler = new TestHandler([], 'test_handler', $definition);
+
+    $this->expectException(AccessException::class);
+    $this->expectExceptionMessage("The 'access callback' key in Views handler definitions is no longer supported in drupal:12.0.0. Use a custom access method on the handler instead.");
+    $handler->access($this->createStub(AccountInterface::class));
   }
 
 }
