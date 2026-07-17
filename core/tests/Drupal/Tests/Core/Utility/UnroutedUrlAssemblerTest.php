@@ -153,11 +153,13 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
   public static function providerTestAssembleWithLocalUri(): array {
     return [
       ['base:example', [], FALSE, '/example'],
+      ['base:1978', [], FALSE, '/1978'],
       ['base:example', ['query' => ['foo' => 'bar']], FALSE, '/example?foo=bar'],
       ['base:example', ['query' => ['foo' => '"bar"']], FALSE, '/example?foo=%22bar%22'],
       ['base:example', ['query' => ['foo' => '"bar"', 'zoo' => 'baz']], FALSE, '/example?foo=%22bar%22&zoo=baz'],
       ['base:example', ['fragment' => 'example'], FALSE, '/example#example'],
       ['base:example', [], TRUE, '/subdir/example'],
+      ['base:1978', [], TRUE, '/subdir/1978'],
       ['base:example', ['query' => ['foo' => 'bar']], TRUE, '/subdir/example?foo=bar'],
       ['base:example', ['fragment' => 'example'], TRUE, '/subdir/example#example'],
       ['base:/drupal.org', [], FALSE, '/drupal.org'],
