@@ -143,7 +143,6 @@ class StandardRecipeTest extends StandardTest {
       'system.action.taxonomy_term_publish_action',
       'core.entity_view_mode.taxonomy_term.full',
       'taxonomy.settings',
-      'taxonomy.vocabulary.tags',
       'views.view.taxonomy_term',
     ];
     // We expect core.extension to be different because standard is no longer

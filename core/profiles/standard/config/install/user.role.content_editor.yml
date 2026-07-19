@@ -1,8 +1,6 @@
 langcode: en
 status: true
 dependencies:
-  config:
-    - taxonomy.vocabulary.tags
   module:
     - contextual
     - file
@@ -10,7 +8,6 @@ dependencies:
     - node
     - path
     - system
-    - taxonomy
 id: content_editor
 label: 'Content editor'
 weight: 2
@@ -22,10 +19,8 @@ permissions:
   - 'access files overview'
   - 'access navigation'
   - 'administer url aliases'
-  - 'create terms in tags'
   - 'create url aliases'
   - 'delete own files'
-  - 'edit terms in tags'
   - 'revert all revisions'
   - 'view all revisions'
   - 'view own unpublished content'
