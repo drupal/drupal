@@ -29,7 +29,6 @@ class ShortcutCacheTagsTest extends KernelTestBase {
   protected static $modules = [
     'system',
     'user',
-    'toolbar',
     'shortcut',
     'link',
   ];

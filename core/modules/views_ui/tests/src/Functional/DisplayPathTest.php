@@ -209,7 +209,7 @@ class DisplayPathTest extends UITestBase {
    * Tests the regression in https://www.drupal.org/node/2532490.
    */
   public function testDefaultMenuTabRegression(): void {
-    $this->container->get('module_installer')->install(['menu_link_content', 'toolbar', 'system']);
+    $this->container->get('module_installer')->install(['menu_link_content', 'system']);
     $this->resetAll();
     $admin_user = $this->drupalCreateUser([
       'administer views',
@@ -220,7 +220,6 @@ class DisplayPathTest extends UITestBase {
       'administer permissions',
       'administer menu',
       'link to any page',
-      'access toolbar',
       'access administration pages',
     ]);
     $this->drupalLogin($admin_user);
