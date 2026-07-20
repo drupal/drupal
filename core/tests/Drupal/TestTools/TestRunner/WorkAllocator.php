@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\TestRunner;
 
-use Drupal\BuildTests\Framework\BuildTestBase;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\BrowserTestBase;
-
 /**
  * Allocates available tests to test workers.
  *
@@ -130,23 +125,22 @@ class WorkAllocator {
   private function sortTestsByTypeAndCount(array &$tests): void {
     uasort(
       $tests,
-      fn (array $a, array $b): int => $this->getTestTypeWeight($b['name']) <=> $this->getTestTypeWeight($a['name']) ?: $b['tests_count'] <=> $a['tests_count'],
+      fn (array $a, array $b): int => $this->getTestTypeWeight($b) <=> $this->getTestTypeWeight($a) ?: $b['tests_count'] <=> $a['tests_count'],
     );
   }
 
   /**
-   * Weights a test class based on which test base class it extends.
+   * Weights a test class based on which test suite it belongs to.
    *
-   * @param string $class
-   *   The test class name.
+   * @param TestClassInfo $classInfo
+   *   The test class info array.
    */
-  private function getTestTypeWeight(string $class): int {
-    assert(class_exists($class), "$class does not exist");
-    return match(TRUE) {
-      is_subclass_of($class, WebDriverTestBase::class) => 3,
-      is_subclass_of($class, BrowserTestBase::class) => 2,
-      is_subclass_of($class, BuildTestBase::class) => 2,
-      is_subclass_of($class, KernelTestBase::class) => 1,
+  private function getTestTypeWeight(array $classInfo): int {
+    return match ($classInfo['type']) {
+      'functional-javascript' => 3,
+      'functional' => 2,
+      'build' => 2,
+      'kernel' => 1,
       default => 0,
     };
   }
