@@ -95,12 +95,7 @@ class ContentModerationHooks {
   #[Hook('entity_bundle_field_info')]
   public function entityBundleFieldInfo(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions): array {
     if (isset($base_field_definitions['moderation_state'])) {
-      // Add the target bundle to the moderation state field. Since each bundle
-      // can be attached to a different moderation workflow, adding this
-      // information to the field definition allows the associated workflow to
-      // be derived where a field definition is present.
-      $base_field_definitions['moderation_state']->setTargetBundle($bundle);
-      return ['moderation_state' => $base_field_definitions['moderation_state']];
+      return ['moderation_state' => clone $base_field_definitions['moderation_state']];
     }
     return [];
   }
