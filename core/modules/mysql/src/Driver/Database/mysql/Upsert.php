@@ -23,22 +23,29 @@ class Upsert extends QueryUpsert {
       return $this->connection->escapeField($field);
     }, $insert_fields);
 
-    $query = $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
+    // Updating the unique / primary key fields is not necessary.
+    $update_fields = $insert_fields;
+    foreach ($this->key as $key) {
+      unset($update_fields[$key]);
+    }
 
+    $query = $comments . 'INSERT ';
+
+    if (empty($update_fields)) {
+      $query .= 'IGNORE ';
+    }
+
+    $query .= 'INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
     $values = $this->getInsertPlaceholderFragment($this->insertValues, $this->defaultFields);
     $query .= implode(', ', $values);
 
-    // Updating the unique / primary key fields is not necessary.
-    foreach ($this->key as $key) {
-      unset($insert_fields[$key]);
+    if (!empty($update_fields)) {
+      $update = [];
+      foreach ($update_fields as $field) {
+        $update[] = "$field = VALUES($field)";
+      }
+      $query .= ' ON DUPLICATE KEY UPDATE ' . implode(', ', $update);
     }
-
-    $update = [];
-    foreach ($insert_fields as $field) {
-      $update[] = "$field = VALUES($field)";
-    }
-
-    $query .= ' ON DUPLICATE KEY UPDATE ' . implode(', ', $update);
 
     return $query;
   }
