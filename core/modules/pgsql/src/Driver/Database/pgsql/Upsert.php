@@ -132,7 +132,14 @@ class Upsert extends QueryUpsert {
       $update[] = "$field = EXCLUDED.$field";
     }
 
-    $query .= ' ON CONFLICT (' . implode(', ', $keys) . ') DO UPDATE SET ' . implode(', ', $update);
+    $query .= ' ON CONFLICT (' . implode(', ', $keys) . ') DO ';
+
+    if (!empty($update)) {
+      $query .= 'UPDATE SET ' . implode(', ', $update);
+    }
+    else {
+      $query .= 'NOTHING';
+    }
 
     return $query;
   }
