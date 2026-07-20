@@ -90,12 +90,12 @@ trait HtmxRequestInfoTrait {
    * @return string
    *   The value of the 'HX-Trigger' header, or an empty string if not set.
    *
-   * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is
-   *   no replacement.
+   * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use
+   * HtmxRequestInfoTrait::getHtmxSource() instead.
    * @see https://www.drupal.org/node/3583674
    */
   protected function getHtmxTrigger(): string {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3583674', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use HtmxRequestInfoTrait::getHtmxSource() instead. See https://www.drupal.org/node/3583674', E_USER_DEPRECATED);
     return $this->getRequest()->headers->get('HX-Trigger', '');
   }
 

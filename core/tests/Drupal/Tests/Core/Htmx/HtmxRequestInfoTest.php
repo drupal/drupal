@@ -109,7 +109,7 @@ class HtmxRequestInfoTest extends UnitTestCase {
   #[IgnoreDeprecations]
   public function testGetHtmxTrigger(): void {
     // Test with the header not present.
-    $this->expectUserDeprecationMessage('Drupal\Core\Htmx\HtmxRequestInfoTrait::getHtmxTrigger() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3583674');
+    $this->expectUserDeprecationMessage('Drupal\Core\Htmx\HtmxRequestInfoTrait::getHtmxTrigger() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use HtmxRequestInfoTrait::getHtmxSource() instead. See https://www.drupal.org/node/3583674');
     $this->assertEquals('', $this->getHtmxTrigger());
   }
 
