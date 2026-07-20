@@ -6,7 +6,7 @@
          "block_content",
          "#slow"
       ],
-      "type":"PHPUnit-Kernel",
+      "type":"kernel",
       "description":"Tests validation of block_content_type entities.",
       "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block_content\/tests\/src\/Kernel\/BlockContentTypeValidationTest.php",
       "tests_count":22,
@@ -18,7 +18,7 @@
       "groups":[
          "block"
       ],
-      "type":"PHPUnit-FunctionalJavascript",
+      "type":"functional-javascript",
       "description":"Tests the JS functionality in the block add form.",
       "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block\/tests\/src\/FunctionalJavascript\/BlockAddTest.php",
       "tests_count":1,
@@ -30,7 +30,7 @@
       "groups":[
          "block_content"
       ],
-      "type":"PHPUnit-Functional",
+      "type":"functional",
       "description":"Ensures that block type functions work correctly.",
       "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block_content\/tests\/src\/Functional\/BlockContentTypeTest.php",
       "tests_count":5,
@@ -42,7 +42,7 @@
       "groups":[
          "block"
       ],
-      "type":"PHPUnit-Functional",
+      "type":"functional",
       "description":"Tests the block system with admin themes.",
       "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block\/tests\/src\/Functional\/BlockAdminThemeTest.php",
       "tests_count":2,
@@ -54,7 +54,7 @@
       "groups":[
          "block_content"
       ],
-      "type":"PHPUnit-Functional",
+      "type":"functional",
       "description":"Tests the block content translation UI.",
       "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block_content\/tests\/src\/Functional\/BlockContentTranslationUITest.php",
       "tests_count":1,
@@ -66,7 +66,7 @@
       "groups":[
          "block_content"
       ],
-      "type":"PHPUnit-Functional",
+      "type":"functional",
       "description":"Tests block_content wizard and generic entity integration.",
       "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block_content\/tests\/src\/Functional\/Views\/BlockContentWizardTest.php",
       "tests_count":1,
@@ -78,7 +78,7 @@
       "groups":[
          "block"
       ],
-      "type":"PHPUnit-Functional",
+      "type":"functional",
       "description":"Tests blocks are being rendered in order by weight.",
       "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block\/tests\/src\/Functional\/BlockRenderOrderTest.php",
       "tests_count":1,
@@ -90,7 +90,7 @@
       "groups":[
          "block"
       ],
-      "type":"PHPUnit-Kernel",
+      "type":"kernel",
       "description":"Tests block_rebuild().",
       "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block\/tests\/src\/Kernel\/BlockRebuildTest.php",
       "tests_count":3,
@@ -102,7 +102,7 @@
       "groups":[
          "block_content"
       ],
-      "type":"PHPUnit-Kernel",
+      "type":"kernel",
       "description":"Tests revision based functions for Block Content.",
       "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block_content\/tests\/src\/Kernel\/BlockContentRevisionsTest.php",
       "tests_count":1,
@@ -114,7 +114,7 @@
       "groups":[
          "block"
       ],
-      "type":"PHPUnit-Kernel",
+      "type":"kernel",
       "description":"Tests that the block plugin can work properly without a supporting entity.",
       "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block\/tests\/src\/Kernel\/BlockInterfaceTest.php",
       "tests_count":1,
@@ -126,7 +126,7 @@
       "groups":[
          "block"
       ],
-      "type":"PHPUnit-Unit",
+      "type":"unit",
       "description":"Tests \\Drupal\\block\\BlockRepository.",
       "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block\/tests\/src\/Unit\/BlockRepositoryTest.php",
       "tests_count":2,

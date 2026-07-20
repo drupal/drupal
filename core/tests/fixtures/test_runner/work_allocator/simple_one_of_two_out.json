@@ -7,7 +7,7 @@
       "1": "#slow",
       "54": "legacy"
     },
-    "type": "PHPUnit-Kernel",
+    "type": "kernel",
     "description": "Tests validation of block entities.",
     "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/BlockValidationTest.php",
     "tests_count": 37,
@@ -19,7 +19,7 @@
     "groups": [
       "Session"
     ],
-    "type": "PHPUnit-Kernel",
+    "type": "kernel",
     "description": "Test case for getting all permissions as a super user.",
     "file": "/Users/foo/Dev/drupal/core/tests/Drupal/KernelTests/Core/Session/SuperUserPermissionsTest.php",
     "tests_count": 1,
