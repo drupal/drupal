@@ -7,6 +7,7 @@ namespace Drupal\FunctionalTests\Installer;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Installer\Form\SelectProfileForm;
+use Drupal\Core\Extension\ModuleWeight;
 
 /**
  * Provides a base class for testing installing from existing configuration.
@@ -110,7 +111,7 @@ abstract class InstallerConfigDirectoryTestBase extends InstallerTestBase {
       $module = Database::getConnection()->getProvider();
       if ($module !== 'core') {
         $core_extension['module'][$module] = 0;
-        $core_extension['module'] = module_config_sort($core_extension['module']);
+        $core_extension['module'] = \Drupal::service(ModuleWeight::class)->sort($core_extension['module']);
       }
       if ($this->profile === FALSE && array_key_exists('profile', $core_extension)) {
         // Remove the profile.

@@ -5,11 +5,13 @@
  * Contains install and update functions for Views.
  */
 
+use Drupal\Core\Extension\ModuleWeight;
+
 /**
  * Implements hook_install().
  */
 function views_install(): void {
-  module_set_weight('views', 10);
+  \Drupal::service(ModuleWeight::class)->set('views', 10);
 }
 
 /**

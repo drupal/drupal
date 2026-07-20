@@ -66,27 +66,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
    */
   protected $updateRegistry;
 
-  /**
-   * Constructs a new ModuleInstaller instance.
-   *
-   * @param string $root
-   *   The app root.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\DrupalKernelInterface $kernel
-   *   The drupal kernel.
-   * @param \Drupal\Core\Database\Connection $connection
-   *   The database connection.
-   * @param \Drupal\Core\Update\UpdateHookRegistry $update_registry
-   *   The update registry service.
-   * @param \Psr\Log\LoggerInterface|null $logger
-   *   The logger.
-   * @param \Traversable|null $uninstallValidators
-   *   The uninstall validator services.
-   *
-   * @see \Drupal\Core\DrupalKernel
-   * @see \Drupal\Core\CoreServiceProvider
-   */
   public function __construct(
     #[Autowire(param: 'app.root')]
     string $root,
@@ -98,6 +77,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     protected LoggerInterface $logger,
     #[AutowireIterator(tag: 'module_install.uninstall_validator')]
     protected ?\Traversable $uninstallValidators = NULL,
+    protected ?ModuleWeight $moduleWeight = NULL,
   ) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
@@ -106,6 +86,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $this->updateRegistry = $update_registry;
     if ($this->uninstallValidators === NULL) {
       $this->uninstallValidators = \Drupal::service('module_installer.uninstall_validators');
+    }
+
+    if (!$this->moduleWeight instanceof ModuleWeight) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $moduleWeight argument is deprecated in drupal:11.5.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3595653', E_USER_DEPRECATED);
+      $this->moduleWeight = \Drupal::service(ModuleWeight::class);
     }
   }
 
@@ -274,7 +259,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // Save this data without checking schema. This is a performance
     // improvement for module installation.
     $extension_config
-      ->set('module', module_config_sort(array_merge(
+      ->set('module', $this->moduleWeight->sort(array_merge(
         array_fill_keys($module_list, 0),
         $installed_modules
       )))
@@ -292,7 +277,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // weight of 0.
     $current_module_filenames = $this->moduleHandler->getModuleList();
     $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
-    $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
+    $current_modules = $this->moduleWeight->sort(array_merge($current_modules, $extension_config->get('module')));
     $module_filenames = [];
     foreach ($current_modules as $name => $weight) {
       if (isset($current_module_filenames[$name])) {

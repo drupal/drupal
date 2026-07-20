@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Common;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Extension\ModuleWeight;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\Group;
@@ -38,7 +39,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
     $core_extension = \Drupal::configFactory()->getEditable('core.extension');
     $module = $core_extension->get('module');
     $module['system_test'] = -10;
-    $core_extension->set('module', module_config_sort($module))->save();
+    $core_extension->set('module', \Drupal::service(ModuleWeight::class)->sort($module))->save();
     $this->containerBuilds = 0;
     drupal_flush_all_caches();
     $module_list = ['system_test', 'system'];

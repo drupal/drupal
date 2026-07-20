@@ -5,6 +5,7 @@ namespace Drupal\Core\EventSubscriber;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\StorageTransformEvent;
+use Drupal\Core\Extension\ModuleWeight;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -20,36 +21,12 @@ final class ExcludedModulesEventSubscriber implements EventSubscriberInterface {
    */
   const EXCLUDED_MODULES_KEY = "config_exclude_modules";
 
-  /**
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  private $activeStorage;
-
-  /**
-   * @var \Drupal\Core\Site\Settings
-   */
-  private $settings;
-
-  /**
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  private $manager;
-
-  /**
-   * EnvironmentModulesEventSubscriber constructor.
-   *
-   * @param \Drupal\Core\Config\StorageInterface $active_storage
-   *   The active config storage.
-   * @param \Drupal\Core\Site\Settings $settings
-   *   The Drupal settings.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $manager
-   *   The config manager.
-   */
-  public function __construct(StorageInterface $active_storage, Settings $settings, ConfigManagerInterface $manager) {
-    $this->activeStorage = $active_storage;
-    $this->settings = $settings;
-    $this->manager = $manager;
-  }
+  public function __construct(
+    private StorageInterface $activeStorage,
+    private Settings $settings,
+    private ConfigManagerInterface $manager,
+    private ModuleWeight $moduleWeight,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -102,7 +79,7 @@ final class ExcludedModulesEventSubscriber implements EventSubscriberInterface {
     }
 
     // Sort the extensions.
-    $extension['module'] = module_config_sort($modules);
+    $extension['module'] = $this->moduleWeight->sort($modules);
     // Set the modified extension.
     $storage->write('core.extension', $extension);
   }
