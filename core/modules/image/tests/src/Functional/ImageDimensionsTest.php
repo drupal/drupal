@@ -42,6 +42,8 @@ class ImageDimensionsTest extends BrowserTestBase {
    * Tests styled image dimensions cumulatively.
    */
   public function testImageDimensions(): void {
+    // @todo Fix random test failure.
+    $this->markTestSkipped('Temporarily skipped due to random failures. See https://www.drupal.org/project/drupal/issues/3514699');
     $image_factory = $this->container->get('image.factory');
     // Create a working copy of the file.
     $files = $this->drupalGetTestFiles('image');

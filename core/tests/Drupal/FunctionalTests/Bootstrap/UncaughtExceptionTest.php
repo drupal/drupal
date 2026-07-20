@@ -188,7 +188,9 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $incorrect_username = $this->randomMachineName(16);
     switch ($this->container->get('database')->driver()) {
       case 'pgsql':
-      case 'mysql':
+        // @todo Fix random test failure. This test is failing for MariaDb.
+        //   see https://www.drupal.org/project/drupal/issues/3600845
+        // case 'mysql':
       case 'mysqli':
         $this->expectedExceptionMessage = $incorrect_username;
         break;

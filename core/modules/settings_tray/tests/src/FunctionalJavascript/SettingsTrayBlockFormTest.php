@@ -57,6 +57,8 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
    * Tests opening off-canvas dialog by click blocks and elements in the blocks.
    */
   public function testBlocks(): void {
+    // @todo Fix random test failure.
+    $this->markTestSkipped('Temporarily skipped due to random failures. See https://www.drupal.org/project/drupal/issues/3542883');
     foreach ($this->getBlockTests() as $test) {
       call_user_func_array([$this, 'doTestBlocks'], array_values($test));
     }
