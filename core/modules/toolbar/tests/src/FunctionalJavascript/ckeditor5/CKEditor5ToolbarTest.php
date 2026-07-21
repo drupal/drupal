@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
+namespace Drupal\Tests\toolbar\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
@@ -18,7 +18,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *
  * @internal
  */
-#[Group('ckeditor5')]
+#[Group('toolbar')]
 #[RunTestsInSeparateProcesses]
 class CKEditor5ToolbarTest extends WebDriverTestBase {
 
