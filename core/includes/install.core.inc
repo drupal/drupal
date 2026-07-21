@@ -1646,6 +1646,18 @@ function install_profile_modules(&$install_state) {
   $batch_builder
     ->setTitle(t('Installing @drupal', ['@drupal' => drupal_install_profile_distribution_name()]))
     ->setErrorMessage(t('The installation has encountered an error.'));
+
+  // If the profile has a list of recipes to apply, add them to the batch job.
+  $recipes = array_map(
+    Recipe::createFromDirectory(...),
+    $install_state['profile_info']['recipes'] ?? [],
+  );
+  foreach ($recipes as $recipe) {
+    foreach (RecipeRunner::toBatchOperations($recipe) as [$callback, $arguments]) {
+      $batch_builder->addOperation($callback, $arguments);
+    }
+  }
+
   return $batch_builder->toArray();
 }
 

@@ -1,0 +1,9 @@
+name: 'Testing - Recipes'
+type: profile
+description: 'A profile that applies recipes and installs modules.'
+hidden: true
+version: VERSION
+install:
+  - drupal:workflows
+recipes:
+  - core/recipes/audio_media_type
