@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
+use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -22,11 +24,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class RevisionRouteProviderTest extends KernelTestBase {
 
   use UserCreationTrait;
+  use BlockCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test', 'user'];
+  protected static $modules = ['block', 'entity_test', 'system', 'user'];
 
   /**
    * {@inheritdoc}
@@ -102,6 +105,37 @@ class RevisionRouteProviderTest extends KernelTestBase {
 
     $this->assertFalse($originalRevision->toUrl($linkTemplate)->access());
     $this->assertTrue($viewableRevision->toUrl($linkTemplate)->access());
+  }
+
+  /**
+   * Tests title is from revision in context.
+   */
+  public function testRevisionTitle(): void {
+    \Drupal::service(ThemeInstallerInterface::class)->install(['stark']);
+    $this->placeBlock('page_title_block', ['region' => 'content', 'theme' => 'stark']);
+
+    $entity = EntityTestRev::create();
+    $entity
+      ->setName('first revision, view revision')
+      ->setNewRevision();
+    $entity->save();
+    $revisionId = $entity->getRevisionId();
+
+    // A default revision is created to ensure it is not pulled from the
+    // non-revision entity parameter.
+    $entity
+      ->setName('second revision, view revision')
+      ->setNewRevision();
+    $entity->isDefaultRevision(TRUE);
+    $entity->save();
+
+    // Reload the object.
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_test_rev');
+    $revision = $storage->loadRevision($revisionId);
+    $this->drupalGet($revision->toUrl('revision'));
+    $this->assertSession()->responseContains('first revision');
+    $this->assertSession()->responseNotContains('second revision');
   }
 
   /**

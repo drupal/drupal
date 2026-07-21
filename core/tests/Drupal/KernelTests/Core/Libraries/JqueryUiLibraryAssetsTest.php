@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\FunctionalTests\Libraries;
+namespace Drupal\KernelTests\Core\Libraries;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -14,17 +14,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('libraries')]
 #[RunTestsInSeparateProcesses]
-class JqueryUiLibraryAssetsTest extends BrowserTestBase {
+class JqueryUiLibraryAssetsTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['jqueryui_library_assets_test'];
+  protected static $modules = ['jqueryui_library_assets_test', 'system'];
 
   /**
    * The library discovery service.

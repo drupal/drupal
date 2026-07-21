@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Drupal\FunctionalTests\Entity;
+namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\Controller\EntityRevisionViewController;
 use Drupal\Core\Entity\RevisionLogInterface;
+use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -20,12 +22,11 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[CoversClass(EntityRevisionViewController::class)]
 #[Group('Entity')]
 #[RunTestsInSeparateProcesses]
-class RevisionViewTest extends BrowserTestBase {
+class RevisionViewTest extends KernelTestBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  use BlockCreationTrait {
+    placeBlock as drupalPlaceBlock;
+  }
 
   /**
    * {@inheritdoc}
@@ -35,6 +36,8 @@ class RevisionViewTest extends BrowserTestBase {
     'entity_test',
     'entity_test_revlog',
     'field',
+    'system',
+    'user',
   ];
 
   /**
@@ -42,6 +45,10 @@ class RevisionViewTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installConfig('system');
+    $this->installEntitySchema('entity_test_rev');
+    $this->installEntitySchema('entity_test_revlog');
+    \Drupal::service(ThemeInstallerInterface::class)->install(['stark']);
     $this->drupalPlaceBlock('page_title_block');
   }
 

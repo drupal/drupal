@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Component;
 
+use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -59,6 +60,34 @@ final class ComponentRenderTest extends KernelTestBase {
     // This will assert that css-order-dependent.css is loaded before the
     // component's css-load-order.css.
     $this->assertGreaterThan($dependent_position, $component_position);
+  }
+
+  /**
+   * Tests libraryOverrides.
+   */
+  public function testLibraryOverrides(): void {
+    \Drupal::service(ThemeInstallerInterface::class)
+      ->install(['sdc_theme_test']);
+    $build = [
+      '#type' => 'inline_template',
+      '#template' => "{{ include('sdc_theme_test:lib-overrides') }}",
+    ];
+    \Drupal::state()->set('sdc_test_component', $build);
+    $output = $this->drupalGet('sdc-test-component');
+    $this->assertStringContainsString('another-stylesheet.css', $output);
+    $this->assertStringContainsString('test-component-font.woff2', $output);
+    // Since libraryOverrides is taking control of CSS, and it's not listing
+    // lib-overrides.css, then it should not be there. Even if it's the CSS
+    // that usually gets auto-attached.
+    $this->assertStringNotContainsString('lib-overrides.css', $output);
+    // Ensure that libraryDependencies adds the expected assets.
+    $this->assertStringContainsString('dialog.position.js', $output);
+    // Ensure that libraryOverrides processes attributes properly.
+    $this->assertMatchesRegularExpression('@<script.*src="[^"]*lib-overrides\.js\?v=1[^"]*".*defer.*bar="foo"></script>@', $output);
+    // Ensure that libraryOverrides processes external CSS properly.
+    $this->assertMatchesRegularExpression('@<link.*href="https://drupal\.org/fake-dependency/styles\.css" />@', $output);
+    // Ensure that libraryOverrides processes external JS properly.
+    $this->assertMatchesRegularExpression('@<script.*src="https://drupal\.org/fake-dependency/index\.min\.js"></script>@', $output);
   }
 
 }

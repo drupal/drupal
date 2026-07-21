@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\FunctionalTests\Routing;
+namespace Drupal\KernelTests\Core\Routing;
 
 use Drupal\Core\Url;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -16,20 +16,26 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('path')]
 #[Group('routing')]
 #[RunTestsInSeparateProcesses]
-class PathEncodedTest extends BrowserTestBase {
+class PathEncodedTest extends KernelTestBase {
 
   use PathAliasTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'path_encoded_test'];
+  protected static $modules = ['system', 'path_encoded_test', 'path_alias'];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installEntitySchema('path_alias');
+  }
 
+  /**
+   * Test PathEncodedTestController.
+   */
   public function testGetEncoded(): void {
     $route_paths = [
       'path_encoded_test.colon' => '/hi/llama:party',
@@ -42,6 +48,9 @@ class PathEncodedTest extends BrowserTestBase {
     }
   }
 
+  /**
+   * Test PathEncodedTestController.
+   */
   public function testAliasToEncoded(): void {
     $route_paths = [
       'path_encoded_test.colon' => '/hi/llama:party',

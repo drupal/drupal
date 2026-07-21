@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Drupal\FunctionalTests\Entity;
+namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -16,7 +19,15 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Entity')]
 #[RunTestsInSeparateProcesses]
-class EntityConcurrentRenderTest extends BrowserTestBase {
+class EntityConcurrentRenderTest extends KernelTestBase {
+
+  use BlockCreationTrait {
+    placeBlock as drupalPlaceBlock;
+  }
+
+  use UserCreationTrait {
+    createUser as drupalCreateUser;
+  }
 
   /**
    * {@inheritdoc}
@@ -27,18 +38,17 @@ class EntityConcurrentRenderTest extends BrowserTestBase {
     'field',
     'filter',
     'text',
+    'system',
+    'user',
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('entity_test');
+    $this->installEntitySchema('user');
 
     // Add a formatted text field. The text format processing creates filter
     // placeholders during rendering, which causes the block's Fiber to
@@ -58,8 +68,13 @@ class EntityConcurrentRenderTest extends BrowserTestBase {
       ->getViewDisplay('entity_test', 'entity_test')
       ->setComponent('body')
       ->save();
+    \Drupal::service(ThemeInstallerInterface::class)
+      ->install(['stark']);
+    \Drupal::configFactory()->getEditable('system.theme')
+      ->set('default', 'stark')
+      ->save();
 
-    $this->drupalLogin($this->drupalCreateUser(['view test entity']));
+    $this->setCurrentUser($this->drupalCreateUser(['view test entity']));
   }
 
   /**

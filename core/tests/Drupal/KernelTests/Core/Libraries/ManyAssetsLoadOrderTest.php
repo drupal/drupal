@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\FunctionalTests\Libraries;
+namespace Drupal\KernelTests\Core\Libraries;
 
 use Behat\Mink\Element\NodeElement;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -14,17 +14,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('libraries')]
 #[RunTestsInSeparateProcesses]
-class ManyAssetsLoadOrderTest extends BrowserTestBase {
+class ManyAssetsLoadOrderTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['many_assets_test'];
+  protected static $modules = ['many_assets_test', 'system'];
 
   /**
    * Loads a page with many assets that have different but close weights.
