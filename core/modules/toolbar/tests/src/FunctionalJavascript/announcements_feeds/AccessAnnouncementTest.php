@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\announcements_feed\FunctionalJavascript;
+namespace Drupal\Tests\announcements_feed\toolbar\FunctionalJavascript;
 
 use Drupal\announce_feed_test\AnnounceTestHttpClientMiddleware;
 use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Test the access announcement permissions to get access announcement icon.
  */
-#[Group('announcements_feed')]
+#[Group('toolbar')]
 #[RunTestsInSeparateProcesses]
 class AccessAnnouncementTest extends OffCanvasTestBase {
 

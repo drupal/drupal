@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\user\Unit;
+namespace Drupal\Tests\toolbar\user\Unit;
 
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Tests\UnitTestCase;
@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\Group;
  * Tests user's ToolbarLinkBuilder.
  */
 #[CoversClass(ToolbarLinkBuilder::class)]
-#[Group('user')]
+#[Group('toolbar')]
 class ToolbarLinkBuilderTest extends UnitTestCase {
 
   /**
