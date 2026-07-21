@@ -12,27 +12,27 @@
 
 {% for featured_page_action in featured_page_actions %}
   {% set link = featured_page_action.page_action['#link'] %}
-  {% include 'navigation:toolbar-button' with {
+  {{ include('navigation:toolbar-button', {
     text: link['#title'],
     html_tag: 'a',
     attributes: create_attribute(link['#attributes']|default([])).setAttribute('href', link['#url']|render|default(null)),
     modifiers: ['primary'],
     icon: featured_page_action.icon,
-  } only %}
+  }, with_context: false) }}
 {% endfor %}
 
 {% if page_actions %}
-  {% include 'navigation:toolbar-button' with {
-    icon: { icon_id: 'dots' },
+  {{ include('navigation:toolbar-button', {
+    icon: {icon_id: 'dots'},
     action: 'More actions'|t,
     attributes: create_attribute(
       {
         'aria-expanded': 'false',
         'aria-controls': dropdown_id,
-        'data-drupal-dropdown': 'true'
-      }
+        'data-drupal-dropdown': 'true',
+      },
     ),
-  } only %}
+  }, with_context: false) }}
 
   <div class="toolbar-dropdown__menu" id={{ dropdown_id }}>
     <ul class="toolbar-dropdown__list">

@@ -8,7 +8,7 @@ related:
 {% set workflows_overview_topic = render_var(help_topic_link('workflows.overview')) %}
 {% set content_structure_topic = render_var(help_topic_link('core.content_structure')) %}
 {% set content_moderation_permissions_link_text %}{% trans %}Content Moderation{% endtrans %}{% endset %}
-{% set content_moderation_permissions_link = render_var(help_route_link(content_moderation_permissions_link_text, 'user.admin_permissions', {}, {'fragment': 'module-content_moderation'})) %}
+{% set content_moderation_permissions_link = render_var(help_route_link(content_moderation_permissions_link_text, 'user.admin_permissions', {}, {fragment: 'module-content_moderation'})) %}
 {% set content_link_text %}{% trans %}Content{% endtrans %}{% endset %}
 {% set content_link = render_var(help_route_link(content_link_text, 'system.admin_content')) %}
 <h2>{% trans %}Goal{% endtrans %}</h2>

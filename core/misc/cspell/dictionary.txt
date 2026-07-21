@@ -513,6 +513,8 @@ translatables
 trayblock
 trgm
 truecolor
+twigcs
+twigcsfixercache
 twistie
 twocol
 ufffd
@@ -545,6 +547,7 @@ userinfo
 versionable
 vfsstream
 viewports
+vincentlanglet
 warmable
 wcag
 webcal

@@ -89,7 +89,7 @@
 
           {% if menu_item_type == 'link' or menu_item_type == 'nolink' %}
             {{ link(menu_item_type == 'link' ? link_title : item.title, item.url, {
-              'class': link_classes,
+              class: link_classes,
               'data-drupal-selector': is_top_level_menu ? 'primary-nav-menu-link-has-children' : false,
               })
             }}
@@ -102,12 +102,12 @@
               #}
               {% if is_top_level_menu %}
                 {% set toggle_button_attributes = create_attribute({
-                  'class': 'primary-nav__button-toggle',
+                  class: 'primary-nav__button-toggle',
                   'data-drupal-selector': 'primary-nav-submenu-toggle-button',
                   'aria-controls': aria_id,
                   'aria-expanded': 'false',
                   'aria-hidden': 'true',
-                  'tabindex': '-1',
+                  tabindex: '-1',
                 }) %}
 
                 <button{{ toggle_button_attributes }}>
@@ -123,7 +123,7 @@
           {% elseif menu_item_type == 'button' %}
 
             {{ link(link_title, item.url, {
-              'class': link_classes,
+              class: link_classes,
               'aria-controls': is_top_level_menu and item.below ? aria_id : false,
               'aria-expanded': is_top_level_menu and item.below ? 'false' : false,
               'data-drupal-selector': is_top_level_menu and item.below ? 'primary-nav-submenu-toggle-button' : false,

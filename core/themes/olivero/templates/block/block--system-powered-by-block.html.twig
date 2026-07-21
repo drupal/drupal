@@ -1,4 +1,4 @@
-{% extends "block.html.twig" %}
+{% extends 'block.html.twig' %}
 {#
 /**
  * @file
@@ -15,7 +15,7 @@
     {% trans %}Powered by{% endtrans %}
     <a href="https://www.drupal.org">{% trans %}Drupal{% endtrans %}</a>
     <span class="drupal-logo" role="img" aria-label="{{ 'Drupal Logo'|t }}">
-      {% include "@olivero/../images/drupal.svg" %}
+      {{ include('@olivero/../images/drupal.svg') }}
     </span>
   </span>
 {% endblock %}

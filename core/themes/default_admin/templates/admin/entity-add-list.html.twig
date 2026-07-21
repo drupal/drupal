@@ -35,7 +35,7 @@
         {% set bundle_attributes = bundle.add_link.url.getOption('attributes') ?: {} %}
         {% set link_attributes = create_attribute(bundle_attributes).addClass('admin-item__link') %}
         {% set description_id = bundle.add_link.text|clean_id ~ '-desc' %}
-        <div{{ create_attribute({ class: item_classes }) }}>
+        <div{{ create_attribute({class: item_classes}) }}>
           <a href="{{ bundle.add_link.url }}" title="{{ bundle.add_link.text }}" {{ link_attributes }}></a>
           <div class="admin-item__title"{% if bundle.description %} aria-details="{{ description_id }}"{% endif %}>
             {{ bundle.add_link.text }}

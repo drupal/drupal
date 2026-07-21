@@ -70,7 +70,7 @@
   {% if show_description_toggle %}
     <div class="help-icon">
   {% endif %}
-  {#  Always wrap fieldset legends in a <span> for CSS positioning. #}
+  {# Always wrap fieldset legends in a <span> for CSS positioning. #}
   {% if legend.title %}
     <legend{{ legend.attributes.addClass(legend_classes) }}>
       <span{{ legend_span.attributes.addClass(legend_span_classes) }}>{{ legend.title }}</span>

@@ -27,10 +27,10 @@
           {%
             set summary_classes = [
               'system-status-report__status-title',
-              group.type in ['warning', 'error'] ? 'system-status-report__status-icon system-status-report__status-icon--' ~ group.type
+              group.type in ['warning', 'error'] ? 'system-status-report__status-icon system-status-report__status-icon--' ~ group.type,
             ]
           %}
-          <summary{{ create_attribute({'class': summary_classes}) }} role="button">
+          <summary{{ create_attribute({class: summary_classes}) }} role="button">
             {% if requirement.severity_title %}
               <span class="visually-hidden">{{ requirement.severity_title }}</span>
             {% endif %}

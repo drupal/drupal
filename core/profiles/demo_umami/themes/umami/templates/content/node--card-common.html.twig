@@ -74,7 +74,7 @@
 {% trans %}View {{ node.type.entity.label() }}{% endtrans %}
 {% endset %}
 
-{% embed "umami:card" with {
+{% embed 'umami:card' with {
   attributes: attributes.addClass(classes),
   content,
   content_attributes,
@@ -86,7 +86,7 @@
   url,
   } only %}
   {% block content %}
-    {% embed "umami:title" with {
+    {% embed 'umami:title' with {
       attributes: title_attributes.addClass('umami-card__title'),
       label: label ? label : content.field_title,
       title_prefix,
@@ -99,8 +99,8 @@
         {{ title_suffix }}
       {% endblock %}
     {% endembed %}
-    {% embed "umami:read-more" with {
-      attributes: create_attribute({'class': ['umami-card__read-more']}),
+    {% embed 'umami:read-more' with {
+      attributes: create_attribute({class: ['umami-card__read-more']}),
       read_more,
       label,
       url,

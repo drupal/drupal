@@ -15,12 +15,12 @@
 {% endif %}
 <div {{ attributes.addClass('top-bar gin--navigation-top-bar').setAttribute('data-drupal-admin-styles', '') }}>
   <div class="top-bar__content">
-    {% include '@navigation/toolbar-button.html.twig' ignore missing with {
+    {{ include('@navigation/toolbar-button.html.twig', {
       attributes: create_attribute({'aria-expanded': 'false', 'aria-controls': 'admin-toolbar'}),
       icon: 'burger',
       text: 'Expand sidebar'|t,
       extra_classes: 'top-bar__burger',
-    } only %}
+    }, false, true) }}
     <div class="top-bar__tools">
       {% if default_admin_breadcrumbs %}
         {{ default_admin_breadcrumbs }}

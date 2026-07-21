@@ -36,6 +36,7 @@
         "symfony/dom-crawler": "^7.4.12",
         "symfony/error-handler": "^7.4",
         "symfony/lock": "^7.4",
-        "symfony/var-dumper": "^7.4"
+        "symfony/var-dumper": "^7.4",
+        "vincentlanglet/twig-cs-fixer": "^4.0"
     }
 }

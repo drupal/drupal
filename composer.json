@@ -43,7 +43,8 @@
         "symfony/dom-crawler": "^7.4.12",
         "symfony/error-handler": "^7.4",
         "symfony/lock": "^7.4",
-        "symfony/var-dumper": "^7.4"
+        "symfony/var-dumper": "^7.4",
+        "vincentlanglet/twig-cs-fixer": "^4.0"
     },
     "replace": {
         "symfony/polyfill-php72": "*",
@@ -139,7 +140,9 @@
         "phpcs": "phpcs -d memory_limit=-1 --standard=core/phpcs.xml.dist --parallel=\"$( (nproc || sysctl -n hw.logicalcpu || echo 4) 2>/dev/null)\" --",
         "phpcbf": "phpcbf -d memory_limit=-1 --standard=core/phpcs.xml.dist --parallel=\"$( (nproc || sysctl -n hw.logicalcpu || echo 4) 2>/dev/null)\" --",
         "phpstan": "phpstan analyze --memory-limit=-1 --configuration=core/phpstan.neon.dist --",
-        "phpstan-baseline": "phpstan analyze --memory-limit=-1 --configuration=core/phpstan.neon.dist --generate-baseline=core/.phpstan-baseline.php"
+        "phpstan-baseline": "phpstan analyze --memory-limit=-1 --configuration=core/phpstan.neon.dist --generate-baseline=core/.phpstan-baseline.php",
+        "twigcs": "twig-cs-fixer lint -c core/.twig-cs-fixer.php",
+        "twigcs-fix": "twig-cs-fixer lint -c core/.twig-cs-fixer.php --fix"
     },
     "repositories": [
         {

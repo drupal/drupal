@@ -83,7 +83,7 @@
             {% endif %}
             <div class="card__content-wrapper">
               <div class="card__content">
-                <h3{{ create_attribute({'id': theme.title_id}).addClass(theme_title_classes) }} id={{ theme.title_id }}>
+                <h3{{ create_attribute({id: theme.title_id}).addClass(theme_title_classes) }} id={{ theme.title_id }}>
                   {{- theme.name }} {{ theme.version -}}
                   {% if theme.notes %}
                     ({{ theme.notes|safe_join(', ') }})
@@ -91,7 +91,7 @@
                 </h3>
 
                 {% if theme.description and theme.description_id %}
-                  <div{{ create_attribute({'id': theme.description_id ?: null}).addClass(theme_description_classes) }}>
+                  <div{{ create_attribute({id: theme.description_id ?: null}).addClass(theme_description_classes) }}>
                     {{ theme.description }}
                   </div>
                 {%- endif -%}

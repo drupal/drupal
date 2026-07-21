@@ -37,7 +37,7 @@
             </a>
           </li>
           {% for item in item.below %}
-            <li class="{{ item.below ? 'toolbar-menu__item--has-dropdown'}} toolbar-menu__item toolbar-menu__item--level-2">
+            <li class="{{ item.below ? 'toolbar-menu__item--has-dropdown' }} toolbar-menu__item toolbar-menu__item--level-2">
               {% if item.below is empty %}
                 <a href="{{ item.url }}" class="toolbar-link">
                 <span>{{ item.title }}</span>
