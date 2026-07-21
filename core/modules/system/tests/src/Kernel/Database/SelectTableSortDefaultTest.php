@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\Database;
+namespace Drupal\Tests\system\Kernel\Database;
 
+use Drupal\KernelTests\Core\Database\DatabaseTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -17,7 +18,15 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['database_test', 'system', 'user'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installEntitySchema('user');
+  }
 
   /**
    * Confirms that a tablesort query returns the correct results.

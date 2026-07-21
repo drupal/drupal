@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\Routing;
+namespace Drupal\Tests\system\Kernel\Routing;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,17 +14,24 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Routing')]
 #[RunTestsInSeparateProcesses]
-class RouterPermissionTest extends BrowserTestBase {
+class RouterPermissionTest extends KernelTestBase {
+
+  use UserCreationTrait {
+    createUser as drupalCreateUser;
+  }
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['router_test'];
+  protected static $modules = ['router_test', 'system', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installEntitySchema('user');
+  }
 
   /**
    * Tests permission requirements on routes.
@@ -38,7 +46,7 @@ class RouterPermissionTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
 
     $user = $this->drupalCreateUser(['access test7']);
-    $this->drupalLogin($user);
+    $this->setCurrentUser($user);
     $this->drupalGet('router_test/test7');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseNotContains('Access denied');
