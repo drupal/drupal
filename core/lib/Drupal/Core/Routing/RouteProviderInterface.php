@@ -94,7 +94,7 @@ interface RouteProviderInterface {
    * use RouteProviderInterface::getRoutesByNames() or
    * RouteProviderInterface::getRoutesByPattern() instead.
    *
-   * @return \Symfony\Component\Routing\Route[]
+   * @return iterable<\Symfony\Component\Routing\Route>
    *   An iterator of routes keyed by route name.
    */
   public function getAllRoutes();
