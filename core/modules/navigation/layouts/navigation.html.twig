@@ -24,15 +24,15 @@
   .setAttribute('data-drupal-admin-styles', '')
 }}>
   <div class="admin-toolbar-control-bar__content">
-    {% include 'navigation:toolbar-button' with {
-      attributes: create_attribute({'data-drupal-selector': 'admin-toolbar-mobile-trigger', 'aria-expanded': 'false', 'aria-controls': 'admin-toolbar', 'type': 'button'}),
-      icon: { icon_id: 'burger' },
+    {{ include('navigation:toolbar-button', {
+      attributes: create_attribute({'data-drupal-selector': 'admin-toolbar-mobile-trigger', 'aria-expanded': 'false', 'aria-controls': 'admin-toolbar', type: 'button'}),
+      icon: {icon_id: 'burger'},
       text: 'Expand sidebar'|t,
       modifiers: ['small-offset'],
       extra_classes: [
         'admin-toolbar-control-bar__burger',
       ],
-    } only %}
+    }, with_context: false) }}
   </div>
 </div>
 
@@ -61,24 +61,24 @@
             {% if settings.logo_path is not null %}
               <img src="{{ file_url(settings.logo_path) }}" loading="eager" width="{{ settings.logo_width|default(40) }}" height="{{ settings.logo_height|default(40) }}" role="presentation" aria-hidden="true" focusable="false">
             {% else %}
-              {% include '@navigation/logo.svg.twig' only %}
+              {{ include('@navigation/logo.svg.twig', with_context: false) }}
             {% endif %}
             <span class="visually-hidden">{{ 'Home page'|t }}</span>
           </a>
         {% endif %}
-        {% include 'navigation:toolbar-button' with {
-          attributes: create_attribute({ 'data-toolbar-back-control': true, 'tabindex': '-1' }),
+        {{ include('navigation:toolbar-button', {
+          attributes: create_attribute({'data-toolbar-back-control': true, tabindex: '-1'}),
           extra_classes: ['admin-toolbar__back-button'],
-          icon: { icon_id: 'arrow-left' },
+          icon: {icon_id: 'arrow-left'},
           text: 'Back'|t,
-        } only %}
+        }, with_context: false) }}
         {# The close button should be in the tab sequence. Therefore, `tabindex` is omitted here. #}
-        {% include 'navigation:toolbar-button' with {
+        {{ include('navigation:toolbar-button', {
           action: 'Collapse sidebar'|t,
-          attributes: create_attribute({ 'aria-controls': 'admin-toolbar', 'type': 'button' }),
+          attributes: create_attribute({'aria-controls': 'admin-toolbar', type: 'button'}),
           extra_classes: ['admin-toolbar__close-button'],
-          icon: { icon_id: 'cross' },
-        } only %}
+          icon: {icon_id: 'cross'},
+        }, with_context: false) }}
       </div>
 
       {{ content.content_top }}
@@ -92,7 +92,7 @@
     }}>
       {{ content.footer }}
       <button aria-controls="admin-toolbar" class="admin-toolbar__expand-button" type="button">
-        {{ icon('navigation', 'chevron', { class: 'admin-toolbar__expand-button-chevron', size: 16 }) }}
+        {{ icon('navigation', 'chevron', {class: 'admin-toolbar__expand-button-chevron', size: 16}) }}
         <span class="visually-hidden" data-toolbar-text>{{ 'Collapse sidebar'|t }}</span>
       </button>
     </div>

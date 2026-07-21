@@ -27,7 +27,7 @@
   {{ link }}
   {% if is_active and level == 'primary' %}
     <button class="tabs__trigger" type="button" aria-label="{{ 'Tabs display toggle'|t }}" data-drupal-nav-tabs-trigger>
-      {% include "@default_admin/../images/src/hamburger-menu.svg" %}
+      {{ include('@default_admin/../images/src/hamburger-menu.svg') }}
     </button>
   {% endif %}
 </li>

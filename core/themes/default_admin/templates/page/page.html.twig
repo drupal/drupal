@@ -64,7 +64,7 @@
           <ol class="breadcrumb__list">
             <li class="breadcrumb__item">
               {% if entity_edit_url and entity_title %}
-                <a class="breadcrumb__link gin-back-to-admin" href="{{ entity_edit_url }}">{{ 'Edit %title'|t({ '%title': entity_title }) }}</a>
+                <a class="breadcrumb__link gin-back-to-admin" href="{{ entity_edit_url }}">{{ 'Edit %title'|t({'%title': entity_title}) }}</a>
               {% else %}
                 <a class="breadcrumb__link gin-back-to-admin" href="{{ path('system.admin_content') }}">{{ 'Back to Administration'|t }}</a>
               {% endif %}

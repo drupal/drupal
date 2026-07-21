@@ -84,7 +84,7 @@
             {% endif %}
             <div class="card__content-wrapper">
               <div class="card__content">
-                <h3{{ create_attribute({'id': theme.title_id}).addClass(theme_title_classes) }} id={{ theme.title_id }}>
+                <h3{{ create_attribute({id: theme.title_id}).addClass(theme_title_classes) }} id={{ theme.title_id }}>
                   {{- theme.name }} {{ theme.version -}}
                   {% if theme.notes %}
                     ({{ theme.notes|safe_join(', ') }})
@@ -92,7 +92,7 @@
                 </h3>
 
                 {% if theme.description and theme.description_id %}
-                  <div{{ create_attribute({'id': theme.description_id ?: null}).addClass(theme_description_classes) }}>
+                  <div{{ create_attribute({id: theme.description_id ?: null}).addClass(theme_description_classes) }}>
                     {{ theme.description }}
                   </div>
                 {%- endif -%}
@@ -101,7 +101,7 @@
               <div class="card__footer">
                 {% if theme.module_dependencies %}
                   <div class="theme-info__requires">
-                    {{ 'Requires: @module_dependencies'|t({ '@module_dependencies': theme.module_dependencies|render }) }}
+                    {{ 'Requires: @module_dependencies'|t({'@module_dependencies': theme.module_dependencies|render}) }}
                   </div>
                 {% endif %}
                 {# Display operation links only if the theme is compatible. #}

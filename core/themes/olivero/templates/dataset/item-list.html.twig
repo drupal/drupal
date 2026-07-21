@@ -29,7 +29,7 @@
   {%- if items -%}
     <{{ list_type }}{{ attributes }}>
     {%- for item in items -%}
-      <li{{ item.attributes.addClass(listClasses) }}>{{ item.value }}</li>
+      <li{{ item.attributes.addClass(item_classes) }}>{{ item.value }}</li>
     {%- endfor -%}
     </{{ list_type }}>
   {%- else -%}

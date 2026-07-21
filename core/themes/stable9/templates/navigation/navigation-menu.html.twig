@@ -26,20 +26,20 @@
     {% if menu_level == 0 %}
       {% if item.below is empty %}
         <li id="{{ item_id }}" class="toolbar-block__list-item">
-          {% include 'navigation:toolbar-button' with {
+          {{ include('navigation:toolbar-button', {
             attributes: item_link_attributes.setAttribute('href', item.url|render|default(null)).setAttribute('data-drupal-tooltip', item.title).setAttribute('data-drupal-tooltip-class', 'admin-toolbar__tooltip'),
             icon: item.icon,
             html_tag: item_link_tag,
             text: item.title,
             modifiers: [
               'collapsible',
-              item_link_tag == 'span' ? 'non-interactive' : null
+              item_link_tag == 'span' ? 'non-interactive' : null,
             ]|filter(v => v is not null),
-          } only %}
+          }, with_context: false) }}
         </li>
       {% else %}
         <li id="{{ item_id }}" class="toolbar-block__list-item toolbar-popover" data-toolbar-popover>
-          {% include 'navigation:toolbar-button' with {
+          {{ include('navigation:toolbar-button', {
             action: 'Extend'|t,
             attributes: create_attribute({
               'aria-expanded': 'false',
@@ -56,10 +56,10 @@
             extra_classes: [
               'toolbar-popover__control',
             ],
-          } only %}
+          }, with_context: false) }}
           <div class="toolbar-popover__wrapper" data-toolbar-popover-wrapper inert>
             {% if item.url %}
-              {% include 'navigation:toolbar-button' with {
+              {{ include('navigation:toolbar-button', {
                 attributes: item_link_attributes.setAttribute('href', item.url|render),
                 html_tag: item_link_tag,
                 text: item.title,
@@ -70,9 +70,9 @@
                 extra_classes: [
                   'toolbar-popover__header',
                 ],
-              } only %}
+              }, with_context: false) }}
             {% else %}
-              {% include 'navigation:toolbar-button' with {
+              {{ include('navigation:toolbar-button', {
                 attributes: create_attribute(),
                 modifiers: [
                   'large',
@@ -84,7 +84,7 @@
                 ],
                 html_tag: 'span',
                 text: item.title,
-              } only %}
+              }, with_context: false) }}
             {% endif %}
             <ul class="toolbar-menu toolbar-popover__menu">
               {{ menus.menu_items(item.below, attributes, 1) }}
@@ -95,24 +95,24 @@
 
     {% elseif menu_level == 1 %}
       <li class="toolbar-menu__item toolbar-menu__item--level-{{ menu_level }}">
-        {% if item.below is empty  %}
-          {% include 'navigation:toolbar-button' with {
+        {% if item.below is empty %}
+          {{ include('navigation:toolbar-button', {
             attributes: item_link_attributes.setAttribute('href', item.url|render|default(null)),
             text: item.title,
             html_tag: item_link_tag,
             extra_classes: [
-              item_link_tag == 'span' ? 'toolbar-button--non-interactive'
+              item_link_tag == 'span' ? 'toolbar-button--non-interactive',
             ],
-          } only %}
+          }, with_context: false) }}
         {% else %}
-          {% include 'navigation:toolbar-button' with {
+          {{ include('navigation:toolbar-button', {
             attributes: create_attribute({
               'aria-expanded': 'false',
               'data-toolbar-menu-trigger': menu_level,
             }),
             text: item.title,
             modifiers: ['expand--down'],
-          } only %}
+          }, with_context: false) }}
           <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}" inert>
             {{ menus.menu_items(item.below, attributes, menu_level + 1) }}
           </ul>
@@ -120,13 +120,13 @@
       </li>
     {% else %}
       <li class="toolbar-menu__item toolbar-menu__item--level-{{ menu_level }}">
-        {% if item.below is empty  %}
+        {% if item.below is empty %}
           {{ link(item.title, item.url, {
-            'class': [
+            class: [
               'toolbar-menu__link',
               'toolbar-menu__link--' ~ menu_level,
             ],
-            'data-index-text': item.title|first|lower
+            'data-index-text': item.title|first|lower,
           }) }}
         {% else %}
           <button
@@ -137,7 +137,7 @@
           >
             <span data-toolbar-action class="toolbar-menu__link-action visually-hidden">{{ 'Extend'|t }}</span>
             <span class="toolbar-menu__link-title">{{ item.title }}</span>
-            {{ icon('navigation', 'chevron', { class: 'toolbar-menu__chevron', size: 16 }) }}
+            {{ icon('navigation', 'chevron', {class: 'toolbar-menu__chevron', size: 16}) }}
           </button>
           <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}" inert>
             {{ menus.menu_items(item.below, attributes, menu_level + 1) }}

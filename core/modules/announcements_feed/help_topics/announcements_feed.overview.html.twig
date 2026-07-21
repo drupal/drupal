@@ -9,7 +9,7 @@ top_level: true
 {% set permissions_link_text %}
 {% trans %}View official announcements related to Drupal{% endtrans %}
 {% endset %}
-{% set permissions_link = render_var(help_route_link(permissions_link_text, 'user.admin_permissions.module', {'modules': 'announcements_feed'})) %}
+{% set permissions_link = render_var(help_route_link(permissions_link_text, 'user.admin_permissions.module', {modules: 'announcements_feed'})) %}
 <h2>{% trans %}What are Drupal announcements?{% endtrans %}</h2>
 <p>{% trans %}A feed of announcements about the Drupal project and Drupal Association programs.{% endtrans %}</p>
 <p>{% trans %}The purpose of this feed is to provide a channel for outreach directly to Drupal site owners. This content must be highly relevant to site owners interests, serve the strategic goals of the project, and/or promote the sustainability of the project and the Drupal Association.{% endtrans %}</p>
