@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\Entity;
+namespace Drupal\Tests\system\Kernel\Entity;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -14,26 +15,26 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Entity')]
 #[RunTestsInSeparateProcesses]
-class EntityOperationsTest extends BrowserTestBase {
+class EntityOperationsTest extends KernelTestBase {
+
+  use UserCreationTrait {
+    createUser as drupalCreateUser;
+  }
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['entity_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['entity_test', 'system', 'user'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('user');
 
     // Create and log in user.
-    $this->drupalLogin($this->drupalCreateUser(['administer permissions']));
+    $this->setCurrentUser($this->drupalCreateUser(['administer permissions']));
   }
 
   /**

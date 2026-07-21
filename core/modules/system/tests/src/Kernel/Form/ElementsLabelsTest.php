@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\Form;
+namespace Drupal\Tests\system\Kernel\Form;
 
 use Drupal\form_test\Form\FormTestLabelForm;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -14,17 +14,20 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Form')]
 #[RunTestsInSeparateProcesses]
-class ElementsLabelsTest extends BrowserTestBase {
+class ElementsLabelsTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['form_test'];
+  protected static $modules = ['file', 'filter', 'form_test', 'system', 'user'];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installConfig(['filter', 'system']);
+  }
 
   /**
    * Tests form elements.
