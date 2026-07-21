@@ -84,6 +84,11 @@ class LinkFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('trim_length'),
       '#min' => 1,
       '#description' => $this->t('Leave blank to allow unlimited link text lengths.'),
+      '#states' => [
+        'invisible' => [
+          ':input[name*="url_only"]' => ['checked' => TRUE],
+        ],
+      ],
     ];
     $elements['url_only'] = [
       '#type' => 'checkbox',
@@ -125,8 +130,7 @@ class LinkFormatter extends FormatterBase {
     $summary = [];
 
     $settings = $this->getSettings();
-
-    if (!empty($settings['trim_length'])) {
+    if (!empty($settings['trim_length']) && empty($settings['url_only']) && empty($settings['url_plain'])) {
       $summary[] = $this->t('Link text trimmed to @limit characters', ['@limit' => $settings['trim_length']]);
     }
     else {
@@ -174,7 +178,7 @@ class LinkFormatter extends FormatterBase {
       }
 
       // Trim the link text to the desired length.
-      if (!empty($settings['trim_length'])) {
+      if (!empty($settings['trim_length']) && empty($settings['url_plain']) && empty($settings['url_only'])) {
         $link_title = Unicode::truncate($link_title, $settings['trim_length'], FALSE, TRUE);
       }
 

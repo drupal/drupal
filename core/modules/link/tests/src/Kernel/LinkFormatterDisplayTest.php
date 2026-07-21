@@ -70,7 +70,7 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
 
     foreach ($this->getTestCases() as $case_name => $case_options) {
       [$display_settings, $expected_results] = array_values($case_options);
-      $this->assertEquals(count($this->getLinkInputValues()), count($expected_results), "Each field delta have expected result. Case name: '$case_name'");
+      $this->assertCount(count($this->getLinkInputValues()), $expected_results, "Each field delta have expected result. Case name: '$case_name'");
 
       // Render link field with default 'link' formatter and custom
       // display settings. Hide field label.
@@ -98,6 +98,8 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
     $default = [
       0 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012#com</a></div>',
       1 => '<div><a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org">A very long &amp; strange example title that could break the nice layout of the site</a></div>',
+      17 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">Longer than 80 characters</a></div>',
+      18 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=feb…</a></div>',
       2 => '<div><a href="#net">Fragment only</a></div>',
       3 => '<div><a href="?a%5B0%5D=1&amp;a%5B1%5D=2">?a%5B0%5D=1&amp;a%5B1%5D=2</a></div>',
       4 => '<div><a href="?b%5B0%5D=1&amp;b%5B1%5D=2">?b%5B0%5D=1&amp;b%5B1%5D=2</a></div>',
@@ -122,7 +124,9 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
 
     yield 'trim_length=null' => [
       'display_settings' => ['trim_length' => NULL],
-      'expected_results' => $default,
+      'expected_results' => [
+        18 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com</a></div>',
+      ] + $default,
     ];
 
     yield 'trim_length=6' => [
@@ -130,6 +134,8 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
       'expected_results' => [
         0 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012#com">http:…</a></div>',
         1 => '<div><a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org">A ver…</a></div>',
+        17 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">Longe…</a></div>',
+        18 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">http:…</a></div>',
         2 => '<div><a href="#net">Fragm…</a></div>',
         3 => '<div><a href="?a%5B0%5D=1&amp;a%5B1%5D=2">?a%5B…</a></div>',
         4 => '<div><a href="?b%5B0%5D=1&amp;b%5B1%5D=2">?b%5B…</a></div>',
@@ -158,6 +164,8 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
       'expected_results' => [
         0 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012#com" rel="nofollow">http://www.example.com/content/articles/archive?author=John&amp;year=2012#com</a></div>',
         1 => '<div><a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org" rel="nofollow">A very long &amp; strange example title that could break the nice layout of the site</a></div>',
+        17 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com" rel="nofollow">Longer than 80 characters</a></div>',
+        18 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com" rel="nofollow">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=feb…</a></div>',
         2 => '<div><a href="#net" rel="nofollow">Fragment only</a></div>',
         3 => '<div><a href="?a%5B0%5D=1&amp;a%5B1%5D=2" rel="nofollow">?a%5B0%5D=1&amp;a%5B1%5D=2</a></div>',
         4 => '<div><a href="?b%5B0%5D=1&amp;b%5B1%5D=2" rel="nofollow">?b%5B0%5D=1&amp;b%5B1%5D=2</a></div>',
@@ -186,6 +194,8 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
       'expected_results' => [
         0 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012#com" target="_blank">http://www.example.com/content/articles/archive?author=John&amp;year=2012#com</a></div>',
         1 => '<div><a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org" target="_blank">A very long &amp; strange example title that could break the nice layout of the site</a></div>',
+        17 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com" target="_blank">Longer than 80 characters</a></div>',
+        18 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com" target="_blank">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=feb…</a></div>',
         2 => '<div><a href="#net" target="_blank">Fragment only</a></div>',
         3 => '<div><a href="?a%5B0%5D=1&amp;a%5B1%5D=2" target="_blank">?a%5B0%5D=1&amp;a%5B1%5D=2</a></div>',
         4 => '<div><a href="?b%5B0%5D=1&amp;b%5B1%5D=2" target="_blank">?b%5B0%5D=1&amp;b%5B1%5D=2</a></div>',
@@ -214,6 +224,8 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
       'expected_results' => [
         0 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012#com</a></div>',
         1 => '<div><a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org">http://www.example.org/content/articles/archive?author=John&amp;year=2012#org</a></div>',
+        17 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com</a></div>',
+        18 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com</a></div>',
         2 => '<div><a href="#net">#net</a></div>',
         3 => '<div><a href="?a%5B0%5D=1&amp;a%5B1%5D=2">?a%5B0%5D=1&amp;a%5B1%5D=2</a></div>',
         4 => '<div><a href="?b%5B0%5D=1&amp;b%5B1%5D=2">?b%5B0%5D=1&amp;b%5B1%5D=2</a></div>',
@@ -237,7 +249,9 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
         'url_only' => FALSE,
         'url_plain' => TRUE,
       ],
-      'expected_results' => $default,
+      'expected_results' => [
+        18 => '<div><a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com</a></div>',
+      ] + $default,
     ];
 
     yield 'url_only=true, url_plain=true' => [
@@ -248,6 +262,8 @@ class LinkFormatterDisplayTest extends FieldKernelTestBase {
       'expected_results' => [
         0 => '<div>http://www.example.com/content/articles/archive?author=John&amp;year=2012#com</div>',
         1 => '<div>http://www.example.org/content/articles/archive?author=John&amp;year=2012#org</div>',
+        17 => '<div>http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com</div>',
+        18 => '<div>http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com</div>',
         2 => '<div>#net</div>',
         3 => '<div>?a%5B0%5D=1&amp;a%5B1%5D=2</div>',
         4 => '<div>?b%5B0%5D=1&amp;b%5B1%5D=2</div>',
