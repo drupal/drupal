@@ -304,7 +304,6 @@ mystarterkit
 namespacing
 navs
 ndocs
-necolas
 newcol
 newwin
 nids

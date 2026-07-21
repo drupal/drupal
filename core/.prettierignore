@@ -5,7 +5,6 @@ node_modules/**/*
 **/css_test_files/**/*.css
 modules/locale/tests/locale_test.js
 *.yml
-themes/stable9/css/core/assets/vendor/**/*.css
 misc/jquery.form.js
 
 # Temporary until they are brought up to standards

@@ -62,6 +62,7 @@ class SystemRequirements implements InstallRequirementsInterface {
     'classy' => 'Classy',
     'seven' => 'Seven',
     'stable' => 'Stable',
+    'stable9' => 'Stable 9',
   ];
 
   /**
