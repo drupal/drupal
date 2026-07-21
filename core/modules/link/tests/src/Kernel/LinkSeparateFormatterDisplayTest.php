@@ -70,7 +70,7 @@ class LinkSeparateFormatterDisplayTest extends FieldKernelTestBase {
 
     foreach ($this->getTestCases() as $case_name => $case_options) {
       [$display_settings, $expected_results] = array_values($case_options);
-      $this->assertEquals(count($this->getLinkInputValues()), count($expected_results), "Each field delta have expected result. Case name: '$case_name'");
+      $this->assertCount(count($this->getLinkInputValues()), $expected_results, "Each field delta have expected result. Case name: '$case_name'");
 
       // Render link field with 'link_separate' formatter and custom
       // display settings. Hide field label.
@@ -101,6 +101,12 @@ class LinkSeparateFormatterDisplayTest extends FieldKernelTestBase {
 </div>',
       1 => '<div>A very long &amp; strange example title that could break the nice layout of the site
 <a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org">http://www.example.org/content/articles/archive?author=John&amp;year=2012#org</a>
+</div>',
+      17 => '<div>Longer than 80 characters
+<a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=feb…</a>
+</div>',
+      18 => '<div>
+<a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=feb…</a>
 </div>',
       2 => '<div>Fragment only
 <a href="#net">#net</a>
@@ -156,7 +162,14 @@ class LinkSeparateFormatterDisplayTest extends FieldKernelTestBase {
 
     yield 'trim_length=null' => [
       'display_settings' => ['trim_length' => NULL],
-      'expected_results' => $defaultExpectedResults,
+      'expected_results' => [
+        17 => '<div>Longer than 80 characters
+<a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com</a>
+</div>',
+        18 => '<div>
+<a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com</a>
+</div>',
+      ] + $defaultExpectedResults,
     ];
 
     yield 'trim_length=6' => [
@@ -167,6 +180,12 @@ class LinkSeparateFormatterDisplayTest extends FieldKernelTestBase {
 </div>',
         1 => '<div>A ver…
 <a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org">http:…</a>
+</div>',
+        17 => '<div>Longe…
+<a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">http:…</a>
+</div>',
+        18 => '<div>
+<a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com">http:…</a>
 </div>',
         2 => '<div>Fragm…
 <a href="#net">#net</a>
@@ -229,6 +248,12 @@ class LinkSeparateFormatterDisplayTest extends FieldKernelTestBase {
         1 => '<div>A very long &amp; strange example title that could break the nice layout of the site
 <a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org" rel="nofollow">http://www.example.org/content/articles/archive?author=John&amp;year=2012#org</a>
 </div>',
+        17 => '<div>Longer than 80 characters
+<a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com" rel="nofollow">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=feb…</a>
+</div>',
+        18 => '<div>
+<a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com" rel="nofollow">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=feb…</a>
+</div>',
         2 => '<div>Fragment only
 <a href="#net" rel="nofollow">#net</a>
 </div>',
@@ -288,6 +313,12 @@ class LinkSeparateFormatterDisplayTest extends FieldKernelTestBase {
 </div>',
         1 => '<div>A very long &amp; strange example title that could break the nice layout of the site
 <a href="http://www.example.org/content/articles/archive?author=John&amp;year=2012#org" target="_blank">http://www.example.org/content/articles/archive?author=John&amp;year=2012#org</a>
+</div>',
+        17 => '<div>Longer than 80 characters
+<a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com" target="_blank">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=feb…</a>
+</div>',
+        18 => '<div>
+<a href="http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=february#com" target="_blank">http://www.example.com/content/articles/archive?author=John&amp;year=2012&amp;month=feb…</a>
 </div>',
         2 => '<div>Fragment only
 <a href="#net" target="_blank">#net</a>

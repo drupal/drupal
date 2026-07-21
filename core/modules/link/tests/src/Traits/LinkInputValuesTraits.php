@@ -25,6 +25,14 @@ trait LinkInputValuesTraits {
         'uri' => 'http://www.example.org/content/articles/archive?author=John&year=2012#org',
         'title' => 'A very long & strange example title that could break the nice layout of the site',
       ],
+      17 => [
+        'uri' => 'http://www.example.com/content/articles/archive?author=John&year=2012&month=february#com',
+        'title' => 'Longer than 80 characters',
+      ],
+      18 => [
+        'uri' => 'http://www.example.com/content/articles/archive?author=John&year=2012&month=february#com',
+      ],
+
       2 => ['uri' => 'internal:#net', 'title' => 'Fragment only'],
 
       // Complex internal links.
