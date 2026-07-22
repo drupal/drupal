@@ -919,18 +919,19 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       // Check that entity queries return the correct results.
       $this->assertEntityQuery($expected_values, $entity_type_id);
 
-      // Check that the 'Frontpage' view only shows published content that is
+      // Check that the 'Promoted Content' view only shows published content that is
       // also considered as the default revision in the given workspace.
-      $expected_frontpage = array_filter($expected_values, function (array $expected_value): bool {
+      $expected_promoted_content = array_filter($expected_values, function (array $expected_value): bool {
         return $expected_value['status'] === TRUE && $expected_value['default_revision'] === TRUE;
       });
-      // The 'Frontpage' view will output nodes in reverse creation order.
-      usort($expected_frontpage, function (array $a, array $b): int|float {
+      // The 'Promoted Content' view will output nodes in reverse creation order.
+      usort($expected_promoted_content, function (array $a, array $b): int|float {
         return $b['nid'] - $a['nid'];
       });
-      $view = Views::getView('frontpage');
+
+      $view = Views::getView('promoted_content');
       $view->execute();
-      $this->assertIdenticalResultset($view, $expected_frontpage, ['nid' => 'nid']);
+      $this->assertIdenticalResultset($view, $expected_promoted_content, ['nid' => 'nid']);
 
       $rendered_view = $view->render('page_1');
       $output = \Drupal::service('renderer')->renderRoot($rendered_view);

@@ -23,7 +23,7 @@ readonly class ContextualLinksSerializer {
    * Examples:
    *  - node:node=1:langcode=en
    *  -
-   * views_ui_edit:view=frontpage:location=page&view_name=frontpage&view_display_id=page_1&langcode=en
+   * views_ui_edit:view=promoted_content:location=page&view_name=promoted_content&view_display_id=page_1&langcode=en
    *  - menu:menu=tools:langcode=en|block:block=olivero.tools:langcode=en
    *
    * So, expressed in a pattern:

@@ -6,6 +6,7 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\Html;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -19,6 +20,7 @@ class NodeTitleTest extends NodeTestBase {
 
   use CommentTestTrait;
   use AssertBreadcrumbTrait;
+  use PromotedContentViewTestTrait;
 
   /**
    * {@inheritdoc}
@@ -44,6 +46,8 @@ class NodeTitleTest extends NodeTestBase {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
     $this->drupalPlaceBlock('page_title_block');
+
+    $this->enablePromotedContentView();
 
     $this->adminUser = $this->drupalCreateUser([
       'administer nodes',

@@ -12,15 +12,16 @@ interface ConfigInstallerInterface {
    *
    * When an extension is installed, it searches all the default configuration
    * directories for all other extensions to locate any configuration with its
-   * name prefix. For example, the Node module provides the frontpage view as a
-   * default configuration file:
-   * core/modules/node/config/optional/views.view.frontpage.yml
+   * name prefix. For example, the Node module provides the promoted_content
+   * view as a default configuration file:
+   * core/modules/node/config/optional/views.view.promoted_content.yml
    * When the Views module is installed after the Node module is already
-   * enabled, the frontpage view will be installed.
+   * enabled, the promoted_content view will be installed.
    *
    * Additionally, the default configuration directory for the extension being
    * installed is searched to discover if it contains default configuration
-   * that is owned by other enabled extensions. So, the frontpage view will also
+   * that is owned by other enabled extensions. So, the promoted_content view
+   * will also
    * be installed when the Node module is installed after Views.
    *
    * @param string $type
@@ -53,7 +54,7 @@ interface ConfigInstallerInterface {
    *   (optional) If set, ensures that the configuration being installed has
    *   this dependency. The format is dependency type as the key ('module',
    *   'theme', or 'config') and the dependency name as the value
-   *   ('node', 'olivero', 'views.view.frontpage').
+   *   ('node', 'olivero', 'views.view.promoted_content').
    */
   public function installOptionalConfig(?StorageInterface $storage = NULL, $dependency = []);
 

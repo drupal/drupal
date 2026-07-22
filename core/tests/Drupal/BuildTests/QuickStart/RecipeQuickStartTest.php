@@ -108,8 +108,6 @@ class RecipeQuickStartTest extends BuildTestBase {
         return TRUE;
       }
     });
-    // The progress bar uses STDERR to write messages.
-    $this->assertStringContainsString('Congratulations, you installed Drupal!', $process->getErrorOutput());
     // Ensure the command does not trigger any PHP deprecations.
     $this->assertStringNotContainsStringIgnoringCase('deprecated', $process->getErrorOutput());
     $this->assertNotFalse($port, "Web server running on port $port");
@@ -128,8 +126,8 @@ class RecipeQuickStartTest extends BuildTestBase {
     $response = $guzzle->get('http://127.0.0.1:' . $port, ['cookies' => $cookieJar]);
     $content = (string) $response->getBody();
     $this->assertStringContainsString('Test site ' . $this->testDb->getDatabasePrefix(), $content);
-    // Test content from Standard front page.
-    $this->assertStringContainsString('Congratulations and welcome to the Drupal community.', $content);
+    // Test content from frontpage.
+    $this->assertMatchesRegularExpression('/Powered by\s+Drupal/', strip_tags($content));
 
     // Stop the web server.
     $process->stop();

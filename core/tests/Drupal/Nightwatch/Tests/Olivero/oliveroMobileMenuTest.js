@@ -108,7 +108,7 @@ module.exports = {
   'Verify parent <button> focus on ESC in narrow navigation': (browser) => {
     browser
       // Verify functionality on regular link's button.
-      .drupalRelativeURL('/node')
+      .drupalRelativeURL('/')
       .waitForElementVisible('body')
       .click(mobileNavButtonSelector)
       .waitForElementVisible(headerNavSelector)
@@ -181,7 +181,7 @@ module.exports = {
   },
   'Verify clicks on hashes close mobile menu': (browser) => {
     browser
-      .drupalRelativeURL('/node')
+      .drupalRelativeURL('/')
       .waitForElementVisible('body')
       .click(mobileNavButtonSelector)
       .waitForElementVisible(headerNavSelector)

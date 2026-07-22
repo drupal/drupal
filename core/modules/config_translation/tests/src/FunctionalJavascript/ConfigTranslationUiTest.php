@@ -6,6 +6,7 @@ namespace Drupal\Tests\config_translation\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -15,6 +16,8 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('config_translation')]
 #[RunTestsInSeparateProcesses]
 class ConfigTranslationUiTest extends WebDriverTestBase {
+
+  use PromotedContentViewTestTrait;
 
   /**
    * {@inheritdoc}
@@ -36,6 +39,9 @@ class ConfigTranslationUiTest extends WebDriverTestBase {
    * Tests that contextual link related to views.
    */
   public function testViewContextualLink(): void {
+    $this->enablePromotedContentView();
+    $this->config('system.site')->set('page.front', '/node')->save();
+
     $user = $this->drupalCreateUser([
       'translate configuration',
       'access contextual links',

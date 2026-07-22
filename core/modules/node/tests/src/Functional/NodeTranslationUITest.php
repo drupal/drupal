@@ -15,6 +15,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
@@ -29,6 +30,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
 
   use LanguageTestTrait;
   use CommentTestTrait;
+  use PromotedContentViewTestTrait;
 
   /**
    * {@inheritdoc}
@@ -338,13 +340,16 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     }
     $node->save();
 
-    // Test that the frontpage view displays the correct translations.
+    // Test that the promoted content view displays the correct translations.
     \Drupal::service('module_installer')->install(['views'], TRUE);
     $this->rebuildContainer();
+
+    $this->enablePromotedContentView();
+
     $this->doTestTranslations('node', $values);
 
     // Enable the translation language renderer.
-    $view = \Drupal::entityTypeManager()->getStorage('view')->load('frontpage');
+    $view = \Drupal::entityTypeManager()->getStorage('view')->load('promoted_content');
     $display = &$view->getDisplay('default');
     $display['display_options']['rendering_language'] = '***LANGUAGE_entity_translation***';
     $view->save();

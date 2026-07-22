@@ -18,7 +18,7 @@ class FrontPageTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'path', 'system_test', 'views'];
+  protected static $modules = ['node', 'path', 'system_test'];
 
   /**
    * {@inheritdoc}
@@ -44,10 +44,10 @@ class FrontPageTest extends BrowserTestBase {
       'administer site configuration',
     ]));
     $this->drupalCreateContentType(['type' => 'page']);
-    $this->nodePath = "node/" . $this->drupalCreateNode(['promote' => 1])->id();
+    $this->nodePath = "node/" . $this->drupalCreateNode()->id();
 
-    // Configure 'node' as front page.
-    $this->config('system.site')->set('page.front', '/node')->save();
+    // Configure the created node as front page.
+    $this->config('system.site')->set('page.front', '/' . $this->nodePath)->save();
     // Enable front page logging in system_test.module.
     \Drupal::state()->set('system_test.front_page_output', 1);
   }
@@ -56,20 +56,17 @@ class FrontPageTest extends BrowserTestBase {
    * Tests front page functionality.
    */
   public function testDrupalFrontPage(): void {
-    // Create a promoted node to test the <title> tag on the front page view.
-    $settings = [
-      'title' => $this->randomMachineName(8),
-      'promote' => 1,
-    ];
-    $this->drupalCreateNode($settings);
+    // Test the front page displays correctly.
     $this->drupalGet('');
-    $this->assertSession()->titleEquals('Home | Drupal');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('On front page.');
 
-    // Check that path is the front page.
-    $this->assertSession()->pageTextContains('On front page.');
-    $this->drupalGet('node');
-    $this->assertSession()->pageTextContains('On front page.');
+    // Check that the direct path is also considered the front page.
     $this->drupalGet($this->nodePath);
+    $this->assertSession()->pageTextContains('On front page.');
+
+    // Test that other paths are not the front page.
+    $this->drupalGet('admin/structure');
     $this->assertSession()->pageTextNotContains('On front page.');
 
     // Change the front page to an invalid path.
@@ -84,17 +81,19 @@ class FrontPageTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains("The path '{$edit['site_frontpage']}' has to start with a slash.");
 
-    // Change the front page to a valid path.
+    // Change the front page again to a valid path.
     $edit['site_frontpage'] = '/' . $this->nodePath;
     $this->drupalGet('admin/config/system/site-information');
     $this->submitForm($edit, 'Save configuration');
     // Check that the front page path has been saved.
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
-    // Check that path is the front page.
+    // Check that the empty path is the front page.
     $this->drupalGet('');
     $this->assertSession()->pageTextContains('On front page.');
-    $this->drupalGet('node');
+    // Test that other paths are not the front page.
+    $this->drupalGet('admin');
     $this->assertSession()->pageTextNotContains('On front page.');
+    // Check that the direct path is also considered the front page.
     $this->drupalGet($this->nodePath);
     $this->assertSession()->pageTextContains('On front page.');
 
@@ -115,6 +114,7 @@ class FrontPageTest extends BrowserTestBase {
     $assert_session->pageTextContains('The configuration options have been saved.');
     $assert_session->fieldValueEquals('site_frontpage', '/what-a-twist');
     $this->drupalGet('<front>');
+    $this->assertSession()->pageTextContains('On front page.');
     $assert_session->pageTextContains('Space, the final frontier.');
     $assert_session->addressEquals('/');
     $this->assertSame('/what-a-twist', $this->config('system.site')->get('page.front'));

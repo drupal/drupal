@@ -7,6 +7,7 @@ namespace Drupal\Tests\node\Functional\Views;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
@@ -20,6 +21,8 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('node')]
 #[RunTestsInSeparateProcesses]
 class NodeLanguageTest extends NodeTestBase {
+
+  use PromotedContentViewTestTrait;
 
   /**
    * {@inheritdoc}
@@ -60,6 +63,8 @@ class NodeLanguageTest extends NodeTestBase {
     // Add two new languages.
     ConfigurableLanguage::createFromLangcode('fr')->save();
     ConfigurableLanguage::createFromLangcode('es')->save();
+
+    $this->enablePromotedContentView();
 
     // Make the body field translatable. The title is already translatable by
     // definition.
@@ -173,7 +178,7 @@ class NodeLanguageTest extends NodeTestBase {
     // Test the front page view filter. Only node titles in the current language
     // should be displayed on the front page by default.
     foreach ($this->nodeTitles as $langcode => $titles) {
-      // The frontpage view does not display content without a language.
+      // The promoted content view does not display content without a language.
       if ($langcode == LanguageInterface::LANGCODE_NOT_SPECIFIED) {
         continue;
       }
@@ -215,7 +220,7 @@ class NodeLanguageTest extends NodeTestBase {
     // Override the config for the front page view, so that the language
     // filter is set to the site default language instead. This should just
     // show the English nodes, no matter what the content language is.
-    $config = $this->config('views.view.frontpage');
+    $config = $this->config('views.view.promoted_content');
     $config->set('display.default.display_options.filters.langcode.value', [PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT => PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT]);
     $config->save();
     foreach ($this->nodeTitles as $langcode => $titles) {

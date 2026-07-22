@@ -1,5 +1,5 @@
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - core.entity_view_mode.node.rss
@@ -7,10 +7,10 @@ dependencies:
   module:
     - node
     - user
-id: frontpage
-label: Frontpage
+id: promoted_content
+label: 'Promoted Content'
 module: node
-description: 'All promoted content.'
+description: 'All content promoted to the front page.'
 tag: default
 base_table: node_field_data
 base_field: nid
@@ -73,7 +73,7 @@ display:
           plugin_id: text_custom
           label: ''
           empty: true
-          content: 'No promoted content has been created yet.<br/>Follow the <a target="_blank" href="https://www.drupal.org/docs/user_guide/en/index.html">User Guide</a> to start building your site.'
+          content: 'No promoted content has been created yet.'
           tokenize: false
         node_listing_empty:
           id: node_listing_empty
@@ -96,7 +96,7 @@ display:
           plugin_id: title
           label: ''
           empty: true
-          title: 'Welcome!'
+          title: ''
       sorts:
         sticky:
           id: sticky

@@ -143,6 +143,7 @@ class StandardRecipeTest extends StandardTest {
       'system.action.taxonomy_term_publish_action',
       'core.entity_view_mode.taxonomy_term.full',
       'taxonomy.settings',
+      'views.view.promoted_content',
       'views.view.taxonomy_term',
     ];
     // We expect core.extension to be different because standard is no longer
@@ -151,7 +152,6 @@ class StandardRecipeTest extends StandardTest {
       'core.extension',
       'user.role.content_editor',
       'views.view.archive',
-      'views.view.frontpage',
     ];
     $this->assertSame($expected_list, $comparer->getChangelist());
 

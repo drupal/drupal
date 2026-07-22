@@ -10,6 +10,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Http\Message\ResponseInterface;
@@ -20,6 +21,8 @@ use Psr\Http\Message\ResponseInterface;
 #[Group('contextual')]
 #[RunTestsInSeparateProcesses]
 class ContextualDynamicContextTest extends BrowserTestBase {
+
+  use PromotedContentViewTestTrait;
 
   /**
    * {@inheritdoc}
@@ -65,6 +68,8 @@ class ContextualDynamicContextTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->enablePromotedContentView();
+
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
@@ -106,7 +111,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
       'node:node=' . $node1->id() . ':changed=' . $node1->getChangedTime() . '&langcode=en',
       'node:node=' . $node2->id() . ':changed=' . $node2->getChangedTime() . '&langcode=en',
       'node:node=' . $node3->id() . ':changed=' . $node3->getChangedTime() . '&langcode=en',
-      'entity.view.edit_form:view=frontpage:location=page&name=frontpage&display_id=page_1&langcode=en',
+      'entity.view.edit_form:view=promoted_content:location=page&name=promoted_content&display_id=page_1&langcode=en',
     ];
 
     // Editor user: can access contextual links and can edit articles.

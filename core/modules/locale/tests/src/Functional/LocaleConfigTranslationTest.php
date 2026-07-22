@@ -289,16 +289,16 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
 
     // Check the optional default configuration in node module.
     $string = $this->storage->findString([
-      'source' => 'No promoted content has been created yet.<br/>Follow the <a target="_blank" href="https://www.drupal.org/docs/user_guide/en/index.html">User Guide</a> to start building your site.',
+      'source' => 'No promoted content has been created yet.',
       'context' => '',
       'type' => 'configuration',
     ]);
     if ($optional) {
-      $this->assertFalse($this->config('views.view.frontpage')->isNew());
+      $this->assertFalse($this->config('views.view.promoted_content')->isNew());
       $this->assertNotEmpty($string, 'Node view text can be found with node and views modules.');
     }
     else {
-      $this->assertTrue($this->config('views.view.frontpage')->isNew());
+      $this->assertTrue($this->config('views.view.promoted_content')->isNew());
       $this->assertNull($string, 'Node view text can not be found without node and/or views modules.');
     }
   }

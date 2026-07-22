@@ -9,6 +9,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\ResultRow;
@@ -19,14 +20,15 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests the default frontpage provided by views.
+ * Tests the promoted content view provided with views.
  */
 #[Group('node')]
 #[RunTestsInSeparateProcesses]
-class FrontPageTest extends ViewTestBase {
+class PromotedContentPageTest extends ViewTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
   use AssertViewsCacheTagsTrait;
+  use PromotedContentViewTestTrait;
 
   /**
    * {@inheritdoc}
@@ -53,18 +55,20 @@ class FrontPageTest extends ViewTestBase {
 
     $this->nodeStorage = $this->container->get('entity_type.manager')
       ->getStorage('node');
+
+    $this->enablePromotedContentView();
   }
 
   /**
-   * Tests the frontpage.
+   * Tests the promoted content view.
    */
-  public function testFrontPage(): void {
+  public function testPromotedContentPage(): void {
     $site_name = $this->randomMachineName();
     $this->config('system.site')
       ->set('name', $site_name)
       ->save();
 
-    $view = Views::getView('frontpage');
+    $view = Views::getView('promoted_content');
 
     // Tests
     // \Drupal\node\Plugin\views\row\RssPluginBase::calculateDependencies().
@@ -80,14 +84,9 @@ class FrontPageTest extends ViewTestBase {
     ];
     $this->assertSame($expected, $view->getDependencies());
 
-    $view->setDisplay('page_1');
-    $this->executeView($view);
-    $view->preview();
-
-    $this->assertEquals('Welcome!', $view->getTitle(), 'The welcome title is used for the empty view.');
     $view->destroy();
 
-    // Create some nodes on the frontpage view. Add more than 10 nodes in order
+    // Create some nodes on the promoted_content view. Add more than 10 nodes in order
     // to enable paging.
     $expected = [];
     for ($i = 0; $i < 20; $i++) {
@@ -114,7 +113,7 @@ class FrontPageTest extends ViewTestBase {
       }
     }
 
-    // Create some nodes which aren't on the frontpage, either because they
+    // Create some nodes which aren't on the promoted_content, either because they
     // aren't promoted or because they aren't published.
     $not_expected_nids = [];
 
@@ -146,14 +145,14 @@ class FrontPageTest extends ViewTestBase {
 
     $view->setDisplay('page_1');
     $this->executeView($view);
-    $this->assertIdenticalResultset($view, array_slice($expected, 0, 10), $column_map, 'Ensure that the right nodes are displayed on the frontpage.');
+    $this->assertIdenticalResultset($view, array_slice($expected, 0, 10), $column_map, 'Ensure that the right nodes are displayed on the promoted_content.');
     $this->assertNotInResultSet($view, $not_expected_nids, 'Ensure no unexpected node is in the result.');
     $view->destroy();
 
     $view->setDisplay('page_1');
     $view->setCurrentPage(1);
     $this->executeView($view);
-    $this->assertIdenticalResultset($view, array_slice($expected, 10, 10), $column_map, 'Ensure that the right nodes are displayed on second page of the frontpage.');
+    $this->assertIdenticalResultset($view, array_slice($expected, 10, 10), $column_map, 'Ensure that the right nodes are displayed on second page of the promoted_content.');
     $this->assertNotInResultSet($view, $not_expected_nids, 'Ensure no unexpected node is in the result.');
     $view->destroy();
   }
@@ -182,7 +181,7 @@ class FrontPageTest extends ViewTestBase {
    */
   public function testCacheTagsWithCachePluginNone(): void {
     $this->enablePageCaching();
-    $this->doTestFrontPageViewCacheTags(FALSE);
+    $this->doTestPromotedContentPageViewCacheTags(FALSE);
   }
 
   /**
@@ -191,14 +190,14 @@ class FrontPageTest extends ViewTestBase {
   public function testCacheTagsWithCachePluginTag(): void {
     $this->enablePageCaching();
 
-    $view = Views::getView('frontpage');
+    $view = Views::getView('promoted_content');
     $view->setDisplay('page_1');
     $view->display_handler->overrideOption('cache', [
       'type' => 'tag',
     ]);
     $view->save();
 
-    $this->doTestFrontPageViewCacheTags(TRUE);
+    $this->doTestPromotedContentPageViewCacheTags(TRUE);
   }
 
   /**
@@ -207,7 +206,7 @@ class FrontPageTest extends ViewTestBase {
   public function testCacheTagsWithCachePluginTime(): void {
     $this->enablePageCaching();
 
-    $view = Views::getView('frontpage');
+    $view = Views::getView('promoted_content');
     $view->setDisplay('page_1');
     $view->display_handler->overrideOption('cache', [
       'type' => 'time',
@@ -218,17 +217,17 @@ class FrontPageTest extends ViewTestBase {
     ]);
     $view->save();
 
-    $this->doTestFrontPageViewCacheTags(TRUE);
+    $this->doTestPromotedContentPageViewCacheTags(TRUE);
   }
 
   /**
-   * Tests the cache tags on the front page.
+   * Tests the cache tags on the promoted content page.
    *
    * @param bool $do_assert_views_caches
    *   Whether to check Views' result & output caches.
    */
-  protected function doTestFrontPageViewCacheTags($do_assert_views_caches): void {
-    $view = Views::getView('frontpage');
+  protected function doTestPromotedContentPageViewCacheTags($do_assert_views_caches): void {
+    $view = Views::getView('promoted_content');
     $view->setDisplay('page_1');
 
     $cache_contexts = [
@@ -248,7 +247,7 @@ class FrontPageTest extends ViewTestBase {
 
     // Test before there are any nodes.
     $empty_node_listing_cache_tags = [
-      'config:views.view.frontpage',
+      'config:views.view.promoted_content',
       'node_list',
     ];
 
@@ -262,12 +261,12 @@ class FrontPageTest extends ViewTestBase {
     $expected_tags = Cache::mergeTags($empty_node_listing_cache_tags, $cache_context_tags);
     $expected_tags = Cache::mergeTags($expected_tags, ['http_response', 'rendered', 'config:user.role.anonymous']);
     $this->assertPageCacheContextsAndTags(
-      Url::fromRoute('view.frontpage.page_1'),
+      Url::fromRoute('view.promoted_content.page_1'),
       $cache_contexts,
       $expected_tags
     );
 
-    // Create some nodes on the frontpage view. Add more than 10 nodes in order
+    // Create some nodes on the promoted_content view. Add more than 10 nodes in order
     // to enable paging.
     $this->drupalCreateContentType(['type' => 'article']);
     for ($i = 0; $i < 15; $i++) {
@@ -293,7 +292,7 @@ class FrontPageTest extends ViewTestBase {
 
     // First page.
     $first_page_result_cache_tags = [
-      'config:views.view.frontpage',
+      'config:views.view.promoted_content',
       'node_list',
       'node:6',
       'node:7',
@@ -323,13 +322,13 @@ class FrontPageTest extends ViewTestBase {
       $first_page_output_cache_tags
     );
     $this->assertPageCacheContextsAndTags(
-      Url::fromRoute('view.frontpage.page_1'),
+      Url::fromRoute('view.promoted_content.page_1'),
       $cache_contexts,
       Cache::mergeTags($first_page_output_cache_tags, ['http_response', 'rendered', 'config:user.role.anonymous'])
     );
 
     // Second page.
-    $this->assertPageCacheContextsAndTags(Url::fromRoute('view.frontpage.page_1', [], ['query' => ['page' => 1]]), $cache_contexts, [
+    $this->assertPageCacheContextsAndTags(Url::fromRoute('view.promoted_content.page_1', [], ['query' => ['page' => 1]]), $cache_contexts, [
       // The cache tags for the listed nodes.
       'node:1',
       'node:2',
@@ -338,7 +337,7 @@ class FrontPageTest extends ViewTestBase {
       'node:5',
       // The rest.
       'config:filter.format.plain_text',
-      'config:views.view.frontpage',
+      'config:views.view.promoted_content',
       'node_list',
       'node_view',
       'user_view',
@@ -357,7 +356,7 @@ class FrontPageTest extends ViewTestBase {
     $node->setTitle($title);
     $node->save();
 
-    $this->drupalGet(Url::fromRoute('view.frontpage.page_1'));
+    $this->drupalGet(Url::fromRoute('view.promoted_content.page_1'));
     $this->assertSession()->pageTextContains($title);
   }
 

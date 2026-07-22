@@ -75,7 +75,7 @@ class UrlTest extends UnitTestCase {
     parent::setUp();
 
     $map = [];
-    $map[] = ['view.frontpage.page_1', [], ['query' => []], FALSE, '/node'];
+    $map[] = ['view.promoted_content.page_1', [], ['query' => []], FALSE, '/node'];
     $map[] = ['node_view', ['node' => '1'], ['query' => []], FALSE, '/node/1'];
     $map[] = ['node_edit', ['node' => '2'], ['query' => []], FALSE, '/node/2/edit'];
     $this->map = $map;
@@ -158,7 +158,7 @@ class UrlTest extends UnitTestCase {
       ->method('matchRequest')
       ->willReturnCallback(function (Request $request): array {
         [$route_name, $vars] = match($request->getPathInfo()) {
-          '/node' => ['view.frontpage.page_1', []],
+          '/node' => ['view.promoted_content.page_1', []],
           '/node/1' => ['node_view', ['node' => '1']],
           '/node/2/edit' => ['node_edit', ['node' => '2']],
         };
@@ -192,7 +192,7 @@ class UrlTest extends UnitTestCase {
     $this->router->expects($this->once())
       ->method('matchRequest')
       ->willReturn([
-        RouteObjectInterface::ROUTE_NAME => 'view.frontpage.page_1',
+        RouteObjectInterface::ROUTE_NAME => 'view.promoted_content.page_1',
         '_raw_variables' => new InputBag([]),
       ]);
     $request = Request::create('/node', 'GET', $queryParameters);
@@ -389,7 +389,7 @@ class UrlTest extends UnitTestCase {
   #[Depends('testUrlFromRequest')]
   public function testGetInternalPath($urls): void {
     $map = [];
-    $map[] = ['view.frontpage.page_1', [], '/node'];
+    $map[] = ['view.promoted_content.page_1', [], '/node'];
     $map[] = ['node_view', ['node' => '1'], '/node/1'];
     $map[] = ['node_edit', ['node' => '2'], '/node/2/edit'];
 
