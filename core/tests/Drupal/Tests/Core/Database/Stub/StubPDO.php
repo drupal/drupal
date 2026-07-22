@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Database\Stub;
 
+@trigger_error('\Drupal\Tests\Core\Database\Stub\StubPDO is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. No replacement provided. See https://www.drupal.org/node/3611435', E_USER_DEPRECATED);
+
 /**
  * A stub of \PDO for testing purposes.
  *
@@ -15,6 +17,11 @@ namespace Drupal\Tests\Core\Database\Stub;
  * @see Drupal\Tests\Core\Database\ConnectionTest
  * @see Drupal\Core\Database\Connection
  * @see http://stackoverflow.com/questions/3138946/mocking-the-pdo-object-using-phpunit
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. No replacement
+ *   provided.
+ *
+ * @see https://www.drupal.org/node/3611435
  */
 class StubPDO extends \PDO {
 

@@ -10,7 +10,6 @@ use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\PlaceholderInterface;
 use Drupal\Tests\Core\Database\Stub\StubCondition;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
-use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -230,7 +229,7 @@ class ConditionTest extends UnitTestCase {
    * Tests that the core Condition can be overridden.
    */
   public function testContribCondition(): void {
-    $connection = new StubConnection($this->createStub(StubPDO::class), [
+    $connection = new StubConnection($this->createStub(\PDO::class), [
       'namespace' => 'Drupal\mock\Driver\Database\mock',
       'prefix' => '',
     ]);

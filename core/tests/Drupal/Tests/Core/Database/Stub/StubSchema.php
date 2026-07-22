@@ -10,6 +10,8 @@ use Drupal\Core\Database\Schema as DatabaseSchema;
  * A stub of the abstract Schema class for testing purposes.
  *
  * Includes minimal implementations of Schema's abstract methods.
+ *
+ * @internal
  */
 class StubSchema extends DatabaseSchema {
 

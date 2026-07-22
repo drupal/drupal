@@ -9,7 +9,6 @@ use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
-use Drupal\Tests\Core\Database\Stub\StubPDO;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -130,8 +129,7 @@ class SelectExtenderTest extends KernelTestBase {
     $additional_class_loader->addPsr4("Drupal\\core_fake\\Driver\\Database\\CoreFakeWithAllCustomClasses\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/core_fake/src/Driver/Database/CoreFakeWithAllCustomClasses");
     $additional_class_loader->register(TRUE);
 
-    $mock_pdo = $this->createStub(StubPDO::class);
-    $connection = new StubConnection($mock_pdo, ['namespace' => $namespace]);
+    $connection = new StubConnection($this->createStub(\PDO::class), ['namespace' => $namespace]);
 
     // Tests the method \Drupal\Core\Database\Query\Select::extend().
     $select = $connection->select('test')->extend($extend);

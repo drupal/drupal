@@ -12,7 +12,6 @@ use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Exception\EventException;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
-use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -35,7 +34,7 @@ class DatabaseEventsTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->connection = new StubConnection($this->createStub(StubPDO::class), []);
+    $this->connection = new StubConnection($this->createStub(\PDO::class), []);
   }
 
   /**

@@ -6,11 +6,11 @@ namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\Query\Select;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
-use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\Group;
 
 // cspell:ignore tablenode
+
 /**
  * Tests the orderBy() method of select queries.
  */
@@ -30,7 +30,7 @@ class OrderByTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $mockPdo = $this->createStub(StubPDO::class);
+    $mockPdo = $this->createStub(\PDO::class);
     $connection = new StubConnection($mockPdo, []);
     $this->query = new Select($connection, 'test', NULL);
   }
