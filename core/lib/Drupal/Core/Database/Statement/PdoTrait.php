@@ -12,6 +12,10 @@ trait PdoTrait {
   /**
    * Map FETCH_* modes to their literal for inclusion in messages.
    *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3611848
    * @see https://github.com/php/php-src/blob/master/ext/pdo/php_pdo_driver.h#L65-L80
    */
   protected array $fetchModeLiterals = [
@@ -59,8 +63,14 @@ trait PdoTrait {
    *
    * @return \Drupal\Core\Database\Statement\FetchAs
    *   A FetchAs mode.
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3611848
    */
   protected function pdoToFetchAs(int $mode): FetchAs {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3611848', E_USER_DEPRECATED);
     return match ($mode) {
       \PDO::FETCH_ASSOC => FetchAs::Associative,
       \PDO::FETCH_CLASS, \PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE => FetchAs::ClassObject,
@@ -165,8 +175,14 @@ trait PdoTrait {
    * @return scalar|null|false
    *   A single column from the next row of a result set or false if there are
    *   no more rows.
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3611848
    */
   protected function clientFetchColumn(int $column = 0): int|float|string|bool|NULL {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3611848', E_USER_DEPRECATED);
     return $this->getClientStatement()->fetchColumn($column);
   }
 
@@ -181,8 +197,14 @@ trait PdoTrait {
    * @return object|false
    *   An instance of the required class with property names that correspond
    *   to the column names, or FALSE on failure.
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3611848
    */
   protected function clientFetchObject(?string $class = NULL, array $constructorArguments = []): object|FALSE {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3611848', E_USER_DEPRECATED);
     if ($class) {
       return $this->getClientStatement()->fetchObject($class, $constructorArguments);
     }
@@ -237,8 +259,14 @@ trait PdoTrait {
    *
    * @return string
    *   The query string.
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3611848
    */
   protected function clientQueryString(): string {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3611848', E_USER_DEPRECATED);
     return $this->getClientStatement()->queryString;
   }
 
