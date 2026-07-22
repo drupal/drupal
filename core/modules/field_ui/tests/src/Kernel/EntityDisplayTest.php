@@ -11,9 +11,11 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\Core\Form\FormState;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field_ui\Form\EntityDisplayModeAddForm;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\Role;
@@ -547,6 +549,34 @@ class EntityDisplayTest extends KernelTestBase {
     $form_display_teaser->setStatus(TRUE)->save();
     $form_modes = \Drupal::service('entity_display.repository')->getFormModeOptionsByBundle('user', 'user');
     $this->assertEquals(['default' => 'Default', 'register' => 'Register'], $form_modes);
+  }
+
+  /**
+   * Tests building the view mode add form when an entity type has no bundles.
+   *
+   * This is a regression test for
+   * https://www.drupal.org/project/drupal/issues/3593466.
+   */
+  public function testViewModeAddFormWithoutBundles(): void {
+    $view_mode = EntityViewMode::create([
+      'id' => 'node.test',
+      'label' => 'Test view mode',
+      'targetEntityType' => 'node',
+    ]);
+    $view_mode->save();
+
+    $form_object = EntityDisplayModeAddForm::create($this->container);
+    $form_object->setEntityTypeManager($this->container->get('entity_type.manager'));
+    $form_object->setModuleHandler($this->container->get('module_handler'));
+    $form_object->setEntity($view_mode);
+
+    $form = $form_object->buildForm([], new FormState(), 'node');
+
+    $this->assertSame([], $this->container->get('entity_type.bundle.info')->getBundleInfo('node'));
+    $this->assertArrayHasKey('id', $form);
+    $this->assertArrayHasKey('label', $form);
+    $this->assertArrayHasKey('bundles_by_entity', $form);
+    $this->assertSame([], $form['bundles_by_entity']['#options']);
   }
 
   /**
