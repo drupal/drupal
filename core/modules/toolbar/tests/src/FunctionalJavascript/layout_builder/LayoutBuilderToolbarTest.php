@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\toolbar\layout_builder\FunctionalJavascript;
+namespace Drupal\Tests\toolbar\FunctionalJavascript\layout_builder;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
