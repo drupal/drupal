@@ -47,4 +47,15 @@ interface BatchStorageInterface {
    */
   public function cleanup();
 
+  /**
+   * Returns a new batch id.
+   *
+   * @return int
+   *   A batch id.
+   *
+   * @throws \Exception
+   *   Thrown when a new batch id could not be generated.
+   */
+  public function getId(): int;
+
 }
