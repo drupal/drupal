@@ -23,11 +23,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   const DATABASE_NOT_FOUND = 14;
 
   /**
-   * {@inheritdoc}
-   */
-  protected $statementWrapperClass = NULL;
-
-  /**
    * A map of condition operators to SQLite operators.
    *
    * We don't want to override any of the defaults.
@@ -425,13 +420,17 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     assert(!isset($options['fetch']) || $options['fetch'] instanceof FetchAs || is_string($options['fetch']), 'The "fetch" option passed to query() must contain a FetchAs enum case or a string. See https://www.drupal.org/node/3488338');
 
     try {
-      $query = $this->preprocessStatement($query, $options);
-      $statement = new Statement($this->connection, $this, $query, $options['pdo'] ?? [], $allow_row_count);
+      return new Statement(
+        $this->connection,
+        $this,
+        $this->preprocessStatement($query, $options),
+        $options['pdo'] ?? [],
+        $allow_row_count,
+      );
     }
     catch (\Exception $e) {
       $this->exceptionHandler()->handleStatementException($e, $query, $options);
     }
-    return $statement;
   }
 
   /**

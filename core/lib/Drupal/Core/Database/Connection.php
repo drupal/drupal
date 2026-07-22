@@ -435,14 +435,17 @@ abstract class Connection {
     assert(!isset($options['fetch']) || $options['fetch'] instanceof FetchAs || is_string($options['fetch']), 'The "fetch" option passed to prepareStatement() must contain a FetchAs enum case or a string. See https://www.drupal.org/node/3488338');
 
     try {
-      $query = $this->preprocessStatement($query, $options);
-      $statement = new $this->statementWrapperClass($this, $this->connection, $query, $options['pdo'] ?? [], $allow_row_count);
+      return new $this->statementWrapperClass(
+        $this,
+        $this->connection,
+        $this->preprocessStatement($query, $options),
+        $options['pdo'] ?? [],
+        $allow_row_count,
+      );
     }
     catch (\Exception $e) {
       $this->exceptionHandler()->handleStatementException($e, $query, $options);
     }
-
-    return $statement;
   }
 
   /**
@@ -659,13 +662,12 @@ abstract class Connection {
     $this->expandArguments($query, $args);
     $statement = $this->prepareStatement($query, $options);
     try {
-      $result = $statement->execute($args, $options);
+      $statement->execute($args, $options);
+      return $statement;
     }
     catch (\Exception $e) {
       $this->exceptionHandler()->handleExecutionException($e, $statement, $args, $options);
-      $result = FALSE;
     }
-    return $result ? $statement : NULL;
   }
 
   /**

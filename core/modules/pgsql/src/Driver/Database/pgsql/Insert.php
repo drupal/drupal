@@ -109,6 +109,10 @@ class Insert extends QueryInsert {
       if (isset($savepoint)) {
         $savepoint->commitOrRelease();
       }
+
+      // Re-initialize the values array so that we can re-use this query.
+      $this->insertValues = [];
+      return $last_insert_id ?? NULL;
     }
     catch (\Exception $e) {
       if (isset($savepoint)) {
@@ -116,11 +120,6 @@ class Insert extends QueryInsert {
       }
       $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
     }
-
-    // Re-initialize the values array so that we can re-use this query.
-    $this->insertValues = [];
-
-    return $last_insert_id ?? NULL;
   }
 
   /**

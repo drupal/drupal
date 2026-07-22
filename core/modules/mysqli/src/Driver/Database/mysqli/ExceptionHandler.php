@@ -15,7 +15,7 @@ class ExceptionHandler extends BaseMySqlExceptionHandler {
   /**
    * {@inheritdoc}
    */
-  public function handleExecutionException(\Exception $exception, StatementInterface $statement, array $arguments = [], array $options = []): void {
+  public function handleExecutionException(\Exception $exception, StatementInterface $statement, array $arguments = [], array $options = []): never {
     // Close the client statement to release handles.
     if ($statement->hasClientStatement()) {
       $statement->getClientStatement()->close();
