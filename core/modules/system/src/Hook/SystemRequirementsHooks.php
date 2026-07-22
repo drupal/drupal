@@ -125,7 +125,7 @@ class SystemRequirementsHooks {
               ':url' => 'https://www.drupal.org/core/experimental',
             ]
           ),
-          'severity' => RequirementSeverity::Warning,
+          'severity' => RequirementSeverity::Info,
         ];
       }
       // Warn if any deprecated modules are installed.
@@ -166,7 +166,7 @@ class SystemRequirementsHooks {
         $requirements['experimental_themes'] = [
           'title' => $this->t('Experimental themes installed'),
           'value' => $this->t('Experimental themes found: %theme_list. Experimental themes are provided for testing purposes only. Use at your own risk.', ['%theme_list' => implode(', ', $experimental_themes)]),
-          'severity' => RequirementSeverity::Warning,
+          'severity' => RequirementSeverity::Info,
         ];
       }
 
