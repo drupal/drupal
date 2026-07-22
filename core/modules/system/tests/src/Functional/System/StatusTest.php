@@ -23,7 +23,7 @@ class StatusTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['update_test_postupdate', 'update'];
+  protected static $modules = ['update_test_postupdate', 'update', 'experimental_module_requirements_test'];
 
   /**
    * {@inheritdoc}
@@ -65,6 +65,13 @@ class StatusTest extends BrowserTestBase {
 
     // Verify that the PHP version is shown on the page.
     $this->assertSession()->pageTextContains(phpversion());
+
+    // Test that the experimental modules requirement is reported as info (in
+    // the "Checked" group), rather than as a warning.
+    $elements = $this->xpath('//div[h3[@id="checked"]]//summary[contains(@class, "system-status-report__status-title") and contains(text(), :text)]', [
+      ':text' => 'Experimental modules installed',
+    ]);
+    $this->assertCount(1, $elements);
 
     if (function_exists('phpinfo')) {
       $this->assertSession()->linkByHrefExists(Url::fromRoute('system.php')->toString());
