@@ -57,6 +57,7 @@ class Insert extends Query implements \Countable {
    *   That makes it safe to use in multi-insert loops.
    */
   public function execute() {
+    @trigger_error('Calling ' . __METHOD__ . '() as a concrete method is deprecated in drupal:11.5.0 and it is made abstract in drupal:12.0.0. Each database driver should should provide its own implementation. See https://www.drupal.org/node/3612421', E_USER_DEPRECATED);
     // If validation fails, simply return NULL. Note that validation routines
     // in preExecute() may throw exceptions instead.
     if (!$this->preExecute()) {

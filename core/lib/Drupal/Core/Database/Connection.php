@@ -821,6 +821,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
   public function insert($table, array $options = []) {
+    @trigger_error('Calling ' . __METHOD__ . '() as a concrete method is deprecated in drupal:11.5.0 and it is made abstract in drupal:12.0.0. Each database driver should should provide its own implementation. See https://www.drupal.org/node/3612421', E_USER_DEPRECATED);
     return new Insert($this, $table, $options);
   }
 
