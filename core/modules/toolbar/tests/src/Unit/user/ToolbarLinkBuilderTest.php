@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\toolbar\user\Unit;
+namespace Drupal\Tests\toolbar\Unit\user;
 
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Tests\UnitTestCase;
