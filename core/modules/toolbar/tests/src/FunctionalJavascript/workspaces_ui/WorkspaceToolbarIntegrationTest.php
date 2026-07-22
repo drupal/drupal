@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\toolbar\workspaces_ui\FunctionalJavascript;
+namespace Drupal\Tests\toolbar\FunctionalJavascript\workspaces_ui;
 
 use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
 use Drupal\workspaces\Entity\Workspace;
