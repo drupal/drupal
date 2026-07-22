@@ -117,8 +117,9 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
 
     $bundles_by_entity = [];
     $defaults = [];
-    foreach (array_keys($bundles[$definition->id()]) as $bundle) {
-      $bundles_by_entity[$bundle] = $bundles[$definition->id()][$bundle]['label'];
+    $entity_bundles = $bundles[$definition->id()] ?? [];
+    foreach (array_keys($entity_bundles) as $bundle) {
+      $bundles_by_entity[$bundle] = $entity_bundles[$bundle]['label'];
       // Determine default display modes.
       if (!$this->entity->isNew()) {
         [, $display_mode_name] = explode('.', $this->entity->id());
