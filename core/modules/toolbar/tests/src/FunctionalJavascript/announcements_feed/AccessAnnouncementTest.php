@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\announcements_feed\toolbar\FunctionalJavascript;
+namespace Drupal\Tests\toolbar\FunctionalJavascript\announcements_feed;
 
 use Drupal\announce_feed_test\AnnounceTestHttpClientMiddleware;
 use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
