@@ -7,7 +7,6 @@ use Drupal\Core\Database\Event\DatabaseEvent;
 use Drupal\Core\Database\Exception\EventException;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
-use Drupal\Core\Database\Query\Insert;
 use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Database\Query\Truncate;
@@ -818,9 +817,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Query\Insert
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
-  public function insert($table, array $options = []) {
-    return new Insert($this, $table, $options);
-  }
+  abstract public function insert($table, array $options = []);
 
   /**
    * Returns the ID of the last inserted row or sequence value.

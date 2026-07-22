@@ -7,7 +7,7 @@ namespace Drupal\Core\Database\Query;
  *
  * @ingroup database
  */
-class Insert extends Query implements \Countable {
+abstract class Insert extends Query implements \Countable {
 
   use InsertTrait;
 
@@ -56,52 +56,7 @@ class Insert extends Query implements \Countable {
    *   fields are specified, this method will do nothing and return NULL. That
    *   That makes it safe to use in multi-insert loops.
    */
-  public function execute() {
-    // If validation fails, simply return NULL. Note that validation routines
-    // in preExecute() may throw exceptions instead.
-    if (!$this->preExecute()) {
-      return NULL;
-    }
-
-    // If we're selecting from a SelectQuery, finish building the query and
-    // pass it back, as any remaining options are irrelevant.
-    if (!empty($this->fromQuery)) {
-      $sql = (string) $this;
-      // The SelectQuery may contain arguments, load and pass them through.
-      return $this->connection->query($sql, $this->fromQuery->getArguments(), $this->queryOptions);
-    }
-
-    $last_insert_id = 0;
-    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
-    try {
-      // Per https://en.wikipedia.org/wiki/Insert_%28SQL%29#Multirow_inserts,
-      // not all databases implement SQL-92's standard syntax for multi-row
-      // inserts. Therefore, in the degenerate case, execute a separate query
-      // for each row, all within a single transaction for atomicity and
-      // performance.
-      $transaction = $this->connection->startTransaction();
-      foreach ($this->insertValues as $insert_values) {
-        $stmt->execute($insert_values, $this->queryOptions);
-        $last_insert_id = $this->connection->lastInsertId();
-      }
-      $transaction->commitOrRelease();
-    }
-    catch (\Exception $e) {
-      if (isset($transaction)) {
-        // One of the INSERTs failed, rollback the whole batch.
-        $transaction->rollBack();
-      }
-      // Rethrow the exception for the calling code.
-      throw $e;
-    }
-
-    // Re-initialize the values array so that we can re-use this query.
-    $this->insertValues = [];
-
-    // Transaction commits here where $transaction looses scope.
-
-    return $last_insert_id;
-  }
+  abstract public function execute();
 
   /**
    * Implements PHP magic __toString method to convert the query to a string.
