@@ -57,7 +57,7 @@ trait ViewsFormAjaxHelperTrait {
   protected function addAjaxTrigger(array &$wrappingElement, string $triggerKey, array $refreshParents): void {
     // Add the AJAX behavior to the triggering element.
     $triggeringElement = &$wrappingElement[$triggerKey];
-    $triggeringElement['#ajax']['callback'] = static::class . ':ajaxUpdateForm';
+    $triggeringElement['#ajax']['callback'] = static::class . '::ajaxUpdateForm';
 
     // We do not use \Drupal\Component\Utility\Html::getUniqueId() to get an ID
     // for the AJAX wrapper. It remembers IDs across AJAX requests (and won't
@@ -222,7 +222,7 @@ trait ViewsFormAjaxHelperTrait {
    * @return array
    *   Render array.
    */
-  public function ajaxUpdateForm(array $form, FormStateInterface $formState): array {
+  public static function ajaxUpdateForm(array $form, FormStateInterface $formState): array {
     // The region that needs to be updated was stored in a property of the
     // triggering element by self::addAjaxTrigger(), so all we have to do is
     // retrieve that here.
