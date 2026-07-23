@@ -95,6 +95,10 @@ class ViewsWizardTest extends WebDriverTestBase {
     $this->assertNotNull($page->findField('show[type]'), 'The "of type" filter is added for nodes when there is at least one node type.');
     $this->assertEquals('fields', $page->findField('page[style][row_plugin]')->getValue(), 'The page display format was not changed from a valid value.');
     $this->assertEquals('fields', $page->findField('block[style][row_plugin]')->getValue(), 'The block display format was not changed from a valid value.');
+
+    $page->selectFieldOption('show[type]', 'page');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSame('page', $page->findField('show[type]')->getValue());
   }
 
 }
