@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\pgsql\Unit;
 
+use Drupal\Core\Database\StatementInterface;
+use Drupal\pgsql\Driver\Database\pgsql\Connection;
 use Drupal\pgsql\Driver\Database\pgsql\Schema;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use Prophecy\Argument;
 
 /**
  * Tests Drupal\pgsql\Driver\Database\pgsql\Schema.
@@ -34,19 +35,25 @@ class SchemaTest extends UnitTestCase {
   public function testComputedConstraintName(string $table_name, string $name, string $expected): void {
     $max_identifier_length = 63;
 
-    $connection = $this->prophesize('\Drupal\pgsql\Driver\Database\pgsql\Connection');
-    $connection->getConnectionOptions()->willReturn([]);
-    $connection->getPrefix()->willReturn('');
+    $connection = $this->createMock(Connection::class);
+    $connection->method('getConnectionOptions')->willReturn([]);
+    $connection->method('getPrefix')->willReturn('');
 
-    $statement = $this->prophesize('\Drupal\Core\Database\StatementInterface');
-    $statement->fetchField()->willReturn($max_identifier_length);
-    $connection->query('SHOW max_identifier_length')->willReturn($statement->reveal());
+    $statement = $this->createStub(StatementInterface::class);
+    $statement->method('fetchField')->willReturn($max_identifier_length);
+    $matched_statement = $this->createStub(StatementInterface::class);
 
-    $connection->query(Argument::containingString($expected))
-      ->willReturn($this->prophesize('\Drupal\Core\Database\StatementInterface')->reveal())
-      ->shouldBeCalled();
+    $connection->expects($this->exactly(2))
+      ->method('query')
+      ->willReturnCallback(function (string $query) use ($expected, $statement, $matched_statement) {
+        if ($query === 'SHOW max_identifier_length') {
+          return $statement;
+        }
+        $this->assertStringContainsString($expected, $query);
+        return $matched_statement;
+      });
 
-    $schema = new Schema($connection->reveal());
+    $schema = new Schema($connection);
     $schema->constraintExists($table_name, $name);
   }
 

@@ -10,7 +10,6 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * Tests the MySQL install tasks.
@@ -20,29 +19,15 @@ use Prophecy\Prophecy\ObjectProphecy;
 class InstallTasksTest extends UnitTestCase {
 
   /**
-   * A connection object prophecy.
-   */
-  private ObjectProphecy|Connection $connection;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    $this->connection = $this->prophesize(Connection::class);
-  }
-
-  /**
    * Creates a Tasks object for testing.
+   *
+   * @param \Drupal\mysql\Driver\Database\mysql\Connection $connection
+   *   The database connection.
    *
    * @return \Drupal\mysql\Driver\Database\mysql\Install\Tasks
    *   A Tasks object.
    */
-  private function createTasks(): Tasks {
-    /** @var \Drupal\mysql\Driver\Database\mysql\Connection $connection */
-    $connection = $this->connection->reveal();
-
+  private function createTasks(Connection $connection): Tasks {
     return new class($connection) extends Tasks {
 
       /**
@@ -119,11 +104,12 @@ class InstallTasksTest extends UnitTestCase {
    */
   #[DataProvider('providerNameAndMinimumVersion')]
   public function testNameAndMinimumVersion(bool $is_mariadb, string $expected_name, string $expected_minimum_version): void {
-    $this->connection
-      ->isMariaDb()
-      ->shouldBeCalledTimes(2)
+    $connection = $this->createMock(Connection::class);
+    $connection
+      ->expects($this->exactly(2))
+      ->method('isMariaDb')
       ->willReturn($is_mariadb);
-    $tasks = $this->createTasks();
+    $tasks = $this->createTasks($connection);
 
     $minimum_version = $tasks->minimumVersion();
     $name = $tasks->name();

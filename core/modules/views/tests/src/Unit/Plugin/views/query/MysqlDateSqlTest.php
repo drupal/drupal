@@ -30,7 +30,7 @@ class MysqlDateSqlTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->database = $this->prophesize(Connection::class)->reveal();
+    $this->database = $this->createStub(Connection::class);
   }
 
   /**
@@ -82,9 +82,9 @@ class MysqlDateSqlTest extends UnitTestCase {
    * Tests setting the database offset.
    */
   public function testSetTimezoneOffset(): void {
-    $database = $this->prophesize(Connection::class);
-    $database->query("SET @@session.time_zone = '42'")->shouldBeCalledTimes(1);
-    $date_sql = new MysqlDateSql($database->reveal());
+    $database = $this->createMock(Connection::class);
+    $database->expects($this->once())->method('query')->with("SET @@session.time_zone = '42'");
+    $date_sql = new MysqlDateSql($database);
     $date_sql->setTimezoneOffset(42);
   }
 
