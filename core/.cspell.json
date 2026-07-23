@@ -6,8 +6,9 @@
     "ignorePaths": [
       "**/.*.json",
       ".*ignore",
+      "../**/composer.json",
       "composer.lock",
-      "../composer/Metapackage/PinnedDevDependencies/composer.json",
+      "../composer/Plugin/VendorHardening/Config.php",
       "assets/vendor/**",
       "misc/jquery.form.js",
       "lib/Drupal/Component/Diff/**",
