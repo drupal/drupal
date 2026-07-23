@@ -33424,13 +33424,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/TestSite/TestSetupInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\Client\\:
-ClientInterface\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/BrowserTestBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:cleanupEnvironment\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -34463,13 +34456,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Form/SubformStateTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\Client\\:
-ClientInterface\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Http/ClientFactoryTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$mock_plugin of method Drupal\\\\Tests\\\\Core\\\\Menu\\\\LocalTaskManagerTest\\:\\:getLocalTasksForRouteResult\\(\\) expects PHPUnit\\\\Framework\\\\MockObject\\\\MockObject, Drupal\\\\Core\\\\Menu\\\\LocalTaskInterface&PHPUnit\\\\Framework\\\\MockObject\\\\Stub given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 4,
@@ -34720,13 +34706,6 @@ $ignoreErrors[] = [
 	'identifier' => 'includeOnce.fileNotFound',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Update/UpdateRegistryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getConfig\\(\\) of interface GuzzleHttp\\\\ClientInterface\\:
-ClientInterface\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
-	'identifier' => 'method.deprecated',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/DrupalTestBrowser.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\DrupalTestBrowser\\:\\:addPostFiles\\(\\) has no return type specified\\.$#',

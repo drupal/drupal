@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\BrowserTestBase;
 use GuzzleHttp\Cookie\CookieJar;
+use GuzzleHttp\Cookie\SetCookie;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Http\Message\ResponseInterface;
@@ -200,11 +201,21 @@ class SessionHttpsTest extends BrowserTestBase {
     ]);
 
     // When logging in via the HTTPS mock, the child site will issue a session
-    // cookie with the secure attribute set. While this cookie will be stored in
-    // the Guzzle CookieJar, it will not be used on subsequent requests.
-    // Update the BrowserKit CookieJar so that subsequent requests have the
+    // cookie with the secure attribute set. Guzzle's CookieJar does not store a
+    // secure cookie received over the insecure HTTPS mock connection, so parse
+    // the Set-Cookie header directly to confirm the cookie was issued with the
+    // secure attribute. It will not be used on subsequent requests; instead the
+    // BrowserKit CookieJar is updated so that subsequent requests have the
     // correct cookie.
-    $cookie = $guzzle_cookie_jar->getCookieByName($this->secureSessionName);
+    $cookie = NULL;
+    foreach ($response->getHeader('Set-Cookie') as $set_cookie) {
+      $candidate = SetCookie::fromString($set_cookie);
+      if ($candidate->getName() === $this->secureSessionName) {
+        $cookie = $candidate;
+        break;
+      }
+    }
+    $this->assertNotNull($cookie);
     $this->assertTrue($cookie->getSecure(), 'The secure cookie has the secure attribute');
     /** @var \Symfony\Component\BrowserKit\CookieJar $browser_kit_cookie_jar */
     $browser_kit_cookie_jar = $this->getSession()->getDriver()->getClient()->getCookieJar();

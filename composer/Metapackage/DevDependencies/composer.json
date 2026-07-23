@@ -24,7 +24,6 @@
         "mikey179/vfsstream": "^1.6.11",
         "open-telemetry/exporter-otlp": "^1",
         "open-telemetry/sdk": "^1",
-        "php-http/guzzle7-adapter": "^1.0",
         "phpspec/prophecy": "^1.23",
         "phpspec/prophecy-phpunit": "^2.4",
         "phpstan/extension-installer": "^1.4.3",
