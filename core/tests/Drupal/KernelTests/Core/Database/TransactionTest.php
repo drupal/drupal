@@ -1250,6 +1250,34 @@ class TransactionTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests post-transaction callback executes on "garbage collection".
+   *
+   * Simulate the end of a request by closing the connection and destroying
+   * the transaction manually. The order matters for this test as the garbage
+   * collection is unpredictable and could operate this way.
+   */
+  public function testPostTransactionsAlwaysExecutedBeforeConnectionIsDestroyed(): void {
+    $transaction = $this->createRootTransaction('', FALSE);
+    $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
+    $this->insertRow('row');
+    $this->assertNull($this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
+
+    Database::closeConnection();
+    unset($this->connection);
+    unset($transaction);
+
+    // Reopen the database connection so we can continue running assertions.
+    $this->connection = Database::getConnection();
+
+    // The post-transaction callback should now have inserted a 'rtcCommit'
+    // row.
+    $this->assertSame('rtcCommit', $this->postTransactionCallbackAction);
+    $this->assertRowPresent('row');
+    $this->assertRowPresent('rtcCommit');
+  }
+
+  /**
    * A post-transaction callback for testing purposes.
    */
   public function rootTransactionCallback(bool $success): void {
