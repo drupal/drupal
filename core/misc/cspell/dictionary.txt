@@ -258,6 +258,7 @@ longtext
 lrdd
 lstitle
 ltitle
+lzma
 mainpage
 maryjane
 maximumred
