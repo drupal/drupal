@@ -109,6 +109,17 @@ class FileTokenReplaceTest extends FileFieldTestBase {
       ]);
       $this->assertEquals($expected, $output, "Unsanitized file token $input replaced.");
     }
+
+    // Assign the file to a non-existent user so that getOwner() returns NULL,
+    // then verify that the owner tokens are left unreplaced rather than causing
+    // an error. Both [file:owner] and the chained [file:owner:*] tokens are
+    // skipped when there is no user entity to derive their values from.
+    $file->setOwnerId(999999)->save();
+    $this->assertNull($file->getOwner());
+    foreach (['[file:owner]', '[file:owner:uid]', '[file:owner:name]'] as $input) {
+      $output = $token_service->replace($input, ['file' => $file], ['langcode' => $language_interface->getId()]);
+      $this->assertSame($input, $output, "File token $input is left unreplaced when the owner is missing.");
+    }
   }
 
 }

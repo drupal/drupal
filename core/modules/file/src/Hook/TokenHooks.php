@@ -88,10 +88,13 @@ class TokenHooks {
             break;
 
           case 'owner':
-            $owner = $file->getOwner();
-            $bubbleable_metadata->addCacheableDependency($owner);
-            $name = $owner->label();
-            $replacements[$original] = $name;
+            // Only replace the token when the file has a valid owner. When the
+            // owner is missing the token is left unreplaced, consistent with
+            // the chained [file:owner:*] tokens handled below.
+            if ($owner = $file->getOwner()) {
+              $bubbleable_metadata->addCacheableDependency($owner);
+              $replacements[$original] = $owner->label();
+            }
             break;
         }
       }
