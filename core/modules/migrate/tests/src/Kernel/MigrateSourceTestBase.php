@@ -85,7 +85,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
   /**
    * Determines the plugin to be tested.
    *
-   * This is identified by the first #[CoverClass] attribute set on the
+   * This is identified by the first #[CoversClass] attribute set on the
    * concrete test class.
    *
    * @return string
