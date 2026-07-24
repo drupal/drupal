@@ -6,9 +6,11 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Provides the user permissions administration form.
@@ -18,6 +20,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
+#[Route(
+  path: '/admin/people/permissions',
+  name: 'user.admin_permissions',
+  requirements: [
+    '_permission' => 'administer permissions',
+  ],
+  defaults: [
+    '_title' => new TranslatableMarkup('Permissions'),
+  ],
+)]
 class UserPermissionsForm extends FormBase {
 
   /**

@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
 
@@ -161,6 +162,15 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @return \Symfony\Component\HttpFoundation\Response
    *   A response which contains the ID and CSRF token.
    */
+  #[Route(
+    path: '/user/login',
+    name: 'user.login.http',
+    methods: ['POST'],
+    requirements: [
+      '_user_is_logged_in' => 'FALSE',
+      '_format' => 'json',
+    ],
+  )]
   public function login(Request $request) {
     $format = $this->getRequestFormat($request);
 
@@ -230,6 +240,15 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
    */
+  #[Route(
+    path: '/user/password',
+    name: 'user.pass.http',
+    methods: ['POST'],
+    requirements: [
+      '_access' => 'TRUE',
+      '_format' => 'json',
+    ],
+  )]
   public function resetPassword(Request $request) {
     $format = $this->getRequestFormat($request);
 
@@ -299,6 +318,16 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
    */
+  #[Route(
+    path: '/user/logout',
+    name: 'user.logout.http',
+    methods: ['POST'],
+    requirements: [
+      '_user_is_logged_in' => 'TRUE',
+      '_format' => 'json',
+      '_csrf_token' => 'TRUE',
+    ],
+  )]
   public function logout() {
     $this->userLogout();
     return new Response(NULL, 204);
@@ -317,6 +346,15 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response.
    */
+  #[Route(
+    path: '/user/login_status',
+    name: 'user.login_status.http',
+    methods: ['GET'],
+    requirements: [
+      '_access' => 'TRUE',
+      '_format' => 'json',
+    ],
+  )]
   public function loginStatus() {
     if ($this->currentUser()->isAuthenticated()) {
       $response = new Response(self::LOGGED_IN);

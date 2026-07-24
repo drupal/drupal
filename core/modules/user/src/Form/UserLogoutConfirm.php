@@ -9,10 +9,18 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Provides a confirmation form for user logout.
  */
+#[Route(
+  path: '/user/logout/confirm',
+  name: 'user.logout.confirm',
+  requirements: [
+    '_user_is_logged_in' => 'TRUE',
+  ],
+)]
 class UserLogoutConfirm extends ConfirmFormBase implements WorkspaceSafeFormInterface {
 
   /**
