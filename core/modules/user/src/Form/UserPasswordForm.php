@@ -10,10 +10,12 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element\Email;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
 use Drupal\user\UserNameValidator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Provides a user password reset form.
@@ -22,6 +24,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
+#[Route(
+  path: '/user/password',
+  name: 'user.pass',
+  requirements: [
+    '_access' => 'TRUE',
+  ],
+  options: [
+    '_maintenance_access' => TRUE,
+  ],
+  defaults: [
+    '_title' => new TranslatableMarkup('Reset your password'),
+  ],
+)]
 class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
 
   /**

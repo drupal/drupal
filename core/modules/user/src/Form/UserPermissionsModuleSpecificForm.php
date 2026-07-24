@@ -5,12 +5,26 @@ namespace Drupal\user\Form;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Provides the user permissions administration form for one or more module(s).
  *
  * @internal
  */
+#[Route(
+  path: '/admin/people/permissions/module/{modules}',
+  name: 'user.admin_permissions.module',
+  requirements: [
+    '_permission' => 'administer permissions',
+    'modules' => '[a-z][a-z0-9_,]*',
+    '_custom_access' => self::class . '::access',
+  ],
+  defaults: [
+    '_title' => new TranslatableMarkup('Module Permissions'),
+  ],
+)]
 class UserPermissionsModuleSpecificForm extends UserPermissionsForm {
 
   /**

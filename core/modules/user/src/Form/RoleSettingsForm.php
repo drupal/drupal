@@ -4,13 +4,25 @@ namespace Drupal\user\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\RoleInterface;
 use Drupal\user\RoleStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Configure administrator role settings for this site.
  */
+#[Route(
+  path: '/admin/people/role-settings',
+  name: 'user.role.settings',
+  requirements: [
+    '_permission' => 'administer permissions',
+  ],
+  defaults: [
+    '_title' => new TranslatableMarkup('Role settings'),
+  ],
+)]
 class RoleSettingsForm extends FormBase {
 
   /**

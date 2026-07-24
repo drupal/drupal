@@ -3,13 +3,25 @@
 namespace Drupal\user\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\RoleInterface;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Provides the user permissions administration form for a specific role.
  *
  * @internal
  */
+#[Route(
+  path: '/admin/people/permissions/{user_role}',
+  name: 'entity.user_role.edit_permissions_form',
+  requirements: [
+    '_entity_access' => 'user_role.update',
+  ],
+  defaults: [
+    '_title' => new TranslatableMarkup('Edit role'),
+  ],
+)]
 class UserPermissionsRoleSpecificForm extends UserPermissionsForm {
 
   /**
