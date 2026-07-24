@@ -84,15 +84,19 @@ class RevertOverridesForm extends ConfirmFormBase implements WorkspaceDynamicSaf
    * {@inheritdoc}
    */
   public function getDescription() {
+    $default = $this->t('The layout will be reverted to its default state. All layout modifications and inline blocks will be reset.');
     try {
       $entity = $this->sectionStorage->getContextValue('entity');
-      return $this->t("The layout for %label will be reverted to its default state. All layout modifications and inline blocks wil be reset.", [
+      if ($entity === NULL) {
+        return $default;
+      }
+      return $this->t("The layout for %label will be reverted to its default state. All layout modifications and inline blocks will be reset.", [
         '%label' => $entity->label(),
       ]);
     }
     catch (ContextException) {
       // If the entity is not available, just return a generic message.
-      return $this->t('The layout will be reverted to its default state. All layout modifications and inline blocks will be reset.');
+      return $default;
     }
   }
 

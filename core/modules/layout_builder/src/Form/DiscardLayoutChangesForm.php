@@ -83,15 +83,19 @@ class DiscardLayoutChangesForm extends ConfirmFormBase implements WorkspaceDynam
    * {@inheritdoc}
    */
   public function getDescription() {
+    $default = $this->t('Any unsaved changes to the layout will be discarded. This action cannot be undone.');
     try {
       $entity = $this->sectionStorage->getContextValue('entity');
+      if ($entity === NULL) {
+        return $default;
+      }
       return $this->t('Any unsaved changes to the layout for %label will be discarded. This action cannot be undone.', [
         '%label' => $entity->label(),
       ]);
     }
     catch (ContextException) {
       // If the entity is not available, just return a generic message.
-      return $this->t('Any unsaved changes to the layout will be discarded. This action cannot be undone.');
+      return $default;
     }
   }
 
