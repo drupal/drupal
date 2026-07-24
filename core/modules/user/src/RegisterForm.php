@@ -63,8 +63,13 @@ class RegisterForm extends AccountForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $admin = $form_state->getValue('administer_users');
+    $notify = !$form_state->isValueEmpty('notify');
 
-    if (!\Drupal::config('user.settings')->get('verify_mail') || $admin) {
+    // Use the submitted password only when the password field is accessible:
+    // either self-registration with email verification disabled, or admin
+    // creation without the notification checkbox. In all other cases, generate
+    // a random password so the user must set their own via email.
+    if (($admin && !$notify) || !\Drupal::config('user.settings')->get('verify_mail')) {
       $pass = $form_state->getValue('pass');
     }
     else {
