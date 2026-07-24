@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fb7daab92b7450aa308b40c367dffc43",
+    "content-hash": "1976e0c86eb893f92680f2c395aea3dc",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -368,15 +368,15 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "9eb3b6d1261580d22a7234e7b9ccd7f801a9bbb5"
+                "reference": "9e8e316cdddf365f74ccdaa12293cbeeb34bdd58"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
                 "composer-runtime-api": "^2.1",
                 "composer/semver": "^3.3",
-                "doctrine/lexer": "^2 || ^3",
+                "doctrine/lexer": "^3",
                 "drupal/core-composer-scaffold": "self.version",
-                "egulias/email-validator": "^3.2.1|^4.0",
+                "egulias/email-validator": "^4.0",
                 "ext-date": "*",
                 "ext-dom": "*",
                 "ext-filter": "*",
@@ -391,9 +391,9 @@
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
                 "ext-zlib": "*",
-                "guzzlehttp/guzzle": "^7.10 || ^8.0",
-                "guzzlehttp/psr7": "^2.8.0 || ^3.0",
-                "justinrainbow/json-schema": "^5.2 || ^6.5.2",
+                "guzzlehttp/guzzle": "^8.0",
+                "guzzlehttp/psr7": "^3.0",
+                "justinrainbow/json-schema": "^6.5.2",
                 "masterminds/html5": "^2.7",
                 "mck89/peast": "^1.17.4",
                 "pear/archive_tar": "^1.4.14",
@@ -401,7 +401,7 @@
                 "php-tuf/composer-stager": "^2.0",
                 "psr/log": "^3.0",
                 "revolt/event-loop": "^1.0",
-                "sebastian/diff": "^4 || ^5 || ^6 || ^7",
+                "sebastian/diff": "^7",
                 "symfony/console": "^8.0",
                 "symfony/dependency-injection": "^8.0",
                 "symfony/event-dispatcher": "^8.0",
