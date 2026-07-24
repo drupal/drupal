@@ -109,7 +109,7 @@ class NodePerformanceTest extends PerformanceTestBase {
       'SELECT "config"."name" AS "name" FROM "config" "config" WHERE ("collection" = "") AND ("name" LIKE "node.type.%" ESCAPE ' . "'\\\\'" . ') ORDER BY "collection" ASC, "name" ASC',
       'SELECT "base"."uid" AS "uid", "base"."uuid" AS "uuid", "base"."langcode" AS "langcode" FROM "users" "base" WHERE "base"."uid" IN (0)',
       'SELECT "users_field_data".*, "users_field_data"."langcode" AS "users_field_data__langcode" FROM "users_field_data" "users_field_data" WHERE "users_field_data"."uid" IN (0)',
-      'SELECT "users_field_data".*, "users_field_data"."langcode" AS "users_field_data__langcode", "user__roles"."roles_target_id" AS "roles_target_id", "user__roles"."delta" AS "roles_delta" FROM "users_field_data" "users_field_data" INNER JOIN "user__roles" "user__roles" ON "user__roles"."entity_id" = "users_field_data"."uid" AND "user__roles"."langcode" = "users_field_data"."langcode" AND "user__roles"."deleted" = 0 WHERE "users_field_data"."uid" IN (0)',
+      'SELECT "user__roles"."entity_id" AS "id", "user__roles"."langcode" AS "langcode", "user__roles"."roles_target_id" AS "roles_target_id", "user__roles"."delta" AS "roles_delta" FROM "user__roles" "user__roles" WHERE ("user__roles"."entity_id" IN (0)) AND ("user__roles"."deleted" = 0) ORDER BY "user__roles"."delta" ASC',
       'SELECT "name", "data" FROM "config" WHERE "collection" = "" AND "name" IN ( "core.date_format.medium" )',
       'SELECT "name", "data" FROM "config" WHERE "collection" = "" AND "name" IN ( "core.date_format.long" )',
       'SELECT "name", "route" FROM "router" WHERE "name" IN ( "entity.node.canonical" )',
