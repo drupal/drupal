@@ -34,7 +34,7 @@ class PgsqlRequirements implements InstallRequirementsInterface {
         // If the extension is not available, set the requirement error.
         if (!$connection->schema()->extensionExists('pg_trgm')) {
           $requirements['pgsql_extension_pg_trgm']['severity'] = RequirementSeverity::Error;
-          $requirements['pgsql_extension_pg_trgm']['value'] = t('Not created');
+          $requirements['pgsql_extension_pg_trgm']['value'] = t('Not available');
           $requirements['pgsql_extension_pg_trgm']['description'] = t('The <a href=":pg_trgm">pg_trgm</a> PostgreSQL extension is not present. The extension is required by Drupal to improve performance when using PostgreSQL. See <a href=":requirements">Drupal database server requirements</a> for more information.', [
             ':pg_trgm' => 'https://www.postgresql.org/docs/current/pgtrgm.html',
             ':requirements' => 'https://www.drupal.org/docs/system-requirements/database-server-requirements',
