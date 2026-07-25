@@ -46,6 +46,16 @@
         "symfony/var-dumper": "^6.4"
     },
     "replace": {
+        "drupal/ban": "*",
+        "drupal/contact": "*",
+        "drupal/field_layout": "*",
+        "drupal/history": "*",
+        "drupal/search": "*",
+        "drupal/settings_tray": "*",
+        "drupal/shortcut": "*",
+        "drupal/stable9": "*",
+        "drupal/telephone": "*",
+        "drupal/toolbar": "*",
         "symfony/polyfill-php72": "*",
         "symfony/polyfill-php73": "*",
         "symfony/polyfill-php74": "*",
