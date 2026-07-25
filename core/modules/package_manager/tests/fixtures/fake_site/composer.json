@@ -1,6 +1,6 @@
 {
   "name": "fake/site",
-  "description": "bull shit",
+  "description": "Fake site description.",
   "version": "1.2.4",
   "require": {
     "drupal/core-recommended": "9.8.0",
