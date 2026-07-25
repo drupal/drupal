@@ -35,8 +35,8 @@ parameters:
     - ../sites
     # Skip test fixtures.
     - ../*/node_modules/*
-    - */tests/fixtures/*.php
-    - */tests/fixtures/*.php.gz
+    - */fixtures/*.php
+    - */fixtures/*.php.gz
     # Skip the phpstan tmpDir
     - phpstan-tmp/*
     # Skip Drupal's own PHPStan rules test fixtures.
