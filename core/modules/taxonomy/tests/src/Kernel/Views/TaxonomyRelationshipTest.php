@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional\Views;
+namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\node\NodeInterface;
 use Drupal\taxonomy\TermInterface;
@@ -34,13 +34,10 @@ class TaxonomyRelationshipTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected function setUp($import_test_views = TRUE): void {
+    parent::setUp($import_test_views);
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp($import_test_views = TRUE, $modules = []): void {
-    parent::setUp($import_test_views, $modules);
+    $this->installSchema('node', ['node_access']);
 
     // Make term2 parent of term1.
     $this->term1->set('parent', $this->term2->id());
@@ -112,9 +109,9 @@ class TaxonomyRelationshipTest extends TaxonomyTestBase {
 
     // Test node fields are available through relationship.
     \Drupal::service('module_installer')->install(['views_ui']);
-    $this->drupalLogin($this->createUser(['administer views']));
+    $this->setCurrentUser($this->createUser(['administer views']));
     $this->drupalGet('admin/structure/views/view/test_taxonomy_term_relationship');
-    $this->click('#views-add-field');
+    $this->getSession()->getPage()->find('css', '#views-add-field')->click();
     $this->assertSession()->pageTextContains('Body');
   }
 

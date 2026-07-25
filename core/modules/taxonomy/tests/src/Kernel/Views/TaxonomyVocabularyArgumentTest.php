@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional\Views;
+namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\taxonomy\Entity\Vocabulary;
 use PHPUnit\Framework\Attributes\Group;
@@ -14,16 +14,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('taxonomy')]
 #[RunTestsInSeparateProcesses]
 class TaxonomyVocabularyArgumentTest extends TaxonomyTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['taxonomy', 'taxonomy_test_views', 'views'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -45,8 +35,10 @@ class TaxonomyVocabularyArgumentTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE, $modules = []): void {
-    parent::setUp($import_test_views, $modules);
+  protected function setUp($import_test_views = TRUE): void {
+    parent::setUp($import_test_views);
+
+    $this->setUpCurrentUser(permissions: ['access content']);
 
     // Add default vocabulary to list of vocabularies.
     $this->vocabularies[] = $this->vocabulary;

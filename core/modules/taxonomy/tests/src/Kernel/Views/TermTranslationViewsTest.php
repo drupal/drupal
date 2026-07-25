@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional\Views;
+namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\Core\Url;
 use Drupal\Tests\taxonomy\Functional\TaxonomyTranslationTestTrait;
@@ -39,7 +39,7 @@ class TermTranslationViewsTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['taxonomy', 'language', 'content_translation', 'views'];
+  protected static $modules = ['language', 'content_translation'];
 
   /**
    * Views used by this test.
@@ -47,11 +47,6 @@ class TermTranslationViewsTest extends TaxonomyTestBase {
    * @var array
    */
   public static $testViews = ['taxonomy_translated_term_name_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * Language object.
@@ -63,8 +58,9 @@ class TermTranslationViewsTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE, $modules = []): void {
-    parent::setUp($import_test_views, $modules);
+  protected function setUp($import_test_views = TRUE): void {
+    parent::setUp($import_test_views);
+    $this->installConfig(['language']);
     $this->setupLanguages();
     $this->enableTranslation();
     $this->setUpTerms();
@@ -78,7 +74,7 @@ class TermTranslationViewsTest extends TaxonomyTestBase {
    * contextual filters are enabled for two separate view modes.
    */
   public function testTermsTranslationWithContextualFilter(): void {
-    $this->drupalLogin($this->rootUser);
+    $this->setUpCurrentUser(permissions: ['access content']);
 
     foreach ($this->terms as $term) {
       // Test with "Content: Has taxonomy term ID (with depth)" contextual

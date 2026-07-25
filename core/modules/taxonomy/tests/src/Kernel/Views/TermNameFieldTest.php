@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional\Views;
+namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\Core\Link;
 use Drupal\views\Views;
@@ -24,19 +24,13 @@ class TermNameFieldTest extends TaxonomyTestBase {
   public static $testViews = ['test_taxonomy_term_name'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Tests term name field plugin functionality.
    */
   public function testTermNameField(): void {
     $this->term1->name->value = $this->randomMachineName() . ' ' . $this->randomMachineName();
     $this->term1->save();
 
-    $user = $this->drupalCreateUser(['access content']);
-    $this->drupalLogin($user);
+    $this->setCurrentUser($this->createUser(['access content']));
 
     $view = Views::getView('test_taxonomy_term_name');
     $view->initDisplay();

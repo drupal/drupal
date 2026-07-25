@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional\Views;
+namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -15,11 +15,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class TermDisplayConfigurableTest extends TaxonomyTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * Views used by this test.
    *
    * @var array
@@ -30,9 +25,6 @@ class TermDisplayConfigurableTest extends TaxonomyTestBase {
    * Sets base fields to configurable display and check settings are respected.
    */
   public function testDisplayConfigurable(): void {
-    $user = $this->drupalCreateUser(['administer nodes']);
-    $this->drupalLogin($user);
-
     $assert = $this->assertSession();
 
     // Check the taxonomy_term with default non-configurable display.
@@ -50,6 +42,10 @@ class TermDisplayConfigurableTest extends TaxonomyTestBase {
 
     // Enable helper module to make base fields' displays configurable.
     \Drupal::service('module_installer')->install(['taxonomy_term_display_configurable_test']);
+
+    // Need to reload these after installing the module.
+    $this->initMink();
+    $assert = $this->assertSession();
 
     // Configure display.
     $display = \Drupal::service('entity_display.repository')->getViewDisplay('taxonomy_term', $this->vocabulary->id(), 'default');
