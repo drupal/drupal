@@ -30,7 +30,7 @@ class ConnectionTest extends UnitTestCase {
    */
   #[DataProvider('providerCreateConnectionOptionsFromUrl')]
   public function testCreateConnectionOptionsFromUrl(string $url, string $expected): void {
-    $sqlite_connection = new Connection($this->createMock(\PHP_VERSION_ID >= 80400 ? SqliteConnection::class : StubPDO::class), []);
+    $sqlite_connection = new Connection($this->createMock(\PHP_VERSION_ID >= 80400 ? SqliteConnection::class : \PDO::class), []);
     $database = $sqlite_connection->createConnectionOptionsFromUrl($url, NULL);
     $this->assertEquals('sqlite', $database['driver']);
     $this->assertEquals($expected, $database['database']);
