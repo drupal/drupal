@@ -222,7 +222,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
         'DESC' => $this->options['sort_desc_label'],
       ];
       $user_input = $form_state->getUserInput();
-      if (isset($user_input['sort_by']) && isset($exposed_sorts[$user_input['sort_by']]) && isset($this->view->sort[$exposed_sorts[$user_input['sort_by']]])) {
+      if (isset($user_input['sort_by']) && is_string($user_input['sort_by']) && isset($exposed_sorts[$user_input['sort_by']]) && isset($this->view->sort[$exposed_sorts[$user_input['sort_by']]])) {
         $default_sort_order = $this->view->sort[$exposed_sorts[$user_input['sort_by']]]->options['order'];
       }
       else {
@@ -230,7 +230,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
         $default_sort_order = $first_sort->options['order'];
       }
 
-      if (!isset($user_input['sort_by'])) {
+      if (!isset($user_input['sort_by']) || !is_string($user_input['sort_by'])) {
         $keys = array_keys($exposed_sorts);
         $user_input['sort_by'] = array_shift($keys);
         $form_state->setUserInput($user_input);
