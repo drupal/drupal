@@ -211,6 +211,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   public function setFetchMode(FetchAs|int $mode, string|int|null $a1 = NULL, array $a2 = []) {
     if (is_int($mode)) {
       @trigger_error("Passing the \$mode argument as an integer to setFetchMode() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\Statement\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
+      // @phpstan-ignore method.deprecated
       $mode = $this->pdoToFetchAs($mode);
     }
     assert($mode instanceof FetchAs);
@@ -247,6 +248,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   public function fetch(FetchAs|int|null $mode = NULL, $cursorOrientation = NULL, $cursorOffset = NULL) {
     if (is_int($mode)) {
       @trigger_error("Passing the \$mode argument as an integer to fetch() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\Statement\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
+      // @phpstan-ignore method.deprecated
       $mode = $this->pdoToFetchAs($mode);
     }
     assert($mode === NULL || $mode instanceof FetchAs);
@@ -328,6 +330,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   public function fetchAll(FetchAs|int|null $mode = NULL, ?int $columnIndex = NULL, ?array $constructorArguments = NULL) {
     if (is_int($mode)) {
       @trigger_error("Passing the \$mode argument as an integer to fetchAll() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\Statement\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
+      // @phpstan-ignore method.deprecated
       $mode = $this->pdoToFetchAs($mode);
     }
 
@@ -360,6 +363,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   public function fetchAllAssoc(string $key, FetchAs|int|null $fetch = NULL) {
     if (is_int($fetch)) {
       @trigger_error("Passing the \$fetch argument as an integer to fetchAllAssoc() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\Statement\FetchAs enum instead. See https://www.drupal.org/node/3488338", E_USER_DEPRECATED);
+      // @phpstan-ignore method.deprecated
       $fetch = $this->pdoToFetchAs($fetch);
     }
     assert($fetch === NULL || $fetch instanceof FetchAs);
