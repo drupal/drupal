@@ -5,12 +5,24 @@ namespace Drupal\views_ui\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\RedundantEditableConfigNamesTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Form builder for the admin display defaults page.
  *
  * @internal
  */
+#[Route(
+  path: '/admin/structure/views/settings',
+  name: 'views_ui.settings_basic',
+  requirements: [
+    '_permission' => 'administer views',
+  ],
+  defaults: [
+    '_title' => new TranslatableMarkup('Views settings'),
+  ],
+)]
 class BasicSettingsForm extends ConfigFormBase {
   use RedundantEditableConfigNamesTrait;
 
