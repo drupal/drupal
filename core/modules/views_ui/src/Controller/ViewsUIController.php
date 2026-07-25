@@ -5,6 +5,7 @@ namespace Drupal\views_ui\Controller;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewEntityInterface;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Component\Utility\Html;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Returns responses for Views UI routes.
@@ -45,6 +47,12 @@ class ViewsUIController extends ControllerBase {
    * @return array
    *   The Views fields report page.
    */
+  #[Route(
+    path: '/admin/reports/fields/views-fields',
+    name: 'views_ui.reports_fields',
+    requirements: ['_permission' => 'administer views'],
+    defaults: ['_title' => new TranslatableMarkup('Used in views')],
+  )]
   public function reportFields() {
     $views = $this->entityTypeManager()->getStorage('view')->loadMultiple();
 
@@ -106,6 +114,12 @@ class ViewsUIController extends ControllerBase {
    * @return array
    *   The Views plugins report page.
    */
+  #[Route(
+    path: '/admin/reports/views-plugins',
+    name: 'views_ui.reports_plugins',
+    requirements: ['_permission' => 'administer views'],
+    defaults: ['_title' => new TranslatableMarkup('Views plugins')],
+  )]
   public function reportPlugins() {
     $rows = Views::pluginList();
     foreach ($rows as &$row) {
@@ -146,6 +160,24 @@ class ViewsUIController extends ControllerBase {
    *   Either returns a rebuilt listing page as an AJAX response, or redirects
    *   back to the listing page.
    */
+  #[Route(
+    path: '/admin/structure/views/view/{view}/enable',
+    name: 'entity.view.enable',
+    defaults: ['op' => 'enable'],
+    requirements: [
+      '_entity_access' => 'view.enable',
+      '_csrf_token' => 'TRUE',
+    ],
+  )]
+  #[Route(
+    path: '/admin/structure/views/view/{view}/disable',
+    name: 'entity.view.disable',
+    defaults: ['op' => 'disable'],
+    requirements: [
+      '_entity_access' => 'view.disable',
+      '_csrf_token' => 'TRUE',
+    ],
+  )]
   public function ajaxOperation(ViewEntityInterface $view, $op, Request $request) {
     // Perform the operation.
     $view->$op()->save();
@@ -171,6 +203,11 @@ class ViewsUIController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   A JSON response containing the autocomplete suggestions for Views tags.
    */
+  #[Route(
+    path: '/admin/views/ajax/autocomplete/tag',
+    name: 'views_ui.autocomplete',
+    requirements: ['_permission' => 'administer views'],
+  )]
   public function autocompleteTag(Request $request) {
     $matches = [];
     $string = $request->query->get('q');
@@ -208,6 +245,33 @@ class ViewsUIController extends ControllerBase {
    * @return array
    *   An array containing the Views edit and preview forms.
    */
+  #[Route(
+    path: '/admin/structure/views/view/{view}',
+    name: 'entity.view.edit_form',
+    options: [
+      'parameters' => [
+        'view' => [
+          'tempstore' => TRUE,
+          'type' => 'entity:view',
+        ],
+      ],
+    ],
+    requirements: ['_entity_access' => 'view.update'],
+  )]
+  #[Route(
+    path: '/admin/structure/views/view/{view}/edit/{display_id}',
+    name: 'entity.view.edit_display_form',
+    defaults: ['display_id' => NULL],
+    options: [
+      'parameters' => [
+        'view' => [
+          'tempstore' => TRUE,
+          'type' => 'entity:view',
+        ],
+      ],
+    ],
+    requirements: ['_entity_access' => 'view.update'],
+  )]
   public function edit(ViewUI $view, $display_id = NULL) {
     $name = $view->label();
     $data = $this->viewsData->get($view->get('base_table'));

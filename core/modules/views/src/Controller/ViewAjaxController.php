@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Defines a controller to load a view via AJAX.
@@ -81,6 +82,11 @@ class ViewAjaxController implements ContainerInjectionInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   Thrown when the view was not found.
    */
+  #[Route(
+    path: '/views/ajax',
+    name: 'views.ajax',
+    requirements: ['_access' => 'TRUE'],
+  )]
   public function ajaxView(Request $request) {
     $name = $request->query->get('view_name', $request->request->get('view_name'));
     $display_id = $request->query->get('view_display_id', $request->request->get('view_display_id'));
