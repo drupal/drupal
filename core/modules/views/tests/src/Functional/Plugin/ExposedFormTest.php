@@ -419,6 +419,18 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertCacheContexts($contexts);
     $this->assertIds(range(1, 10, 1));
 
+    // Test that malformed sort_by is not causing PHP errors.
+    $this->drupalGet('test_exposed_form_sort_items_per_page', [
+      'query' => [
+        // Sort by must be a string, not an array.
+        'sort_by' => [
+          'aaa' => 'bbb',
+        ],
+      ],
+    ]);
+    $this->assertCacheContexts($contexts);
+    $this->assertIds(range(1, 10, 1));
+
     $this->drupalGet('test_exposed_form_sort_items_per_page', ['query' => ['sort_order' => 'DESC']]);
     $this->assertCacheContexts($contexts);
     $this->assertIds(range(50, 41, 1));
