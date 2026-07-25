@@ -110,7 +110,7 @@ class KernelTestHttpRequestTest extends KernelTestBase {
     $this->drupalGet('kernel-test-example');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->titleEquals('Example route | Drupal');
-    $this->assertSession()->pageTextContains($this->testMarkup);
+    $this->assertSession()->assertEscaped($this->testMarkup);
   }
 
   /**
