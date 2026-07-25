@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\Core\Url;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
+use Drupal\Tests\taxonomy\Functional\TaxonomyTranslationTestTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -45,13 +46,10 @@ class TermTranslationTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
+    $this->config('system.site')->set('name', 'Drupal')->save();
+    $this->installConfig(['language']);
     $this->setupLanguages();
     $this->vocabulary = $this->createVocabulary();
     $this->enableTranslation();
@@ -63,6 +61,8 @@ class TermTranslationTest extends TaxonomyTestBase {
    * Tests translated breadcrumbs.
    */
   public function testTranslatedBreadcrumbs(): void {
+    $this->setUpCurrentUser(permissions: ['access content']);
+
     // Ensure non-translated breadcrumb is correct.
     $breadcrumb = [Url::fromRoute('<front>')->toString() => 'Home'];
     foreach ($this->terms as $term) {
@@ -106,7 +106,7 @@ class TermTranslationTest extends TaxonomyTestBase {
         'type' => 'options_buttons',
       ])
       ->save();
-    $this->drupalLogin($this->drupalCreateUser(['create article content']));
+    $this->setUpCurrentUser(permissions: ['access content', 'create article content']);
 
     // Test terms are listed.
     $this->drupalGet('node/add/article');

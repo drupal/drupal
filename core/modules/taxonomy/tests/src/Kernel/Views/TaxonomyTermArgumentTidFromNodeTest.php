@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional\Views;
+namespace Drupal\Tests\taxonomy\Kernel\Views;
 
+use Drupal\Core\Extension\ThemeInstallerInterface;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,6 +15,10 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('taxonomy')]
 #[RunTestsInSeparateProcesses]
 class TaxonomyTermArgumentTidFromNodeTest extends TaxonomyTestBase {
+
+  use BlockCreationTrait {
+    placeBlock as drupalPlaceBlock;
+  }
 
   /**
    * {@inheritdoc}
@@ -28,18 +34,13 @@ class TaxonomyTermArgumentTidFromNodeTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
   public static $testViews = ['test_argument_tid_from_node'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE, $modules = []): void {
-    parent::setUp($import_test_views, $modules);
+  protected function setUp($import_test_views = TRUE): void {
+    parent::setUp($import_test_views);
 
     // Remove the term field from the display, replace with the view.
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
@@ -48,7 +49,14 @@ class TaxonomyTermArgumentTidFromNodeTest extends TaxonomyTestBase {
       ->removeComponent('field_views_testing_tags')
       ->save();
 
+    \Drupal::service(ThemeInstallerInterface::class)->install(['stark']);
+    $this->config('system.theme')->set('default', 'stark')->save();
+
+    $this->installSchema('node', ['node_access']);
+
     $this->drupalPlaceBlock('views_block:test_argument_tid_from_node-block_1');
+
+    $this->setUpCurrentUser(permissions: ['access content']);
   }
 
   /**

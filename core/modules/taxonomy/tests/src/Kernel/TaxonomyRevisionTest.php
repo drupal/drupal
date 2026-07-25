@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\Tests\taxonomy\Kernel;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -14,9 +15,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('taxonomy')]
 #[RunTestsInSeparateProcesses]
-class TaxonomyRevisionTest extends BrowserTestBase {
+class TaxonomyRevisionTest extends KernelTestBase {
 
   use TaxonomyTestTrait;
+  use UserCreationTrait {
+    createUser as drupalCreateUser;
+  }
 
   /**
    * {@inheritdoc}
@@ -24,12 +28,19 @@ class TaxonomyRevisionTest extends BrowserTestBase {
   protected static $modules = [
     'system',
     'taxonomy',
+    'user',
+    'text',
+    'filter',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('taxonomy_term');
+  }
 
   /**
    * Tests default revision settings on vocabularies.
@@ -38,7 +49,7 @@ class TaxonomyRevisionTest extends BrowserTestBase {
     $assert = $this->assertSession();
     $vocabulary1 = $this->createVocabulary(['new_revision' => TRUE]);
     $vocabulary2 = $this->createVocabulary(['new_revision' => FALSE]);
-    $user = $this->createUser([
+    $user = $this->drupalCreateUser([
       'administer taxonomy',
     ]);
     $term1 = $this->createTerm($vocabulary1);
@@ -47,7 +58,7 @@ class TaxonomyRevisionTest extends BrowserTestBase {
     // Create some revisions so revision checkbox is visible.
     $term1 = $this->createTaxonomyTermRevision($term1);
     $term2 = $this->createTaxonomyTermRevision($term2);
-    $this->drupalLogin($user);
+    $this->setCurrentUser($user);
     $this->drupalGet($term1->toUrl('edit-form'));
     $assert->statusCodeEquals(200);
     $assert->checkboxChecked('Create new revision');

@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\Core\Entity\Controller\VersionHistoryController;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\taxonomy\VocabularyInterface;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -18,9 +20,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[CoversClass(VersionHistoryController::class)]
 #[Group('taxonomy')]
 #[RunTestsInSeparateProcesses]
-class TaxonomyRevisionVersionHistoryTest extends BrowserTestBase {
+class TaxonomyRevisionVersionHistoryTest extends KernelTestBase {
 
   use TaxonomyTestTrait;
+  use UserCreationTrait {
+    createUser as drupalCreateUser;
+  }
 
   /**
    * {@inheritdoc}
@@ -28,12 +33,9 @@ class TaxonomyRevisionVersionHistoryTest extends BrowserTestBase {
   protected static $modules = [
     'system',
     'taxonomy',
+    'user',
+    'text',
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -46,16 +48,17 @@ class TaxonomyRevisionVersionHistoryTest extends BrowserTestBase {
 
   /**
    * Vocabulary for testing.
-   *
-   * @var \Drupal\taxonomy\VocabularyInterface
    */
-  private $vocabulary;
+  private VocabularyInterface $vocabulary;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('taxonomy_term');
+    $this->installConfig(['system']);
     $this->vocabulary = $this->createVocabulary(['vid' => 'test', 'name' => 'Test']);
   }
 
@@ -92,7 +95,7 @@ class TaxonomyRevisionVersionHistoryTest extends BrowserTestBase {
       ->setNewRevision();
     $entity->save();
 
-    $this->drupalLogin($this->drupalCreateUser($this->permissions));
+    $this->setCurrentUser($this->drupalCreateUser($this->permissions));
     $this->drupalGet($entity->toUrl('version-history'));
     $this->assertSession()->elementsCount('css', 'table tbody tr', 3);
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\taxonomy\Functional;
+namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\views\Views;
@@ -19,12 +19,7 @@ class RssTest extends TaxonomyTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'field_ui', 'views'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['field_ui', 'views'];
 
   /**
    * Vocabulary for testing.
@@ -46,7 +41,8 @@ class RssTest extends TaxonomyTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->drupalLogin($this->drupalCreateUser([
+    $this->setCurrentUser($this->drupalCreateUser([
+      'access content',
       'administer taxonomy',
       'bypass node access',
       'administer content types',
