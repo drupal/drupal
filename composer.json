@@ -47,6 +47,10 @@
         "vincentlanglet/twig-cs-fixer": "^4.0"
     },
     "replace": {
+        "drupal/search": "*",
+        "drupal/settings_tray": "*",
+        "drupal/shortcut": "*",
+        "drupal/toolbar": "*",
         "symfony/polyfill-php72": "*",
         "symfony/polyfill-php73": "*",
         "symfony/polyfill-php74": "*",
