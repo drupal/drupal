@@ -20,7 +20,7 @@ class SearchEntityOperationsCacheabilityTest extends EntityOperationsCacheabilit
    */
   public static function providerEntityOperationsCacheability(): iterable {
     yield [
-      ['user', 'search'],
+      ['user', 'search', 'search_user'],
       'search_page',
       ['plugin' => 'user_search', 'path' => '/test_user_search'],
       ['config:search.page.test'],

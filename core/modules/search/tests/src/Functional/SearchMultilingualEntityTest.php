@@ -30,7 +30,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
   /**
    * Node search plugin.
    *
-   * @var \Drupal\node\Plugin\Search\NodeSearch
+   * @var \Drupal\node\Plugin\Search\SearchNode
    */
   protected $plugin;
 
@@ -44,6 +44,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     'node',
     'search',
     'search_node',
+    'search_user',
   ];
 
   /**
