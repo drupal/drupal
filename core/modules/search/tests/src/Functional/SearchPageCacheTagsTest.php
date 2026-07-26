@@ -24,8 +24,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'search', 'search_node'];
-
+  protected static $modules = ['node', 'search', 'search_node', 'search_user'];
   /**
    * {@inheritdoc}
    */

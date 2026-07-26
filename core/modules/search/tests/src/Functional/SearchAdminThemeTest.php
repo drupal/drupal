@@ -29,6 +29,8 @@ class SearchAdminThemeTest extends BrowserTestBase {
     'search_help',
     'search_node',
     'search_extra_type',
+    'search_help',
+    'search_user',
     'user',
   ];
 
@@ -71,7 +73,7 @@ class SearchAdminThemeTest extends BrowserTestBase {
   /**
    * Tests that search results could be displayed in administration theme.
    *
-   * @see \Drupal\node\Plugin\Search\NodeSearch
+   * @see \Drupal\node\Plugin\Search\SearchNode
    * @see \Drupal\search_extra_type\Plugin\Search\SearchExtraTypeSearch
    * @see \Drupal\user\Plugin\Search\SearchUser
    */
