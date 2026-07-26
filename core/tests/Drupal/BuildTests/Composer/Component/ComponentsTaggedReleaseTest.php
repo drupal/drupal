@@ -41,7 +41,21 @@ class ComponentsTaggedReleaseTest extends ComposerBuildTestBase {
    */
   #[DataProvider('providerVersionConstraint')]
   public function testReleaseTagging(string $tag, string $constraint): void {
-    $this->copyCodebase();
+
+    $drupal_root = $this->getWorkingPathDrupalRoot() ?? '';
+
+    $finder = $this->getCodebaseFinder();
+    $finder->notPath("#^{$drupal_root}core/assets#");
+    $finder->notPath("#^{$drupal_root}core/misc#");
+    $finder->notPath("#^{$drupal_root}core/modules#");
+    $finder->notPath("#^{$drupal_root}core/phpstan-tmp#");
+    $finder->notPath("#^{$drupal_root}core/profiles#");
+    $finder->notPath("#^{$drupal_root}core/recipes#");
+    $finder->notPath("#^{$drupal_root}core/themes#");
+    $finder->notPath("#^{$drupal_root}(.+)tests#");
+    $finder->notPath("#^{$drupal_root}vendor#");
+
+    $this->copyCodebase($finder->getIterator());
     $drupal_root = $this->getWorkspaceDirectory();
 
     // Set the core version.
