@@ -124,7 +124,7 @@ function search_schema(): array {
 }
 
 /**
- * Install Search Node if Search and Node are installed.
+ * Install Search Node and Search and Node are installed.
  */
 function search_update_11400(): void {
   // Moved to system_update_11401().
@@ -155,14 +155,5 @@ function search_update_11402(): void {
     /** @var \Drupal\search\SearchPageInterface|null $node_search_page */
     $node_search_page = \Drupal::entityTypeManager()->getStorage('search_page')->load('node_search');
     $node_search_page?->calculateDependencies()->save();
-  }
-}
-
-/**
- * Install Search user module if user is installed.
- */
-function search_update_11403(): void {
-  if (\Drupal::moduleHandler()->moduleExists('user') && !\Drupal::moduleHandler()->moduleExists('search_user')) {
-    \Drupal::service('module_installer')->install(['search_user']);
   }
 }

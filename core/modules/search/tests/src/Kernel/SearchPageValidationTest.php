@@ -23,7 +23,7 @@ class SearchPageValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['search', 'search_user', 'user'];
+  protected static $modules = ['search', 'user'];
 
   /**
    * {@inheritdoc}

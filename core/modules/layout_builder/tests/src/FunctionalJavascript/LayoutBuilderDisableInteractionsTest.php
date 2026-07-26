@@ -39,7 +39,6 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     'layout_builder',
     'node',
     'search',
-    'search_node',
     'contextual',
     'off_canvas_test',
   ];

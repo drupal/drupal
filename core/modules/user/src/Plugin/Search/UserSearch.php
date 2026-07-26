@@ -4,6 +4,7 @@ namespace Drupal\user\Plugin\Search;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -15,11 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Executes a keyword search for users against the {users} database table.
- *
- * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Instead, use
- *    \Drupal\search_user\Plugin\Search\SearchUser.
- *
- * @see https://www.drupal.org/node/3590230
  */
 #[Search(
   id: 'user_search',
@@ -89,7 +85,6 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
    *   The plugin implementation definition.
    */
   public function __construct(Connection $database, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, AccountInterface $current_user, array $configuration, $plugin_id, $plugin_definition) {
-    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Instead, use \Drupal\search_user\Plugin\Search\SearchUser See https://www.drupal.org/node/3590230', E_USER_DEPRECATED);
     $this->database = $database;
     $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
@@ -102,15 +97,84 @@ class UserSearch extends SearchPluginBase implements AccessibleInterface {
   /**
    * {@inheritdoc}
    */
-  public function access($operation = 'view', ?AccountInterface $account = NULL, $return_as_object = FALSE): AccessResult {
-    return AccessResult::forbidden();
+  public function access($operation = 'view', ?AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $result = AccessResult::allowedIf(!empty($account) && $account->hasPermission('access user profiles'))->cachePerPermissions();
+    return $return_as_object ? $result : $result->isAllowed();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function execute(): array {
-    return [];
+  public function execute() {
+    $results = [];
+    if (!$this->isSearchExecutable()) {
+      return $results;
+    }
+
+    // Process the keywords.
+    $keys = $this->keywords;
+    // Escape for LIKE matching.
+    $keys = $this->database->escapeLike($keys);
+    // Replace wildcards with MySQL/PostgreSQL wildcards.
+    $keys = preg_replace('!\*+!', '%', $keys);
+
+    // Run the query to find matching users.
+    $query = $this->database
+      ->select('users_field_data', 'users')
+      ->extend(PagerSelectExtender::class);
+    $query->fields('users', ['uid']);
+    $query->condition('default_langcode', 1);
+    if ($this->currentUser->hasPermission('administer users')) {
+      // Administrators can also search in the otherwise private email field,
+      // and they don't need to be restricted to only active users.
+      $query->fields('users', ['mail']);
+      $query->condition($query->orConditionGroup()
+        ->condition('name', '%' . $keys . '%', 'LIKE')
+        ->condition('mail', '%' . $keys . '%', 'LIKE')
+      );
+    }
+    else {
+      // Regular users can only search via usernames, and we do not show them
+      // blocked accounts.
+      $query->condition('name', '%' . $keys . '%', 'LIKE')
+        ->condition('status', 1);
+    }
+    $uids = $query
+      ->limit(15)
+      ->execute()
+      ->fetchCol();
+    $accounts = $this->entityTypeManager->getStorage('user')->loadMultiple($uids);
+
+    foreach ($accounts as $account) {
+      $result = [
+        'title' => $account->getDisplayName(),
+        'link' => $account->toUrl('canonical', ['absolute' => TRUE])->toString(),
+      ];
+      if ($this->currentUser->hasPermission('administer users')) {
+        $result['title'] .= ' (' . $account->getEmail() . ')';
+      }
+      $this->addCacheableDependency($account);
+      $results[] = $result;
+    }
+
+    return $results;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHelp() {
+    $help = [
+      'list' => [
+        '#theme' => 'item_list',
+        '#items' => [
+          $this->t('User search looks for user names and partial user names. Example: mar would match usernames mar, delmar, and maryjane.'),
+          $this->t('You can use * as a wildcard within your keyword. Example: m*r would match user names mar, delmar, and elementary.'),
+        ],
+      ],
+    ];
+
+    return $help;
   }
 
 }

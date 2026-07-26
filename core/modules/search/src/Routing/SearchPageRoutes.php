@@ -111,6 +111,7 @@ class SearchPageRoutes implements ContainerInjectionInterface {
           ],
         ]
       );
+
       // Use a try/catch because during an update the provider of the plugin
       // may not be installed.
       try {

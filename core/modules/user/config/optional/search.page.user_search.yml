@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - search_user
+    - user
 id: user_search
 label: Users
 path: user

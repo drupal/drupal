@@ -1,8 +1,0 @@
-name: Search user
-type: module
-description: 'Provides a search plugin for searching users.'
-package: Core
-version: VERSION
-dependencies:
-  - drupal:search
-  - drupal:user
