@@ -22,7 +22,7 @@ class TypeResolverTest extends UnitTestCase {
    */
   // phpcs:disable Drupal.Arrays.Array.LongLineDeclaration
   #[TestWith(["[foo.%bar.qux]", "`foo.%bar.qux` is not a valid dynamic type expression. Dynamic type expressions must contain at least `%parent`, `%key`, or `%type`.`", ["foo" => "foo"]])]
-  #[TestWith(["[%paren.field_type]", "`%paren.field_type` is not a valid dynamic type expression. Dynamic type expressions must contain at least `%parent`, `%key`, or `%type`."])]
+  #[TestWith(["[%paren.field_type]", "`%paren.field_type` is not a valid dynamic type expression. Dynamic type expressions must contain at least `%parent`, `%key`, or `%type`.`"])]
   #[TestWith(["[something.%type]", "`%type` can only used when immediately preceded by `%parent` in `something.%type`", ["something" => "something"]])]
   // phpcs:enable
   public function testInvalidType(string $name, string $message, array $data = []): void {

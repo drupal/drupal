@@ -481,7 +481,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
 
     $entity = new StubConfigEntity(['id' => 'foo'], 'test_entity_type');
     $this->expectException(ConfigDuplicateUUIDException::class);
-    $this->expectExceptionMessageIs('when this UUID is already used for');
+    $this->expectExceptionMessageIs("Attempt to save a configuration entity 'foo' with UUID '' when this UUID is already used for 'baz'");
     $this->entityStorage->save($entity);
   }
 
@@ -567,7 +567,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
 
     $entity->set('uuid', 'baz');
     $this->expectException(ConfigDuplicateUUIDException::class);
-    $this->expectExceptionMessageIs('when this entity already exists with UUID');
+    $this->expectExceptionMessageIs("Attempt to save a configuration entity 'foo' with UUID 'baz' when this entity already exists with UUID ''");
     $this->entityStorage->save($entity);
   }
 

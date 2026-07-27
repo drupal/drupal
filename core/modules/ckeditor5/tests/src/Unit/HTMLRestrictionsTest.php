@@ -147,19 +147,19 @@ class HTMLRestrictionsTest extends UnitTestCase {
     // Invalid overrides of globally disallowed attributes.
     yield 'INVALID: <foo bar> when "bar" is globally disallowed' => [
       ['foo' => ['bar' => TRUE], '*' => ['bar' => FALSE, 'baz' => TRUE]],
-      'The attribute restrictions in "<foo bar>" are allowing attributes "bar" that are disallowed by the special "*" global attribute restrictions',
+      'The attribute restrictions in "<foo bar>" are allowing attributes "bar" that are disallowed by the special "*" global attribute restrictions.',
     ];
     yield 'INVALID: <foo style> when "style" is globally disallowed' => [
       ['foo' => ['style' => TRUE], '*' => ['bar' => FALSE, 'baz' => TRUE, 'style' => FALSE]],
-      'The attribute restrictions in "<foo style>" are allowing attributes "bar", "style" that are disallowed by the special "*" global attribute restrictions',
+      'The attribute restrictions in "<foo style>" are allowing attributes "bar", "style" that are disallowed by the special "*" global attribute restrictions.',
     ];
     yield 'INVALID: <foo on*> when "on*" is globally disallowed' => [
       ['foo' => ['on*' => TRUE], '*' => ['bar' => FALSE, 'baz' => TRUE, 'style' => FALSE, 'on*' => FALSE]],
-      'The attribute restrictions in "<foo on*>" are allowing attributes "bar", "style", "on*" that are disallowed by the special "*" global attribute restrictions',
+      'The attribute restrictions in "<foo on*>" are allowing attributes "bar", "style", "on*" that are disallowed by the special "*" global attribute restrictions.',
     ];
     yield 'INVALID: <foo ontouch> when "on" is globally disallowed' => [
       ['foo' => ['ontouch' => TRUE], '*' => ['bar' => FALSE, 'baz' => TRUE, 'style' => FALSE, 'on*' => FALSE]],
-      'The attribute restrictions in "<foo ontouch>" are allowing attributes "bar", "style", "on*" that are disallowed by the special "*" global attribute restrictions',
+      'The attribute restrictions in "<foo ontouch>" are allowing attributes "bar", "style", "on*" that are disallowed by the special "*" global attribute restrictions.',
     ];
   }
 

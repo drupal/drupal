@@ -51,7 +51,7 @@ class LoginCommandTest extends KernelTestBase {
     $blockedUser->block()->save();
 
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage("Account {$blockedUser->getAccountName()} is blocked and thus cannot login.");
+    $this->expectExceptionMessageIs("Account {$blockedUser->getAccountName()} is blocked and thus cannot login.");
 
     $tester = $this->buildLoginCommandTester();
     $tester->execute(['--uid' => $blockedUser->id()]);
@@ -67,7 +67,7 @@ class LoginCommandTest extends KernelTestBase {
   #[DataProvider('invalidUserProvider')]
   public function testLoginInvalidUsers(string $property, string $value): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage("Unable to load user by $property: $value");
+    $this->expectExceptionMessageIs("Unable to load user by $property: $value");
 
     $tester = $this->buildLoginCommandTester();
     $tester->execute(['--' . $property => $value]);

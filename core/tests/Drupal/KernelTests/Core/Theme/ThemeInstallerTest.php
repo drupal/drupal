@@ -237,7 +237,7 @@ class ThemeInstallerTest extends KernelTestBase {
       'theme depending on a module that does not exist' => [
         'test_theme_depending_on_nonexisting_module',
         [],
-        "Unable to install theme: 'test_theme_depending_on_nonexisting_module' due to unmet module dependencies: 'test_module_non_existing",
+        "Unable to install theme: 'test_theme_depending_on_nonexisting_module' due to unmet module dependencies: 'test_module_non_existing'.",
       ],
       'theme depending on an installed but incompatible module' => [
         'test_theme_depending_on_constrained_modules',

@@ -104,7 +104,7 @@ class StringEqualsConcatenatedValuesConstraintValidatorTest extends KernelTestBa
     $editable_config->set('string_concat_values', $result);
     $editable_config->save();
 
-    $this->expectExceptionMessageIs("Schema errors for config_test.validation with the following errors: 0 [string_concat_values] Expected &#039;$result&#039;, not &#039;$invalid_result&#039;. Format: &#039;&amp;lt;%parent.string_concat_value_1&amp;gt;.&amp;lt;%parent.string_concat_value_2&amp;gt;&#039;");
+    $this->expectExceptionMessageIs("Schema errors for config_test.validation with the following errors: 0 [string_concat_values] Expected &#039;{$result}&#039;, not &#039;{$invalid_result}&#039;. Format: &#039;&amp;lt;%parent.string_concat_value_1&amp;gt;.&amp;lt;%parent.string_concat_value_2&amp;gt;&#039;.");
     $editable_config->set('string_concat_values', $invalid_result);
     $editable_config->save();
   }

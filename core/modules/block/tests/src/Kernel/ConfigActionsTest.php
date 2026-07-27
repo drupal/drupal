@@ -89,7 +89,7 @@ class ConfigActionsTest extends KernelTestBase {
   #[TestWith(["placeBlockInAdminTheme"])]
   public function testPlaceBlockActionOnlyWorksOnBlocks(string $action): void {
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessageIs("The \"user_role\" entity does not support the \"$action\" config action.");
+    $this->expectExceptionMessageIsOrContains("The \"user_role\" entity does not support the \"$action\" config action.");
     $this->configActionManager->applyAction($action, 'user.role.anonymous', []);
   }
 

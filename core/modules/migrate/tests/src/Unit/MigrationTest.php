@@ -136,7 +136,7 @@ class MigrationTest extends UnitTestCase {
       ->willReturn(['test_b' => $migration_b, 'test_c' => $migration_c, 'test_d' => $migration_d]);
 
     $this->expectException(RequirementsException::class);
-    $this->expectExceptionMessageIs('Missing migrations test_a, test_c');
+    $this->expectExceptionMessageIs('Missing migrations test_a, test_c.');
     $migration->checkRequirements();
   }
 

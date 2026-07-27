@@ -771,7 +771,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
     return [
       'css_bad_category' => [
         'css_bad_category',
-        'See https://www.drupal.org/node/2274843.',
+        'Invalid CSS category: bad_category. See https://www.drupal.org/node/2274843.',
       ],
       'Improper CSS nesting' => [
         'css_bad_nesting',

@@ -60,7 +60,7 @@ class ConditionTest extends UnitTestCase {
     ];
 
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('Invalid operator "LIKE"');
+    $this->expectExceptionMessageIs('Invalid operator "LIKE" for a case-insensitive array condition. Allowed operators are "IN" and "NOT IN".');
 
     Condition::translateCondition($condition, $sql_query, FALSE);
   }

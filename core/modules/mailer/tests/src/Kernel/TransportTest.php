@@ -156,7 +156,7 @@ class TransportTest extends KernelTestBase {
   public function testMissingFactory(): void {
     $this->setUpMailerDsnConfigOverride('drupal.no-transport', 'default');
 
-    $this->expectExceptionMessageIs('The "drupal.no-transport" scheme is not supported');
+    $this->expectExceptionMessageIs('The "drupal.no-transport" scheme is not supported.');
     $this->container->get(TransportInterface::class);
   }
 

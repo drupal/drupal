@@ -213,7 +213,7 @@ EOF;
     ]);
     $discovery = new HelpTopicDiscovery(['help' => vfsStream::url('root/modules/help/help_topics')]);
     $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessageIs("Malformed YAML in help topic \"vfs://root/modules/help/help_topics/core.topic.html.twig\":");
+    $this->expectExceptionMessageIsOrContains("Malformed YAML in help topic \"vfs://root/modules/help/help_topics/core.topic.html.twig\":");
     $discovery->getDefinitions();
   }
 
