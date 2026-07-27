@@ -1,0 +1,9 @@
+name: 'Install config_enum_test with config'
+type: 'Testing'
+install:
+  - config_enum_test
+config:
+  actions:
+    config_enum_test.settings:
+      simpleConfigUpdate:
+        foo: !php/enum Drupal\config_enum_test\DoesNotExistEnumValue::No

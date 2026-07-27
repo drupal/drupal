@@ -1,0 +1,6 @@
+name: 'Configuration test for enum with dependency'
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:config_enum_test

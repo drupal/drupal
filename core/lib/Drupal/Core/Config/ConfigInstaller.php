@@ -556,8 +556,10 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $names = (array) $name;
     $enabled_extensions = $this->getEnabledExtensions();
     $previous_config_names = [];
+    $autoloader_paths = [];
 
     foreach ($names as $name) {
+      $autoloader_paths[$name] = \Drupal::root() . '/' . $this->extensionPathResolver->getPath($type, $name);
       // Add the extension that will be enabled to the list of enabled
       // extensions.
       $enabled_extensions[] = $name;
@@ -571,6 +573,10 @@ class ConfigInstaller implements ConfigInstallerInterface {
 
       // Gets profile storages to search for overrides if necessary.
       $profile_storages = $this->getProfileStorages($name);
+
+      // Ensure enums and constants can be autoloaded from the module or its
+      // dependencies being installed.
+      $storage = new AutoloadingStorage($storage, $autoloader_paths);
 
       // Check the dependencies of configuration provided by the module.
       [

@@ -11,6 +11,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -19,12 +20,14 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[CoversClass(FileStorageFactory::class)]
 #[Group('config')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class FileStorageFactoryTest extends KernelTestBase {
 
   /**
    * Tests get sync.
    */
   public function testGetSync(): void {
+    $this->expectUserDeprecationMessage('Drupal\Core\Config\FileStorageFactory::getSync() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use the "config.storage.sync" service instead. See https://www.drupal.org/node/3586484');
 
     // Write some random data to the sync storage.
     $name = $this->randomMachineName();

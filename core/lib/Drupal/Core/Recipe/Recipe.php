@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Recipe;
 
+use Composer\Autoload\ClassLoader;
+use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Core\DefaultContent\Finder;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ExtensionDiscovery;
@@ -315,7 +317,8 @@ final class Recipe {
       ]),
     ]);
 
-    $recipe_data = Yaml::decode($recipe_contents);
+    $recipe_data = static::parseRecipeContents($recipe_contents);
+
     /** @var \Symfony\Component\Validator\ConstraintViolationList $violations */
     $violations = Validation::createValidator()->validate($recipe_data, $constraints);
     if (count($violations) > 0) {
@@ -330,6 +333,69 @@ final class Recipe {
       'content' => [],
     ];
     return $recipe_data;
+  }
+
+  /**
+   * Parses recipe files.
+   *
+   * If the recipe contains constants or enums from uninstalled extensions, a
+   * classloader will be registered to autoload them.
+   *
+   * @param string $contents
+   *   The recipe file contents.
+   * @param string[] $already_loaded
+   *   The list of extensions that have been added to the autoloader. Used by
+   *   recursive calls to this method.
+   *
+   * @return array
+   *   The parsed recipe contents.
+   */
+  private static function parseRecipeContents(string $contents, array $already_loaded = []): array {
+    try {
+      return Yaml::decode($contents);
+    }
+    catch (InvalidDataTypeException $e) {
+      // Extract the possibly uninstalled Drupal extension from the exception
+      // message, see \Symfony\Component\Yaml\Inline::evaluateScalar().
+      if (preg_match('/^The (enum|constant) "Drupal\\\\([^\\\\]*)\\\\[^"]*" is not defined/', $e->getMessage(), $matches)) {
+        $extension = $matches[2];
+
+        foreach (['module', 'profile', 'theme'] as $list_service_name) {
+          /** @var \Drupal\Core\Extension\ExtensionList $list_service */
+          $list_service = \Drupal::service('extension.list.' . $list_service_name);
+
+          // Does the extension exist on the file system.
+          if ($list_service->exists($extension)) {
+
+            // Is the extension installed already.
+            $installed = match($list_service_name) {
+              'module', 'profile' => \Drupal::moduleHandler()->moduleExists($extension),
+              'theme' => \Drupal::service('theme_handler')->themeExists($extension),
+            };
+            if ($installed || in_array($extension, $already_loaded, TRUE)) {
+              // The extension is installed, the missing enum or constant will
+              // not be fixed by altering the classloader.
+              throw $e;
+            }
+
+            // Register the extension with the classloader and try parsing the
+            // recipe contents again.
+            $dir = $list_service->getPath($extension);
+            $classloader = new ClassLoader();
+            $classloader->addPsr4("Drupal\\$extension\\", $dir . '/src');
+            $already_loaded[] = $extension;
+            $classloader->register();
+            try {
+              return static::parseRecipeContents($contents, $already_loaded);
+            }
+            finally {
+              $classloader->unregister();
+            }
+          }
+        }
+      }
+      throw $e;
+    }
   }
 
   /**

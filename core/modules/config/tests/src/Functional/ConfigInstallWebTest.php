@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config\Functional;
 
+use Drupal\config_enum_test\AnotherEnumValue;
+use Drupal\config_enum_test\EnumValue;
 use Drupal\config_test\Entity\ConfigTest;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\StorageInterface;
@@ -258,6 +260,38 @@ class ConfigInstallWebTest extends BrowserTestBase {
     }
     $this->drupalGet('/admin/reports/status');
     $this->assertSession()->pageTextContains("The directory $directory does not exist.");
+  }
+
+  /**
+   * Tests installing modules with enums and constants in config.
+   */
+  public function testEnumsAndConstantsInModules(): void {
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('admin/modules');
+
+    // Install modules using enums at the same time. This ensures that a module
+    // can use a enum from a dependency that is not yet installed.
+    $this->assertSession()->fieldExists('edit-modules-config-enum-test-enable')->check();
+    $this->assertSession()->fieldExists('edit-modules-config-enum-dependency-test-enable')->check();
+    $this->submitForm([], 'Install');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Configuration test for enums');
+    $this->assertSession()->pageTextContains('Configuration test for enum with dependency');
+
+    // Ensure the value returned from config is an enum.
+    $this->assertSame(AnotherEnumValue::Foo, $this->config('config_enum_dependency_test.settings')->get('status'));
+    $this->assertSame(EnumValue::Maybe, $this->config('config_enum_test.settings')->get('foo'));
+
+    $this->drupalGet('admin/modules');
+
+    // Enable a module which has a constant in configuration.
+    $this->assertSession()->fieldExists('edit-modules-config-constant-test-enable')->check();
+    $this->submitForm([], 'Install');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Module Configuration test for constants has been installed.');
+
+    // Ensure the value returned from config is the expected value.
+    $this->assertSame('foo', $this->config('config_constant_test.settings')->get('foo'));
   }
 
 }

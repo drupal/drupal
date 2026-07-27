@@ -232,7 +232,7 @@ abstract class StorableConfigBase extends ConfigBase {
       $this->validateValue($key, $value);
       return $value;
     }
-    if (is_scalar($value) || $value === NULL) {
+    if (is_scalar($value) || $value === NULL || $value instanceof \UnitEnum) {
       if ($element && $element instanceof PrimitiveInterface) {
         // Special handling for integers and floats since the configuration
         // system is primarily concerned with saving values from the Form API
