@@ -157,8 +157,8 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       @trigger_error('Calling ' . __METHOD__ . '() without the $fast_cache argument is deprecated in drupal:11.4.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3503843', E_USER_DEPRECATED);
 
       $this->fastCache = \Drupal::service('cache.routes');
-      $this->tableName = $fast_cache;
-      $this->languageManager = $table ?: \Drupal::languageManager();
+      $this->tableName = is_string($fast_cache) ? $fast_cache : 'router';
+      $this->languageManager = $table instanceof LanguageManagerInterface ? $table : \Drupal::languageManager();
     }
     else {
       $this->fastCache = $fast_cache;
