@@ -106,11 +106,11 @@ class KernelTestHttpRequestTest extends KernelTestBase {
       ->save();
     // Demonstrate that route markup can be set dynamically by class test
     // property $testMarkup.
-    $this->testMarkup = $this->randomString();
+    $this->testMarkup = $this->randomMachineName();
     $this->drupalGet('kernel-test-example');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->titleEquals('Example route | Drupal');
-    $this->assertSession()->assertEscaped($this->testMarkup);
+    $this->assertSession()->pageTextContains($this->testMarkup);
   }
 
   /**
