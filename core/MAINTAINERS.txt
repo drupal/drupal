@@ -454,6 +454,9 @@ Accessibility
 Documentation
 - ?
 
+Dependency Coordination
+- Dave Long 'longwave' https://www.drupal.org/u/longwave
+
 Performance
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 
