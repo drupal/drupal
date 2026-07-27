@@ -17,6 +17,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -210,6 +211,7 @@ class UpdateFetcherTest extends UnitTestCase {
    * @legacy-covers ::doRequest
    * @legacy-covers ::fetchProjectData
    */
+  #[IgnoreDeprecations]
   public function testUpdateFetcherHttpFallback(): void {
     $settings = new Settings(['update_fetch_with_http_fallback' => TRUE]);
     $this->mockClient(

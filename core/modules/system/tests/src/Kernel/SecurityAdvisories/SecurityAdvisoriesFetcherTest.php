@@ -19,6 +19,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
@@ -631,6 +632,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
    * @legacy-covers ::doRequest
    * @legacy-covers ::getSecurityAdvisories
    */
+  #[IgnoreDeprecations]
   public function testHttpFallback(): void {
     $this->setSetting('update_fetch_with_http_fallback', TRUE);
     $feed_item = [

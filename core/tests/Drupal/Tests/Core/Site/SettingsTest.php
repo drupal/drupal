@@ -325,9 +325,8 @@ class SettingsTest extends UnitTestCase {
    *   The expected deprecation message.
    */
   #[DataProvider('providerTestRealDeprecatedSettings')]
+  #[IgnoreDeprecations]
   public function testRealDeprecatedSettings(string $legacy_setting, string $expected_deprecation): void {
-    $this->markTestSkipped('No settings to test real deprecated settings with.');
-
     $settings_file_content = "<?php\n\$settings['$legacy_setting'] = 'foo';\n";
     $class_loader = NULL;
     $vfs_root = vfsStream::setup('root');
@@ -347,9 +346,9 @@ class SettingsTest extends UnitTestCase {
    */
   public static function providerTestRealDeprecatedSettings(): array {
     return [
-      [
-        '',
-        '',
+      'update_fetch_with_http_fallback' => [
+        'update_fetch_with_http_fallback',
+        'The update_fetch_with_http_fallback setting is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3591920',
       ],
     ];
   }
