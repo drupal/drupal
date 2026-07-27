@@ -101,6 +101,11 @@ class ComposerIntegrationTest extends UnitTestCase {
     $json = json_decode(file_get_contents($this->root . '/core/composer.json'), FALSE);
     $composer_replace_packages = (array) $json->replace;
 
+    // Filter out extensions removed from core.
+    $composer_replace_packages_core = array_filter($composer_replace_packages, function ($k) {
+      return (str_contains($k, "drupal/core"));
+    }, ARRAY_FILTER_USE_KEY);
+
     // Get a list of all the composer.json files in the components path.
     $components_composer_json_files = [];
 
@@ -114,7 +119,7 @@ class ComposerIntegrationTest extends UnitTestCase {
     }
 
     $this->assertNotEmpty($components_composer_json_files);
-    $this->assertCount(count($composer_replace_packages), $components_composer_json_files);
+    $this->assertCount(count($composer_replace_packages_core), $components_composer_json_files);
 
     // Assert that each core components has a corresponding 'replace' in
     // composer.json.

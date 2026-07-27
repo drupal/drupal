@@ -417,7 +417,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "738fad58e605901746f56a4a5949de11a3520e2e"
+                "reference": "b8a3057150bd59934bfc911a3e7082a5cab672f9"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -469,6 +469,8 @@
                 "drush/drush": "<12.4.3"
             },
             "replace": {
+                "drupal/ban": "*",
+                "drupal/contact": "*",
                 "drupal/core-annotation": "self.version",
                 "drupal/core-assertion": "self.version",
                 "drupal/core-class-finder": "self.version",
@@ -492,7 +494,15 @@
                 "drupal/core-transliteration": "self.version",
                 "drupal/core-utility": "self.version",
                 "drupal/core-uuid": "self.version",
-                "drupal/core-version": "self.version"
+                "drupal/core-version": "self.version",
+                "drupal/field_layout": "*",
+                "drupal/history": "*",
+                "drupal/search": "*",
+                "drupal/settings_tray": "*",
+                "drupal/shortcut": "*",
+                "drupal/stable9": "*",
+                "drupal/telephone": "*",
+                "drupal/toolbar": "*"
             },
             "suggest": {
                 "ext-zip": "Needed to extend the plugin.manager.archiver service capability with the handling of files in the ZIP format."
