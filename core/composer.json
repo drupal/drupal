@@ -88,7 +88,11 @@
         "drupal/core-transliteration": "self.version",
         "drupal/core-utility": "self.version",
         "drupal/core-uuid": "self.version",
-        "drupal/core-version": "self.version"
+        "drupal/core-version": "self.version",
+        "drupal/search": "*",
+        "drupal/settings_tray": "*",
+        "drupal/shortcut": "*",
+        "drupal/toolbar": "*"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
