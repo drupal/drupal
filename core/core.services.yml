@@ -471,8 +471,11 @@ services:
     public: false
   Drupal\Core\Config\StorageManagerInterface: '@config.storage.export.manager'
   config.storage.sync:
-    class: Drupal\Core\Config\FileStorage
-    factory: Drupal\Core\Config\FileStorageFactory::getSync
+    class: Drupal\Core\Config\AutoloadingStorage
+    factory: ['@Drupal\Core\Config\SyncFactory', 'get']
+  Drupal\Core\Config\SyncFactory:
+    autowire: true
+    public: false
   config.storage.snapshot:
     class: Drupal\Core\Config\DatabaseStorage
     arguments: ['@database', config_snapshot]

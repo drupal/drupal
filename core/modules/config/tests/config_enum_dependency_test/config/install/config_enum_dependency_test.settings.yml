@@ -1,0 +1,1 @@
+status: !php/enum Drupal\config_enum_test\AnotherEnumValue::Foo

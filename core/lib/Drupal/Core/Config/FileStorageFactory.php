@@ -5,15 +5,24 @@ namespace Drupal\Core\Config;
 use Drupal\Core\Site\Settings;
 
 /**
- * Provides a factory for creating config file storage objects.
+ * Provides a factory for creating config storage objects.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use the
+ *   "config.storage.sync" service instead.
+ *
+ * @see https://www.drupal.org/node/3586484
  */
 class FileStorageFactory {
 
+  public function __construct() {
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use the "config.storage.sync" service instead. See https://www.drupal.org/node/3586484', E_USER_DEPRECATED);
+  }
+
   /**
-   * Returns a FileStorage object working with the sync config directory.
+   * Returns a StorageInterface object working with the sync config directory.
    *
-   * @return \Drupal\Core\Config\FileStorage
-   *   The file storage object for the configuration sync directory.
+   * @return \Drupal\Core\Config\StorageInterface
+   *   The config storage object for the configuration sync directory.
    *
    * @throws \Drupal\Core\Config\ConfigDirectoryNotDefinedException
    *   In case the sync directory does not exist or is not defined in
@@ -24,7 +33,8 @@ class FileStorageFactory {
     if ($directory === FALSE) {
       throw new ConfigDirectoryNotDefinedException('The config sync directory is not defined in $settings["config_sync_directory"]');
     }
-    return new FileStorage($directory);
+    @trigger_error(__CLASS__ . '::getSync() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use the "config.storage.sync" service instead. See https://www.drupal.org/node/3586484', E_USER_DEPRECATED);
+    return \Drupal::service('config.storage.sync');
   }
 
 }

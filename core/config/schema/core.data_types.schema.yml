@@ -22,6 +22,9 @@ ignore:
 boolean:
   label: 'Boolean'
   class: '\Drupal\Core\TypedData\Plugin\DataType\BooleanData'
+enum:
+  label: 'Enum'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\Enum'
 email:
   label: 'Email'
   class: '\Drupal\Core\TypedData\Plugin\DataType\Email'

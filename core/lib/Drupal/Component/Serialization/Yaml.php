@@ -36,7 +36,7 @@ class Yaml implements SerializationInterface {
       // 'foo: bar' with no newline will fail to parse otherwise.
       return $yaml->parse(
         $raw,
-        SymfonyYaml::PARSE_EXCEPTION_ON_INVALID_TYPE | SymfonyYaml::PARSE_CUSTOM_TAGS
+        SymfonyYaml::PARSE_EXCEPTION_ON_INVALID_TYPE | SymfonyYaml::PARSE_CUSTOM_TAGS | SymfonyYaml::PARSE_CONSTANT
       );
     }
     catch (\Exception $e) {

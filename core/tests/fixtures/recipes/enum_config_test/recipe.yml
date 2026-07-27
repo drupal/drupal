@@ -1,0 +1,4 @@
+name: 'Install config_enum_test with config'
+type: 'Testing'
+install:
+  - config_enum_test

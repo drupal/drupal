@@ -1,0 +1,13 @@
+name: 'Recipe with enum and constant from different modules'
+type: 'Testing'
+install:
+  - config_constant_test
+  - config_enum_test
+config:
+  actions:
+    config_constant_test.settings:
+      simpleConfigUpdate:
+        foo: !php/const Drupal\config_constant_test\Test::BAR
+    config_enum_test.settings:
+      simpleConfigUpdate:
+        foo: !php/enum Drupal\config_enum_test\EnumValue::No

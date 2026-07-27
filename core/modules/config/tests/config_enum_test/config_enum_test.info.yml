@@ -1,0 +1,4 @@
+name: 'Configuration test for enums'
+type: module
+package: Testing
+version: VERSION

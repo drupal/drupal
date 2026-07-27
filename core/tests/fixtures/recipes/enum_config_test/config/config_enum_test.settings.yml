@@ -1,0 +1,1 @@
+foo: !php/enum Drupal\config_enum_test\EnumValue::Yes

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Core\Recipe;
 
+use Drupal\config_enum_test\EnumValue;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
 use Drupal\Core\Recipe\Command\RecipeCommand;
 use Drupal\Tests\BrowserTestBase;
@@ -107,6 +108,56 @@ class RecipeCommandTest extends BrowserTestBase {
     $output = trim(preg_replace('/\s+/', ' ', $process->getOutput()));
     $this->assertSame('[ERROR] The supplied path core/tests/fixtures/recipes/does_not_exist is not a directory', $output);
     $this->assertEmpty($process->getErrorOutput());
+  }
+
+  /**
+   * Test installing a module with recipe config using an enum from module.
+   *
+   * This test is a functional test because all code is autoloadable in tests.
+   * Using the CLI command means that we test loading the recipe prior to the
+   * module being installed.
+   */
+  public function testEnumInRecipeConfig(): void {
+    $this->applyRecipe('core/tests/fixtures/recipes/enum_config_test');
+    $this->assertSame(EnumValue::Yes, $this->config('config_enum_test.settings')->get('foo'));
+  }
+
+  /**
+   * Test installing a module with recipe action using an enum from module.
+   *
+   * This test is a functional test because all code is autoloadable in tests.
+   * Using the CLI command means that we test loading the recipe prior to the
+   * module being installed.
+   */
+  public function testEnumInRecipeAction(): void {
+    $this->applyRecipe('core/tests/fixtures/recipes/enum_action_test');
+    $this->assertSame(EnumValue::No, $this->config('config_enum_test.settings')->get('foo'));
+  }
+
+  /**
+   * Test installing a module with recipe action using a constant from module.
+   *
+   * This test is a functional test because all code is autoloadable in tests.
+   * Using the CLI command means that we test loading the recipe prior to the
+   * module being installed.
+   */
+  public function testConstantInRecipeAction(): void {
+    $this->applyRecipe('core/tests/fixtures/recipes/constant_action_test');
+    $this->assertSame('bar', $this->config('config_constant_test.settings')->get('foo'));
+    $this->assertSame(EnumValue::No, $this->config('config_enum_test.settings')->get('foo'));
+  }
+
+  /**
+   * Test installing a module with recipe action using a broken enum.
+   *
+   * This test is a functional test because all code is autoloadable in tests.
+   * Using the CLI command means that we test loading the recipe prior to the
+   * module being installed.
+   */
+  public function testBrokenEnumInRecipeAction(): void {
+    $process = $this->applyRecipe('core/tests/fixtures/recipes/broken_enum_action_test', 1);
+    $output = trim(preg_replace('/\s+/', ' ', $process->getErrorOutput()));
+    $this->assertStringContainsString('The enum "Drupal\config_enum_test\DoesNotExistEnumValue" is not defined', $output);
   }
 
   /**

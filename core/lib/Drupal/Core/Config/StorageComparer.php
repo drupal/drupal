@@ -116,9 +116,9 @@ class StorageComparer implements StorageComparerInterface {
     }
 
     $time = \Drupal::hasService(TimeInterface::class) ? \Drupal::service(TimeInterface::class) : new Time();
-    if ($source_storage instanceof FileStorage) {
-      // FileStorage has its own static cache so that multiple reads of the
-      // same raw configuration object are not costly.
+    if ($source_storage instanceof FileStorage || $source_storage instanceof AutoloadingStorage) {
+      // FileStorage and AutoloadingStorage have their own static cache so that
+      // multiple reads of the same raw configuration object are not costly.
       $this->sourceCacheStorage = new NullBackend('storage_comparer');
       $this->sourceStorage = $source_storage;
     }
