@@ -14,6 +14,7 @@ use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 use Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
@@ -121,6 +122,104 @@ class LinkFormatterTest extends UnitTestCase {
         '#url' => $expectedUrl,
       ],
     ], $elements);
+  }
+
+  /**
+   * Tests settings summary messages.
+   */
+  #[DataProvider('providerSettingsSummary')]
+  public function testSettingsSummary(array $settings, array $expected_summaries): void {
+    $container = new ContainerBuilder();
+    $container->set('string_translation', $this->getStringTranslationStub());
+    \Drupal::setContainer($container);
+
+    $mock = $this->getMockBuilder(LinkFormatter::class)
+      ->disableOriginalConstructor()
+      ->onlyMethods(['getPluginId', 'getSettings'])
+      ->getMock();
+    $mock->expects($this->once())
+      ->method('getPluginId')
+      ->willReturn('link');
+    $mock->expects($this->once())
+      ->method('getSettings')
+      ->willReturn($settings);
+
+    $summaries = $mock->settingsSummary();
+    // Summaries are translated so cast them to strings before comparison.
+    foreach ($summaries as $key => $summary) {
+      $summaries[$key] = (string) $summary;
+    }
+    $this->assertEqualsCanonicalizing($expected_summaries, $summaries);
+  }
+
+  /**
+   * Provides test cases for ::testSettingsSummary().
+   */
+  public static function providerSettingsSummary(): array {
+    return [
+      [
+        [],
+        [
+          'Link text not trimmed',
+        ],
+      ],
+      [
+        [
+          'trim_length' => 80,
+        ],
+        [
+          'Link text trimmed to 80 characters',
+        ],
+      ],
+      [
+        [
+          'trim_length' => 20,
+        ],
+        [
+          'Link text trimmed to 20 characters',
+        ],
+      ],
+      [
+        [
+          'trim_length' => 20,
+          'url_only' => TRUE,
+          'url_plain' => TRUE,
+        ],
+        [
+          'Link text not trimmed',
+          'Show URL only as plain-text',
+        ],
+      ],
+      [
+        [
+          'trim_length' => 20,
+          'url_only' => TRUE,
+          'url_plain' => FALSE,
+        ],
+        [
+          'Link text not trimmed',
+          'Show URL only',
+        ],
+      ],
+      [
+        [
+          'rel' => 'nofollow',
+        ],
+        [
+          'Link text not trimmed',
+          'Add rel="nofollow"',
+        ],
+      ],
+      [
+        [
+          'target' => '_blank',
+        ],
+        [
+          'Link text not trimmed',
+          'Open link in new window',
+        ],
+      ],
+    ];
   }
 
 }
