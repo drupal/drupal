@@ -2,20 +2,18 @@
 // phpcs:ignoreFile
 
 /**
- * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Core\Lock\DatabaseLockBackend' "core/lib/Drupal/Core".
+ * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\Tests\Core\DependencyInjection\Fixture\LazyService' "core/tests/Drupal/Tests".
  */
 
-namespace Drupal\Core\ProxyClass\Lock {
+namespace Drupal\Tests\ProxyClass\Core\DependencyInjection\Fixture {
 
     /**
-     * Provides a proxy class for \Drupal\Core\Lock\DatabaseLockBackend.
+     * Provides a proxy class for \Drupal\Tests\Core\DependencyInjection\Fixture\LazyService.
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class DatabaseLockBackend implements \Drupal\Core\Lock\LockBackendInterface
+    class LazyService
     {
-
-        use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
         /**
          * The id of the original proxied service.
@@ -27,7 +25,7 @@ namespace Drupal\Core\ProxyClass\Lock {
         /**
          * The real proxied service, after it was lazy loaded.
          *
-         * @var \Drupal\Core\Lock\DatabaseLockBackend
+         * @var \Drupal\Tests\Core\DependencyInjection\Fixture\LazyService
          */
         protected $service;
 
@@ -70,57 +68,9 @@ namespace Drupal\Core\ProxyClass\Lock {
         /**
          * {@inheritdoc}
          */
-        public function acquire($name, $timeout = 30.0)
+        public function getValue(): string
         {
-            return $this->lazyLoadItself()->acquire($name, $timeout);
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function lockMayBeAvailable($name)
-        {
-            return $this->lazyLoadItself()->lockMayBeAvailable($name);
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function release($name)
-        {
-            return $this->lazyLoadItself()->release($name);
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function releaseAll($lock_id = NULL)
-        {
-            return $this->lazyLoadItself()->releaseAll($lock_id);
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function schemaDefinition()
-        {
-            return $this->lazyLoadItself()->schemaDefinition();
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function wait($name, $delay = 30)
-        {
-            return $this->lazyLoadItself()->wait($name, $delay);
-        }
-
-        /**
-         * {@inheritdoc}
-         */
-        public function getLockId()
-        {
-            return $this->lazyLoadItself()->getLockId();
+            return $this->lazyLoadItself()->getValue();
         }
 
     }
