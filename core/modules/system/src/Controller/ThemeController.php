@@ -7,6 +7,7 @@ use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -113,6 +114,14 @@ class ThemeController extends ControllerBase {
       $this->messenger()->addError($this->t('Unable to install @theme due to missing module dependencies.', ['@theme' => $theme]));
     }
 
+    // Process any batch queued by hook_themes_installed (e.g. locale's
+    // langcode rewrite). batch_process() redirects to the batch page and
+    // then to $redirect after completion, so it is returned directly.
+    $batch = &batch_get();
+    if (!empty($batch)) {
+      return batch_process(Url::fromRoute('system.themes_page'));
+    }
+
     return $this->redirect('system.themes_page');
   }
 
@@ -198,6 +207,14 @@ class ThemeController extends ControllerBase {
     }
     else {
       $this->messenger()->addError($this->t('The %theme theme was not found.', ['%theme' => $theme]));
+    }
+
+    // Process any batch queued by hook_themes_installed (e.g. locale's
+    // langcode rewrite). batch_process() redirects to the batch page and
+    // then to $redirect after completion, so it is returned directly.
+    $batch = &batch_get();
+    if (!empty($batch)) {
+      return batch_process(Url::fromRoute('system.themes_page'));
     }
 
     return $this->redirect('system.themes_page');
