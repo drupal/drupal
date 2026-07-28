@@ -2,15 +2,15 @@
 
 namespace Drupal\Core\Access;
 
+use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\SessionConfigurationInterface;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Access protection against CSRF attacks.
  */
-class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
+class CsrfRequestHeaderAccessCheck implements AccessInterface {
 
   /**
    * A string key that will used to designate the token used by this class.
@@ -42,28 +42,6 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
   public function __construct(SessionConfigurationInterface $session_configuration, CsrfTokenGenerator $csrf_token) {
     $this->sessionConfiguration = $session_configuration;
     $this->csrfToken = $csrf_token;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function applies(Route $route) {
-    $requirements = $route->getRequirements();
-    if (array_key_exists('_csrf_request_header_token', $requirements)) {
-      if (isset($requirements['_method'])) {
-        // There could be more than one method requirement separated with '|'.
-        $methods = explode('|', $requirements['_method']);
-        // CSRF protection only applies to write operations, so we can filter
-        // out any routes that require reading methods only.
-        $write_methods = array_diff($methods, ['GET', 'HEAD', 'OPTIONS', 'TRACE']);
-        if (empty($write_methods)) {
-          return FALSE;
-        }
-      }
-      // No method requirement given, so we run this access check to be on the
-      // safe side.
-      return TRUE;
-    }
   }
 
   /**
