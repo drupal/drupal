@@ -1,11 +1,19 @@
 # Tests CSRF request header token protection.
 csrf_test.protected:
   path: csrf/protected
+  methods: ['POST']
   defaults:
     _controller: '\Drupal\csrf_test\Controller\TestController::testMethod'
   requirements:
     _csrf_request_header_token: 'TRUE'
-    _method: 'POST'
+csrf_test.protected_read_only:
+  path: csrf/protected/read-only
+  methods: ['GET']
+  defaults:
+    _controller: '\Drupal\csrf_test\Controller\TestController::testMethod'
+  requirements:
+    _access: 'TRUE'
+    _csrf_request_header_token: 'TRUE'
 csrf_test.route_with_csrf_token:
   path: csrf/protected/route
   defaults:
