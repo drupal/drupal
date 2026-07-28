@@ -24,6 +24,7 @@ class SearchBlockTest extends BrowserTestBase {
     'node',
     'search',
     'search_node',
+    'search_user',
     'dblog',
     'user',
   ];
