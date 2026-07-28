@@ -23,3 +23,13 @@
 # Drupal 13.
 %The "cache.backend.memory" service is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use cache.backend.memory.memory instead. See https://www.drupal.org/node/3546856%
 %The "cache.static" service is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use the cache.memory bin instead. See https://www.drupal.org/node/3546856%
+
+# Symfony 8.
+%Since symfony/dependency-injection 8\.1: Calling "Drupal\\workspaces\\Provider\\DefaultWorkspaceProvider::getId\(\)" to get the "" index is deprecated, use the #\[AsTaggedItem\] attribute instead\.%
+%Since symfony/dependency-injection 8\.1: Relying solely on the name of parameter "\$testInjection3" of "__construct\(\)" to match a named autowiring alias is deprecated; use the "#\[Target\]" attribute\.%
+%Since symfony/dependency-injection 8\.1: The \$defaultIndexMethod and \$defaultPriorityMethod arguments of tagged locators and iterators are deprecated, use the #\[AsTaggedItem\] attribute instead\.%
+%Since symfony/http-foundation 8\.1: Directly setting property "\w+" of "Symfony\\Component\\HttpFoundation\\Request" is deprecated; pass .* as a constructor argument or call "initialize\(\)" instead\.%
+%Since symfony/http-foundation 8\.1: Directly setting property "headers" of "Symfony\\Component\\HttpFoundation\\Response" is deprecated; pass the header bag as a constructor argument instead\.%
+%Since symfony/http-foundation 8\.1: Directly setting property "headers" of "Drupal\\Core\\Cache\\CacheableResponse" is deprecated; pass the header bag as a constructor argument instead\.%
+%Since symfony/http-foundation 8\.1: Directly setting property "headers" of "Drupal\\big_pipe\\Render\\BigPipeResponse" is deprecated; pass the header bag as a constructor argument instead\.%
+%Since symfony/validator 8\.1: The "ConstraintValidator::initialize\(\)" method is deprecated. Use the "validateInContext\(\)" method instead of the "initialize\(\)" and "validate\(\)" ones\.%

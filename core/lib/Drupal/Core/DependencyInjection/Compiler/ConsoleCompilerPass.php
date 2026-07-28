@@ -43,7 +43,7 @@ class ConsoleCompilerPass implements CompilerPassInterface {
       $definition
         ->setAutowired(TRUE)
         ->setPublic(TRUE)
-        ->setTags(['console.command' => []]);
+        ->addTag('console.command');
 
       $container->setDefinition($className, $definition);
     }

@@ -8,7 +8,6 @@ use Drupal\Core\StackMiddleware\NegotiationMiddleware;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -91,33 +90,27 @@ class NegotiationMiddlewareTest extends UnitTestCase {
    * Tests that handle() correctly hands off to sub application.
    */
   public function testHandle(): void {
-    $request = $this->prophesize(Request::class);
-
-    // Default empty format list should not set any formats.
-    $request->setFormat()->shouldNotBeCalled();
-
-    // Request format will be set with default format.
-    $request->setRequestFormat()->shouldNotBeCalled();
-
-    // Some getContentType calls we don't really care about but have to mock.
-    $request_mock = $request->reveal();
-    $request_mock->query = new InputBag();
-    $request_mock->request = new InputBag();
+    $request = new Request();
 
     // Calling kernel app with default arguments.
-    $this->httpKernel->handle($request_mock, HttpKernelInterface::MAIN_REQUEST, TRUE)
+    $this->httpKernel->handle($request, HttpKernelInterface::MAIN_REQUEST, TRUE)
       ->shouldBeCalled()
       ->willReturn(
         $this->createStub(Response::class)
       );
-    $this->contentNegotiation->handle($request_mock);
+    $this->contentNegotiation->handle($request);
+
+    // No format was registered and none was requested, so the request format
+    // should not have been set.
+    $this->assertNull($request->getRequestFormat(NULL));
+
     // Calling kernel app with specified arguments.
-    $this->httpKernel->handle($request_mock, HttpKernelInterface::SUB_REQUEST, FALSE)
+    $this->httpKernel->handle($request, HttpKernelInterface::SUB_REQUEST, FALSE)
       ->shouldBeCalled()
       ->willReturn(
         $this->createStub(Response::class)
       );
-    $this->contentNegotiation->handle($request_mock, HttpKernelInterface::SUB_REQUEST, FALSE);
+    $this->contentNegotiation->handle($request, HttpKernelInterface::SUB_REQUEST, FALSE);
   }
 
   /**
@@ -133,20 +126,13 @@ class NegotiationMiddlewareTest extends UnitTestCase {
 
     $content_negotiation = new StubNegotiationMiddleware($httpKernel);
 
-    $request = $this->prophesize(Request::class);
-
-    // Default empty format list should not set any formats.
-    $request->setFormat('david', 'geeky/david')->shouldBeCalled();
-
-    // Some calls we don't care about.
-    $request->setRequestFormat()->shouldNotBeCalled();
-    $request_mock = $request->reveal();
-    $request_mock->query = new InputBag();
-    $request_mock->request = new InputBag();
+    $request = new Request();
 
     // Trigger handle.
     $content_negotiation->registerFormat('david', 'geeky/david');
-    $content_negotiation->handle($request_mock);
+    $content_negotiation->handle($request);
+
+    $this->assertSame('geeky/david', $request->getMimeType('david'));
   }
 
 }

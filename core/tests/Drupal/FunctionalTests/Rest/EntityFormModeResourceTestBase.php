@@ -63,7 +63,7 @@ abstract class EntityFormModeResourceTestBase extends ConfigEntityResourceTestBa
       ],
       'id' => 'user.test',
       'label' => 'Test',
-      'description' => '',
+      'description' => NULL,
       'langcode' => 'en',
       'status' => TRUE,
       'targetEntityType' => 'user',

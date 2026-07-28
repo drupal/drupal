@@ -8,9 +8,9 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": ">=8.5.0",
-        "symfony/dependency-injection": "^8.0",
-        "symfony/event-dispatcher": "^8.0",
-        "symfony/event-dispatcher-contracts": "v3.7.0"
+        "symfony/dependency-injection": "^8.1",
+        "symfony/event-dispatcher": "^8.1",
+        "symfony/event-dispatcher-contracts": "v3.7.1"
     },
     "autoload": {
         "psr-4": {

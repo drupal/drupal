@@ -591,12 +591,17 @@ abstract class BrowserTestBase extends TestCase {
     $backtrace = debug_backtrace();
     // Find the test class that has the test method.
     while ($caller = Error::getLastCaller($backtrace)) {
-      // If we match PHPUnit's TestCase::runTest, then the previously processed
-      // caller entry is where our test method sits.
-      if (isset($last_caller) && isset($caller['function']) && $caller['function'] === 'PHPUnit\Framework\TestCase->runTest()') {
-        // Return the last caller since that has to be the test class.
-        $caller = $last_caller;
-        break;
+      // If we match PHPUnit's TestCase::runTest or ::invokeTestMethod, then
+      // the previously processed caller entry is where our test method sits.
+      if (isset($last_caller) && isset($caller['function'])) {
+        if (in_array($caller['function'], [
+          'PHPUnit\Framework\TestCase->runTest()',
+          'PHPUnit\Framework\TestCase->invokeTestMethod()',
+        ], TRUE)) {
+          // Return the last caller since that has to be the test class.
+          $caller = $last_caller;
+          break;
+        }
       }
 
       // If the test method is implemented by a test class's parent then the

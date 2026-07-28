@@ -19,7 +19,6 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -94,8 +93,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
       ->willReturn(new Language(['id' => 'en']));
 
     $request = $this->createStub(Request::class);
-    $response = $this->createStub(Response::class);
-    $response->headers = new ResponseHeaderBag();
+    $response = new Response();
     $event = new ResponseEvent($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
 
     $finishSubscriber->onRespond($event);
@@ -125,8 +123,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
       ->willReturn(new Language(['id' => 'en']));
 
     $request = $this->createStub(Request::class);
-    $response = $this->createStub(Response::class);
-    $response->headers = new ResponseHeaderBag();
+    $response = new Response();
     $event = new ResponseEvent($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
 
     $response->headers->set('X-Content-Type-Options', 'foo');
@@ -161,16 +158,14 @@ class FinishResponseSubscriberTest extends UnitTestCase {
       ->willReturn(['context1', 'context2']);
 
     $request = $this->createStub(Request::class);
-    $response = $this->createStub(CacheableResponse::class);
-    $response->headers = new ResponseHeaderBag();
+    $response = new CacheableResponse();
 
     // Set cache tags, context, max-age.
     $cacheData = (new CacheableMetadata())
       ->setCacheTags(['tag1', 'tag2'])
       ->setCacheContexts(['context1', 'context2'])
       ->setCacheMaxAge(123);
-    $response->method('getCacheableMetadata')
-      ->willReturn($cacheData);
+    $response->addCacheableDependency($cacheData);
 
     $event = new ResponseEvent($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
     $finishSubscriber->onRespond($event);
@@ -199,8 +194,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
       ->willReturn(new Language(['id' => 'en']));
 
     $request = $this->createStub(Request::class);
-    $response = $this->createStub(CacheableResponse::class);
-    $response->headers = new ResponseHeaderBag();
+    $response = new CacheableResponse();
 
     // Create multiple cache tags that add up to more than 8k bytes. Each tag is
     // 15 bytes. The tags imploded together will have a space between
@@ -222,8 +216,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
     $cacheData = (new CacheableMetadata())
       ->setCacheTags($tags);
 
-    $response->method('getCacheableMetadata')
-      ->willReturn($cacheData);
+    $response->addCacheableDependency($cacheData);
 
     $event = new ResponseEvent($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
     $finishSubscriber->onRespond($event);
