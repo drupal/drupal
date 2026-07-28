@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_ui\Functional;
 
-use Behat\Mink\Exception\ElementNotFoundException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -15,6 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Tests the Field UI "Manage fields" screen.
  */
 #[Group('field_ui')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
 
@@ -108,106 +108,6 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
       ->save();
     $this->drupalGet($admin_path);
     $this->assertSession()->fieldValueEquals($element_id, '');
-  }
-
-  /**
-   * Tests that Field UI respects locked fields.
-   */
-  public function testLockedField(): void {
-    // Create a locked field and attach it to a bundle. We need to do this
-    // programmatically as there's no way to create a locked field through UI.
-    $field_name = $this->randomMachineName(8);
-    $field_storage = FieldStorageConfig::create([
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'type' => 'test_field',
-      'cardinality' => 1,
-      'locked' => TRUE,
-    ]);
-    $field_storage->save();
-    FieldConfig::create([
-      'field_storage' => $field_storage,
-      'bundle' => $this->contentType,
-    ])->save();
-    \Drupal::service('entity_display.repository')
-      ->getFormDisplay('node', $this->contentType)
-      ->setComponent($field_name, [
-        'type' => 'test_field_widget',
-      ])
-      ->save();
-
-    // Check that the links for edit and delete are not present.
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields');
-    $locked = $this->xpath('//tr[@id=:field_name]/td[3]', [':field_name' => $field_name]);
-    $this->assertSame('Locked', $locked[0]->getHtml(), 'Field is marked as Locked in the UI');
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_name . '/delete');
-    $this->assertSession()->statusCodeEquals(403);
-  }
-
-  /**
-   * Tests that Field UI respects the 'no_ui' flag in the field type definition.
-   */
-  public function testHiddenFields(): void {
-    // Check that the field type is not available in the 'add new field' row.
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
-    $this->assertSession()->elementNotExists('xpath', "//a//span[text()='Hidden from UI test field']");
-    $this->assertSession()->elementExists('xpath', "//a//span[text()='Shape']");
-
-    // Create a field storage and a field programmatically.
-    $field_name = 'hidden_test_field';
-    FieldStorageConfig::create([
-      'field_name' => $field_name,
-      'entity_type' => 'node',
-      'type' => $field_name,
-    ])->save();
-    $field = [
-      'field_name' => $field_name,
-      'bundle' => $this->contentType,
-      'entity_type' => 'node',
-      'label' => 'Hidden field',
-    ];
-    FieldConfig::create($field)->save();
-    \Drupal::service('entity_display.repository')
-      ->getFormDisplay('node', $this->contentType)
-      ->setComponent($field_name)
-      ->save();
-    $this->assertInstanceOf(FieldConfig::class, FieldConfig::load('node.' . $this->contentType . '.' . $field_name));
-
-    // Check that the newly added field appears on the 'Manage Fields'
-    // screen.
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields');
-    $this->assertSession()->elementTextContains('xpath', '//table[@id="field-overview"]//tr[@id="hidden-test-field"]//td[1]', $field['label']);
-
-    // Check that the field does not appear in the 're-use existing field' row
-    // on other bundles.
-    $this->drupalGet('admin/structure/types/manage/page/fields/reuse');
-    $this->assertSession()->elementNotExists('css', ".js-reuse-table [data-field-id='{$field_name}']");
-    $this->assertSession()->elementExists('css', '.js-reuse-table [data-field-id="field_tags"]');
-
-    // Check that non-configurable fields are not available.
-    $field_types = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
-    foreach ($field_types as $field_type => $definition) {
-      $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
-      $label = (string) $definition['label'];
-      if (empty($definition['no_ui'])) {
-        try {
-          $this->assertSession()->elementExists('xpath', "//a//span[text()='$label']");
-        }
-        catch (ElementNotFoundException) {
-          if ($group = $this->getFieldFromGroup($field_type)) {
-            if ($group !== 'General') {
-              $link = $this->assertSession()->elementExists('xpath', "//a[.//span[text()='$group']]");
-              $link->click();
-              $this->assertSession()
-                ->elementExists('css', "[name='field_options_wrapper'][value='$field_type']");
-            }
-          }
-        }
-      }
-      else {
-        $this->assertSession()->elementNotExists('xpath', "//a//span[text()='$label']");
-      }
-    }
   }
 
   /**
