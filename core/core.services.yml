@@ -1123,13 +1123,11 @@ services:
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
-    lazy: true
   lock.persistent:
     class: Drupal\Core\Lock\PersistentDatabaseLockBackend
     arguments: ['@database']
     tags:
       - { name: backend_overridable }
-    lazy: true
   router.request_context:
     class: Drupal\Core\Routing\RequestContext
     tags:
