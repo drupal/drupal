@@ -43,6 +43,10 @@ final class Settings {
       'replacement' => '',
       'message' => 'The "state_cache" setting is deprecated in drupal:11.0.0. This setting should be removed from the settings file, since its usage has been removed. See https://www.drupal.org/node/3177901.',
     ],
+    'update_fetch_with_http_fallback' => [
+      'replacement' => '',
+      'message' => 'The update_fetch_with_http_fallback setting is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3591920',
+    ],
   ];
 
   /**

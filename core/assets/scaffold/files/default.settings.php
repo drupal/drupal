@@ -324,6 +324,10 @@ $settings['update_free_access'] = FALSE;
  * @see https://en.wikipedia.org/wiki/Man-in-the-middle_attack
  * @see \Drupal\update\UpdateFetcher
  * @see \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is
+ *   no replacement.
+ * @see https://www.drupal.org/node/3591920
  */
 # $settings['update_fetch_with_http_fallback'] = TRUE;
 
