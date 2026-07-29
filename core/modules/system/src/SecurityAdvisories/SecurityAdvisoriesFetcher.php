@@ -8,13 +8,11 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\Utility\ProjectInfo;
 use Drupal\Core\Extension\ExtensionVersion;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -49,13 +47,6 @@ final class SecurityAdvisoriesFetcher {
    */
   protected $extensionLists = [];
 
-  /**
-   * Whether to fall back to HTTP if the HTTPS request fails.
-   *
-   * @var bool
-   */
-  protected $withHttpFallback;
-
   public function __construct(
     ConfigFactoryInterface $config_factory,
     #[Autowire(service: 'keyvalue.expirable')]
@@ -66,14 +57,12 @@ final class SecurityAdvisoriesFetcher {
     ProfileExtensionList $profile_list,
     #[Autowire(service: 'logger.channel.system')]
     protected LoggerInterface $logger,
-    Settings $settings,
   ) {
     $this->config = $config_factory->get('system.advisories');
     $this->keyValueExpirable = $key_value_factory->get('system');
     $this->extensionLists['module'] = $module_list;
     $this->extensionLists['theme'] = $theme_list;
     $this->extensionLists['profile'] = $profile_list;
-    $this->withHttpFallback = $settings->get('update_fetch_with_http_fallback', FALSE);
   }
 
   /**
@@ -275,10 +264,7 @@ final class SecurityAdvisoriesFetcher {
   }
 
   /**
-   * Makes an HTTPS GET request, with a possible HTTP fallback.
-   *
-   * This method will fall back to HTTP if the HTTPS request fails and the site
-   * setting 'update_fetch_with_http_fallback' is set to TRUE.
+   * Makes an HTTPS GET request.
    *
    * @param int $timeout
    *   The timeout in seconds for the request.
@@ -288,20 +274,7 @@ final class SecurityAdvisoriesFetcher {
    */
   protected function doRequest(int $timeout): string {
     $options = [RequestOptions::TIMEOUT => $timeout];
-    if (!$this->withHttpFallback) {
-      // If not using an HTTP fallback just use HTTPS and do not catch any
-      // exceptions.
-      $response = $this->httpClient->get('https://updates.drupal.org/psa.json', $options);
-    }
-    else {
-      try {
-        $response = $this->httpClient->get('https://updates.drupal.org/psa.json', $options);
-      }
-      catch (ClientExceptionInterface $exception) {
-        Error::logException($this->logger, $exception);
-        $response = $this->httpClient->get('http://updates.drupal.org/psa.json', $options);
-      }
-    }
+    $response = $this->httpClient->get('https://updates.drupal.org/psa.json', $options);
     return (string) $response->getBody();
   }
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\update\Unit;
 
 use ColinODell\PsrTestLogger\TestLogger;
-use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 use Drupal\update\UpdateFetcher;
 use GuzzleHttp\Client;
@@ -17,7 +16,6 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -76,9 +74,8 @@ class UpdateFetcherTest extends UnitTestCase {
     parent::setUp();
     $this->mockConfigFactory = $this->getConfigFactoryStub(['update.settings' => ['fetch_url' => 'http://www.example.com']]);
     $this->mockHttpClient = $this->createStub(ClientInterface::class);
-    $settings = new Settings([]);
     $this->logger = new TestLogger();
-    $this->updateFetcher = new UpdateFetcher($this->mockConfigFactory, $this->mockHttpClient, $settings, $this->logger);
+    $this->updateFetcher = new UpdateFetcher($this->mockConfigFactory, $this->mockHttpClient, $this->logger);
     $this->testProject = [
       'name' => 'update_test',
       'project_type' => '',
@@ -181,12 +178,10 @@ class UpdateFetcherTest extends UnitTestCase {
    * @legacy-covers ::fetchProjectData
    */
   public function testUpdateFetcherNoFallback(): void {
-    // First, try without the HTTP fallback setting, and HTTPS mocked to fail.
-    $settings = new Settings([]);
     $this->mockClient(
       new Response(500, [], 'HTTPS failed'),
     );
-    $update_fetcher = new UpdateFetcher($this->mockConfigFactory, $this->mockHttpClient, $settings, $this->logger);
+    $update_fetcher = new UpdateFetcher($this->mockConfigFactory, $this->mockHttpClient, $this->logger);
 
     $data = $update_fetcher->fetchProjectData($this->testProject, '');
     // There should only be one request / response pair.
@@ -200,45 +195,6 @@ class UpdateFetcherTest extends UnitTestCase {
     $this->assertEquals(500, $response->getStatusCode());
     $this->assertEmpty($data);
 
-    $this->assertTrue($this->logger->hasErrorThatPasses(function (array $record): bool {
-      return $record['context']['@message'] === "Server error: `GET https://www.example.com/update_test/current` resulted in a `500 Internal Server Error` response: HTTPS failed";
-    }));
-  }
-
-  /**
-   * Tests update fetcher http fallback.
-   *
-   * @legacy-covers ::doRequest
-   * @legacy-covers ::fetchProjectData
-   */
-  #[IgnoreDeprecations]
-  public function testUpdateFetcherHttpFallback(): void {
-    $settings = new Settings(['update_fetch_with_http_fallback' => TRUE]);
-    $this->mockClient(
-      new Response(500, [], 'HTTPS failed'),
-      new Response(200, [], 'HTTP worked'),
-    );
-    $update_fetcher = new UpdateFetcher($this->mockConfigFactory, $this->mockHttpClient, $settings, $this->logger);
-
-    $data = $update_fetcher->fetchProjectData($this->testProject, '');
-
-    // There should be two request / response pairs.
-    $this->assertCount(2, $this->history);
-
-    // The first should have been HTTPS and should have failed.
-    $first_try = $this->history[0];
-    $this->assertNotEmpty($first_try);
-    $this->assertEquals('https', $first_try['request']->getUri()->getScheme());
-    $this->assertEquals(500, $first_try['response']->getStatusCode());
-
-    // The second should have been the HTTP fallback and should have worked.
-    $second_try = $this->history[1];
-    $this->assertNotEmpty($second_try);
-    $this->assertEquals('http', $second_try['request']->getUri()->getScheme());
-    $this->assertEquals(200, $second_try['response']->getStatusCode());
-    // Although this is a bogus mocked response, it's what fetchProjectData()
-    // should return in this case.
-    $this->assertEquals('HTTP worked', $data);
     $this->assertTrue($this->logger->hasErrorThatPasses(function (array $record): bool {
       return $record['context']['@message'] === "Server error: `GET https://www.example.com/update_test/current` resulted in a `500 Internal Server Error` response: HTTPS failed";
     }));

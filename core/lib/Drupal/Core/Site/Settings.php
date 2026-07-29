@@ -38,12 +38,7 @@ final class Settings {
    *
    * @see self::handleDeprecations()
    */
-  private static $deprecatedSettings = [
-    'update_fetch_with_http_fallback' => [
-      'replacement' => '',
-      'message' => 'The update_fetch_with_http_fallback setting is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3591920',
-    ],
-  ];
+  private static $deprecatedSettings = [];
 
   /**
    * Constructor.

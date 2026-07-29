@@ -88,7 +88,6 @@ services:
   Drupal\package_manager\PackageManagerUninstallValidator:
     arguments:
       $eventDispatcher: '@event_dispatcher'
-  Drupal\package_manager\Validator\SettingsValidator: {}
   Drupal\package_manager\Validator\RsyncValidator: {}
   Drupal\package_manager\Validator\ComposerPluginsValidator: {}
   Drupal\package_manager\Validator\ComposerPatchesValidator: {}
