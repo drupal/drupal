@@ -191,9 +191,6 @@ img {
 
 /**
  * Default focus styles for focused elements.
- *
- * This is applied globally to all interactive elements except Toolbar and
- * Settings Tray since they have their own styles.
  */
 .page-wrapper *:focus,
 .ui-dialog *:focus {
