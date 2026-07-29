@@ -13,6 +13,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Base class for entity translation controllers.
@@ -362,7 +363,7 @@ class ContentTranslationController extends ControllerBase {
    * @param string $entity_type_id
    *   (optional) The entity type ID.
    *
-   * @return array
+   * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
    *   A processed form array ready to be rendered.
    */
   public function add(LanguageInterface $source, LanguageInterface $target, RouteMatchInterface $route_match, $entity_type_id = NULL) {
@@ -379,6 +380,11 @@ class ContentTranslationController extends ControllerBase {
       if ($revision_id != $entity->getRevisionId()) {
         $entity = $storage->loadRevision($revision_id);
       }
+    }
+
+    if ($entity->hasTranslation($target->getId())) {
+      $this->messenger()->addError($this->t('A translation already exists for @language.', ['@language' => $target->getName()]));
+      return new RedirectResponse($entity->getTranslation($target->getId())->toUrl('edit-form')->toString());
     }
 
     // @todo Exploit the upcoming hook_entity_prepare() when available.
