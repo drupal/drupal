@@ -109,7 +109,7 @@ class FileStorageTest extends PhpStorageTestBase {
     $this->assertSame(E_USER_WARNING, $messages[0][0]);
     $this->assertSame('mkdir(): Permission Denied', $messages[0][1]);
     $this->assertSame(E_WARNING, $messages[1][0]);
-    $this->assertStringStartsWith('file_put_contents(vfs://permissionDenied/test/subdirectory/foo.php)', $messages[1][1]);
+    $this->assertMatchesRegularExpression('/file_put_contents(.*): Failed to open stream: ".*vfsStreamWrapper::stream_open" call failed/', $messages[1][1]);
   }
 
 }
