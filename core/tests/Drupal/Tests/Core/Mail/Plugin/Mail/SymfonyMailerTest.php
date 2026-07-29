@@ -35,7 +35,10 @@ class SymfonyMailerTest extends UnitTestCase {
     $variables = [
       '@form-url' => 'https://www.example.com/contact',
       '@sender-url' => 'https://www.example.com/user/123',
-      '@sender-name' => $this->randomString(),
+      // The sender name is put into HTML markup and must not contain HTML
+      // special characters: MailFormatHelper::htmlToText() would strip or
+      // decode them, while the expected value below uses the raw string.
+      '@sender-name' => $this->randomMachineName(),
     ];
 
     $plain = "In HTML, ampersand must be written as &amp;.\nI saw your house and <wow> it is great. There is too much to say about that beautiful building, it will never fit on one line of text.\nIf a<b and b<c then a<c.";
