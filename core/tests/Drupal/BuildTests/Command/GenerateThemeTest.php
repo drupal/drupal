@@ -51,7 +51,19 @@ class GenerateThemeTest extends QuickStartTestBase {
     parent::setUp();
     $php_executable_finder = new PhpExecutableFinder();
     $this->php = $php_executable_finder->find();
-    $this->copyCodebase();
+    $drupal_root = $this->getWorkingPathDrupalRoot() ?? '';
+
+    $finder = $this->getCodebaseFinder();
+    $finder->notPath([
+      "#^{$drupal_root}vendor#",
+      "#^{$drupal_root}core/assets#",
+      "#^{$drupal_root}core/misc#",
+      "#^{$drupal_root}core/phpstan-tmp#",
+      "#^{$drupal_root}core/recipes#",
+      "#^{$drupal_root}(.+)/tests#",
+    ]);
+
+    $this->copyCodebase($finder->getIterator());
     $this->executeCommand('COMPOSER_DISCARD_CHANGES=true composer install --no-dev --no-interaction');
     chdir($this->getWorkingPath());
     $this->starterKitInfoYamlLocation = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.info.yml';
