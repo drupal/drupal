@@ -271,13 +271,13 @@ function hook_menu_links_discovered_alter(&$links) {
   // Change the weight and title of the user.logout link.
   $links['user.logout']['weight'] = -10;
   $links['user.logout']['title'] = new \Drupal\Core\StringTranslation\TranslatableMarkup('Logout');
-  // Conditionally add an additional link with a title that's not translated.
-  if (\Drupal::moduleHandler()->moduleExists('search')) {
-    $links['menu.api.search'] = [
-      'title' => \Drupal::config('system.site')->get('name'),
-      'route_name' => 'menu.api.search',
-      'description' => new \Drupal\Core\StringTranslation\TranslatableMarkup('View popular search phrases for this site.'),
-      'parent' => 'system.admin_reports',
+  // Conditionally add an additional link.
+  if (\Drupal::moduleHandler()->moduleExists('navigation')) {
+    $links['navigation.create'] = [
+      'title' => new \Drupal\Core\StringTranslation\TranslatableMarkup('Create'),
+      'route_name' => 'entity.node.add_page',
+      'description' => new \Drupal\Core\StringTranslation\TranslatableMarkup('Add content'),
+      'parent' => 'system.admin_content',
     ];
   }
 }
