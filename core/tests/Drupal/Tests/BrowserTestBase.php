@@ -23,7 +23,6 @@ use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use GuzzleHttp\Cookie\CookieJar;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Provides a test case for functional Drupal tests.
@@ -47,9 +46,8 @@ use PHPUnit\Framework\TestCase;
  *
  * @ingroup testing
  */
-abstract class BrowserTestBase extends TestCase {
+abstract class BrowserTestBase extends DrupalTestCase {
 
-  use DrupalTestCaseTrait;
   use FunctionalTestSetupTrait;
   use UiHelperTrait {
     FunctionalTestSetupTrait::refreshVariables insteadof UiHelperTrait;

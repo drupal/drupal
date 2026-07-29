@@ -6,7 +6,7 @@ namespace Drupal\Tests\Core\Test;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\TestSetupTrait;
-use Drupal\Tests\DrupalTestCaseTrait;
+use Drupal\Tests\DrupalTestCase;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -29,7 +29,6 @@ class TestSetupTraitTest extends UnitTestCase {
    * Tests the SIMPLETEST_DB environment variable is used.
    */
   public function testChangeDatabasePrefix(): void {
-    $root = dirname(__FILE__, 7);
     putenv('SIMPLETEST_DB=pgsql://user:pass@127.0.0.1/db');
     $connection_info = Database::convertDbUrlToConnectionInfo('mysql://user:pass@localhost/db');
     Database::addConnectionInfo('default', 'default', $connection_info);
@@ -38,35 +37,15 @@ class TestSetupTraitTest extends UnitTestCase {
 
     // Create a mock for testing the trait and set a few properties that are
     // used to avoid unnecessary set up.
-    $test_setup = new class() {
+    $test_setup = new #[Group('Testing')] class('test') extends DrupalTestCase {
 
-      use DrupalTestCaseTrait;
       use TestSetupTrait;
-
-      /**
-       * Returns the test class name.
-       *
-       * @return string
-       *   The test class name.
-       */
-      public function name(): string {
-        return 'test';
-      }
-
-      /**
-       * Expects an exception message.
-       *
-       * @param string $message
-       *   The expected exception message.
-       */
-      protected function expectExceptionMessage(string $message): void {
-      }
 
     };
 
     $reflection = new \ReflectionClass($test_setup);
     $reflection->getProperty('databasePrefix')->setValue($test_setup, 'testDbPrefix');
-    $reflection->getProperty('root')->setValue($test_setup, $root);
+    $reflection->getProperty('root')->setValue($test_setup, $this->root);
 
     $method = new \ReflectionMethod(get_class($test_setup), 'changeDatabasePrefix');
     $method->invoke($test_setup);

@@ -33220,10 +33220,42 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/scripts/run-tests.sh',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getDrupalRoot\\(\\) of class Drupal\\\\BuildTests\\\\Framework\\\\BuildTestBase\\:
+in drupal\\:11\\.4\\.0 and is removed from drupal\\:13\\.0\\.0\\. Access
+  \\$this\\-\\>root directly\\.$#',
+	'identifier' => 'method.deprecated',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/BuildTests/Composer/Component/ComponentsIsolatedBuildTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getDrupalRoot\\(\\) of class Drupal\\\\BuildTests\\\\Framework\\\\BuildTestBase\\:
+in drupal\\:11\\.4\\.0 and is removed from drupal\\:13\\.0\\.0\\. Access
+  \\$this\\-\\>root directly\\.$#',
+	'identifier' => 'method.deprecated',
+	'count' => 4,
+	'path' => __DIR__ . '/tests/Drupal/BuildTests/Composer/Template/ComposerProjectTemplatesTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getDrupalRoot\\(\\) of class Drupal\\\\BuildTests\\\\Framework\\\\BuildTestBase\\:
+in drupal\\:11\\.4\\.0 and is removed from drupal\\:13\\.0\\.0\\. Access
+  \\$this\\-\\>root directly\\.$#',
+	'identifier' => 'method.deprecated',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/BuildTests/Framework/BuildTestBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Calling md5\\(\\) is forbidden, use hash\\(\\) with an xxHash algorithm instead\\.$#',
 	'identifier' => 'disallowed.function',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/BuildTests/Framework/BuildTestBase.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getDrupalRoot\\(\\) of class Drupal\\\\BuildTests\\\\Framework\\\\BuildTestBase\\:
+in drupal\\:11\\.4\\.0 and is removed from drupal\\:13\\.0\\.0\\. Access
+  \\$this\\-\\>root directly\\.$#',
+	'identifier' => 'method.deprecated',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/BuildTests/Framework/Tests/BuildTestTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\FunctionalJavascriptTests\\\\Ajax\\\\AjaxMaintenanceModeTest\\:\\:attachFileField\\(\\) has no return type specified\\.$#',

@@ -10,9 +10,8 @@ use Behat\Mink\Session;
 use Composer\InstalledVersions;
 use Drupal\Component\FileSystem\FileSystem as DrupalFilesystem;
 use Drupal\Tests\DrupalTestBrowser;
-use Drupal\Tests\DrupalTestCaseTrait;
+use Drupal\Tests\DrupalTestCase;
 use Drupal\TestTools\Extension\RequiresComposerTrait;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Lock\LockFactory;
@@ -59,9 +58,8 @@ use Symfony\Component\Process\Process;
  * We don't use UiHelperInterface because it is too tightly integrated to
  * Drupal.
  */
-abstract class BuildTestBase extends TestCase {
+abstract class BuildTestBase extends DrupalTestCase {
 
-  use DrupalTestCaseTrait;
   use RequiresComposerTrait;
 
   /**

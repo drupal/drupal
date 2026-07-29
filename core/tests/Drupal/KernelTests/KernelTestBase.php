@@ -25,7 +25,7 @@ use Drupal\Core\Test\EventSubscriber\FieldStorageCreateCheckSubscriber;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Tests\BrowserHtmlDebugTrait;
 use Drupal\Tests\ConfigTestTrait;
-use Drupal\Tests\DrupalTestCaseTrait;
+use Drupal\Tests\DrupalTestCase;
 use Drupal\Tests\ExtensionListTestTrait;
 use Drupal\Tests\HttpKernelUiHelperTrait;
 use Drupal\Tests\RandomGeneratorTrait;
@@ -36,7 +36,6 @@ use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Exception;
-use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
@@ -95,9 +94,8 @@ use Symfony\Component\Routing\Route;
  *
  * @ingroup testing
  */
-abstract class KernelTestBase extends TestCase implements ServiceProviderInterface {
+abstract class KernelTestBase extends DrupalTestCase implements ServiceProviderInterface {
 
-  use DrupalTestCaseTrait;
   use AssertContentTrait;
   use RandomGeneratorTrait;
   use ConfigTestTrait;
