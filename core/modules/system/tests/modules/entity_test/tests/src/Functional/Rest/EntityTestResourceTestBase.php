@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\entity_test\Functional\Rest;
 
-use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
-use Drupal\Core\State\StateInterface;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use Drupal\user\Entity\User;
@@ -33,23 +31,9 @@ abstract class EntityTestResourceTestBase extends ConfigEntityResourceTestBase {
   protected static $patchProtectedFieldNames = [];
 
   /**
-   * The state object.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected StateInterface $state;
-
-  /**
    * @var \Drupal\entity_test\Entity\EntityTest
    */
   protected $entity;
-
-  /**
-   * The entity definition update manager.
-   *
-   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
-   */
-  protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
   /**
    * {@inheritdoc}

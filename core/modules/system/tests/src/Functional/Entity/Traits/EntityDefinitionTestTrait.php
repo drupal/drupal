@@ -6,6 +6,7 @@ namespace Drupal\Tests\system\Functional\Entity\Traits;
 
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\entity_test\FieldStorageDefinition;
 
@@ -13,6 +14,16 @@ use Drupal\entity_test\FieldStorageDefinition;
  * Provides some test methods used to update existing entity definitions.
  */
 trait EntityDefinitionTestTrait {
+
+  /**
+   * The entity definition update manager.
+   */
+  protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
+
+  /**
+   * The state service.
+   */
+  protected StateInterface $state;
 
   /**
    * Applies all the detected valid changes.

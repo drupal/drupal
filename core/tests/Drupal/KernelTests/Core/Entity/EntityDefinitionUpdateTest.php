@@ -21,13 +21,6 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   use EntityDefinitionTestTrait;
 
   /**
-   * The entity definition update manager.
-   *
-   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
-   */
-  protected $entityDefinitionUpdateManager;
-
-  /**
    * The database connection.
    *
    * @var \Drupal\Core\Database\Connection

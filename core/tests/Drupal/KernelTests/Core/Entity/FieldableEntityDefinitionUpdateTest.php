@@ -25,13 +25,6 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   use EntityDefinitionTestTrait;
 
   /**
-   * The entity definition update manager.
-   *
-   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
-   */
-  protected $entityDefinitionUpdateManager;
-
-  /**
    * The last installed schema repository service.
    *
    * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface

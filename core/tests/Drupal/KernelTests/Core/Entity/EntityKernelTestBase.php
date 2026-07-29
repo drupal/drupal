@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\State\StateInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\EntityTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -45,10 +46,8 @@ abstract class EntityKernelTestBase extends KernelTestBase {
 
   /**
    * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
    */
-  protected $state;
+  protected StateInterface $state;
 
   /**
    * {@inheritdoc}
