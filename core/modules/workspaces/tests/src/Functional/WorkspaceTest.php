@@ -16,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Test the workspace entity.
  */
 #[Group('workspaces')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class WorkspaceTest extends BrowserTestBase {
 
@@ -81,10 +82,20 @@ class WorkspaceTest extends BrowserTestBase {
   }
 
   /**
+   * Test workspace functionality.
+   */
+  public function testWorkspaces(): void {
+    $this->drupalLogin($this->editor1);
+    $this->doTestSpecialCharacters();
+    $this->doTestWorkspaceToolbar();
+    $this->doTestWorkspaceFormRevisions();
+    $this->doTestWorkspaceOwner();
+  }
+
+  /**
    * Tests creating a workspace with special characters.
    */
-  public function testSpecialCharacters(): void {
-    $this->drupalLogin($this->editor1);
+  protected function doTestSpecialCharacters(): void {
     $page = $this->getSession()->getPage();
 
     // Test a valid workspace name.
@@ -104,17 +115,17 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * Tests that the toolbar correctly shows the active workspace.
    */
-  public function testWorkspaceToolbar(): void {
+  protected function doTestWorkspaceToolbar(): void {
     $this->drupalLogin($this->editor1);
 
     $this->drupalGet('/admin/config/workflow/workspaces/add');
     $this->submitForm([
-      'id' => 'test_workspace',
+      'id' => 'test_workspace_1',
       'label' => 'Test workspace',
     ], 'Save');
 
     // Activate the test workspace.
-    $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace/activate');
+    $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace_1/activate');
     $this->submitForm([], 'Confirm');
 
     $this->drupalGet('<front>');
@@ -123,7 +134,7 @@ class WorkspaceTest extends BrowserTestBase {
     $this->assertTrue($page->hasLink('Test workspace'));
 
     // Change the workspace label.
-    $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace/edit');
+    $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace_1/edit');
     $this->submitForm(['label' => 'New name'], 'Save');
 
     $this->drupalGet('<front>');
@@ -135,43 +146,41 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * Tests changing the owner of a workspace.
    */
-  public function testWorkspaceOwner(): void {
-    $this->drupalLogin($this->editor1);
-
+  protected function doTestWorkspaceOwner(): void {
     $this->drupalGet('/admin/config/workflow/workspaces/add');
     $this->submitForm([
-      'id' => 'test_workspace',
+      'id' => 'test_workspace_2',
       'label' => 'Test workspace',
     ], 'Save');
 
     $storage = \Drupal::entityTypeManager()->getStorage('workspace');
-    $test_workspace = $storage->load('test_workspace');
+    $test_workspace = $storage->load('test_workspace_2');
     $this->assertEquals($this->editor1->id(), $test_workspace->getOwnerId());
 
-    $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace/edit');
+    $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace_2/edit');
     $this->submitForm(['uid[0][target_id]' => $this->editor2->getAccountName()], 'Save');
 
-    $test_workspace = $storage->loadUnchanged('test_workspace');
+    $test_workspace = $storage->loadUnchanged('test_workspace_2');
     $this->assertEquals($this->editor2->id(), $test_workspace->getOwnerId());
   }
 
   /**
    * Tests that editing a workspace creates a new revision.
    */
-  public function testWorkspaceFormRevisions(): void {
+  protected function doTestWorkspaceFormRevisions(): void {
     $this->drupalLogin($this->editor1);
     $storage = \Drupal::entityTypeManager()->getStorage('workspace');
     $this->createWorkspaceThroughUi('Stage', 'stage');
 
-    // The current 'stage' workspace entity should be revision 1.
+    // The current 'stage' workspace entity should be revision 4.
     $stage_workspace = $storage->load('stage');
-    $this->assertEquals('1', $stage_workspace->getRevisionId());
+    $this->assertEquals('4', $stage_workspace->getRevisionId());
 
-    // Re-save the 'stage' workspace via the UI to create revision 2.
+    // Re-save the 'stage' workspace via the UI to create revision 5.
     $this->drupalGet($stage_workspace->toUrl('edit-form')->toString());
     $this->submitForm([], 'Save');
     $stage_workspace = $storage->loadUnchanged('stage');
-    $this->assertEquals('2', $stage_workspace->getRevisionId());
+    $this->assertEquals('5', $stage_workspace->getRevisionId());
   }
 
   /**
