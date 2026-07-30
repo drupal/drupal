@@ -208,8 +208,14 @@ class WorkspaceTest extends BrowserTestBase {
     $assert_session->linkExists('Switch to this workspace');
 
     // Create some test content.
-    $this->createNodeThroughUi('Node 1', 'test');
-    $this->createNodeThroughUi('Node 2', 'test');
+    $this->drupalCreateNode([
+      'title' => 'Node 1',
+      'type' => 'test',
+    ]);
+    $this->drupalCreateNode([
+      'title' => 'Node 2',
+      'type' => 'test',
+    ]);
     $edit = [
       'name[0][value]' => 'Term 1',
     ];
@@ -224,7 +230,10 @@ class WorkspaceTest extends BrowserTestBase {
 
     // Create 50 more nodes to test the pagination.
     for ($i = 3; $i < 53; $i++) {
-      $this->createNodeThroughUi('Node ' . $i, 'test');
+      $this->drupalCreateNode([
+        'title' => 'Node ' . $i,
+        'type' => 'test',
+      ]);
     }
 
     $this->drupalGet($test_1->toUrl()->toString());
@@ -287,7 +296,10 @@ class WorkspaceTest extends BrowserTestBase {
     $this->createAndActivateWorkspaceThroughUi('May 4', 'may_4');
 
     // Create a node in the workspace.
-    $this->createNodeThroughUi('A mayfly flies / In May or June', 'test');
+    $this->drupalCreateNode([
+      'title' => 'A mayfly flies / In May or June',
+      'type' => 'test',
+    ]);
 
     // Delete the workspace.
     $this->drupalGet('/admin/config/workflow/workspaces/manage/may_4/delete');
@@ -389,6 +401,21 @@ class WorkspaceTest extends BrowserTestBase {
 
     $this->getSession()->getPage()->pressButton('Publish 1 item to Live');
     $this->assertSession()->pageTextContains('Successful publication.');
+  }
+
+  /**
+   * Tests that nodes created inside a workspace are assigned to the workspace.
+   */
+  public function testNodeCreation(): void {
+    $this->createContentType(['type' => 'test', 'label' => 'Test']);
+    $this->drupalLogin($this->drupalCreateUser([
+      'create workspace',
+      'view own workspace',
+      'create test content',
+    ]));
+    $workspace = $this->createAndActivateWorkspaceThroughUi('Test', 'test');
+    $node = $this->createNodeThroughUi('Test', 'test');
+    $this->assertSame($node->workspace->entity->id(), $workspace->id());
   }
 
 }
