@@ -277,137 +277,6 @@ default:
       - composer.lock
       - composer/Metapackage/
 
-##################
-# Unit test Jobs
-##################
-
-'📋 PHPUnit Unit (Core)':
-  stage: ⚡️ Tests
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
-      when: never
-    - if: $PERFORMANCE_TEST != "1"
-  needs: []
-  parallel:
-    matrix:
-      - _TARGET_PHP: !reference [.php_versions]
-  allow_failure:
-    # It's not possible to set allow failure conditional on a possible value of
-    # the matrix, so we intercept failure from the script and exit with a code
-    # that we allow here.
-    exit_codes: 100
-  variables:
-    KUBERNETES_CPU_REQUEST: "4"
-    CONCURRENCY: 24
-    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
-  before_script:
-    - *composer-setup
-    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
-    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
-  script:
-    - export EXIT_CODE=0
-    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --types "unit" --concurrency "$CONCURRENCY" --repeat "1" --verbose --non-html --all || EXIT_CODE=$?
-    # Allow failure for the next PHP major.
-    - |
-      [[ $EXIT_CODE != 0 && $_TARGET_PHP == $NEXT_PHP_MAJOR ]] && exit 100
-    - exit $EXIT_CODE
-  after_script:
-    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
-  artifacts:
-    when: always
-    expire_in: 6 mos
-    reports:
-      junit: ./sites/default/files/simpletest/phpunit-*.xml
-    paths:
-      - ./sites/default/files/simpletest/phpunit-*.xml
-
-'📋 PHPUnit Unit (Component)':
-  # Jobs that produce metrics must run on performance test pipelines so MRs show
-  # the correct information.
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
-      when: never
-    - if: $PERFORMANCE_TEST != "1" || $_TARGET_PHP == $PRIMARY_PHP
-  stage: ⚡️ Tests
-  needs: []
-  parallel:
-    matrix:
-      - _TARGET_PHP: !reference [.php_versions]
-  allow_failure:
-    # It's not possible to set allow failure conditional on a possible value of
-    # the matrix, so we intercept failure from the script and exit with a code
-    # that we allow here.
-    exit_codes: 100
-  variables:
-    KUBERNETES_CPU_REQUEST: "2"
-    _ARTIFACTS_DIR: "test-artifacts/phpunit"
-    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
-  before_script:
-    - mkdir -p $_ARTIFACTS_DIR
-    - *composer-setup
-    - |
-      [[ $_TARGET_PHP == $PRIMARY_PHP ]] && docker-php-ext-enable pcov
-  script:
-    # Execute test coverage reporting only for the primary PHP version.
-    - |
-      [[ $_TARGET_PHP != $PRIMARY_PHP ]] && export _PHPUNIT_COVERAGE=""
-      [[ $_TARGET_PHP == $PRIMARY_PHP ]] && export _PHPUNIT_COVERAGE="--coverage-text=$_ARTIFACTS_DIR/component-coverage-report.txt --coverage-cobertura=$_ARTIFACTS_DIR/component-coverage-cobertura.xml"
-    - |
-      [[ $PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION == false ]] && export _FAIL_ON_PHPUNIT_DEPRECATION=""
-      [[ $PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION != false ]] && export _FAIL_ON_PHPUNIT_DEPRECATION="--fail-on-phpunit-deprecation"
-    # Component tests are run via the PHPUnit CLI using a PHPUnit configuration
-    # file of its own located in the core/tests/Drupal/Tests/Component
-    # directory.
-    - export EXIT_CODE=0
-    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --log-junit $_ARTIFACTS_DIR/junit.xml --fail-on-deprecation $_FAIL_ON_PHPUNIT_DEPRECATION $_PHPUNIT_COVERAGE || EXIT_CODE=$?
-    # Allow failure for the next PHP major.
-    - |
-      [[ $EXIT_CODE != 0 && $_TARGET_PHP == $NEXT_PHP_MAJOR ]] && exit 100
-    - exit $EXIT_CODE
-  after_script:
-    # Process the coverage text report to produce an OpenMetrics report.
-    - |
-      [[ $_TARGET_PHP == $PRIMARY_PHP ]] && php .gitlab-ci/scripts/component-coverage-metrics.php $_ARTIFACTS_DIR/component-coverage-report.txt $_ARTIFACTS_DIR/component-coverage-metrics.txt
-  artifacts:
-    when: always
-    expire_in: 6 mos
-    reports:
-      junit: $_ARTIFACTS_DIR/junit.xml
-      metrics: $_ARTIFACTS_DIR/component-coverage-metrics.txt
-      coverage_report:
-        coverage_format: cobertura
-        path: $_ARTIFACTS_DIR/component-coverage-cobertura.xml
-    paths:
-      - $_ARTIFACTS_DIR
-
-'📋 PHPUnit Unit (PHPStan rules)':
-  stage: ⚡️ Tests
-  needs: []
-  variables:
-    KUBERNETES_CPU_REQUEST: "2"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
-      when: never
-    # Run if PHPStan files have changed, or manually.
-    - if: $PERFORMANCE_TEST != "1"
-      changes:
-        - core/tests/PHPStan/**/*
-        - composer/Metapackage/PinnedDevDependencies/composer.json
-    - when: manual
-      allow_failure: true
-  script:
-    - docker-php-ext-enable pcov
-    - cd core/tests/PHPStan
-    - composer install
-    - vendor/bin/phpunit tests --testdox --coverage-text --colors=always --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
-  artifacts:
-    when: always
-    reports:
-      junit: core/tests/PHPStan/junit.xml
-      coverage_report:
-        coverage_format: cobertura
-        path: core/tests/PHPStan/coverage.cobertura.xml
-
 ################
 # Test Jobs
 ################
@@ -1040,6 +909,137 @@ default:
     - corepack enable
     - echo -e "Node version $(node --version)\nYarn version $(corepack yarn --version)"
     - yarn install
+
+##################
+# Unit test Jobs
+##################
+
+'📋 PHPUnit Unit (Core)':
+  stage: ⚡️ Tests
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
+    - if: $PERFORMANCE_TEST != "1"
+  needs: []
+  parallel:
+    matrix:
+      - _TARGET_PHP: !reference [.php_versions]
+  allow_failure:
+    # It's not possible to set allow failure conditional on a possible value of
+    # the matrix, so we intercept failure from the script and exit with a code
+    # that we allow here.
+    exit_codes: 100
+  variables:
+    KUBERNETES_CPU_REQUEST: "4"
+    CONCURRENCY: 24
+    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
+  before_script:
+    - *composer-setup
+    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
+    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+  script:
+    - export EXIT_CODE=0
+    - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --types "unit" --concurrency "$CONCURRENCY" --repeat "1" --verbose --non-html --all || EXIT_CODE=$?
+    # Allow failure for the next PHP major.
+    - |
+      [[ $EXIT_CODE != 0 && $_TARGET_PHP == $NEXT_PHP_MAJOR ]] && exit 100
+    - exit $EXIT_CODE
+  after_script:
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: ./sites/default/files/simpletest/phpunit-*.xml
+    paths:
+      - ./sites/default/files/simpletest/phpunit-*.xml
+
+'📋 PHPUnit Unit (Component)':
+  # Jobs that produce metrics must run on performance test pipelines so MRs show
+  # the correct information.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
+    - if: $PERFORMANCE_TEST != "1" || $_TARGET_PHP == $PRIMARY_PHP
+  stage: ⚡️ Tests
+  needs: []
+  parallel:
+    matrix:
+      - _TARGET_PHP: !reference [.php_versions]
+  allow_failure:
+    # It's not possible to set allow failure conditional on a possible value of
+    # the matrix, so we intercept failure from the script and exit with a code
+    # that we allow here.
+    exit_codes: 100
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+    _ARTIFACTS_DIR: "test-artifacts/phpunit"
+    PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
+  before_script:
+    - mkdir -p $_ARTIFACTS_DIR
+    - *composer-setup
+    - |
+      [[ $_TARGET_PHP == $PRIMARY_PHP ]] && docker-php-ext-enable pcov
+  script:
+    # Execute test coverage reporting only for the primary PHP version.
+    - |
+      [[ $_TARGET_PHP != $PRIMARY_PHP ]] && export _PHPUNIT_COVERAGE=""
+      [[ $_TARGET_PHP == $PRIMARY_PHP ]] && export _PHPUNIT_COVERAGE="--coverage-text=$_ARTIFACTS_DIR/component-coverage-report.txt --coverage-cobertura=$_ARTIFACTS_DIR/component-coverage-cobertura.xml"
+    - |
+      [[ $PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION == false ]] && export _FAIL_ON_PHPUNIT_DEPRECATION=""
+      [[ $PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION != false ]] && export _FAIL_ON_PHPUNIT_DEPRECATION="--fail-on-phpunit-deprecation"
+    # Component tests are run via the PHPUnit CLI using a PHPUnit configuration
+    # file of its own located in the core/tests/Drupal/Tests/Component
+    # directory.
+    - export EXIT_CODE=0
+    - vendor/bin/phpunit -c core/tests/Drupal/Tests/Component --testsuite unit-component --colors=always --testdox --log-junit $_ARTIFACTS_DIR/junit.xml --fail-on-deprecation $_FAIL_ON_PHPUNIT_DEPRECATION $_PHPUNIT_COVERAGE || EXIT_CODE=$?
+    # Allow failure for the next PHP major.
+    - |
+      [[ $EXIT_CODE != 0 && $_TARGET_PHP == $NEXT_PHP_MAJOR ]] && exit 100
+    - exit $EXIT_CODE
+  after_script:
+    # Process the coverage text report to produce an OpenMetrics report.
+    - |
+      [[ $_TARGET_PHP == $PRIMARY_PHP ]] && php .gitlab-ci/scripts/component-coverage-metrics.php $_ARTIFACTS_DIR/component-coverage-report.txt $_ARTIFACTS_DIR/component-coverage-metrics.txt
+  artifacts:
+    when: always
+    expire_in: 6 mos
+    reports:
+      junit: $_ARTIFACTS_DIR/junit.xml
+      metrics: $_ARTIFACTS_DIR/component-coverage-metrics.txt
+      coverage_report:
+        coverage_format: cobertura
+        path: $_ARTIFACTS_DIR/component-coverage-cobertura.xml
+    paths:
+      - $_ARTIFACTS_DIR
+
+'📋 PHPUnit Unit (PHPStan rules)':
+  stage: ⚡️ Tests
+  needs: []
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
+    # Run if PHPStan files have changed, or manually.
+    - if: $PERFORMANCE_TEST != "1"
+      changes:
+        - core/tests/PHPStan/**/*
+        - composer/Metapackage/PinnedDevDependencies/composer.json
+    - when: manual
+      allow_failure: true
+  script:
+    - docker-php-ext-enable pcov
+    - cd core/tests/PHPStan
+    - composer install
+    - vendor/bin/phpunit tests --testdox --coverage-text --colors=always --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
+  artifacts:
+    when: always
+    reports:
+      junit: core/tests/PHPStan/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: core/tests/PHPStan/coverage.cobertura.xml
 
 # This job should be real quick and run at the very end of the pipeline.
 'Write lint caches':
