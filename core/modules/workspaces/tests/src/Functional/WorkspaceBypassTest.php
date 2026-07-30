@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Functional;
 
+use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
@@ -51,7 +52,11 @@ class WorkspaceBypassTest extends BrowserTestBase {
     $bears = $this->createAndActivateWorkspaceThroughUi('Bears', 'bears');
 
     // Now create a node in the Bears workspace, as the owner of that workspace.
-    $coach_bears_node = $this->createNodeThroughUi('Ditka Bears node', 'test');
+    $coach_bears_node = $this->drupalCreateNode([
+      'title' => 'Ditka Bears node',
+      'type' => 'test',
+      'status' => NodeInterface::PUBLISHED,
+    ]);
     $coach_bears_node_id = $coach_bears_node->id();
 
     // Editing both nodes should be possible.
