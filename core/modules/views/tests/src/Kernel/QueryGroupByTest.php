@@ -28,6 +28,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     'test_group_by_in_filters',
     'test_aggregate_count',
     'test_aggregate_count_function',
+    'test_aggregate_count_numeric',
     'test_group_by_count',
     'test_group_by_count_multicardinality',
     'test_group_by_field_not_within_bundle',
@@ -96,6 +97,37 @@ class QueryGroupByTest extends ViewsKernelTestBase {
 
     $this->assertEquals(7, $view->result[0]->id);
     $this->assertCount(1, $view->result, 'Make sure the count of rows is one.');
+  }
+
+  /**
+   * Tests aggregate count feature with a numeric field.
+   */
+  public function testAggregateCountNumeric(): void {
+    // Create 4 entities with one timestamp.
+    for ($i = 0; $i < 4; $i++) {
+      $this->storage->create([
+        'name' => $this->randomMachineName(),
+        // Tue, 8 Apr 2025 - 10:45.
+        'created' => '1744073136',
+      ])->save();
+    }
+    // Create 3 entities with another timestamp.
+    for ($i = 0; $i < 3; $i++) {
+      $this->storage->create([
+        'name' => $this->randomMachineName(),
+        // Tue, 1 Apr 2025 - 10:46.
+        'created' => '1743464778',
+      ])->save();
+    }
+
+    $view = Views::getView('test_aggregate_count_numeric');
+    $this->executeView($view);
+
+    $this->assertCount(2, $view->result);
+    $this->assertEquals('4', $view->getStyle()->getField(0, 'created_count'));
+    $this->assertEquals('Tue, 8 Apr 2025 - 10:45', $view->getStyle()->getField(0, 'created_group'));
+    $this->assertEquals('3', $view->getStyle()->getField(1, 'created_count'));
+    $this->assertEquals('Tue, 1 Apr 2025 - 10:46', $view->getStyle()->getField(1, 'created_group'));
   }
 
   /**

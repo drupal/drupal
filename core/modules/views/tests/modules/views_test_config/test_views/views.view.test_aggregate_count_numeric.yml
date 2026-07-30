@@ -1,0 +1,84 @@
+langcode: en
+status: true
+dependencies: {  }
+id: test_aggregate_count_numeric
+label: test_aggregate_count_numeric
+module: views
+description: ''
+tag: ''
+base_table: entity_test
+base_field: nid
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: tag
+      exposed_form:
+        type: basic
+      fields:
+        created_count:
+          alter:
+            alter_text: false
+            ellipsis: true
+            html: false
+            make_link: false
+            strip_tags: false
+            trim: false
+            word_boundary: true
+          empty_zero: false
+          field: created
+          hide_empty: false
+          id: created_count
+          table: entity_test
+          plugin_id: field
+          type: timestamp
+          entity_type: entity_test
+          entity_field: created
+          group_type: count
+        created_group:
+          alter:
+            alter_text: false
+            ellipsis: true
+            html: false
+            make_link: false
+            strip_tags: true
+            trim_whitespace: true
+            trim: false
+            word_boundary: true
+          empty_zero: false
+          field: created
+          hide_empty: false
+          id: created_group
+          table: entity_test
+          plugin_id: field
+          type: timestamp
+          entity_type: entity_test
+          entity_field: created
+          group_type: group
+      group_by: true
+      pager:
+        type: some
+      sorts:
+        created:
+          id: created
+          table: entity_test
+          field: created
+          order: DESC
+          plugin_id: date
+          entity_type: entity_test
+          entity_field: created
+          group_type: group
+      query:
+        options:
+          query_comment: ''
+        type: views_query
+      style:
+        type: default
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Default
+    id: default
+    position: 0
