@@ -492,7 +492,7 @@
     this.url = this.url.replace(/\/nojs(\/|$|\?|#)/, '/ajax$1');
     // If the 'nojs' version of the URL is trusted, also trust the 'ajax'
     // version.
-    if (drupalSettings.ajaxTrustedUrl[originalUrl]) {
+    if (drupalSettings.ajaxTrustedUrl.hasOwnProperty(originalUrl)) {
       drupalSettings.ajaxTrustedUrl[this.url] = true;
     }
 
@@ -569,7 +569,10 @@
         //   #ajax) can bypass header verification. This is especially useful
         //   for Ajax with multipart forms. Because IFRAME transport is used,
         //   the response headers cannot be accessed for verification.
-        if (response !== null && !drupalSettings.ajaxTrustedUrl[ajax.url]) {
+        if (
+          response !== null &&
+          !drupalSettings.ajaxTrustedUrl.hasOwnProperty(ajax.url)
+        ) {
           if (xmlhttprequest.getResponseHeader('X-Drupal-Ajax-Token') !== '1') {
             const customMessage = Drupal.t(
               'The response failed verification so will not be processed.',
@@ -636,7 +639,7 @@
     // Bind the ajaxSubmit function to the element event.
     $(ajax.element).on(elementSettings.event, function (event) {
       if (
-        !drupalSettings.ajaxTrustedUrl[ajax.url] &&
+        !drupalSettings.ajaxTrustedUrl.hasOwnProperty(ajax.url) &&
         !Drupal.url.isLocal(ajax.url)
       ) {
         throw new Error(

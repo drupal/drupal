@@ -168,3 +168,17 @@ ajax_test.link_page.dialog_contents:
     _controller: '\Drupal\ajax_test\Controller\AjaxTestController::httpMethodsDialog'
   requirements:
     _access: 'TRUE'
+
+ajax_test.constructor:
+  path: '/ajax-test/constructor'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::constructor'
+  requirements:
+    _access: 'TRUE'
+
+ajax_test.property_link:
+  path: '/ajax-test/property-link'
+  defaults:
+    _controller: '\Drupal\ajax_test\Controller\AjaxTestController::propertyLink'
+  requirements:
+    _access: 'TRUE'
