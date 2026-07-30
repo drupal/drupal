@@ -9,6 +9,12 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Validation constraint for changing the menu settings in pending revisions.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Menu
+ *   settings validation is now handled as a form validation callback in
+ *   \Drupal\menu_ui\Hook\MenuUiHooks::formNodeFormValidate().
+ *
+ * @see https://www.drupal.org/node/3606616
  */
 #[Constraint(
   id: 'MenuSettings',
