@@ -55,12 +55,11 @@ class Breadcrumb404Test extends BrowserTestBase {
    */
   protected function getBreadcrumbCacheEntries() {
     $database = \Drupal::database();
-    $cache_entries = $database->select('cache_render')
+    return $database->select('cache_render')
       ->fields('cache_render')
       ->condition('cid', $database->escapeLike('entity_view:block:breadcrumb') . '%', 'LIKE')
       ->execute()
       ->fetchAllAssoc('cid');
-    return $cache_entries;
   }
 
 }

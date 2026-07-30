@@ -39,7 +39,7 @@ trait UiHelperTrait {
    *
    * @var null|int
    */
-  protected $maximumMetaRefreshCount = NULL;
+  protected $maximumMetaRefreshCount;
 
   /**
    * The number of meta refresh redirects followed during ::drupalGet().

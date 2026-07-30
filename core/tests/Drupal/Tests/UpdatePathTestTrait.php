@@ -95,7 +95,6 @@ trait UpdatePathTestTrait {
       $module_handler = $this->container->get('module_handler');
       $config_module_list = $this->config('core.extension')->get('module');
       $module_handler_list = $module_handler->getModuleList();
-      $modules_installed = FALSE;
       // Modules that are in configuration but not the module handler have been
       // installed.
       $modules_installed = !empty(array_diff_key($config_module_list, $module_handler_list));

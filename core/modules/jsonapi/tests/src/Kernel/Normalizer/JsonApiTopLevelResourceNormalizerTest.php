@@ -76,8 +76,6 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * The node type.
-   *
-   * @var \Drupal\node\Entity\NodeType
    */
   protected NodeType $nodeType;
 
@@ -90,29 +88,21 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * A user.
-   *
-   * @var \Drupal\user\Entity\User
    */
   protected User $user2;
 
   /**
    * A vocabulary.
-   *
-   * @var \Drupal\taxonomy\Entity\Vocabulary
    */
   protected Vocabulary $vocabulary;
 
   /**
    * A term.
-   *
-   * @var \Drupal\taxonomy\Entity\Term
    */
   protected Term $term1;
 
   /**
    * A term.
-   *
-   * @var \Drupal\taxonomy\Entity\Term
    */
   protected Term $term2;
 

@@ -610,7 +610,7 @@ class PagerTest extends ViewTestBase {
 
     // Go to the second page so we see both previous and next buttons.
     $this->drupalGet('nl/test_pager_full', ['query' => ['page' => 1]]);
-    foreach ($labels as $label => $translation) {
+    foreach ($labels as $translation) {
       // Check if we can find the translation.
       $this->assertSession()->pageTextContains($translation);
     }

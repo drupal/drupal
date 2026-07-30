@@ -225,8 +225,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
    */
   protected function createThemeNegotiator(array $negotiators): ThemeNegotiator {
     $resolver = new ClassResolver($this->container);
-    $theme_negotiator = new ThemeNegotiator($this->themeAccessCheck, $resolver, $negotiators);
-    return $theme_negotiator;
+    return new ThemeNegotiator($this->themeAccessCheck, $resolver, $negotiators);
   }
 
 }

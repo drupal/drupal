@@ -30,7 +30,7 @@ class DistributionProfileTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $profile = NULL;
+  protected $profile;
 
   protected function prepareEnvironment(): void {
     parent::prepareEnvironment();

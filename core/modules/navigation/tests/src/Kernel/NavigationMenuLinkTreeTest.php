@@ -21,8 +21,6 @@ class NavigationMenuLinkTreeTest extends KernelTestBase {
 
   /**
    * The tested navigation menu link tree.
-   *
-   * @var \Drupal\navigation\Menu\NavigationMenuLinkTree
    */
   protected NavigationMenuLinkTree $linkTree;
 

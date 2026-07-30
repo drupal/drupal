@@ -85,7 +85,7 @@ final class Configuration {
       throw new \RuntimeException(sprintf('Invalid pattern found in "%s" on line %d', $path, 1 + $line));
     });
     try {
-      foreach (file($path) as $line => $pattern) {
+      foreach (file($path) as $pattern) {
         if ((trim($pattern)[0] ?? '#') !== '#') {
           preg_match($pattern, '');
           $this->deprecationIgnorePatterns[] = $pattern;

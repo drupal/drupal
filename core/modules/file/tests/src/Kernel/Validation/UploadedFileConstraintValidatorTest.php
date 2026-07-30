@@ -30,29 +30,21 @@ class UploadedFileConstraintValidatorTest extends KernelTestBase {
 
   /**
    * The file name.
-   *
-   * @var string
    */
   protected string $filename;
 
   /**
    * The temporary file path.
-   *
-   * @var string
    */
   protected string $path;
 
   /**
    * The max 4 MB filesize to use for testing.
-   *
-   * @var int
    */
   protected int $maxSize = 4194304;
 
   /**
    * A validator.
-   *
-   * @var \Symfony\Component\Validator\Validator\ValidatorInterface
    */
   private ValidatorInterface $validator;
 

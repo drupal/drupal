@@ -204,9 +204,8 @@ class FieldWebTest extends ViewTestBase {
    */
   protected function parseContent($content): ?\SimpleXMLElement {
     $htmlDom = Html::load($content);
-    $elements = simplexml_import_dom($htmlDom);
 
-    return $elements;
+    return simplexml_import_dom($htmlDom);
   }
 
   /**

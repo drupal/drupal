@@ -27,22 +27,16 @@ class LinkFormatterTest extends EntityKernelTestBase {
 
   /**
    * The entity type used in this test.
-   *
-   * @var string
    */
   protected string $entityType = 'entity_test';
 
   /**
    * The bundle used in this test.
-   *
-   * @var string
    */
   protected string $bundle = 'entity_test';
 
   /**
    * The name of the field used in this test.
-   *
-   * @var string
    */
   protected string $fieldName = 'field_test';
 

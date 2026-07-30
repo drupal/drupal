@@ -110,7 +110,7 @@ class NodeLanguageTest extends NodeTestBase {
       $node->save();
     }
     // Create non-translatable nodes.
-    foreach ($this->nodeTitles[LanguageInterface::LANGCODE_NOT_SPECIFIED] as $index => $title) {
+    foreach ($this->nodeTitles[LanguageInterface::LANGCODE_NOT_SPECIFIED] as $title) {
       $node = $this->drupalCreateNode([
         'title' => $title,
         'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
@@ -169,8 +169,6 @@ class NodeLanguageTest extends NodeTestBase {
 
     // Test the argument -- filter to just Spanish.
     $this->drupalGet('test-language/es');
-    // This time, test just the language field.
-    $message = 'Spanish argument page';
     $this->assertSession()->pageTextNotContains('English');
     $this->assertSession()->pageTextNotContains('French');
     $this->assertSession()->pageTextContains('Spanish');

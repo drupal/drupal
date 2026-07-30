@@ -27,50 +27,36 @@ class LocaleProjectRepositoryTest extends UnitTestCase {
 
   /**
    * The local project storage.
-   *
-   * @var \Drupal\locale\LocaleProjectRepository
    */
   private LocaleProjectRepository $localeProjectRepository;
 
   /**
    * The key value memory factory.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   private CacheBackendInterface $cache;
 
   /**
    * The key value memory factory.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory
    */
   private KeyValueMemoryFactory $keyValueMemoryFactory;
 
   /**
    * The key value memory factory.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   private ModuleHandlerInterface $moduleHandler;
 
   /**
    * The key value memory factory.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
    */
   private ModuleExtensionList $moduleExtensionList;
 
   /**
    * The key value memory factory.
-   *
-   * @var \Drupal\Core\Extension\ThemeExtensionList
    */
   private ThemeExtensionList $themeExtensionList;
 
   /**
    * The key value memory factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   private ConfigFactoryInterface $config;
 

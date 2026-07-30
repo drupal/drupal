@@ -88,7 +88,7 @@ class ErrorTest extends UnitTestCase {
     $data = [];
 
     // Test with no function, main should be in the backtrace.
-    $data[] = [[self::createBacktraceItem(NULL, NULL)], "main() (Line: 10)\n"];
+    $data[] = [[self::createBacktraceItem(NULL)], "main() (Line: 10)\n"];
 
     $base = [self::createBacktraceItem()];
     $data[] = [$base, "test_function() (Line: 10)\n"];

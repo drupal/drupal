@@ -38,8 +38,6 @@ class EntityCreateAccessCustomCidTest extends UnitTestCase {
 
   /**
    * A language code.
-   *
-   * @var string
    */
   protected string $langcode;
 

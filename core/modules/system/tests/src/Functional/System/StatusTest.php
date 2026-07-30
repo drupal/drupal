@@ -234,7 +234,7 @@ class StatusTest extends BrowserTestBase {
     $this->assertNotEquals(count($error_elements), 0, 'Errors are listed on the page.');
     $expected_text = new PluralTranslatableMarkup(count($error_elements), 'Error', 'Errors');
     $expected_text = count($error_elements) . ' ' . $expected_text;
-    $this->assertSession()->responseContains((string) $expected_text);
+    $this->assertSession()->responseContains($expected_text);
   }
 
   /**
@@ -254,7 +254,7 @@ class StatusTest extends BrowserTestBase {
     $this->assertNotEquals(count($warning_elements), 0, 'Warnings are listed on the page.');
     $expected_text = new PluralTranslatableMarkup(count($warning_elements), 'Warning', 'Warnings');
     $expected_text = count($warning_elements) . ' ' . $expected_text;
-    $this->assertSession()->responseContains((string) $expected_text);
+    $this->assertSession()->responseContains($expected_text);
   }
 
 }

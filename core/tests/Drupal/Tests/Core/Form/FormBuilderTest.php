@@ -1158,7 +1158,7 @@ class TestFormInjected extends TestForm implements ContainerInjectionInterface {
 class TestFormWithPredefinedForm extends TestForm {
 
   /**
-   * @var array
+   * The form data.
    */
   protected array $form;
 

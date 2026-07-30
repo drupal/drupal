@@ -38,15 +38,11 @@ class EntityLinksTest extends KernelTestBase {
 
   /**
    * The entity_links filter.
-   *
-   * @var \Drupal\filter\Plugin\Filter\EntityLinks
    */
   protected EntityLinks $filter;
 
   /**
    * The test logger.
-   *
-   * @var \ColinODell\PsrTestLogger\TestLogger
    */
   protected TestLogger $logger;
 

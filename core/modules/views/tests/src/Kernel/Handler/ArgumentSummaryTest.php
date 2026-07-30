@@ -45,15 +45,11 @@ class ArgumentSummaryTest extends ViewsKernelTestBase {
 
   /**
    * Node type with an autocomplete tagging field.
-   *
-   * @var \Drupal\node\NodeTypeInterface
    */
   protected NodeTypeInterface $nodeType;
 
   /**
    * The vocabulary used for the test tag field.
-   *
-   * @var \Drupal\taxonomy\VocabularyInterface
    */
   protected VocabularyInterface $tagVocabulary;
 

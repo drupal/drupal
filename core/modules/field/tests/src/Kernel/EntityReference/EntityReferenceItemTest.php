@@ -212,7 +212,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::setValue().
     $user = User::create(['name' => $this->randomString()]);
     $user->save();
-    $entity = EntityTest::create(['user_id' => ['target_id' => (int) $user->id(), 'entity' => $user]]);
+    EntityTest::create(['user_id' => ['target_id' => (int) $user->id(), 'entity' => $user]]);
   }
 
   /**

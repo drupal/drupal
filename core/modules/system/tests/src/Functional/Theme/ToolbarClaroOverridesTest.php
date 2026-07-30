@@ -38,8 +38,6 @@ class ToolbarClaroOverridesTest extends BrowserTestBase {
 
   /**
    * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
    */
   protected ThemeManagerInterface $themeManager;
 

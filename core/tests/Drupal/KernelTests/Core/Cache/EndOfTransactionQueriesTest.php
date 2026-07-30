@@ -233,7 +233,7 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
   protected static function isStatementRelatedToTable(string $statement, string $tableName): bool {
     $realTableIdentifier = Database::getConnection()->prefixTables('{' . $tableName . '}');
     $pattern = '/.*(INTO|FROM|UPDATE)( |\n)' . preg_quote($realTableIdentifier, '/') . '/';
-    return preg_match($pattern, $statement) === 1 ? TRUE : FALSE;
+    return preg_match($pattern, $statement) === 1;
   }
 
 }

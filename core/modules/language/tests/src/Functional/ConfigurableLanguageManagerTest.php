@@ -58,7 +58,6 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     // for Drupal to perform its termination work before continuing.
     $this->setWaitForTerminate();
 
-    /** @var \Drupal\user\UserInterface $user */
     $user = $this->createUser([], '', TRUE);
     $this->drupalLogin($user);
     ConfigurableLanguage::createFromLangcode('es')->save();

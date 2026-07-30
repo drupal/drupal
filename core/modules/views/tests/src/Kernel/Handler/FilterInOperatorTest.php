@@ -218,7 +218,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
    *   An array of grouped exposed filters.
    */
   protected function getGroupedExposedFilters(): array {
-    $filters = [
+    return [
       'age' => [
         'id' => 'age',
         'table' => 'views_test_data',
@@ -250,7 +250,6 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
         ],
       ],
     ];
-    return $filters;
   }
 
   /**

@@ -174,7 +174,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
     $query->range(0, 2);
-    $query->range(NULL, NULL);
+    $query->range();
     $query_result = $query->countQuery()->execute()->fetchField();
 
     $this->assertEquals(4, $query_result, 'Returned the correct number of rows.');

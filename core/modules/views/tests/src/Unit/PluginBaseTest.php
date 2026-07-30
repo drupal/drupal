@@ -40,7 +40,7 @@ class PluginBaseTest extends UnitTestCase {
    * Tests the getAvailableGlobalTokens method.
    */
   #[DataProvider('providerTestGetAvailableGlobalTokens')]
-  public function testGetAvailableGlobalTokens($info, $types, $expected): void {
+  public function testGetAvailableGlobalTokens(array $info, array $types, array $expected): void {
     // Get the token service and set the container.
     $token = $this->createStub(Token::class);
     $token

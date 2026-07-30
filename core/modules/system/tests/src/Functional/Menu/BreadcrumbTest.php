@@ -300,7 +300,7 @@ class BreadcrumbTest extends BrowserTestBase {
     // Logout the user because we want to check the active class as well, which
     // is just rendered as anonymous user.
     $this->drupalLogout();
-    foreach ($tags as $name => $data) {
+    foreach ($tags as $data) {
       $term = $data['term'];
       /** @var \Drupal\menu_link_content\MenuLinkContentInterface $link */
       $link = $data['link'];

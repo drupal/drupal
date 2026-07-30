@@ -198,9 +198,8 @@ class LinkUriTest extends KernelTestBase {
     $executable = $this->prophesize(MigrateExecutableInterface::class)->reveal();
 
     $plugin = new LinkUri($configuration, 'link_uri', [], $entityTypeManager);
-    $actual = $plugin->transform($value, $executable, $row, 'destination_property');
 
-    return $actual;
+    return $plugin->transform($value, $executable, $row, 'destination_property');
   }
 
 }

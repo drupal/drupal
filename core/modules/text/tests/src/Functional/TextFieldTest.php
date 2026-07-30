@@ -244,7 +244,7 @@ class TextFieldTest extends StringFieldTest {
     // Display the creation form.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('entity_test/add');
-    $this->assertSession()->fieldExists("{$field_name}[0][value]", NULL);
+    $this->assertSession()->fieldExists("{$field_name}[0][value]");
     $this->assertSession()->optionExists("{$field_name}[0][format]", $format1->id());
     $this->assertSession()->optionExists("{$field_name}[0][format]", $format2->id());
     $this->assertSession()->optionExists("{$field_name}[0][format]", $format3->id());
@@ -276,7 +276,7 @@ class TextFieldTest extends StringFieldTest {
     $this->drupalLogin($this->webUser);
     // We shouldn't have the 'format' selector since only one format is allowed.
     $this->drupalGet('entity_test/add');
-    $this->assertSession()->fieldExists("{$field_name}[0][value]", NULL);
+    $this->assertSession()->fieldExists("{$field_name}[0][value]");
     $this->assertSession()->fieldNotExists("{$field_name}[0][format]");
 
     // Retest the entity renders fine even though filter2 is disabled.
@@ -291,7 +291,7 @@ class TextFieldTest extends StringFieldTest {
     $field->save();
     $this->drupalGet('entity_test/add');
     // We should see the 'format' selector again.
-    $this->assertSession()->fieldExists("{$field_name}[0][value]", NULL);
+    $this->assertSession()->fieldExists("{$field_name}[0][value]");
     $this->assertSession()->optionExists("{$field_name}[0][format]", $format1->id());
     $this->assertSession()->optionExists("{$field_name}[0][format]", $format2->id());
     $this->assertSession()->optionNotExists("{$field_name}[0][format]", $format3->id());
@@ -301,7 +301,7 @@ class TextFieldTest extends StringFieldTest {
     $field->save();
     $this->drupalGet('entity_test/add');
     // We should see the 'format' selector again.
-    $this->assertSession()->fieldExists("{$field_name}[0][value]", NULL);
+    $this->assertSession()->fieldExists("{$field_name}[0][value]");
     $this->assertSession()->optionExists("{$field_name}[0][format]", $format1->id());
     $this->assertSession()->optionExists("{$field_name}[0][format]", $format2->id());
     $this->assertSession()->optionExists("{$field_name}[0][format]", $format3->id());

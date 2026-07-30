@@ -45,7 +45,7 @@ class PrepareModulesEntityUninstallFormTest extends KernelTestBase {
     // Simulate matching.
     $request->attributes->set('entity_type_id', $not_an_entity_type);
     $this->expectException(PluginNotFoundException::class);
-    (string) $title_resolver->getTitle($request, $route);
+    $title_resolver->getTitle($request, $route);
   }
 
 }

@@ -607,16 +607,15 @@ class MigrateExecutableTest extends MigrateTestCase {
         ? array_combine($source_id_keys, array_values($source_values))
         : NULL;
     });
-    $id_map->getRowByDestination(Argument::type('array'))->will(function () {
+    $id_map->getRowByDestination(Argument::type('array'))->will(function (): array {
       $destination_ids = func_get_args()[0][0];
-      $return = array_reduce(self::$idMapRecords, function (array $carry, array $record) use ($destination_ids): array {
+
+      return array_reduce(self::$idMapRecords, function (array $carry, array $record) use ($destination_ids): array {
         if (array_merge($record, $destination_ids) === $record) {
           $carry = $record;
         }
         return $carry;
       }, []);
-
-      return $return;
     });
     $id_map->deleteDestination(Argument::type('array'))->will(function (): void {
       $destination_ids = func_get_args()[0][0];

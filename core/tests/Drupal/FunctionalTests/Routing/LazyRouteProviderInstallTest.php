@@ -38,7 +38,7 @@ class LazyRouteProviderInstallTest extends BrowserTestBase {
     // 'lazy_route_provider_install_test_menu_links_discovered_alter' will be
     // set.
     // @see lazy_route_provider_install_test_menu_links_discovered_alter().
-    $this->assertEquals('success', \Drupal::state()->get('lazy_route_provider_install_test_menu_links_discovered_alter', NULL));
+    $this->assertEquals('success', \Drupal::state()->get('lazy_route_provider_install_test_menu_links_discovered_alter'));
   }
 
 }

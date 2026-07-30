@@ -32,8 +32,6 @@ class ValidSequenceKeysValidatorTest extends KernelTestBase {
 
   /**
    * The typed configuration manager.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
    */
   protected TypedConfigManagerInterface $typedConfigManager;
 
@@ -59,10 +57,8 @@ class ValidSequenceKeysValidatorTest extends KernelTestBase {
     $definition = $this->typedData->createDataDefinition('map');
     $definition->setPropertyDefinition('keys', $this->typedConfigManager->createDataDefinition('sequence'));
 
-    if (count($extra_constraints) > 0) {
-      foreach ($extra_constraints as $name => $settings) {
-        $definition->addConstraint($name, $settings);
-      }
+    foreach ($extra_constraints as $name => $settings) {
+      $definition->addConstraint($name, $settings);
     }
 
     $definition->addConstraint('ValidSequenceKeys', [

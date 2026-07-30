@@ -79,7 +79,7 @@ class FieldCounterTest extends ViewsKernelTestBase {
     $view->preview();
 
     $counter = $view->style_plugin->getField(0, 'counter');
-    $expected_number = 0 + $rand_start;
+    $expected_number = $rand_start;
     $this->assertEquals((string) $expected_number, $counter, "Make sure the expected number ($expected_number) patches with the rendered number ($counter)");
     $counter = $view->style_plugin->getField(1, 'counter');
     $expected_number = 1 + $rand_start;

@@ -85,7 +85,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
     $result = $page->waitFor($timeout / 1000, function ($page) use ($text): bool {
       $actual = preg_replace('/\s+/u', ' ', $page->getText());
       $regex = '/' . preg_quote($text, '/') . '/ui';
-      return (bool) !preg_match($regex, $actual);
+      return !preg_match($regex, $actual);
     });
     $this->assertNotEmpty($result, "\"$text\" was found but shouldn't be there.");
   }

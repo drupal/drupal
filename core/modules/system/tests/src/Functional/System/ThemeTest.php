@@ -42,8 +42,6 @@ class ThemeTest extends BrowserTestBase {
 
   /**
    * A test node.
-   *
-   * @var \Drupal\node\Entity\Node
    */
   protected Node $node;
 

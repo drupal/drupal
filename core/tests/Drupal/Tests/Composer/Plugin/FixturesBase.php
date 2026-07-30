@@ -21,8 +21,6 @@ abstract class FixturesBase {
 
   /**
    * Keep a persistent prefix to help group our tmp directories together.
-   *
-   * @var string
    */
   protected static string $randomPrefix = '';
 
@@ -35,15 +33,11 @@ abstract class FixturesBase {
 
   /**
    * A Composer IOInterface to write to.
-   *
-   * @var \Composer\IO\IOInterface|null
    */
   protected ?IOInterface $io;
 
   /**
    * The composer object.
-   *
-   * @var \Composer\Composer
    */
   protected Composer $composer;
 

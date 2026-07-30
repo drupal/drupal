@@ -126,8 +126,7 @@ class SmartDefaultSettingsTest extends UnitTestCase {
         NestedArray::setValue($annotation, explode('.', $path), $value);
       }
       $annotation_instance = new CKEditor5Plugin($annotation);
-      $definition = $annotation_instance->get();
-      return $definition;
+      return $annotation_instance->get();
     };
 
     yield 'Tag needed, no match due to no plugin supporting it' => [

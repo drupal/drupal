@@ -165,7 +165,7 @@ class FilterEqualityTest extends ViewsKernelTestBase {
    * Provides grouped exposed filter options for the 'name' field.
    */
   protected function getGroupedExposedFilters(): array {
-    $filters = [
+    return [
       'name' => [
         'id' => 'name',
         'plugin_id' => 'equality',
@@ -199,7 +199,6 @@ class FilterEqualityTest extends ViewsKernelTestBase {
         ],
       ],
     ];
-    return $filters;
   }
 
 }

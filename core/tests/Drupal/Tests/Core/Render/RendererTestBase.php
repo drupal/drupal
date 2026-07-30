@@ -33,8 +33,6 @@ abstract class RendererTestBase extends UnitTestCase {
 
   /**
    * System time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
    */
   protected TimeInterface $datetimeTime;
 

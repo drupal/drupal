@@ -303,7 +303,6 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
    * Tests reverting a revision.
    */
   public function testRevisionRevert(): void {
-    /** @var \Drupal\user\UserInterface $user */
     $user = $this->drupalCreateUser([
       'edit any test media',
       'view any test media revisions',

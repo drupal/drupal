@@ -189,7 +189,7 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Sets up the entity type manager to be tested.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface[]|\Prophecy\Prophecy\ProphecyInterface[] $definitions
+   * @param array<\Prophecy\Prophecy\ProphecyInterface<\Drupal\Core\Entity\EntityTypeInterface>> $definitions
    *   (optional) An array of entity type definitions.
    */
   protected function setUpEntityTypeDefinitions(array $definitions = []): void {
@@ -203,7 +203,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     }
 
     $this->entityTypeManager->getDefinition(Argument::type('string'))
-      ->will(function ($args) use ($definitions) {
+      ->will(function (array $args) use ($definitions): EntityTypeInterface {
         if (isset($definitions[$args[0]])) {
           return $definitions[$args[0]];
         }

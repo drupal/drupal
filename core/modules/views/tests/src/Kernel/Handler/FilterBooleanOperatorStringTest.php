@@ -175,7 +175,7 @@ class FilterBooleanOperatorStringTest extends ViewsKernelTestBase {
    *   Returns the filter configuration for exposed filters.
    */
   protected function getGroupedExposedFilters(): array {
-    $filters = [
+    return [
       'status' => [
         'id' => 'status',
         'table' => 'views_test_data',
@@ -207,7 +207,6 @@ class FilterBooleanOperatorStringTest extends ViewsKernelTestBase {
         ],
       ],
     ];
-    return $filters;
   }
 
 }

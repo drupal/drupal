@@ -26,8 +26,6 @@ class FieldTypePluginManagerTest extends UnitTestCase {
 
   /**
    * The field type plugin manager.
-   *
-   * @var \Drupal\Core\Field\FieldTypePluginManager
    */
   protected FieldTypePluginManager $fieldTypeManager;
 

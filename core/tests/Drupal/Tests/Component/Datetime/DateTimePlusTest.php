@@ -1026,7 +1026,7 @@ class DateTimePlusTest extends TestCase {
     // Parse the same date with ['validate_format' => TRUE] and make sure we
     // get the expected exception.
     $this->expectException(\UnexpectedValueException::class);
-    $date = DateTimePlus::createFromFormat('Y-m-d H:i:s', '11-03-31 17:44:00', 'UTC', ['validate_format' => TRUE]);
+    DateTimePlus::createFromFormat('Y-m-d H:i:s', '11-03-31 17:44:00', 'UTC', ['validate_format' => TRUE]);
   }
 
   /**

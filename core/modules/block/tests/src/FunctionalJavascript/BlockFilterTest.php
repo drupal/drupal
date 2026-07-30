@@ -94,10 +94,9 @@ class BlockFilterTest extends WebDriverTestBase {
    *   An array of visible elements.
    */
   protected function filterVisibleElements(array $elements): array {
-    $elements = array_filter($elements, function (NodeElement $element) {
+    return array_filter($elements, function (NodeElement $element) {
       return $element->isVisible();
     });
-    return $elements;
   }
 
   /**

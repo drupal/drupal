@@ -560,7 +560,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
    *   An array of grouped exposed filters.
    */
   protected function getGroupedExposedFilters(): array {
-    $filters = [
+    return [
       'age' => [
         'id' => 'age',
         'plugin_id' => 'numeric',
@@ -626,7 +626,6 @@ class FilterNumericTest extends ViewsKernelTestBase {
         ],
       ],
     ];
-    return $filters;
   }
 
 }

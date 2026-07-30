@@ -1179,18 +1179,17 @@ HTML;
   protected function setupThemeManagerForDetails(): void {
     $this->themeManager
       ->method('render')
-      ->willReturnCallback(function ($theme, array $vars): array|string {
+      ->willReturnCallback(function ($theme, array $vars): string {
         $output = <<<'EOS'
 <details>
   <summary>{{ title }}</summary>
   <div class="details-wrapper">{{ children }}</div>
 </details>
 EOS;
-        $output = str_replace([
+        return str_replace([
           '{{ title }}',
           '{{ children }}',
         ], [$vars['#title'], $vars['#children']], $output);
-        return $output;
       });
   }
 

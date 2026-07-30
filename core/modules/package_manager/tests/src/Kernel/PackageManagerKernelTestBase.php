@@ -84,8 +84,6 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
   /**
    * The test root directory, if any, created by ::createTestProject().
    *
-   * @var string|null
-   *
    * @see ::createTestProject()
    * @see ::tearDown()
    */
@@ -93,15 +91,11 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
 
   /**
    * The Symfony filesystem class.
-   *
-   * @var \Symfony\Component\Filesystem\Filesystem
    */
   private Filesystem $fileSystem;
 
   /**
    * A logger that will fail the test if Package Manager logs any errors.
-   *
-   * @var \ColinODell\PsrTestLogger\TestLogger
    *
    * @see ::tearDown()
    */

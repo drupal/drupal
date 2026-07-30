@@ -388,7 +388,7 @@ class ConfigTest extends UnitTestCase {
     }
 
     // Check that overrides have persisted.
-    foreach ($module_data as $key => $value) {
+    foreach ($module_data as $value) {
       $this->assertConfigDataEquals($module_data);
       $this->assertOriginalConfigDataEquals($module_data, TRUE);
     }

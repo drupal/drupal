@@ -33,8 +33,6 @@ trait HttpKernelUiHelperTrait {
    * Mink session manager.
    *
    * This is lazily initialized by the first call to self::drupalGet().
-   *
-   * @var \Behat\Mink\Mink|null
    */
   protected ?Mink $mink;
 
@@ -209,8 +207,7 @@ trait HttpKernelUiHelperTrait {
   protected function getDefaultDriverInstance(): DriverInterface {
     $http_kernel = $this->container->get('http_kernel');
     $browserkit_client = new HttpKernelBrowser($http_kernel);
-    $driver = new BrowserKitDriver($browserkit_client);
-    return $driver;
+    return new BrowserKitDriver($browserkit_client);
   }
 
   /**

@@ -76,7 +76,7 @@ trait BasicAuthResourceTestTrait {
   protected function normalizeHeadersForGetHeadComparison(array $headers): array {
     if (isset($headers['Link'])) {
       $headers['Link'] = array_map(
-        fn ($value) => preg_replace('/(\?|&)token=[^&>]+/', '$1token=NORMALIZED', $value),
+        fn (string $value): string => preg_replace('/(\?|&)token=[^&>]+/', '$1token=NORMALIZED', $value),
         $headers['Link']
       );
     }

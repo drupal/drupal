@@ -23,16 +23,12 @@ class FakeRecord {
   /**
    * The property used in tests.
    *
-   * @var string
-   *
    * @see \Drupal\KernelTests\Core\Database\FetchTest
    */
   public string $name;
 
   /**
    * The property used in tests.
-   *
-   * @var string
    *
    * @see \Drupal\KernelTests\Core\Database\DatabaseTestBase
    */

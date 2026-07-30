@@ -51,9 +51,8 @@ trait XmlEntityNormalizationQuirksTrait {
     else {
       $normalization = $this->applyXmlConfigEntityDecodingQuirks($default_normalization);
     }
-    $normalization = $this->applyXmlDecodingQuirks($normalization);
 
-    return $normalization;
+    return $this->applyXmlDecodingQuirks($normalization);
   }
 
   /**

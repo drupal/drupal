@@ -33,8 +33,6 @@ class AlertsJsonFeedTest extends BrowserTestBase {
 
   /**
    * A user with permission to access toolbar and access announcements.
-   *
-   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $user;
 

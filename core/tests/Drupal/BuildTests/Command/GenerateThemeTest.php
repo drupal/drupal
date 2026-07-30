@@ -208,8 +208,7 @@ FIXTURE;
     $theme_name = basename($theme_path_relative);
     $info_yml_filename = "$theme_name.info.yml";
     $this->assertFileExists($theme_path_absolute . '/' . $info_yml_filename);
-    $info = Yaml::decode(file_get_contents($theme_path_absolute . '/' . $info_yml_filename));
-    return $info;
+    return Yaml::decode(file_get_contents($theme_path_absolute . '/' . $info_yml_filename));
   }
 
   /**
@@ -497,7 +496,7 @@ SH;
       '--starterkit',
       'foobar',
     ];
-    $process = new Process($install_command, NULL);
+    $process = new Process($install_command);
     $process->setTimeout(60);
     $result = $process->run();
     $this->assertStringContainsString('Theme source theme foobar cannot be found.', trim($process->getErrorOutput()));
@@ -519,7 +518,7 @@ SH;
       '--starterkit',
       'stark',
     ];
-    $process = new Process($install_command, NULL);
+    $process = new Process($install_command);
     $process->setTimeout(60);
     $result = $process->run();
     $this->assertStringContainsString('Theme source theme stark is not a valid starter kit.', trim($process->getErrorOutput()));
@@ -536,7 +535,7 @@ SH;
       '--starterkit',
       'olivero',
     ];
-    $process = new Process($install_command, NULL);
+    $process = new Process($install_command);
     $process->setTimeout(60);
     $result = $process->run();
     $this->assertStringContainsString('Theme source theme olivero is not a valid starter kit.', trim($process->getErrorOutput()));
@@ -826,7 +825,7 @@ EDITED, file_get_contents($theme_path_absolute . '/src/TestCustomThemePreRender.
    *
    * @see \Drupal\Core\File\FileSystemInterface::deleteRecursive()
    */
-  protected function fileUnmanagedDeleteRecursive($path, $callback = NULL): bool {
+  protected function fileUnmanagedDeleteRecursive(string $path, $callback = NULL): bool {
     if (isset($callback)) {
       call_user_func($callback, $path);
     }

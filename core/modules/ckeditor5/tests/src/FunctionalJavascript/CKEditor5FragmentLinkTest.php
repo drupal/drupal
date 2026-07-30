@@ -40,8 +40,6 @@ class CKEditor5FragmentLinkTest extends WebDriverTestBase {
 
   /**
    * The admin user.
-   *
-   * @var \Drupal\user\Entity\User
    */
   protected User $account;
 

@@ -22,15 +22,11 @@ class FileIsImageConstraintValidatorTest extends FileValidatorTestBase {
 
   /**
    * An image file.
-   *
-   * @var \Drupal\file\FileInterface
    */
   protected FileInterface $image;
 
   /**
    * A file which is not an image.
-   *
-   * @var \Drupal\file\FileInterface
    */
   protected FileInterface $nonImage;
 

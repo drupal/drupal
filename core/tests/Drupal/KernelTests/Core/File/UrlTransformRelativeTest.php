@@ -28,7 +28,7 @@ class UrlTransformRelativeTest extends KernelTestBase {
    * Tests transformRelative() function.
    */
   #[DataProvider('providerFileUrlTransformRelative')]
-  public function testFileUrlTransformRelative($host, $port, $https, $base_path, $root_relative, $url, $expected): void {
+  public function testFileUrlTransformRelative(string $host, int $port, string $https, string $base_path, bool $root_relative, string $url, string $expected): void {
 
     $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     $_SERVER['SERVER_ADDR'] = '127.0.0.1';
@@ -54,7 +54,7 @@ class UrlTransformRelativeTest extends KernelTestBase {
    * Provides data for testing URL transformation.
    */
   public static function providerFileUrlTransformRelative(): array {
-    $data = [
+    return [
       'http' => [
         'example.com',
         80,
@@ -245,7 +245,6 @@ class UrlTransformRelativeTest extends KernelTestBase {
         '/page',
       ],
     ];
-    return $data;
   }
 
 }

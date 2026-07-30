@@ -101,7 +101,7 @@ class CommentOrphanTest extends EntityKernelTestBase {
     $renderer = \Drupal::service('renderer');
     $comments = $comment_storage->loadMultiple();
     foreach ($comments as $comment) {
-      $built = $this->buildEntityView($comment, 'full', NULL);
+      $built = $this->buildEntityView($comment, 'full');
       $renderer->renderInIsolation($built);
     }
 
@@ -116,12 +116,12 @@ class CommentOrphanTest extends EntityKernelTestBase {
     // Render the comments with an orphan comment.
     $comments = $comment_storage->loadMultiple();
     foreach ($comments as $comment) {
-      $built = $this->buildEntityView($comment, 'full', NULL);
+      $built = $this->buildEntityView($comment, 'full');
       $renderer->renderInIsolation($built);
     }
 
     $node = $node_storage->load($node->id());
-    $built = $this->buildEntityView($node, 'full', NULL);
+    $built = $this->buildEntityView($node, 'full');
     $renderer->renderInIsolation($built);
   }
 

@@ -78,8 +78,6 @@ class EntityUnitTest extends UnitTestCase {
 
   /**
    * The entity values.
-   *
-   * @var array
    */
   protected array $values;
 

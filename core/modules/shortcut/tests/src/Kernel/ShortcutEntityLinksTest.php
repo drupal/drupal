@@ -36,8 +36,6 @@ class ShortcutEntityLinksTest extends KernelTestBase {
 
   /**
    * The entity_links filter.
-   *
-   * @var \Drupal\filter\Plugin\Filter\EntityLinks
    */
   protected EntityLinks $filter;
 

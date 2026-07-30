@@ -75,8 +75,6 @@ class RegistryTest extends UnitTestCase {
 
   /**
    * They key value factory.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
    */
   protected KeyValueFactoryInterface $keyValueFactory;
 

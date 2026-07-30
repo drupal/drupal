@@ -46,22 +46,16 @@ class UserAuthenticationTest extends UnitTestCase {
 
   /**
    * The user auth object under test.
-   *
-   * @var \Drupal\user\UserAuthentication
    */
   protected UserAuthentication $userAuth;
 
   /**
    * The test username.
-   *
-   * @var string
    */
   protected string $username = 'test_user';
 
   /**
    * The test password.
-   *
-   * @var string
    */
   protected string $password = 'password';
 

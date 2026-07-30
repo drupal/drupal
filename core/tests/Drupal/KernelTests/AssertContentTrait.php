@@ -29,8 +29,6 @@ trait AssertContentTrait {
    * The drupalSettings value from the current raw $content.
    *
    * Variable drupalSettings refers to the drupalSettings JavaScript variable.
-   *
-   * @var array
    */
   protected array $drupalSettings;
 
@@ -177,7 +175,7 @@ trait AssertContentTrait {
       $replacement = function ($matches) use ($value) {
         return $value;
       };
-      $xpath = preg_replace_callback('/' . preg_quote($placeholder, NULL) . '\b/', $replacement, $xpath);
+      $xpath = preg_replace_callback('/' . preg_quote($placeholder) . '\b/', $replacement, $xpath);
     }
     return $xpath;
   }

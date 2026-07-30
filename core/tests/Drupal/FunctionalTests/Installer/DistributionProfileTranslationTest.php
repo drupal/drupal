@@ -30,7 +30,7 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $profile = NULL;
+  protected $profile;
 
   /**
    * The distribution profile info.

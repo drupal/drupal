@@ -21,12 +21,12 @@ class InspectorTest extends TestCase {
    * Tests asserting all members are strings.
    */
   #[DataProvider('providerTestAssertAllStrings')]
-  public function testAssertAllStrings($input, $expected): void {
+  public function testAssertAllStrings(string|array $input, bool $expected): void {
     $this->assertSame($expected, Inspector::assertAllStrings($input));
   }
 
   public static function providerTestAssertAllStrings(): array {
-    $data = [
+    return [
       'empty-array' => [[], TRUE],
       'array-with-strings' => [['foo', 'bar'], TRUE],
       'string' => ['foo', FALSE],
@@ -47,8 +47,6 @@ class InspectorTest extends TestCase {
       'object' => [[new \stdClass()], FALSE],
       'string-and-object' => [['foo', new StringObject()], FALSE],
     ];
-
-    return $data;
   }
 
   /**

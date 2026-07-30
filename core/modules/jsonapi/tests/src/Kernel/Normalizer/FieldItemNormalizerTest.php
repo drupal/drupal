@@ -36,8 +36,6 @@ class FieldItemNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * The normalizer.
-   *
-   * @var \Drupal\jsonapi\Normalizer\FieldItemNormalizer
    */
   private FieldItemNormalizer $normalizer;
 

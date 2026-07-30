@@ -183,7 +183,7 @@ class ColorTest extends TestCase {
    *     - The 6 character length hex color value.
    */
   public static function providerTestNormalizeHexLength(): array {
-    $data = [
+    return [
       ['#000', '#000000'],
       ['#FFF', '#FFFFFF'],
       ['#abc', '#aabbcc'],
@@ -192,8 +192,6 @@ class ColorTest extends TestCase {
       ['ffffff', '#ffffff'],
       ['#010203', '#010203'],
     ];
-
-    return $data;
   }
 
   /**
@@ -205,7 +203,7 @@ class ColorTest extends TestCase {
    *   The expected normalized hex color value.
    */
   #[DataProvider('providerTestNormalizeHexLength')]
-  public function testNormalizeHexLength($value, $expected): void {
+  public function testNormalizeHexLength(string $value, string $expected): void {
     $this->assertSame($expected, Color::normalizeHexLength($value));
   }
 

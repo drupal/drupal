@@ -278,8 +278,8 @@ class RequestSanitizerTest extends UnitTestCase {
 
     $request = RequestSanitizer::sanitize($request, [], TRUE);
 
-    $this->assertSame($destination, $request->query->get('destination', NULL));
-    $this->assertNull($request->request->get('destination', NULL));
+    $this->assertSame($destination, $request->query->get('destination'));
+    $this->assertNull($request->request->get('destination'));
     $this->assertSame($destination, $_GET['destination']);
     $this->assertSame($destination, $_REQUEST['destination']);
     $this->assertArrayNotHasKey('destination', $_POST);
@@ -299,8 +299,8 @@ class RequestSanitizerTest extends UnitTestCase {
 
     $request = RequestSanitizer::sanitize($request, [], TRUE);
 
-    $this->assertNull($request->request->get('destination', NULL));
-    $this->assertNull($request->query->get('destination', NULL));
+    $this->assertNull($request->request->get('destination'));
+    $this->assertNull($request->query->get('destination'));
     $this->assertArrayNotHasKey('destination', $_POST);
     $this->assertArrayNotHasKey('destination', $_REQUEST);
     $this->assertArrayNotHasKey('destination', $_GET);
@@ -344,8 +344,8 @@ class RequestSanitizerTest extends UnitTestCase {
 
     $request = RequestSanitizer::sanitize($request, [], TRUE);
 
-    $this->assertSame($destination, $request->request->get('destination', NULL));
-    $this->assertNull($request->query->get('destination', NULL));
+    $this->assertSame($destination, $request->request->get('destination'));
+    $this->assertNull($request->query->get('destination'));
     $this->assertSame($destination, $_POST['destination']);
     $this->assertSame($destination, $_REQUEST['destination']);
     $this->assertArrayNotHasKey('destination', $_GET);
@@ -365,8 +365,8 @@ class RequestSanitizerTest extends UnitTestCase {
 
     $request = RequestSanitizer::sanitize($request, [], TRUE);
 
-    $this->assertNull($request->request->get('destination', NULL));
-    $this->assertNull($request->query->get('destination', NULL));
+    $this->assertNull($request->request->get('destination'));
+    $this->assertNull($request->query->get('destination'));
     $this->assertArrayNotHasKey('destination', $_POST);
     $this->assertArrayNotHasKey('destination', $_REQUEST);
     $this->assertArrayNotHasKey('destination', $_GET);

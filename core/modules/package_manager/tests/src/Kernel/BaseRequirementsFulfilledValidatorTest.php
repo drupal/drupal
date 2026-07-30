@@ -34,8 +34,6 @@ class BaseRequirementsFulfilledValidatorTest extends PackageManagerKernelTestBas
 
   /**
    * The event class to throw to an error for.
-   *
-   * @var string
    */
   private string $eventClass;
 

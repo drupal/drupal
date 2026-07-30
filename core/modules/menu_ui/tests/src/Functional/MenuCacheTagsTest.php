@@ -109,7 +109,7 @@ class MenuCacheTagsTest extends PageCacheTagsTestBase {
 
     // Verify that after resetting the first menu link, there is a cache miss.
     $this->assertTrue($menu_link->isResettable(), 'First link can be reset');
-    $menu_link = $menu_link_manager->resetLink($menu_link->getPluginId());
+    $menu_link_manager->resetLink($menu_link->getPluginId());
     $this->verifyPageCache($url, 'MISS');
 
     // Verify a cache hit.

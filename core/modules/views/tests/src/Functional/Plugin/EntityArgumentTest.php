@@ -22,8 +22,6 @@ class EntityArgumentTest extends TaxonomyTestBase {
 
   /**
    * Views used by this test.
-   *
-   * @var array
    */
   public static array $testViews = ['test_entity_id_argument'];
 
@@ -39,8 +37,6 @@ class EntityArgumentTest extends TaxonomyTestBase {
 
   /**
    * A user with permission to administer taxonomy.
-   *
-   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $adminUser;
 

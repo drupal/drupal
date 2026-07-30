@@ -24,7 +24,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
   protected static $modules = ['system', 'user', 'field'];
 
   /**
-   * @var \Drupal\user\UserInterface
+   * An user.
    */
   protected UserInterface $user;
 

@@ -20,8 +20,6 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
 
   /**
    * The Fetcher service object.
-   *
-   * @var \Drupal\announcements_feed\AnnounceFetcher
    */
   protected AnnounceFetcher $fetcher;
 

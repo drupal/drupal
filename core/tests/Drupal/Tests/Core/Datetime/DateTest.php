@@ -113,7 +113,7 @@ class DateTest extends UnitTestCase {
    * Tests the formatInterval method.
    */
   #[DataProvider('providerTestFormatInterval')]
-  public function testFormatInterval($interval, $granularity, $expected, $langcode = NULL): void {
+  public function testFormatInterval(int $interval, ?int $granularity, string $expected, ?string $langcode = NULL): void {
     // Mocks a simple formatPlural implementation.
     $this->stringTranslation
       ->method('translateString')
@@ -136,7 +136,7 @@ class DateTest extends UnitTestCase {
    * Provides some test data for the format interval test.
    */
   public static function providerTestFormatInterval(): array {
-    $data = [
+    return [
       // Checks for basic seconds.
       [1, 1, '1 sec'],
       [1, 2, '1 sec'],
@@ -163,8 +163,6 @@ class DateTest extends UnitTestCase {
       // Check with an unspecified granularity.
       [61, NULL, '1 min 1 sec'],
     ];
-
-    return $data;
   }
 
   /**
@@ -301,7 +299,7 @@ class DateTest extends UnitTestCase {
 
     $non_strict = ['strict' => FALSE];
 
-    $data = [
+    return [
       // Checks for equal timestamps.
       ['0 seconds', 0, $request_time, $request_time],
 
@@ -509,8 +507,6 @@ class DateTest extends UnitTestCase {
         $granularity_3,
       ],
     ];
-
-    return $data;
   }
 
   /**

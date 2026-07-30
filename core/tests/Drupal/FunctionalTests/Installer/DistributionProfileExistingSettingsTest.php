@@ -33,7 +33,7 @@ class DistributionProfileExistingSettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $profile = NULL;
+  protected $profile;
 
   /**
    * {@inheritdoc}

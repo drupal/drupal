@@ -107,10 +107,9 @@ class FilterTest extends WebDriverTestBase {
    *   The filtered elements.
    */
   protected function filterVisibleElements($elements): array {
-    $elements = array_filter($elements, function (NodeElement $element) {
+    return array_filter($elements, function (NodeElement $element) {
       return $element->isVisible();
     });
-    return $elements;
   }
 
   /**

@@ -33,7 +33,7 @@ class PhpTransliterationTest extends UnitTestCase {
    *   printable in the output.
    */
   #[DataProvider('providerTestPhpTransliterationWithAlter')]
-  public function testPhpTransliterationWithAlter($langcode, $original, $expected, $printable = NULL): void {
+  public function testPhpTransliterationWithAlter(string $langcode, string $original, string $expected, ?string $printable = NULL): void {
     if ($printable === NULL) {
       $printable = $original;
     }
@@ -80,7 +80,7 @@ class PhpTransliterationTest extends UnitTestCase {
     // Five-byte characters do not work in MySQL, so make a printable version.
     $five_byte_printable = '&#x10330;&#x10338;';
 
-    $cases = [
+    return [
       // Test the language override hook in the test module, which changes
       // the transliteration of Ä to Z and provides for the 5-byte characters.
       // cSpell:disable-next-line
@@ -88,8 +88,6 @@ class PhpTransliterationTest extends UnitTestCase {
       ['zz', $random, $random],
       ['zz', $five_byte, 'ATh', $five_byte_printable],
     ];
-
-    return $cases;
   }
 
 }

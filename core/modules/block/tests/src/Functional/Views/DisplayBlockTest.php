@@ -206,7 +206,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->assertSession()->fieldNotExists('label');
     // Test that the machine name field is hidden from display and has been
     // saved as expected from the default value.
-    $this->assertSession()->fieldNotExists('edit-machine-name', NULL);
+    $this->assertSession()->fieldNotExists('edit-machine-name');
 
     // Save the block.
     $edit = ['region' => 'content'];

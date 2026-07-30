@@ -801,7 +801,7 @@ class DbLogTest extends BrowserTestBase {
    * @return int|null
    *   The watchdog severity constant or NULL if not found.
    */
-  protected function getSeverityConstant($class) {
+  protected function getSeverityConstant(string $class): ?int {
     $map = array_flip(DbLogController::getLogLevelClassMap());
 
     // Find the class that contains the severity.

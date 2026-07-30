@@ -253,7 +253,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   #[DataProvider('providerTestValidatePropertyWithInvalidObjects')]
   public function testValidatePropertyWithInvalidObjects(object $object): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->recursiveValidator->validateProperty($object, 'key1', NULL);
+    $this->recursiveValidator->validateProperty($object, 'key1');
   }
 
   /**
@@ -295,7 +295,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   #[DataProvider('providerTestValidatePropertyWithInvalidObjects')]
   public function testValidatePropertyValueWithInvalidObjects(object $object): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->recursiveValidator->validatePropertyValue($object, 'key1', [], NULL);
+    $this->recursiveValidator->validatePropertyValue($object, 'key1', []);
   }
 
   /**

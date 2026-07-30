@@ -134,11 +134,9 @@ msgstr ""
 EOF;
 
     // Convert array of translations to Gettext source and translation strings.
-    if ($translations) {
-      foreach ($translations as $source => $target) {
-        $text .= 'msgid "' . $source . '"' . "\n";
-        $text .= 'msgstr "' . $target . '"' . "\n";
-      }
+    foreach ($translations as $source => $target) {
+      $text .= 'msgid "' . $source . '"' . "\n";
+      $text .= 'msgstr "' . $target . '"' . "\n";
     }
 
     \Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);

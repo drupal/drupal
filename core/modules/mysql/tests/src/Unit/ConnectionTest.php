@@ -21,8 +21,6 @@ class ConnectionTest extends UnitTestCase {
 
   /**
    * A mocked MySql connection.
-   *
-   * @var \Drupal\mysql\Driver\Database\mysql\Connection&\PHPUnit\Framework\MockObject\MockObject
    */
   private Connection&MockObject $connection;
 

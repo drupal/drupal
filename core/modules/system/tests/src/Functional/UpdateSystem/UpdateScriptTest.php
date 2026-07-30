@@ -58,8 +58,6 @@ class UpdateScriptTest extends BrowserTestBase {
 
   /**
    * A user with the necessary permissions to administer software updates.
-   *
-   * @var \Drupal\user\UserInterface
    */
   private UserInterface $updateUser;
 

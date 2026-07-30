@@ -356,7 +356,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     // Retrieve messages with a specific level.
     $messages = $id_map->getMessages([], MigrationInterface::MESSAGE_WARNING);
     $count = 0;
-    foreach ($messages as $key => $message_row) {
+    foreach ($messages as $message_row) {
       $count = 1;
       $this->assertEquals(MigrationInterface::MESSAGE_WARNING, $message_row->level);
     }

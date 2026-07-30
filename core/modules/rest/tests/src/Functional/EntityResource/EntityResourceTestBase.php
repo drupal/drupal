@@ -79,7 +79,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    *
    * @var string
    */
-  protected static $entityTypeId = NULL;
+  protected static $entityTypeId;
 
   /**
    * The fields that are protected against modification during PATCH requests.
@@ -108,7 +108,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    *
    * @see ::getInvalidNormalizedEntityToCreate
    */
-  protected static $labelFieldName = NULL;
+  protected static $labelFieldName;
 
   /**
    * The entity ID for the first created entity in doTestPost().

@@ -7,10 +7,10 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
+use Drupal\node\NodeAccessRebuild;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\user\UserInterface;
 use Drupal\views\Tests\ViewTestData;
-use Drupal\node\NodeAccessRebuild;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -35,43 +35,31 @@ class NodeAccessJoinTest extends NodeTestBase {
 
   /**
    * The user that will create the articles.
-   *
-   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $authorUser;
 
   /**
    * Another user that will create articles.
-   *
-   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $otherUser;
 
   /**
    * A user with just access content permissions.
-   *
-   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $regularUser;
 
   /**
    * A user with access to private articles.
-   *
-   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $accessUser;
 
   /**
    * Articles.
-   *
-   * @var array
    */
   protected array $articles;
 
   /**
    * Views used by this test.
-   *
-   * @var array
    */
   public static array $testViews = ['test_node_access_join'];
 

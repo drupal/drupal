@@ -570,11 +570,6 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->drupalLogout();
 
-    $edit = [
-      'name' => $this->account->getAccountName(),
-      'pass' => $password,
-    ];
-
     // The next request should *not* trigger flood control, since the
     // password change should have cleared flood events for this user.
     $this->account->passRaw = $password;

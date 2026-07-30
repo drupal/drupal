@@ -549,7 +549,7 @@ class DateRangeFieldTest extends DateTestBase {
     $end_date = new DrupalDateTime($end_value, timezone_open(date_default_timezone_get()));
 
     $date_format = DateFormat::load('html_date')->getPattern();
-    $time_format = DateFormat::load('html_time')->getPattern();
+    DateFormat::load('html_time')->getPattern();
 
     $edit = [
       "{$field_name}[0][value][date]" => $start_date->format($date_format),

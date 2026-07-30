@@ -113,11 +113,11 @@ class TimestampNormalizerTest extends UnitTestCase {
 
     $data['U'] = [$expected_stamp, $expected_stamp];
     $data['RFC3339'] = ['2016-11-06T09:02:00+00:00', $expected_stamp];
-    $data['RFC3339 +0100'] = ['2016-11-06T09:02:00+01:00', $expected_stamp - 1 * 3600];
+    $data['RFC3339 +0100'] = ['2016-11-06T09:02:00+01:00', $expected_stamp - 3600];
     $data['RFC3339 -0600'] = ['2016-11-06T09:02:00-06:00', $expected_stamp + 6 * 3600];
 
     $data['ISO8601'] = ['2016-11-06T09:02:00+0000', $expected_stamp];
-    $data['ISO8601 +0100'] = ['2016-11-06T09:02:00+0100', $expected_stamp - 1 * 3600];
+    $data['ISO8601 +0100'] = ['2016-11-06T09:02:00+0100', $expected_stamp - 3600];
     $data['ISO8601 -0600'] = ['2016-11-06T09:02:00-0600', $expected_stamp + 6 * 3600];
 
     return $data;

@@ -34,7 +34,7 @@ class InstallerExistingConfigNoSystemSiteTest extends InstallerConfigDirectoryTe
    * Tests that profiles with no system.site do not work.
    */
   public function testConfigSync(): void {
-    $this->htmlOutput(NULL);
+    $this->htmlOutput();
     $this->assertSession()->titleEquals('Configuration validation | Drupal');
     $this->assertSession()->pageTextContains('The configuration synchronization failed validation.');
     $this->assertSession()->pageTextContains('This import does not contain system.site configuration, so has been rejected.');

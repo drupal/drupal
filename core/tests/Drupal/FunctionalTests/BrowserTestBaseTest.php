@@ -317,7 +317,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     }
     // Test that the assertion fails correctly if a NULL value is passed in.
     try {
-      $this->assertSession()->fieldNotExists('name', NULL);
+      $this->assertSession()->fieldNotExists('name');
       $this->fail('The "name" field was not found.');
     }
     catch (ExpectationException) {
@@ -422,7 +422,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Test that the assertion fails correctly when using NULL to ignore state.
     try {
-      $this->assertSession()->fieldNotExists('edit-checkbox-disabled', NULL);
+      $this->assertSession()->fieldNotExists('edit-checkbox-disabled');
       $this->fail('The "edit-checkbox-disabled" field was not found by ID, using NULL value.');
     }
     catch (ExpectationException) {

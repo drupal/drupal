@@ -38,8 +38,6 @@ class ScaffoldUpgradeTest extends TestCase {
 
   /**
    * The Fixtures directory.
-   *
-   * @var string
    */
   protected string $fixturesDir;
 

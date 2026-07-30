@@ -53,7 +53,7 @@ class InstallerExistingConfigSyncDirectoryProfileMismatchTest extends InstallerC
    * Tests that profile mismatch fails to install.
    */
   public function testConfigSync(): void {
-    $this->htmlOutput(NULL);
+    $this->htmlOutput();
     $this->assertSession()->titleEquals('Configuration validation | Drupal');
     $this->assertSession()->pageTextContains('The configuration synchronization failed validation.');
     $this->assertSession()->pageTextContains('The selected installation profile minimal does not match the profile stored in configuration testing_config_install_multilingual.');

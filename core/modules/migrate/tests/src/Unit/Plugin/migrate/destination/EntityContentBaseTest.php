@@ -117,7 +117,7 @@ class EntityTestDestination extends EntityContentBase {
    *
    * @var \Drupal\migrate\Plugin\migrate\destination\EntityContentBase|null
    */
-  private $entity = NULL;
+  private $entity;
 
   /**
    * Sets the test entity.

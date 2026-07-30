@@ -46,16 +46,12 @@ class DirectWriteTest extends PackageManagerKernelTestBase implements EventSubsc
   /**
    * Whether we are in maintenance mode before a require operation.
    *
-   * @var bool|null
-   *
    * @see ::onPreRequire()
    */
   private ?bool $preRequireMaintenanceMode = NULL;
 
   /**
    * Whether we are in maintenance mode after a require operation.
-   *
-   * @var bool|null
    *
    * @see ::onPostRequire()
    */

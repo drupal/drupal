@@ -351,7 +351,7 @@ class AttributeTest extends UnitTestCase {
     $attribute = new Attribute(['class' => ['example-class'], 'id' => 'example-id', 'enabled' => TRUE]);
 
     $content = $this->randomMachineName();
-    $html = '<div' . (string) $attribute . '>' . $content . '</div>';
+    $html = '<div' . $attribute . '>' . $content . '</div>';
     $this->assertClass('example-class', $html);
     $this->assertNoClass('example-class2', $html);
 

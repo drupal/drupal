@@ -98,7 +98,7 @@ class EntityTypeManagerTest extends UnitTestCase {
   /**
    * Sets up the entity type manager to be tested.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface[]|\Prophecy\Prophecy\ProphecyInterface[] $definitions
+   * @param array<\Prophecy\Prophecy\ProphecyInterface<\Drupal\Core\Entity\EntityTypeInterface>> $definitions
    *   (optional) An array of entity type definitions.
    */
   protected function setUpEntityTypeDefinitions(array $definitions = []): void {
@@ -118,7 +118,7 @@ class EntityTypeManagerTest extends UnitTestCase {
     }
 
     $this->discovery->getDefinition(Argument::cetera())
-      ->will(function ($args) use ($definitions) {
+      ->will(function (array $args) use ($definitions): EntityTypeInterface {
         $entity_type_id = $args[0];
         $exception_on_invalid = $args[1];
         if (isset($definitions[$entity_type_id])) {

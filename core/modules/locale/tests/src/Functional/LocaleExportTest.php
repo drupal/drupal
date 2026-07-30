@@ -32,7 +32,7 @@ class LocaleExportTest extends BrowserTestBase {
    *
    * @var \Drupal\user\Entity\User|false
    */
-  protected $adminUser = NULL;
+  protected $adminUser;
 
   /**
    * {@inheritdoc}

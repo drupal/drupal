@@ -118,8 +118,7 @@ class SitesDirectoryHardeningTest extends BrowserTestBase {
    *   The path to settings.php.
    */
   protected function settingsFile(string $site_path): string {
-    $settings_file = $site_path . '/settings.php';
-    return $settings_file;
+    return $site_path . '/settings.php';
   }
 
 }

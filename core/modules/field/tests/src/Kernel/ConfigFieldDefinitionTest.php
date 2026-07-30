@@ -17,12 +17,12 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class ConfigFieldDefinitionTest extends FieldKernelTestBase {
 
   /**
-   * @var string
+   * The entity type.
    */
   private string $entityType;
 
   /**
-   * @var string
+   * The bundle.
    */
   private string $bundle;
 

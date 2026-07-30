@@ -474,9 +474,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $executable->newDisplay('display_test');
     $errors = $executable->validate();
     $total_error_count = array_reduce($errors, function (float|int|null $carry, $item): float|int {
-      $carry += count($item);
-
-      return $carry;
+      return $carry + count($item);
     });
     // Assert that there were 9 total errors across 3 displays.
     $this->assertSame(9, $total_error_count);

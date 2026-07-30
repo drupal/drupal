@@ -32,15 +32,11 @@ class RecipeQuickStartTest extends BuildTestBase {
 
   /**
    * The PHP executable path.
-   *
-   * @var string
    */
   protected string $php;
 
   /**
    * A test database object.
-   *
-   * @var \Drupal\Core\Test\TestDatabase
    */
   protected TestDatabase $testDb;
 

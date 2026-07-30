@@ -50,8 +50,6 @@ class UserRegistrationRestTest extends ResourceTestBase {
 
   /**
    * Entity type ID for this storage.
-   *
-   * @var string
    */
   protected static string $entityTypeId;
 
@@ -206,7 +204,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
    * @return bool|\Drupal\user\Entity\User
    *   Return bool or the user.
    */
-  protected function registerUser($name, $include_password = TRUE, $include_email = TRUE) {
+  protected function registerUser(string $name, $include_password = TRUE, $include_email = TRUE) {
     // Verify that an anonymous user can register.
     $response = $this->registerRequest($name, $include_password, $include_email);
     $this->assertResourceResponse(200, FALSE, $response);
@@ -237,9 +235,8 @@ class UserRegistrationRestTest extends ResourceTestBase {
       ->setRouteParameter('_format', static::$format);
     $request_body = $this->createRequestBody($name, $include_password, $include_email);
     $request_options = $this->createRequestOptions($request_body);
-    $response = $this->request('POST', $user_register_url, $request_options);
 
-    return $response;
+    return $this->request('POST', $user_register_url, $request_options);
   }
 
   /**

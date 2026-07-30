@@ -139,8 +139,7 @@ abstract class UnitTestCase extends DrupalTestCase {
     $translation
       ->method('formatPlural')
       ->willReturnCallback(function ($count, $singular, $plural, array $args = [], array $options = []) use ($translation): PluralTranslatableMarkup {
-        $wrapper = new PluralTranslatableMarkup($count, $singular, $plural, $args, $options, $translation);
-        return $wrapper;
+        return new PluralTranslatableMarkup($count, $singular, $plural, $args, $options, $translation);
       });
     return $translation;
   }

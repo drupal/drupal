@@ -95,10 +95,9 @@ class ModuleUninstallFilterTest extends WebDriverTestBase {
    *   An array of node elements that are visible.
    */
   protected function filterVisibleElements($elements): array {
-    $elements = array_filter($elements, function (NodeElement $element) {
+    return array_filter($elements, function (NodeElement $element) {
       return $element->isVisible();
     });
-    return $elements;
   }
 
 }

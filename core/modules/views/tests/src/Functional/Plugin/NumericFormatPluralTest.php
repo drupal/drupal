@@ -89,7 +89,7 @@ class NumericFormatPluralTest extends ViewTestBase {
       \Drupal::service('file.usage')->add($file, 'views_ui', 'dummy', $i, $number);
     }
     $this->drupalGet('numeric-test');
-    foreach ($numbers as $i => $number) {
+    foreach ($numbers as $number) {
       $this->assertSession()->responseContains('<span class="field-content">' . $number . ($number == 1 ? ' time' : ' times') . '</span>');
     }
 

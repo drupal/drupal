@@ -30,8 +30,6 @@ class ConfigExportTest extends WebDriverTestBase {
 
   /**
    * A prefix string used in naming the test blocks.
-   *
-   * @var string
    */
   protected string $blockNamePrefix = 'aaaaaa_config_export_test_block';
 

@@ -32,8 +32,6 @@ class ClearCacheBlockTest extends BrowserTestBase {
 
   /**
    * The clear cache block instance.
-   *
-   * @var \Drupal\block\BlockInterface
    */
   protected BlockInterface $clearCacheBlock;
 

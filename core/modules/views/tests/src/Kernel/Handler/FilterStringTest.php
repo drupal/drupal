@@ -980,7 +980,7 @@ class FilterStringTest extends ViewsKernelTestBase {
    * Returns a set of grouped exposed filters.
    */
   protected function getGroupedExposedFilters(): array {
-    $filters = [
+    return [
       'name' => [
         'id' => 'name',
         'plugin_id' => 'string',
@@ -1089,7 +1089,6 @@ class FilterStringTest extends ViewsKernelTestBase {
         ],
       ],
     ];
-    return $filters;
   }
 
 }

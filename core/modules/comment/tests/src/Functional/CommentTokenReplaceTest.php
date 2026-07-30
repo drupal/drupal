@@ -154,7 +154,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $comment->setOwnerId(0)->setAuthorName($author_name);
     $input = '[comment:author]';
     $output = $token_service->replace($input, ['comment' => $comment], ['langcode' => $language_interface->getId()]);
-    $this->assertSame((string) Html::escape($author_name), (string) $output);
+    $this->assertSame(Html::escape($author_name), (string) $output);
     // Add comment field to user and term entities.
     $this->addDefaultCommentField('user', 'user', 'comment', CommentingStatus::Open, 'comment_user');
     $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentingStatus::Open, 'comment_term');

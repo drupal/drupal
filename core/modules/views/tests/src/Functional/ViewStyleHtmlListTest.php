@@ -16,8 +16,6 @@ class ViewStyleHtmlListTest extends ViewTestBase {
 
   /**
    * Views used by this test.
-   *
-   * @var array
    */
   public static array $testViews = ['test_style_html_list_ordered'];
 

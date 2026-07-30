@@ -81,7 +81,7 @@ class UserRegistrationResourceTest extends UnitTestCase {
    */
   public function testEmptyPost(): void {
     $this->expectException(BadRequestHttpException::class);
-    $this->testClass->post(NULL);
+    $this->testClass->post();
   }
 
   /**

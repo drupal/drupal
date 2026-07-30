@@ -27,8 +27,6 @@ class RouterTest extends KernelTestBase {
 
   /**
    * The router.
-   *
-   * @var \Drupal\Core\Routing\Router
    */
   protected Router $router;
 

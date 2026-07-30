@@ -36,7 +36,7 @@ class AssetXssTest extends BrowserTestBase {
    * @return array
    *   - Array of inputs for the test URL
    */
-  public static function providerAssetUrl() {
+  public static function providerAssetUrl(): array {
     $query = [
       'language' => 'en',
       'delta' => 1,
@@ -61,7 +61,7 @@ class AssetXssTest extends BrowserTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   #[DataProvider('providerAssetUrl')]
-  public function testAssetUrl($path, $query): void {
+  public function testAssetUrl(string $path, array $query): void {
     $path = PublicStream::basePath() . $path;
 
     $this->drupalGet($path, ['query' => $query]);

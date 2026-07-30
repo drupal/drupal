@@ -136,8 +136,6 @@ abstract class BuildTestBase extends DrupalTestCase {
 
   /**
    * The PHP executable finder.
-   *
-   * @var \Symfony\Component\Process\PhpExecutableFinder
    */
   private PhpExecutableFinder $phpFinder;
 

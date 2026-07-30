@@ -81,9 +81,8 @@ jquery.ui.accordion:
     foreach (static::providerBoolTest() as $test) {
       $data[] = ['bool: ' . $test[0], ['bool' => $test[1]]];
     }
-    $data = array_merge($data, static::providerBoolTest());
 
-    return $data;
+    return array_merge($data, static::providerBoolTest());
   }
 
   /**

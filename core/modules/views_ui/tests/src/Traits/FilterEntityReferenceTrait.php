@@ -28,15 +28,11 @@ trait FilterEntityReferenceTrait {
 
   /**
    * The host content type to add the entity reference field to.
-   *
-   * @var \Drupal\node\NodeTypeInterface
    */
   protected NodeTypeInterface $hostBundle;
 
   /**
    * The content type to be referenced by the host content type.
-   *
-   * @var \Drupal\node\NodeTypeInterface
    */
   protected NodeTypeInterface $targetBundle;
 

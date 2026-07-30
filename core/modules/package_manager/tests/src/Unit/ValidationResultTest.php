@@ -82,7 +82,7 @@ class ValidationResultTest extends UnitTestCase {
   public function testCreateWarningResultException(array $messages, string $expected_exception_message): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessageIs($expected_exception_message);
-    ValidationResult::createWarning($messages, NULL);
+    ValidationResult::createWarning($messages);
   }
 
   /**
@@ -97,7 +97,7 @@ class ValidationResultTest extends UnitTestCase {
   public function testCreateErrorResultException(array $messages, string $expected_exception_message): void {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessageIs($expected_exception_message);
-    ValidationResult::createError($messages, NULL);
+    ValidationResult::createError($messages);
   }
 
   /**

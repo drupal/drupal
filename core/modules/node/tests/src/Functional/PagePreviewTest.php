@@ -65,8 +65,6 @@ class PagePreviewTest extends NodeTestBase {
 
   /**
    * A term.
-   *
-   * @var \Drupal\taxonomy\Entity\Term
    */
   protected Term $term;
 

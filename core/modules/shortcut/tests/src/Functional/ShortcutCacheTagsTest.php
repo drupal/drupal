@@ -35,8 +35,6 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
 
   /**
    * User with permission to administer shortcuts.
-   *
-   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $adminUser;
 

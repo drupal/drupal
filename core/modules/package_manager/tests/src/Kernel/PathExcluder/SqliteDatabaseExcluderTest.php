@@ -30,8 +30,6 @@ class SqliteDatabaseExcluderTest extends PackageManagerKernelTestBase {
 
   /**
    * The mocked database connection.
-   *
-   * @var \Drupal\Core\Database\Connection|\Prophecy\Prophecy\ObjectProphecy
    */
   private Connection|ObjectProphecy $mockDatabase;
 

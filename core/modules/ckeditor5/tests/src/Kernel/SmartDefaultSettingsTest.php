@@ -69,15 +69,11 @@ class SmartDefaultSettingsTest extends KernelTestBase {
 
   /**
    * The service name for a logger implementation that collects anything logged.
-   *
-   * @var string
    */
   protected string $testLogServiceName = 'smart_default_settings_test.logger';
 
   /**
    * The message's placeholders parser.
-   *
-   * @var \Drupal\Core\Logger\LogMessageParserInterface
    */
   protected LogMessageParserInterface $parser;
 

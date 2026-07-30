@@ -20,7 +20,7 @@ abstract class InstallerConfigDirectoryTestBase extends InstallerTestBase {
    *
    * @var string|null|bool
    */
-  protected $profile = NULL;
+  protected $profile;
 
   /**
    * @var bool

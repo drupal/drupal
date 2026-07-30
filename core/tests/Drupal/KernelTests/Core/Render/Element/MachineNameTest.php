@@ -42,14 +42,12 @@ class MachineNameTest extends KernelTestBase implements FormInterface {
       '#name' => 'test_machine_name',
       '#default_value' => NULL,
     ];
-
-    $complete_form = [
+    return [
       'test_machine_name' => $element,
       'test_source' => [
         '#type' => 'textfield',
       ],
     ];
-    return $complete_form;
   }
 
   /**

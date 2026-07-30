@@ -23,8 +23,6 @@ class CallableResolverTest extends UnitTestCase {
 
   /**
    * The callable resolver.
-   *
-   * @var \Drupal\Core\Utility\CallableResolver
    */
   protected CallableResolver $resolver;
 
@@ -37,15 +35,11 @@ class CallableResolverTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $container->set('test_service', $this);
 
-    $class_resolver = new ClassResolver($container);
-
-    $this->resolver = new CallableResolver($class_resolver);
+    $this->resolver = new CallableResolver(new ClassResolver($container));
   }
 
   /**
    * Tests callback resolver.
-   *
-   * @legacy-covers ::getCallableFromDefinition
    */
   public function testCallbackResolver(): void {
     $cases = [
@@ -53,7 +47,7 @@ class CallableResolverTest extends UnitTestCase {
         function (string $suffix): string {
           return __METHOD__ . '+' . $suffix;
         },
-        '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():53}',
+        '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():' . (__LINE__ - 3) . '}',
       ],
       'First-class callable function' => [
         $this->method(...),
@@ -65,7 +59,7 @@ class CallableResolverTest extends UnitTestCase {
       ],
       'Arrow function' => [
         fn($suffix): string => __METHOD__ . '+' . $suffix,
-        '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():67}',
+        '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():' . (__LINE__ - 1) . '}',
       ],
       'Static function' => [
         '\Drupal\Tests\Core\Utility\NoInstantiationMockStaticCallable::staticMethod',

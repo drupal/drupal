@@ -36,8 +36,6 @@ class ImporterTest extends KernelTestBase implements EventSubscriberInterface {
   /**
    * Whether the imported content entities were syncing.
    *
-   * @var bool
-   *
    * @see ::onPreSave()
    */
   private bool $wasSyncing = FALSE;

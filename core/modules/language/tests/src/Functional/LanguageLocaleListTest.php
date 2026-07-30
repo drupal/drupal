@@ -30,7 +30,7 @@ class LanguageLocaleListTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * @var \Drupal\locale\StringStorageInterface
+   * The string storage.
    */
   protected StringStorageInterface $storage;
 

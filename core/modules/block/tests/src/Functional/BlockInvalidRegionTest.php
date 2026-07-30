@@ -74,7 +74,6 @@ class BlockInvalidRegionTest extends BrowserTestBase {
 
     // Place disabled test block in the invalid region of the default theme.
     \Drupal::configFactory()->getEditable('block.block.' . $block->id())->set('region', 'invalid_region')->save();
-    $block = Block::load($block->id());
 
     // Clear the cache to check if the warning message is not triggered.
     $this->drupalGet('admin/config/development/performance');

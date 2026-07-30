@@ -141,12 +141,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
       'body[0][value]' => 'Test article',
       'files[field_image_0]' => $this->container->get('file_system')->realpath($image->getFileUri()),
     ];
-    if (!$this->loggedInUser) {
-      $label = 'Save';
-    }
-    else {
-      $label = 'Save';
-    }
+    $label = 'Save';
     $this->submitForm($edit, $label);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextNotContains("$type $title has been created.");

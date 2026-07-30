@@ -351,7 +351,7 @@ class LocalTaskManagerTest extends UnitTestCase {
    *   The expected result, keyed by local task level.
    */
   protected function getLocalTasksForRouteResult($mock_plugin): array {
-    $result = [
+    return [
       0 => [
         'menu_local_task_test_tasks_settings' => $mock_plugin,
         'menu_local_task_test_tasks_view.tab' => $mock_plugin,
@@ -362,7 +362,6 @@ class LocalTaskManagerTest extends UnitTestCase {
         'menu_local_task_test_tasks_view_child2' => $mock_plugin,
       ],
     ];
-    return $result;
   }
 
   /**

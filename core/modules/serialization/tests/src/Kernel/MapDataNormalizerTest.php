@@ -98,12 +98,11 @@ class MapDataNormalizerTest extends KernelTestBase {
       ],
     ];
     $map_data_definition = MapDataDefinition::create();
-    $typed_data = $this->typedDataManager->create(
+    return $this->typedDataManager->create(
       $map_data_definition,
       $tree,
       'test name'
     );
-    return $typed_data;
   }
 
   /**
@@ -130,13 +129,11 @@ class MapDataNormalizerTest extends KernelTestBase {
         ->setPropertyDefinition('key7', DataDefinition::create('string'))
     );
 
-    $typed_data = $this->typedDataManager->create(
+    return $this->typedDataManager->create(
       $map_data_definition,
       $tree,
       'test name'
     );
-
-    return $typed_data;
   }
 
 }

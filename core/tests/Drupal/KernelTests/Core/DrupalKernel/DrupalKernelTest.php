@@ -101,7 +101,7 @@ class DrupalKernelTest extends KernelTestBase {
     $this->assertEquals(array_values($modules_enabled), $module_list);
 
     // Get the container another time, simulating a "production" environment.
-    $container = $this->getTestKernel($request, NULL)
+    $container = $this->getTestKernel($request)
       ->getContainer();
 
     $refClass = new \ReflectionClass($container);

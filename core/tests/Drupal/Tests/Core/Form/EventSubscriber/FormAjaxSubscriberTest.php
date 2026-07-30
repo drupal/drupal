@@ -62,7 +62,7 @@ class FormAjaxSubscriberTest extends UnitTestCase {
    *
    * @var \Symfony\Component\HttpKernel\Event\ExceptionEvent
    */
-  protected $event = NULL;
+  protected $event;
 
   /**
    * {@inheritdoc}

@@ -222,7 +222,7 @@ class SelectTest extends DatabaseTestBase {
 
     $names = $this->connection->select('test_null', 'tn')
       ->fields('tn', ['name'])
-      ->condition('age', NULL)
+      ->condition('age')
       ->execute()->fetchCol();
 
     $this->assertCount(0, $names, 'No records found when comparing to NULL.');

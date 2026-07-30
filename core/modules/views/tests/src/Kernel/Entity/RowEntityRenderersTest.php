@@ -59,12 +59,12 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
   protected $testAuthor;
 
   /**
-   * @var array
+   * The values.
    */
   protected array $values;
 
   /**
-   * @var array
+   * The IDs.
    */
   protected array $ids;
 

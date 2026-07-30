@@ -166,8 +166,6 @@ class ConfigurableTestClass extends PluginBase implements ConfigurableInterface 
 
   /**
    * A default configuration for the test class to return.
-   *
-   * @var array|null
    */
   protected ?array $defaultConfiguration = NULL;
 

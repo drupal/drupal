@@ -92,10 +92,9 @@ class PermissionFilterTest extends WebDriverTestBase {
    *   An array of node elements.
    */
   protected function filterVisibleElements(array $elements): array {
-    $elements = array_filter($elements, function (NodeElement $element) {
+    return array_filter($elements, function (NodeElement $element) {
       return $element->isVisible();
     });
-    return $elements;
   }
 
 }

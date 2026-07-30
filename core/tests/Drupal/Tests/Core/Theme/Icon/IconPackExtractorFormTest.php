@@ -21,15 +21,11 @@ class IconPackExtractorFormTest extends UnitTestCase {
 
   /**
    * The icon pack form.
-   *
-   * @var \Drupal\Core\Theme\Icon\IconPackExtractorForm
    */
   private IconPackExtractorForm $iconPackForm;
 
   /**
    * The plugin form.
-   *
-   * @var \Drupal\Core\Plugin\PluginWithFormsInterface
    */
   private PluginWithFormsInterface $plugin;
 

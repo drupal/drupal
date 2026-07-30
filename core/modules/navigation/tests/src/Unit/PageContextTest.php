@@ -144,7 +144,7 @@ class PageContextTest extends UnitTestCase {
     $route_helper->getContentEntityFromRoute()->willReturn($entity->reveal());
     $entity_repository = $this->prophesize(EntityRepositoryInterface::class)->reveal();
 
-    $published_plugin = new PageContext([], 'page_context', [], $route_helper->reveal(), $entity_repository, NULL);
+    $published_plugin = new PageContext([], 'page_context', [], $route_helper->reveal(), $entity_repository);
     $build = $published_plugin->build();
 
     $this->assertSame('Published Title', $build[0]['#slots']['content']);
@@ -157,7 +157,7 @@ class PageContextTest extends UnitTestCase {
     $entity->label()->willReturn('Unpublished Title');
     $route_helper->getContentEntityFromRoute()->willReturn($entity->reveal());
 
-    $plugin = new PageContext([], 'page_context', [], $route_helper->reveal(), $entity_repository, NULL);
+    $plugin = new PageContext([], 'page_context', [], $route_helper->reveal(), $entity_repository);
     $build = $plugin->build();
     $this->assertSame('Unpublished Title', $build[0]['#slots']['content']);
     $this->assertSame('Unpublished', $build[1]['#slots']['label']);
@@ -267,7 +267,7 @@ class PageContextTest extends UnitTestCase {
     $route_helper->getContentEntityFromRoute()->willReturn($entity->reveal());
     $entity_repository = $this->prophesize(EntityRepositoryInterface::class)->reveal();
 
-    $plugin = new PageContext([], 'page_context', [], $route_helper->reveal(), $entity_repository, NULL);
+    $plugin = new PageContext([], 'page_context', [], $route_helper->reveal(), $entity_repository);
     $build = $plugin->build();
 
     $this->assertSame('Simple Title', $build[0]['#slots']['content']);

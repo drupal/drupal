@@ -21,15 +21,11 @@ abstract class FileValidatorTestBase extends KernelTestBase {
 
   /**
    * The file.
-   *
-   * @var \Drupal\file\FileInterface
    */
   protected FileInterface $file;
 
   /**
    * The file validator.
-   *
-   * @var \Drupal\file\Validation\FileValidatorInterface
    */
   protected FileValidatorInterface $validator;
 

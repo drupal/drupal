@@ -735,7 +735,9 @@ if (!class_exists('\Symfony\Component\ExpressionLanguage\Expression')) {
    */
   class Expression {
 
-    public function __construct($expression) {
+    public function __construct(
+      private readonly string $expression,
+    ) {
     }
 
     /**

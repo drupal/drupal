@@ -62,8 +62,6 @@ class UpdateFetcherTest extends UnitTestCase {
 
   /**
    * The logger.
-   *
-   * @var \Psr\Log\LoggerInterface
    */
   protected LoggerInterface $logger;
 

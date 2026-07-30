@@ -140,7 +140,7 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
    *   The example plugin definitions.
    */
   protected function getPluginDefinitions() {
-    $definitions = [
+    return [
       'apple' => [
         'id' => 'apple',
         'label' => 'Apple',
@@ -166,7 +166,6 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
         'provider' => 'plugin_test',
       ],
     ];
-    return $definitions;
   }
 
 }

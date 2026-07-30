@@ -159,7 +159,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    * Provides test data for testUserNameAccess().
    */
   public static function userNameProvider(): array {
-    $name_access = [
+    return [
       // The viewer user is allowed to see user names on all accounts.
       [
         'viewer' => 'viewer',
@@ -194,7 +194,6 @@ class UserAccessControlHandlerTest extends UnitTestCase {
         'edit' => TRUE,
       ],
     ];
-    return $name_access;
   }
 
   /**
@@ -324,7 +323,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    * Provides test data for passwordAccessProvider().
    */
   public static function passwordAccessProvider(): array {
-    $pass_access = [
+    return [
       [
         'viewer' => 'viewer',
         'target' => 'viewer',
@@ -353,7 +352,6 @@ class UserAccessControlHandlerTest extends UnitTestCase {
         'edit' => TRUE,
       ],
     ];
-    return $pass_access;
   }
 
   /**
@@ -368,7 +366,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    * Provides test data for testCreatedAccess().
    */
   public static function createdAccessProvider(): array {
-    $created_access = [
+    return [
       [
         'viewer' => 'viewer',
         'target' => 'viewer',
@@ -388,7 +386,6 @@ class UserAccessControlHandlerTest extends UnitTestCase {
         'edit' => TRUE,
       ],
     ];
-    return $created_access;
   }
 
   /**
@@ -406,7 +403,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    * Provides test data for testNonExistingFieldAccess().
    */
   public static function NonExistingFieldAccessProvider(): array {
-    $created_access = [
+    return [
       [
         'viewer' => 'viewer',
         'target' => 'viewer',
@@ -426,7 +423,6 @@ class UserAccessControlHandlerTest extends UnitTestCase {
         'edit' => TRUE,
       ],
     ];
-    return $created_access;
   }
 
 }

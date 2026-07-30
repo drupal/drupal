@@ -24,8 +24,6 @@ class EntityViewBuilderTest extends UnitTestCase {
 
   /**
    * The entity view builder under test.
-   *
-   * @var \Drupal\Core\Entity\EntityViewBuilder
    */
   protected EntityViewBuilder $viewBuilder;
 

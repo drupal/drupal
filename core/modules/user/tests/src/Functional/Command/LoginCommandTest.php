@@ -60,11 +60,11 @@ class LoginCommandTest extends BrowserTestBase {
     $this->assertEquals(Command::SUCCESS, $code);
 
     // Test account selection options for a valid user.
-    $code = $tester->execute(['--uid' => '2']);
+    $tester->execute(['--uid' => '2']);
     $this->assertStringContainsString('user/reset/2', $tester->getDisplay());
-    $code = $tester->execute(['--name' => $adminUser->getAccountName()]);
+    $tester->execute(['--name' => $adminUser->getAccountName()]);
     $this->assertStringContainsString('user/reset/2', $tester->getDisplay());
-    $code = $tester->execute(['--mail' => $adminUser->getEmail()]);
+    $tester->execute(['--mail' => $adminUser->getEmail()]);
     $this->assertStringContainsString('user/reset/2', $tester->getDisplay());
 
     // Actually verify that link.

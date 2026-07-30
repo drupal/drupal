@@ -67,7 +67,7 @@ class TestDatabaseTest extends UnitTestCase {
   public function testConstructorNullPrefix(): void {
     // We use a stub class here because we can't mock getTestLock() so that it's
     // available before the constructor is called.
-    $test_db = new TestTestDatabase(NULL);
+    $test_db = new TestTestDatabase();
 
     $this->assertEquals('test23', $test_db->getDatabasePrefix());
     $this->assertEquals('sites/simpletest/23', $test_db->getTestSitePath());
