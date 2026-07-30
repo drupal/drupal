@@ -9,6 +9,7 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Controller routines for admin block routes.
@@ -32,6 +33,24 @@ class BlockController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect back to the listing page.
    */
+  #[Route(
+    path: '/admin/structure/block/manage/{block}/enable',
+    name: 'entity.block.enable',
+    requirements: [
+      '_entity_access' => 'block.enable',
+      '_csrf_token' => 'TRUE',
+    ],
+    defaults: ['op' => 'enable'],
+  )]
+  #[Route(
+    path: '/admin/structure/block/manage/{block}/disable',
+    name: 'entity.block.disable',
+    requirements: [
+      '_entity_access' => 'block.disable',
+      '_csrf_token' => 'TRUE',
+    ],
+    defaults: ['op' => 'disable'],
+  )]
   public function performOperation(BlockInterface $block, $op) {
     $block->$op()->save();
     $this->messenger()->addStatus($this->t('The block settings have been updated.'));
@@ -47,6 +66,16 @@ class BlockController extends ControllerBase {
    * @return array
    *   A #type 'page' render array containing the block region demo.
    */
+  #[Route(
+    path: '/admin/structure/block/demo/{theme}',
+    name: 'block.admin_demo',
+    requirements: [
+      '_access_theme' => 'TRUE',
+      '_permission' => 'administer blocks',
+    ],
+    options: ['_admin_route' => FALSE],
+    defaults: ['_title_callback' => 'theme_handler:getName'],
+  )]
   public function demo($theme) {
     if (!$this->themeHandler->hasUi($theme)) {
       throw new NotFoundHttpException();
