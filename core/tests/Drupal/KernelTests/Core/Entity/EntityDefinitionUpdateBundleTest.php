@@ -26,13 +26,6 @@ class EntityDefinitionUpdateBundleTest extends EntityKernelTestBase {
   use EntityDefinitionTestTrait;
 
   /**
-   * The entity definition update manager.
-   *
-   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
-   */
-  protected $entityDefinitionUpdateManager;
-
-  /**
    * The entity field manager.
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
