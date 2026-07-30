@@ -1255,7 +1255,12 @@ class TransactionTest extends DatabaseTestBase {
    * Simulate the end of a request by closing the connection and destroying
    * the transaction manually. The order matters for this test as the garbage
    * collection is unpredictable and could operate this way.
+   *
+   * @todo do not remove the test once the deprecation is removed; this test
+   *   should stay as long as post transaction callbacks are executed on
+   *   destruction of the Transaction object.
    */
+  #[IgnoreDeprecations]
   public function testPostTransactionsAlwaysExecutedBeforeConnectionIsDestroyed(): void {
     $transaction = $this->createRootTransaction('', FALSE);
     $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
@@ -1320,6 +1325,31 @@ class TransactionTest extends DatabaseTestBase {
     $reflectionProperty->setValue($manager, []);
     unset($testConnection);
     Database::closeConnection('test_fail');
+  }
+
+  /**
+   * Tests deprecation of implicit commit.
+   */
+  #[IgnoreDeprecations]
+  public function testDeprecationOfImplicitCommit(): void {
+    $this->expectUserDeprecationMessage('Database commit by letting a Transaction object go out of scope is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Commit explicitly via Transaction::commitOrRelease() instead. See https://www.drupal.org/node/3524461');
+    $transaction = $this->createRootTransaction();
+    unset($transaction);
+    $this->assertRowPresent('David');
+  }
+
+  /**
+   * Tests deprecation of ::commitAll().
+   */
+  #[IgnoreDeprecations]
+  public function testDeprecationOfCommitAll(): void {
+    $this->expectUserDeprecationMessage('Committing transactions via Drupal\\Core\\Database\\Transaction\\TransactionManagerBase::commitAll() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3524461');
+    $transaction = $this->createRootTransaction();
+    $savepoint = $this->createFirstSavepointTransaction();
+    $this->connection->commitAll();
+    $this->assertRowPresent('David');
+    $this->assertRowPresent('Roger');
+    unset($transaction, $savepoint);
   }
 
   /**

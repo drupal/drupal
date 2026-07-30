@@ -102,6 +102,14 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   private ClientConnectionTransactionState $connectionTransactionState;
 
   /**
+   * Indicates if a exception was thrown.
+   *
+   * This is needed to manage destruction of objects after a transaction was
+   * thrown on an active stack.
+   */
+  private bool $exceptionThrown = FALSE;
+
+  /**
    * Whether to trigger warnings when unpiling a void transaction.
    *
    * Normally FALSE, is set to TRUE by specific tests checking the internal
@@ -165,8 +173,18 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    *   This method exists only to work around a bug caused by Drupal incorrectly
    *   relying on object destruction order to commit transactions. Xdebug 3.3.0
    *   changes the order of object destruction when the develop mode is enabled.
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3524461
    */
   public function commitAll(): void {
+    // Only soft deprecation (no @trigger_error) to avoid thousands of
+    // occurrences per test run. PHPStan reports usage errors anyway.
+    if ($this->stackDepth() !== 0) {
+      @trigger_error('Committing transactions via ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3524461', E_USER_DEPRECATED);
+    }
     foreach (array_reverse($this->stack()) as $id => $item) {
       $this->unpile($item->name, $id);
     }
@@ -269,17 +287,20 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     }
 
     if ($this->has($name)) {
+      $this->exceptionThrown = TRUE;
       throw new TransactionNameNonUniqueException("A transaction named {$name} is already in use. Active stack: " . $this->dumpStackItemsAsString());
     }
 
     // Define a unique ID for the transaction.
     $id = bin2hex(random_bytes(12));
 
-    // Do the client-level processing.
+    // Do the client-level processing, ensuring the manager state is properly
+    // set.
     if ($this->stackDepth() === 0) {
       $this->beginClientTransaction();
       $type = StackItemType::Root;
       $this->setConnectionTransactionState(ClientConnectionTransactionState::Active);
+      $this->exceptionThrown = FALSE;
       // Only set ::rootId if there's not one set already, which may happen in
       // case of broken transactions.
       if ($this->rootId === NULL) {
@@ -326,6 +347,15 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       return;
     }
 
+    // We deprecate auto-commit on destruction, but in case an exception is
+    // thrown, we still need to destruct and cleanup objects in relation to the
+    // underlying database transaction, so we do not trigger the error in such
+    // circumstance.
+    if (!$this->exceptionThrown) {
+      @trigger_error('Database commit by letting a Transaction object go out of scope is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Commit explicitly via Transaction::commitOrRelease() instead. See https://www.drupal.org/node/3524461', E_USER_DEPRECATED);
+    }
+
+    // Commit the transaction.
     // When we get here, the transaction (or savepoint) is still active on the
     // database. We can unpile it, and if we are left with no more items in the
     // stack, we can also process the post transaction callbacks.
@@ -359,6 +389,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     // If there is no $id to commit, or if $id does not correspond to the one
     // in the stack for that $name, the commit is out of order.
     if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
+      $this->exceptionThrown = TRUE;
       throw new TransactionOutOfOrderException("Error attempting commit of {$id}\\{$name}. Active stack: " . $this->dumpStackItemsAsString());
     }
 
@@ -385,6 +416,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   protected function commit(string $name, string $id): void {
     if ($this->getConnectionTransactionState() !== ClientConnectionTransactionState::Active) {
       // The stack got corrupted.
+      $this->exceptionThrown = TRUE;
       throw new TransactionOutOfOrderException("Transaction {$id}\\{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
     }
 
@@ -408,6 +440,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     }
     else {
       // The stack got corrupted.
+      $this->exceptionThrown = TRUE;
       throw new TransactionOutOfOrderException("Transaction {$id}/{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
     }
   }
@@ -426,6 +459,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
 
     // Rolled back item should match the last one in stack.
     if ($id != array_key_last($this->stack()) || $name !== $this->stack()[$id]->name) {
+      $this->exceptionThrown = TRUE;
       throw new TransactionOutOfOrderException("Error attempting rollback of {$id}\\{$name}. Active stack: " . $this->dumpStackItemsAsString());
     }
 
@@ -452,12 +486,14 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       }
       else {
         // The stack got corrupted.
+        $this->exceptionThrown = TRUE;
         throw new TransactionOutOfOrderException("Error attempting rollback of {$id}\\{$name}. Active stack: " . $this->dumpStackItemsAsString());
       }
       return;
     }
 
     // The stack got corrupted.
+    $this->exceptionThrown = TRUE;
     throw new TransactionOutOfOrderException("Error attempting rollback of {$id}\\{$name}. Active stack: " . $this->dumpStackItemsAsString());
   }
 
@@ -466,6 +502,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    */
   public function addPostTransactionCallback(callable $callback): void {
     if (!$this->inTransaction()) {
+      $this->exceptionThrown = TRUE;
       throw new \LogicException('Root transaction end callbacks can only be added when there is an active transaction.');
     }
     $this->postTransactionCallbacks[] = $callback;
@@ -533,6 +570,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   protected function processRootCommit(): void {
     $clientCommit = $this->commitClientTransaction();
     if (!$clientCommit) {
+      $this->exceptionThrown = TRUE;
       throw new TransactionCommitFailedException();
     }
   }

@@ -12,9 +12,18 @@ use Drupal\Core\Database\Transaction\StackItemType;
 use Drupal\Core\Database\Transaction\TransactionManagerBase;
 use Drupal\Core\Database\TransactionNameNonUniqueException;
 use Drupal\Core\Database\TransactionOutOfOrderException;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the transaction abstraction system.
+ *
+ * NOTE: This base test class is mostly testing legacy Transaction processing
+ * occurring when transactions are committed as part of object destruction.
+ * That process is now deprecated, and the tests contained here were replicated
+ * in TransactionTest, that should receive any new test method. This class
+ * should be removed when commit-on-destruct is removed, and its child concrete
+ * test classes be adjusted not to rely on this. While removing, ensure that no
+ * test coverage gets lost and in case move test methods to TransactionTest.
  *
  * We test nesting by having two transaction layers, an outer and inner. The
  * outer layer encapsulates the inner layer. Our transaction nesting abstraction
@@ -251,6 +260,7 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
   /**
    * Tests savepoint transaction rollback.
    */
+  #[IgnoreDeprecations]
   public function testRollbackSavepoint(): void {
     $transaction = $this->createRootTransaction();
     $savepoint = $this->createFirstSavepointTransaction();
@@ -343,6 +353,7 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
    * The behavior of this test should be identical for connections that support
    * transactions and those that do not.
    */
+  #[IgnoreDeprecations]
   public function testCommittedTransaction(): void {
     try {
       // Create two nested transactions. The changes should be committed.
@@ -362,6 +373,7 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
   /**
    * Tests the compatibility of transactions with DDL statements.
    */
+  #[IgnoreDeprecations]
   public function testTransactionWithDdlStatement(): void {
     // First, test that a commit works normally, even with DDL statements.
     $transaction = $this->createRootTransaction('', FALSE);
@@ -542,6 +554,7 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
   /**
    * Tests transaction stacking, commit, and rollback.
    */
+  #[IgnoreDeprecations]
   public function testTransactionStacking(): void {
     // Standard case: pop the inner transaction before the outer transaction.
     $transaction = $this->createRootTransaction('', FALSE);
@@ -579,6 +592,7 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
   /**
    * Tests that transactions can continue to be used if a query fails.
    */
+  #[IgnoreDeprecations]
   public function testQueryFailureInTransaction(): void {
     $transaction = $this->createRootTransaction('test_transaction', FALSE);
     $this->connection->schema()->dropTable('test');
@@ -697,6 +711,7 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
   /**
    * Tests releasing a savepoint before last is safe.
    */
+  #[IgnoreDeprecations]
   public function testReleaseIntermediateSavepoint(): void {
     $transaction = $this->createRootTransaction();
     $savepoint1 = $this->createFirstSavepointTransaction('', FALSE);
@@ -737,6 +752,7 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
   /**
    * Tests committing a transaction while savepoints are active.
    */
+  #[IgnoreDeprecations]
   public function testCommitWithActiveSavepoint(): void {
     $transaction = $this->createRootTransaction();
     // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
@@ -792,6 +808,7 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
   /**
    * Tests post-transaction callback executes after transaction commit.
    */
+  #[IgnoreDeprecations]
   public function testRootTransactionEndCallbackCalledOnCommit(): void {
     $transaction = $this->createRootTransaction('', FALSE);
     $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
@@ -835,6 +852,7 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
   /**
    * Tests post-transaction callback executes after a DDL statement.
    */
+  #[IgnoreDeprecations]
   public function testRootTransactionEndCallbackCalledAfterDdlAndDestruction(): void {
     $transaction = $this->createRootTransaction('', FALSE);
     $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
