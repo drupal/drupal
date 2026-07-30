@@ -10,6 +10,12 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 /**
  * Constraint validator for changing the menu settings in pending revisions.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Menu
+ *   settings validation is now handled as a form validation callback in
+ *   \Drupal\menu_ui\Hook\MenuUiHooks::formNodeFormValidate().
+ *
+ * @see https://www.drupal.org/node/3606616
  */
 class MenuSettingsConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
@@ -29,52 +35,7 @@ class MenuSettingsConstraintValidator extends ConstraintValidator implements Con
    * {@inheritdoc}
    */
   public function validate($entity, Constraint $constraint): void {
-    if (isset($entity) && !$entity->isNew() && !$entity->isDefaultRevision()) {
-      $defaults = $this->menuUiUtility->getMenuLinkDefaults($entity);
-
-      // If the menu UI entity builder is not present and the menu property has
-      // not been set, do not attempt to validate the menu settings since they
-      // are not being modified.
-      if (!$values = $entity->menu) {
-        return;
-      }
-
-      if (trim($values['title']) && !empty($values['menu_parent'])) {
-        [$menu_name, $parent] = explode(':', $values['menu_parent'], 2);
-        $values['menu_name'] = $menu_name;
-        $values['parent'] = $parent;
-      }
-
-      // Handle the case when the menu link is deleted in a pending revision.
-      if (empty($values['enabled']) && $defaults['entity_id']) {
-        $this->context->buildViolation($constraint->messageRemove)
-          ->atPath('menu')
-          ->setInvalidValue($entity)
-          ->addViolation();
-      }
-      // Handle all the other non-revisionable menu link changes in a pending
-      // revision.
-      elseif ($defaults['entity_id']) {
-        if ($defaults['entity_id'] && ($values['menu_name'] != $defaults['menu_name'])) {
-          $this->context->buildViolation($constraint->messageParent)
-            ->atPath('menu.menu_parent')
-            ->setInvalidValue($entity)
-            ->addViolation();
-        }
-        elseif (isset($values['parent']) && ($values['parent'] != $defaults['parent'])) {
-          $this->context->buildViolation($constraint->messageParent)
-            ->atPath('menu.menu_parent')
-            ->setInvalidValue($entity)
-            ->addViolation();
-        }
-        elseif (($values['weight'] != $defaults['weight'])) {
-          $this->context->buildViolation($constraint->messageWeight)
-            ->atPath('menu.weight')
-            ->setInvalidValue($entity)
-            ->addViolation();
-        }
-      }
-    }
+    @trigger_error('MenuSettingsConstraintValidator is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Menu settings validation is now handled as a form validation callback in \Drupal\menu_ui\Hook\MenuUiHooks::formNodeFormValidate(). See https://www.drupal.org/node/3606616', E_USER_DEPRECATED);
   }
 
 }
