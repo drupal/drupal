@@ -8,11 +8,11 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Builds a form to test a required textfield within a details element.
+ * Builds a form to test required fields within details elements.
  *
  * @internal
  */
-class FormTestDetailsContainsRequiredTextfieldForm extends FormBase {
+class FormTestDetailsContainsRequiredFieldsForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -36,6 +36,27 @@ class FormTestDetailsContainsRequiredTextfieldForm extends FormBase {
       '#required' => TRUE,
       '#title' => 'Required textfield',
     ];
+    $form['meta2'] = [
+      '#type' => 'details',
+      '#title' => 'Details element 2',
+      '#open' => FALSE,
+    ];
+    $form['meta2']['required_textarea_in_details'] = [
+      '#type' => 'textarea',
+      '#required' => TRUE,
+      '#title' => 'Required textarea',
+    ];
+    $form['meta3'] = [
+      '#type' => 'details',
+      '#title' => 'Details element 3',
+      '#open' => FALSE,
+    ];
+    $form['meta3']['required_select_in_details'] = [
+      '#type' => 'select',
+      '#options' => ['one', 'two', 'three', 'four', 'five'],
+      '#required' => TRUE,
+      '#title' => 'Required select',
+    ];
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => 'Submit',
@@ -57,7 +78,7 @@ class FormTestDetailsContainsRequiredTextfieldForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): array {
     return $form;
   }
 

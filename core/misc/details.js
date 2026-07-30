@@ -35,7 +35,9 @@
   window.addEventListener(
     'invalid',
     (event) => {
-      if (event.target.matches('details input[required]')) {
+      if (
+        event.target.matches('details :is(input, textarea, select)[required]')
+      ) {
         handleFragmentLinkClickOrHashChange(event, $(event.target));
       }
     },
