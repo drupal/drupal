@@ -60,7 +60,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * @return \Drupal\file\FileInterface
    *   The new unsaved file entity.
    */
-  public function getTestFile($type_name, $size = NULL) {
+  public function getTestFile($type_name, $size = NULL): FileInterface {
     // Get a file to upload.
     $file = current($this->drupalGetTestFiles($type_name, $size));
 
@@ -74,7 +74,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
   /**
    * Retrieves the fid of the last inserted file.
    */
-  public function getLastFileId() {
+  public function getLastFileId(): int {
     return (int) \Drupal::entityQueryAggregate('file')
       ->accessCheck(FALSE)
       ->aggregate('fid', 'max')

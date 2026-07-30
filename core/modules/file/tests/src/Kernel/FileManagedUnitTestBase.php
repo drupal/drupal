@@ -160,7 +160,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    * @return \Drupal\file\FileInterface
    *   File entity.
    */
-  public function createFile($filepath = NULL, $contents = NULL, $scheme = NULL) {
+  public function createFile($filepath = NULL, $contents = NULL, $scheme = NULL): FileInterface {
     // Don't count hook invocations caused by creating the file.
     \Drupal::state()->set('file_test.count_hook_invocations', FALSE);
     $file = File::create([
@@ -193,7 +193,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    * @return string
    *   File URI.
    */
-  public function createUri($filepath = NULL, $contents = NULL, $scheme = NULL) {
+  public function createUri($filepath = NULL, $contents = NULL, $scheme = NULL): string {
     if (!isset($filepath)) {
       // Prefix with non-latin characters to ensure that all file-related
       // tests work with international filenames.

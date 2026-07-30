@@ -36,7 +36,7 @@ class DummyStreamWrapper extends LocalStream {
    *
    * Return a dummy path for testing.
    */
-  public function getInternalUri() {
+  public function getInternalUri(): string {
     return '/dummy/example.txt';
   }
 
