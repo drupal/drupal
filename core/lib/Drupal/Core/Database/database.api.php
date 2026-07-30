@@ -159,18 +159,16 @@ use Drupal\Core\Database\Query\SelectInterface;
  * @endcode
  *
  * @section sec_transaction Transactions
- * Drupal supports transactions, including a transparent fallback for
- * databases that do not support transactions. To start a new transaction,
- * call startTransaction(), like this:
+ * Drupal supports transactions. To start a new transaction, call
+ * startTransaction(), like this:
  * @code
  * $transaction = \Drupal::database()->startTransaction();
  * @endcode
- * The transaction will remain open for as long as the variable $transaction
- * remains in scope; when $transaction is destroyed, the transaction will be
- * committed. If your transaction is nested inside of another then Drupal will
- * track each transaction and only commit the outer-most transaction when the
- * last transaction object goes out of scope (when all relevant queries have
- * completed successfully).
+ * The transaction needs to be explicitly committed or rolled back once you
+ * have completed the database operations requested. If your transaction is
+ * nested inside of another then Drupal will track each transaction and only
+ * commit the outer-most transaction when the last transaction object is
+ * committed (when all relevant queries have completed successfully).
  *
  * Example:
  * @code
@@ -189,6 +187,9 @@ use Drupal\Core\Database\Query\SelectInterface;
  *       ->execute();
  *
  *     my_other_function($id);
+ *
+ *     // The transaction has completed, commit it here.
+ *     $transaction->commitOrRelease();
  *
  *     return $id;
  *   }

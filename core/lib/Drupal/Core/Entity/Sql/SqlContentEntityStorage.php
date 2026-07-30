@@ -848,7 +848,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       \Drupal::service('database.replica_kill_switch')->trigger();
       return $return;
     }
-    catch (\Exception $e) {
+    catch (\Throwable $e) {
       if (isset($transaction)) {
         try {
           $transaction->rollBack();
