@@ -65,6 +65,8 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       'field_private',
     ] as $image_target) {
       $file = File::create((array) array_pop($files));
+      // Setting owner as current user so private images are accessible.
+      $file->setOwner($this->adminUser);
       $file->save();
       $default_images[$image_target] = $file;
     }
