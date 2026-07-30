@@ -20,6 +20,9 @@ use Symfony\Component\Routing\Attribute\Route;
   requirements: [
     '_user_is_logged_in' => 'TRUE',
   ],
+  defaults: [
+    '_title' => new TranslatableMarkup('Log out'),
+  ],
 )]
 class UserLogoutConfirm extends ConfirmFormBase implements WorkspaceSafeFormInterface {
 
