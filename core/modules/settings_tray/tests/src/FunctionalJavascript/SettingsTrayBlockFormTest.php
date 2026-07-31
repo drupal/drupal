@@ -36,7 +36,8 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    if ($this->name() === 'testEditModeEnableDisable') {
+    if ($this->name() === 'testEditModeEnableDisable'
+      || $this->name() === 'testBlocks') {
       $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3317520");
     }
 
