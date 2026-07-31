@@ -107,12 +107,12 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
 
     $wrapper_id = Html::getUniqueId('allowed-values-wrapper');
     $element['allowed_values'] = [
+      '#type' => 'container',
       '#element_validate' => [[static::class, 'validateAllowedValues']],
       '#field_has_data' => $has_data,
       '#allowed_values' => $allowed_values,
       '#required' => TRUE,
-      '#prefix' => '<div id="' . $wrapper_id . '">',
-      '#suffix' => '</div>',
+      '#id' => $wrapper_id,
       '#access' => empty($allowed_values_function),
       'help_text' => ['#markup' => $this->allowedValuesDescription()],
     ];
