@@ -9,7 +9,7 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests the CSS asset optimizer.
@@ -19,25 +19,21 @@ class CssOptimizerUnitTest extends UnitTestCase {
 
   /**
    * A CSS asset optimizer.
-   *
-   * @var \Drupal\Core\Asset\CssOptimizer
    */
-  protected $optimizer;
+  protected CssOptimizer $optimizer;
 
   /**
    * The file URL generator mock.
    */
-  protected FileUrlGeneratorInterface&MockObject $fileUrlGenerator;
+  protected FileUrlGeneratorInterface&Stub $fileUrlGenerator;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
+  protected function setUpOptimizer(): void {
+    $this->fileUrlGenerator = $this->createStub(FileUrlGeneratorInterface::class);
     $this->fileUrlGenerator
       ->method('generateString')
-      ->with($this->isString())
       ->willReturnCallback(function (string $uri): string {
         return 'generated-relative-url:' . $uri;
       });
@@ -238,8 +234,12 @@ class CssOptimizerUnitTest extends UnitTestCase {
    * Tests optimizing a CSS asset group containing 'type' => 'file'.
    */
   #[DataProvider('providerTestOptimize')]
-  public function testOptimize(array $css_asset, string|bool $expected): void {
+  public function testOptimize(
+    array $css_asset,
+    string|bool $expected,
+  ): void {
     global $base_path;
+    $this->setUpOptimizer();
     $original_base_path = $base_path;
     $base_path = '/';
 
@@ -252,6 +252,8 @@ class CssOptimizerUnitTest extends UnitTestCase {
    * Tests a file CSS asset with preprocessing disabled.
    */
   public function testTypeFilePreprocessingDisabled(): void {
+    $this->setUpOptimizer();
+
     $this->expectException('Exception');
     $this->expectExceptionMessageIs('Only file CSS assets with preprocessing enabled can be optimized.');
 
@@ -272,6 +274,8 @@ class CssOptimizerUnitTest extends UnitTestCase {
    * Tests a CSS asset with 'type' => 'external'.
    */
   public function testTypeExternal(): void {
+    $this->setUpOptimizer();
+
     $this->expectException('Exception');
     $this->expectExceptionMessageIs('Only file CSS assets can be optimized.');
 

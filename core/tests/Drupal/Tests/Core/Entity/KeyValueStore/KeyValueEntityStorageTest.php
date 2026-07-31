@@ -25,6 +25,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
@@ -63,15 +64,13 @@ class KeyValueEntityStorageTest extends UnitTestCase {
 
   /**
    * The entity storage.
-   *
-   * @var \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage
    */
-  protected $entityStorage;
+  protected KeyValueEntityStorage $entityStorage;
 
   /**
    * The mocked entity type manager.
    */
-  protected EntityTypeManagerInterface&MockObject $entityTypeManager;
+  protected EntityTypeManagerInterface&Stub $entityTypeManager;
 
   /**
    * The mocked entity field manager.
@@ -88,7 +87,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->entityType = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
+    $this->entityType = $this->createMock(EntityTypeInterface::class);
   }
 
   /**
@@ -96,10 +95,8 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    *
    * @param string|null $uuid_key
    *   (optional) The entity key used for the UUID. Defaults to 'uuid'.
-   *
-   * @legacy-covers ::__construct
    */
-  protected function setUpKeyValueEntityStorage($uuid_key = 'uuid'): void {
+  protected function setUpKeyValueEntityStorage(?string $uuid_key = 'uuid'): void {
     $this->entityType->expects($this->atLeastOnce())
       ->method('getKey')
       ->willReturnMap([
@@ -114,10 +111,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->method('getListCacheTags')
       ->willReturn(['test_entity_type_list']);
 
-    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
+    $this->entityTypeManager = $this->createStub(EntityTypeManagerInterface::class);
     $this->entityTypeManager
       ->method('getDefinition')
-      ->with('test_entity_type')
       ->willReturn($this->entityType);
 
     $this->entityFieldManager = $this->createStub(EntityFieldManagerInterface::class);
@@ -213,7 +209,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->entityType->expects($this->once())
       ->method('getClass')
       ->willReturn(EntityBaseTest::class);
-    $this->setUpKeyValueEntityStorage(NULL);
+    $this->setUpKeyValueEntityStorage();
     $this->setUpMockModuleHandler();
     $this->setUpMockUuidService();
 
@@ -315,7 +311,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @legacy-covers ::save
    * @legacy-covers ::doSave
    */
-  #[\PHPUnit\Framework\Attributes\Depends('testSaveInsert')]
+  #[Depends('testSaveInsert')]
   public function testSaveUpdate(EntityInterface $entity): void {
     $this->entityType->expects($this->once())
       ->method('getClass')
@@ -394,7 +390,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @legacy-covers ::save
    * @legacy-covers ::doSave
    */
-  #[\PHPUnit\Framework\Attributes\Depends('testSaveConfigEntity')]
+  #[Depends('testSaveConfigEntity')]
   public function testSaveRenameConfigEntity(ConfigEntityInterface $entity): void {
     $this->entityType->expects($this->once())
       ->method('getClass')

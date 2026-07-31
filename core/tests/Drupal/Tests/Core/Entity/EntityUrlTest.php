@@ -438,7 +438,7 @@ class EntityUrlTest extends UnitTestCase {
   /**
    * Tests the uriRelationships() method.
    */
-  public function testUriRelationships(): void {
+  public function testUriRelationshipsWithNoMandatoryParameters(): void {
     $entity = $this->getEntity(StubEntityBase::class, ['id' => static::ENTITY_ID]);
 
     $container_builder = new ContainerBuilder();
@@ -449,16 +449,28 @@ class EntityUrlTest extends UnitTestCase {
     // Test route with no mandatory parameters.
     $this->registerLinkTemplate('canonical');
     $route_name_0 = 'entity.' . static::ENTITY_TYPE_ID . '.canonical';
-    $url_generator
+    $url_generator->expects($this->once())
       ->method('generateFromRoute')
       ->with($route_name_0)
       ->willReturn((new GeneratedUrl())->setGeneratedUrl('/entity_test'));
     $this->assertEquals(['canonical'], $entity->uriRelationships());
+  }
+
+  /**
+   * Tests the uriRelationships() method.
+   */
+  public function testUriRelationshipsWithNonDefaultMandatoryParameters(): void {
+    $entity = $this->getEntity(StubEntityBase::class, ['id' => static::ENTITY_ID]);
+
+    $container_builder = new ContainerBuilder();
+    $url_generator = $this->createMock(UrlGeneratorInterface::class);
+    $container_builder->set('url_generator', $url_generator);
+    \Drupal::setContainer($container_builder);
 
     // Test route with non-default mandatory parameters.
     $this->registerLinkTemplate('{non_default_parameter}');
     $route_name_1 = 'entity.' . static::ENTITY_TYPE_ID . '.{non_default_parameter}';
-    $url_generator
+    $url_generator->expects($this->once())
       ->method('generateFromRoute')
       ->with($route_name_1)
       ->willThrowException(new MissingMandatoryParametersException($route_name_1, ['missing_parameter']));

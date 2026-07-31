@@ -137,10 +137,9 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
     $this->viewAjaxController = new ViewAjaxController($this->viewStorage, $this->executableFactory, $this->renderer, $this->currentPath, $this->redirectDestination, $this->pathValidator);
 
-    $element_info_manager = $this->createMock(ElementInfoManagerInterface::class);
+    $element_info_manager = $this->createStub(ElementInfoManagerInterface::class);
     $element_info_manager
       ->method('getInfo')
-      ->with('status_messages')
       ->willReturn([]);
     $request_stack = new RequestStack();
     $request_stack->push(new Request());

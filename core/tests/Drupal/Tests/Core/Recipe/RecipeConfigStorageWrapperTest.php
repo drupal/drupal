@@ -228,10 +228,10 @@ class RecipeConfigStorageWrapperTest extends UnitTestCase {
    */
   public function testListAll(): void {
     $a = $this->createMock(StorageInterface::class);
-    $a->method('listAll')->with('node.')
+    $a->expects($this->once())->method('listAll')->with('node.')
       ->willReturn(['node.type']);
     $b = $this->createMock(StorageInterface::class);
-    $b->method('listAll')->with('node.')
+    $b->expects($this->once())->method('listAll')->with('node.')
       ->willReturn(['node.type', 'node.id']);
     $storage = new RecipeConfigStorageWrapper($a, $b);
     $this->assertEquals([

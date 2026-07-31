@@ -57,10 +57,6 @@ class BaseFieldDefinitionTest extends UnitTestCase {
     $field_type_manager
       ->method('getDefinitions')
       ->willReturn([$this->fieldType => $this->fieldTypeDefinition]);
-    $field_type_manager
-      ->method('getDefinition')
-      ->with($this->fieldType)
-      ->willReturn($this->fieldTypeDefinition);
     $field_type_manager->expects($this->atLeastOnce())
       ->method('getDefaultStorageSettings')
       ->with($this->fieldType)

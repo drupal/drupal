@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Unit;
 
 use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
@@ -18,6 +18,7 @@ use Drupal\TestTools\Random;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests Drupal\language\Entity\ContentLanguageSettings.
@@ -28,31 +29,23 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
 
   /**
    * The entity type manager used for testing.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The UUID generator used for testing.
-   *
-   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit\Framework\MockObject\Stub
    */
-  protected $uuid;
+  protected UuidInterface&Stub $uuid;
 
   /**
    * The typed configuration manager used for testing.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit\Framework\MockObject\Stub
    */
-  protected $typedConfigManager;
+  protected TypedConfigManagerInterface&Stub $typedConfigManager;
 
   /**
    * The config entity storage used for testing.
-   *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityStorage
    */
-  protected $configEntityStorageInterface;
+  protected ConfigEntityStorageInterface&Stub $configEntityStorageInterface;
 
   /**
    * {@inheritdoc}
@@ -61,12 +54,9 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     parent::setUp();
 
     $this->entityTypeManager = $this->createStub(EntityTypeManagerInterface::class);
-
     $this->uuid = $this->createStub(UuidInterface::class);
-
     $this->typedConfigManager = $this->createStub(TypedConfigManagerInterface::class);
-
-    $this->configEntityStorageInterface = $this->createStub(EntityStorageInterface::class);
+    $this->configEntityStorageInterface = $this->createStub(ConfigEntityStorageInterface::class);
 
     $container = new ContainerBuilder();
     $container->set('entity_type.manager', $this->entityTypeManager);
@@ -80,7 +70,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
    * Reinitializes the config entity storage as a mock object.
    */
   protected function setUpMockConfigEntityStorage(): void {
-    $this->configEntityStorageInterface = $this->createMock(EntityStorageInterface::class);
+    $this->configEntityStorageInterface = $this->createMock(ConfigEntityStorageInterface::class);
     \Drupal::getContainer()->set('config.storage', $this->configEntityStorageInterface);
   }
 
@@ -104,7 +94,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
       ->method('getBundleConfigDependency')
       ->willReturn(['type' => 'config', 'name' => 'test.test_entity_type.id']);
 
-    $this->entityTypeManager
+    $this->entityTypeManager->expects($this->once())
       ->method('getDefinition')
       ->with('test_entity_type')
       ->willReturn($target_entity_type);
@@ -266,9 +256,13 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
    * Tests load by entity type bundle.
    */
   #[DataProvider('providerLoadByEntityTypeBundle')]
-  public function testLoadByEntityTypeBundle(string $config_id, ?ContentLanguageSettings $existing_config, string $expected_langcode, bool $expected_language_alterable): void {
+  public function testLoadByEntityTypeBundle(
+    string $config_id,
+    ?ContentLanguageSettings $existing_config,
+    string $expected_langcode,
+    bool $expected_language_alterable,
+  ): void {
     $this->setUpMockConfigEntityStorage();
-    $this->setUpMockEntityTypeManager();
 
     [$type, $bundle] = explode('.', $config_id);
 
@@ -276,7 +270,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
       'target_entity_type_id' => $type,
       'target_bundle' => $bundle,
     ], 'language_content_settings');
-    $this->configEntityStorageInterface
+    $this->configEntityStorageInterface->expects($this->once())
       ->method('load')
       ->with($config_id)
       ->willReturn($existing_config);
@@ -286,7 +280,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
 
     $this->entityTypeManager
       ->method('getStorage')
-      ->with('language_content_settings')
       ->willReturn($this->configEntityStorageInterface);
 
     if ($existing_config === NULL) {
@@ -330,7 +323,12 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     return [
       ['test_entity_type.test_bundle', $alteredLanguage, LanguageInterface::LANGCODE_SITE_DEFAULT, TRUE],
       ['test_entity_type.test_fixed_language_bundle', $alteredDefaultLangcode, $langcode, FALSE],
-      ['test_entity_type.test_default_language_bundle', $defaultConfig, LanguageInterface::LANGCODE_SITE_DEFAULT, FALSE],
+      [
+        'test_entity_type.test_default_language_bundle',
+        $defaultConfig,
+        LanguageInterface::LANGCODE_SITE_DEFAULT,
+        FALSE,
+      ],
       ['test_entity_type.null_bundle', NULL, LanguageInterface::LANGCODE_SITE_DEFAULT, FALSE],
     ];
   }

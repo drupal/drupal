@@ -73,9 +73,14 @@ class ParamConverterManagerTest extends UnitTestCase {
    * Tests set route parameter converters.
    */
   #[DataProvider('providerTestSetRouteParameterConverters')]
-  public function testSetRouteParameterConverters(string $path, ?array $parameters = NULL, ?string $expected = NULL): void {
+  public function testSetRouteParameterConverters(
+    string $path,
+    ?array $parameters = NULL,
+    ?string $expected = NULL,
+    int $appliesCallsCount = 0,
+  ): void {
     $converter = $this->createMock('Drupal\Core\ParamConverter\ParamConverterInterface');
-    $converter
+    $converter->expects($this->exactly($appliesCallsCount))
       ->method('applies')
       ->with($this->anything(), 'id', $this->anything())
       ->willReturn(TRUE);
@@ -109,8 +114,8 @@ class ParamConverterManagerTest extends UnitTestCase {
   public static function providerTestSetRouteParameterConverters(): array {
     return [
       ['/test'],
-      ['/test/{id}', ['id' => []], 'applied'],
-      ['/test/{id}', ['id' => ['converter' => 'predefined']], 'predefined'],
+      ['/test/{id}', ['id' => []], 'applied', 1],
+      ['/test/{id}', ['id' => ['converter' => 'predefined']], 'predefined', 0],
     ];
   }
 
@@ -140,7 +145,7 @@ class ParamConverterManagerTest extends UnitTestCase {
     $expected['id'] = 'something_better!';
 
     $converter = $this->createMock('Drupal\Core\ParamConverter\ParamConverterInterface');
-    $converter
+    $converter->expects($this->once())
       ->method('convert')
       ->with(1, $this->isArray(), 'id', $this->isArray())
       ->willReturn('something_better!');
@@ -231,7 +236,7 @@ class ParamConverterManagerTest extends UnitTestCase {
     ];
 
     $converter = $this->createMock('Drupal\Core\ParamConverter\ParamConverterInterface');
-    $converter
+    $converter->expects($this->once())
       ->method('convert')
       ->with(1, $this->isArray(), 'id', $this->isArray())
       ->willReturn(NULL);
