@@ -131,7 +131,7 @@ YAML;
    */
   // phpcs:disable Drupal.Arrays.Array.LongLineDeclaration
   #[TestWith(["field.*.node.one.*", "No installed config entity type uses the prefix in the expression 'field.*.node.one.*'. Either there is a typo in the expression or this recipe should install an additional module or depend on another recipe."])]
-  #[TestWith(["field.field.node.*.body/", " could not be parsed."])]
+  #[TestWith(["field.field.node.*.body/", "The expression 'field\\.field\\.node\\.[^.:?*<>\"'\\/\\\\]+\\.body/' could not be parsed."])]
   // phpcs:enable
   public function testInvalidExpression(string $expression, string $expected_exception_message): void {
     $contents = <<<YAML
@@ -272,7 +272,7 @@ YAML;
     // We should not be able to use this action on entities that aren't
     // themselves bundles of another entity type.
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessageIs('The "language_content_settings" entity does not support the "createForEach" config action.');
+    $this->expectExceptionMessageIsOrContains('The "language_content_settings" entity does not support the "createForEach" config action.');
     $this->container->get('plugin.manager.config_action')
       ->applyAction('createForEach', 'language.content_settings.node.*', []);
   }

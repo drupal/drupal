@@ -100,7 +100,7 @@ class RequestFormatRouteFilterTest extends UnitTestCase {
     $request->setRequestFormat('xml');
     $route_filter = new RequestFormatRouteFilter();
     $this->expectException(NotAcceptableHttpException::class);
-    $this->expectExceptionMessageIs('No route found for the specified format.');
+    $this->expectExceptionMessageIs('No route found for the specified format. Supported formats: json.');
     $route_filter->filter($collection, $request);
   }
 
@@ -111,7 +111,7 @@ class RequestFormatRouteFilterTest extends UnitTestCase {
    */
   public function testNoRouteFoundWhenNoRequestFormatAndSingleRouteWithMultipleFormats(): void {
     $this->expectException(NotAcceptableHttpException::class);
-    $this->expectExceptionMessageIs('No route found for the specified format.');
+    $this->expectExceptionMessageIs('No route found for the specified format. Supported formats: json, xml.');
 
     $url = $this->prophesize(GeneratedUrl::class);
     $url_assembler = $this->prophesize(UnroutedUrlAssemblerInterface::class);

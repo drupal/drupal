@@ -77,7 +77,7 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
     // If composer.json is removed, we should get an exception because
     // getConfig() should validate that $dir is Composer-ready.
     unlink($dir . '/composer.json');
-    $this->expectExceptionMessageIs("composer.json not found.");
+    $this->expectExceptionMessageIsOrContains("composer.json not found.");
     $inspector->getConfig('extra', $dir);
   }
 

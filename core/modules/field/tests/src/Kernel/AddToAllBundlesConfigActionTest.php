@@ -92,7 +92,7 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
     // Expect an error when the 'addToAllBundles' action is invoked on anything
     // other than a field storage config entity.
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessageIs('The "user_role" entity does not support the "addToAllBundles" config action.');
+    $this->expectExceptionMessageIsOrContains('The "user_role" entity does not support the "addToAllBundles" config action.');
     $this->applyAction('user.role.anonymous');
   }
 

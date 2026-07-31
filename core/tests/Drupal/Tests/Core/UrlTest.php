@@ -854,7 +854,7 @@ class UrlTest extends UnitTestCase {
    */
   public function testFromRouteUriWithMissingRouteName(): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessageIs("The route URI 'route:' is invalid.");
+    $this->expectExceptionMessageIs("The route URI 'route:' is invalid. You must have a route name in the URI. e.g., route:system.admin");
     Url::fromUri('route:');
   }
 

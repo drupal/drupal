@@ -83,7 +83,7 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
    */
   public function testGetSourceContextException(): void {
     $this->expectException(LoaderError::class);
-    $this->expectExceptionMessageIs("Malformed YAML in help topic \"vfs://root/modules/test/help_topics/test.invalid_yaml.html.twig\":");
+    $this->expectExceptionMessageIs("Malformed YAML in help topic \"vfs://root/modules/test/help_topics/test.invalid_yaml.html.twig\": An error occurred when attempting to parse front matter data on line 2.");
 
     $this->helpLoader->getSourceContext('@' . HelpTopicTwigLoader::MAIN_NAMESPACE . '/test.invalid_yaml.html.twig');
   }

@@ -161,7 +161,7 @@ BROKEN_INFO;
     ]);
     $filename = vfsStream::url('modules/fixtures/broken.info.txt');
     $this->expectException('\Drupal\Core\Extension\InfoParserException');
-    $this->expectExceptionMessageIs('Unable to parse vfs://modules/fixtures/broken.info.txt');
+    $this->expectExceptionMessageIsOrContains('Unable to parse vfs://modules/fixtures/broken.info.txt');
     $this->infoParser->parse($filename);
   }
 
@@ -492,7 +492,7 @@ INFO;
       ],
     ]);
     $this->expectException('\Drupal\Core\Extension\InfoParserException');
-    $this->expectExceptionMessageIs($exception_message);
+    $this->expectExceptionMessageIsOrContains($exception_message);
     $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
     $this->assertEmpty($info_values);
   }

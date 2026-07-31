@@ -255,7 +255,7 @@ YAML;
 
     $recipe = $this->createRecipe($recipe_data);
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessageIs('The "setFoo" plugin does not exist.');
+    $this->expectExceptionMessageIsOrContains('The "setFoo" plugin does not exist.');
     RecipeRunner::processRecipe($recipe);
   }
 
@@ -277,7 +277,7 @@ YAML;
 
     $recipe = $this->createRecipe($recipe_data);
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessageIs('The "config_test" entity does not support the "setBody" config action.');
+    $this->expectExceptionMessageIsOrContains('The "config_test" entity does not support the "setBody" config action.');
     RecipeRunner::processRecipe($recipe);
   }
 

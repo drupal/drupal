@@ -172,7 +172,7 @@ YAML
     );
 
     $this->expectException(\ArgumentCountError::class);
-    $this->expectExceptionMessageIs('Argument #1 ($question) not passed');
+    $this->expectExceptionMessageIsOrContains('::ask(): Argument #1 ($question) not passed');
     $recipe->input->collectAll($collector);
   }
 

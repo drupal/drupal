@@ -35,7 +35,7 @@ class SettingsConfigValidationTest extends KernelTestBase {
     file_put_contents($file, 'Not an image!');
 
     $this->expectException(SchemaIncompleteException::class);
-    $this->expectExceptionMessageIs('[preview_image] This file is not a valid image.');
+    $this->expectExceptionMessageIs('Schema errors for image.settings with the following errors: 0 [preview_image] This file is not a valid image.');
     $this->config('image.settings')
       ->set('preview_image', $file)
       ->save();

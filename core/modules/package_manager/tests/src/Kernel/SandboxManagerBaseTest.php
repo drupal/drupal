@@ -436,7 +436,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
     $project_root = $this->container->get(PathLocator::class)->getProjectRoot();
     unlink($project_root . '/composer.json');
     $this->expectException(SandboxException::class);
-    $this->expectExceptionMessageIs("composer.json not found.");
+    $this->expectExceptionMessageIsOrContains("composer.json not found.");
     $this->createStage()->create();
   }
 
@@ -448,7 +448,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
     $stage->create();
     $stage->require(['drupal/random']);
     $this->expectException(SandboxException::class);
-    $this->expectExceptionMessageIs("composer.json not found.");
+    $this->expectExceptionMessageIsOrContains("composer.json not found.");
     unlink($stage->getSandboxDirectory() . '/composer.json');
     $stage->apply();
   }

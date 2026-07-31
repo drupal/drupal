@@ -135,7 +135,7 @@ config:
 YAML;
 
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessageIs('The "field_storage_config" entity does not support the "grantPermissionsForEachNodeType" config action.');
+    $this->expectExceptionMessageIsOrContains('The "field_storage_config" entity does not support the "grantPermissionsForEachNodeType" config action.');
     $this->applyRecipeFromString($recipe_data);
   }
 
@@ -223,7 +223,7 @@ config:
       grantPermissionsForEachMediaType: $value
 YAML;
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessageIs(" must be an array of strings that contain '%bundle'.");
+    $this->expectExceptionMessageMatches("/The permissions provided .* must be an array of strings that contain '%bundle'\./s");
     $this->applyRecipeFromString($recipe_data);
   }
 

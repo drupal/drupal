@@ -74,7 +74,15 @@ YAML;
     // data, we should get a validation error.
     $recipe = $this->createRecipeWithInvalidDataInFile('config_test.types.fully_validatable.yml');
     $this->expectException(InvalidConfigException::class);
-    $this->expectExceptionMessageIs('There were validation errors in config_test.types.fully_validatable');
+    $this->expectExceptionMessageIs(<<<EXC
+There were validation errors in config_test.types.fully_validatable:
+- mapping_with_only_required_keys: 'north' is a required key.
+- mapping_with_only_required_keys: 'east' is a required key.
+- mapping_with_only_required_keys: 'south' is a required key.
+- mapping_with_only_required_keys: 'west' is a required key.
+- mapping_with_some_required_keys: 'north' is a required key.
+- mapping_with_some_required_keys: 'south' is a required key.
+EXC);
     RecipeRunner::processRecipe($recipe);
   }
 

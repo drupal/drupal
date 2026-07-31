@@ -211,7 +211,7 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
       if ($attribute->defaults !== NULL) {
         $globals['defaults'] = $attribute->defaults;
         if (!empty($attribute->defaults['_locale'])) {
-          throw new UnsupportedRouteAttributePropertyException(sprintf('The "%s" route attribute is not supported in class "%s""', "locale", $class->getName()));
+          throw new UnsupportedRouteAttributePropertyException(sprintf('The "%s" route attribute is not supported in class "%s"', "locale", $class->getName()));
         }
       }
 

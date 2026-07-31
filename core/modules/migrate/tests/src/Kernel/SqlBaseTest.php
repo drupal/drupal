@@ -127,7 +127,7 @@ class SqlBaseTest extends MigrateTestBase {
     $sql_base->setConfiguration([]);
     Database::renameConnection('migrate', 'fallback_connection');
     $this->expectException(RequirementsException::class);
-    $this->expectExceptionMessageIs('No database connection configured for source plugin');
+    $this->expectExceptionMessageIs('No database connection configured for source plugin sql_base');
     $sql_base->getDatabase();
   }
 

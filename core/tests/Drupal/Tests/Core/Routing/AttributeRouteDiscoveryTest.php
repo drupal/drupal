@@ -157,7 +157,7 @@ EOF
     $additionalClassLoader->register(TRUE);
     $discovery = new AttributeRouteDiscovery($namespaces);
     $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('Route attributes can not target methods on class Drupal\router_test_invalid\Form\TestRouteInvalidAttributeForm. Use the attribute on the form class itself.');
+    $this->expectExceptionMessageIs('Route attributes can not target methods on class Drupal\router_test_invalid\Form\TestRouteInvalidAttributeForm. Use the attribute on the form class itself.');
     $discovery->onRouteBuild($event);
   }
 

@@ -47,7 +47,7 @@ class FileSystemTest extends KernelTestBase {
     // We need to compute the exception message here because it will include
     // the 'real' path to the file, which varies with $this->siteDirectory.
     $this->expectException(FileNotExistsException::class);
-    $this->expectExceptionMessageIs("File 'public://test.txt' ('{$this->siteDirectory}/files/test.txt') could not be copied because it does not exist");
+    $this->expectExceptionMessageIs("File 'public://test.txt' ('{$this->siteDirectory}/files/test.txt') could not be copied because it does not exist.");
 
     $this->fileSystem->copy('public://test.txt', 'public://test-copy.txt');
   }
@@ -72,7 +72,7 @@ class FileSystemTest extends KernelTestBase {
    */
   public function testCopyFailureIfFileAlreadyExists(): void {
     $this->expectException(FileExistsException::class);
-    $this->expectExceptionMessageIs("File 'public://test.txt' could not be copied because a file by that name already exists in the destination directory ('')");
+    $this->expectExceptionMessageIs("File 'public://test.txt' could not be copied because a file by that name already exists in the destination directory ('').");
     $uri = 'public://test.txt';
     touch($uri);
     $this->fileSystem->copy($uri, $uri, FileExists::Error);
@@ -83,7 +83,7 @@ class FileSystemTest extends KernelTestBase {
    */
   public function testCopyFailureIfSelfOverwrite(): void {
     $this->expectException(FileException::class);
-    $this->expectExceptionMessageIs("'public://test.txt' could not be copied because it would overwrite itself");
+    $this->expectExceptionMessageIs("File 'public://test.txt' could not be copied because it would overwrite itself.");
     $uri = 'public://test.txt';
     touch($uri);
     $this->fileSystem->copy($uri, $uri, FileExists::Replace);

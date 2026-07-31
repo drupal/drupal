@@ -206,7 +206,7 @@ YAML,
    do not:
       do: this: for the love of Foo Bar!
 YAML,
-        'The file "vfs://drupal/modules/example/example.yml" does not contain valid YAML',
+        'The file "vfs://drupal/modules/example/example.yml" does not contain valid YAML: Unable to parse at line 1 (near "   do not:").',
       ],
       'YAML must have expected keys' => [<<<YAML
       "do not":

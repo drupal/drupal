@@ -288,7 +288,7 @@ class WorkflowTest extends UnitTestCase {
    */
   public function testDeleteOnlyStateException(): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessageIs("The state 'draft' can not be deleted from workflow as it is the only state");
+    $this->expectExceptionMessageIs("The state 'draft' can not be deleted from workflow as it is the only state.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->getTypePlugin()->addState('draft', 'Draft');
     $workflow->getTypePlugin()->deleteState('draft');
@@ -337,7 +337,7 @@ class WorkflowTest extends UnitTestCase {
    */
   public function testAddTransitionInvalidIdException(): void {
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessageIs("The transition ID 'publish-publish' must contain only lowercase letters, numbers, and underscores");
+    $this->expectExceptionMessageIs("The transition ID 'publish-publish' must contain only lowercase letters, numbers, and underscores.");
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');
     $workflow->getTypePlugin()->addState('published', 'Published');
     $workflow->getTypePlugin()->addTransition('publish-publish', 'Publish', ['published'], 'published');

@@ -232,7 +232,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
   public function testError(): void {
     $this->expectException('\Exception');
-    $this->expectExceptionMessageIs('User notice: foo');
+    $this->expectExceptionMessageIsOrContains('User notice: foo');
     $this->drupalGet('test-error');
   }
 

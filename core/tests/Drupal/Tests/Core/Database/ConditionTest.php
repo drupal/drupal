@@ -208,7 +208,7 @@ class ConditionTest extends UnitTestCase {
     $condition = $connection->condition('AND');
     $condition->condition('name', 'value', $operator);
     $this->expectException(InvalidQueryException::class);
-    $this->expectExceptionMessageIs('Invalid characters in query operator:');
+    $this->expectExceptionMessageIsOrContains('Invalid characters in query operator:');
     $condition->compile($connection, $query_placeholder);
   }
 

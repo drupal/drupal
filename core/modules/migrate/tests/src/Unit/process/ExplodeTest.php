@@ -60,7 +60,7 @@ class ExplodeTest extends MigrateProcessTestCase {
    */
   public function testExplodeWithNonString(): void {
     $this->expectException(MigrateException::class);
-    $this->expectExceptionMessageIs('is not a string');
+    $this->expectExceptionMessageIsOrContains('is not a string');
     $this->plugin->transform(['foo'], $this->migrateExecutable, $this->row, 'destination_property');
   }
 
@@ -96,7 +96,7 @@ class ExplodeTest extends MigrateProcessTestCase {
   public function testExplodeWithNonStrictAndNonCastable(): void {
     $plugin = new Explode(['delimiter' => '|', 'strict' => FALSE], 'map', []);
     $this->expectException(MigrateException::class);
-    $this->expectExceptionMessageIs('cannot be casted to a string');
+    $this->expectExceptionMessageIsOrContains('cannot be casted to a string');
     $processed = $plugin->transform(['foo'], $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame(['foo'], $processed);
   }
