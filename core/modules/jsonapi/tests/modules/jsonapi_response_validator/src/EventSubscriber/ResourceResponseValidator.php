@@ -117,8 +117,7 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    *   TRUE if the string is a valid instance of the schema. FALSE otherwise.
    */
   protected function validateSchema(object $schema, mixed $response_data): bool {
-    // @phpstan-ignore method.deprecated
-    $this->validator->check($response_data, $schema);
+    $this->validator->validate($response_data, $schema);
     $is_valid = $this->validator->isValid();
     if (!$is_valid) {
       $this->logger->debug("Response failed validation.\nResponse:\n@data\n\nErrors:\n@errors", [
