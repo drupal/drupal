@@ -380,7 +380,7 @@
     "selector-id-pattern": "^[a-z][-_a-z0-9]*$",
     "selector-no-vendor-prefix": null,
     "shorthand-property-no-redundant-values": null,
-    "unit-allowed-list": ["ch", "deg", "dpcm", "em", "ex", "fr", "ms", "rem", "%", "s", "px", "vw", "dvw", "svw", "lvw", "vh", "dvh", "svh", "lvh", "cqw", "cqh", "cqi", "cqb", "cqmin", "cqmax"],
+    "unit-allowed-list": ["%", "cap", "ch", "cm", "cqb", "cqh", "cqi", "cqmax", "cqmin", "cqw", "deg", "dpcm", "dpi", "dppx", "dvb", "dvh", "dvi", "dvmax", "dvmin", "dvw", "em", "ex", "fr", "grad", "hz", "ic", "in", "khz", "lh", "lvb", "lvh", "lvi", "lvmax", "lvmin", "lvw", "mm", "ms", "pc", "pt", "px", "q", "rad", "rcap", "rch", "rem", "rex", "ric", "rlh", "s", "svb", "svh", "svi", "svmax", "svmin", "svw", "turn", "vb", "vh", "vi", "vmax", "vmin", "vw", "x"],
     "value-keyword-case": ["lower", {
       "camelCaseSvgKeywords": true,
       "ignoreProperties": [
