@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('#slow')]
 #[RequiresPhpExtension('apcu')]
 #[RunTestsInSeparateProcesses]
-class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
+class OpenTelemetryPerformanceTest extends PerformanceTestBase {
 
   /**
    * {@inheritdoc}
@@ -26,13 +26,22 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
   protected $profile = 'demo_umami';
 
   /**
-   * Test canonical node page performance with various cache permutations.
+   * Test performance of various with various cache permutations.
    */
-  public function testNodePage(): void {
+  public function testUmamiPerformance(): void {
     $this->testNodePageColdCache();
     $this->testNodePageCoolCache();
     $this->testNodePageWarmCache();
     $this->testNodePageHotCache();
+    $this->testFrontPageColdCache();
+    $this->testFrontPageCoolCache();
+    $this->testFrontPageHotCache();
+    $this->doTestFrontPageAuthenticatedWarmCache();
+    $this->doTestNodePageAdministrator();
+    $this->doTestFrontAndRecipesPages();
+    $this->doTestFrontAndRecipesPagesAuthenticated();
+    $this->doTestFrontAndRecipesPagesEditor();
+    $this->doTestNodeAddPagesAuthor();
   }
 
   /**
@@ -316,6 +325,332 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'StylesheetBytes' => 40500,
     ];
     $this->assertMetrics($expected, $performance_data);
+  }
+
+  /**
+   * Logs front page tracing data with a cold cache.
+   */
+  protected function testFrontPageColdCache(): void {
+    // Request the front page twice then clear caches, this allows asset
+    // aggregate requests to complete so they are excluded from the performance
+    // test itself. Including the asset aggregates would lead to
+    // a non-deterministic test since they happen in parallel and therefore post
+    // response tasks run in different orders each time.
+    $this->drupalGet('<front>');
+    $this->drupalGet('<front>');
+    sleep(2);
+    $this->clearCaches();
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('<front>');
+    }, 'umamiFrontPageColdCache');
+    $this->assertSession()->pageTextContains('Umami');
+
+    $expected = [
+      'QueryCount' => 178,
+      'CacheGetCount' => 232,
+      'CacheSetCount' => 240,
+      'CacheDeleteCount' => 0,
+      'CacheTagLookupQueryCount' => 25,
+      'CacheTagInvalidationCount' => 0,
+      'ScriptCount' => 3,
+      'ScriptBytes' => 12000,
+      'StylesheetCount' => 6,
+      'StylesheetBytes' => 39150,
+    ];
+    $this->assertMetrics($expected, $performance_data);
+  }
+
+  /**
+   * Logs front page tracing data with a hot cache.
+   *
+   * Hot here means that all possible caches are warmed.
+   */
+  protected function testFrontPageHotCache(): void {
+    // Request the page twice so that asset aggregates and image derivatives are
+    // definitely cached in the browser cache. The first response builds the
+    // file and serves from PHP with private, no-store headers. The second
+    // request will get the file served directly from disk by the browser with
+    // cacheable headers, so only the third request actually has the files
+    // in the browser cache.
+    $this->drupalGet('<front>');
+    $this->drupalGet('<front>');
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('<front>');
+    }, 'umamiFrontPageHotCache');
+    $this->assertSession()->pageTextContains('Umami');
+
+    $expected_queries = [];
+    $recorded_queries = $performance_data->getQueries();
+    $this->assertSame($expected_queries, $recorded_queries);
+
+    $expected = [
+      'QueryCount' => 0,
+      'CacheGetCount' => 1,
+      'CacheSetCount' => 0,
+      'CacheDeleteCount' => 0,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 1,
+      'ScriptCount' => 3,
+      'ScriptBytes' => 11850,
+      'StylesheetCount' => 6,
+      'StylesheetBytes' => 38850,
+    ];
+    $this->assertMetrics($expected, $performance_data);
+  }
+
+  /**
+   * Logs front page tracing data with a lukewarm cache.
+   *
+   * Cool here means that 'global' site caches are warm but anything
+   * specific to the front page is cold.
+   */
+  protected function testFrontPageCoolCache(): void {
+    // First of all visit the front page to ensure the image style exists.
+    $this->drupalGet('<front>');
+    sleep(2);
+    $this->clearCaches();
+    // Now visit a different page to warm non-route-specific caches.
+    $this->drupalGet('user/login');
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('<front>');
+    }, 'umamiFrontPageCoolCache');
+
+    $expected = [
+      'QueryCount' => 54,
+      'CacheGetCount' => 170,
+      'CacheSetCount' => 75,
+      'CacheDeleteCount' => 0,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 19,
+      'ScriptCount' => 3,
+      'ScriptBytes' => 12000,
+      'StylesheetCount' => 6,
+      'StylesheetBytes' => 38850,
+    ];
+    $this->assertMetrics($expected, $performance_data);
+  }
+
+  /**
+   * Logs front page tracing data with an authenticated user and warm cache.
+   */
+  protected function doTestFrontPageAuthenticatedWarmCache(): void {
+    $user = $this->drupalCreateUser();
+    $this->drupalLogin($user);
+    sleep(2);
+    $this->drupalGet('<front>');
+    sleep(2);
+    $this->drupalGet('<front>');
+    sleep(2);
+    $this->drupalGet('<front>');
+    sleep(2);
+
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('<front>');
+    }, 'authenticatedFrontPage');
+
+    $expected_queries = [
+      'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
+      'SELECT * FROM "users_field_data" "u" WHERE "u"."uid" = "10" AND "u"."default_langcode" = 1',
+      'SELECT "roles_target_id" FROM "user__roles" WHERE "entity_id" = "10"',
+    ];
+    $recorded_queries = $performance_data->getQueries();
+    $this->assertSame($expected_queries, $recorded_queries);
+
+    $expected = [
+      'QueryCount' => 3,
+      'CacheGetCount' => 34,
+      'CacheGetCountByBin' => [
+        'config' => 12,
+        'bootstrap' => 7,
+        'discovery' => 5,
+        'data' => 4,
+        'dynamic_page_cache' => 2,
+        'render' => 2,
+        'routes' => 2,
+      ],
+      'CacheSetCount' => 0,
+      'CacheDeleteCount' => 0,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 4,
+      'ScriptCount' => 3,
+      'ScriptBytes' => 13150,
+      'StylesheetCount' => 6,
+      'StylesheetBytes' => 39163,
+    ];
+    $this->assertMetrics($expected, $performance_data);
+  }
+
+  /**
+   * Logs node page performance with an administrator.
+   */
+  protected function doTestNodePageAdministrator(): void {
+    // Create a user with most important admin permissions, but not access to
+    // contextual links. This is because contextual module makes an AJAX request
+    // dependent on the content of browser local storage, which can make
+    // performance testing indeterminate.
+    $user = $this->drupalCreateUser([
+      'administer nodes',
+      'bypass node access',
+      'access administration pages',
+      'administer site configuration',
+      'administer modules',
+      'administer themes',
+      'access site reports',
+      'administer users',
+      'access navigation',
+      'administer media',
+      'access files overview',
+      'administer blocks',
+      'administer block content',
+      'administer taxonomy',
+      'administer menu',
+    ]);
+
+    $this->drupalLogin($user);
+
+    // Ensure the asset cache warming request happens with empty caches,
+    // otherwise the unique combination of assets for the performance request
+    // may not have been created yet.
+    $this->clearCaches();
+
+    $this->drupalGet('node/1');
+    sleep(2);
+    $this->drupalGet('node/1');
+    sleep(2);
+
+    $this->clearCaches();
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('node/1');
+    }, 'administratorNodePage');
+
+    $expected = [
+      'QueryCount' => 264,
+      'CacheGetCount' => 264,
+      'CacheGetCountByBin' => [
+        'config' => 60,
+        'bootstrap' => 15,
+        'discovery' => 75,
+        'data' => 14,
+        'entity' => 24,
+        'dynamic_page_cache' => 1,
+        'default' => 20,
+        'routes' => 18,
+        'render' => 14,
+        'file_parsing' => 1,
+        'menu' => 22,
+      ],
+      'CacheSetCount' => 266,
+      'CacheDeleteCount' => 0,
+      'CacheTagInvalidationCount' => 0,
+      'CacheTagLookupQueryCount' => 29,
+      'ScriptCount' => 10,
+      'ScriptBytes' => 200400,
+      'StylesheetCount' => 11,
+      'StylesheetBytes' => 79412,
+    ];
+    $this->assertMetrics($expected, $performance_data);
+  }
+
+  /**
+   * Checks the asset requests made when the front and recipe pages are visited.
+   */
+  protected function doTestFrontAndRecipesPages(): void {
+    $this->drupalLogout();
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->doRequests();
+    }, 'umamiFrontAndRecipePages');
+
+    $expected = [
+      'ScriptCount' => 3,
+      'ScriptBytes' => 11700,
+      'StylesheetCount' => 12,
+      'StylesheetBytes' => 69629,
+    ];
+    $this->assertMetrics($expected, $performance_data);
+  }
+
+  /**
+   * Checks the front and recipe page asset requests as an authenticated user.
+   */
+  protected function doTestFrontAndRecipesPagesAuthenticated(): void {
+    $user = $this->createUser();
+    $this->drupalLogin($user);
+    sleep(2);
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->doRequests();
+    }, 'umamiFrontAndRecipePagesAuthenticated');
+
+    $expected = [
+      'ScriptCount' => 6,
+      'ScriptBytes' => 73750,
+      'StylesheetCount' => 10,
+      'StylesheetBytes' => 55581,
+    ];
+    $this->assertMetrics($expected, $performance_data);
+  }
+
+  /**
+   * Checks the front and recipe page asset requests as an editor.
+   */
+  protected function doTestFrontAndRecipesPagesEditor(): void {
+    $user = $this->createUser();
+    $user->addRole('editor');
+    $user->save();
+    $this->drupalLogin($user);
+    sleep(2);
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->doRequests();
+    }, 'umamiFrontAndRecipePagesEditor');
+    $expected = [
+      'ScriptCount' => 12,
+      'ScriptBytes' => 207212,
+      'StylesheetCount' => 10,
+      'StylesheetBytes' => 141652,
+    ];
+    $this->assertMetrics($expected, $performance_data);
+  }
+
+  /**
+   * Checks the node/add page asset requests as an author.
+   */
+  protected function doTestNodeAddPagesAuthor(): void {
+    $user = $this->createUser();
+    $user->addRole('author');
+    $user->save();
+    $this->drupalLogin($user);
+    $this->drupalGet('<front>');
+    // Give additional time for the request and all assets to be returned
+    // before making the next request.
+    sleep(2);
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('node/add/article');
+      sleep(2);
+      $this->drupalGet('node/add/recipe');
+      sleep(2);
+      $this->drupalGet('node/add/page');
+    }, 'umamiNodeAddEditor');
+    $expected = [
+      'ScriptCount' => 24,
+      'ScriptBytes' => 2979216,
+      'StylesheetCount' => 23,
+      'StylesheetBytes' => 1085546,
+    ];
+    $this->assertMetrics($expected, $performance_data);
+  }
+
+  /**
+   * Performs a common set of requests so the above test methods stay in sync.
+   */
+  protected function doRequests(): void {
+    $this->drupalGet('<front>');
+    // Give additional time for the request and all assets to be returned
+    // before making the next request.
+    sleep(2);
+    $this->drupalGet('articles');
+    sleep(2);
+    $this->drupalGet('recipes');
+    sleep(2);
+    $this->drupalGet('recipes/deep-mediterranean-quiche');
   }
 
   /**
