@@ -165,6 +165,8 @@ PO;
     // Spanish is always an override (never used as installation language).
     $this->assertEquals('Anonymous es', $override_es->get('anonymous'));
 
+    // Verify that config entities get the correct language assumptions.
+    $this->verifyConfigLanguageAssumptions();
   }
 
   /**
@@ -185,6 +187,29 @@ PO;
         $this->assertSession()->pageTextContains($sample . ' ' . $langcode);
       }
     }
+  }
+
+  /**
+   * Verifies config entity and simple config langcode assumptions.
+   */
+  protected function verifyConfigLanguageAssumptions(): void {
+    if ($this->langcode === 'en') {
+      return;
+    }
+
+    $config_factory = \Drupal::configFactory();
+    foreach (['language.entity.de', 'language.entity.es'] as $config_name) {
+      $this->assertEquals(
+        $this->langcode,
+        $config_factory->get($config_name)->get('langcode'),
+        "Config entity '$config_name' should use the installation language langcode."
+      );
+    }
+
+    $this->assertNull(
+      $config_factory->get('system.performance')->get('langcode'),
+      'Non-entity config without translatable data should not be rewritten to the installation language.'
+    );
   }
 
 }
