@@ -133,7 +133,7 @@ default:
   alias: database
 
 .with-selenium-chrome: &with-selenium-chrome
-  name: selenium/standalone-chrome:127.0
+  name: selenium/standalone-chrome:133.0
   alias: selenium
   variables:
     JAVA_OPTS: $SELENIUM_JAVA_OPTS

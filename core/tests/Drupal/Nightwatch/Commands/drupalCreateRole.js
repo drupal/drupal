@@ -43,6 +43,9 @@ exports.command = function drupalCreateRole(
       'table.permissions',
     );
 
+    // We need to resize the browser in order to grant permissions.
+    this.resizeWindow(1024, 768);
+
     await Promise.all(
       permissions.map(async (permission) =>
         this.click(`input[name="${machineName}[${permission}]"]`),

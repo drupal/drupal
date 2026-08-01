@@ -100,7 +100,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     // Resize window due to bug in Chromedriver when clicking on overlays over
     // iFrames.
     // @see https://bugs.chromium.org/p/chromedriver/issues/detail?id=2758
-    $this->getSession()->resizeWindow(1200, 1200);
+    $this->getSession()->resizeWindow(1200, 1339);
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
