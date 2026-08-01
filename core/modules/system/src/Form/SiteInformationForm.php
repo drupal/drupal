@@ -9,10 +9,10 @@ use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\RedundantEditableConfigNamesTrait;
 use Drupal\Core\Path\PathValidatorInterface;
+use Drupal\Core\Routing\Attribute\Route;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Configure site information settings for this site.
@@ -22,10 +22,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(
   path: '/admin/config/system/site-information',
   name: 'system.site_information_settings',
+  title: new TranslatableMarkup('Basic site settings'),
   requirements: [
     '_permission' => 'administer site configuration',
   ],
-  defaults: ['_title' => new TranslatableMarkup('Basic site settings')],
 )]
 class SiteInformationForm extends ConfigFormBase {
   use RedundantEditableConfigNamesTrait;

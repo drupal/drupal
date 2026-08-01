@@ -1,13 +1,3 @@
-block_content.add_form:
-  path: '/block/add/{block_content_type}'
-  defaults:
-    _controller: '\Drupal\block_content\Controller\BlockContentController::addForm'
-    _title_callback: '\Drupal\block_content\Controller\BlockContentController::getAddFormTitle'
-  options:
-    _admin_route: TRUE
-  requirements:
-    _entity_create_access: 'block_content:{block_content_type}'
-
 # @todo remove these aliases as well as overrides in BlockContentRouteProvider and BlockContentTypeRouteProvider when
 # https://www.drupal.org/project/drupal/issues/3506653 is done.
 # @see https://www.drupal.org/project/drupal/issues/3534380
