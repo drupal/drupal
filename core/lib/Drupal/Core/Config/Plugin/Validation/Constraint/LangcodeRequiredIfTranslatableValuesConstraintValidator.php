@@ -33,9 +33,15 @@ final class LangcodeRequiredIfTranslatableValuesConstraintValidator extends Cons
     assert(in_array('langcode', $mapping->getValidKeys(), TRUE));
 
     $is_translatable = $mapping->hasTranslatableElements();
+    $is_config_entity = \Drupal::service('config.manager')->getEntityTypeIdByName($mapping->getName()) !== NULL;
 
-    if ($is_translatable && !array_key_exists('langcode', $value)) {
-      $this->context->buildViolation($constraint->missingMessage)
+    // Require a langcode for translatable configuration and for config
+    // entities. Configuration entities that currently do not have translatable
+    // elements but do not have a langcode key are not valid because they may
+    // receive translatable elements later outside of the entity's control,
+    // eg. third party settings.
+    if (($is_translatable || $is_config_entity) && !array_key_exists('langcode', $value)) {
+      $this->context->buildViolation($is_config_entity ? $constraint->entityMessage : $constraint->missingMessage)
         ->setParameter('@name', $mapping->getName())
         ->addViolation();
       return;
