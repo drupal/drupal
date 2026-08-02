@@ -6,6 +6,13 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\ColumnSize;
+use Drupal\Core\Database\SchemaDefinition\Index;
+use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
+use Drupal\Core\Database\SchemaDefinition\Schema;
+use Drupal\Core\Database\SchemaDefinition\SchemaDefinitionType;
+use Drupal\Core\Database\SchemaDefinition\Table;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -166,9 +173,7 @@ class BatchStorage implements BatchStorageInterface {
    */
   protected function ensureTableExists() {
     try {
-      $database_schema = $this->connection->schema();
-      $schema_definition = $this->schemaDefinition();
-      $database_schema->createTable(static::TABLE_NAME, $schema_definition);
+      $this->connection->schema()->createSchemaFromDefinition($this->schemaDefinition());
     }
     // If another process has already created the batch table, attempting to
     // recreate it will throw an exception. In this case just catch the
@@ -204,39 +209,44 @@ class BatchStorage implements BatchStorageInterface {
    *
    * @internal
    */
-  public function schemaDefinition() {
-    return [
-      'description' => 'Stores details about batches (processes that run in multiple HTTP requests).',
-      'fields' => [
-        'bid' => [
-          'description' => 'Primary Key: Unique batch ID.',
-          'type' => 'serial',
-          'unsigned' => TRUE,
-          'not null' => TRUE,
-        ],
-        'token' => [
-          'description' => "A string token generated against the current user's session id and the batch id, used to ensure that only the user who submitted the batch can effectively access it.",
-          'type' => 'varchar_ascii',
-          'length' => 64,
-          'not null' => TRUE,
-        ],
-        'timestamp' => [
-          'description' => 'A Unix timestamp indicating when this batch was submitted for processing. Stale batches are purged at cron time.',
-          'type' => 'int',
-          'not null' => TRUE,
-        ],
-        'batch' => [
-          'description' => 'A serialized array containing the processing data for the batch.',
-          'type' => 'blob',
-          'not null' => FALSE,
-          'size' => 'big',
-        ],
+  public function schemaDefinition(): Schema {
+    $tables[] = new Table(
+      name: static::TABLE_NAME,
+      description: 'Stores details about batches (processes that run in multiple HTTP requests).',
+      columns: [
+        Column::serial(
+          name: 'bid',
+          description: 'Primary Key: Unique batch ID.',
+        ),
+        Column::varcharAscii(
+          name: 'token',
+          description: "A string token generated against the current user's session id and the batch id, used to ensure that only the user who submitted the batch can effectively access it.",
+          length: 64,
+          notNull: TRUE,
+        ),
+        Column::int(
+          name: 'timestamp',
+          description: 'A Unix timestamp indicating when this batch was submitted for processing. Stale batches are purged at cron time.',
+          notNull: TRUE,
+        ),
+        Column::blob(
+          name: 'batch',
+          description: 'A serialized array containing the processing data for the batch.',
+          size: ColumnSize::Big,
+          notNull: FALSE,
+        ),
       ],
-      'primary key' => ['bid'],
-      'indexes' => [
-        'token' => ['token'],
+      primaryKey: new PrimaryKey(['bid']),
+      indexes: [
+        new Index(name: 'token', columns: ['token']),
       ],
-    ];
+    );
+
+    return new Schema(
+      type: SchemaDefinitionType::Storage,
+      name: 'batch',
+      tables: $tables,
+    );
   }
 
 }

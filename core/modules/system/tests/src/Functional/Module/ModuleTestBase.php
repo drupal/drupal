@@ -48,7 +48,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
    *   The name of the module.
    */
   public function assertModuleTablesExist(string $module): void {
-    $tables = array_keys(SchemaInspector::getTablesSpecification(\Drupal::moduleHandler(), $module));
+    $tables = SchemaInspector::getTableNames(\Drupal::moduleHandler(), $module);
     $tables_exist = TRUE;
     $schema = Database::getConnection()->schema();
     foreach ($tables as $table) {
@@ -66,7 +66,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
    *   The name of the module.
    */
   public function assertModuleTablesDoNotExist(string $module): void {
-    $tables = array_keys(SchemaInspector::getTablesSpecification(\Drupal::moduleHandler(), $module));
+    $tables = SchemaInspector::getTableNames(\Drupal::moduleHandler(), $module);
     $tables_exist = FALSE;
     $schema = Database::getConnection()->schema();
     foreach ($tables as $table) {
