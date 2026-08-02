@@ -75,7 +75,7 @@ interface ThemeManagerInterface {
    * Invokes a hook in a particular theme.
    *
    * @param string $theme_key
-   *   The name of the theme (without the .theme extension).
+   *   The machine name of the theme.
    * @param string $hook
    *   The name of the hook to invoke.
    * @param array $args

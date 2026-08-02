@@ -107,7 +107,7 @@ interface ThemeHandlerInterface {
    * Determines whether a given theme is installed.
    *
    * @param string $theme
-   *   The name of the theme (without the .theme extension).
+   *   The machine name of the theme.
    *
    * @return bool
    *   TRUE if the theme is installed.

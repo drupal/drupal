@@ -32,6 +32,7 @@ class Theme extends Extension {
    *   The info array parsed from the theme's .info.yml file.
    * @param string|null $filename
    *   (optional) The filename of the main extension file; e.g., olivero.theme.
+   *   This is deprecated and will be removed in Drupal 13.0.0.
    */
   public function __construct(string $root, string $pathname, array $info, ?string $filename = NULL) {
     parent::__construct($root, 'theme', $pathname, $filename);
