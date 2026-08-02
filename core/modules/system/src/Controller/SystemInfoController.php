@@ -2,7 +2,6 @@
 
 namespace Drupal\system\Controller;
 
-use Drupal\Core\Routing\Attribute\Route;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -10,6 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\system\SystemManager;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Returns responses for System Info routes.
@@ -54,8 +54,8 @@ class SystemInfoController implements ContainerInjectionInterface {
   #[Route(
     path: '/admin/reports/status',
     name: 'system.status',
-    title: new TranslatableMarkup('Status report'),
     requirements: ['_permission' => 'administer site configuration'],
+    defaults: ['_title' => new TranslatableMarkup('Status report')],
   )]
   public function status() {
     $requirements = $this->systemManager->listRequirements();

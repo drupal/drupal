@@ -6,8 +6,6 @@ use Drupal\block_content\BlockContentTypeInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Routing\Attribute\Route;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -77,15 +75,6 @@ class BlockContentController extends ControllerBase {
    *   A form array as expected by
    *   \Drupal\Core\Render\RendererInterface::render().
    */
-  #[Route(
-    path: '/block/add/{block_content_type}',
-    name: 'block_content.add_form',
-    title: static function (BlockContentTypeInterface $block_content_type) {
-      return new TranslatableMarkup('Add %type content block', ['%type' => $block_content_type->label()]);
-    },
-    requirements: ['_entity_create_access' => 'block_content:{block_content_type}'],
-    options: ['_admin_route' => TRUE],
-  )]
   public function addForm(BlockContentTypeInterface $block_content_type, Request $request) {
     $block = $this->blockContentStorage->create([
       'type' => $block_content_type->id(),
@@ -107,14 +96,8 @@ class BlockContentController extends ControllerBase {
    *
    * @return string
    *   The page title.
-   *
-   * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use the
-   *   title closure on the route attribute instead.
-   *
-   * @see https://www.drupal.org/node/3614321
    */
   public function getAddFormTitle(BlockContentTypeInterface $block_content_type) {
-    @trigger_error('The ' . __METHOD__ . ' method is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use the title closure on the route attribute instead. See https://www.drupal.org/node/3614321', E_USER_DEPRECATED);
     return $this->t('Add %type content block', ['%type' => $block_content_type->label()]);
   }
 

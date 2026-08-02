@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Routing;
 
 use Composer\Autoload\ClassLoader;
-use Drupal\Core\Routing\Attribute\Route;
 use Drupal\Core\Routing\AttributeRouteDiscovery;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Core\Routing\RouteCompiler;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\router_test\Controller\TestAttributes;
 use Drupal\router_test\Controller\TestClassAttribute;
 use Drupal\router_test\Controller\TestClassAttributeClassOnly;
@@ -210,20 +208,6 @@ EOF
     $this->assertSame('TRUE', $route->getRequirement('_access'));
     // Aliases for invokable controllers must also be registered.
     $this->assertSame($route, $this->routeCollection->get(TestClassAttributeClassOnly::class . '::__invoke'));
-  }
-
-  /**
-   * Tests that the "title" property and a "_title" default cannot both be set.
-   */
-  public function testTitleConflictsWithTitleDefault(): void {
-    $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('The "title" property cannot be used together with a "_title" default on the Route attribute.');
-    new Route(
-      path: '/test',
-      name: 'router_test.title_conflict',
-      title: new TranslatableMarkup('Title from property'),
-      defaults: ['_title' => 'Title from default'],
-    );
   }
 
   /**
