@@ -92,6 +92,22 @@ weight:
     lighter.js: { weight: -1 }
     before-jquery.js: { weight: -21 }
 
+before_main:
+  js:
+    before_main.js: {}
+  before:
+    - common_test/main
+
+main:
+  js:
+    main.js: {}
+
+after_main:
+  js:
+    after_main.js: {}
+  after:
+    - common_test/main
+
 # Library to test hook_js_alter().
 hook_js_alter:
   version: VERSION

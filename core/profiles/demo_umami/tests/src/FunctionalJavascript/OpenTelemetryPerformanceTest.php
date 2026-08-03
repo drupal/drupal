@@ -72,7 +72,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       'CacheTagInvalidationCount' => 0,
       'ScriptCount' => 3,
       'ScriptBytes' => 12000,
-      'StylesheetCount' => 6,
+      'StylesheetCount' => 7,
       'StylesheetBytes' => 40800,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -103,7 +103,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 1,
       'ScriptCount' => 3,
       'ScriptBytes' => 12000,
-      'StylesheetCount' => 6,
+      'StylesheetCount' => 7,
       'StylesheetBytes' => 40800,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -135,7 +135,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 19,
       'ScriptCount' => 3,
       'ScriptBytes' => 12000,
-      'StylesheetCount' => 6,
+      'StylesheetCount' => 7,
       'StylesheetBytes' => 40800,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -321,7 +321,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       ],
       'ScriptCount' => 3,
       'ScriptBytes' => 12000,
-      'StylesheetCount' => 6,
+      'StylesheetCount' => 7,
       'StylesheetBytes' => 40500,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -354,7 +354,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       'CacheTagInvalidationCount' => 0,
       'ScriptCount' => 3,
       'ScriptBytes' => 12000,
-      'StylesheetCount' => 6,
+      'StylesheetCount' => 7,
       'StylesheetBytes' => 39150,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -392,7 +392,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 1,
       'ScriptCount' => 3,
       'ScriptBytes' => 11850,
-      'StylesheetCount' => 6,
+      'StylesheetCount' => 7,
       'StylesheetBytes' => 38850,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -424,7 +424,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 19,
       'ScriptCount' => 3,
       'ScriptBytes' => 12000,
-      'StylesheetCount' => 6,
+      'StylesheetCount' => 7,
       'StylesheetBytes' => 38850,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -474,7 +474,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 4,
       'ScriptCount' => 3,
       'ScriptBytes' => 13150,
-      'StylesheetCount' => 6,
+      'StylesheetCount' => 7,
       'StylesheetBytes' => 39163,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -543,9 +543,9 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
       'CacheTagLookupQueryCount' => 29,
-      'ScriptCount' => 10,
+      'ScriptCount' => 12,
       'ScriptBytes' => 200400,
-      'StylesheetCount' => 11,
+      'StylesheetCount' => 12,
       'StylesheetBytes' => 79412,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -563,7 +563,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     $expected = [
       'ScriptCount' => 3,
       'ScriptBytes' => 11700,
-      'StylesheetCount' => 12,
+      'StylesheetCount' => 15,
       'StylesheetBytes' => 69629,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -581,9 +581,9 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     }, 'umamiFrontAndRecipePagesAuthenticated');
 
     $expected = [
-      'ScriptCount' => 6,
+      'ScriptCount' => 7,
       'ScriptBytes' => 73750,
-      'StylesheetCount' => 10,
+      'StylesheetCount' => 12,
       'StylesheetBytes' => 55581,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -604,7 +604,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     $expected = [
       'ScriptCount' => 12,
       'ScriptBytes' => 207212,
-      'StylesheetCount' => 10,
+      'StylesheetCount' => 12,
       'StylesheetBytes' => 141652,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -630,7 +630,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('node/add/page');
     }, 'umamiNodeAddEditor');
     $expected = [
-      'ScriptCount' => 24,
+      'ScriptCount' => 20,
       'ScriptBytes' => 2979216,
       'StylesheetCount' => 23,
       'StylesheetBytes' => 1085546,

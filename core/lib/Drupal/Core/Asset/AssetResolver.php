@@ -257,6 +257,17 @@ class AssetResolver implements AssetResolverInterface {
       [$extension, $name] = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       foreach ($definition['css'] as $options) {
+        // Libraries are loaded based on dependencies, then their attaching
+        // order. Individual asset files are ordered how they are defined within
+        // the library itself.
+        // Re-adding an asset file will rewrite the resulting array leading to
+        // an incorrect order of asset files, i.e. the last occurrence of the
+        // particular asset will win, but the desired behavior is the opposite -
+        // the first occurrence must win.
+        // So, let's skip processing of already added asset files.
+        if (array_key_exists($options['data'], $css)) {
+          continue;
+        }
         $options += $default_options;
         // Copy the asset library license information to each file.
         $options['license'] = $definition['license'];
@@ -265,11 +276,6 @@ class AssetResolver implements AssetResolverInterface {
         if ($options['type'] === 'file' && $options['preprocess'] && str_contains($options['data'], '?')) {
           $options['preprocess'] = FALSE;
         }
-
-        // Always add a tiny value to the weight, to conserve the insertion
-        // order.
-        $options['weight'] += count($css) / 30000;
-
         $options['library'] = $library;
         $options['aggregate_target'] = $definition['aggregate_target'] ?? ['js' => FALSE, 'css' => FALSE];
 
@@ -387,6 +393,17 @@ class AssetResolver implements AssetResolverInterface {
         [$extension, $name] = explode('/', $library, 2);
         $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
         foreach ($definition['js'] as $options) {
+          // Libraries are loaded based on dependencies, then their attaching
+          // order. Individual asset files are ordered how they are defined
+          // within the library itself.
+          // Re-adding an asset file will rewrite the resulting array leading to
+          // an incorrect order of asset files, i.e. the last occurrence of the
+          // particular asset will win, but the desired behavior is the opposite
+          // - the first occurrence must win.
+          // So, let's skip processing of already added asset files.
+          if (array_key_exists($options['data'], $javascript)) {
+            continue;
+          }
           $options += $default_options;
           // Copy the asset library license information to each file.
           $options['license'] = $definition['license'];
@@ -399,13 +416,8 @@ class AssetResolver implements AssetResolverInterface {
           // attributes are set.
           $options['preprocess'] = $options['cache'] && empty($options['attributes']) ? $options['preprocess'] : FALSE;
 
-          // Always add a tiny value to the weight, to conserve the insertion
-          // order.
-          $options['weight'] += count($javascript) / 30000;
-
           $options['library'] = $library;
           $options['aggregate_target'] = $definition['aggregate_target'] ?? ['js' => FALSE, 'css' => FALSE];
-
           // Local and external files must keep their name as the associative
           // key so the same JavaScript file is not added twice.
           $javascript[$options['data']] = $options;
@@ -475,7 +487,6 @@ class AssetResolver implements AssetResolverInterface {
       $settings_as_inline_javascript = [
         'type' => 'setting',
         'group' => JS_SETTING,
-        'weight' => 0,
         'data' => $settings,
       ];
       $settings_js_asset = ['drupalSettings' => $settings_as_inline_javascript];

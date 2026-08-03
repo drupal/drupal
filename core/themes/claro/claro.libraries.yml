@@ -34,7 +34,6 @@ global-styling:
       css/components/container-inline.css: {}
       css/components/container-inline.module.css: {}
       css/components/breadcrumb.css: {}
-      css/components/button.css: {}
       css/components/details.css: {}
       css/components/divider.css: {}
       css/components/messages.css: {}
@@ -61,6 +60,7 @@ global-styling:
       css/components/tabs.css: {}
     theme:
       css/theme/colors.css: {}
+      css/components/button.css: {}
     layout:
       css/layout/breadcrumb.css: {}
       css/layout/local-actions.css: {}
@@ -123,7 +123,7 @@ claro.jquery.ui:
   version: VERSION
   css:
     component:
-      css/components/jquery.ui/theme.css: { weight: -1 }
+      css/components/jquery.ui/theme.css: {}
   dependencies:
     - claro/variables
 
@@ -139,7 +139,7 @@ claro.drupal.dialog:
 claro.tabledrag:
   version: VERSION
   js:
-    js/tabledrag.js: { weight: -1 }
+    js/tabledrag.js: {}
 
 drupal.node.preview:
   version: VERSION

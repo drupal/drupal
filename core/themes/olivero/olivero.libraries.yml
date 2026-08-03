@@ -92,6 +92,9 @@ comments:
       css/components/comments.css: {}
   js:
     js/comments.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
 
 content-below:
   version: VERSION
@@ -288,6 +291,9 @@ tabs:
       css/components/tabs.css: {}
   js:
     js/tabs.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
 
 tabledrag:
   version: VERSION

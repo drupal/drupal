@@ -165,9 +165,6 @@ class LocaleHooks {
       if ($translation_file = locale_js_translate($files, $language)) {
         $js_translation_asset =& $javascript[$placeholder_file];
         $js_translation_asset['data'] = $translation_file;
-        // @todo Remove this when https://www.drupal.org/node/1945262 lands.
-        // Decrease the weight so that the translation file is loaded first.
-        $js_translation_asset['weight'] = $javascript['core/misc/drupal.js']['weight'] - 0.001;
       }
       else {
         // If no translation file exists, then remove the placeholder JS asset.
