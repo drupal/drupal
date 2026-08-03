@@ -31,13 +31,28 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
 
     // Make a list of packages we do not want to put in the 'require' section.
     $remove_list = [
-      'drupal/core',
-      'wikimedia/composer-merge-plugin',
       'composer/installers',
+      'drupal/core',
+      // Guzzle regularly releases security fixes in only minor releases.
+      'guzzlehttp/guzzle',
+      'guzzlehttp/promises',
+      'guzzlehttp/psr7',
       // This package contains no code other than interfaces, so allow sites
       // to use any compatible version without needing to switch off of
       // drupal/core-recommended.
       'psr/http-message',
+      // Symfony polyfills are transitive dependency that almost exclusively
+      // release security releases as minor releases.
+      'symfony/polyfill-ctype',
+      'symfony/polyfill-iconv',
+      'symfony/polyfill-intl-grapheme',
+      'symfony/polyfill-intl-idn',
+      'symfony/polyfill-intl-normalizer',
+      'symfony/polyfill-mbstring',
+      'symfony/polyfill-php83',
+      // Twig regularly releases security fixes in only minor releases.
+      'twig/twig',
+      'wikimedia/composer-merge-plugin',
     ];
 
     // Copy the 'packages' section from the Composer lock into our 'require'
