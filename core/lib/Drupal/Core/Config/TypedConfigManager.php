@@ -43,6 +43,11 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   protected $definitions;
 
   /**
+   * The array of base definitions, keyed by type.
+   */
+  protected array $baseDefinitions = [];
+
+  /**
    * Creates a new typed configuration manager.
    *
    * @param \Drupal\Core\Config\StorageInterface $configStorage
@@ -278,7 +283,10 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     $definition = $definitions[$type];
     // Check whether this type is an extension of another one and compile it.
     if (isset($definition['type'])) {
-      $merge = $this->getDefinition($definition['type'], $exception_on_invalid);
+      if (!isset($this->baseDefinitions[$definition['type']])) {
+        $this->baseDefinitions[$definition['type']] = $this->getDefinition($definition['type'], $exception_on_invalid);
+      }
+      $merge = $this->baseDefinitions[$definition['type']];
       // Preserve integer keys on merge, so sequence item types can override
       // parent settings as opposed to adding unused second, third, etc. items.
       $definition = NestedArray::mergeDeepArray([$merge, $definition], TRUE);
@@ -323,6 +331,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    */
   public function clearCachedDefinitions() {
     $this->schemaStorage->reset();
+    $this->baseDefinitions = [];
     parent::clearCachedDefinitions();
   }
 
