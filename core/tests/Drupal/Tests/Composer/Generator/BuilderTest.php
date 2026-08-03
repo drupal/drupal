@@ -33,7 +33,6 @@ class BuilderTest extends TestCase {
           'require' =>
           [
             'drupal/core' => Composer::drupalVersionBranch(),
-            'symfony/polyfill-ctype' => '~v1.12.0',
             'symfony/yaml' => '~v3.4.32',
           ],
           'conflict' =>
