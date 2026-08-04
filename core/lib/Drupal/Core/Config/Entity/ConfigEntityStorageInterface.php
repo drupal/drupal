@@ -14,7 +14,7 @@ interface ConfigEntityStorageInterface extends EntityStorageInterface {
    *
    * @param string $config_name
    *   The full configuration name to extract the ID from; for example,
-   *   'views.view.archive'.
+   *   'views.view.content'.
    * @param string $config_prefix
    *   The config prefix of the configuration entity; for example, 'views.view'.
    *

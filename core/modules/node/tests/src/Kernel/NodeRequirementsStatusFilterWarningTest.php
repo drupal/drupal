@@ -43,7 +43,6 @@ class NodeRequirementsStatusFilterWarningTest extends KernelTestBase {
     $this->installSchema('node', ['node_access']);
     // Remove default views to avoid interference.
     View::load('content')->delete();
-    View::load('content_recent')->delete();
   }
 
   /**

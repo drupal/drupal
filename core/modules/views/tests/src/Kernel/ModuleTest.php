@@ -153,11 +153,11 @@ class ModuleTest extends ViewsKernelTestBase {
     $this->assertSame(array_keys($all_views_sorted), array_keys(Views::getViewsAsOptions(TRUE, 'all', NULL, FALSE, TRUE)), 'All view id keys returned in expected sort order');
 
     // Test $exclude_view parameter.
-    $archive = $storage->load('archive');
-    $archive->enable();
-    $this->assertArrayNotHasKey('archive', Views::getViewsAsOptions(TRUE, 'all', 'archive'));
-    $this->assertArrayNotHasKey('archive:default', Views::getViewsAsOptions(FALSE, 'all', 'archive:default'));
-    $this->assertArrayNotHasKey('archive', Views::getViewsAsOptions(TRUE, 'all', $archive->getExecutable()));
+    $promoted_content = $storage->load('promoted_content');
+    $promoted_content->enable();
+    $this->assertArrayNotHasKey('promoted_content', Views::getViewsAsOptions(TRUE, 'all', 'promoted_content'));
+    $this->assertArrayNotHasKey('promoted_content:default', Views::getViewsAsOptions(FALSE, 'all', 'promoted_content:default'));
+    $this->assertArrayNotHasKey('promoted_content', Views::getViewsAsOptions(TRUE, 'all', $promoted_content->getExecutable()));
 
     // Test the $opt_group parameter.
     $expected_opt_groups = [];

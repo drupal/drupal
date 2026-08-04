@@ -2,3 +2,6 @@ name: 'Node block test'
 type: module
 package: Testing
 version: VERSION
+dependencies:
+  - drupal:node
+  - drupal:views

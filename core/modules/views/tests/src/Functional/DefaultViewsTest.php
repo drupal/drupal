@@ -16,7 +16,6 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\views\Entity\View;
-use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -40,6 +39,7 @@ class DefaultViewsTest extends ViewTestBase {
     'taxonomy',
     'block',
     'user',
+    'views_test_config',
   ];
 
   /**
@@ -53,9 +53,7 @@ class DefaultViewsTest extends ViewTestBase {
    * @var array
    */
   protected $viewArgMap = [
-    'backlink' => [1],
     'taxonomy_term' => [1],
-    'glossary' => ['all'],
   ];
 
   /**
@@ -182,68 +180,6 @@ class DefaultViewsTest extends ViewTestBase {
     ]);
     $term->save();
     return $term;
-  }
-
-  /**
-   * Tests the archive view.
-   */
-  public function testArchiveView(): void {
-    // Create additional nodes compared to the one in the setup method.
-    // Create two nodes in the same month, and one in each following month.
-    $node = [
-      // Sun, 19 Nov 1978 05:00:00 GMT.
-      'created' => 280299600,
-    ];
-    $this->drupalCreateNode($node);
-    $this->drupalCreateNode($node);
-    $node = [
-      // Tue, 19 Dec 1978 05:00:00 GMT.
-      'created' => 282891600,
-    ];
-    $this->drupalCreateNode($node);
-    $node = [
-      // Fri, 19 Jan 1979 05:00:00 GMT.
-      'created' => 285570000,
-    ];
-    $this->drupalCreateNode($node);
-
-    $view = Views::getView('archive');
-    $view->setDisplay('page_1');
-    $this->executeView($view);
-    $columns = ['nid', 'created_year_month', 'num_records'];
-    $column_map = array_combine($columns, $columns);
-    // Create time of additional nodes created in the setup method.
-    $created_year_month = date('Ym', \Drupal::time()->getRequestTime() - 3600);
-    $expected_result = [
-      [
-        'nid' => 1,
-        'created_year_month' => $created_year_month,
-        'num_records' => 11,
-      ],
-      [
-        'nid' => 15,
-        'created_year_month' => 197901,
-        'num_records' => 1,
-      ],
-      [
-        'nid' => 14,
-        'created_year_month' => 197812,
-        'num_records' => 1,
-      ],
-      [
-        'nid' => 12,
-        'created_year_month' => 197811,
-        'num_records' => 2,
-      ],
-    ];
-    $this->assertIdenticalResultset($view, $expected_result, $column_map);
-
-    $view->storage->setStatus(TRUE);
-    $view->save();
-    \Drupal::service('router.builder')->rebuild();
-
-    $this->drupalGet('archive');
-    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

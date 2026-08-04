@@ -58,10 +58,10 @@ class BlockDependenciesTest extends ViewsKernelTestBase {
    * @see \Drupal\views\Plugin\Derivative\ViewsBlock::getDerivativeDefinitions()
    */
   public function testViewsBlock(): void {
-    $block = $this->createBlock('views_block:content_recent-block_1');
+    $block = $this->createBlock('views_block:test_exposed_block-block_1');
     $dependencies = $block->calculateDependencies()->getDependencies();
     $expected = [
-      'config' => ['views.view.content_recent'],
+      'config' => ['views.view.test_exposed_block'],
       'module' => ['views'],
       'theme' => ['stark'],
     ];

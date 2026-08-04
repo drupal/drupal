@@ -6,8 +6,8 @@ dependencies:
   module:
     - node
     - user
-id: archive
-label: Archive
+id: test_archive
+label: 'Test Archive'
 module: node
 description: 'All content, by month.'
 tag: default
@@ -233,7 +233,7 @@ display:
         type: views_query
         options: {  }
       display_extenders: {  }
-      path: archive
+      path: test_archive
     cache_metadata:
       max-age: -1
       contexts:

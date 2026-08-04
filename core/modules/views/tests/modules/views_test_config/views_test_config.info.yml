@@ -5,3 +5,5 @@ package: Testing
 version: VERSION
 dependencies:
   - drupal:views
+  - drupal:node
+  - drupal:user

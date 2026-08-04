@@ -43,10 +43,8 @@ config:
       - system.menu.content
       - system.menu.navigation-user-links
     node:
-      - views.view.archive
       - views.view.content
       - views.view.content_recent
-      - views.view.glossary
     olivero:
       - block.block.olivero_help
     user:

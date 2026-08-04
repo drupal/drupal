@@ -151,7 +151,6 @@ class StandardRecipeTest extends StandardTest {
     $expected_list['update'] = [
       'core.extension',
       'user.role.content_editor',
-      'views.view.archive',
     ];
     $this->assertSame($expected_list, $comparer->getChangelist());
 

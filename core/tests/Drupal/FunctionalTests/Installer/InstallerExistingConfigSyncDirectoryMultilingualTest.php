@@ -164,9 +164,6 @@ PO;
       // All views with 'Aplicar' will have been changed to use the new
       // translation.
       'update' => [
-        'views.view.archive',
-        'views.view.content_recent',
-        'views.view.glossary',
         'views.view.who_s_new',
         'views.view.who_s_online',
       ],

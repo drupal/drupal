@@ -4,8 +4,8 @@ dependencies:
   module:
     - node
     - user
-id: content_recent
-label: 'Recent content'
+id: test_content_recent
+label: 'Test Recent content'
 module: node
 description: 'Recent content.'
 tag: default

@@ -6,8 +6,8 @@ dependencies:
   module:
     - node
     - user
-id: glossary
-label: Glossary
+id: test_glossary
+label: 'Test Glossary'
 module: node
 description: 'All content, by letter.'
 tag: default
@@ -460,7 +460,7 @@ display:
         type: views_query
         options: {  }
       display_extenders: {  }
-      path: glossary
+      path: test-glossary
       menu:
         type: normal
         title: Glossary

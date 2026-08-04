@@ -18,7 +18,7 @@ class FilterCriteriaTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'views', 'views_ui'];
+  protected static $modules = ['node', 'views', 'views_ui', 'node_block_test'];
 
   /**
    * {@inheritdoc}
@@ -52,7 +52,7 @@ class FilterCriteriaTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $this->assertNotNull($page->findLink('User: Last access (>= -15 minutes)'));
 
-    $this->drupalGet('admin/structure/views/view/content_recent');
+    $this->drupalGet('admin/structure/views/view/test_content_recent');
     $assert_session = $this->assertSession();
     $session = $this->getSession();
     $page = $session->getPage();

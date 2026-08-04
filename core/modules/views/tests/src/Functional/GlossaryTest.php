@@ -25,7 +25,7 @@ class GlossaryTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node'];
+  protected static $modules = ['node', 'views_ui_test'];
 
   /**
    * {@inheritdoc}
@@ -33,7 +33,7 @@ class GlossaryTest extends ViewTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests the default glossary view.
+   * Tests the test glossary view.
    */
   public function testGlossaryView(): void {
     // Create a content type and add some nodes, with a non-random title.
@@ -59,8 +59,8 @@ class GlossaryTest extends ViewTestBase {
       }
     }
 
-    // Execute glossary view.
-    $view = Views::getView('glossary');
+    // Execute test glossary view.
+    $view = Views::getView('test_glossary');
     $view->setDisplay('attachment_1');
     $view->executeDisplay('attachment_1');
 
@@ -69,10 +69,10 @@ class GlossaryTest extends ViewTestBase {
       $this->assertEquals($nodes_per_char[$item->title_truncated], $item->num_records);
     }
 
-    // Enable the glossary to be displayed.
+    // Enable the test glossary to be displayed.
     $view->storage->enable()->save();
     $this->container->get('router.builder')->rebuildIfNeeded();
-    $url = Url::fromRoute('view.glossary.page_1');
+    $url = Url::fromRoute('view.test_glossary.page_1');
 
     // Verify cache tags.
     $this->assertPageCacheContextsAndTags(
@@ -87,7 +87,7 @@ class GlossaryTest extends ViewTestBase {
         'user.permissions',
       ],
       [
-        'config:views.view.glossary',
+        'config:views.view.test_glossary',
         // Listed for letter 'a'.
         'node:' . $nodes_by_char['a'][0]->id(), 'node:' . $nodes_by_char['a'][1]->id(), 'node:' . $nodes_by_char['a'][2]->id(),
         // Link for letter 'd'.
@@ -115,7 +115,7 @@ class GlossaryTest extends ViewTestBase {
     $this->drupalGet($url);
     $this->assertSession()->statusCodeEquals(200);
     foreach ($nodes_per_char as $char => $count) {
-      $href = Url::fromRoute('view.glossary.page_1', ['arg_0' => $char])->toString();
+      $href = Url::fromRoute('view.test_glossary.page_1', ['arg_0' => $char])->toString();
       $label = mb_strtoupper($char);
       // Get the summary link for a certain character. Filter by label and href
       // to ensure that both of them are correct.

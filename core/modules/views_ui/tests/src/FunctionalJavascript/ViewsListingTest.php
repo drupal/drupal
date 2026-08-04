@@ -44,9 +44,9 @@ class ViewsListingTest extends WebDriverTestBase {
    * Tests the filtering on the Views listing page.
    */
   public function testFilterViewsListing(): void {
-    $enabled_views_count = 5;
-    $disabled_views_count = 3;
-    $content_views_count = 2;
+    $enabled_views_count = 4;
+    $disabled_views_count = 1;
+    $content_views_count = 1;
 
     $this->drupalGet('admin/structure/views');
 
