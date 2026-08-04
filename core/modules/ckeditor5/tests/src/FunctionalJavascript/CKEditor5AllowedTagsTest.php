@@ -475,6 +475,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $this->drupalGet('node/1/edit');
     $page->pressButton('Save');
 
+    $this->assertTrue($assert_session->waitForText('NASA is an acronym.'));
     $assert_session->responseContains('<p><a foo="bar" hreflang="en" href="https://example.com"><abbr title="National Aeronautics and Space Administration">NASA</abbr> is an acronym.</a></p>');
 
     // Configure Basic HTML text format to use CKE5 and enable the link plugin.

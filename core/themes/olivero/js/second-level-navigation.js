@@ -9,7 +9,7 @@
   /**
    * NodeList of second level navigation <ul>'s.
    */
-  let secondLevelNavMenus;
+  let secondLevelNavMenus = [];
 
   /**
    * Shows and hides the specified menu item's second level submenu.
