@@ -95,19 +95,18 @@ class DefaultConfigTest extends KernelTestBase {
       $this->markTestSkipped("The $type '$name' is deprecated.");
     }
 
+    $extension_path = \Drupal::service('extension.path.resolver')->getPath($type, $name) . '/';
+    $extension_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_INSTALL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
+    $optional_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
+    if (empty($optional_config_storage->listAll()) && empty($extension_config_storage->listAll())) {
+      $this->markTestSkipped("$name has no configuration to test");
+    }
+
     // System and user are required in order to be able to install some of the
     // other modules. Therefore they are put into static::$modules, which though
     // doesn't install config files, so import those config files explicitly. Do
     // this for all tests in case optional configuration depends on it.
     $this->installConfig(['system', 'user']);
-
-    $extension_path = \Drupal::service('extension.path.resolver')->getPath($type, $name) . '/';
-    $extension_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_INSTALL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
-    $optional_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
-
-    if (empty($optional_config_storage->listAll()) && empty($extension_config_storage->listAll())) {
-      $this->markTestSkipped("$name has no configuration to test");
-    }
 
     // Work out any additional modules and themes that need installing to create
     // an optional config.
