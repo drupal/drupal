@@ -7,15 +7,19 @@ namespace Drupal\Tests\Core\Menu;
 use Drupal\Component\Plugin\Factory\FactoryInterface;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCache;
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\Menu\LocalTaskManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
-use Drupal\Core\Plugin\Discovery\YamlDiscovery;
+use Drupal\Core\Plugin\Discovery\YamlCacheCollectorDiscovery;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Utility\YamlCacheCollector;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -83,6 +87,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $language_manager->method('getCurrentLanguage')
       ->willReturn($language);
 
+    $yaml_cache_collector = new YamlCacheCollector('test', new MemoryCache(new Time()), new NullLockBackend(), new Time());
     $manager = new LocalTaskManager(
       $this->createStub(ArgumentResolverInterface::class),
       new RequestStack(),
@@ -93,9 +98,10 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
       $language_manager,
       $this->createStub(AccessManagerInterface::class),
       $this->createStub(AccountInterface::class),
+      $yaml_cache_collector,
     );
 
-    $pluginDiscovery = new YamlDiscovery('links.task', $module_dirs);
+    $pluginDiscovery = new YamlCacheCollectorDiscovery('links.task', $module_dirs, $yaml_cache_collector);
     $pluginDiscovery = new ContainerDerivativeDiscoveryDecorator($pluginDiscovery);
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'discovery');
     $property->setValue($manager, $pluginDiscovery);

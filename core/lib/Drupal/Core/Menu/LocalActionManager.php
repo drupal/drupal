@@ -5,11 +5,12 @@ namespace Drupal\Core\Menu;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheCollectorInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
-use Drupal\Core\Plugin\Discovery\YamlDiscovery;
+use Drupal\Core\Plugin\Discovery\YamlCacheCollectorDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -48,53 +49,9 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
   ];
 
   /**
-   * An argument resolver object.
-   *
-   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface
+   * The YAML cache collector.
    */
-  protected $argumentResolver;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
-   * The route provider to load routes by name.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The access manager.
-   *
-   * @var \Drupal\Core\Access\AccessManagerInterface
-   */
-  protected $accessManager;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected LanguageManagerInterface $languageManager;
+  protected CacheCollectorInterface $yamlCacheCollector;
 
   /**
    * The plugin instances.
@@ -103,42 +60,29 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
    */
   protected $instances = [];
 
-  /**
-   * Constructs a LocalActionManager object.
-   *
-   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
-   *   An object to use in resolving route arguments.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The current route match.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
-   *   The route provider.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   Cache backend instance to use.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
-   *   The access manager.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The current user.
-   */
-  public function __construct(ArgumentResolverInterface $argument_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
+  public function __construct(
+    protected ArgumentResolverInterface $argumentResolver,
+    protected RequestStack $requestStack,
+    protected RouteMatchInterface $routeMatch,
+    protected RouteProviderInterface $routeProvider,
+    ModuleHandlerInterface $module_handler,
+    CacheBackendInterface $cache_backend,
+    protected LanguageManagerInterface $languageManager,
+    protected AccessManagerInterface $accessManager,
+    protected AccountInterface $account,
+    ?CacheCollectorInterface $yaml_cache_collector = NULL,
+  ) {
+    if (!isset($yaml_cache_collector)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $yamlCacheCollector argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3593485', E_USER_DEPRECATED);
+      $yaml_cache_collector = \Drupal::service('local_action.yaml_cache_collector');
+    }
+    $this->yamlCacheCollector = $yaml_cache_collector;
     // Skip calling the parent constructor, since that assumes annotation-based
     // discovery.
-    $this->factory = new ContainerFactory($this, 'Drupal\Core\Menu\LocalActionInterface');
-    $this->argumentResolver = $argument_resolver;
-    $this->requestStack = $request_stack;
-    $this->routeMatch = $route_match;
-    $this->routeProvider = $route_provider;
-    $this->accessManager = $access_manager;
     $this->moduleHandler = $module_handler;
-    $this->account = $account;
-    $this->languageManager = $language_manager;
+    $this->factory = new ContainerFactory($this, 'Drupal\Core\Menu\LocalActionInterface');
     $this->alterInfo('menu_local_actions');
-    $this->setCacheBackend($cache_backend, 'local_action_plugins:' . $language_manager->getCurrentLanguage()->getId());
+    $this->setCacheBackend($cache_backend, 'local_action_plugins:' . $this->languageManager->getCurrentLanguage()->getId());
   }
 
   /**
@@ -146,7 +90,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
    */
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
-      $yaml_discovery = new YamlDiscovery('links.action', $this->moduleHandler->getModuleDirectories());
+      $yaml_discovery = new YamlCacheCollectorDiscovery('links.action', $this->moduleHandler->getModuleDirectories(), $this->yamlCacheCollector);
       $yaml_discovery->addTranslatableProperty('title', 'title_context');
       $this->discovery = new ContainerDerivativeDiscoveryDecorator($yaml_discovery);
     }

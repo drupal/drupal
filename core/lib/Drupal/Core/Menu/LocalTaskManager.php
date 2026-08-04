@@ -5,6 +5,7 @@ namespace Drupal\Core\Menu;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheCollectorInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
@@ -12,8 +13,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
-use Drupal\Core\Plugin\Discovery\YamlDiscovery;
-use Drupal\Core\Plugin\Factory\ContainerFactory;
+use Drupal\Core\Plugin\Discovery\YamlCacheCollectorDiscovery;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -51,27 +51,6 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   ];
 
   /**
-   * An argument resolver object.
-   *
-   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface
-   */
-  protected $argumentResolver;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
    * The plugin instances.
    *
    * @var array
@@ -86,62 +65,32 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   protected $taskData;
 
   /**
-   * The route provider to load routes by name.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
+   * The YAML cache collector.
    */
-  protected $routeProvider;
-
-  /**
-   * The access manager.
-   *
-   * @var \Drupal\Core\Access\AccessManagerInterface
-   */
-  protected $accessManager;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
+  protected CacheCollectorInterface $yamlCacheCollector;
 
   /**
    * Flag that indicates if local tasks are currently being loaded.
    */
   protected bool $loadingLocalTasks = FALSE;
 
-  /**
-   * Constructs a \Drupal\Core\Menu\LocalTaskManager object.
-   *
-   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
-   *   An object to use in resolving route arguments.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request object to use for building titles and paths for plugin
-   *   instances.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The current route match.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
-   *   The route provider to load routes by name.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
-   *   The cache backend.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
-   *   The access manager.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The current user.
-   */
-  public function __construct(ArgumentResolverInterface $argument_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
-    $this->factory = new ContainerFactory($this, '\Drupal\Core\Menu\LocalTaskInterface');
-    $this->argumentResolver = $argument_resolver;
-    $this->requestStack = $request_stack;
-    $this->routeMatch = $route_match;
-    $this->routeProvider = $route_provider;
-    $this->accessManager = $access_manager;
-    $this->account = $account;
+  public function __construct(
+    protected ArgumentResolverInterface $argumentResolver,
+    protected RequestStack $requestStack,
+    protected RouteMatchInterface $routeMatch,
+    protected RouteProviderInterface $routeProvider,
+    ModuleHandlerInterface $module_handler,
+    CacheBackendInterface $cache,
+    LanguageManagerInterface $language_manager,
+    protected AccessManagerInterface $accessManager,
+    protected AccountInterface $account,
+    ?CacheCollectorInterface $yaml_cache_collector = NULL,
+  ) {
+    if (!isset($yaml_cache_collector)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $yamlCacheCollector argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3593485', E_USER_DEPRECATED);
+      $yaml_cache_collector = \Drupal::service('local_task.yaml_cache_collector');
+    }
+    $this->yamlCacheCollector = $yaml_cache_collector;
     $this->moduleHandler = $module_handler;
     $this->alterInfo('local_tasks');
     $this->setCacheBackend($cache, 'local_task_plugins:' . $language_manager->getCurrentLanguage()->getId(), ['local_task']);
@@ -152,7 +101,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    */
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
-      $yaml_discovery = new YamlDiscovery('links.task', $this->moduleHandler->getModuleDirectories());
+      $yaml_discovery = new YamlCacheCollectorDiscovery('links.task', $this->moduleHandler->getModuleDirectories(), $this->yamlCacheCollector);
       $yaml_discovery->addTranslatableProperty('title', 'title_context');
       $this->discovery = new ContainerDerivativeDiscoveryDecorator($yaml_discovery);
     }
