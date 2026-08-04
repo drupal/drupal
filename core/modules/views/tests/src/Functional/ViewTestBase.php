@@ -59,9 +59,6 @@ abstract class ViewTestBase extends BrowserTestBase {
     \Drupal::state()->set('views_test_data_views_data', $this->viewsData());
 
     \Drupal::service('module_installer')->install(['views_test_data']);
-    $this->resetAll();
-    $this->rebuildContainer();
-    $this->container->get('module_handler')->reload();
 
     // Load the test dataset.
     $data_set = $this->dataSet();
