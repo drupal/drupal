@@ -22,6 +22,9 @@ class Condition extends BaseCondition {
    */
   public static function translateCondition(&$condition, SelectInterface $sql_query, $case_sensitive) {
     if (is_array($condition['value']) && $case_sensitive === FALSE) {
+      if (!in_array($condition['operator'], ['IN', 'NOT IN'], TRUE)) {
+        throw new \InvalidArgumentException(sprintf('Invalid operator "%s" for a case-insensitive array condition. Allowed operators are "IN" and "NOT IN".', $condition['operator']));
+      }
       $condition['where'] = 'LOWER(' . $sql_query->escapeField($condition['real_field']) . ') ' . $condition['operator'] . ' (';
       $condition['where_args'] = [];
 
@@ -29,7 +32,7 @@ class Condition extends BaseCondition {
       // argument following similar pattern in
       // \Drupal\Core\Database\Connection::expandArguments().
       $where_prefix = str_replace('.', '_', $condition['real_field']);
-      foreach ($condition['value'] as $key => $value) {
+      foreach (array_values($condition['value']) as $key => $value) {
         $where_id = $where_prefix . $key;
         $condition['where'] .= 'LOWER(:' . $where_id . '),';
         $condition['where_args'][':' . $where_id] = $value;
