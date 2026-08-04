@@ -227,9 +227,9 @@ final class Settings implements ContainerInjectionInterface {
       '#description' => $this->t('Enables dark mode for the administration interface.'),
       '#default_value' => (string) ($account ? $this->get('enable_dark_mode', $account) : $this->getDefault('enable_dark_mode')),
       '#options' => [
+        'auto' => $this->t('Auto'),
         0 => $this->t('Light'),
         1 => $this->t('Dark'),
-        'auto' => $this->t('Auto'),
       ],
     ];
 

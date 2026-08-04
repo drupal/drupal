@@ -1,6 +1,6 @@
 preset_accent_color: 'blue'
 preset_focus_color: 'gin'
-enable_dark_mode: '0'
+enable_dark_mode: 'auto'
 high_contrast_mode: false
 accent_color: ''
 focus_color: ''
