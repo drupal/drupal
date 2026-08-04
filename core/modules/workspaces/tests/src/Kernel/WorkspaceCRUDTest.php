@@ -280,6 +280,65 @@ class WorkspaceCRUDTest extends KernelTestBase {
     $this->assertTrue($revisions[3]->isDefaultRevision());
     $this->assertFalse(isset($revisions[4]));
     $this->assertFalse(isset($revisions[5]));
+
+    // Check that deleting a workspace does not delete the entities which were
+    // created in it but became live content in the meantime.
+    $node_storage = $this->entityTypeManager->getStorage('node');
+    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_tracker */
+    $workspace_tracker = \Drupal::service('workspaces.tracker');
+    $workspace_3 = Workspace::create(['id' => 'summer', 'label' => 'Summer']);
+    $workspace_3->save();
+    $workspace_4 = Workspace::create(['id' => 'winter', 'label' => 'Winter']);
+    $workspace_4->save();
+
+    // Create two new nodes in the 'summer' workspace. The published one gets an
+    // unpublished initial revision (6) and a published pending revision (7),
+    // while the unpublished one only gets an initial revision (8).
+    $this->workspaceManager->setActiveWorkspace($workspace_3);
+    $node_1 = $this->createNode(['status' => TRUE]);
+    $node_2 = $this->createNode(['status' => FALSE]);
+
+    // Simulate a module that bypasses the entity editing protections and
+    // creates a new revision (9) of the first node in another workspace.
+    $this->workspaceManager->setActiveWorkspace($workspace_4);
+    $node_1 = $node_storage->load($node_1->id());
+    $node_1->setNewRevision(TRUE);
+    $node_1->setPublished();
+    $node_1->save();
+
+    // Publishing the 'winter' workspace makes revision 9 the published default
+    // revision of the first node.
+    $workspace_4->publish();
+
+    // Publish the second node in Live without creating a new revision, so its
+    // initial revision (8) is also its default revision.
+    $this->workspaceManager->switchToLive();
+    $node_storage->resetCache();
+    $node_2 = $node_storage->load($node_2->id());
+    $node_2->setPublished();
+    $node_2->save();
+
+    // Deleting the 'summer' workspace has to purge only the revisions created
+    // in it, because both nodes are live content now.
+    $workspace_3->delete();
+
+    $node_storage->resetCache();
+    $node_1 = $node_storage->load($node_1->id());
+    $this->assertNotNull($node_1);
+    $this->assertTrue($node_1->isPublished());
+    $this->assertEquals(9, $node_1->getRevisionId());
+    $this->assertEmpty($node_storage->loadMultipleRevisions([6, 7]));
+
+    // The initial revision of the second node is also its default revision, so
+    // it can not be deleted. Only its tracking records are removed.
+    $node_2 = $node_storage->load($node_2->id());
+    $this->assertNotNull($node_2);
+    $this->assertTrue($node_2->isPublished());
+    $this->assertEquals(8, $node_2->getRevisionId());
+    $this->assertEmpty($workspace_tracker->getAllTrackedRevisions($workspace_3->id(), 'node'));
+
+    // The purge finished, so the workspace ID is no longer in the queue.
+    $this->assertEmpty(\Drupal::state()->get('workspace.deleted'));
   }
 
   /**
