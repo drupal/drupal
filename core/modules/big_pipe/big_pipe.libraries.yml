@@ -1,4 +1,6 @@
 big_pipe:
+  aggregate_target:
+    js: true
   version: VERSION
   js:
     js/big_pipe.commands.js: {}

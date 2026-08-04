@@ -1,4 +1,6 @@
 global-styling:
+  aggregate_target:
+    css: true
   version: VERSION
   fonts:
     fonts/metropolis/Metropolis-Regular.woff2:

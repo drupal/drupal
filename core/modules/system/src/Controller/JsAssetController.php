@@ -49,7 +49,13 @@ class JsAssetController extends AssetControllerBase {
     // $group_key is not sufficient to find the group, we also need to locate it
     // within either the header or footer set.
     $language = $this->languageManager()->getLanguage($request->query->get('language'));
-    [$js_assets_header, $js_assets_footer] = $this->assetResolver->getJsAssets($attached_assets, FALSE, $language);
+
+    if ($request->query->has('libraries')) {
+      [$js_assets_header, $js_assets_footer] = $this->assetResolver->getJsAssets($attached_assets, FALSE, $language, FALSE);
+    }
+    else {
+      [$js_assets_header, $js_assets_footer] = $this->assetResolver->getJsAssets($attached_assets, FALSE, $language);
+    }
     $scope = $request->query->get('scope');
     if (!isset($scope)) {
       throw new BadRequestHttpException('The URL must have a scope query argument.');

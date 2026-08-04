@@ -219,12 +219,17 @@ class AssetResolver implements AssetResolverInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCssAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL) {
+  public function getCssAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL, bool $with_dependencies = TRUE) {
     if (!$assets->getLibraries()) {
       return [];
     }
-    // Get the complete list of libraries to load including dependencies.
-    $libraries_to_load = $this->getLibrariesToLoad($assets, 'css');
+    if ($with_dependencies) {
+      // Get the complete list of libraries to load including dependencies.
+      $libraries_to_load = $this->getLibrariesToLoad($assets, 'css');
+    }
+    else {
+      $libraries_to_load = $assets->getLibraries();
+    }
 
     if (!$libraries_to_load) {
       return [];
@@ -269,6 +274,9 @@ class AssetResolver implements AssetResolverInterface {
         // Always add a tiny value to the weight, to conserve the insertion
         // order.
         $options['weight'] += count($css) / 30000;
+
+        $options['library'] = $library;
+        $options['aggregate_target'] = $definition['aggregate_target'] ?? ['js' => FALSE, 'css' => FALSE];
 
         // CSS files are being keyed by the full path.
         $css[$options['data']] = $options;
@@ -321,7 +329,7 @@ class AssetResolver implements AssetResolverInterface {
   /**
    * {@inheritdoc}
    */
-  public function getJsAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL) {
+  public function getJsAssets(AttachedAssetsInterface $assets, $optimize, ?LanguageInterface $language = NULL, bool $with_dependencies = TRUE) {
     $asset_settings = $assets->getSettings();
     if (!$assets->getLibraries() && !$asset_settings) {
       return [[], []];
@@ -331,8 +339,13 @@ class AssetResolver implements AssetResolverInterface {
     }
     $theme_info = $this->themeManager->getActiveTheme();
 
-    // Get the complete list of libraries to load including dependencies.
-    $libraries_to_load = $this->getLibrariesToLoad($assets, 'js');
+    if ($with_dependencies) {
+      // Get the complete list of libraries to load including dependencies.
+      $libraries_to_load = $this->getLibrariesToLoad($assets, 'js');
+    }
+    else {
+      $libraries_to_load = $assets->getLibraries();
+    }
 
     // Collect all libraries that contain JS assets and are in the header.
     $header_js_libraries = [];
@@ -394,6 +407,9 @@ class AssetResolver implements AssetResolverInterface {
           // Always add a tiny value to the weight, to conserve the insertion
           // order.
           $options['weight'] += count($javascript) / 30000;
+
+          $options['library'] = $library;
+          $options['aggregate_target'] = $definition['aggregate_target'] ?? ['js' => FALSE, 'css' => FALSE];
 
           // Local and external files must keep their name as the associative
           // key so the same JavaScript file is not added twice.
@@ -511,7 +527,6 @@ class AssetResolver implements AssetResolverInterface {
     elseif ($a['group'] > $b['group']) {
       return 1;
     }
-    // Finally, order by weight.
     elseif ($a['weight'] < $b['weight']) {
       return -1;
     }

@@ -129,14 +129,16 @@ abstract class AssetControllerBase extends FileDownloadController {
     if (!$request->query->has('theme')) {
       throw new BadRequestHttpException('The theme must be passed as a query argument');
     }
-    if (!$request->query->has('delta') || !is_numeric($request->query->get('delta'))) {
-      throw new BadRequestHttpException('The numeric delta must be passed as a query argument');
+    if (!$request->query->has('libraries')) {
+      if (!$request->query->has('delta') || !is_numeric($request->query->get('delta'))) {
+        throw new BadRequestHttpException('The numeric delta must be passed as a query argument');
+      }
+      if (!$request->query->has('include')) {
+        throw new BadRequestHttpException('The libraries to include must be passed as a query argument');
+      }
     }
     if (!$request->query->has('language')) {
       throw new BadRequestHttpException('The language must be passed as a query argument');
-    }
-    if (!$request->query->has('include')) {
-      throw new BadRequestHttpException('The libraries to include must be passed as a query argument');
     }
     $file_parts = explode('_', basename($file_name, '.' . $this->fileExtension), 2);
     // Ensure the filename is correctly prefixed.
@@ -158,7 +160,13 @@ abstract class AssetControllerBase extends FileDownloadController {
     $this->themeManager->setActiveTheme($active_theme);
 
     $attached_assets = new AttachedAssets();
-    $include_libraries = explode(',', UrlHelper::uncompressQueryParameter($request->query->get('include')));
+
+    if ($request->query->has('include')) {
+      $include_libraries = explode(',', UrlHelper::uncompressQueryParameter($request->query->get('include')));
+    }
+    else {
+      $include_libraries = explode(',', UrlHelper::uncompressQueryParameter($request->query->get('libraries')));
+    }
 
     // Check that library names are in the correct format.
     $validate = function ($libraries_to_check) {
@@ -176,9 +184,11 @@ abstract class AssetControllerBase extends FileDownloadController {
       $validate($exclude_libraries);
       $attached_assets->setAlreadyLoadedLibraries($exclude_libraries);
     }
+
     $groups = $this->getGroups($attached_assets, $request);
 
-    $group = $this->getGroup($groups, (int) $request->query->get('delta'));
+    // If the request is for a single library, there is only ever one group.
+    $group = $this->getGroup($groups, $request->query->has('libraries') ? 0 : (int) $request->query->get('delta'));
     // Generate a hash based on the asset group, this uses the same method as
     // the collection optimizer does to create the filename, so it should match.
     $generated_hash = $this->generateHash($group);

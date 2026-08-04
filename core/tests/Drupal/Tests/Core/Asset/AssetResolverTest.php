@@ -111,6 +111,7 @@ class AssetResolverTest extends UnitTestCase {
     $this->libraries = [
       'core/drupal' => [
         'version' => '1.0.0',
+        'aggregate_target' => ['css' => FALSE, 'js' => FALSE],
         'css' => [],
         'js' =>
           [
@@ -120,6 +121,7 @@ class AssetResolverTest extends UnitTestCase {
       ],
       'core/jquery' => [
         'version' => '1.0.0',
+        'aggregate_target' => ['css' => FALSE, 'js' => FALSE],
         'css' => [],
         'js' =>
           [
@@ -129,6 +131,7 @@ class AssetResolverTest extends UnitTestCase {
       ],
       'llama/css' => [
         'version' => '1.0.0',
+        'aggregate_target' => ['css' => FALSE, 'js' => FALSE],
         'css' =>
           [
             'core/misc/llama.css' => ['data' => 'core/misc/llama.css'],
@@ -139,6 +142,7 @@ class AssetResolverTest extends UnitTestCase {
       ],
       'piggy/css' => [
         'version' => '1.0.0',
+        'aggregate_target' => ['css' => FALSE, 'js' => FALSE],
         'css' =>
           [
             'core/misc/piggy.css' => ['data' => 'core/misc/piggy.css'],
@@ -156,6 +160,7 @@ class AssetResolverTest extends UnitTestCase {
         'remote' => 'https://github.com/ckeditor/ckeditor5',
         'version' => '1.0.0',
         'license' => '',
+        'aggregate_target' => ['css' => FALSE, 'js' => FALSE],
         'js' => [
           'assets/vendor/ckeditor5/ckeditor5-dll/ckeditor5-dll.js' => [
             'data' => 'assets/vendor/ckeditor5/ckeditor5-dll/ckeditor5-dll.js',

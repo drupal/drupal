@@ -1,8 +1,8 @@
 global:
+  aggregate_target:
+    css: 'umami'
   version: VERSION
   css:
-    base:
-      css/base.css: {}
     component:
       css/components/blocks/help/help.css: {}
       css/components/blocks/page-title/page-title.css: {}
@@ -10,7 +10,6 @@ global:
       css/components/blocks/search/search.css: {}
       css/components/blocks/search/search-results.css: {}
       css/components/blocks/articles-aside/articles-aside.css: {}
-      css/components/forms/form.css: { weight: -10 }
       css/components/forms/content-moderation.css: {}
       css/components/content/node.css: {}
       css/components/content/full/node-full.css: {}
@@ -39,8 +38,6 @@ global:
       css/components/regions/tabs/tabs.css: {}
       css/components/toolbar/toolbar.css: {}
       css/components/layout_builder/layout-builder.css: {}
-    layout:
-      css/layout/layout.css: {}
   fonts:
     fonts/source-sans-pro-v21-latin-regular.woff2:
       preload: true
@@ -48,6 +45,18 @@ global:
       preload: true
     fonts/source-sans-pro-v21-latin-700.woff2:
       preload: true
+  dependencies:
+    - umami/global_tweaks
+
+global_tweaks:
+  version: VERSION
+  css:
+    base:
+      css/base.css: {}
+    component:
+      css/components/forms/form.css: { weight: -10}
+    layout:
+      css/layout/layout.css: {}
 
 messages:
   css:
@@ -62,8 +71,10 @@ quicklinks:
       css/components/blocks/quicklinks/quicklinks.css: {}
 
 recipe-collections:
+  aggregate_target:
+    css: 'umami'
   css:
-    theme:
+    component:
       css/components/blocks/recipe-collections/recipe-collections.css: {}
 
 two-columns:
@@ -79,7 +90,7 @@ user:
 
 oneplusfourgrid_section:
   css:
-    theme:
+    layout:
       layouts/oneplusfourgrid_section/oneplusfourgrid_section.css: {}
 
 filter:
@@ -89,6 +100,8 @@ filter:
       css/theme/filter.admin.css: {}
 
 classy.base:
+  aggregate_target:
+    css: 'umami'
   version: VERSION
   css:
     component:

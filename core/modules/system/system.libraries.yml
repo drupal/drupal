@@ -1,4 +1,6 @@
 base:
+  aggregate_target:
+    css: 'global'
   version: VERSION
   css:
     # Adjust the weights to load these early.

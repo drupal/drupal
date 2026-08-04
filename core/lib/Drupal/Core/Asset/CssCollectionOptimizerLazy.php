@@ -90,6 +90,9 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
           // groups, whether or not files in a group are from a particular
           // library or not.
           $css_assets[$order]['preprocessed'] = TRUE;
+          if (!empty($css_group['libraries'])) {
+            $css_assets[$order]['libraries'] = $css_group['libraries'];
+          }
         }
       }
       if ($css_group['type'] === 'external') {
@@ -112,12 +115,20 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
     if ($already_loaded) {
       $query_args['exclude'] = UrlHelper::compressQueryParameter(implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($already_loaded)));
     }
+    // When an asset corresponds 1-1 with a single library, we don't need
+    // either the include or exclude query arguments. Replace this with just
+    // the library needed to produce the aggregate.
 
     // Generate a URL for each group of assets, but do not process them inline,
     // this is done using optimizeGroup() when the asset path is requested.
     foreach ($css_assets as $order => $css_asset) {
       if (!empty($css_asset['preprocessed'])) {
         $query = ['delta' => "$order"] + $query_args;
+        if (isset($css_asset['libraries'])) {
+          unset($query['include'], $query['exclude'], $query['delta']);
+          $query['libraries'] = UrlHelper::compressQueryParameter(implode(',', $css_asset['libraries']));
+          $query['category'] = $css_asset['category'];
+        }
         $filename = 'css_' . $this->generateHash($css_asset) . '.css';
         $uri = 'assets://css/' . $filename;
         $css_assets[$order]['data'] = $this->fileUrlGenerator->generateString($uri) . '?' . UrlHelper::buildQuery($query);
