@@ -126,7 +126,8 @@
             "lib/Drupal/Component/Datetime/Time.php"
         ],
         "files": [
-            "includes/bootstrap.inc"
+            "includes/bootstrap.inc",
+            "includes/guzzle_file_cookie_jar_shim.php"
         ]
     },
     "bin": [
