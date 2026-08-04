@@ -9,6 +9,14 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * Classes using this trait must implement \Drupal\Core\Form\FormInterface and
  * are expected to set the $formBuilder property in their constructor.
+ *
+ * The entity type must define a corresponding entity key for its weight field:
+ *
+ * @code
+ * entity_keys: [
+ *   "weight" => "weight",
+ * ]
+ * @endcode
  */
 trait DraggableListBuilderTrait {
 
