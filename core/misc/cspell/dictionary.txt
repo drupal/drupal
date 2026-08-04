@@ -228,6 +228,7 @@ introspectable
 invalidators
 invokable
 isam
+iterability
 javascripts
 jessebeach
 jqueryui

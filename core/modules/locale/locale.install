@@ -5,6 +5,17 @@
  * Install, update, and uninstall functions for the Locale module.
  */
 
+use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\ColumnSize;
+use Drupal\Core\Database\SchemaDefinition\ColumnType;
+use Drupal\Core\Database\SchemaDefinition\ForeignKey;
+use Drupal\Core\Database\SchemaDefinition\Index;
+use Drupal\Core\Database\SchemaDefinition\IntValue;
+use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
+use Drupal\Core\Database\SchemaDefinition\Schema;
+use Drupal\Core\Database\SchemaDefinition\SchemaDefinitionType;
+use Drupal\Core\Database\SchemaDefinition\StringValue;
+use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\locale\StreamWrapper\TranslationsStream;
@@ -57,195 +68,221 @@ function locale_uninstall(): void {
 /**
  * Implements hook_schema().
  */
-function locale_schema(): array {
-  $schema['locales_source'] = [
-    'description' => 'List of English source strings.',
-    'fields' => [
-      'lid' => [
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Unique identifier of this string.',
-      ],
-      'source' => [
-        'type' => 'text',
-        'mysql_type' => 'blob',
-        'not null' => TRUE,
-        'description' => 'The original string in English.',
-      ],
-      'context' => [
-        'type' => 'varchar_ascii',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The context this string applies to.',
-      ],
-      'version' => [
-        'type' => 'varchar_ascii',
-        'length' => 20,
-        'not null' => TRUE,
-        'default' => 'none',
-        'description' => 'Version of Drupal where the string was last used (for locales optimization).',
-      ],
+function locale_schema(): Schema {
+  $locales_source = new Table(
+    name: 'locales_source',
+    description: 'List of English source strings.',
+    columns: [
+      Column::serial(
+        name: 'lid',
+        description: 'Unique identifier of this string.',
+      ),
+      Column::create(
+        type: ColumnType::Text,
+        name: 'source',
+        description: 'The original string in English.',
+        notNull: TRUE,
+        dbSpecificExtra: [
+          'mysql' => [
+            'mysql_type' => 'blob',
+          ],
+        ],
+      ),
+      Column::varcharAscii(
+        name: 'context',
+        description: 'The context this string applies to.',
+        length: 255,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::varcharAscii(
+        name: 'version',
+        description: 'Version of Drupal where the string was last used (for locales optimization).',
+        length: 20,
+        notNull: TRUE,
+        default: new StringValue('none'),
+      ),
     ],
-    'primary key' => ['lid'],
-    'indexes' => [
-      'source_context' => [['source', 30], 'context'],
+    primaryKey: new PrimaryKey(['lid']),
+    indexes: [
+      new Index(name: 'source_context', columns: [['source', 30], 'context']),
     ],
-  ];
+  );
 
-  $schema['locales_target'] = [
-    'description' => 'Stores translated versions of strings.',
-    'fields' => [
-      'lid' => [
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Source string ID. References {locales_source}.lid.',
-      ],
-      'translation' => [
-        'type' => 'text',
-        'mysql_type' => 'blob',
-        'not null' => TRUE,
-        'description' => 'Translation string value in this language.',
-      ],
-      'language' => [
-        'type' => 'varchar_ascii',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Language code. References {language}.langcode.',
-      ],
-      'customized' => [
-        'type' => 'int',
-        'not null' => TRUE,
+  $locales_target = new Table(
+    name: 'locales_target',
+    description: 'Stores translated versions of strings.',
+    columns: [
+      Column::int(
+        name: 'lid',
+        description: 'Source string ID. References {locales_source}.lid.',
+        notNull: TRUE,
+        default: new IntValue(0),
+      ),
+      Column::create(
+        type: ColumnType::Text,
+        name: 'translation',
+        description: 'Translation string value in this language.',
+        notNull: TRUE,
+        dbSpecificExtra: [
+          'mysql' => [
+            'mysql_type' => 'blob',
+          ],
+        ],
+      ),
+      Column::varcharAscii(
+        name: 'language',
+        description: 'Language code. References {language}.langcode.',
+        length: 12,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::int(
+        name: 'customized',
+        description: 'Boolean indicating whether the translation is custom to this site.',
+        notNull: TRUE,
         // LOCALE_NOT_CUSTOMIZED.
-        'default' => 0,
-        'description' => 'Boolean indicating whether the translation is custom to this site.',
-      ],
+        default: new IntValue(0),
+      ),
     ],
-    'primary key' => ['language', 'lid'],
-    'foreign keys' => [
-      'locales_source' => [
-        'table' => 'locales_source',
-        'columns' => ['lid' => 'lid'],
-      ],
+    primaryKey: new PrimaryKey(['language', 'lid']),
+    indexes: [
+      new Index(name: 'lid', columns: ['lid']),
     ],
-    'indexes' => [
-      'lid' => ['lid'],
+    foreignKeys: [
+      new ForeignKey(
+        name: 'locales_source',
+        foreignTable: 'locales_source',
+        columns: ['lid'],
+        foreignColumns: ['lid'],
+      ),
     ],
-  ];
+  );
 
-  $schema['locales_location'] = [
-    'description' => 'Location information for source strings.',
-    'fields' => [
-      'lid' => [
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Unique identifier of this location.',
-      ],
-      'sid' => [
-        'type' => 'int',
-        'not null' => TRUE,
-        'description' => 'Unique identifier of this string.',
-      ],
-      'type' => [
-        'type' => 'varchar_ascii',
-        'length' => 50,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The location type (file, config, path, etc).',
-      ],
-      'name' => [
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Type dependent location information (file name, path, etc).',
-      ],
-      'version' => [
-        'type' => 'varchar_ascii',
-        'length' => 20,
-        'not null' => TRUE,
-        'default' => 'none',
-        'description' => 'Version of Drupal where the location was found.',
-      ],
+  $locales_location = new Table(
+    name: 'locales_location',
+    description: 'Location information for source strings.',
+    columns: [
+      Column::serial(
+        name: 'lid',
+        description: 'Unique identifier of this location.',
+      ),
+      Column::int(
+        name: 'sid',
+        description: 'Unique identifier of this string.',
+        notNull: TRUE,
+      ),
+      Column::varcharAscii(
+        name: 'type',
+        description: 'The location type (file, config, path, etc).',
+        length: 50,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::varchar(
+        name: 'name',
+        description: 'Type dependent location information (file name, path, etc).',
+        length: 255,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::varcharAscii(
+        name: 'version',
+        description: 'Version of Drupal where the location was found.',
+        length: 20,
+        notNull: TRUE,
+        default: new StringValue('none'),
+      ),
     ],
-    'primary key' => ['lid'],
-    'foreign keys' => [
-      'locales_source' => [
-        'table' => 'locales_source',
-        'columns' => ['sid' => 'lid'],
-      ],
+    primaryKey: new PrimaryKey(['lid']),
+    indexes: [
+      new Index(name: 'string_type', columns: ['sid', 'type']),
+      new Index(name: 'type_name', columns: ['type', 'name']),
     ],
-    'indexes' => [
-      'string_type' => ['sid', 'type'],
-      'type_name' => ['type', 'name'],
+    foreignKeys: [
+      new ForeignKey(
+        name: 'locales_source',
+        foreignTable: 'locales_source',
+        columns: ['sid'],
+        foreignColumns: ['lid'],
+      ),
     ],
-  ];
+  );
 
-  $schema['locale_file'] = [
-    'description' => 'File import status information for interface translation files.',
-    'fields' => [
-      'project' => [
-        'type' => 'varchar_ascii',
-        'length' => '255',
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'A unique short name to identify the project the file belongs to.',
-      ],
-      'langcode' => [
-        'type' => 'varchar_ascii',
-        'length' => '12',
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Language code of this translation. References {language}.langcode.',
-      ],
-      'filename' => [
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Filename of the imported file.',
-      ],
-      'version' => [
-        'type' => 'varchar',
-        'length' => '128',
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Version tag of the imported file.',
-      ],
-      'uri' => [
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'URI of the remote file, the resulting local file or the locally imported file.',
-      ],
-      'timestamp' => [
-        'type' => 'int',
-        'not null' => FALSE,
-        'default' => 0,
-        'description' => 'Unix timestamp of the imported file.',
-        'size' => 'big',
-      ],
-      'hash' => [
-        'type' => 'varchar_ascii',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The hash of the imported file.',
-      ],
-      'last_checked' => [
-        'type' => 'int',
-        'not null' => FALSE,
-        'default' => 0,
-        'description' => 'Unix timestamp of the last time this translation was confirmed to be the most recent release available.',
-        'size' => 'big',
-      ],
+  $locale_file = new Table(
+    name: 'locale_file',
+    description: 'File import status information for interface translation files.',
+    columns: [
+      Column::varcharAscii(
+        name: 'project',
+        description: 'A unique short name to identify the project the file belongs to.',
+        length: 255,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::varcharAscii(
+        name: 'langcode',
+        description: 'Language code of this translation. References {language}.langcode.',
+        length: 12,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::varchar(
+        name: 'filename',
+        description: 'Filename of the imported file.',
+        length: 255,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::varchar(
+        name: 'version',
+        description: 'Version tag of the imported file.',
+        length: 128,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::varchar(
+        name: 'uri',
+        description: 'URI of the remote file, the resulting local file or the locally imported file.',
+        length: 255,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::int(
+        name: 'timestamp',
+        description: 'Unix timestamp of the imported file.',
+        size: ColumnSize::Big,
+        notNull: FALSE,
+        default: new IntValue(0),
+      ),
+      Column::varcharAscii(
+        name: 'hash',
+        description: 'The hash of the imported file.',
+        length: 32,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::int(
+        name: 'last_checked',
+        description: 'Unix timestamp of the last time this translation was confirmed to be the most recent release available.',
+        size: ColumnSize::Big,
+        notNull: FALSE,
+        default: new IntValue(0),
+      ),
     ],
-    'primary key' => ['project', 'langcode'],
-  ];
-  return $schema;
+    primaryKey: new PrimaryKey(['project', 'langcode']),
+  );
+
+  return new Schema(
+    type: SchemaDefinitionType::Module,
+    name: 'locale',
+    tables: [
+      $locales_source,
+      $locales_target,
+      $locales_location,
+      $locale_file,
+    ],
+  );
 }
 
 /**
