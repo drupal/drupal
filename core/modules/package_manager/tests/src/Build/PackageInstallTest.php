@@ -12,7 +12,6 @@ use PHPUnit\Framework\Attributes\Group;
  * @internal
  */
 #[Group('package_manager')]
-#[Group('#slow')]
 class PackageInstallTest extends TemplateProjectTestBase {
 
   /**

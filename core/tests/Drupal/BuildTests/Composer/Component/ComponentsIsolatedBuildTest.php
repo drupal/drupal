@@ -17,6 +17,7 @@ use Symfony\Component\Process\Process;
 #[CoversNothing]
 #[Group('Composer')]
 #[Group('Component')]
+#[Group('#slow')]
 class ComponentsIsolatedBuildTest extends ComposerBuildTestBase {
 
   /**

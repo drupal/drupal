@@ -281,20 +281,6 @@ default:
 # Test Jobs
 ################
 
-'👷️️️ PHPUnit Build':
-  <<: [ *with-composer, *test-setup ]
-  retry: 1
-  variables:
-    TESTSUITE: build
-    KUBERNETES_CPU_REQUEST: "16"
-    CONCURRENCY: "8"
-    # No parallel for this job, setup manually the env variables that need to
-    # be passed to run-tests.sh command line options.
-    CI_NODE_INDEX: 1
-    CI_NODE_TOTAL: 1
-  services:
-    - <<: *with-database
-
 '🦉️️️ Nightwatch':
   <<: [ *with-composer, *test-setup ]
   retry: 1
@@ -374,6 +360,20 @@ default:
     TESTSUITE: kernel
     KUBERNETES_CPU_REQUEST: "12"
     CONCURRENCY: "24"
+  services:
+    - <<: *with-database
+
+'👷️️️ PHPUnit Build':
+  <<: [ *with-composer, *test-setup ]
+  retry: 1
+  variables:
+    TESTSUITE: build
+    KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: "4"
+    # No parallel for this job, setup manually the env variables that need to
+    # be passed to run-tests.sh command line options.
+    CI_NODE_INDEX: 1
+    CI_NODE_TOTAL: 1
   services:
     - <<: *with-database
 
