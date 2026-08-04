@@ -80,11 +80,10 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
 
     // Entity save should have deferred cache invalidation to after transaction
     // completion for the "entity_test_list", "entity_test_list:entity_test"
-    // and "4xx-response" tags. Since cache invalidation is a MERGE database
-    // operation, and in core drivers each MERGE is split in two SELECT and
-    // INSERT|UPDATE operations, we expect the last 6 logged database queries
-    // to be related to the {cachetags} table.
-    $expected_tail_length = 6;
+    // and "4xx-response" tags. Since cache invalidation is an UPSERT database
+    // operation, we expect the last 3 logged database queries to be related to
+    // the {cachetags} table.
+    $expected_tail_length = 3;
     $executed_statements = [];
     foreach (Database::getLog('testEntitySave') as $log) {
       // Exclude transaction related statements from the log.

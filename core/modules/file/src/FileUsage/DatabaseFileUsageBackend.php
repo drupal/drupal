@@ -4,6 +4,7 @@ namespace Drupal\file\FileUsage;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\UpsertUpdateExpression;
 use Drupal\file\FileInterface;
 
 /**
@@ -46,17 +47,23 @@ class DatabaseFileUsageBackend extends FileUsageBase {
    * {@inheritdoc}
    */
   public function add(FileInterface $file, $module, $type, $id, $count = 1) {
-    $this->connection->merge($this->tableName)
-      ->keys([
+    $this->connection->upsert($this->tableName)
+      ->key(['fid', 'type', 'id', 'module'])
+      ->fields([
+        'fid',
+        'type',
+        'id',
+        'module',
+        'count' => new UpsertUpdateExpression("{{$this->tableName}}.[count] + :count", [':count' => $count]),
+      ])
+      ->values([
         'fid' => $file->id(),
-        'module' => $module,
         'type' => $type,
         'id' => $id,
+        'module' => $module,
+        'count' => $count,
       ])
-      ->fields(['count' => $count])
-      ->expression('count', '[count] + :count', [':count' => $count])
       ->execute();
-
     parent::add($file, $module, $type, $id, $count);
   }
 

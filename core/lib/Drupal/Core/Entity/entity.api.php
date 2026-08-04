@@ -1426,9 +1426,13 @@ function hook_entity_predelete(\Drupal\Core\Entity\EntityInterface $entity): voi
     ->fetchField();
 
   // Log the count in a table that records this statistic for deleted entities.
-  $connection->merge('example_deleted_entity_statistics')
-    ->keys(['type' => $type, 'id' => $id])
-    ->fields(['count' => $count])
+  $connection->upsert('example_deleted_entity_statistics')
+    ->key(['type', 'id'])
+    ->fields([
+      'type' => $type,
+      'id' => $id,
+      'count' => $count,
+    ])
     ->execute();
 }
 
@@ -1455,9 +1459,13 @@ function hook_ENTITY_TYPE_predelete(\Drupal\Core\Entity\EntityInterface $entity)
     ->fetchField();
 
   // Log the count in a table that records this statistic for deleted entities.
-  $connection->merge('example_deleted_entity_statistics')
-    ->keys(['type' => $type, 'id' => $id])
-    ->fields(['count' => $count])
+  $connection->upsert('example_deleted_entity_statistics')
+    ->key(['type', 'id'])
+    ->fields([
+      'type' => $type,
+      'id' => $id,
+      'count' => $count,
+    ])
     ->execute();
 }
 
