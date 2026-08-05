@@ -6,3 +6,4 @@ show_message:
     - core/drupalSettings
     - core/drupal.message
     - core/once
+    - core/jquery

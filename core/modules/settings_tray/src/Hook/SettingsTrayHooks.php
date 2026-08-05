@@ -2,8 +2,6 @@
 
 namespace Drupal\settings_tray\Hook;
 
-use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\settings_tray\Block\BlockEntitySettingTrayForm;
 use Drupal\Core\Url;
@@ -145,20 +143,6 @@ class SettingsTrayHooks {
       if (!isset($definition['forms']['settings_tray'])) {
         $definition['forms']['settings_tray'] = $definition['class'];
       }
-    }
-  }
-
-  /**
-   * Implements hook_css_alter().
-   */
-  #[Hook('css_alter')]
-  public function cssAlter(&$css, AttachedAssetsInterface $assets, LanguageInterface $language): void {
-    // @todo Remove once conditional ordering is introduced in
-    //   https://www.drupal.org/node/1945262.
-    $path = \Drupal::service('extension.list.module')->getPath('settings_tray') . '/css/settings_tray.theme.css';
-    if (isset($css[$path])) {
-      // Use 200 to come after CSS_AGGREGATE_THEME.
-      $css[$path]['group'] = 200;
     }
   }
 

@@ -43,6 +43,7 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     // a non-deterministic test since they happen in parallel and therefore post
     // response tasks run in different orders each time.
     $this->drupalGet('<front>');
+    sleep(2);
     $this->drupalGet('<front>');
     sleep(2);
     $this->clearCaches();
@@ -60,7 +61,7 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
       'CacheTagInvalidationCount' => 0,
       'ScriptCount' => 3,
       'ScriptBytes' => 12000,
-      'StylesheetCount' => 6,
+      'StylesheetCount' => 7,
       'StylesheetBytes' => 39150,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -98,7 +99,7 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 1,
       'ScriptCount' => 3,
       'ScriptBytes' => 11850,
-      'StylesheetCount' => 6,
+      'StylesheetCount' => 7,
       'StylesheetBytes' => 38850,
     ];
     $this->assertMetrics($expected, $performance_data);
@@ -130,7 +131,7 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 19,
       'ScriptCount' => 3,
       'ScriptBytes' => 12000,
-      'StylesheetCount' => 6,
+      'StylesheetCount' => 7,
       'StylesheetBytes' => 38850,
     ];
     $this->assertMetrics($expected, $performance_data);

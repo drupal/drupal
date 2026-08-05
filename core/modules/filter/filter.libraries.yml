@@ -7,6 +7,8 @@ drupal.filter.admin:
     - core/drupal
     - core/once
     - core/drupal.form
+    - core/drupal.tabledrag
+    - core/drupal.vertical-tabs
   moved_files:
     filter/filter.admin.js:
       deprecation_version: drupal:11.1.0

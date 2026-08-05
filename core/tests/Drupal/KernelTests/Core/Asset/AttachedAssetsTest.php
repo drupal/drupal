@@ -377,6 +377,34 @@ class AttachedAssetsTest extends KernelTestBase {
   }
 
   /**
+   * Tests using 'before' in library definition.
+   */
+  public function testLibraryBefore(): void {
+    $build['#attached']['library'][] = 'common_test/main';
+    $build['#attached']['library'][] = 'common_test/before_main';
+    $assets = AttachedAssets::createFromRenderArray($build);
+
+    $js = $this->assetResolver->getJsAssets($assets, FALSE)[1];
+    $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
+    $rendered_js = (string) $this->renderer->renderInIsolation($js_render_array);
+    $this->assertLessThan(strpos($rendered_js, 'common_test/main.js'), strpos($rendered_js, 'common_test/before_main.js'));
+  }
+
+  /**
+   * Tests using 'after' in library definition.
+   */
+  public function testLibraryAfter(): void {
+    $build['#attached']['library'][] = 'common_test/after_main';
+    $build['#attached']['library'][] = 'common_test/main';
+    $assets = AttachedAssets::createFromRenderArray($build);
+
+    $js = $this->assetResolver->getJsAssets($assets, FALSE)[1];
+    $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
+    $rendered_js = (string) $this->renderer->renderInIsolation($js_render_array);
+    $this->assertGreaterThan(strpos($rendered_js, 'common_test/main.js'), strpos($rendered_js, 'common_test/after_main.js'));
+  }
+
+  /**
    * Tests altering a JavaScript's weight via hook_js_alter().
    *
    * @see common_test_js_alter()

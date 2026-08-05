@@ -12,6 +12,7 @@ drupal.field_ui:
     - core/once
     - core/drupal.ajax
     - core/drupal.dialog
+    - core/drupal.tabledrag
 
 drupal.field_ui.manage_fields:
   version: VERSION

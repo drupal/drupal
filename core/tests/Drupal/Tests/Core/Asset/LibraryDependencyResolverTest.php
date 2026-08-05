@@ -299,12 +299,12 @@ class LibraryDependencyResolverTest extends UnitTestCase {
         ['test/nested_deps_b', 'test/deps_c', 'test/no_deps_c'],
         [
           'test/no_deps_a',
+          'test/no_deps_c',
           'test/deps_a',
           'test/nested_deps_a',
           'test/nested_deps_b',
           'test/no_deps_b',
           'test/deps_c',
-          'test/no_deps_c',
         ],
       ],
     ];

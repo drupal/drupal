@@ -15,7 +15,9 @@ window.drupalCumulativeXhrCount = 0;
   }
   // jQuery.active alone is unable to detect whether an XHR request ever occurred.
   /* eslint-disable no-jquery/no-ajax-events */
-  $(document).on('ajaxSend', increment).on('ajaxComplete', decrement);
+  if ($) {
+    $(document).on('ajaxSend', increment).on('ajaxComplete', decrement);
+  }
   if (htmx) {
     htmx.on('htmx:beforeSend', increment);
     htmx.on('htmx:afterRequest', decrement);
@@ -29,4 +31,4 @@ window.drupalCumulativeXhrCount = 0;
       return res;
     });
   };
-})(jQuery, window.htmx);
+})(window.jQuery, window.htmx);
