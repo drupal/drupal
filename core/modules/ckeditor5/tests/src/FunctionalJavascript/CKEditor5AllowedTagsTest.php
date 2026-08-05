@@ -435,6 +435,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $page->fillField('title[0][value]', 'My test content');
     $page->fillField('body[0][value]', '<foo bar="baz">⬅️✌️➡️</foo><p><a style="color:#ff0000;" foo="bar" hreflang="en" href="https://example.com"><abbr title="National Aeronautics and Space Administration">NASA</abbr> is an acronym.</a></p>');
     $page->pressButton('Save');
+    $this->assertTrue($assert_session->waitForText('My test content'));
 
     // Configure Full HTML text format to use CKEditor 5.
     $this->drupalGet('admin/config/content/formats/manage/full_html');
@@ -460,6 +461,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // Ensure the editor is loaded and ensure that arbitrary markup is retained.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     $page->pressButton('Save');
+    $this->assertTrue($assert_session->waitForText('NASA is an acronym.'));
 
     // But note that the `style` attribute was stripped by
     // \Drupal\editor\EditorXssFilter\Standard.
@@ -496,6 +498,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $page->pressButton('Continue');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save');
+    $this->assertTrue($assert_session->waitForText('NASA is an acronym.'));
 
     // The `style` and foo` attributes should have been removed, as should the
     // `<abbr>` and `<foo>` tags.
