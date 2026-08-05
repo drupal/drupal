@@ -132,12 +132,6 @@ abstract class TextItemBase extends FieldItemBase {
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
     $random = new Random();
     $settings = $field_definition->getSettings();
-    $allowed_formats = $settings['allowed_formats'];
-    $fallback = \Drupal::service(FilterFormatRepositoryInterface::class)->getFallbackFormatId();
-
-    if (!empty($allowed_formats) && !in_array($fallback, $allowed_formats)) {
-      $fallback = reset($allowed_formats);
-    }
 
     if (empty($settings['max_length'])) {
       // Textarea handling.
@@ -152,7 +146,7 @@ abstract class TextItemBase extends FieldItemBase {
     $values = [
       'value' => $value,
       'summary' => $value,
-      'format' => $fallback,
+      'format' => \Drupal::service(FilterFormatRepositoryInterface::class)->getFallbackFormatId(),
     ];
     return $values;
   }
