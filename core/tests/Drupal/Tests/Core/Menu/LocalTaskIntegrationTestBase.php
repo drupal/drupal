@@ -5,12 +5,23 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\LocalTaskManager;
+use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCache;
+use Drupal\Component\Datetime\Time;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
-use Drupal\Core\Plugin\Discovery\YamlDiscovery;
+use Drupal\Core\Plugin\Discovery\YamlCacheCollectorDiscovery;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Utility\YamlCacheCollector;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 
 /**
  * Defines a base unit test for testing existence of local tasks.
@@ -58,7 +69,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
   /**
    * Sets up the local task manager for the test.
    */
-  protected function getLocalTaskManager(array $module_dirs, string $route_name, array $route_params): LocalTaskManager&MockObject {
+  protected function getLocalTaskManager(array $module_dirs, string $route_name, array $route_params): LocalTaskManager {
     $manager = $this
       ->getMockBuilder('Drupal\Core\Menu\LocalTaskManager')
       ->disableOriginalConstructor()
@@ -94,7 +105,28 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
         return isset($module_dirs[$module]);
       });
 
-    $pluginDiscovery = new YamlDiscovery('links.task', $module_dirs);
+    $language = $this->createStub(LanguageInterface::class);
+    $language->method('getId')
+      ->willReturn('en');
+    $language_manager = $this->createStub(LanguageManagerInterface::class);
+    $language_manager->method('getCurrentLanguage')
+      ->willReturn($language);
+
+    $yaml_cache_collector = new YamlCacheCollector('test', new MemoryCache(new Time()), new NullLockBackend(), new Time());
+    $manager = new LocalTaskManager(
+      $this->createStub(ArgumentResolverInterface::class),
+      new RequestStack(),
+      $this->createStub(RouteMatchInterface::class),
+      $this->createStub(RouteProviderInterface::class),
+      $module_handler,
+      $this->createStub(CacheBackendInterface::class),
+      $language_manager,
+      $this->createStub(AccessManagerInterface::class),
+      $this->createStub(AccountInterface::class),
+      $yaml_cache_collector,
+    );
+
+    $pluginDiscovery = new YamlCacheCollectorDiscovery('links.task', $module_dirs, $yaml_cache_collector);
     $pluginDiscovery = new ContainerDerivativeDiscoveryDecorator($pluginDiscovery);
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'discovery');
     $property->setValue($manager, $pluginDiscovery);
