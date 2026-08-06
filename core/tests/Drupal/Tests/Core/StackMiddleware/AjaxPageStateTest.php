@@ -61,32 +61,52 @@ class AjaxPageStateTest extends UnitTestCase {
    * Provides data for testHandle().
    */
   public static function providerHandle(): array {
-    $foo_bar = UrlHelper::compressQueryParameter('foo,bar');
-    $foo_baz = UrlHelper::compressQueryParameter('foo,baz');
+    $foo_bar = UrlHelper::compressQueryParameter('core/foo,core/bar');
+    $foo_baz = UrlHelper::compressQueryParameter('core/foo,core/baz');
     $data = [];
     $data['only query'] = [
       $foo_bar,
       NULL,
-      'foo,bar',
+      'core/foo,core/bar',
       NULL,
     ];
     $data['only request'] = [
       NULL,
       $foo_bar,
       NULL,
-      'foo,bar',
+      'core/foo,core/bar',
     ];
     $data['matching'] = [
       $foo_bar,
       $foo_bar,
-      'foo,bar',
-      'foo,bar',
+      'core/foo,core/bar',
+      'core/foo,core/bar',
     ];
     $data['different'] = [
       $foo_baz,
       $foo_bar,
-      'foo,bar,baz',
-      'foo,bar,baz',
+      'core/foo,core/bar,core/baz',
+      'core/foo,core/bar,core/baz',
+    ];
+    $data['invalid libraries discarded'] = [
+      UrlHelper::compressQueryParameter('<b>foo'),
+      NULL,
+      NULL,
+      NULL,
+    ];
+    $data['mixed valid and invalid'] = [
+      UrlHelper::compressQueryParameter('core/drupal,<b>foo'),
+      NULL,
+      'core/drupal',
+      NULL,
+    ];
+    // A name containing a slash is structurally valid; the middleware does not
+    // need to filter it because the asset system ignores unknown libraries.
+    $data['slash-containing name preserved'] = [
+      UrlHelper::compressQueryParameter('core/<b>foo'),
+      NULL,
+      'core/<b>foo',
+      NULL,
     ];
     return $data;
   }
