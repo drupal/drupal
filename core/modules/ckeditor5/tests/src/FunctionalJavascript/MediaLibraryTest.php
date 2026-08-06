@@ -162,8 +162,6 @@ class MediaLibraryTest extends WebDriverTestBase {
    * Tests using drupalMedia button to embed media into CKEditor 5.
    */
   public function testButton(): void {
-    // @todo Fix random test failure.
-    $this->markTestSkipped('Temporarily skipped due to random failures. See https://www.drupal.org/project/drupal/issues/3547493');
     $media_preview_selector = '.ck-content .ck-widget.drupal-media .media';
     $this->drupalGet('/node/add/blog');
     $this->waitForEditor();
@@ -185,7 +183,7 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     $assert_session->elementExists('css', '.js-media-library-item')->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $media_preview_selector, 1000));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $media_preview_selector));
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
     $drupal_media = $xpath->query('//drupal-media')[0];
     $expected_attributes = [
@@ -213,7 +211,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal #media-library-content'));
     $assert_session->elementExists('css', '.js-media-library-item')->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $media_preview_selector, 1000));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $media_preview_selector));
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
     $drupal_media = $xpath->query('//drupal-media')[0];
     $expected_attributes = [
