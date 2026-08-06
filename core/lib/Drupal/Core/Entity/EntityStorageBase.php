@@ -155,6 +155,20 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   }
 
   /**
+   * Builds the cache ID entity IDs that are not found.
+   *
+   * @param string|int $id
+   *   Entity ID for which the cache ID should be built.
+   *
+   * @return string
+   *   Cache ID that can be passed to the cache backend.
+   */
+  protected function buildNotFoundCacheId(string|int $id): string {
+    // Ensure that any overrides of ::buildCacheId() are reflected here too.
+    return "not_found:" . $this->buildCacheId($id);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function loadUnchanged($id) {
@@ -172,11 +186,45 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       $this->memoryCache->invalidateTags([$this->uuidMemoryCacheTag]);
       foreach ($ids as $id) {
         $this->memoryCache->delete($this->buildCacheId($id));
+        $this->memoryCache->delete($this->buildNotFoundCacheId($id));
       }
     }
     else {
       // Call the backend method directly.
       $this->memoryCache->invalidateTags([$this->memoryCacheTag, $this->uuidMemoryCacheTag]);
+    }
+  }
+
+  /**
+   * Gets not found entities from the static cache.
+   *
+   * @param array $ids
+   *   IDs to check against the cache of not found entity IDs.
+   *
+   * @return array
+   *   Array of not found entity IDs.
+   */
+  protected function getNotFoundFromStaticCache(array $ids): array {
+    $not_found = [];
+    foreach ($ids as $id) {
+      if ($this->memoryCache->get($this->buildNotFoundCacheId($id))) {
+        $not_found[] = $id;
+      }
+    }
+    return $not_found;
+  }
+
+  /**
+   * Stores not found entities in the static entity cache.
+   *
+   * @param array $remaining_ids
+   *   Not found entity IDs to store in the cache.
+   */
+  protected function setNotFoundStaticCache(array $remaining_ids): void {
+    if ($this->entityType->isStaticallyCacheable()) {
+      foreach ($remaining_ids as $id) {
+        $this->memoryCache->set($this->buildNotFoundCacheId($id), FALSE, MemoryCacheInterface::CACHE_PERMANENT, [$this->memoryCacheTag]);
+      }
     }
   }
 
@@ -209,12 +257,12 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected function setStaticCache(array $entities) {
     $has_uuid = $this->entityType->hasKey('uuid');
     if ($this->entityType->isStaticallyCacheable()) {
-      foreach ($entities as $entity) {
-        $this->memoryCache->set($this->buildCacheId($entity->id()), $entity, MemoryCacheInterface::CACHE_PERMANENT, [$this->memoryCacheTag]);
+      foreach ($entities as $id => $entity) {
+        $this->memoryCache->set($this->buildCacheId($id), $entity, MemoryCacheInterface::CACHE_PERMANENT, [$this->memoryCacheTag]);
         if ($has_uuid) {
           // Pre-cache the UUID of this entity to speed up ::loadEntityByUuid
           // @see ::loadByProperties
-          $this->memoryCache->set(\sprintf('uuid_lookup:%s:%s', $this->entityTypeId, $entity->uuid()), [$entity->id()], MemoryCacheInterface::CACHE_PERMANENT, [$this->uuidMemoryCacheTag]);
+          $this->memoryCache->set(\sprintf('uuid_lookup:%s:%s', $this->entityTypeId, $entity->uuid()), [$id], MemoryCacheInterface::CACHE_PERMANENT, [$this->uuidMemoryCacheTag]);
         }
       }
     }
@@ -300,9 +348,10 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     // static caching.
     if ($ids && $this->entityType->isStaticallyCacheable()) {
       $entities += $this->getFromStaticCache($ids);
-      // If any entities were in the static cache remove them from the
-      // remaining IDs.
-      $ids = array_diff($ids, array_keys($entities));
+      $not_found = $this->getNotFoundFromStaticCache($ids);
+      // Remove any statically cached entity lookups from the remaining IDs to
+      // load.
+      $ids = array_diff($ids, array_keys($entities), $not_found);
 
       $fiber = \Fiber::getCurrent();
       if ($ids && $fiber !== NULL) {
@@ -317,7 +366,8 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
         // deferring these may allow them to be loaded with more other entities
         // later.
         $entities += $this->getFromStaticCache($ids);
-        $ids = array_diff($ids, array_keys($entities));
+        $not_found = $this->getNotFoundFromStaticCache($ids);
+        $ids = array_diff($ids, array_keys($entities), $not_found);
 
         // Otherwise load additional entities now.
         if ($ids && $this->entityIdsToLoad) {
@@ -353,6 +403,14 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     // load.
     if ($ids === NULL || $ids) {
       $queried_entities = $this->doLoadMultiple($ids);
+
+      // Statically cache entities that were not loaded.
+      if ($ids) {
+        $remaining_ids = array_diff_key($ids, $queried_entities);
+        if ($remaining_ids) {
+          $this->setNotFoundStaticCache($remaining_ids);
+        }
+      }
     }
 
     // Pass all entities loaded from the database through $this->postLoad(),

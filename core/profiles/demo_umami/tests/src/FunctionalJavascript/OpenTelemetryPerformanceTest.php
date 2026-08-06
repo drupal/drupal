@@ -65,7 +65,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 195,
-      'CacheGetCount' => 225,
+      'CacheGetCount' => 217,
       'CacheSetCount' => 226,
       'CacheDeleteCount' => 0,
       'CacheTagLookupQueryCount' => 24,
@@ -347,7 +347,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 178,
-      'CacheGetCount' => 233,
+      'CacheGetCount' => 225,
       'CacheSetCount' => 240,
       'CacheDeleteCount' => 0,
       'CacheTagLookupQueryCount' => 25,
@@ -525,9 +525,9 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 264,
-      'CacheGetCount' => 265,
+      'CacheGetCount' => 257,
       'CacheGetCountByBin' => [
-        'config' => 60,
+        'config' => 52,
         'bootstrap' => 15,
         'discovery' => 75,
         'data' => 14,
