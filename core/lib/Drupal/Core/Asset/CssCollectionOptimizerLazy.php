@@ -108,7 +108,7 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
       'include' => UrlHelper::compressQueryParameter(implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($libraries))),
     ];
     $ajax_page_state = $this->requestStack->getCurrentRequest()->attributes->get('ajax_page_state');
-    $already_loaded = isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : [];
+    $already_loaded = isset($ajax_page_state['libraries']) ? explode(',', $ajax_page_state['libraries']) : [];
     if ($already_loaded) {
       $query_args['exclude'] = UrlHelper::compressQueryParameter(implode(',', $this->dependencyResolver->getMinimalRepresentativeSubset($already_loaded)));
     }

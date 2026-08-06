@@ -29,13 +29,23 @@ class AjaxPageState implements HttpKernelInterface {
       $request_ajax_page_state = [];
       if ($request->request->has('ajax_page_state')) {
         $request_ajax_page_state = $this->parseAjaxPageState($request->request->all('ajax_page_state'));
-        $request->request->set('ajax_page_state', $request_ajax_page_state);
+        if (!empty($request_ajax_page_state)) {
+          $request->request->set('ajax_page_state', $request_ajax_page_state);
+        }
+        else {
+          $request->request->remove('ajax_page_state');
+        }
       }
 
       $query_ajax_page_state = [];
       if ($request->query->has('ajax_page_state')) {
         $query_ajax_page_state = $this->parseAjaxPageState($request->query->all('ajax_page_state'));
-        $request->query->set('ajax_page_state', $query_ajax_page_state);
+        if (!empty($query_ajax_page_state)) {
+          $request->query->set('ajax_page_state', $query_ajax_page_state);
+        }
+        else {
+          $request->query->remove('ajax_page_state');
+        }
       }
 
       // If libraries are present in both the request and the query, ensure they
@@ -75,7 +85,18 @@ class AjaxPageState implements HttpKernelInterface {
    *   changed to be uncompressed.
    */
   private function parseAjaxPageState(array $ajax_page_state): array {
-    $ajax_page_state['libraries'] = UrlHelper::uncompressQueryParameter($ajax_page_state['libraries']);
+    if (isset($ajax_page_state['libraries'])) {
+      $libraries = explode(',', UrlHelper::uncompressQueryParameter($ajax_page_state['libraries']));
+      // A library name always consists of an extension and a library name,
+      // separated by a slash.
+      $libraries = array_filter($libraries, static fn (string $library): bool => str_contains($library, '/'));
+      if ($libraries) {
+        $ajax_page_state['libraries'] = implode(',', $libraries);
+      }
+      else {
+        unset($ajax_page_state['libraries']);
+      }
+    }
     return $ajax_page_state;
   }
 
