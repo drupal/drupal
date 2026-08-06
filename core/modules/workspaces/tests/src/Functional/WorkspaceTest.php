@@ -33,7 +33,6 @@ class WorkspaceTest extends BrowserTestBase {
     'field_ui',
     'node',
     'taxonomy',
-    'toolbar',
     'user',
     'workspaces',
     'workspaces_ui',
@@ -72,7 +71,6 @@ class WorkspaceTest extends BrowserTestBase {
       'edit any workspace',
       'view any workspace',
       'view own workspace',
-      'access toolbar',
     ];
 
     $this->editor1 = $this->drupalCreateUser($permissions);
@@ -87,7 +85,6 @@ class WorkspaceTest extends BrowserTestBase {
   public function testWorkspaces(): void {
     $this->drupalLogin($this->editor1);
     $this->doTestSpecialCharacters();
-    $this->doTestWorkspaceToolbar();
     $this->doTestWorkspaceFormRevisions();
     $this->doTestWorkspaceOwner();
   }
@@ -100,7 +97,7 @@ class WorkspaceTest extends BrowserTestBase {
 
     // Test a valid workspace name.
     $this->createAndActivateWorkspaceThroughUi('Workspace 1', 'workspace_1');
-    $this->assertSession()->elementTextContains('css', '.workspaces-toolbar-tab', 'Workspace 1');
+    $this->assertSession()->elementTextContains('css', '.active-workspace > td:nth-child(1) > a:nth-child(1)', 'Workspace 1');
 
     // Test and invalid workspace name.
     $this->drupalGet('/admin/config/workflow/workspaces/add');
@@ -110,37 +107,6 @@ class WorkspaceTest extends BrowserTestBase {
     $page->fillField('id', 'A!"£%^&*{}#~@?');
     $page->findButton('Save')->click();
     $page->hasContent("This value is not valid");
-  }
-
-  /**
-   * Tests that the toolbar correctly shows the active workspace.
-   */
-  protected function doTestWorkspaceToolbar(): void {
-    $this->drupalLogin($this->editor1);
-
-    $this->drupalGet('/admin/config/workflow/workspaces/add');
-    $this->submitForm([
-      'id' => 'test_workspace_1',
-      'label' => 'Test workspace',
-    ], 'Save');
-
-    // Activate the test workspace.
-    $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace_1/activate');
-    $this->submitForm([], 'Confirm');
-
-    $this->drupalGet('<front>');
-    $page = $this->getSession()->getPage();
-    // Toolbar should show the correct label.
-    $this->assertTrue($page->hasLink('Test workspace'));
-
-    // Change the workspace label.
-    $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace_1/edit');
-    $this->submitForm(['label' => 'New name'], 'Save');
-
-    $this->drupalGet('<front>');
-    $page = $this->getSession()->getPage();
-    // Toolbar should show the new label.
-    $this->assertTrue($page->hasLink('New name'));
   }
 
   /**
@@ -174,13 +140,13 @@ class WorkspaceTest extends BrowserTestBase {
 
     // The current 'stage' workspace entity should be revision 4.
     $stage_workspace = $storage->load('stage');
-    $this->assertEquals('4', $stage_workspace->getRevisionId());
+    $this->assertEquals('2', $stage_workspace->getRevisionId());
 
     // Re-save the 'stage' workspace via the UI to create revision 5.
     $this->drupalGet($stage_workspace->toUrl('edit-form')->toString());
     $this->submitForm([], 'Save');
     $stage_workspace = $storage->loadUnchanged('stage');
-    $this->assertEquals('5', $stage_workspace->getRevisionId());
+    $this->assertEquals('3', $stage_workspace->getRevisionId());
   }
 
   /**

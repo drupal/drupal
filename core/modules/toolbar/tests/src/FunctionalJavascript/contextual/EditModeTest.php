@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\contextual\FunctionalJavascript;
+namespace Drupal\Tests\toolbar\FunctionalJavascript\contextual;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests edit mode.
  */
-#[Group('contextual')]
+#[Group('toolbar')]
 #[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class EditModeTest extends WebDriverTestBase {
