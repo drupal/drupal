@@ -490,6 +490,40 @@ class BubbleableMetadataTest extends UnitTestCase {
   }
 
   /**
+   * Tests page region attachment merging with recursive render arrays.
+   */
+  public function testMergeAttachmentsPageRegionMergingWithRecursiveRenderArrays(): void {
+    $a = [
+      'library' => [
+        'core/drupal',
+      ],
+    ];
+    $b = [
+      'library' => [
+        'core/jquery',
+      ],
+    ];
+
+    foreach (['page_top', 'page_bottom'] as $page_region) {
+      $a[$page_region]['node_preview'] = [
+        '#markup' => 'Preview from a',
+      ];
+      $a[$page_region]['node_preview']['#attached'][$page_region]['node_preview'] = &$a[$page_region]['node_preview'];
+
+      $b[$page_region]['node_preview'] = [
+        '#markup' => 'Preview from b',
+      ];
+      $b[$page_region]['node_preview']['#attached'][$page_region]['node_preview'] = &$b[$page_region]['node_preview'];
+    }
+
+    $merged = BubbleableMetadata::mergeAttachments($a, $b);
+
+    $this->assertSame(['core/drupal', 'core/jquery'], $merged['library']);
+    $this->assertSame('Preview from b', $merged['page_top']['node_preview']['#markup']);
+    $this->assertSame('Preview from b', $merged['page_bottom']['node_preview']['#markup']);
+  }
+
+  /**
    * Tests html_head asset merging.
    */
   #[DataProvider('providerTestMergeAttachmentsHtmlHeadMerging')]
