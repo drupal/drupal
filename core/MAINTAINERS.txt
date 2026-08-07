@@ -39,6 +39,7 @@ Framework managers
   - Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
   - Sally Young 'justafish' https://www.drupal.org/u/justafish
   - Pierre Dureau 'pdureau' https://www.drupal.org/u/pdureau
+  - (provisional) Mike Herchel 'mherchel' https://www.drupal.org/u/mherchel
 
 Release managers
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
