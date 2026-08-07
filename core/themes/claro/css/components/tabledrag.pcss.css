@@ -215,7 +215,7 @@ body.drag-y {
 .tabledrag-cell-content {
   display: flex;
   align-items: center;
-  height: 100%;
+  min-height: 100%;
 
   & > * {
     display: table-cell;
