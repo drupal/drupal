@@ -1528,6 +1528,18 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         $default_language_values = ['id' => $system['langcode']];
       }
     }
+    else {
+      // If the system.site config doesn't exist, then we're in the installer,
+      // if langcode is set in install state parameters, then set that as the
+      // default language. This allows the default language to be correct on the
+      // container just before system module is installed.
+      // @todo move default language configuration to core from system module so
+      // that it can be set prior to system module install without workarounds.
+      // @see https://www.drupal.org/project/drupal/issues/3615365
+      if (isset($GLOBALS['install_state']['parameters']['langcode'])) {
+        $default_language_values['id'] = $GLOBALS['install_state']['parameters']['langcode'];
+      }
+    }
     $container->setParameter('language.default_values', $default_language_values);
 
     // Register synthetic services.

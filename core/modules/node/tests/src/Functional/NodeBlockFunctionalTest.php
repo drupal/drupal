@@ -44,7 +44,12 @@ class NodeBlockFunctionalTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'views', 'node_block_test'];
+  protected static $modules = [
+    'block',
+    'views',
+    'node_block_test',
+    'dynamic_page_cache',
+  ];
 
   /**
    * {@inheritdoc}

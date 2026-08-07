@@ -25,7 +25,7 @@ class GlossaryTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'views_ui_test'];
+  protected static $modules = ['node', 'page_cache', 'views_ui_test'];
 
   /**
    * {@inheritdoc}

@@ -429,6 +429,7 @@ class BlockTest extends BlockTestBase {
    * - "block_plugin:<block plugin ID>"
    */
   public function testBlockCacheTags(): void {
+    \Drupal::service('module_installer')->install(['page_cache']);
     // The page cache only works for anonymous users.
     $this->drupalLogout();
 

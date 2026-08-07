@@ -29,23 +29,15 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['dynamic_page_cache_test'];
+  protected static $modules = [
+    'dynamic_page_cache_test',
+    'dynamic_page_cache',
+  ];
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    // Uninstall the page_cache module; we want to test the Dynamic Page Cache
-    // alone.
-    \Drupal::service('module_installer')->uninstall(['page_cache']);
-  }
 
   /**
    * Tests that Dynamic Page Cache works correctly, and verifies the edge cases.

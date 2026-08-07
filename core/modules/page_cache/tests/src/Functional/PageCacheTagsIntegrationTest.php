@@ -48,6 +48,7 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
     'language',
     'help',
     'node',
+    'page_cache',
     'views',
   ];
 

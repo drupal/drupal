@@ -45,7 +45,11 @@ class PromotedContentPageTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'contextual'];
+  protected static $modules = [
+    'node',
+    'contextual',
+    'page_cache',
+  ];
 
   /**
    * {@inheritdoc}

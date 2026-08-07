@@ -220,14 +220,6 @@ class DisplayFeedTest extends ViewTestBase {
     $config->set('cache.page.max_age', 300);
     $config->save();
 
-    // Uninstall all page cache modules that could cache the HTTP response
-    // headers.
-    \Drupal::service('module_installer')->uninstall([
-      'page_cache',
-      'dynamic_page_cache',
-    ]);
-
-    // Reset all so that the config and module changes are active.
     $this->resetAll();
 
     $url = 'test-feed-display.xml';

@@ -268,7 +268,7 @@ class StyleTableTest extends ViewTestBase {
    * Tests the cacheability of the table display.
    */
   public function testTableCacheability(): void {
-    \Drupal::service('module_installer')->uninstall(['page_cache']);
+    \Drupal::service('module_installer')->install(['dynamic_page_cache']);
 
     $url = 'test-table';
     $this->drupalGet($url);

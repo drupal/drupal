@@ -29,7 +29,7 @@ class PageCacheTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['test_page_test', 'system_test', 'entity_test'];
+  protected static $modules = ['page_cache', 'test_page_test', 'system_test', 'entity_test'];
 
   /**
    * {@inheritdoc}

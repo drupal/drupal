@@ -74,6 +74,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     'jsonapi_test_field_access',
     'jsonapi_response_validator',
     'text',
+    'dynamic_page_cache',
+    'page_cache',
   ];
 
   /**

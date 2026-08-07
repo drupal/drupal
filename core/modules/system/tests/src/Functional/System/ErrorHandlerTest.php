@@ -106,6 +106,7 @@ class ErrorHandlerTest extends BrowserTestBase {
    * Tests the exception handler.
    */
   public function testExceptionHandler(): void {
+    \Drupal::service('module_installer')->install(['page_cache']);
     $error_exception = '<em class="placeholder">Exception</em>: Drupal &amp; awesome in <em class="placeholder">Drupal\error_test\Controller\ErrorTestController-&gt;triggerException()</em> (line';
     $select = \Drupal::database()->select('bananas_are_awesome', 'b')->fields('b');
     $message = \Drupal::database()->prepareStatement((string) $select, [])->getQueryString();

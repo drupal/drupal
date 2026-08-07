@@ -18,7 +18,10 @@ class FormStoragePageCacheTest extends BrowserTestBase {
   /**
    * @var array
    */
-  protected static $modules = ['form_test'];
+  protected static $modules = [
+    'form_test',
+    'page_cache',
+  ];
 
   /**
    * {@inheritdoc}

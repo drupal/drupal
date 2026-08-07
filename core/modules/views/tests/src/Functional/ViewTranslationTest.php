@@ -26,7 +26,7 @@ class ViewTranslationTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'locale', 'language', 'config_translation', 'views_ui'];
+  protected static $modules = ['block', 'locale', 'language', 'config_translation', 'views_ui', 'page_cache'];
 
   /**
    * {@inheritdoc}

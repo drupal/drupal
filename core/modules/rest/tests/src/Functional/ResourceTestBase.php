@@ -97,7 +97,11 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['rest'];
+  protected static $modules = [
+    'rest',
+    'dynamic_page_cache',
+    'page_cache',
+  ];
 
   /**
    * {@inheritdoc}

@@ -254,14 +254,6 @@ class SessionTest extends BrowserTestBase {
    * Tests that empty anonymous sessions are destroyed.
    */
   public function testEmptyAnonymousSession(): void {
-    // Disable the dynamic_page_cache module; it'd cause session_test's debug
-    // output (that is added in
-    // SessionTestSubscriber::onKernelResponseSessionTest()) to not be added.
-    $this->container->get('module_installer')->uninstall(['dynamic_page_cache']);
-
-    // Verify that no session is automatically created for anonymous user when
-    // page caching is disabled.
-    $this->container->get('module_installer')->uninstall(['page_cache']);
     $this->drupalGet('');
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(TRUE);

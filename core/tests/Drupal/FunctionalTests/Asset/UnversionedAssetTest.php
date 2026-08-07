@@ -51,7 +51,6 @@ class UnversionedAssetTest extends BrowserTestBase {
     // Ensure that the library discovery cache is empty before the page is
     // requested and that updated asset URLs are rendered.
     \Drupal::service('cache.data')->deleteAll();
-    \Drupal::service('cache.page')->deleteAll();
     $this->drupalGet('<front>');
     $session = $this->getSession();
     $page = $session->getPage();
@@ -78,7 +77,6 @@ class UnversionedAssetTest extends BrowserTestBase {
     // Clear the library discovery and page caches again so that new URLs are
     // generated.
     \Drupal::service('cache.data')->deleteAll();
-    \Drupal::service('cache.page')->deleteAll();
     $this->drupalGet('<front>');
     $session = $this->getSession();
     $page = $session->getPage();

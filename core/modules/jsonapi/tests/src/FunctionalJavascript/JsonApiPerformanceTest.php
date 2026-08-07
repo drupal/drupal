@@ -27,7 +27,12 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['jsonapi', 'node'];
+  protected static $modules = [
+    'jsonapi',
+    'node',
+    'dynamic_page_cache',
+    'page_cache',
+  ];
 
   /**
    * Tests performance of the navigation toolbar.

@@ -45,6 +45,8 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
     'image',
     'taxonomy',
     'link',
+    'page_cache',
+    'dynamic_page_cache',
   ];
 
   /**

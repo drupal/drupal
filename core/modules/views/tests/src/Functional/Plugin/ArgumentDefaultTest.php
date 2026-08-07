@@ -279,7 +279,7 @@ class ArgumentDefaultTest extends ViewTestBase {
     ]);
     $view->save();
 
-    $this->container->get('module_installer')->uninstall(['page_cache']);
+    $this->container->get('module_installer')->install(['dynamic_page_cache']);
 
     // Check that the page is not cached with date argument default.
     $this->drupalGet('path-page-1');

@@ -179,7 +179,7 @@ function drupal_verify_profile($install_state): array {
 }
 
 /**
- * Installs the system module.
+ * Install the base system and any required database drivers.
  *
  * Separated from the installation of other modules so core system
  * functions can be made available while other modules are installed.
@@ -239,17 +239,6 @@ function drupal_install_system($install_state): void {
     if (str_contains($autoload, 'src/Driver/Database/')) {
       $kernel->getContainer()->get('module_installer')->install([$provider], TRUE);
     }
-  }
-
-  // Install System module.
-  $kernel->getContainer()->get('module_installer')->install(['system'], FALSE);
-
-  // Ensure default language is saved.
-  if (isset($install_state['parameters']['langcode'])) {
-    \Drupal::configFactory()->getEditable('system.site')
-      ->set('langcode', (string) $install_state['parameters']['langcode'])
-      ->set('default_langcode', (string) $install_state['parameters']['langcode'])
-      ->save();
   }
 }
 

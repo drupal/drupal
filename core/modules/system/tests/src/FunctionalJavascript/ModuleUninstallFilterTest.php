@@ -19,7 +19,7 @@ class ModuleUninstallFilterTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['user', 'system'];
+  protected static $modules = ['user', 'system', 'page_cache', 'dynamic_page_cache'];
 
   /**
    * {@inheritdoc}

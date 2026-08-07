@@ -23,6 +23,7 @@ class WorkspaceTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'dynamic_page_cache',
     'node',
     'toolbar',
     'user',

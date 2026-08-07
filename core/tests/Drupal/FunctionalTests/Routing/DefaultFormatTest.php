@@ -18,7 +18,7 @@ class DefaultFormatTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'default_format_test'];
+  protected static $modules = ['system', 'default_format_test', 'page_cache'];
 
   /**
    * {@inheritdoc}

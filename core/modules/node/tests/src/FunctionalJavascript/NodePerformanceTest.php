@@ -35,7 +35,12 @@ class NodePerformanceTest extends PerformanceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'views'];
+  protected static $modules = [
+    'node',
+    'views',
+    'dynamic_page_cache',
+    'page_cache',
+  ];
 
   /**
    * {@inheritdoc}

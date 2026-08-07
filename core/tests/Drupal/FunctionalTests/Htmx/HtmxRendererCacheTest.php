@@ -25,6 +25,7 @@ class HtmxRendererCacheTest extends BrowserTestBase {
   protected static $modules = [
     'system',
     'user',
+    'page_cache',
     'test_htmx',
   ];
 

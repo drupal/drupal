@@ -341,6 +341,7 @@ INFO;
    * Tests the 'rendered' cache tag is cleared when saving theme settings.
    */
   public function testThemeSettingsRenderCacheClear(): void {
+    \Drupal::service('module_installer')->install(['page_cache']);
     $this->container->get('theme_installer')->install(['olivero']);
     // Ensure the frontpage is cached for anonymous users. The render cache will
     // cleared by installing a theme.
