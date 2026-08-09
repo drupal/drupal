@@ -9,6 +9,7 @@ use Drupal\big_pipe\Render\BigPipe;
 use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;
 use Drupal\big_pipe_test\BigPipePlaceholderTestCases;
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
@@ -166,6 +167,7 @@ class BigPipeTest extends BrowserTestBase {
 
     $this->setCsrfTokenSeedInTestEnvironment();
     $cases = $this->getTestCases();
+    $this->assertCsrfTokenPlaceholderTestCaseData($cases);
     $this->assertBigPipeNoJsPlaceholders([
       $cases['edge_case__invalid_html']->bigPipeNoJsPlaceholder     => $cases['edge_case__invalid_html']->embeddedHtmlResponse,
       $cases['html_attribute_value']->bigPipeNoJsPlaceholder        => $cases['html_attribute_value']->embeddedHtmlResponse,
@@ -264,6 +266,7 @@ class BigPipeTest extends BrowserTestBase {
 
     $this->setCsrfTokenSeedInTestEnvironment();
     $cases = $this->getTestCases();
+    $this->assertCsrfTokenPlaceholderTestCaseData($cases);
     $this->assertBigPipeNoJsPlaceholders([
       $cases['edge_case__invalid_html']->bigPipeNoJsPlaceholder           => $cases['edge_case__invalid_html']->embeddedHtmlResponse,
       $cases['html_attribute_value']->bigPipeNoJsPlaceholder              => $cases['html_attribute_value']->embeddedHtmlResponse,
@@ -463,6 +466,29 @@ class BigPipeTest extends BrowserTestBase {
    */
   protected function getTestCases($has_session = TRUE) {
     return BigPipePlaceholderTestCases::cases($this->container, $this->rootUser);
+  }
+
+  /**
+   * Asserts that CSRF-token-based test case data is independently correct.
+   *
+   * The html_attribute_value_subset case tests a CSRF token link placeholder.
+   * This assertion verifies the placeholder hash in the test case matches what
+   * RouteProcessorCsrf would actually generate for the route path, so that a
+   * wrong route or path in the test data cannot silently pass.
+   *
+   * @param \Drupal\big_pipe_test\BigPipePlaceholderTestCase[] $cases
+   *   The test cases from BigPipePlaceholderTestCases::cases().
+   */
+  protected function assertCsrfTokenPlaceholderTestCaseData(array $cases): void {
+    $case = $cases['html_attribute_value_subset'];
+    // The placeholder for an HTML attribute value subset is just the hash
+    // string itself (not wrapped in HTML). Verify it equals what Crypt would
+    // produce for the expected route path.
+    $this->assertSame(Crypt::hashBase64('admin/appearance/default'), $case->placeholder);
+    // Verify the no-JS placeholder string contains the same hash.
+    $this->assertStringContainsString($case->placeholder, $case->bigPipeNoJsPlaceholder);
+    // Verify the embedded HTML response is the actual CSRF token for the path.
+    $this->assertSame($this->container->get('csrf_token')->get('admin/appearance/default'), $case->embeddedHtmlResponse);
   }
 
   /**
