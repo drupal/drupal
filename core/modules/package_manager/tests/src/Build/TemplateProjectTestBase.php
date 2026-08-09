@@ -266,7 +266,9 @@ END;
   protected function createTestProject(string $template): void {
     // Create a copy of core (including its Composer plugins, templates, and
     // metapackages) which we can modify.
-    $this->copyCodebase();
+    $finder = $this->getCodebaseFinder();
+    $finder->exclude('core/tests');
+    $this->copyCodebase($finder->getIterator());
 
     $workspace_dir = $this->getWorkspaceDirectory();
     $project_dir = $workspace_dir . '/project';

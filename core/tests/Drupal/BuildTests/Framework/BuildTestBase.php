@@ -599,6 +599,7 @@ abstract class BuildTestBase extends TestCase {
       ->notPath("#^{$drupal_root}sites/default/files#")
       ->notPath("#^{$drupal_root}sites/simpletest#")
       ->notPath("#^{$drupal_root}core/node_modules#")
+      ->notPath("#^{$drupal_root}core/phpstan-tmp#")
       ->notPath("#^{$drupal_root}sites/default/settings\..*php#")
       ->ignoreDotFiles(FALSE)
       ->ignoreVCS(FALSE);
