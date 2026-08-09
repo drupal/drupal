@@ -8,6 +8,7 @@ use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
+use Drupal\TestTools\Attribute\Skip;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -326,9 +327,8 @@ class SettingsTest extends UnitTestCase {
    */
   #[DataProvider('providerTestRealDeprecatedSettings')]
   #[IgnoreDeprecations]
+  #[Skip('No settings to test real deprecated settings with.')]
   public function testRealDeprecatedSettings(string $legacy_setting, string $expected_deprecation): void {
-    $this->markTestSkipped('No settings to test real deprecated settings with.');
-
     $settings_file_content = "<?php\n\$settings['$legacy_setting'] = 'foo';\n";
     $class_loader = NULL;
     $vfs_root = vfsStream::setup('root');
