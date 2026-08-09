@@ -1318,7 +1318,7 @@
  * system (block types are plugins), the entity/field system (entity types,
  * field types, field formatters, and field widgets are plugins), the image
  * manipulation system (image effects and image toolkits are plugins), and the
- * search system (search page types are plugins).
+ * filter system (text format filters are plugins).
  *
  * Plugins are grouped into plugin types, each generally defined by an
  * interface. Each plugin type is managed by a plugin manager service, which
@@ -1348,7 +1348,7 @@
  * - @link field Various types of field-related plugins @endlink
  * - @link views_plugins Views plugins @endlink (has links to topics covering
  *   various specific types of Views plugins).
- * - @link search Search page plugins @endlink
+ * - @link filter Filter plugins @endlink
  *
  * @section sec_define Defining a new plugin type
  * To define a new plugin type:
@@ -1403,8 +1403,8 @@
  *
  * @subsection sub_manager Defining a plugin manager class and service
  * To define an annotation-based plugin manager:
- * - Choose a namespace subdirectory for your plugin. For example, search page
- *   plugins go in directory Plugin/Search under the module namespace.
+ * - Choose a namespace subdirectory for your plugin. For example, filter
+ *   plugins go in directory Plugin/Filter under the module namespace.
  * - Define an annotation class for your plugin type. This class should extend
  *   \Drupal\Component\Annotation\Plugin, and for most plugin types, it should
  *   contain member variables corresponding to the annotations plugins will

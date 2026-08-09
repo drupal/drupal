@@ -313,19 +313,6 @@ use Drupal\node\Entity\NodeType;
  * @link theme_render Theme system and render API topic @endlink for more
  * information.
  *
- * @section misc Other entity hooks
- * Some types of entities invoke hooks for specific operations:
- * - Searching nodes:
- *   - hook_node_search_ranking()
- *   - Query is executed to find matching nodes
- *   - Resulting node is loaded
- *   - Node render array is built
- *   - comment_node_update_index() is called (this adds "N comments" text)
- *   - hook_node_search_result()
- * - Search indexing nodes:
- *   - Node is loaded
- *   - Node render array is built
- *   - hook_node_update_index()
  * @}
  */
 
@@ -1824,8 +1811,8 @@ function hook_entity_build_defaults_alter(array &$build, \Drupal\Core\Entity\Ent
  * @ingroup entity_crud
  */
 function hook_entity_view_display_alter(\Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, array $context): void {
-  // Leave field labels out of the search index.
-  if ($context['entity_type'] == 'node' && $context['view_mode'] == 'search_index') {
+  // Hide field labels when displaying nodes in teaser view mode.
+  if ($context['entity_type'] == 'node' && $context['view_mode'] == 'teaser') {
     foreach ($display->getComponents() as $name => $options) {
       if (isset($options['label'])) {
         $options['label'] = 'hidden';

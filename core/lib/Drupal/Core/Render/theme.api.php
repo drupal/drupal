@@ -48,25 +48,27 @@ use Drupal\Core\Extension\ThemeSettingsProvider;
  * "variables" used to provide data and options, and other information. Modules
  * implementing hook_theme() also need to provide a default implementation for
  * each of their theme hooks in a Twig file, and they may also provide
- * preprocessing functions. For example, the core Search module defines a theme
- * hook for a search result item in
- * \Drupal\search\Hook\SearchThemeHooks::theme():
+ * preprocessing functions. For example, the core File module defines a theme
+ * hook for a file link in
+ * \Drupal\file\Hook\FileThemeHooks::theme():
  * @code
  * return [
- *   'search_result' => [
+ *   'file_link' => [
  *     'variables' => [
- *       'result' => NULL,
- *       'plugin_id' => NULL,
+ *       'file' => NULL,
+ *       'description' => NULL,
+ *       'attributes' => [],
+ *       'with_size' => TRUE,
  *     ],
- *    'initial preprocess' => static::class . ':preprocessSearchResult',
+ *     'initial preprocess' => static::class . ':preprocessFileLink',
  *   ],
  * ];
  * @endcode
  * Given this definition, the template file with the default implementation is
- * search-result.html.twig, which can be found in the
- * core/modules/search/templates directory, and the variables for rendering are
- * the search result and the plugin ID. In addition, there is the initial
- * preprocess method preprocessSearchResult in the same class, which
+ * file-link.html.twig, which can be found in the
+ * core/modules/file/templates directory, and the variables for rendering are
+ * the file object and a description. In addition, there is the initial
+ * preprocess method preprocessFileLink in the same class, which
  * preprocesses the information from the input variables so that it can be
  * rendered by the Twig template; the processed variables that the Twig template
  * receives are documented in the header of the default Twig template file.
@@ -93,8 +95,8 @@ use Drupal\Core\Extension\ThemeSettingsProvider;
  * it is more common for themes to override default implementations provided by
  * modules than to register entirely new theme hooks. Themes can override a
  * default implementation by creating a template file with the same name as the
- * default implementation; for example, to override the display of search
- * results, a theme would add a file called search-result.html.twig to its
+ * default implementation; for example, to override the display of file
+ * links, a theme would add a file called file-link.html.twig to its
  * templates directory. A good starting point for doing this is normally to
  * copy the default implementation template, and then modifying it as desired.
  *
@@ -139,21 +141,20 @@ use Drupal\Core\Extension\ThemeSettingsProvider;
  *   hook name, and if no implementation is found, look for the second, and so
  *   on. Note that the highest-priority suggestion is at the end of the array.
  * - In a render array, the '#theme' property can be set to the name of a hook
- *   with a '__SUGGESTION' suffix. For example, in search results theming, the
- *   hook 'item_list__search_results' is given. In this case, the render system
- *   will look for theme templates called item-list--search-results.html.twig,
- *   which would only be used for rendering item lists containing search
- *   results, and if this template is not found, it will fall back to using the
- *   base item-list.html.twig template. This type of suggestion can also be
- *   combined with providing an array of theme hook names as described above.
+ *   with a '__SUGGESTION' suffix. For example, if an 'article' content type
+ *   exists, the hook 'node__article' can be given. In this case, the render
+ *   system will look for theme templates called node--article.html.twig,
+ *   which would only be used for rendering article nodes, and if this template
+ *   is not found, it will fall back to using the base node.html.twig template.
+ *   This type of suggestion can also be combined with providing an array of
+ *   theme hook names as described above.
  * - A module can implement hook_theme_suggestions_HOOK(). This allows the
  *   module that defines the theme template to dynamically return an array
  *   containing specific theme hook names (presumably with '__' suffixes as
- *   defined above) to use as suggestions. For example, the Search module
- *   does this in search_theme_suggestions_search_result() to suggest
- *   search_result__PLUGIN as the theme hook for search result items, where
- *   PLUGIN is the machine name of the particular search plugin type that was
- *   used for the search (such as node_search or user_search).
+ *   defined above) to use as suggestions. For example, the Node module
+ *   implements hook_theme_suggestions_node() to suggest node__BUNDLE as the
+ *   theme hook for node items, where BUNDLE is the machine name of the
+ *   particular node type (such as article or page).
  *
  * For further information on overriding theme hooks see
  * https://www.drupal.org/node/2186401
@@ -1219,8 +1220,8 @@ function hook_page_bottom(array &$page_bottom): void {
  *     extension will be added automatically by the default rendering engine
  *     (which is Twig.) If 'path' is specified, 'template' should also be
  *     specified. If not specified, a default template name will be assumed.
- *     For example, if a module registers the 'search_result' theme hook,
- *     'search-result' will be assigned as its template name.
+ *     For example, if a module registers the 'file_link' theme hook,
+ *     'file-link' will be assigned as its template name.
  *   - base hook: Used for theme suggestions only: the base theme hook name.
  *     Instead of this suggestion's implementation being used directly, the base
  *     hook will be invoked with this implementation as its first suggestion.
