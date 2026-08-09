@@ -27,6 +27,15 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    $module = $this->getModule();
+    static::$modules = array_merge(static::$modules, [$module]);
+    parent::setUp();
+  }
+
+  /**
    * Get the module name.
    *
    * @return string
@@ -41,7 +50,6 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
    */
   public function testModuleGenericIssues(): void {
     $module = $this->getModule();
-    \Drupal::service('module_installer')->install([$module]);
     $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
     if (!empty($info['required']) && !empty($info['hidden'])) {
       $this->markTestSkipped('Nothing to assert for hidden, required modules.');
