@@ -135,7 +135,7 @@ thead tr {
 
 td {
   box-sizing: border-box;
-  min-height: 4rem;
+  height: 4rem;
   padding: var(--space-xs) var(--space-m);
   text-align: start;
 
