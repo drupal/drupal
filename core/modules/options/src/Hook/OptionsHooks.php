@@ -53,22 +53,6 @@ class OptionsHooks {
   }
 
   /**
-   * Implements hook_ENTITY_TYPE_update() for 'field_storage_config'.
-   */
-  #[Hook('field_storage_config_update')]
-  public function fieldStorageConfigUpdate(FieldStorageConfigInterface $field_storage): void {
-    drupal_static_reset('options_allowed_values');
-  }
-
-  /**
-   * Implements hook_ENTITY_TYPE_delete() for 'field_storage_config'.
-   */
-  #[Hook('field_storage_config_delete')]
-  public function fieldStorageConfigDelete(FieldStorageConfigInterface $field_storage): void {
-    drupal_static_reset('options_allowed_values');
-  }
-
-  /**
    * Implements hook_field_storage_config_update_forbid().
    */
   #[Hook('field_storage_config_update_forbid')]
@@ -78,10 +62,36 @@ class OptionsHooks {
       $allowed_values = $field_storage->getSetting('allowed_values');
       $prior_allowed_values = $prior_field_storage->getSetting('allowed_values');
       $lost_keys = array_keys(array_diff_key($prior_allowed_values, $allowed_values));
-      if (_options_values_in_use($field_storage->getTargetEntityTypeId(), $field_storage->getName(), $lost_keys)) {
+      if ($this->hasValuesInUse($field_storage->getTargetEntityTypeId(), $field_storage->getName(), $lost_keys)) {
         throw new FieldStorageDefinitionUpdateForbiddenException("A list field '{$field_storage->getName()}' with existing data cannot have its keys changed.");
       }
     }
+  }
+
+  /**
+   * Checks if a list of values is being used in actual field values.
+   *
+   * @param string $entity_type_id
+   *   The entity type ID.
+   * @param string $field_name
+   *   The field name.
+   * @param array $values
+   *   The values to check.
+   */
+  protected function hasValuesInUse(string $entity_type_id, string $field_name, array $values): bool {
+    if ($values) {
+      $result = \Drupal::entityQuery($entity_type_id)
+        ->accessCheck(FALSE)
+        ->condition($field_name . '.value', $values, 'IN')
+        ->count()
+        ->range(0, 1)
+        ->execute();
+      if ($result) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
   }
 
 }

@@ -458,6 +458,11 @@ function drupal_static_reset($name = NULL): void {
       \Drupal::service('cache.memory')->invalidateTags(['file_references']);
       break;
 
+    case 'options_allowed_values':
+      @trigger_error("Calling drupal_static_reset() with 'options_allowed_values' as argument is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::cache('memory')->delete('options.allowed_values') instead. See https://www.drupal.org/node/3572185", E_USER_DEPRECATED);
+      \Drupal::cache('memory')->delete('options.allowed_values');
+      break;
+
   }
   drupal_static($name, NULL, TRUE);
 }

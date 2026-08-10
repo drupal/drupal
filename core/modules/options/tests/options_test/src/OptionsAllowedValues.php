@@ -15,7 +15,7 @@ class OptionsAllowedValues {
   /**
    * Implements callback_allowed_values_function().
    *
-   * @see options_allowed_values()
+   * @see \Drupal\options\OptionsAllowedValuesInterface::allowedValues()
    */
   public static function simpleValues(FieldStorageDefinitionInterface $definition, ?FieldableEntityInterface $entity = NULL): array {
     return [
@@ -35,12 +35,7 @@ class OptionsAllowedValues {
   /**
    * Implements callback_allowed_values_function().
    *
-   * @todo This function violates the recommendation in options_allowed_values()
-   *   to return a list of all possible values in any context when $items is
-   *   NULL. Since this is not yet used for testing Views integration, that is
-   *   alright for now. Fix this in https://www.drupal.org/node/2012130.
-   *
-   * @see options_allowed_values()
+   * @see \Drupal\options\OptionsAllowedValuesInterface::allowedValues()
    */
   public static function dynamicValues(FieldStorageDefinitionInterface $definition, ?FieldableEntityInterface $entity = NULL, &$cacheable = NULL): array {
     $values = [];
