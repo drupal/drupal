@@ -40,7 +40,7 @@ function hook_options_list_alter(array &$options, array $context) {
 /**
  * Provide the allowed values for a 'list_*' field.
  *
- * Callback for options_allowed_values().
+ * Callback for \Drupal\options\OptionsAllowedValuesInterface::allowedValues().
  *
  * 'list_*' fields can specify a callback to define the set of their allowed
  * values using the 'allowed_values_function' storage setting.
@@ -76,7 +76,7 @@ function hook_options_list_alter(array &$options, array $context) {
  *   values for all possible entities and bundles.
  *
  * @ingroup callbacks
- * @see options_allowed_values()
+ * @see \Drupal\options\OptionsAllowedValuesInterface::getAllowedValues()
  * @see \Drupal\options_test\OptionsAllowedValues::simpleValues()
  * @see \Drupal\options_test\OptionsAllowedValues::dynamicValues()
  */

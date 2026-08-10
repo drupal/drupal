@@ -7,6 +7,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\FocusFirstCommand;
 use Drupal\Core\Ajax\InsertCommand;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -15,6 +16,8 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\OptionsProviderInterface;
+use Drupal\options\OptionsAllowedValues;
+use Drupal\options\OptionsAllowedValuesInterface;
 
 /**
  * Plugin base class inherited by the options field types.
@@ -62,15 +65,19 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * {@inheritdoc}
    */
   public function getSettableOptions(?AccountInterface $account = NULL) {
-    $allowed_options = options_allowed_values($this->getFieldDefinition()->getFieldStorageDefinition(), $this->getEntity());
-    return $allowed_options;
+    return \Drupal::service(OptionsAllowedValuesInterface::class)->getAllowedValues(
+      $this->getFieldDefinition()->getFieldStorageDefinition(),
+      $this->getEntity()
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-    $allowed_options = options_allowed_values($field_definition->getFieldStorageDefinition());
+    $allowed_options = \Drupal::service(OptionsAllowedValuesInterface::class)
+      ->getAllowedValues($field_definition->getFieldStorageDefinition());
+
     if (empty($allowed_options)) {
       $values['value'] = NULL;
       return $values;
@@ -567,10 +574,14 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   }
 
   /**
-   * Resets the static variable on field storage update.
+   * Resets the cached allowed values on field storage update.
+   *
+   * @todo Deprecate this method in #3583435.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3583435
    */
   public static function submitFieldStorageUpdate() {
-    drupal_static_reset('options_allowed_values');
+    Cache::invalidateTags([OptionsAllowedValues::CACHE_TAG]);
   }
 
 }
