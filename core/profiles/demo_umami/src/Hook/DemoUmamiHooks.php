@@ -74,43 +74,6 @@ class DemoUmamiHooks {
   }
 
   /**
-   * Implements hook_toolbar().
-   */
-  #[Hook('toolbar')]
-  public function toolbar(): array {
-    // Add a warning about using an experimental profile.
-    // @todo This can be removed once a generic warning for experimental
-    //   profiles has been introduced in
-    //   https://www.drupal.org/project/drupal/issues/2934374
-    $items['experimental-profile-warning'] = [
-      '#weight' => 3400,
-      '#cache' => [
-        'contexts' => ['route'],
-      ],
-    ];
-
-    // Show warning only on administration pages.
-    if ($this->adminContext->isAdminRoute()) {
-      $link_to_help_page = $this->moduleHandler->moduleExists('help') && $this->currentUser->hasPermission('access help pages');
-      $items['experimental-profile-warning']['#type'] = 'toolbar_item';
-      $items['experimental-profile-warning']['tab'] = [
-        '#type' => 'inline_template',
-        '#template' => '<a class="toolbar-warning" href="{{ more_info_link }}">This site is intended for demonstration purposes.</a>',
-        '#context' => [
-          // Link directly to the drupal.org documentation if the help pages
-          // aren't available.
-          'more_info_link' => $link_to_help_page ? Url::fromRoute('help.page', ['name' => 'demo_umami'])
-            : 'https://www.drupal.org/node/2941833',
-        ],
-        '#attached' => [
-          'library' => ['demo_umami/toolbar-warning'],
-        ],
-      ];
-    }
-    return $items;
-  }
-
-  /**
    * Sets the password of admin to be the password for all users.
    *
    * @internal
