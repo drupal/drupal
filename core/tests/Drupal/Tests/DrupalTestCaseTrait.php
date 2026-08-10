@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
+use Drupal\TestTools\Attribute\Skip;
 use Drupal\TestTools\ErrorHandler\BootstrapErrorHandler;
 use Drupal\TestTools\Extension\DeprecationBridge\Configuration as DeprecationHandlerConfiguration;
 use Drupal\TestTools\Extension\Dump\DebugDump;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\BeforeClass;
@@ -23,6 +25,23 @@ trait DrupalTestCaseTrait {
    * The Drupal root directory.
    */
   protected string $root;
+
+  /**
+   * Supports skipping tests with the Skip attribute.
+   *
+   * This is run with a high priority to prevent any setUp() functions from
+   * executing, avoiding any Drupal bootstrap.
+   *
+   * @internal
+   */
+  #[Before(200)]
+  final protected function skipTestWithAttribute(): void {
+    $reflection = new \ReflectionMethod(static::class, $this->name());
+    $attribute = $reflection->getAttributes(Skip::class, \ReflectionAttribute::IS_INSTANCEOF)[0] ?? NULL;
+    if ($attribute) {
+      Assert::markTestSkipped($attribute->newInstance()->message);
+    }
+  }
 
   /**
    * Ensure that the $root property is set initially.
