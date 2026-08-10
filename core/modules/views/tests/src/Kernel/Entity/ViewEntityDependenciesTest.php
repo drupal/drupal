@@ -128,6 +128,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
         'ArgumentValidatorTest',
       ],
       'module' => [
+        'comment',
         'node',
         'text',
         'user',
@@ -153,6 +154,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
         'ArgumentValidatorTest',
       ],
       'module' => [
+        'comment',
         'core',
         'node',
         'user',

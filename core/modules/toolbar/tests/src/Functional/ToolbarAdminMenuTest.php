@@ -70,7 +70,6 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     'language',
     'test_page_test',
     'locale',
-    'search',
   ];
 
   /**
@@ -101,7 +100,6 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
       'administer taxonomy',
       'administer languages',
       'translate interface',
-      'administer search',
     ];
 
     // Create an administrative user and log it in.
@@ -339,7 +337,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // We need to visit the page to get the string to be translated.
     $this->drupalGet($langcode . '/admin/config');
     $search = [
-      'string' => 'Search and metadata',
+      'string' => 'Performance',
       'langcode' => $langcode,
       'translation' => 'untranslated',
     ];

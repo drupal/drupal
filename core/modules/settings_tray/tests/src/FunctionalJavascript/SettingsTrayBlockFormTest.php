@@ -22,8 +22,8 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'block_test',
     'node',
-    'search',
     'settings_tray_test',
     'off_canvas_test',
   ];
@@ -49,7 +49,6 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
       'access contextual links',
       'access toolbar',
       'administer nodes',
-      'search content',
     ]);
     $this->drupalLogin($user);
   }
@@ -197,13 +196,13 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
           'toolbar_item' => '#toolbar-item-administration',
           ['administer site configuration'],
         ],
-        "$theme: block-search" => [
+        "$theme: block-test-form" => [
           'theme' => $theme,
-          'block_plugin' => 'search_form_block',
+          'block_plugin' => 'test_form_in_block',
           'new_page_text' => NULL,
-          'element_selector' => '[data-drupal-selector="edit-submit"]',
+          'element_selector' => '[data-drupal-selector="edit-show"]',
           'label_selector' => 'h2',
-          'button_text' => 'Save Search form',
+          'button_text' => NULL,
           'toolbar_item' => NULL,
           NULL,
         ],
