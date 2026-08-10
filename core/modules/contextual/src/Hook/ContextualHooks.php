@@ -15,46 +15,6 @@ class ContextualHooks {
   use StringTranslationTrait;
 
   /**
-   * Implements hook_toolbar().
-   */
-  #[Hook('toolbar')]
-  public function toolbar(): array {
-    $items = [];
-    $items['contextual'] = ['#cache' => ['contexts' => ['user.permissions']]];
-    if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
-      return $items;
-    }
-    $items['contextual'] += [
-      '#type' => 'toolbar_item',
-      'tab' => [
-        '#type' => 'html_tag',
-        '#tag' => 'button',
-        '#value' => $this->t('Edit'),
-        '#attributes' => [
-          'class' => [
-            'toolbar-icon',
-            'toolbar-icon-edit',
-          ],
-          'aria-pressed' => 'false',
-          'type' => 'button',
-        ],
-      ],
-      '#wrapper_attributes' => [
-        'class' => [
-          'hidden',
-          'contextual-toolbar-tab',
-        ],
-      ],
-      '#attached' => [
-        'library' => [
-          'contextual/drupal.contextual-toolbar',
-        ],
-      ],
-    ];
-    return $items;
-  }
-
-  /**
    * Implements hook_page_attachments().
    *
    * Adds the drupal.contextual-links library to the page for any user who has
