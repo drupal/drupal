@@ -631,7 +631,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     }, 'umamiNodeAddEditor');
     $expected = [
       'ScriptCount' => 20,
-      'ScriptBytes' => 2979216,
+      'ScriptBytes' => 2976954,
       'StylesheetCount' => 23,
       'StylesheetBytes' => 1085546,
     ];
