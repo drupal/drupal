@@ -28,6 +28,7 @@ class ViewsMultilingualTest extends ViewTestBase {
     'node',
     'search',
     'search_node',
+    'search_test_views',
     'language',
     'content_translation',
   ];
@@ -36,6 +37,13 @@ class ViewsMultilingualTest extends ViewTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['search_test_views']): void {
+    parent::setUp($import_test_views, $modules);
+  }
 
   /**
    * Views used by this test.

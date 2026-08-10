@@ -33,13 +33,12 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
   protected static $modules = [
     'block',
     'block_content',
+    'block_test',
     'field_ui',
     'filter',
     'filter_test',
     'layout_builder',
     'node',
-    'search',
-    'search_node',
     'contextual',
     'off_canvas_test',
   ];
@@ -77,7 +76,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
       'info' => 'Block with link',
       'body' => [
         // Create a link that should be disabled in Layout Builder preview.
-        'value' => '<a id="link-that-should-be-disabled" href="/search/node">Take me away</a>',
+        'value' => '<a id="link-that-should-be-disabled" href="/user/login">Take me away</a>',
         'format' => 'full_html',
       ],
     ])->save();
@@ -108,7 +107,6 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
       'configure any layout',
       'administer node display',
       'administer node fields',
-      'search content',
       'access contextual links',
     ]));
 
@@ -120,7 +118,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $this->clickLink('Manage layout');
 
     // Add a block with a form, another with a link, and one with an iframe.
-    $this->addBlock('Search form', '#layout-builder .search-block-form');
+    $this->addBlock('Test form block', '[id^="block-test-form-test"]');
     $this->addBlock('Block with link', '#link-that-should-be-disabled');
     $this->addBlock('Block with iframe', '#iframe-that-should-be-disabled');
 
@@ -206,9 +204,9 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.block-search'));
-    $searchButton = $assert_session->buttonExists('Search');
-    $this->assertElementNotClickable($searchButton);
+    $this->assertNotEmpty($assert_session->waitForElement('css', '[id^="block-test-form-test"]'));
+    $submitButton = $assert_session->buttonExists('Submit');
+    $this->assertElementNotClickable($submitButton);
     $assert_session->linkExists('Take me away');
     $this->assertElementNotClickable($page->findLink('Take me away'));
     $iframe = $assert_session->elementExists('css', '#iframe-that-should-be-disabled');

@@ -1,0 +1,9 @@
+name: 'Search test views'
+type: module
+description: 'Support module for search views integration testing.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:search
+  - drupal:search_node
+  - drupal:views

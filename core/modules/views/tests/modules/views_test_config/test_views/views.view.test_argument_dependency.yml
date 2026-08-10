@@ -8,8 +8,8 @@ dependencies:
     - ArgumentDefaultTest
     - ArgumentValidatorTest
   module:
+    - comment
     - node
-    - search
     - text
     - user
 id: test_argument_dependency
@@ -146,10 +146,10 @@ display:
       empty: {  }
       relationships: {  }
       arguments:
-        keys:
-          id: keys
-          table: node_search_index
-          field: keys
+        uid_touch:
+          id: uid_touch
+          table: node_field_data
+          field: uid_touch
           relationship: none
           group_type: group
           admin_label: ''
@@ -177,7 +177,9 @@ display:
             type: none
             fail: 'not found'
           validate_options: {  }
-          plugin_id: search
+          entity_type: node
+          entity_field: uid
+          plugin_id: argument_comment_user_uid
         uid:
           id: uid
           table: node_field_revision

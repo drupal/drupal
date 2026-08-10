@@ -565,10 +565,17 @@ class ViewExecutableTest extends ViewsKernelTestBase {
 
     $view = Views::getView('test_argument_dependency');
     $view->setDisplay('page_1');
-    $view->setArguments([(string) $account->id(), 'this value should be replaced']);
+    // The view has two arguments: uid_touch (comment module) and uid (with
+    // argument_validator_test as its validator). Both are needed to verify
+    // that calculateDependencies() picks up dependencies from both default
+    // and validator plugins. uid receives the value the validator intercepts
+    // and overrides to '1'.
+    $view->setArguments([$account->id(), 'this value should be replaced']);
     $view->execute();
     $account = User::load(1);
     $expected = [
+      '{{ arguments.uid_touch }}' => $account->label(),
+      '{{ raw_arguments.uid_touch }}' => (string) $account->id(),
       '{{ arguments.uid }}' => $account->label(),
       '{{ raw_arguments.uid }}' => (string) $account->id(),
     ];
