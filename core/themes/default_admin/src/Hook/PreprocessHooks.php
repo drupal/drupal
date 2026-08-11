@@ -14,6 +14,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
@@ -51,6 +52,7 @@ final class PreprocessHooks implements TrustedCallbackInterface {
     protected readonly ConfigFactoryInterface $configFactory,
     protected readonly AccountInterface $currentUser,
     protected readonly EntityTypeManagerInterface $entityTypeManager,
+    protected readonly EntityTypeBundleInfoInterface $entityTypeBundleInfo,
     protected readonly BlockManagerInterface $blockManager,
     protected readonly RendererInterface $renderer,
     protected readonly ModuleHandlerInterface $moduleHandler,
@@ -185,11 +187,13 @@ final class PreprocessHooks implements TrustedCallbackInterface {
 
       $entity_type = $entity->getEntityType();
       $type_label = $entity_type->getSingularLabel();
-      $bundle_key = $entity_type->getKey('bundle');
 
-      if ($bundle_key) {
-        $bundle_entity = $entity->get($bundle_key)->entity;
-        $type_label = $bundle_entity->label();
+      if ($entity_type->hasKey('bundle')) {
+        $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
+        $bundle_label = $bundle_info[$entity->bundle()]['label'] ?? NULL;
+        if ($bundle_label !== NULL) {
+          $type_label = $bundle_label;
+        }
       }
 
       if ($entity_type->id() === 'user') {
