@@ -241,12 +241,6 @@
 
 		var callbacks = [];
 
-		if (options.resetForm) {
-			callbacks.push(function() {
-				$form.resetForm();
-			});
-		}
-
 		if (options.clearForm) {
 			callbacks.push(function() {
 				$form.clearForm(options.includeHidden);
@@ -1386,89 +1380,6 @@
 					(typeof includeHidden === 'string' && $(this).is(includeHidden))) {
 					this.value = '';
 				}
-			}
-		});
-	};
-
-
-	/**
-	 * Resets the form data or individual elements. Takes the following actions
-	 * on the selected tags:
-	 * - all fields within form elements will be reset to their original value
-	 * - input / textarea / select fields will be reset to their original value
-	 * - option / optgroup fields (for multi-selects) will defaulted individually
-	 * - non-multiple options will find the right select to default
-	 * - label elements will be searched against its 'for' attribute
-	 * - all others will be searched for appropriate children to default
-	 */
-	$.fn.resetForm = function() {
-		return this.each(function() {
-			var el = $(this);
-			var tag = this.tagName.toLowerCase();
-
-			switch (tag) {
-			case 'input':
-				this.checked = this.defaultChecked;
-				// fall through
-
-			case 'textarea':
-				this.value = this.defaultValue;
-
-				return true;
-
-			case 'option':
-			case 'optgroup':
-				var select = el.parents('select');
-
-				if (select.length && select[0].multiple) {
-					if (tag === 'option') {
-						this.selected = this.defaultSelected;
-					} else {
-						el.find('option').resetForm();
-					}
-				} else {
-					select.resetForm();
-				}
-
-				return true;
-
-			case 'select':
-				el.find('option').each(function(i) {				// eslint-disable-line consistent-return
-					this.selected = this.defaultSelected;
-					if (this.defaultSelected && !el[0].multiple) {
-						el[0].selectedIndex = i;
-
-						return false;
-					}
-				});
-
-				return true;
-
-			case 'label':
-				var forEl = $(el.attr('for'));
-				var list = el.find('input,select,textarea');
-
-				if (forEl[0]) {
-					list.unshift(forEl[0]);
-				}
-
-				list.resetForm();
-
-				return true;
-
-			case 'form':
-				// guard against an input with the name of 'reset'
-				// note that IE reports the reset function as an 'object'
-				if (typeof this.reset === 'function' || (typeof this.reset === 'object' && !this.reset.nodeType)) {
-					this.reset();
-				}
-
-				return true;
-
-			default:
-				el.find('form,input,label,select,textarea').resetForm();
-
-				return true;
 			}
 		});
 	};
