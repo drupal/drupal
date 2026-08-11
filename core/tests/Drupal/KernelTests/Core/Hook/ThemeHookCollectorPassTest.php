@@ -143,7 +143,7 @@ class ThemeHookCollectorPassTest extends KernelTestBase {
    */
   #[IgnoreDeprecations]
   public function testIgnoreDirectories(): void {
-    $this->expectUserDeprecationMessage('Using procedural_hooks.theme is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3581222');
+    $this->expectUserDeprecationMessage('Using procedural_hooks.theme is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3581222');
     $container = new ContainerBuilder();
     $theme_filenames = [
       'ignored_directories_theme' => [
