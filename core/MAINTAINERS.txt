@@ -66,6 +66,7 @@ General core committers
 - Drew Webber 'mcdruid' (mcdruid) https://www.drupal.org/u/mcdruid
 - Juraj Nemec 'poker10' (poker10) https://www.drupal.org/u/poker10
 - (provisional) Andrei Mateescu 'amateescu' (amateescu) https://www.drupal.org/u/amateescu
+- (provisional) Michael Strelan 'mstrelan' (mstrelan) https://www.drupal.org/u/mstrelan
 
 Subsystem maintainers
 ---------------------
