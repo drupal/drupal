@@ -9,8 +9,13 @@
  * Sighted users see a colored box. See
  * https://www.w3.org/TR/WCAG-TECHS/H69.html for info.
  *
- * Add an ARIA label to the contentinfo area so that assistive technology
- * user agents will better describe this landmark.
+ * Each message block exposes an ARIA live region role so assistive technology
+ * user agents announce it appropriately: "alert" for errors and warnings
+ * (assertive) and "status" for other message types (polite). This matches the
+ * role assignment used by Drupal.theme.message() for messages added by
+ * JavaScript. The "contentinfo" landmark role is reserved for the page footer
+ * and is intentionally not used here, which avoids duplicate landmark and
+ * non-unique landmark accessibility violations.
  *
  * Available variables:
  * - message_list: List of messages to be displayed, grouped by type.
@@ -35,10 +40,10 @@
       <div{{ attributes
         .addClass(classes)
         .setAttribute('data-drupal-selector', 'messages')
-        .setAttribute('role', 'contentinfo')
+        .setAttribute('role', type in ['error', 'warning'] ? 'alert' : 'status')
         .setAttribute('aria-label', status_headings[type])
         }}>
-        <div class="messages__container" data-drupal-selector="messages-container"{% if type == 'error' %} role="alert"{% endif %}>
+        <div class="messages__container" data-drupal-selector="messages-container">
           {% if status_headings[type] %}
             <div class="messages__header">
             <h2 class="visually-hidden">{{ status_headings[type] }}</h2>

@@ -9,8 +9,13 @@
  * Sighted users see a colored box. See https://www.w3.org/TR/WCAG-TECHS/H69.html
  * for info.
  *
- * Add an ARIA label to the contentinfo area so that assistive technology
- * user agents will better describe this landmark.
+ * Each message block exposes an ARIA live region role so assistive technology
+ * user agents announce it appropriately: "alert" for errors and warnings
+ * (assertive) and "status" for other message types (polite). This matches the
+ * role assignment used by Drupal.theme.message() for messages added by
+ * JavaScript. The "contentinfo" landmark role is reserved for the page footer
+ * and is intentionally not used here, which avoids duplicate landmark and
+ * non-unique landmark accessibility violations.
  *
  * Available variables:
  * - message_list: List of messages to be displayed, grouped by type.
@@ -28,24 +33,18 @@
       'messages--' ~ type,
     ]
   %}
-  <div role="contentinfo" aria-label="{{ status_headings[type] }}"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
-    {% if type == 'error' %}
-      <div role="alert">
+  <div role="{{ type in ['error', 'warning'] ? 'alert' : 'status' }}" aria-label="{{ status_headings[type] }}"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
+    {% if status_headings[type] %}
+      <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
     {% endif %}
-      {% if status_headings[type] %}
-        <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
-      {% endif %}
-      {% if messages|length > 1 %}
-        <ul class="messages__list">
-          {% for message in messages %}
-            <li class="messages__item">{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        {{ messages|first }}
-      {% endif %}
-    {% if type == 'error' %}
-      </div>
+    {% if messages|length > 1 %}
+      <ul class="messages__list">
+        {% for message in messages %}
+          <li class="messages__item">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      {{ messages|first }}
     {% endif %}
   </div>
   {# Remove type specific classes. #}
