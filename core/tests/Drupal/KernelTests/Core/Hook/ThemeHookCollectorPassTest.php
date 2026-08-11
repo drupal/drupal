@@ -10,6 +10,7 @@ use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -140,7 +141,9 @@ class ThemeHookCollectorPassTest extends KernelTestBase {
   /**
    * Tests ignoring of directories when collecting hooks using the file_scan_ignore_directories setting.
    */
+  #[IgnoreDeprecations]
   public function testIgnoreDirectories(): void {
+    $this->expectUserDeprecationMessage('Using procedural_hooks.theme is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3581222');
     $container = new ContainerBuilder();
     $theme_filenames = [
       'ignored_directories_theme' => [

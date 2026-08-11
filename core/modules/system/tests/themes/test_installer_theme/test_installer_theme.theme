@@ -7,9 +7,12 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
+
 /**
  * Implements hook_form_FORM_ID_alter().
  */
+#[ExtensionFileIsConverted]
 function test_installer_theme_form_install_select_language_form_alter(array &$form): void {
   $form['function_name']['#markup'] = 'Added by custom installer theme.';
 }

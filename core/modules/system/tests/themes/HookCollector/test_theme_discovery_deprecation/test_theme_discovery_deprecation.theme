@@ -1,0 +1,8 @@
+<?php
+
+/**
+ * @file
+ * Functions to support deprecation testing.
+ */
+
+declare(strict_types=1);

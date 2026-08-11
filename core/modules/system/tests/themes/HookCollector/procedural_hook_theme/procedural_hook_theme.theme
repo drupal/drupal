@@ -8,10 +8,12 @@
 declare(strict_types=1);
 
 use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 
 /**
  * Implements hook_procedural_alter().
  */
+#[ExtensionFileIsConverted]
 function procedural_hook_theme_procedural_alter(array &$args): void {
   $args[] = 'Procedural theme hook executed.';
 }

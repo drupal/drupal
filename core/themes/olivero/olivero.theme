@@ -5,6 +5,8 @@
  * Functions to support theming in the Olivero theme.
  */
 
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
+
 /**
  * Converts hex color strings to array of HSL values.
  *
@@ -26,6 +28,7 @@
  *
  * @internal
  */
+#[ExtensionFileIsConverted]
 function _olivero_hex_to_hsl(string $hex_string) {
   // Convert hexcode pairs to rgb values (0-255).
   $hex_val = trim($hex_string, '#');
