@@ -33,7 +33,7 @@ class PlaceholderMessageTest extends BrowserTestBase {
    * Tests rendering of message placeholder.
    */
   public function testMessagePlaceholder(): void {
-    $messages_markup = '<div role="contentinfo" aria-label="Status message"';
+    $messages_markup = '<div role="status" aria-label="Status message"';
 
     $test_routes = [
       // Messages placeholder rendered first.

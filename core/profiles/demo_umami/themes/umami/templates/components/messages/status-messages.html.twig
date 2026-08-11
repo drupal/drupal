@@ -9,8 +9,9 @@
  * Sighted users see a colored box. See https://www.w3.org/TR/WCAG-TECHS/H69.html
  * for info.
  *
- * Add an ARIA label to the contentinfo area so that assistive technology
- * user agents will better describe this landmark.
+ * Each message block exposes an ARIA live region role so assistive technology
+ * user agents announce it appropriately: "alert" for errors and warnings
+ * (assertive) and "status" for other message types (polite).
  *
  * Available variables:
  * - message_list: List of messages to be displayed, grouped by type.
