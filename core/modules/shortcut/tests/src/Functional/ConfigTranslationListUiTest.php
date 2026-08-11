@@ -25,7 +25,6 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     'block',
     'config_translation',
     'shortcut',
-    'toolbar',
   ];
 
   /**

@@ -24,20 +24,12 @@ class AnnounceFetcherUserTest extends AnnounceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
-    'toolbar',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
     $this->installSchema('user', ['users_data']);
 
     // Setting current user.
     $permissions = [
-      'access toolbar',
       'access announcements',
     ];
     $this->setUpCurrentUser(['uid' => 1], $permissions);
@@ -67,7 +59,6 @@ class AnnounceFetcherUserTest extends AnnounceTestBase {
 
     // Create another user and test again.
     $permissions = [
-      'access toolbar',
       'access announcements',
     ];
     $this->setUpCurrentUser(['uid' => 2], $permissions);

@@ -30,7 +30,6 @@ class ShortcutCacheTagsTest extends KernelTestBase {
   protected static $modules = [
     'system',
     'user',
-    'toolbar',
     'shortcut',
     'link',
   ];
@@ -56,7 +55,6 @@ class ShortcutCacheTagsTest extends KernelTestBase {
     $this->installEntitySchema('shortcut_set');
 
     $this->adminUser = $this->createUser([
-      'access toolbar',
       'access shortcuts',
       'administer site configuration',
       'administer shortcuts',
