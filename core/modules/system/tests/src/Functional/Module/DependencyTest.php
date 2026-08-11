@@ -44,7 +44,6 @@ class DependencyTest extends ModuleTestBase {
     $edit = [
       'modules[system_project_namespace_test][enable]' => TRUE,
     ];
-    $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertModules(['system_project_namespace_test'], TRUE);
   }
@@ -101,7 +100,6 @@ class DependencyTest extends ModuleTestBase {
     // Ensure the modules can actually be installed.
     $edit['modules[system_no_module_version_test][enable]'] = 'system_no_module_version_test';
     $edit['modules[system_no_module_version_dependency_test][enable]'] = 'system_no_module_version_dependency_test';
-    $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('2 modules have been installed: System no module version dependency test, System no module version test.');
 
@@ -122,14 +120,12 @@ class DependencyTest extends ModuleTestBase {
     $assert_session->fieldDisabled('modules[system_core_incompatible_semver_test][enable]');
 
     // Test compatible 'core_version_requirement' and compatible 'core'.
-    $this->drupalGet('admin/modules');
     $assert_session->fieldEnabled('modules[common_test][enable]');
     $assert_session->fieldEnabled('modules[system_core_semver_test][enable]');
 
     // Ensure the modules can actually be installed.
     $edit['modules[common_test][enable]'] = 'common_test';
     $edit['modules[system_core_semver_test][enable]'] = 'system_core_semver_test';
-    $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertModules(['common_test', 'system_core_semver_test'], TRUE);
   }
@@ -159,9 +155,9 @@ class DependencyTest extends ModuleTestBase {
     // message.
     $this->assertSession()->pageTextContains('You must install the following modules to install Database Logging:Configuration ManagerHelp');
 
+    $this->drupalGet('admin/modules');
     $edit['modules[config][enable]'] = 'config';
     $edit['modules[help][enable]'] = 'help';
-    $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertModules(['dblog', 'config', 'help'], TRUE);
 
@@ -184,9 +180,9 @@ class DependencyTest extends ModuleTestBase {
     // Check the module install text with 2 module dependencies.
     \Drupal::service('module_installer')->install(['module_test'], FALSE);
     \Drupal::state()->set('module_test.dependency', 'dependency');
+    $this->drupalGet('admin/modules');
     $edit = [];
     $edit['modules[dblog][enable]'] = 'dblog';
-    $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('You must install the following modules to install Database Logging:Configuration ManagerHelp');
 
