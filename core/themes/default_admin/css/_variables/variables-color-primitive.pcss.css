@@ -1,0 +1,51 @@
+/*
+ * @file
+ * Primitive CSS color variables.
+ */
+
+.root,
+[data-gin-accent] {
+  /*
+   * Tier 1 (primitive colors).
+   */
+  --admin-color-white: white;
+  --admin-color-gray-950: #222330;
+  --admin-color-gray-900: #393a3f;
+  --admin-color-gray-800: #545560;
+  --admin-color-gray-700: #767676;
+  --admin-color-gray-500: #8e929c;
+  --admin-color-gray-400: #adaeb3;
+  --admin-color-gray-300: #c2c2c2;
+  --admin-color-gray-200: #d4d4d8;
+  --admin-color-gray-100: #dedfe4;
+  --admin-color-blue-900: #000f33;
+  --admin-color-blue-700: #002e9a;
+  --admin-color-blue-650: #0036b1;
+  --admin-color-blue-600: #003ecc;
+  --admin-color-blue-050: #e5edff;
+
+  /*
+   * Default accent color. Will get overridden by inline style.
+   */
+  --accent-base: #015efe;
+
+  /*
+   * Mix base. These are only used as utilities to compose other colors.
+   */
+  --admin-color-accent-base: light-dark(var(--accent-base), color-mix(in lch, lch(from var(--accent-base) calc(l * 20) c h), black 12%));
+  --accent-mix-base: light-dark(color-mix(in lch, var(--accent-base), white 97%), color-mix(in lch, var(--accent-base), black 80%));
+  --accent-mix-base-scheme: light-dark(black, white);
+
+  /*
+   * Base accent colors.
+   */
+  --admin-color-accent-020: color-mix(in lch, var(--admin-color-accent-base) 10%, transparent);
+  --admin-color-accent-030: color-mix(in lch, var(--admin-color-accent-base) 15%, transparent);
+  --admin-color-accent-040: color-mix(in lch, var(--admin-color-accent-base) 20%, transparent);
+  --admin-color-accent-100: color-mix(in lch, var(--accent-mix-base) 60%, var(--admin-color-accent-base));
+  --admin-color-accent-500: var(--admin-color-accent-base);
+  --admin-color-accent-550: color-mix(in lch, var(--accent-mix-base-scheme) 8%, var(--admin-color-accent-base));
+  --admin-color-accent-600: color-mix(in lch, var(--accent-mix-base-scheme) 15%, var(--admin-color-accent-base));
+  --admin-color-accent-700: color-mix(in lch, var(--accent-mix-base-scheme) 30%, var(--admin-color-accent-base));
+  --admin-color-accent-900: color-mix(in lch, var(--accent-mix-base-scheme) 60%, var(--admin-color-accent-base));
+}

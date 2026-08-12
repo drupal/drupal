@@ -89,7 +89,7 @@
   @supports (backdrop-filter: blur()) {
     opacity: 0.999;
     /* stylelint-disable-next-line color-function-notation */
-    background: rgb(from var(--app-bg-color) r g b/ 0.8);
+    background: rgb(from var(--admin-color-bg) r g b/ 0.8);
     backdrop-filter: blur(0.75rem);
   }
 }
