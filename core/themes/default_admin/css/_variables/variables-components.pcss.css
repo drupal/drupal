@@ -62,7 +62,6 @@
   /**
    * Buttons.
    */
-  --button--focus-border-color: var(--admin-color-blue-300);
   --button-border-radius-size: var(--admin-radius-2xs);
   --button-fg-color: var(--admin-color-gray-900);
   --button--hover-bg-color: var(--admin-color-gray-100);
@@ -70,7 +69,7 @@
   --button-bg-color--primary: var(--admin-color-accent-500);
   --button--focus-bg-color--primary: var(--button-bg-color--primary);
   --button-fg-color--danger: var(--admin-color-text-on-primary);
-  --button--hover-bg-color--danger: var(--admin-color-red-550);
+  --button--hover-bg-color--danger: #c61f1f;
   --dropbutton-widget-z-index: 100;
 
   /**

@@ -21,42 +21,38 @@ body {
   word-wrap: break-word;
   hyphens: auto;
   color: var(--admin-color-text);
-  background: var(--app-bg-color);
+  background: var(--admin-color-bg);
 
   @media (--admin-large) {
     overflow-x: auto;
   }
 }
 
-a,
+:any-link,
 .link,
 button.link {
   word-wrap: break-word;
-  color: var(--admin-color-primary);
+  color: var(--admin-color-link);
   overflow-wrap: break-word;
   text-decoration-style: var(--admin-link-decoration-style);
+
+  &:hover {
+    text-decoration: none;
+    color: var(--admin-color-link-hover);
+  }
+
+  &:focus {
+    text-decoration: none;
+  }
+
+  &:active {
+    color: var(--admin-color-link-active);
+  }
 }
 
 *|*:any-link:not(svg|a) {
   text-decoration: underline;
   text-decoration-style: var(--admin-link-decoration-style);
-}
-
-a:hover,
-a:focus,
-.link:hover,
-.link:focus {
-  text-decoration: none;
-}
-
-a:hover,
-.link:hover {
-  color: var(--admin-color-link-hover);
-}
-
-a:active,
-.link:active {
-  color: var(--admin-color-link-active);
 }
 
 hr {

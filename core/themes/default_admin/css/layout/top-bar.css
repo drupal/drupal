@@ -20,18 +20,20 @@
 :is(#extra-specificity-hack, [data-drupal-admin-styles]).gin--navigation-top-bar {
   height: auto;
   min-height: 4rem;
-  opacity: 0.95;
+  opacity: 0.999;
   border-block-end: 1px solid var(--admin-color-border-soft);
-  background: var(--admin-color-bg-surface);
+  background: color-mix(in lch, var(--admin-color-bg-surface) 80%, transparent);
   box-shadow: none;
   padding-inline: calc(var(--admin-toolbar-sidebar-width) + var(--admin-space-m)) var(--admin-space-m);
   padding-block: var(--admin-space-3xs);
+  backdrop-filter: blur(0.75rem);
 
   .gin--high-contrast-mode & {
     background: var(--admin-color-bg-surface);
     backdrop-filter: none;
   }
 
+  /* @todo Figure out what this is attempting to do and fix it. */
   &--offset {
     margin-top: calc(4rem + var(--admin-space-s));
   }
@@ -144,13 +146,6 @@
   .button.button--danger,
   a.button.button--danger {
     padding-block: calc(var(--admin-space-xs) - 0.5px);
-  }
-
-  @supports (backdrop-filter: blur()) {
-    opacity: 0.999;
-    /* stylelint-disable-next-line color-function-notation */
-    background: rgb(from var(--layer-background) r g b/ 0.8);
-    backdrop-filter: blur(0.75rem);
   }
 }
 

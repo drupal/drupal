@@ -234,22 +234,11 @@ tr.selected td {
 .block-system > .views-form .views-bulk-actions,
 .view-content .views-form [data-drupal-selector*="edit-header"],
 .view-content .views-form .views-bulk-actions {
+  opacity: 0.999;
   border: 0 none;
   border-radius: var(--admin-radius-m);
-  /* stylelint-disable-next-line color-function-notation */
-  background: rgb(from var(--admin-color-bg-sticky) r g b / 0.95);
-
-  @supports (backdrop-filter: blur()) {
-    opacity: 0.999;
-    /* Fix Chrome issue with mask */
-    /* stylelint-disable-next-line color-function-notation */
-    background: rgb(from var(--admin-color-bg-sticky) r g b / 0.9);
-    backdrop-filter: blur(0.75rem);
-
-    .gin--dark-mode & {
-      background: rgb(27, 27, 29, 0.8);
-    }
-  }
+  background: light-dark(var(--admin-color-accent-020), #1b1b1d);
+  backdrop-filter: blur(0.75rem);
 }
 
 .block-system > .views-form [data-drupal-selector*="edit-header"].is-sticky,
