@@ -214,7 +214,7 @@ services:
     class: Drupal\jsonapi\EventSubscriber\JsonApiRequestValidator
   jsonapi.resource_response.subscriber:
     class: Drupal\jsonapi\EventSubscriber\ResourceResponseSubscriber
-    arguments: ['@jsonapi.serializer']
+    autowire: true
   jsonapi.maintenance_mode_subscriber:
     class: Drupal\jsonapi\EventSubscriber\JsonapiMaintenanceModeSubscriber
     arguments: ['@maintenance_mode', '@config.factory']

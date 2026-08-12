@@ -23,7 +23,7 @@ services:
   # Event subscribers.
   rest.resource_response.subscriber:
     class: Drupal\rest\EventSubscriber\ResourceResponseSubscriber
-    arguments: ['@serializer', '@renderer', '@current_route_match']
+    autowire: true
   rest.resource.entity.post_route.subscriber:
     class: \Drupal\rest\EventSubscriber\EntityResourcePostRouteSubscriber
     arguments: ['@entity_type.manager']

@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi\ResourceResponse;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,22 +39,10 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class ResourceResponseSubscriber implements EventSubscriberInterface {
 
-  /**
-   * The serializer.
-   *
-   * @var \Symfony\Component\Serializer\SerializerInterface
-   */
-  protected $serializer;
-
-  /**
-   * Constructs a ResourceResponseSubscriber object.
-   *
-   * @param \Symfony\Component\Serializer\SerializerInterface $serializer
-   *   The serializer.
-   */
-  public function __construct(SerializerInterface $serializer) {
-    $this->serializer = $serializer;
-  }
+  public function __construct(
+    #[AutowireServiceClosure('jsonapi.serializer')]
+    protected \Closure $serializer,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -82,7 +71,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
 
     $request = $event->getRequest();
     $format = 'api_json';
-    $this->renderResponseBody($request, $response, $this->serializer, $format);
+    $this->renderResponseBody($request, $response, ($this->serializer)(), $format);
     $event->setResponse($this->flattenResponse($response, $request));
   }
 
