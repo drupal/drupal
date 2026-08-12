@@ -4,60 +4,10 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * @file
  * Accent color and focus ring theme styles.
  */
-
-[data-gin-accent="blue"] {
-  --admin-color-bg-sticky: rgb(235, 241, 253);
-}
-
-[data-gin-accent="light_blue"] {
-  --admin-color-bg-sticky: rgb(238, 243, 251);
-}
-
-[data-gin-accent="dark_purple"] {
-  --admin-color-bg-sticky: rgb(240, 235, 250);
-}
-
-[data-gin-accent="purple"] {
-  --admin-color-bg-sticky: rgb(242, 235, 255);
-}
-
-[data-gin-accent="teal"] {
-  --admin-color-bg-sticky: rgb(236, 245, 245);
-}
-
-[data-gin-accent="green"] {
-  --admin-color-bg-sticky: rgb(235, 245, 242);
-}
-
-[data-gin-accent="red"] {
-  --admin-color-bg-sticky: rgb(252, 235, 238);
-}
-
-[data-gin-accent="orange"] {
-  --admin-color-bg-sticky: rgb(252, 243, 235);
-}
-
-[data-gin-accent="yellow"] {
-  --admin-color-bg-sticky: rgb(249, 244, 235);
-}
-
-[data-gin-accent="pink"] {
-  --admin-color-bg-sticky: rgb(251, 238, 244);
-}
-
-[data-gin-accent="neutral"] {
-  --admin-color-bg-sticky: rgb(236, 236, 236);
-}
-
-[data-gin-accent="custom"] {
-  --admin-color-bg-sticky: rgb(236, 236, 236);
-}
-
 @media (forced-colors: none) {
   .gin--high-contrast-mode {
     --admin-color-bg: #d9dbde;
@@ -85,23 +35,18 @@
     }
   }
 }
-
 [data-gin-focus="green"] {
   --admin-color-focus: rgb(8, 163, 144, 0.6);
 }
-
 [data-gin-focus="claro"] {
   --admin-color-focus: rgb(38, 167, 105, 0.6);
 }
-
 [data-gin-focus="orange"] {
   --admin-color-focus: rgb(236, 124, 87, 0.6);
 }
-
 [data-gin-focus="dark"] {
   --admin-color-focus: var(--admin-color-focus-neutral);
 }
-
 [data-gin-focus="accent"] {
   /* stylelint-disable-next-line color-function-notation */
   --admin-color-focus: rgb(from var(--admin-color-primary) r g b / 0.6);

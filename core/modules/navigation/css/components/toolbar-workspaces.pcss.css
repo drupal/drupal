@@ -2,17 +2,18 @@
  * @file
  * Styling for the Workspaces navigation item.
  */
+[data-drupal-admin-styles] {
+  .toolbar-button--workspaces {
+    --toolbar-button-bg: var(--admin-toolbar-color-orange-300);
+    --toolbar-button-color: var(--admin-toolbar-color-gray-990);
+    --toolbar-button-hover-bg: var(--admin-toolbar-color-orange-300);
+    --toolbar-button-current-bg: var(--admin-toolbar-color-orange-300);
+  }
 
-.toolbar-button--workspaces {
-  --toolbar-button-bg: var(--admin-toolbar-color-orange-300);
-  --toolbar-button-color: var(--admin-toolbar-color-gray-990);
-  --toolbar-button-hover-bg: var(--admin-toolbar-color-orange-300);
-  --toolbar-button-current-bg: var(--admin-toolbar-color-orange-300);
-}
-
-.toolbar-button--workspaces--live {
-  --toolbar-button-bg: #87cc5f;
-  --toolbar-button-color: var(--admin-toolbar-color-gray-990);
-  --toolbar-button-hover-bg: #87cc5f;
-  --toolbar-button-current-bg: #87cc5f;
+  .toolbar-button--workspaces--live {
+    --toolbar-button-bg: #87cc5f;
+    --toolbar-button-color: var(--admin-toolbar-color-gray-990);
+    --toolbar-button-hover-bg: var(--toolbar-button-bg);
+    --toolbar-button-current-bg: var(--toolbar-button-bg);
+  }
 }

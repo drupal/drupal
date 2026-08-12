@@ -5,8 +5,8 @@ global-styling:
       preload: true
   css:
     base:
-      css/_variables/variables-color-accent.css: {}
-      css/_variables/variables-color.css: {}
+      css/_variables/variables-color-primitive.css: {}
+      css/_variables/variables-color-semantic.css: {}
       css/_variables/variables-spacing.css: {}
       css/_variables/variables-typography.css: {}
       css/_variables/variables-misc.css: {}

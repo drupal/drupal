@@ -90,11 +90,6 @@
   .form-item {
     margin: 0.75em;
   }
-
-  .form-boolean--type-checkbox:checked {
-    border-color: var(--button--focus-border-color);
-    background-color: var(--button--focus-border-color);
-  }
 }
 
 /* Edit/remove button base appearance. */
