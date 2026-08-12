@@ -25306,6 +25306,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/ExposedFormCache.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Variable \\$untranslatable_configs in empty\\(\\) always exists and is not falsy\\.$#',
+	'identifier' => 'empty.variable',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/src/FieldViewsDataProvider.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views\\\\Form\\\\ViewsExposedForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -32095,12 +32101,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_ui\\\\ViewEditForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/src/ViewEditForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$group_info might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 2,
 	'path' => __DIR__ . '/modules/views_ui/src/ViewEditForm.php',
 ];
 $ignoreErrors[] = [
