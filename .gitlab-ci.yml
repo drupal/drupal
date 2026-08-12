@@ -618,27 +618,6 @@ default:
     - CACHE_FILE=core/.twigcsfixercache
     - *download-cache
 
-'📔 Spell-checking':
-  <<: [ *yarn-install-from-cache ]
-  stage: 🪄 Lint
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
-      when: never
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $CI_COMMIT_BRANCH == "main"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
-  variables:
-    KUBERNETES_CPU_REQUEST: "2"
-    CACHE_FILE: "core/.cspellcache"
-  script:
-    - *download-cache
-    - *core-spellcheck
-  artifacts:
-    expire_in: 1 week
-    expose_as: 'yarn-vendor'
-    paths:
-      - core/node_modules/
-      - core/.cspellcache
-
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
@@ -686,6 +665,27 @@ default:
     paths:
       - $_ARTIFACTS_DIR
       - core/phpstan-tmp/resultCache.php
+
+'📔 Spell-checking':
+  <<: [ *yarn-install-from-cache ]
+  stage: 🪄 Lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+    CACHE_FILE: "core/.cspellcache"
+  script:
+    - *download-cache
+    - *core-spellcheck
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor'
+    paths:
+      - core/node_modules/
+      - core/.cspellcache
 
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *default-job-settings-lint ]
