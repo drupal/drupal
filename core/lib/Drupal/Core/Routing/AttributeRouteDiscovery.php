@@ -367,8 +367,24 @@ class AttributeRouteDiscovery extends StaticRouteDiscoveryBase {
    *   The attributes.
    */
   private function getAttributes(\ReflectionClass|\ReflectionMethod $reflection): \Generator {
-    foreach ($reflection->getAttributes(RouteAttribute::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute) {
-      yield $attribute->newInstance();
+    foreach ($reflection->getAttributes(RouteAttribute::class, \ReflectionAttribute::IS_INSTANCEOF) as $index => $reflected_attribute) {
+      $attribute = $reflected_attribute->newInstance();
+
+      // Closures cannot be serialized into the router table, so store a
+      // reference to the attribute instead.
+      if (isset($attribute->defaults['_title']) && $attribute->defaults['_title'] instanceof \Closure) {
+        if ($reflection instanceof \ReflectionClass) {
+          throw new InvalidArgumentException(\sprintf('Title closures cannot be used on class Route attributes in "%s". Use a method Route attribute, or the "_title_callback" default.', $reflection->getName()));
+        }
+        $attribute->defaults['_title_closure'] = [
+          $reflection->getDeclaringClass()->getName(),
+          $reflection->getName(),
+          $index,
+        ];
+        unset($attribute->defaults['_title']);
+      }
+
+      yield $attribute;
     }
   }
 

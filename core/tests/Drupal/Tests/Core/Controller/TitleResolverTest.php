@@ -10,8 +10,10 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -275,6 +277,31 @@ class TitleResolverTest extends UnitTestCase {
       // phpcs:enable
       [['#markup' => '<span>Title</span>'], ['#markup' => '<span>Title</span>']],
     ];
+  }
+
+  /**
+   * Tests a title closure declared on the route attribute.
+   *
+   * @see \Drupal\Core\Controller\TitleResolver::getTitle()
+   */
+  #[RequiresPhp('>= 8.5')]
+  public function testTitleClosure(): void {
+    $request = new Request();
+    $route = new Route('/test-route', [
+      '_title' => 'static title',
+      '_title_closure' => [TitleClosureCallback::class, 'example', 0],
+    ]);
+
+    // The closure defined in the Route attribute is resolved and called with
+    // the arguments provided by the argument resolver.
+    $argumentResolver = $this->createMock(ArgumentResolverInterface::class);
+    $argumentResolver->expects($this->once())
+      ->method('getArguments')
+      ->with($request, $this->isInstanceOf(\Closure::class))
+      ->willReturn(['value']);
+    $this->titleResolver = new TitleResolver($this->controllerResolver, $this->translationManager, $argumentResolver);
+
+    $this->assertEquals(new TranslatableMarkup('Title for @value', ['@value' => 'value']), $this->titleResolver->getTitle($request, $route));
   }
 
 }

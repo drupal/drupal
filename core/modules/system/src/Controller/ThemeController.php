@@ -12,9 +12,9 @@ use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
+use Drupal\Core\Routing\Attribute\Route;
 use Drupal\system\Form\ThemeExperimentalConfirmForm;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
-use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Controller for theme handling.
@@ -164,12 +164,10 @@ class ThemeController extends ControllerBase {
   #[Route(
     path: '/admin/appearance/default',
     name: 'system.theme_set_default',
+    title: new TranslatableMarkup('Set as default theme'),
     requirements: [
       '_permission' => 'administer themes',
       '_csrf_token' => 'TRUE',
-    ],
-    defaults: [
-      '_title' => new TranslatableMarkup('Set as default theme'),
     ],
   )]
   public function setDefaultTheme(#[MapQueryParameter] string $theme) {

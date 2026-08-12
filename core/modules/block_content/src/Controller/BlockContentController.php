@@ -6,6 +6,7 @@ use Drupal\block_content\BlockContentTypeInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Routing\Attribute\Route;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -75,6 +76,13 @@ class BlockContentController extends ControllerBase {
    *   A form array as expected by
    *   \Drupal\Core\Render\RendererInterface::render().
    */
+  #[Route(
+    path: '/block/add/{block_content_type}',
+    name: 'block_content.add_form',
+    requirements: ['_entity_create_access' => 'block_content:{block_content_type}'],
+    options: ['_admin_route' => TRUE],
+    defaults: ['_title_callback' => self::class . '::getAddFormTitle'],
+  )]
   public function addForm(BlockContentTypeInterface $block_content_type, Request $request) {
     $block = $this->blockContentStorage->create([
       'type' => $block_content_type->id(),
