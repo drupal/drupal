@@ -47,10 +47,9 @@ class SystemAdminThemePreprocess {
    */
   public function preprocessAdminBlockContent(array &$variables): void {
     if (!empty($variables['content'])) {
-      $variables['compact'] = system_admin_compact_mode();
       foreach ($variables['content'] as $key => $item) {
         $variables['content'][$key]['link'] = Link::fromTextAndUrl($item['title'], $item['url'])->toString();
-        if (!$variables['compact'] && !empty($item['description'])) {
+        if (!empty($item['description'])) {
           $variables['content'][$key]['description'] = ['#markup' => $item['description']];
         }
         else {

@@ -35,6 +35,7 @@ system.site:
     admin_compact_mode:
       type: boolean
       label: 'Compact mode'
+      deprecated: "The 'admin_compact_mode' config is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3588109."
     weight_select_max:
       type: integer
       label: 'Weight element maximum value'

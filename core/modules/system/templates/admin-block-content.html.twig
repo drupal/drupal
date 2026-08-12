@@ -11,25 +11,18 @@
  *   - url: URI to the admin section.
  *   - options: URL options. See \Drupal\Core\Url::fromUri() for details.
  * - attributes: HTML attributes to be added to the element.
- * - compact: Boolean indicating whether compact mode is turned on or not.
  *
  * @see \Drupal\system\Theme\SystemAdminThemePreprocess::preprocessAdminBlockContent()
  *
  * @ingroup themeable
  */
 #}
-{%
-  set classes = [
-    'list-group',
-    compact ? 'compact',
-  ]
-%}
 {% if content %}
-  <dl{{ attributes.addClass(classes) }}>
+  <dl{{ attributes.addClass('list-group') }}>
     {% for item in content %}
       <dt class="list-group__link">{{ item.link }}</dt>
       {% if item.description %}
-        <dd class="list-group__description">{{ item.description }}</dd>
+        <dd class="list-group__description" data-admin-compact-collapsible>{{ item.description }}</dd>
       {% endif %}
     {% endfor %}
   </dl>

@@ -1,0 +1,8 @@
+/**
+ * @file
+ * Styles for admin compact mode.
+ */
+
+:root[data-admin-compact-mode] [data-admin-compact-collapsible] {
+  display: none;
+}

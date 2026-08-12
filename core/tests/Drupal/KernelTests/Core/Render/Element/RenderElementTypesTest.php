@@ -203,7 +203,7 @@ class RenderElementTypesTest extends KernelTestBase {
         'value' => [
           '#type' => 'system_compact_link',
         ],
-        'expected' => '//div[@class="compact-link"]/a[contains(@href, "admin/compact/on?") and text()="Hide descriptions"]',
+        'expected' => '//div[@class="compact-link"]/a[contains(@href, "#") and @data-admin-compact-toggle and text()="Hide descriptions"]',
       ],
       [
         'name' => "#type 'system_compact_link' when adding extra attributes",
@@ -213,30 +213,16 @@ class RenderElementTypesTest extends KernelTestBase {
             'class' => ['kittens-rule'],
           ],
         ],
-        'expected' => '//div[@class="compact-link"]/a[contains(@href, "admin/compact/on?") and @class="kittens-rule" and text()="Hide descriptions"]',
+        'expected' => '//div[@class="compact-link"]/a[contains(@href, "#") and @data-admin-compact-toggle and @class="kittens-rule" and text()="Hide descriptions"]',
       ],
     ];
 
     foreach ($elements as $element) {
-      $xml = new \SimpleXMLElement((string) \Drupal::service('renderer')->renderRoot($element['value']));
-      $result = $xml->xpath($element['expected']);
-      $this->assertNotEmpty($result, '"' . $element['name'] . '" is rendered correctly.');
+      $markup = (string) \Drupal::service('renderer')->renderRoot($element['value']);
+      $xpath = new \DOMXPath(Html::load($markup));
+      $result = $xpath->query($element['expected']);
+      $this->assertGreaterThan(0, $result->length, '"' . $element['name'] . '" is rendered correctly.');
     }
-
-    // Set admin compact mode on for additional tests.
-    \Drupal::request()->cookies->set('Drupal_visitor_admin_compact_mode', TRUE);
-
-    $element = [
-      'name' => "#type 'system_compact_link' when admin compact mode is on",
-      'value' => [
-        '#type' => 'system_compact_link',
-      ],
-      'expected' => '//div[@class="compact-link"]/a[contains(@href, "admin/compact?") and text()="Show descriptions"]',
-    ];
-
-    $xml = new \SimpleXMLElement((string) \Drupal::service('renderer')->renderRoot($element['value']));
-    $result = $xml->xpath($element['expected']);
-    $this->assertNotEmpty($result, '"' . $element['name'] . '" is rendered correctly.');
   }
 
   /**
