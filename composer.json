@@ -35,7 +35,7 @@
         "phpspec/prophecy": "^1.23",
         "phpspec/prophecy-phpunit": "^2",
         "phpstan/extension-installer": "^1.4.3",
-        "phpstan/phpstan": "^1.12.27 || ^2.2.0",
+        "phpstan/phpstan": "^1.12.27 || ^2.2.8",
         "phpstan/phpstan-phpunit": "^1.4.2 || ^2.0.16",
         "phpunit/phpunit": "^11.5.50",
         "symfony/browser-kit": "^7.4",
