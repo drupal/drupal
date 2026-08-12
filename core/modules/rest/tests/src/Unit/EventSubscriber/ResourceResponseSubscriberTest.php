@@ -108,7 +108,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
       $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => $this->randomMachineName()], $route_requirements));
 
       $resource_response_subscriber = new ResourceResponseSubscriber(
-        $this->prophesize(SerializerInterface::class)->reveal(),
+        fn () => $this->prophesize(SerializerInterface::class)->reveal(),
         $this->prophesize(RendererInterface::class)->reveal(),
         $route_match
       );
@@ -408,7 +408,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
 
     // Instantiate the ResourceResponseSubscriber we will test.
     $resource_response_subscriber = new ResourceResponseSubscriber(
-      new Serializer([], [new JsonEncoder(), new XmlEncoder()]),
+      fn () => new Serializer([], [new JsonEncoder(), new XmlEncoder()]),
       $renderer->reveal(),
       $route_match
     );
