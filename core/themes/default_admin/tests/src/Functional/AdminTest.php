@@ -19,7 +19,6 @@ class AdminTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'toolbar',
     'node',
   ];
 
@@ -44,7 +43,6 @@ class AdminTest extends BrowserTestBase {
     $adminUser = $this->drupalCreateUser([
       'access administration pages',
       'administer themes',
-      'access toolbar',
       'access content overview',
     ]);
     $this->drupalLogin($adminUser);

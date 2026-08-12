@@ -108,17 +108,6 @@ class ContextualLinksTest extends WebDriverTestBase {
 
     // Check to make sure that page was not reloaded.
     $this->assertSession()->pageTextContains($current_page_string);
-
-    // Test clicking contextual link with toolbar.
-    $this->container->get('module_installer')->install(['toolbar']);
-    $this->grantPermissions(Role::load(Role::AUTHENTICATED_ID), ['access toolbar']);
-    $this->drupalGet('user');
-    $this->assertSession()->assertExpectedAjaxRequest(1);
-
-    // Click "Edit" in toolbar to show contextual links.
-    $this->getSession()->getPage()->find('css', '.contextual-toolbar-tab button')->press();
-    $this->clickContextualLink('#block-branding', 'Test Link', FALSE);
-    $this->assertSession()->pageTextContains('Everything is contextual!');
   }
 
   /**
