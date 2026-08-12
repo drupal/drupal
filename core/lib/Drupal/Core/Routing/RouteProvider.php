@@ -25,96 +25,11 @@ use Drupal\Core\Database\Connection;
 class RouteProvider implements CacheableRouteProviderInterface, PreloadableRouteProviderInterface, EventSubscriberInterface {
 
   /**
-   * The database connection from which to read route information.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The name of the SQL table from which to read the routes.
-   *
-   * @var string
-   */
-  protected $tableName;
-
-  /**
-   * The state.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * A cache of already-loaded routes, keyed by route name.
    *
    * @var \Symfony\Component\Routing\Route[]
    */
   protected $routes = [];
-
-  /**
-   * A cache of already-loaded serialized routes, keyed by route name.
-   *
-   * @var string[]
-   *
-   * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
-   *    replacement.
-   *
-   * @see https://www.drupal.org/node/3589089
-   */
-  protected $serializedRoutes = [];
-
-  /**
-   * The current path.
-   *
-   * @var \Drupal\Core\Path\CurrentPathStack
-   */
-  protected $currentPath;
-
-  /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
-   * The cache tag invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagInvalidator;
-
-  /**
-   * The chained fast cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $fastCache;
-
-  /**
-   * A path processor manager for resolving the system path.
-   *
-   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface
-   */
-  protected $pathProcessor;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * Cache ID prefix used to load routes.
-   *
-   * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
-   *     replacement.
-   *
-   * @see https://www.drupal.org/node/3589089
-   */
-  const ROUTE_LOAD_CID_PREFIX = 'route_provider.route_load:';
 
   /**
    * An array of cache key parts to be used for the route match cache.
@@ -123,48 +38,8 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    */
   protected $extraCacheKeyParts = [];
 
-  /**
-   * Constructs a new PathMatcher.
-   *
-   * @param \Drupal\Core\Database\Connection $connection
-   *   A database connection object.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state.
-   * @param \Drupal\Core\Path\CurrentPathStack $current_path
-   *   The current path.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   The cache backend.
-   * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
-   *   The path processor.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tag_invalidator
-   *   The cache tag invalidator.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $fast_cache
-   *   The chained fast cache backend.
-   * @param string $table
-   *   (Optional) The table in the database to use for matching. Defaults to
-   *   'router'.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   (Optional) The language manager.
-   */
-  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $fast_cache = NULL, $table = 'router', ?LanguageManagerInterface $language_manager = NULL) {
-    $this->connection = $connection;
-    $this->state = $state;
-    $this->currentPath = $current_path;
-    $this->cache = $cache_backend;
-    $this->cacheTagInvalidator = $cache_tag_invalidator;
-    $this->pathProcessor = $path_processor;
-    if (!$fast_cache instanceof CacheBackendInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $fast_cache argument is deprecated in drupal:11.4.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3503843', E_USER_DEPRECATED);
-
-      $this->fastCache = \Drupal::service('cache.routes');
-      $this->tableName = is_string($fast_cache) ? $fast_cache : 'router';
-      $this->languageManager = $table instanceof LanguageManagerInterface ? $table : \Drupal::languageManager();
-    }
-    else {
-      $this->fastCache = $fast_cache;
-      $this->tableName = $table;
-      $this->languageManager = $language_manager ?: \Drupal::languageManager();
-    }
+  public function __construct(protected Connection $connection, protected StateInterface $state, protected CurrentPathStack $currentPath, protected CacheBackendInterface $cache, protected InboundPathProcessorInterface $pathProcessor, protected CacheTagsInvalidatorInterface $cacheTagInvalidator, protected CacheBackendInterface $fastCache, protected string $tableName = 'router', protected ?LanguageManagerInterface $languageManager = NULL) {
+    $this->languageManager ??= \Drupal::languageManager();
   }
 
   /**
