@@ -19,7 +19,7 @@
   /*
    * Common.
    */
-  --transition: all var(--admin-duration-fast) var(--admin-easing); /* Claro 'all' composite, kept for the shortcut module's Claro backport. */
+  --transition: all var(--admin-duration-fast) var(--admin-easing); /* Claro 'all' composite. */
   --focus-border-size: calc(var(--admin-radius-2xs) - 1px);
   --focus-border-offset-size: 0px;
   --outline-size: 0.25rem;
