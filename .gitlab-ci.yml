@@ -28,6 +28,9 @@ include: '.gitlab-ci/php.yml'
 # https://gitlab.com/help/ci/pipelines/schedules
 ################
 
+.on-commit: &on-commit
+  if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "11.x"
+
 workflow:
   rules:
   # These 3 rules from https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Workflows/MergeRequest-Pipelines.gitlab-ci.yml
@@ -37,8 +40,9 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == 'pipeline'
     # Run when called from a parent pipeline
     - if: $CI_PIPELINE_SOURCE == 'parent_pipeline'
-    # Run on commits.
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    # Run on commits to release branches. Development branches keep a pipeline
+    # for lint-cache warming but skip the on-commit jobs below.
+    - *on-commit
     # The last rule above blocks manual and scheduled pipelines on non-default branch. The rule below allows them:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     # Run if triggered from Web using 'Run Pipelines'
@@ -194,7 +198,7 @@ default:
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - <<: *on-commit
       allow_failure: true
   before_script:
     - |
@@ -237,11 +241,6 @@ default:
     # Rely on the status of the child pipeline.
     strategy: depend
     include: .gitlab-ci.yml
-
-.run-on-commit: &run-on-commit
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "11.x"
-      allow_failure: true
 
 .run-daily: &run-daily
   rules:
@@ -514,26 +513,35 @@ default:
 # Jobs running on commits.
 # The value set in the "needs" property will determine the order in the sequence.
 '[Commit] PHP 8.5 PostgreSQL 18':
-  <<: [ *recursive-trigger, *run-on-commit ]
+  <<: [ *recursive-trigger ]
   variables:
     _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "pgsql-18"
+  rules:
+    - <<: *on-commit
+      allow_failure: true
 
 '[Commit] PHP 8.5 MySQL 9 via mysqli':
-  <<: [ *recursive-trigger, *run-on-commit ]
+  <<: [ *recursive-trigger ]
   needs: [ '[Commit] PHP 8.5 PostgreSQL 18' ]
   variables:
     _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "mysql-9"
     _TARGET_DB_DRIVER: "mysqli"
     _TARGET_DB_DRIVER_MODULE: "mysqli"
+  rules:
+    - <<: *on-commit
+      allow_failure: true
 
 '[Commit] PHP 8.5 SQLite 3.45':
-  <<: [ *recursive-trigger, *run-on-commit ]
+  <<: [ *recursive-trigger ]
   needs: [ '[Commit] PHP 8.5 MySQL 9 via mysqli' ]
   variables:
     _TARGET_PHP: $MINIMUM_PHP
     _TARGET_DB: "sqlite-3"
+  rules:
+    - <<: *on-commit
+      allow_failure: true
 
 # Jobs running daily.
 # The value set in the "needs" property will determine the order in the sequence.
@@ -734,11 +742,12 @@ default:
       fi
     - mkdir -p $_ARTIFACTS_DIR
     - *download-cache
-  # Run on push, or on MRs if Twig files have changed, or manually.
+  # Run on release-branch pushes, or on MRs if Twig files have changed, or manually.
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
       when: never
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - <<: *on-commit
+      allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - core/.twig-cs-fixer.php
@@ -775,11 +784,12 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
     CACHE_FILE: "core/.eslintcache"
-  # Run on push, or on MRs if JS files have changed, or manually.
+  # Run on release-branch pushes, or on MRs if JS files have changed, or manually.
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
       when: never
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - <<: *on-commit
+      allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - core/.eslint*
@@ -809,11 +819,12 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
     CACHE_FILE: "core/.stylelintcache"
-  # Run on push, or on MRs if CSS files have changed, or manually.
+  # Run on release-branch pushes, or on MRs if CSS files have changed, or manually.
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
       when: never
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - <<: *on-commit
+      allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - core/.stylelintrc.json
@@ -897,11 +908,12 @@ default:
   image: node:20
   variables:
     KUBERNETES_CPU_REQUEST: "1"
-  # Run on push, or on MRs if package.json or yarn.lock have changed, or manually.
+  # Run on release-branch pushes, or on MRs if package.json or yarn.lock have changed, or manually.
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
       when: never
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - <<: *on-commit
+      allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - core/package.json
