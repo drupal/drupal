@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\navigation;
+namespace Drupal\shortcut;
 
 use Drupal\Core\Security\Attribute\TrustedCallback;
-use Drupal\shortcut\ShortcutLazyBuilders;
 
 /**
  * Lazy Builders for Navigation shortcuts links.
@@ -13,7 +12,7 @@ use Drupal\shortcut\ShortcutLazyBuilders;
  * @internal
  * @see \Drupal\shortcut\ShortcutLazyBuilders
  */
-final class ShortcutLazyBuilder {
+final class ShortcutNavigationLazyBuilder {
 
   /**
    * Constructs a ShortcutLazyBuilders object.
