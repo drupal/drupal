@@ -16,12 +16,14 @@ use Drupal\TestTools\Random;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Prophecy\Argument;
 
 /**
  * Tests Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck.
  */
 #[CoversClass(BlockPluginHasSettingsTrayFormAccessCheck::class)]
+#[IgnoreDeprecations]
 #[Group('settings_tray')]
 class BlockPluginHasSettingsTrayFormAccessCheckTest extends UnitTestCase {
 

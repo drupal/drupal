@@ -8,6 +8,7 @@ use Drupal\settings_tray_test\Plugin\Block\SettingsTrayFormAnnotationIsClassBloc
 use Drupal\settings_tray_test\Plugin\Block\SettingsTrayFormAnnotationNoneBlock;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('settings_tray')]
 #[Group('#slow')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
 
