@@ -33,7 +33,7 @@ ckeditor5:
     assets/vendor/ckeditor5/ckeditor5.umd.js: { preprocess: false, minified: true }
   css:
     component:
-      assets/vendor/ckeditor5/ckeditor5.css: { minified: true }
+      assets/vendor/ckeditor5/ckeditor5.css: { preprocess: false, minified: true }
   dependencies:
     - core/ckeditor5.translations
 
