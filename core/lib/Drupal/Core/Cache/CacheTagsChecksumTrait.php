@@ -93,7 +93,7 @@ trait CacheTagsChecksumTrait {
     // has been delayed due to an in-progress transaction must not be read by
     // any other request, so use a nonsensical checksum which will cause any
     // written cache items to be ignored.
-    if (!empty(array_intersect($tags, $this->delayedTags))) {
+    if ($this->delayedTags && array_intersect($tags, $this->delayedTags)) {
       return (string) CacheTagsChecksumInterface::INVALID_CHECKSUM_WHILE_IN_TRANSACTION;
     }
 
@@ -122,7 +122,7 @@ trait CacheTagsChecksumTrait {
     // results to be computed instead. Together with the logic in
     // ::getCurrentChecksum(), it also prevents that computed data from being
     // written to the cache.
-    if (!empty(array_intersect($tags, $this->delayedTags))) {
+    if ($this->delayedTags && array_intersect($tags, $this->delayedTags)) {
       return FALSE;
     }
 
@@ -147,27 +147,30 @@ trait CacheTagsChecksumTrait {
       return $checksum;
     }
 
-    // If there are registered preload tags, add them to the tags list then
-    // reset the list. This needs to make sure that it only returns the
-    // requested cache tags, so store the combination of requested and
-    // preload cache tags in a separate variable.
-    $tags_with_preload = $tags;
+    // This code is optimized for larger sets of cache tags in $this->tagCache
+    // and avoids running expensive array functions on it.
+    $query_tags = [];
+    foreach ($tags as $tag) {
+      if (!isset($this->tagCache[$tag])) {
+        $query_tags[$tag] = $tag;
+      }
+    }
+    // Preload tags only go into $query_tags, so that the checksum below still
+    // covers the requested tags only.
     if ($this->preloadTags) {
-      $tags_with_preload = array_unique(array_merge($tags, $this->preloadTags));
+      foreach ($this->preloadTags as $tag) {
+        if (!isset($this->tagCache[$tag])) {
+          $query_tags[$tag] = $tag;
+        }
+      }
       $this->preloadTags = [];
     }
 
-    $query_tags = [];
-    foreach ($tags_with_preload as $tag) {
-      if (!isset($this->tagCache[$tag])) {
-        $query_tags[] = $tag;
-      }
-    }
     if ($query_tags) {
-      $tag_invalidations = $this->getTagInvalidationCounts($query_tags);
-      $this->tagCache += $tag_invalidations;
-      // Fill static cache with empty objects for tags not found in the storage.
-      $this->tagCache += array_fill_keys(array_diff($query_tags, array_keys($tag_invalidations)), 0);
+      $tag_invalidations = $this->getTagInvalidationCounts(array_values($query_tags));
+      foreach ($query_tags as $tag) {
+        $this->tagCache[$tag] = $tag_invalidations[$tag] ?? 0;
+      }
     }
 
     foreach ($tags as $tag) {
