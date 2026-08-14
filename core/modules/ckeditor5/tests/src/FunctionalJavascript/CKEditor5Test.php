@@ -52,6 +52,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     $page->fillField('title[0][value]', 'My test content');
     $page->fillField('body[0][value]', '<p>This is test content</p>');
     $page->pressButton('Save');
+    $this->assertNotEmpty($assert_session->waitForText('page My test content has been created.'));
     $assert_session->responseNotContains('<p>This is test content</p>');
     $assert_session->responseContains('&lt;p&gt;This is test content&lt;/p&gt;');
 
@@ -63,9 +64,12 @@ class CKEditor5Test extends CKEditor5TestBase {
     $page->selectFieldOption('body[0][format]', 'ckeditor5');
     $this->assertNotEmpty($assert_session->waitForText('Change text format?'));
     $page->pressButton('Continue');
-    // Ensure the editor is loaded.
+    // CKEditor initialization can exceed the normal wait time under CI.
+    // Ensure the editor is loaded and has loaded the existing content.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
+    $this->assertNotEmpty($assert_session->waitForText('This is test content', 20000));
     $page->pressButton('Save');
+    $this->assertNotEmpty($assert_session->waitForText('page My test content has been updated.'));
 
     // Assert that the HTML is rendered correctly.
     $assert_session->responseContains('<p>This is test content</p>');
@@ -539,6 +543,7 @@ JS;
     $page->fillField('title[0][value]', 'My test content');
     $page->fillField('body[0][value]', '<p>This is a <em>test!</em></p>');
     $page->pressButton('Save');
+    $this->assertNotEmpty($assert_session->waitForText('page My test content has been created.'));
 
     $this->addNewTextFormat();
 
@@ -548,7 +553,9 @@ JS;
     $page->pressButton('Continue');
 
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
+    $this->assertTrue($assert_session->waitForText('This is a test!', 20000));
     $page->pressButton('Save');
+    $this->assertNotEmpty($assert_session->waitForText('page My test content has been updated.'));
 
     $assert_session->responseContains('<p>This is a <em>test!</em></p>');
   }
