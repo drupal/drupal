@@ -4,20 +4,27 @@ declare(strict_types=1);
 
 namespace Drupal\navigation\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Block\Attribute\Block;
+use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\shortcut\Plugin\Block\ShortcutNavigationBlock;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines a shortcuts navigation block class.
  *
  * @internal
  *
- * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use
- *  \Drupal\shortcut\Plugin\Block\ShortcutNavigationBlock instead.
- *
- * @see https://www.drupal.org/node/3587759
+ * @todo Move to Shortcut module as part of the core MR process.
  */
-final class NavigationShortcutsBlock extends ShortcutNavigationBlock {
+#[Block(
+  id: 'navigation_shortcuts',
+  admin_label: new TranslatableMarkup('Navigation Shortcuts'),
+)]
+final class NavigationShortcutsBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * Constructs a new ShortcutsNavigationBlock.
@@ -32,8 +39,52 @@ final class NavigationShortcutsBlock extends ShortcutNavigationBlock {
    *   The module handler service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, protected ModuleHandlerInterface $moduleHandler) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $moduleHandler);
-    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use \Drupal\shortcut\Plugin\Block\ShortcutNavigationBlock instead. See https://www.drupal.org/node/3587759', E_USER_DEPRECATED);
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function blockAccess(AccountInterface $account): AccessResultInterface {
+    return AccessResult::allowedIfHasPermission($account, 'access shortcuts');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function build(): array {
+    // This navigation block requires shortcut module. Once the plugin is moved
+    // to the module, this should not be necessary.
+    if (!$this->moduleHandler->moduleExists('shortcut')) {
+      return [];
+    }
+    return [
+      'shortcuts' => [
+        // @phpstan-ignore-next-line
+        '#lazy_builder' => ['navigation.shortcut_lazy_builder:lazyLinks', [$this->configuration['label']]],
+        '#create_placeholder' => TRUE,
+        '#cache' => [
+          'keys' => ['shortcut_set_navigation_links'],
+          'contexts' => ['user'],
+        ],
+        '#lazy_builder_preview' => [
+          [
+            '#theme' => 'navigation_menu',
+            '#menu_name' => 'shortcuts',
+            '#title' => $this->configuration['label'],
+            '#items' => [
+              [
+                'title' => $this->configuration['label'],
+                'class' => 'shortcuts',
+                'icon' => [
+                  'icon_id' => 'shortcuts',
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
   }
 
 }

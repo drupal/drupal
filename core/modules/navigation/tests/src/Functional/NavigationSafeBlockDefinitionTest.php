@@ -59,6 +59,7 @@ class NavigationSafeBlockDefinitionTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Administration');
     $this->assertSession()->linkExists('Content');
     $this->assertSession()->linkExists('Footer');
+    $this->assertSession()->linkExists('Navigation Shortcuts');
     $this->assertSession()->linkExists('User');
     $this->assertSession()->linkNotExists('Link');
 
@@ -71,6 +72,7 @@ class NavigationSafeBlockDefinitionTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Content');
     $this->assertSession()->linkExists('Footer');
     $this->assertSession()->linkExists('Link');
+    $this->assertSession()->linkNotExists('Navigation Shortcuts');
   }
 
   /**
@@ -82,6 +84,7 @@ class NavigationSafeBlockDefinitionTest extends BrowserTestBase {
     $this->clickLink('Place block');
     $this->assertSession()->linkByHrefNotExists('/admin/structure/block/add/navigation_menu%3Aadmin/stark');
     $this->assertSession()->linkByHrefNotExists('/admin/structure/block/add/navigation_menu%3Acontent/stark');
+    $this->assertSession()->linkByHrefNotExists('/admin/structure/block/add/navigation_shortcuts/stark');
     $this->assertSession()->linkByHrefNotExists('/admin/structure/block/add/navigation_user/stark');
     $this->assertSession()->linkByHrefNotExists('/admin/structure/block/add/navigation_link/stark');
   }

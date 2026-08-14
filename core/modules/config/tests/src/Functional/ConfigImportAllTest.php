@@ -66,9 +66,6 @@ class ConfigImportAllTest extends ModuleTestBase {
 
     // Get a list of modules to install.
     $all_modules = $this->container->get('extension.list.module')->getList();
-    // @todo Delete the next line when removing Shortcut.
-    //   https://www.drupal.org/project/drupal/issues/3586214
-    unset($all_modules['shortcut']);
     $all_modules = array_filter($all_modules, function ($module): bool {
       // Filter out contrib, hidden, testing, experimental, and deprecated
       // modules. We also don't need to enable modules that are already enabled.

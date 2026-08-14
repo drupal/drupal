@@ -151,6 +151,7 @@ class NavigationHooks {
       //   https://www.drupal.org/project/drupal/issues/3443882 is merged.
       $allow_in_navigation = [
         'navigation_user',
+        'navigation_shortcuts',
         'navigation_menu',
       ];
       if (in_array($base_plugin_id, $allow_in_navigation, TRUE)) {
@@ -158,7 +159,7 @@ class NavigationHooks {
       }
 
       // Hide Navigation specific blocks from the generic UI.
-      $hidden = ['navigation_user', 'navigation_menu', 'navigation_link'];
+      $hidden = ['navigation_user', 'navigation_shortcuts', 'navigation_menu', 'navigation_link'];
       if (in_array($base_plugin_id, $hidden, TRUE)) {
         $definition['_block_ui_hidden'] = TRUE;
       }

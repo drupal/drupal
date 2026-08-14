@@ -49,8 +49,8 @@ class AddNavigationBlockConfigActionTest extends KernelTestBase {
    */
   #[TestWith([0, 0])]
   #[TestWith([1, 1])]
-  #[TestWith([2, 2])]
-  #[TestWith([6, 2])]
+  #[TestWith([3, 3])]
+  #[TestWith([7, 3])]
   public function testAddBlockToNavigation($delta, int $computed_delta): void {
     // Load the navigation section storage.
     $navigation_storage = \Drupal::service('plugin.manager.layout_builder.section_storage')->load('navigation', [
@@ -58,7 +58,7 @@ class AddNavigationBlockConfigActionTest extends KernelTestBase {
     ]);
     $section = $navigation_storage->getSection(0);
     $components = $section->getComponentsByRegion('content');
-    $this->assertCount(2, $components);
+    $this->assertCount(3, $components);
     $data = [
       'delta' => $delta,
       'configuration' => [
@@ -82,7 +82,7 @@ class AddNavigationBlockConfigActionTest extends KernelTestBase {
     ]);
     $section = $navigation_storage->getSection(0);
     $components = $section->getComponentsByRegion('content');
-    $this->assertCount(3, $components);
+    $this->assertCount(4, $components);
     $component = array_values($components)[$computed_delta];
     $this->assertSame('content', $component->getRegion());
     $this->assertEquals($data['configuration'], $component->get('configuration'));

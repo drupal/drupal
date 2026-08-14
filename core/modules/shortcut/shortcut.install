@@ -5,9 +5,6 @@
  * Install, update and uninstall functions for the shortcut module.
  */
 
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
-
 /**
  * Implements hook_schema().
  */
@@ -52,7 +49,7 @@ function shortcut_schema(): array {
 /**
  * Implements hook_install().
  */
-function shortcut_install(bool $is_syncing): void {
+function shortcut_install(): void {
   // Theme settings are not configuration entities and cannot depend on modules
   // so to set a module-specific setting, we need to set it with logic.
   if (\Drupal::service('theme_handler')->themeExists('claro')) {
@@ -66,37 +63,6 @@ function shortcut_install(bool $is_syncing): void {
       ->getEditable("olivero.settings")
       ->set('third_party_settings.shortcut.module_link', TRUE)
       ->save();
-  }
-  // Add the shortcuts block to the navigation layout if Navigation is already
-  // installed. When both are installed in the same request,
-  // navigation_install() may have already added the block via invokeAll(),
-  // so check for duplicates.
-  if (!$is_syncing && \Drupal::moduleHandler()->moduleExists('navigation')) {
-    $config = \Drupal::configFactory()->get('navigation.block_layout');
-    if (!$config->isNew()) {
-      $already_exists = FALSE;
-      foreach ($config->get('sections') ?? [] as $section) {
-        foreach ($section['components'] ?? [] as $component) {
-          if (isset($component['configuration']['id']) && $component['configuration']['id'] === 'navigation_shortcuts') {
-            $already_exists = TRUE;
-            break 2;
-          }
-        }
-      }
-      if (!$already_exists) {
-        \Drupal::service('plugin.manager.config_action')->applyAction('addNavigationBlock', 'navigation.block_layout', [
-          'region' => 'content',
-          'configuration' => [
-            'id' => 'navigation_shortcuts',
-            'label' => 'Shortcuts',
-            'label_display' => '0',
-            'provider' => 'shortcut',
-          ],
-          'weight' => 0,
-          'additional' => [],
-        ]);
-      }
-    }
   }
 }
 
@@ -117,25 +83,5 @@ function shortcut_uninstall(): void {
       ->getEditable("olivero.settings")
       ->clear('third_party_settings.shortcut')
       ->save();
-  }
-  // Remove the navigation_shortcuts block from the navigation layout.
-  // @todo Fix Navigation so it does not store dependencies in config.
-  //   https://www.drupal.org/project/drupal/issues/3587499
-  if (\Drupal::moduleHandler()->moduleExists('navigation')) {
-    /** @var \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager */
-    $section_storage_manager = \Drupal::service('plugin.manager.layout_builder.section_storage');
-    $navigation_storage = $section_storage_manager->load('navigation', [
-      'navigation' => new Context(new ContextDefinition('string'), 'navigation'),
-    ]);
-    if ($navigation_storage) {
-      foreach ($navigation_storage->getSections() as $section) {
-        foreach ($section->getComponents() as $uuid => $component) {
-          if ($component->getPluginId() === 'navigation_shortcuts') {
-            $section->removeComponent($uuid);
-          }
-        }
-        $navigation_storage->save();
-      }
-    }
   }
 }
