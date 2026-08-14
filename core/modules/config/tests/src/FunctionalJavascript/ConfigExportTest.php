@@ -90,6 +90,11 @@ class ConfigExportTest extends WebDriverTestBase {
     $this->assertSession()->fieldValueEquals('export', '');
 
     // Check that the export is emptied again when selecting a config type.
+    // First select a config name to populate the export.
+    $page->selectFieldOption('config_name', 'system.site');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->fieldValueNotEquals('export', '');
+    // Then select a config type to empty the export.
     $page->selectFieldOption('config_type', 'Action');
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->fieldValueEquals('export', '');

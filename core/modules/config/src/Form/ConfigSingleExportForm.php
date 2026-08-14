@@ -101,8 +101,8 @@ class ConfigSingleExportForm extends FormBase {
     (new Htmx())
       ->post($form_url)
       ->onlyMainContent()
-      ->select('*:has(>select[name="config_name"])')
-      ->target('*:has(>select[name="config_name"])')
+      ->select('[data-drupal-wrapper-selector="edit-config-name"]')
+      ->target('[data-drupal-wrapper-selector="edit-config-name"]')
       ->swap('outerHTML')
       ->applyTo($form['config_type']);
 
@@ -119,8 +119,8 @@ class ConfigSingleExportForm extends FormBase {
     (new Htmx())
       ->post($form_url)
       ->onlyMainContent()
-      ->select('[data-export-wrapper]')
-      ->target('[data-export-wrapper]')
+      ->select('[data-drupal-wrapper-selector="edit-export"]')
+      ->target('[data-drupal-wrapper-selector="edit-export"]')
       ->swap('outerHTML')
       ->applyTo($form['config_name']);
 
@@ -128,9 +128,6 @@ class ConfigSingleExportForm extends FormBase {
       '#title' => $this->t('Here is your configuration:'),
       '#type' => 'textarea',
       '#rows' => 24,
-      '#wrapper_attributes' => [
-        'data-export-wrapper' => TRUE,
-      ],
     ];
 
     $pushUrl = FALSE;
@@ -139,7 +136,7 @@ class ConfigSingleExportForm extends FormBase {
       $form = $this->updateConfigurationType($form, $form_state);
       // Also update the empty export element "out of band".
       (new Htmx())
-        ->swapOob('outerHTML:[data-export-wrapper]')
+        ->swapOob('outerHTML:[data-drupal-wrapper-selector="edit-export"]')
         ->applyTo($form['export'], '#wrapper_attributes');
       $pushUrl = Url::fromRoute('config.export_single', ['config_type' => $default_type, 'config_name' => '']);
     }
