@@ -1343,6 +1343,9 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->entityType->expects($this->any())
       ->method('isPersistentlyCacheable')
       ->willReturn(TRUE);
+    $this->entityType
+      ->method('isStaticallyCacheable')
+      ->willReturn(TRUE);
     $this->entityType->expects($this->atLeastOnce())
       ->method('id')
       ->willReturn($this->entityTypeId);
@@ -1367,6 +1370,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->getActiveDefinition($this->entityType->id())
       ->willReturn($this->entityType);
 
+    $memory_cache = new MemoryCache(new Time());
     $entity_storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
       ->setConstructorArgs([
         $this->entityType,
@@ -1374,7 +1378,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
         $this->entityFieldManager->reveal(),
         $this->cache,
         $this->languageManager,
-        new MemoryCache(new Time()), $this->entityTypeBundleInfo, $this->entityTypeManager->reveal(),
+        $memory_cache, $this->entityTypeBundleInfo, $this->entityTypeManager->reveal(),
       ])
       ->onlyMethods(['getFromStorage', 'invokeStorageLoadHook', 'initTableLayout'])
       ->getMock();
@@ -1389,6 +1393,9 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
     $entities = $entity_storage->loadMultiple([$id]);
     $this->assertEquals($entity, $entities[$id]);
+    // A not-found record should keep the ID out of storage queries for the rest
+    // of the request.
+    $this->assertFalse($memory_cache->get('not_found:' . $key));
   }
 
   /**

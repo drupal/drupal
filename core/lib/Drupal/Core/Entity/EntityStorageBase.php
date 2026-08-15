@@ -406,7 +406,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
 
       // Statically cache entities that were not loaded.
       if ($ids) {
-        $remaining_ids = array_diff_key($ids, $queried_entities);
+        $remaining_ids = array_diff($ids, array_keys($queried_entities));
         if ($remaining_ids) {
           $this->setNotFoundStaticCache($remaining_ids);
         }
