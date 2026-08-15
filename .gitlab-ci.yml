@@ -28,6 +28,9 @@ include: '.gitlab-ci/php.yml'
 # https://gitlab.com/help/ci/pipelines/schedules
 ################
 
+.on-commit: &on-commit
+  if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $CI_COMMIT_BRANCH != "main" && $CI_COMMIT_BRANCH != "11.x"
+
 workflow:
   rules:
   # These 3 rules from https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Workflows/MergeRequest-Pipelines.gitlab-ci.yml
@@ -37,8 +40,9 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == 'pipeline'
     # Run when called from a parent pipeline (e.g. updated dependencies job)
     - if: $CI_PIPELINE_SOURCE == 'parent_pipeline'
-    # Run on commits.
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    # Run on commits to release branches. Development branches keep a pipeline
+    # for lint-cache warming but skip the on-commit jobs below.
+    - *on-commit
     # The last rule above blocks manual and scheduled pipelines on non-default branch. The rule below allows them:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     # Run if triggered from Web using 'Run Pipelines'
@@ -318,9 +322,9 @@ default:
     _TARGET_DB_DRIVER_MODULE: "mysql"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
     OPENTELEMETRY_COLLECTOR: $OPENTELEMETRY_COLLECTOR
-  # Run on MR, schedule, push, parent pipeline and performance test.
+  # Run on MR, schedule, release-branch push, parent pipeline and performance test.
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - <<: *on-commit
       allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
       allow_failure: true
@@ -625,9 +629,12 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
     CACHE_FILE: "core/.eslintcache"
-  # Run on push, or on MRs if CSS files have changed, or manually.
+  # Run on release-branch pushes, or on MRs if JS files have changed, or manually.
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
+    - <<: *on-commit
+      allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - core/.eslint*
@@ -657,9 +664,12 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
     CACHE_FILE: "core/.stylelintcache"
-  # Run on push, or on MRs if CSS files have changed, or manually.
+  # Run on release-branch pushes, or on MRs if CSS files have changed, or manually.
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
+    - <<: *on-commit
+      allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - core/.stylelintrc.json
@@ -748,9 +758,12 @@ default:
   image: node:20
   variables:
     KUBERNETES_CPU_REQUEST: "1"
-  # Run on push, or on MRs if package.json or yarn.lock have changed, or manually.
+  # Run on release-branch pushes, or on MRs if package.json or yarn.lock have changed, or manually.
   rules:
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
+      when: never
+    - <<: *on-commit
+      allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - core/package.json
