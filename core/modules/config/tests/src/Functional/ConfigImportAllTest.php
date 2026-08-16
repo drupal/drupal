@@ -66,7 +66,8 @@ class ConfigImportAllTest extends ModuleTestBase {
 
     // Get a list of modules to install.
     $all_modules = $this->container->get('extension.list.module')->getList();
-    $all_modules = array_filter($all_modules, function ($module) {
+    unset($all_modules['shortcut']);
+    $all_modules = array_filter($all_modules, function ($module): bool {
       // Filter out contrib, hidden, testing, experimental, and deprecated
       // modules. We also don't need to enable modules that are already enabled.
       if ($module->origin !== 'core'

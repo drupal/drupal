@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests for \Drupal\navigation\Plugin\Block\NavigationShortcutsBlock.
+ * Tests the \Drupal\shortcut\Plugin\Block\ShortcutNavigationBlock block.
  */
 #[Group('shortcut')]
 #[RunTestsInSeparateProcesses]

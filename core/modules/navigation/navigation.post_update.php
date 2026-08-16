@@ -86,3 +86,31 @@ function navigation_post_update_refresh_tempstore_repository(array &$sandbox): v
   $section_storage = $section_storage_manager->loadEmpty('navigation');
   $layout_tempstore_repository->delete($section_storage);
 }
+
+/**
+ * Remove navigation_shortcuts block if Shortcut module is not installed.
+ */
+function navigation_post_update_remove_shortcut_block(): void {
+  if (\Drupal::moduleHandler()->moduleExists('shortcut')) {
+    return;
+  }
+
+  $config = \Drupal::configFactory()->getEditable('navigation.block_layout');
+  $sections = $config->get('sections');
+  $changed = FALSE;
+  foreach ($sections as &$section) {
+    if (empty($section['components'])) {
+      continue;
+    }
+    foreach ($section['components'] as $uuid => $component) {
+      if (isset($component['configuration']['id']) && $component['configuration']['id'] === 'navigation_shortcuts') {
+        unset($section['components'][$uuid]);
+        $changed = TRUE;
+      }
+    }
+  }
+
+  if ($changed) {
+    $config->set('sections', $sections)->save();
+  }
+}
