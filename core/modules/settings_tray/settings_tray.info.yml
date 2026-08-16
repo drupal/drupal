@@ -7,3 +7,5 @@ dependencies:
   - drupal:block
   - drupal:toolbar
   - drupal:contextual
+lifecycle: deprecated
+lifecycle_link: https://www.drupal.org/node/3223395#s-settings-tray
