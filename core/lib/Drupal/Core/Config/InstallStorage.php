@@ -159,14 +159,6 @@ class InstallStorage extends FileStorage {
       if ($profile = \Drupal::installProfile()) {
         $profile_list = $listing->scan('profile');
         if (isset($profile_list[$profile])) {
-          // Prime the \Drupal\Core\Extension\ExtensionList::getPathname static
-          // cache with the profile info file location so we can use
-          // \Drupal\Core\Extension\ExtensionList::getPath() on the active
-          // profile during the module scan.
-          // @todo Remove as part of https://www.drupal.org/node/2186491
-          /** @var \Drupal\Core\Extension\ProfileExtensionList $profile_extension_list */
-          $profile_extension_list = \Drupal::service('extension.list.profile');
-          $profile_extension_list->setPathname($profile, $profile_list[$profile]->getPathname());
           $this->folders += $this->getComponentNames([$profile_list[$profile]]);
         }
       }

@@ -74,10 +74,6 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
     $container->getDefinition('cache_tags.invalidator.checksum')
       ->clearTag('cache_tags_invalidator');
 
-    // Use performance-optimized extension lists.
-    $container->getDefinition('extension.list.module')->setClass(InstallerModuleExtensionList::class);
-    $container->getDefinition('extension.list.theme')->setClass(InstallerThemeExtensionList::class);
-
     // Don't register the lazy route provider in the super early installer.
     if (static::class === NormalInstallerServiceProvider::class) {
       $lazy_route_provider = $container->register('router.route_provider.installer');

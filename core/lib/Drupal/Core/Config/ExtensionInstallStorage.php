@@ -96,16 +96,6 @@ class ExtensionInstallStorage extends InstallStorage {
         // Remove the install profile as this is handled later.
         unset($modules[$this->installProfile]);
         $profile_list = $listing->scan('profile');
-        if ($this->installProfile && isset($profile_list[$this->installProfile])) {
-          // Prime the \Drupal\Core\Extension\ExtensionList::getPathname()
-          // static cache with the profile info file location so we can use
-          // ExtensionList::getPath() on the active profile during the module
-          // scan.
-          // @todo Remove as part of https://www.drupal.org/node/2186491
-          /** @var \Drupal\Core\Extension\ProfileExtensionList $profile_extension_list */
-          $profile_extension_list = \Drupal::service('extension.list.profile');
-          $profile_extension_list->setPathname($this->installProfile, $profile_list[$this->installProfile]->getPathname());
-        }
         $module_list_scan = $listing->scan('module');
         $module_list = [];
         foreach (array_keys($modules) as $module) {
