@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\navigation\Functional;
+namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
@@ -18,7 +18,13 @@ class NavigationSafeBlockDefinitionTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['navigation', 'navigation_test', 'block'];
+  protected static $modules = [
+    'navigation',
+    'navigation_test',
+    'block',
+    'shortcut',
+    'shortcut_test',
+  ];
 
   /**
    * {@inheritdoc}
@@ -50,27 +56,22 @@ class NavigationSafeBlockDefinitionTest extends BrowserTestBase {
 
   /**
    * Tests logic to include blocks in Navigation Layout UI.
+   *
+   * @see \Drupal\shortcut_test\Hook\ShortcutTestHooks::blockAlter()
    */
   public function testNavigationSafeBlockDefinition(): void {
     // Confirm that default blocks are available.
     $layout_url = '/layout_builder/choose/block/navigation/navigation.block_layout/0/content';
     $this->drupalGet($layout_url);
 
-    $this->assertSession()->linkExists('Administration');
-    $this->assertSession()->linkExists('Content');
-    $this->assertSession()->linkExists('Footer');
-    $this->assertSession()->linkExists('User');
-    $this->assertSession()->linkNotExists('Link');
+    $this->assertSession()->linkExists('Navigation Shortcuts');
 
     // Apply changes, clear cache and confirm that changes are applied.
     \Drupal::state()->set('navigation_safe_alter', TRUE);
     \Drupal::cache('discovery')->delete('block_plugins');
 
     $this->drupalGet($this->getUrl());
-    $this->assertSession()->linkExists('Administration');
-    $this->assertSession()->linkExists('Content');
-    $this->assertSession()->linkExists('Footer');
-    $this->assertSession()->linkExists('Link');
+    $this->assertSession()->linkNotExists('Navigation Shortcuts');
   }
 
   /**
@@ -80,10 +81,7 @@ class NavigationSafeBlockDefinitionTest extends BrowserTestBase {
     $block_url = '/admin/structure/block';
     $this->drupalGet($block_url);
     $this->clickLink('Place block');
-    $this->assertSession()->linkByHrefNotExists('/admin/structure/block/add/navigation_menu%3Aadmin/stark');
-    $this->assertSession()->linkByHrefNotExists('/admin/structure/block/add/navigation_menu%3Acontent/stark');
-    $this->assertSession()->linkByHrefNotExists('/admin/structure/block/add/navigation_user/stark');
-    $this->assertSession()->linkByHrefNotExists('/admin/structure/block/add/navigation_link/stark');
+    $this->assertSession()->linkByHrefNotExists('/admin/structure/block/add/navigation_shortcuts/stark');
   }
 
 }
