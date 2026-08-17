@@ -203,7 +203,7 @@ abstract class Connection {
    * @return object
    *   A client connection object.
    */
-  abstract public static function open(array &$connection_options = []);
+  abstract public static function open(#[\SensitiveParameter] array &$connection_options = []);
 
   /**
    * Ensures that the client connection can be garbage collected.

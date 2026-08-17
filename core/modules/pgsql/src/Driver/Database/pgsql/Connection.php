@@ -143,7 +143,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
-  public static function open(array &$connection_options = []) {
+  public static function open(#[\SensitiveParameter] array &$connection_options = []) {
     // Default to TCP connection on port 5432.
     if (empty($connection_options['port'])) {
       $connection_options['port'] = 5432;

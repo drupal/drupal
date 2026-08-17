@@ -55,7 +55,7 @@ class Connection extends BaseMySqlConnection {
   /**
    * {@inheritdoc}
    */
-  public static function open(array &$connection_options = []) {
+  public static function open(#[\SensitiveParameter] array &$connection_options = []) {
     // Sets mysqli error reporting mode to report errors from mysqli function
     // calls and to throw mysqli_sql_exception for errors.
     // @see https://www.php.net/manual/en/mysqli-driver.report-mode.php
