@@ -484,9 +484,10 @@ class FileSystem implements FileSystemInterface {
     }
 
     // Determine whether we can perform this operation based on overwrite rules.
+    $original_destination = $destination;
     $destination = $this->getDestinationFilename($destination, $fileExists);
     if ($destination === FALSE) {
-      throw new FileExistsException("File '$original_source' could not be copied because a file by that name already exists in the destination directory ('$destination').");
+      throw new FileExistsException("File '$original_source' could not be copied because a file by that name already exists in the destination directory ('$original_destination').");
     }
 
     // Assert that the source and destination filenames are not the same.
