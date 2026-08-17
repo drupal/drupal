@@ -375,10 +375,6 @@ Search
 Serialization
 - Brad Jones 'bradjones1' (bradjones1) https://www.drupal.org/u/bradjones1
 
-Settings Tray
-- Mark Conroy 'markconroy' (MarkConroy) https://www.drupal.org/u/markconroy
-- Chris Weber 'cosmicdreams' (cosmicdreams) https://www.drupal.org/u/cosmicdreams
-
 Shortcut
 - Jibran Ijaz 'jibran' (jibran) https://www.drupal.org/u/jibran
 

@@ -1,5 +1,0 @@
-services:
-  settings_tray_override_test.overrider:
-    class: Drupal\settings_tray_override_test\ConfigOverrider
-    tags:
-      - { name: config.factory.override }
