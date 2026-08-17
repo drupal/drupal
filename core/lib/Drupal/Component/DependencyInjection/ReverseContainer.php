@@ -51,7 +51,7 @@ final class ReverseContainer {
       return 'service_container';
     }
 
-    $hash = $this->generateServiceIdHash($service);
+    $hash = $this->generateServiceObjectId($service);
     $id = self::$recordedServices[$hash] ?? ($this->getServiceId)($service);
 
     if ($id !== NULL && $this->serviceContainer->has($id)) {
@@ -72,25 +72,26 @@ final class ReverseContainer {
     $service_recorder = \Closure::bind(function () : array {
       return $this->services;
     }, $this->serviceContainer, $this->serviceContainer);
-    self::$recordedServices = array_merge(self::$recordedServices, array_flip(array_map([$this, 'generateServiceIdHash'], $service_recorder())));
+    self::$recordedServices = array_merge(self::$recordedServices,
+      array_flip(array_map([$this, 'generateServiceObjectId'], $service_recorder())));
   }
 
   /**
-   * Generates an identifier for a service based on the object class and hash.
+   * Generates an identifier for a service based on the object class and ID.
    *
    * @param object $object
    *   The object to generate an identifier for.
    *
    * @return string
-   *   The object's class and hash concatenated together.
+   *   The object's class and ID concatenated together.
    */
-  private function generateServiceIdHash(object $object): string {
-    // Include class name as an additional namespace for the hash since
-    // spl_object_hash's return can be recycled. This still is not a 100%
+  private function generateServiceObjectId(object $object): string {
+    // Include class name as an additional namespace for the ID since
+    // spl_object_id's return can be recycled. This still is not a 100%
     // guarantee to be unique but makes collisions incredibly difficult and even
     // then the interface would be preserved.
-    // @see https://php.net/spl_object_hash#refsect1-function.spl-object-hash-notes
-    return get_class($object) . spl_object_hash($object);
+    // @see https://www.php.net/spl_object_id#refsect1-function.spl-object-id-notes
+    return get_class($object) . ':' . spl_object_id($object);
   }
 
 }

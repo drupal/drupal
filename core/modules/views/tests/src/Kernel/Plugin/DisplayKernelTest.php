@@ -112,8 +112,8 @@ class DisplayKernelTest extends ViewsKernelTestBase {
     // Get a plugin twice, and make sure the same instance is returned.
     $view->destroy();
     $view->initDisplay();
-    $first = spl_object_hash($display_handler->getPlugin('style'));
-    $second = spl_object_hash($display_handler->getPlugin('style'));
+    $first = $display_handler->getPlugin('style');
+    $second = $display_handler->getPlugin('style');
     $this->assertSame($first, $second, 'The same plugin instance was returned.');
   }
 

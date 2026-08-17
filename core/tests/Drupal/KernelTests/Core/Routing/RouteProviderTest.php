@@ -723,7 +723,7 @@ class RouteProviderTest extends KernelTestBase {
     $result = $provider->getRoutesByPattern($path_to_test);
     $this->assertEquals(1, $result->count());
     // We can't compare the values of the routes directly, nor use
-    // spl_object_hash() because they are separate instances.
+    // object identity because they are separate instances.
     $this->assertEquals(serialize($collection->get('long_pattern')), serialize($result->get('long_pattern')), 'The right route was found.');
     // We now have a single candidate outline.
     $candidates = $provider->getCandidateOutlines(explode('/', trim($path_to_test, '/')));

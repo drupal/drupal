@@ -1084,14 +1084,13 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     // Test that the default translation object is put into the translation
     // object cache when a new translation object is initialized.
     $entity = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
-    $default_translation_spl_object_hash = spl_object_hash($entity);
-    $this->assertEquals($default_translation_spl_object_hash, spl_object_hash($entity->getTranslation($translation_langcode)->getTranslation($default_langcode)));
+    $this->assertSame($entity, $entity->getTranslation($translation_langcode)->getTranslation($default_langcode));
 
     // Test that non-default translations are always served from the translation
     // object cache.
     $entity = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
-    $this->assertEquals(spl_object_hash($entity->getTranslation($translation_langcode)), spl_object_hash($entity->getTranslation($translation_langcode)));
-    $this->assertEquals(spl_object_hash($entity->getTranslation($translation_langcode)), spl_object_hash($entity->getTranslation($translation_langcode)->getTranslation($default_langcode)->getTranslation($translation_langcode)));
+    $this->assertSame($entity->getTranslation($translation_langcode), $entity->getTranslation($translation_langcode));
+    $this->assertSame($entity->getTranslation($translation_langcode), $entity->getTranslation($translation_langcode)->getTranslation($default_langcode)->getTranslation($translation_langcode));
   }
 
 }

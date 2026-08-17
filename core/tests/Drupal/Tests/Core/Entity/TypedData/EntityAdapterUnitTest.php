@@ -252,7 +252,7 @@ class EntityAdapterUnitTest extends UnitTestCase {
    * Tests get root.
    */
   public function testGetRoot(): void {
-    $this->assertSame(spl_object_hash($this->entityAdapter), spl_object_hash($this->entityAdapter->getRoot()));
+    $this->assertSame($this->entityAdapter, $this->entityAdapter->getRoot());
   }
 
   /**

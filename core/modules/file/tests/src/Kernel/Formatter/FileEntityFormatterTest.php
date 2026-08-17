@@ -165,7 +165,7 @@ class FileEntityFormatterTest extends KernelTestBase {
     foreach (array_values($this->files) as $file) {
       $build = $entity_display->build($file);
       $this->assertEquals('image__file_icon', $build['filemime'][0]['#theme']);
-      $this->assertEquals(spl_object_hash($file), spl_object_hash($build['filemime'][0]['#file']));
+      $this->assertSame($file, $build['filemime'][0]['#file']);
     }
   }
 
