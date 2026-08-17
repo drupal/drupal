@@ -8,7 +8,6 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
 use Drupal\Core\Extension\ModuleWeight;
-use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
@@ -176,14 +175,6 @@ class ModuleHandlerTest extends KernelTestBase {
     $dependency = 'dblog';
     $non_dependency = 'dependency_foo_test';
     $this->setInstallProfile($profile);
-    // Prime the \Drupal\Core\Extension\ExtensionList::getPathname() static
-    // cache with the location of the testing_install_profile_dependencies
-    // profile as it is not the currently active profile and we don't yet have
-    // any cached way to retrieve its location.
-    // @todo Remove as part of https://www.drupal.org/node/2186491
-    $profile_list = \Drupal::service('extension.list.profile');
-    assert($profile_list instanceof ProfileExtensionList);
-    $profile_list->setPathname($profile, 'core/profiles/tests/' . $profile . '/' . $profile . '.info.yml');
     $this->enableModules(['module_test', $profile]);
 
     $data = \Drupal::service('extension.list.module')->reset()->getList();
@@ -235,14 +226,6 @@ class ModuleHandlerTest extends KernelTestBase {
     $profile = 'testing_install_profile_all_dependencies';
     $dependencies = ['dblog', 'dependency_foo_test'];
     $this->setInstallProfile($profile);
-    // Prime the \Drupal\Core\Extension\ExtensionList::getPathname() static
-    // cache with the location of the testing_install_profile_dependencies
-    // profile as it is not the currently active profile and we don't yet have
-    // any cached way to retrieve its location.
-    // @todo Remove as part of https://www.drupal.org/node/2186491
-    $profile_list = \Drupal::service('extension.list.profile');
-    assert($profile_list instanceof ProfileExtensionList);
-    $profile_list->setPathname($profile, 'core/profiles/tests/' . $profile . '/' . $profile . '.info.yml');
     $this->enableModules(['module_test', $profile]);
 
     $data = \Drupal::service('extension.list.module')->reset()->getList();

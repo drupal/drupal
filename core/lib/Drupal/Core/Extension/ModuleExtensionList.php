@@ -78,7 +78,7 @@ class ModuleExtensionList extends ExtensionList {
 
     // Use the information from the container. This is an optimization.
     foreach ($container_modules_info as $module_name => $info) {
-      $this->setPathname($module_name, $info['pathname']);
+      $this->addedPathNames[$module_name] = $info['pathname'];
     }
   }
 

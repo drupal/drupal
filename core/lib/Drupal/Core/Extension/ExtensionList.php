@@ -480,11 +480,17 @@ abstract class ExtensionList {
    *   The pathname of the extension which is to be set explicitly rather
    *   than by consulting the dynamic extension listing.
    *
+   * @see ::getPathname
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is
+   *   no replacement.
+   *
    * @internal
    *
-   * @see ::getPathname
+   * @see https://www.drupal.org/node/2934063
    */
   public function setPathname($extension_name, $pathname) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/2934063', E_USER_DEPRECATED);
     $this->addedPathNames[$extension_name] = $pathname;
   }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Installer;
 
-use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
@@ -49,15 +48,6 @@ class InstallerLanguageTest extends KernelTestBase {
    */
   public function testInstallerTranslationCache(): void {
     require_once 'core/includes/install.inc';
-
-    // Prime the \Drupal\Core\Extension\ExtensionList::getPathname() static
-    // cache with the location of the testing profile as it isn't the currently
-    // active profile and we don't yet have any cached way to retrieve its
-    // location.
-    // @todo Remove as part of https://www.drupal.org/node/2186491
-    $profile_list = \Drupal::service('extension.list.profile');
-    assert($profile_list instanceof ProfileExtensionList);
-    $profile_list->setPathname('testing', 'core/profiles/tests/testing/testing.info.yml');
 
     $info_en = install_profile_info('testing', 'en');
     $info_nl = install_profile_info('testing', 'nl');
