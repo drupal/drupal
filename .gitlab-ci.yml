@@ -471,7 +471,7 @@ default:
   parallel:
     matrix:
       - _TARGET_PHP: !reference [.php_versions]
-        _TARGET_DB: [mariadb-10.11]
+        _TARGET_DB: [mariadb-10.11, mariadb-12.3]
   variables:
     _TARGET_DB_DRIVER: "mysql"
     _TARGET_DB_DRIVER_MODULE: "mysql"
