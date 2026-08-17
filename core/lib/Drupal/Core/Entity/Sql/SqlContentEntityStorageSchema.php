@@ -678,12 +678,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   public static function getTemporaryTableMappingPrefix(EntityTypeInterface $entity_type, array $field_storage_definitions, $first_prefix_part = 'tmp_') {
     // Construct a unique prefix based on the contents of the entity type and
     // field storage definitions.
-    $prefix_parts[] = spl_object_hash($entity_type);
+    $prefix_parts[] = spl_object_id($entity_type);
     foreach ($field_storage_definitions as $storage_definition) {
-      $prefix_parts[] = spl_object_hash($storage_definition);
+      $prefix_parts[] = spl_object_id($storage_definition);
     }
     $prefix_parts[] = \Drupal::time()->getRequestTime();
-    $hash = hash('sha256', implode('', $prefix_parts));
+    $hash = hash('sha256', implode(':', $prefix_parts));
 
     return $first_prefix_part . substr($hash, 0, 6);
   }

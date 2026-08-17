@@ -145,7 +145,7 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
     $previous_constraint = $this->context instanceof ExecutionContext ? $this->context->getConstraint() : NULL;
 
     $metadata = $this->metadataFactory->getMetadataFor($data);
-    $cache_key = spl_object_hash($data);
+    $cache_key = (string) spl_object_id($data);
     $property_path = match(TRUE) {
       $is_root_call => '',
       $previous_constraint instanceof Composite => $previous_path,
@@ -215,7 +215,7 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
       // Prevent duplicate validation of constraints, in the case
       // that constraints belong to multiple validated groups.
       if (isset($cache_key)) {
-        $constraint_hash = spl_object_hash($constraint);
+        $constraint_hash = (string) spl_object_id($constraint);
 
         if ($this->context->isConstraintValidated($cache_key, $constraint_hash)) {
           continue;
