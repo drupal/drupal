@@ -72,7 +72,7 @@ class FileSystemTest extends KernelTestBase {
    */
   public function testCopyFailureIfFileAlreadyExists(): void {
     $this->expectException(FileExistsException::class);
-    $this->expectExceptionMessageIs("File 'public://test.txt' could not be copied because a file by that name already exists in the destination directory ('').");
+    $this->expectExceptionMessageIs("File 'public://test.txt' could not be copied because a file by that name already exists in the destination directory ('public://test.txt').");
     $uri = 'public://test.txt';
     touch($uri);
     $this->fileSystem->copy($uri, $uri, FileExists::Error);
