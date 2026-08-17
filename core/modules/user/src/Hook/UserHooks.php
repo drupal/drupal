@@ -8,7 +8,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\system\Entity\Action;
-use Drupal\Component\Assertion\Inspector;
 use Drupal\user\RoleInterface;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Session\AccountInterface;
@@ -241,51 +240,6 @@ class UserHooks {
     $message['subject'] .= PlainTextOutput::renderFromHtml($token_service->replace($mail_config->get($key . '.subject'), $variables, $token_options));
     $message['body'][] = $token_service->replacePlain($mail_config->get($key . '.body'), $variables, $token_options);
     $language_manager->setConfigOverrideLanguage($original_language);
-  }
-
-  /**
-   * Implements hook_ENTITY_TYPE_insert() for user_role entities.
-   */
-  #[Hook('user_role_insert')]
-  public function userRoleInsert(RoleInterface $role): void {
-    // Ignore the authenticated and anonymous roles or the role is being synced.
-    if (in_array($role->id(), [
-      RoleInterface::AUTHENTICATED_ID,
-      RoleInterface::ANONYMOUS_ID,
-    ]) || $role->isSyncing()) {
-      return;
-    }
-    assert(Inspector::assertStringable($role->label()), 'Role label is expected to be a string.');
-    $add_id = 'user_add_role_action.' . $role->id();
-    if (!Action::load($add_id)) {
-      $action = Action::create([
-        'id' => $add_id,
-        'type' => 'user',
-        'label' => $this->t('Add the @label role to the selected user(s)', [
-          '@label' => $role->label(),
-        ]),
-        'configuration' => [
-          'rid' => $role->id(),
-        ],
-        'plugin' => 'user_add_role_action',
-      ]);
-      $action->save();
-    }
-    $remove_id = 'user_remove_role_action.' . $role->id();
-    if (!Action::load($remove_id)) {
-      $action = Action::create([
-        'id' => $remove_id,
-        'type' => 'user',
-        'label' => $this->t('Remove the @label role from the selected user(s)', [
-          '@label' => $role->label(),
-        ]),
-        'configuration' => [
-          'rid' => $role->id(),
-        ],
-        'plugin' => 'user_remove_role_action',
-      ]);
-      $action->save();
-    }
   }
 
   /**

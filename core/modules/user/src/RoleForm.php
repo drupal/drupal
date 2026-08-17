@@ -56,6 +56,37 @@ class RoleForm extends EntityForm {
     $entity->set('label', trim($entity->label()));
     $status = $entity->save();
 
+    // Create actions but ignore the authenticated and anonymous roles.
+    if (!in_array($entity->id(), [RoleInterface::AUTHENTICATED_ID, RoleInterface::ANONYMOUS_ID])) {
+      $type_manager = $this->entityTypeManager->getStorage('action');
+      $add_id = 'user_add_role_action.' . $entity->id();
+      if (!$type_manager->load($add_id)) {
+        $action = $type_manager->create([
+          'id' => $add_id,
+          'type' => 'user',
+          'label' => $this->t('Add the @label role to the selected users', ['@label' => $entity->label()]),
+          'configuration' => [
+            'rid' => $entity->id(),
+          ],
+          'plugin' => 'user_add_role_action',
+        ]);
+        $action->save();
+      }
+      $remove_id = 'user_remove_role_action.' . $entity->id();
+      if (!$type_manager->load($remove_id)) {
+        $action = $type_manager->create([
+          'id' => $remove_id,
+          'type' => 'user',
+          'label' => $this->t('Remove the @label role from the selected users', ['@label' => $entity->label()]),
+          'configuration' => [
+            'rid' => $entity->id(),
+          ],
+          'plugin' => 'user_remove_role_action',
+        ]);
+        $action->save();
+      }
+    }
+
     $edit_link = $this->entity->toLink($this->t('Edit'), 'edit-form')->toString();
     if ($status == SAVED_UPDATED) {
       $this->messenger()->addStatus($this->t('Role %label has been updated.', ['%label' => $entity->label()]));
