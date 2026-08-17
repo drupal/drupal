@@ -84,7 +84,7 @@
         "seld/signal-handler": "2.0.2",
         "sirbrillig/phpcs-variable-analysis": "v2.13.0",
         "slevomat/coding-standard": "8.22.1",
-        "squizlabs/php_codesniffer": "3.13.5",
+        "squizlabs/php_codesniffer": "3.13.6",
         "staabm/side-effects-detector": "1.0.5",
         "symfony/browser-kit": "v7.4.8",
         "symfony/css-selector": "v7.4.9",
