@@ -17,7 +17,7 @@ class BlockFilterTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['user', 'block'];
+  protected static $modules = ['user', 'block', 'block_test'];
 
   /**
    * {@inheritdoc}
@@ -80,6 +80,13 @@ class BlockFilterTest extends WebDriverTestBase {
     $this->assertCount(0, $visible_rows);
     $expected_message = '0 blocks are available in the modified list.';
     $this->assertAnnounceContains($expected_message);
+
+    $this->placeBlock('test_xss');
+    $this->failOnJavascriptConsoleErrors = FALSE;
+    $this->drupalGet('admin/structure/block');
+
+    // If the XSS variable exists, it means the payload has been executed.
+    $this->assertJsCondition("typeof window.XSS === 'undefined'");
   }
 
   /**
