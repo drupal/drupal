@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\locale;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -21,7 +21,7 @@ readonly class LocaleProjectRepository {
 
   public function __construct(
     #[Autowire(service: 'cache.memory')]
-    protected CacheBackendInterface $memoryCache,
+    protected MemoryCacheInterface $memoryCache,
     protected KeyValueFactoryInterface $keyValueFactory,
     protected ModuleHandlerInterface $moduleHandler,
     protected ModuleExtensionList $moduleExtensionList,

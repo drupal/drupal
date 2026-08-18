@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\locale\Unit;
 
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -33,11 +33,9 @@ class LocaleProjectRepositoryTest extends UnitTestCase {
   private LocaleProjectRepository $localeProjectRepository;
 
   /**
-   * The key value memory factory.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
+   * The cache.
    */
-  private CacheBackendInterface $cache;
+  private MemoryCacheInterface $cache;
 
   /**
    * The key value memory factory.
@@ -79,7 +77,7 @@ class LocaleProjectRepositoryTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->cache = $this->createStub(CacheBackendInterface::class);
+    $this->cache = $this->createStub(MemoryCacheInterface::class);
     $this->keyValueMemoryFactory = new KeyValueMemoryFactory();
     $this->moduleHandler = $this->createStub(ModuleHandlerInterface::class);
     $this->moduleExtensionList = $this->createStub(ModuleExtensionList::class);

@@ -3,7 +3,7 @@
 namespace Drupal\Core\Installer;
 
 use Drupal\Component\Datetime\Time;
-use Drupal\Core\Cache\MemoryBackendFactory;
+use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Cache\NullBackendFactory;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
@@ -40,13 +40,22 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
     // During the installer user 1 is a superuser.
     $container->setDefinition(InstallerAccessPolicy::class, (new Definition())->addTag('access_policy')->setPublic(FALSE));
 
-    // Replace cache services with in-memory implementations. The results in
-    // less queries to set caches which will only be cleared on the next module
-    // install.
-    $definition = $container->getDefinition('cache_factory');
-    $definition->setClass(MemoryBackendFactory::class);
+    // Explicitly configure all cache bins to use the memory backend. This
+    // results in less queries to set caches which will only be cleared on the
+    // next module install.
+    foreach (array_keys($container->findTaggedServiceIds('cache.bin')) as $id) {
+      $definition = $container->getDefinition($id);
+      $tags = $definition->getTags();
+      $tags['cache.bin'][0]['default_backend'] = 'cache.backend.memory';
+      $definition->setTags($tags);
+    }
+
+    // Separately override the file_parsing bin as that doesn't use a
+    // tag/parameter.
+    $definition = $container->getDefinition('cache.file_parsing');
+    $definition->setClass(MemoryBackend::class);
     $definition->setArguments([new Time()]);
-    $definition->setMethodCalls([]);
+    $definition->setFactory(NULL);
 
     // When installing from existing config, disabling the config cache entirely
     // yields much faster install times.

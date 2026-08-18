@@ -39,6 +39,11 @@ class ListCacheBinsPass implements CompilerPassInterface {
     $container->setParameter('cache_default_bin_backends', $cache_info['cache']['default_bin_backends']);
     $container->setParameter('memory_cache_bins', $cache_info['memory_cache']['bins']);
     $container->setParameter('memory_cache_default_bin_backends', $cache_info['memory_cache']['default_bin_backends']);
+    // If the cache factory was already initialized before the parameters are
+    // initialized, reset it.
+    if ($container->initialized('cache_factory')) {
+      $container->set('cache_factory', NULL);
+    }
   }
 
 }
