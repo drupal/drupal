@@ -78,8 +78,9 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->drupalGet('admin/config/regional/translate/settings');
     $this->submitForm($edit, 'Save configuration');
 
-    // Get status of translation sources at local file system.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->drupalGet('admin/reports/translations');
+    $this->clickLink('Check manually');
+    $this->checkForMetaRefresh();
     $result = locale_translation_get_status();
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
     $this->assertEquals($this->timestampOld, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
@@ -96,7 +97,9 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Get status of translation sources at both local and remote locations.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->drupalGet('admin/reports/translations');
+    $this->clickLink('Check manually');
+    $this->checkForMetaRefresh();
     $result = locale_translation_get_status();
     $this->assertEquals(LOCALE_TRANSLATION_REMOTE, $result['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
     $this->assertEquals($this->timestampNew, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
@@ -106,6 +109,10 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->assertEquals($this->timestampOld, $result['contrib_module_three']['de']->timestamp, 'Translation timestamp found');
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['locale_test']['de']->type, 'Translation of locale_test found');
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['custom_module_one']['de']->type, 'Translation of custom_module_one found');
+
+    // Tests that the check route is protected against CSRF.
+    $this->drupalGet('admin/reports/translations/check');
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
@@ -132,7 +139,9 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Get the translation status.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->drupalGet('admin/reports/translations');
+    $this->clickLink('Check manually');
+    $this->checkForMetaRefresh();
 
     // Check the status on the Available translation status page.
     $this->assertSession()->responseContains('<label for="edit-langcodes-de" class="visually-hidden">Update German</label>');
@@ -203,7 +212,9 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Execute the translation update.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->drupalGet('admin/reports/translations');
+    $this->clickLink('Check manually');
+    $this->checkForMetaRefresh();
     $this->drupalGet('admin/reports/translations');
     $this->submitForm([], 'Update translations');
 
@@ -263,7 +274,9 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Execute translation update.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->drupalGet('admin/reports/translations');
+    $this->clickLink('Check manually');
+    $this->checkForMetaRefresh();
     $this->drupalGet('admin/reports/translations');
     $this->submitForm([], 'Update translations');
 
@@ -303,7 +316,9 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Execute translation update.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->drupalGet('admin/reports/translations');
+    $this->clickLink('Check manually');
+    $this->checkForMetaRefresh();
     $this->drupalGet('admin/reports/translations');
     $this->submitForm([], 'Update translations');
 

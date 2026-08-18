@@ -68,7 +68,8 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
 
     // Check and update the translation status. This will import the Afrikaans
     // translations of locale_test_translate module.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->drupalGet('admin/reports/translations');
+    $this->clickLink('Check manually');
 
     // Override the Drupal core translation status to be up to date.
     // Drupal core should not be a subject in this test.
@@ -103,7 +104,9 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
 
     $this->configImporter()->import();
 
-    $this->drupalGet('admin/reports/translations/check');
+    $this->drupalGet('admin/reports/translations');
+    $this->clickLink('Check manually');
+    $this->checkForMetaRefresh();
     $status = locale_translation_get_status();
     $status['drupal']['af']->type = 'current';
     \Drupal::state()->set('locale.translation_status', $status);

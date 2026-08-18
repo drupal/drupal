@@ -52,7 +52,9 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $this->config('locale.settings')->set('translation.default_filename', '%project-%version.%language._po')->save();
 
     // Update translations using batch to ensure a clean test starting point.
-    $this->drupalGet('admin/reports/translations/check');
+    $this->drupalGet('admin/reports/translations');
+    $this->clickLink('Check manually');
+    $this->checkForMetaRefresh();
     $this->drupalGet('admin/reports/translations');
     $this->submitForm([], 'Update translations');
 
