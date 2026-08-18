@@ -8,6 +8,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -34,6 +35,18 @@ class UserRoleEntityTest extends KernelTestBase {
     $container
       ->register(BufferingLogger::class)
       ->addTag('logger');
+  }
+
+  /**
+   * Tests that existing user roles have a description.
+   */
+  public function testExistingRoleDescription(): void {
+    $this->installConfig('user');
+    foreach ([RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID] as $role_id) {
+      $role = Role::load($role_id);
+      $this->assertNotNull($role);
+      $this->assertSame('', $role->getDescription());
+    }
   }
 
   /**

@@ -5,6 +5,25 @@
  * Post update functions for User module.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\user\RoleInterface;
+
+/**
+ * Add an empty description to existing user roles.
+ */
+function user_post_update_add_role_description(array &$sandbox): void {
+  $config_factory = \Drupal::configFactory();
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityUpdater $config_updater */
+  $config_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+  $config_updater->update($sandbox, 'user_role', function (RoleInterface $role) use ($config_factory): bool {
+    if ($config_factory->get('user.role.' . $role->id())->get('description') === NULL) {
+      $role->setDescription('');
+      return TRUE;
+    }
+    return FALSE;
+  });
+}
+
 /**
  * Implements hook_removed_post_updates().
  */
