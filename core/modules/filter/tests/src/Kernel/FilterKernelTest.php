@@ -418,6 +418,7 @@ class FilterKernelTest extends KernelTestBase {
     // strings and expectations, we're using "\n" instead of regular newlines
     // here.
     // cSpell:disable
+    // phpcs:disable Drupal.Arrays.Array.ArrayClosingIndentation, Drupal.Arrays.Array.ArrayIndentation
     $tests = [
       // Single line breaks should be changed to <br /> tags, while paragraphs
       // separated with double line breaks should be enclosed with <p></p> tags.
@@ -491,6 +492,7 @@ class FilterKernelTest extends KernelTestBase {
         '<p><drupal-media data-caption=" " data-entity-type="media" data-entity-uuid="dbb16f97-cd11-4357-acde-cd09e19e312b"></drupal-media></p>' => FALSE,
       ],
     ];
+    // phpcs:enable Drupal.Arrays.Array.ArrayClosingIndentation, Drupal.Arrays.Array.ArrayIndentation
     // cSpell:enable
     $this->assertFilteredString($filter, $tests);
 
@@ -722,6 +724,7 @@ class FilterKernelTest extends KernelTestBase {
     $email_with_plus_sign = 'one+two@example.com';
 
     // Filter selection/pattern matching.
+    // phpcs:disable Drupal.Arrays.Array.ArrayClosingIndentation, Drupal.Arrays.Array.ArrayIndentation
     $tests = [
       // HTTP URLs.
       'http://example.com or www.example.com' => [
@@ -813,9 +816,11 @@ class FilterKernelTest extends KernelTestBase {
         'not foo://disallowed.com.' => TRUE,
       ],
     ];
+    // phpcs:enable Drupal.Arrays.Array.ArrayClosingIndentation, Drupal.Arrays.Array.ArrayIndentation
     $this->assertFilteredString($filter, $tests);
 
     // Surrounding text/punctuation.
+    // phpcs:disable Drupal.Arrays.Array.ArrayClosingIndentation, Drupal.Arrays.Array.ArrayIndentation
     $tests = [
       'Partial URL with trailing period www.partial.com.
       Email with trailing comma person@example.com,
@@ -842,9 +847,11 @@ class FilterKernelTest extends KernelTestBase {
         '(<a href="http://www.parenthesis.com/dir?a=1&amp;b=2#a">www.parenthesis.com/dir?a=1&amp;b=2#a</a>)' => TRUE,
       ],
     ];
+    // phpcs:enable Drupal.Arrays.Array.ArrayClosingIndentation, Drupal.Arrays.Array.ArrayIndentation
     $this->assertFilteredString($filter, $tests);
 
     // Surrounding markup.
+    // phpcs:disable Drupal.Arrays.Array.ArrayClosingIndentation, Drupal.Arrays.Array.ArrayIndentation
     $tests = [
       '<p xmlns="www.namespace.com" />
       <p xmlns="http://namespace.com">
@@ -958,6 +965,7 @@ class FilterKernelTest extends KernelTestBase {
         '<li class="odd"><a href="http://www.class.listitem.com">www.class.listitem.com</a></li>' => TRUE,
       ],
     ];
+    // phpcs:enable Drupal.Arrays.Array.ArrayClosingIndentation, Drupal.Arrays.Array.ArrayIndentation
     $this->assertFilteredString($filter, $tests);
 
     // URL trimming.

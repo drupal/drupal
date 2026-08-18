@@ -328,7 +328,7 @@ abstract class GdToolkitImageManipulationTestBase extends KernelTestBase {
       }
 
       // JPEG and AVIF have small differences in color after processing.
-      $tolerance = match($image_original_type) {
+      $tolerance = match ($image_original_type) {
         IMAGETYPE_JPEG, IMAGETYPE_AVIF => 3,
         default => 1,
       };

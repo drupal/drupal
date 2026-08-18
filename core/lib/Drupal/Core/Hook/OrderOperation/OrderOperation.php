@@ -46,7 +46,7 @@ abstract class OrderOperation {
    *   Packed operation.
    */
   final public function pack(): array {
-    $is_before_or_after = match(get_class($this)) {
+    $is_before_or_after = match (get_class($this)) {
       BeforeOrAfter::class => TRUE,
       FirstOrLast::class => FALSE,
     };

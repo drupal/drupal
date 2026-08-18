@@ -146,7 +146,7 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
 
     $metadata = $this->metadataFactory->getMetadataFor($data);
     $cache_key = (string) spl_object_id($data);
-    $property_path = match(TRUE) {
+    $property_path = match (TRUE) {
       $is_root_call => '',
       $previous_constraint instanceof Composite => $previous_path,
       default => PropertyPath::append($previous_path, $data->getName())

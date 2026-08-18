@@ -171,7 +171,7 @@ trait PerformanceTestTrait {
         }
       }
       foreach ($performance_test_data['cache_tag_operations'] as $operation) {
-        match($operation['operation']) {
+        match ($operation['operation']) {
           CacheTagOperation::GetCurrentChecksum => $cache_tag_checksum_count++,
           CacheTagOperation::IsValid => $cache_tag_is_valid_count++,
           CacheTagOperation::InvalidateTags => $cache_tag_invalidation_count++,

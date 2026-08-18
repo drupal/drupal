@@ -111,7 +111,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
     // the complete form is needed.
     if (empty($elements)) {
       // cspell:disable-next-line
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.VariableRedeclaration
+      // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.VariableRedeclaration
       $elements = &$form;
     }
 

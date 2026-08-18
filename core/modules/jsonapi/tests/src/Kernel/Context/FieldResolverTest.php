@@ -110,7 +110,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
       'entity reference' => [[['field_test_ref2']], 'field_test_ref2'],
       'entity reference with multi target bundles' => [[['field_test_ref1']], 'field_test_ref1'],
       'entity reference then another entity reference' => [
-         [['field_test_ref1', 'field_test_ref3']],
+        [['field_test_ref1', 'field_test_ref3']],
         'field_test_ref1.field_test_ref3',
       ],
       'entity reference with multiple target bundles, each with different field, but the same public field name' => [

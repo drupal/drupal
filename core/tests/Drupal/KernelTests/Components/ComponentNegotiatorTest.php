@@ -46,9 +46,9 @@ class ComponentNegotiatorTest extends ComponentKernelTestBase {
         'sdc_test:my-button',
         'sdc_test_replacements:my-button',
       ],
-        ['invalid:component', NULL],
-        ['invalid^component', NULL],
-        ['', NULL],
+      ['invalid:component', NULL],
+      ['invalid^component', NULL],
+      ['', NULL],
     ];
     array_walk($data, function (array $test_input): void {
       [$requested_id, $expected_id] = $test_input;

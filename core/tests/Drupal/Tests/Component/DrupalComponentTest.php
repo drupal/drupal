@@ -127,13 +127,11 @@ class DrupalComponentTest extends TestCase {
       ],
       [
         FALSE,
-        "@see \\Drupal\\Core\\Something\n" .
-        '\\Drupal\\Core\\Something',
+        "@see \\Drupal\\Core\\Something\n" . '\\Drupal\\Core\\Something',
       ],
       [
         FALSE,
-        "\\Drupal\\Core\\Something\n" .
-        '@see \\Drupal\\Core\\Something',
+        "\\Drupal\\Core\\Something\n" . '@see \\Drupal\\Core\\Something',
       ],
     ];
   }

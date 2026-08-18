@@ -577,8 +577,7 @@ class UpdateScriptTest extends BrowserTestBase {
           'theme' => ['theme'],
         ],
       ],
-      'core and contrib' =>
-      [
+      'core and contrib' => [
         'core' => [
           'module' => ['aggregator', 'rdf'],
           'theme' => ['seven'],

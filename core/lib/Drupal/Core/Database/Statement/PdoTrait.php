@@ -157,7 +157,7 @@ trait PdoTrait {
    *   A result, formatted according to $mode, or FALSE on failure.
    */
   protected function clientFetch(?FetchAs $mode = NULL, ?int $cursorOrientation = NULL, ?int $cursorOffset = NULL): array|object|int|float|string|bool|NULL {
-    return match(func_num_args()) {
+    return match (func_num_args()) {
       0 => $this->getClientStatement()->fetch(),
       1 => $this->getClientStatement()->fetch($this->fetchAsToPdo($mode)),
       2 => $this->getClientStatement()->fetch($this->fetchAsToPdo($mode), $cursorOrientation),

@@ -111,7 +111,7 @@ final class EntityMethodDeriver extends DeriverBase implements ContainerDeriverI
     // 'user.role:grantPermission' action.
     $this->addDerivative($action_name, $entity_type, $derivative, $method->name);
 
-    $pluralized_name = match(TRUE) {
+    $pluralized_name = match (TRUE) {
       is_string($action_attribute->pluralize) => $action_attribute->pluralize,
       $action_attribute->pluralize === FALSE => '',
       default => $this->inflector->pluralize($action_name)[0]

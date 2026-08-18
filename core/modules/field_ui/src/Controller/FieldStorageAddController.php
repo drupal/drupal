@@ -160,8 +160,9 @@ final class FieldStorageAddController extends ControllerBase {
           'icon' => [
             '#type' => 'container',
             '#attributes' => [
-              'class' => ['field-option__icon', $display_as_group ?
-                "field-icon-{$field_type['category']}" : "field-icon-$cleaned_class_name",
+              'class' => [
+                'field-option__icon',
+                $display_as_group ? "field-icon-{$field_type['category']}" : "field-icon-$cleaned_class_name",
               ],
             ],
           ],

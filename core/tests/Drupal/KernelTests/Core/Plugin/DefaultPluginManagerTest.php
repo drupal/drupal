@@ -40,7 +40,8 @@ class DefaultPluginManagerTest extends KernelTestBase {
       new \ReflectionClass('\Drupal\plugin_test\Plugin\plugin_test\custom_annotation\ExtendingNonInstalledClass');
     }
     catch (\Throwable $e) {
-    } finally {
+    }
+    finally {
       $this->assertInstanceOf(\Throwable::class, $e);
       $this->assertSame('Class "Drupal\non_installed_module\NonExisting" not found', $e->getMessage());
     }

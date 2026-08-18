@@ -528,7 +528,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
           continue;
         }
 
-        // @codingStandardsIgnoreLine
+        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         $form_state->setErrorByName('editor][editor', t($violation->getMessageTemplate(), $violation->getParameters()));
       }
     }

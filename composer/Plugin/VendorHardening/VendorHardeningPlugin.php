@@ -217,7 +217,7 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
     $filesystem = [];
     foreach ($clean_paths as $clean_path) {
       $clean_pieces = explode("/", $clean_path);
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+      // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
       $current = &$filesystem;
       foreach ($clean_pieces as $clean_piece) {
         $current = &$current[$clean_piece];

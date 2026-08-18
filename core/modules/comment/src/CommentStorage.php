@@ -191,7 +191,8 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
         AND [field_name] = :field_name
         AND [status] = :status
         AND SUBSTRING([thread], 1, (LENGTH([thread]) - 1)) < :thread
-        AND [default_langcode] = 1', [
+        AND [default_langcode] = 1',
+        [
           ':status' => CommentInterface::PUBLISHED,
           ':entity_id' => $entity->id(),
           ':field_name' => $field_name,

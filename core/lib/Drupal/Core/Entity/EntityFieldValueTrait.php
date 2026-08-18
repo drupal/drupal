@@ -42,7 +42,7 @@ trait EntityFieldValueTrait {
     // Attempt to get the value from the values directly if the field is not
     // initialized yet.
     if (!isset($this->fields[$field_name]) && isset($this->values[$field_name])) {
-      $langcode = match(TRUE) {
+      $langcode = match (TRUE) {
         \array_key_exists($this->activeLangcode, $this->values[$field_name]) => $this->activeLangcode,
         \array_key_exists(LanguageInterface::LANGCODE_DEFAULT, $this->values[$field_name]) => LanguageInterface::LANGCODE_DEFAULT,
         default => NULL,

@@ -146,9 +146,9 @@ class EditorHooks {
       '#name' => 'editor_configure',
       '#value' => $this->t('Configure'),
       '#limit_validation_errors' => [
-              [
-                'editor',
-              ],
+        [
+          'editor',
+        ],
       ],
       '#submit' => [
         self::class . ':editorFormFilterAdminFormatEditorConfigure',

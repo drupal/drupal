@@ -446,13 +446,13 @@ class FixtureManipulator {
       /**
        * The standard output for the process.
        */
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+      // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
       public string $stdout = '';
 
       /**
        * The error output for the process.
        */
-      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+      // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
       public string $stderr = '';
 
       /**

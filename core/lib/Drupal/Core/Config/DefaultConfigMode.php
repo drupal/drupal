@@ -23,7 +23,7 @@ enum DefaultConfigMode {
    *   TRUE to create config in /install directory, FALSE if not.
    */
   public function createInstallConfig(): bool {
-    return match($this) {
+    return match ($this) {
       DefaultConfigMode::All, DefaultConfigMode::InstallSimple, DefaultConfigMode::InstallEntities => TRUE,
       default => FALSE,
     };
@@ -36,7 +36,7 @@ enum DefaultConfigMode {
    *   TRUE to create config in /optional directory, FALSE if not.
    */
   public function createOptionalConfig(): bool {
-    return match($this) {
+    return match ($this) {
       DefaultConfigMode::All, DefaultConfigMode::Optional => TRUE,
       default => FALSE,
     };
@@ -50,7 +50,7 @@ enum DefaultConfigMode {
    *   FALSE if not.
    */
   public function createSiteOptionalConfig(): bool {
-    return match($this) {
+    return match ($this) {
       DefaultConfigMode::All, DefaultConfigMode::SiteOptional => TRUE,
       default => FALSE,
     };

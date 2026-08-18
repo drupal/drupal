@@ -94,15 +94,15 @@ class EntityTestHooks {
     }
     if ($entity_type->id() === 'entity_test_mul' && \Drupal::state()->get('entity_test.required_multi_default_field')) {
       $fields['required_multi_default_field'] = BaseFieldDefinition::create('string')->setLabel('Required field with default value')->setRequired(TRUE)->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)->setDefaultValue([
-            [
-              'value' => 'this is the first default field item',
-            ],
-            [
-              'value' => 'this is the second default value',
-            ],
-            [
-              'value' => 'you get the idea...',
-            ],
+        [
+          'value' => 'this is the first default field item',
+        ],
+        [
+          'value' => 'this is the second default value',
+        ],
+        [
+          'value' => 'you get the idea...',
+        ],
       ]);
     }
     if ($entity_type->id() == 'entity_test_mulrev' && \Drupal::state()->get('entity_test.field_test_item')) {

@@ -368,7 +368,7 @@ final class Recipe {
           if ($list_service->exists($extension)) {
 
             // Is the extension installed already.
-            $installed = match($list_service_name) {
+            $installed = match ($list_service_name) {
               'module', 'profile' => \Drupal::moduleHandler()->moduleExists($extension),
               'theme' => \Drupal::service('theme_handler')->themeExists($extension),
             };

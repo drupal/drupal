@@ -329,7 +329,7 @@ class ConnectionTest extends UnitTestCase {
     $additional_class_loader->register(TRUE);
 
     $connection = new StubConnection($this->createStub(\PDO::class), ['namespace' => $namespace]);
-    match($class) {
+    match ($class) {
       'Install\\Tasks',
       'ExceptionHandler',
       'Select',
