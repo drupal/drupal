@@ -52,7 +52,7 @@ class HtaccessWriter implements HtaccessWriterInterface {
         // Note that we log an error here if we can't write the .htaccess file.
         // This can occur if the staging directory is read-only. If it is then
         // it is the user's responsibility to create the .htaccess file.
-        $this->write($staging, TRUE);
+        $this->write($staging);
       }
     }
     catch (\Exception $e) {
