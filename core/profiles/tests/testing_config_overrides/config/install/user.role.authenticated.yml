@@ -5,6 +5,7 @@ dependencies:
     - entity_test_install
 id: authenticated
 label: 'Authenticated user'
+description: ''
 weight: 1
 is_admin: false
 permissions:
