@@ -112,9 +112,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
 
     parent::__construct($connection, $connection_options);
 
-    // Force PostgreSQL to use the UTF-8 character set by default.
-    $this->connection->exec("SET NAMES 'UTF8'");
-
     // Execute PostgreSQL init_commands.
     if (isset($connection_options['init_commands'])) {
       $this->connection->exec(implode('; ', $connection_options['init_commands']));
@@ -166,7 +163,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     }
 
     $connection_options['database'] = (!empty($connection_options['database']) ? $connection_options['database'] : 'template1');
-    $dsn = 'pgsql:host=' . $connection_options['host'] . ' dbname=' . $connection_options['database'] . ' port=' . $connection_options['port'];
+    // Force PostgreSQL to use the UTF-8 character set by default.
+    $dsn = 'pgsql:host=' . $connection_options['host'] . ' dbname=' . $connection_options['database'] . ' port=' . $connection_options['port'] . ' client_encoding=UTF8';
 
     // Allow PDO options to be overridden.
     $connection_options += [
