@@ -50,8 +50,6 @@ config:
     user:
       - core.entity_view_mode.user.compact
       - views.view.user_admin_people
-      - views.view.who_s_new
-      - views.view.who_s_online
   actions:
     node.settings:
       simpleConfigUpdate:

@@ -42,5 +42,3 @@ display:
         severity:
           expose:
             label: Gravedad
-  page:
-    display_title: Página

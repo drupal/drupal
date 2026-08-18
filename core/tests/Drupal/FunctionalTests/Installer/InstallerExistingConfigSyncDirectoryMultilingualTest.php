@@ -71,7 +71,7 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerConf
       'create' => [],
       // The view was untranslated but the translation exists so the installer
       // performs the translation.
-      'update' => ['views.view.who_s_new'],
+      'update' => ['views.view.watchdog'],
       'delete' => [],
       'rename' => [],
     ];
@@ -104,8 +104,6 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerConf
 
     /** @var \Drupal\language\Config\LanguageConfigOverride $view_config */
     // Ensure that views are translated as expected.
-    $view_config = \Drupal::languageManager()->getLanguageConfigOverride('es', 'views.view.who_s_new');
-    $this->assertSame('Aplicar', $view_config->get('display.default.display_options.exposed_form.options.submit_button'));
     $view_config = \Drupal::languageManager()->getLanguageConfigOverride('es', 'views.view.archive');
     $this->assertSame('Aplicar', $view_config->get('display.default.display_options.exposed_form.options.submit_button'));
 
@@ -124,7 +122,7 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerConf
       'create' => [],
       // The view was untranslated but the translation exists so the installer
       // performs the translation.
-      'update' => ['views.view.who_s_new'],
+      'update' => ['views.view.watchdog'],
       'delete' => [],
       'rename' => [],
     ];
@@ -164,8 +162,7 @@ PO;
       // All views with 'Aplicar' will have been changed to use the new
       // translation.
       'update' => [
-        'views.view.who_s_new',
-        'views.view.who_s_online',
+        'views.view.watchdog',
       ],
       'delete' => [],
       'rename' => [],
