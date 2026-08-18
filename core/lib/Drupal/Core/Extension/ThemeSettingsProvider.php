@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Extension;
 
-use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\StorageException;
 use Drupal\Core\File\FileUrlGeneratorInterface;
@@ -41,7 +41,7 @@ class ThemeSettingsProvider {
     protected readonly ConfigFactoryInterface $configFactory,
     protected readonly FileUrlGeneratorInterface $fileUrlGenerator,
     #[Autowire(service: 'cache.memory')]
-    protected readonly CacheBackendInterface $memoryCache,
+    protected readonly MemoryCacheInterface $memoryCache,
   ) {
   }
 
