@@ -23,6 +23,7 @@ class BubbleableMetadata extends CacheableMetadata implements AttachmentsInterfa
    * @return static
    *   A new bubbleable metadata object, with the merged data.
    */
+  #[\NoDiscard]
   public function merge(CacheableMetadata $other) {
     $result = parent::merge($other);
 
