@@ -261,7 +261,7 @@ abstract class InstallerTestBase extends BrowserTestBase {
    * Installer step: Select installation profile.
    */
   protected function setUpProfile() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3520028', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3595589', E_USER_DEPRECATED);
   }
 
   /**

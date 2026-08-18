@@ -54,7 +54,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   ) {
     if (!isset($fileUrlGenerator)) {
       $this->fileUrlGenerator = \Drupal::service('file_url_generator');
-      @trigger_error('Constructing HtmlResponseAttachmentsProcessor without a file url generator is deprecated in drupal:11.4.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3366561', E_USER_DEPRECATED);
+      @trigger_error('Constructing HtmlResponseAttachmentsProcessor without a file url generator is deprecated in drupal:11.4.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3585574', E_USER_DEPRECATED);
     }
     $this->config = $config_factory->get('system.performance');
   }

@@ -88,7 +88,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $this->updateRegistry = $update_registry;
 
     if (!$this->moduleWeight instanceof ModuleWeight) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $moduleWeight argument is deprecated in drupal:11.5.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3595653', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $moduleWeight argument is deprecated in drupal:11.5.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3595653', E_USER_DEPRECATED);
       $this->moduleWeight = \Drupal::service(ModuleWeight::class);
     }
   }

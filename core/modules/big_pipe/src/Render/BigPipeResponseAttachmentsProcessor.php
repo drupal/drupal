@@ -41,7 +41,7 @@ class BigPipeResponseAttachmentsProcessor extends HtmlResponseAttachmentsProcess
   ) {
     if (!isset($file_url_generator)) {
       $file_url_generator = \Drupal::service('file_url_generator');
-      @trigger_error('Constructing BigPipeResponseAttachmentsProcessor without a file url generator is deprecated in drupal:11.4.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3366561', E_USER_DEPRECATED);
+      @trigger_error('Constructing BigPipeResponseAttachmentsProcessor without a file url generator is deprecated in drupal:11.4.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3585574', E_USER_DEPRECATED);
     }
 
     parent::__construct($asset_resolver, $config_factory, $css_collection_renderer, $js_collection_renderer, $request_stack, $renderer, $module_handler, $language_manager, $file_url_generator);
