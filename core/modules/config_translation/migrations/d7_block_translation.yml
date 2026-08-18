@@ -23,6 +23,7 @@ process:
       source:
         - module
         - delta
+        - theme
     -
       plugin: skip_on_empty
       method: row

@@ -108,6 +108,8 @@ class BlockTranslation extends Block {
   public function getIds() {
     $ids['delta']['type'] = 'string';
     $ids['delta']['alias'] = 'b';
+    $ids['theme']['type'] = 'string';
+    $ids['theme']['alias'] = 'b';
     $ids['language']['type'] = 'string';
     return $ids;
   }
