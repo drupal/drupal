@@ -194,7 +194,9 @@ class FileEntityFormatterTest extends KernelTestBase {
       'uri' => 'dummy-external-readonly://file-query-string?foo=bar',
       'filename' => 'file-query-string',
     ]);
+    $file->set('filemime', NULL);
     $file->save();
+    $this->assertNull($file->get('filemime')->value);
     $file_link = [
       '#theme' => 'file_link',
       '#file' => $file,
@@ -202,6 +204,8 @@ class FileEntityFormatterTest extends KernelTestBase {
 
     $output = (string) \Drupal::service('renderer')->renderRoot($file_link);
     $this->assertStringContainsString($this->fileUrlGenerator->generate('dummy-external-readonly://file-query-string?foo=bar')->toUriString(), $output);
+    $this->assertStringContainsString('file--mime-application-octet-stream', $output);
+    $this->assertStringContainsString('type="application/octet-stream"', $output);
   }
 
 }
