@@ -60,19 +60,12 @@ class UserRoleAdminTest extends BrowserTestBase {
     // correspond to an integer, to test that the role administration pages
     // correctly distinguish between role names and IDs.)
     $role_name = '123';
-    $edit = ['label' => $role_name, 'id' => $role_name, 'description' => 'Lorem ipsum'];
+    $edit = ['label' => $role_name, 'id' => $role_name];
     $this->drupalGet('admin/people/roles/add');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("Role 123 has been added.");
     $role = Role::load($role_name);
     $this->assertIsObject($role);
-
-    // Check that the role list displays name and description columns.
-    $this->drupalGet('admin/people/roles');
-    $this->assertSession()->pageTextContains('Name');
-    $this->assertSession()->pageTextContains('Description');
-    $this->assertSession()->pageTextContains($role_name);
-    $this->assertSession()->pageTextContains('Lorem ipsum');
 
     // Check that the role was created in site default language.
     $this->assertEquals($default_langcode, $role->language()->getId());

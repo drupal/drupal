@@ -3,7 +3,6 @@ status: true
 dependencies: {  }
 id: anonymous
 label: 'Anonymous user'
-description: ''
 weight: 0
 is_admin: false
 permissions: {  }

@@ -10,7 +10,6 @@ dependencies:
     - system
 id: content_editor
 label: 'Content editor'
-description: ''
 weight: 2
 is_admin: false
 permissions:

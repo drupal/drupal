@@ -143,9 +143,6 @@ user.role.*:
     label:
       type: required_label
       label: 'Label'
-    description:
-      type: text
-      label: 'Description'
     weight:
       type: weight
       label: 'User role weight'

@@ -24,7 +24,6 @@ dependencies:
     - taxonomy
 id: editor
 label: Editor
-description: ''
 weight: 4
 is_admin: false
 permissions:

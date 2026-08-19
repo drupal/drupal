@@ -80,24 +80,6 @@ interface RoleInterface extends ConfigEntityInterface {
   public function setIsAdmin($is_admin);
 
   /**
-   * Returns the description.
-   *
-   * @return string
-   *   The description.
-   */
-  public function getDescription(): string;
-
-  /**
-   * Sets the description to the given value.
-   *
-   * @param string $description
-   *   The desired description.
-   *
-   * @return $this
-   */
-  public function setDescription(string $description): static;
-
-  /**
    * Returns the weight.
    *
    * @return int

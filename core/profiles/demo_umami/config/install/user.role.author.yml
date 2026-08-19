@@ -23,7 +23,6 @@ dependencies:
     - taxonomy
 id: author
 label: Author
-description: ''
 weight: 3
 is_admin: false
 permissions:
