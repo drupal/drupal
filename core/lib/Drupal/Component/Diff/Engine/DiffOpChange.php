@@ -3,11 +3,16 @@
 namespace Drupal\Component\Diff\Engine;
 
 /**
- * @todo document
+ * A diff operation to change lines.
+ *
  * @private
  * @subpackage DifferenceEngine
  */
 class DiffOpChange extends DiffOp {
+
+  /**
+   * {@inheritdoc}
+   */
   public $type = 'change';
 
   public function __construct($orig, $closing) {

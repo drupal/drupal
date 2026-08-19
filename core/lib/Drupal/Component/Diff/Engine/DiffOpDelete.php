@@ -3,11 +3,16 @@
 namespace Drupal\Component\Diff\Engine;
 
 /**
- * @todo document
+ * A diff operation to delete lines.
+ *
  * @private
  * @subpackage DifferenceEngine
  */
 class DiffOpDelete extends DiffOp {
+
+  /**
+   * {@inheritdoc}
+   */
   public $type = 'delete';
 
   public function __construct($lines) {

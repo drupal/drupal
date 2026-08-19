@@ -3,11 +3,16 @@
 namespace Drupal\Component\Diff\Engine;
 
 /**
- * @todo document
+ * A diff operation to copy lines.
+ *
  * @private
  * @subpackage DifferenceEngine
  */
 class DiffOpCopy extends DiffOp {
+
+  /**
+   * {@inheritdoc}
+   */
   public $type = 'copy';
 
   public function __construct($orig, $closing = FALSE) {
