@@ -2,6 +2,9 @@
 
 namespace Drupal\Component\Diff;
 
+// phpcs:disable Drupal.Commenting.FunctionComment.Missing
+// phpcs:disable Drupal.Commenting.VariableComment.Missing
+
 use Drupal\Component\Diff\Engine\HWLDFWordAccumulator;
 
 /**
@@ -27,7 +30,7 @@ class WordLevelDiff extends MappedDiff {
     foreach ($lines as $line) {
       // If the line is too long, just pretend the entire line is one big word
       // This prevents resource exhaustion problems
-      if ( $first ) {
+      if ($first) {
         $first = FALSE;
       }
       else {

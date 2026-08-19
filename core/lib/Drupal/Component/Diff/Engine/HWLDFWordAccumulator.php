@@ -2,8 +2,11 @@
 
 namespace Drupal\Component\Diff\Engine;
 
+// phpcs:disable Drupal.Commenting.FunctionComment.Missing
+// phpcs:disable Drupal.Commenting.VariableComment.Missing
+
 /**
- * Additions by Axel Boldt follow, partly taken from diff.php, phpwiki-1.3.3
+ * Additions by Axel Boldt follow, partly taken from diff.php, phpwiki-1.3.3.
  */
 
 /**
@@ -15,6 +18,8 @@ class HWLDFWordAccumulator {
 
   /**
    * An iso-8859-x non-breaking space.
+   *
+   * @var string
    */
   const NBSP = '&#160;';
 
@@ -45,7 +50,7 @@ class HWLDFWordAccumulator {
       array_push($this->lines, $this->line);
     }
     else {
-      // make empty lines visible by inserting an NBSP
+      // Make empty lines visible by inserting a non-breaking space.
       array_push($this->lines, $this::NBSP);
     }
     $this->line = '';
@@ -56,7 +61,7 @@ class HWLDFWordAccumulator {
       $this->_flushGroup($tag);
     }
     foreach ($words as $word) {
-      // new-line should only come as first char of word.
+      // New line should only come as first char of word.
       if ($word == '') {
         continue;
       }

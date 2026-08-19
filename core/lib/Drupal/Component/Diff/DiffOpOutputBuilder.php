@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Drupal\Component\Diff;
 
@@ -100,7 +102,7 @@ final class DiffOpOutputBuilder implements DiffOutputBuilderInterface {
    *   A Differ constant or self::CHANGED.
    * @param string[] $source
    *   An array of strings to be changed/added/removed/copied.
-   * @param string[] $source
+   * @param string[] $target
    *   The array of strings to be changed to when self::CHANGED is specified.
    *
    * @return \Drupal\Component\Diff\Engine\DiffOp
