@@ -17,9 +17,7 @@ class RoleForm extends EntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    /** @var \Drupal\role\RoleInterface $entity */
     $entity = $this->entity;
-
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Role name'),
@@ -28,12 +26,6 @@ class RoleForm extends EntityForm {
       '#required' => TRUE,
       '#maxlength' => 64,
       '#description' => $this->t('The name for this role. Example: "Moderator", "Editorial board", "Site architect".'),
-    ];
-    $form['description'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Description'),
-      '#default_value' => $entity->getDescription(),
-      '#description' => $this->t('Describes the role and its characteristics. Displays on the <em>Roles</em> page.'),
     ];
     $form['id'] = [
       '#type' => 'machine_name',
@@ -58,12 +50,10 @@ class RoleForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    /** @var \Drupal\role\RoleInterface $entity */
     $entity = $this->entity;
 
     // Prevent leading and trailing spaces in role names.
     $entity->set('label', trim($entity->label()));
-    $entity->setDescription($entity->getDescription());
     $status = $entity->save();
 
     // Create actions but ignore the authenticated and anonymous roles.

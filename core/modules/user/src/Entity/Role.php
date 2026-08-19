@@ -53,7 +53,6 @@ use Drupal\user\RoleStorage;
   config_export: [
     'id',
     'label',
-    'description',
     'weight',
     'is_admin',
     'permissions',
@@ -74,13 +73,6 @@ class Role extends ConfigEntityBase implements RoleInterface {
    * @var string
    */
   protected $label;
-
-  /**
-   * A brief description of this role.
-   *
-   * @var string
-   */
-  protected string $description = '';
 
   /**
    * The weight of this role in administrative listings.
@@ -111,21 +103,6 @@ class Role extends ConfigEntityBase implements RoleInterface {
       return [];
     }
     return $this->permissions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDescription(): string {
-    return $this->description;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setDescription(string $description): static {
-    $this->description = $description;
-    return $this;
   }
 
   /**

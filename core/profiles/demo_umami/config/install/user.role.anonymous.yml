@@ -9,7 +9,6 @@ dependencies:
     - system
 id: anonymous
 label: 'Anonymous user'
-description: ''
 weight: 0
 is_admin: false
 permissions:
