@@ -71,10 +71,10 @@ class ToolbarClaroOverridesTest extends BrowserTestBase {
     ];
 
     $claro_stylesheets = [
-      'core/themes/claro/css/components/toolbar.module.css',
-      'core/themes/claro/css/state/toolbar.menu.css',
-      'core/themes/claro/css/theme/toolbar.theme.css',
-      'core/themes/claro/css/theme/toolbar.icons.theme.css',
+      'core/modules/toolbar/css/claro/components/toolbar.module.css',
+      'core/modules/toolbar/css/claro/state/toolbar.menu.css',
+      'core/modules/toolbar/css/claro/theme/toolbar.theme.css',
+      'core/modules/toolbar/css/claro/theme/toolbar.icons.theme.css',
     ];
 
     $this->config('system.theme')->set('admin', 'stark')->save();

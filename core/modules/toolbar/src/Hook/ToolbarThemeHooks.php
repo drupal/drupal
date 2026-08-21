@@ -145,28 +145,49 @@ class ToolbarThemeHooks {
    */
   #[Hook('library_info_alter')]
   public function libraryInfoAlter(&$libraries, $extension): void {
-    // If Claro is the admin theme but not the active theme, grant Claro the
-    // ability to override the toolbar library with its own assets.
-    if ($extension === 'toolbar' && $this->isClaroAdminAndNotActive()) {
-      // If the active theme is not Claro, but Claro is the admin theme, this
-      // alters the toolbar library config so Claro's toolbar stylesheets are
-      // used.
-      $claro_info = $this->themeHandler->listInfo()['claro']->info;
-      $path_prefix = '/core/themes/claro/';
-      $claro_toolbar_overrides = $claro_info['libraries-override']['toolbar/toolbar'];
-      foreach ($claro_toolbar_overrides['css'] as $concern => $overrides) {
-        foreach ($claro_toolbar_overrides['css'][$concern] as $key => $value) {
-          $config = $libraries['toolbar']['css'][$concern][$key];
-          $libraries['toolbar']['css'][$concern][$path_prefix . $value] = $config;
-          unset($libraries['toolbar']['css'][$concern][$key]);
-        }
-      }
-      $claro_toolbar_menu_overrides = $claro_info['libraries-override']['toolbar/toolbar.menu'];
-      foreach ($claro_toolbar_menu_overrides['css'] as $concern => $overrides) {
-        foreach ($claro_toolbar_menu_overrides['css'][$concern] as $key => $value) {
-          $config = $libraries['toolbar.menu']['css'][$concern][$key];
-          $libraries['toolbar.menu']['css'][$concern][$path_prefix . $value] = $config;
-          unset($libraries['toolbar.menu']['css'][$concern][$key]);
+    if ($extension !== 'toolbar') {
+      return;
+    }
+    $admin_theme = $this->configFactory->get('system.theme')->get('admin');
+    $active_theme = $this->themeManager->getActiveTheme()->getName();
+    if ($active_theme === $admin_theme) {
+      return;
+    }
+    $overrides = [
+      'claro' => [
+        'toolbar' => [
+          'component' => ['css/toolbar.module.css' => 'components/toolbar.module.css'],
+          'theme' => [
+            'css/toolbar.theme.css' => 'theme/toolbar.theme.css',
+            'css/toolbar.icons.theme.css' => 'theme/toolbar.icons.theme.css',
+          ],
+        ],
+        'toolbar.menu' => [
+          'state' => ['css/toolbar.menu.css' => 'state/toolbar.menu.css'],
+        ],
+      ],
+      'default_admin' => [
+        'toolbar' => [
+          'theme' => [
+            'css/toolbar.theme.css' => 'theme/toolbar.theme.css',
+            'css/toolbar.icons.theme.css' => 'theme/toolbar.icons.theme.css',
+          ],
+        ],
+        'toolbar.menu' => [
+          'state' => ['css/toolbar.menu.css' => 'state/toolbar.menu.css'],
+        ],
+      ],
+    ];
+    if (!isset($overrides[$admin_theme])) {
+      return;
+    }
+    $path_prefix = '/core/modules/toolbar/css/' . $admin_theme . '/';
+    foreach ($overrides[$admin_theme] as $library => $concerns) {
+      foreach ($concerns as $concern => $replacements) {
+        foreach ($replacements as $original => $replacement) {
+          $config = $libraries[$library]['css'][$concern][$original];
+          $libraries[$library]['css'][$concern][$path_prefix . $replacement] = $config;
+          unset($libraries[$library]['css'][$concern][$original]);
         }
       }
     }
