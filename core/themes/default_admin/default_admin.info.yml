@@ -77,17 +77,6 @@ libraries-override:
       layout:
         css/node.module.css: false
 
-  toolbar/toolbar:
-    css:
-      theme:
-        css/toolbar.theme.css: css/theme/toolbar.theme.css
-        css/toolbar.icons.theme.css: css/theme/toolbar.icons.theme.css
-
-  toolbar/toolbar.menu:
-    css:
-      state:
-        css/toolbar.menu.css: css/state/toolbar.menu.css
-
   views_ui/admin.styling:
     css:
       component:

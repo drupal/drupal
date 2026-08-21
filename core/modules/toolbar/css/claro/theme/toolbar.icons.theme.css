@@ -199,7 +199,7 @@
     margin-left: 0;
     padding-right: 0;
     padding-left: 0;
-    text-indent: -624.9375rem;
+    text-indent: -9999px;
   }
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
     left: 0; /* LTR */
@@ -278,7 +278,7 @@
 
 .toolbar .toolbar-icon.toolbar-handle {
   width: 4em;
-  text-indent: -624.9375rem;
+  text-indent: -9999px;
 }
 
 .toolbar .toolbar-icon.toolbar-handle::before {
@@ -321,8 +321,8 @@
  */
 
 .toolbar .toolbar-toggle-orientation button {
-  width: 2.4375rem;
-  height: 2.4375rem;
+  width: 39px;
+  height: 39px;
   padding: 0;
   text-indent: -999em;
 }

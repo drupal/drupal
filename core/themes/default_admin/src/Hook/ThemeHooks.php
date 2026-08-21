@@ -9,7 +9,6 @@ use Drupal\default_admin\Settings;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Asset\AssetQueryStringInterface;
 use Drupal\Core\Extension\ThemeExtensionList;
-use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Security\TrustedCallbackInterface;
@@ -25,7 +24,6 @@ class ThemeHooks implements TrustedCallbackInterface {
    */
   public function __construct(
     protected readonly ThemeExtensionList $themeExtensionList,
-    protected readonly ThemeHandlerInterface $themeHandler,
     protected readonly RequestStack $requestStack,
     protected readonly AssetQueryStringInterface $assetQueryString,
   ) {}
@@ -122,33 +120,6 @@ class ThemeHooks implements TrustedCallbackInterface {
         __CLASS__,
         'textFormat',
       ];
-    }
-  }
-
-  /**
-   * Implements hook_library_info_alter().
-   */
-  #[Hook('library_info_alter')]
-  public function libraryInfoAlter(array &$libraries, string $extension): void {
-    if ($extension === 'toolbar') {
-      $gin_info = $this->themeHandler->listInfo()['default_admin']->info;
-      $path_prefix = '/core/themes/default_admin/';
-      $gin_toolbar_overrides = $gin_info['libraries-override']['toolbar/toolbar'];
-      foreach ($gin_toolbar_overrides['css'] as $concern => $overrides) {
-        foreach ($gin_toolbar_overrides['css'][$concern] as $key => $value) {
-          $config = $libraries['toolbar']['css'][$concern][$key];
-          $libraries['toolbar']['css'][$concern][$path_prefix . $value] = $config;
-          unset($libraries['toolbar']['css'][$concern][$key]);
-        }
-      }
-      $gin_toolbar_menu_overrides = $gin_info['libraries-override']['toolbar/toolbar.menu'];
-      foreach ($gin_toolbar_menu_overrides['css'] as $concern => $overrides) {
-        foreach ($gin_toolbar_menu_overrides['css'][$concern] as $key => $value) {
-          $config = $libraries['toolbar.menu']['css'][$concern][$key];
-          $libraries['toolbar.menu']['css'][$concern][$path_prefix . $value] = $config;
-          unset($libraries['toolbar.menu']['css'][$concern][$key]);
-        }
-      }
     }
   }
 
