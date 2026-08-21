@@ -14,13 +14,11 @@ use Drupal\Tests\jsonapi\Functional\ResourceTestBase;
 use Drupal\Tests\jsonapi\Traits\CommonCollectionFilterAccessTestPatternsTrait;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "Shortcut" content entity type.
  */
-#[IgnoreDeprecations]
 #[Group('shortcut')]
 #[RunTestsInSeparateProcesses]
 class ShortcutTest extends ResourceTestBase {

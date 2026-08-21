@@ -10,13 +10,11 @@ use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the \Drupal\shortcut\Plugin\Block\ShortcutNavigationBlock block.
  */
-#[IgnoreDeprecations]
 #[Group('shortcut')]
 #[RunTestsInSeparateProcesses]
 class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {

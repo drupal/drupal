@@ -6,13 +6,11 @@ namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the definition of navigation safe blocks.
  */
-#[IgnoreDeprecations]
 #[Group('navigation')]
 #[RunTestsInSeparateProcesses]
 class NavigationSafeBlockDefinitionTest extends BrowserTestBase {

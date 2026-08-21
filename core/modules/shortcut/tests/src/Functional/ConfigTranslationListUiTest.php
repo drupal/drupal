@@ -7,7 +7,6 @@ namespace Drupal\Tests\shortcut\Functional;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -15,7 +14,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @see \Drupal\Tests\config_translation\Functional\ConfigTranslationListUiTest
  */
-#[IgnoreDeprecations]
 #[Group('shortcut')]
 #[RunTestsInSeparateProcesses]
 class ConfigTranslationListUiTest extends BrowserTestBase {

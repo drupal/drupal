@@ -2,8 +2,6 @@ name: Shortcut
 type: module
 description: 'Allows users to create sets of shortcuts within the site.'
 package: Core
-lifecycle: deprecated
-lifecycle_link: https://www.drupal.org/node/3223395#s-shortcut
 version: VERSION
 configure: entity.shortcut_set.collection
 dependencies:

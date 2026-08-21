@@ -6,13 +6,11 @@ namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests output on the status overview page.
  */
-#[IgnoreDeprecations]
 #[Group('shortcut')]
 #[RunTestsInSeparateProcesses]
 class TrustedHostsTest extends BrowserTestBase {
