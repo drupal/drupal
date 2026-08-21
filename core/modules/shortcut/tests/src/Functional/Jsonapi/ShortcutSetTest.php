@@ -9,11 +9,13 @@ use Drupal\jsonapi\JsonApiSpec;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\Tests\jsonapi\Functional\ConfigEntityResourceTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * JSON:API integration test for the "ShortcutSet" config entity type.
  */
+#[IgnoreDeprecations]
 #[Group('shortcut')]
 #[RunTestsInSeparateProcesses]
 class ShortcutSetTest extends ConfigEntityResourceTestBase {
