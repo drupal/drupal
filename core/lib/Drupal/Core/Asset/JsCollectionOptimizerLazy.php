@@ -137,7 +137,10 @@ class JsCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfac
           // either the include or exclude query arguments. Replace this with
           // the explicit list of libraries in the aggregate.
           if (isset($js_asset['libraries'])) {
-            unset($query['include'], $query['exclude'], $query['delta']);
+            unset($query['include'], $query['exclude'], $query['delta'], $query['scope']);
+            foreach ($js_asset['items'] as &$asset) {
+              unset($asset['scope']);
+            }
             $query['libraries'] = UrlHelper::compressQueryParameter(implode(',', $js_asset['libraries']));
           }
           // Add a filename prefix to mitigate ad blockers which can block
