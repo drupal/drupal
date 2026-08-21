@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -77,7 +78,11 @@ class ModuleConfigureRouteTest extends KernelTestBase {
 
   /**
    * Tests if the module with lifecycle deprecated configure routes exists.
+   *
+   * Ignore deprecations because installing a deprecated module will trigger
+   * a deprecation notice.
    */
+  #[IgnoreDeprecations]
   public function testDeprecatedModuleConfigureRoutes(): void {
     foreach (static::coreModuleListDataProvider() as $module_name => $info) {
       $this->doTestDeprecatedModuleConfigureRoutes($module_name);
