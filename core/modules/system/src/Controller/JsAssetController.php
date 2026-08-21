@@ -52,18 +52,35 @@ class JsAssetController extends AssetControllerBase {
 
     if ($request->query->has('libraries')) {
       [$js_assets_header, $js_assets_footer] = $this->assetResolver->getJsAssets($attached_assets, FALSE, $language, FALSE);
+      // When the libraries query argument is set, the aggregate contains every
+      // file from each of the listed libraries. However, which scope an
+      // individual library appears in is determined by the HTML page request as
+      // well as the library definition, depending on the dependencies between
+      // libraries. This means we must ignore the scope when collecting the
+      // libraries and get them from both the header and footer in order.
+      // When building the array, also remove the scope from each asset so that
+      // it is ignored when calculating the hash, as in
+      // JsCollectionOptimizerLazy::optimize().
+      $assets = [];
+      unset($js_assets_header['drupalSettings'], $js_assets_footer['drupalSettings']);
+      foreach ($js_assets_header as $key => $asset) {
+        unset($asset['scope']);
+        $assets[$key] = $asset;
+      }
+      foreach ($js_assets_footer as $key => $asset) {
+        unset($asset['scope']);
+        $assets[$key] = $asset;
+      }
     }
     else {
+      $scope = $request->query->get('scope');
+      if (!isset($scope)) {
+        throw new BadRequestHttpException('The URL must have a scope query argument.');
+      }
       [$js_assets_header, $js_assets_footer] = $this->assetResolver->getJsAssets($attached_assets, FALSE, $language);
+      $assets = $scope === 'header' ? $js_assets_header : $js_assets_footer;
+      unset($assets['drupalSettings']);
     }
-    $scope = $request->query->get('scope');
-    if (!isset($scope)) {
-      throw new BadRequestHttpException('The URL must have a scope query argument.');
-    }
-    $assets = $scope === 'header' ? $js_assets_header : $js_assets_footer;
-    // While the asset resolver will find settings, these are never aggregated,
-    // so filter them out.
-    unset($assets['drupalSettings']);
     return $this->grouper->group($assets);
   }
 

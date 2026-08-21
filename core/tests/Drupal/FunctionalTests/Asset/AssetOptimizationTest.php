@@ -23,6 +23,11 @@ class AssetOptimizationTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['header_assets_test'];
+
+  /**
    * The file assets path settings value.
    *
    * @var string
@@ -98,6 +103,17 @@ class AssetOptimizationTest extends BrowserTestBase {
     foreach ($script_elements as $element) {
       $script_urls[] = $element->getAttribute('src');
     }
+
+    // The header_assets_test module attaches a header library depending on
+    // core/drupal, so the page must include a header aggregate covering
+    // libraries that are only in the header via that dependency. Requesting
+    // this aggregate must succeed even though neither core/drupal nor
+    // core/drupalSettings is a header library on its own.
+    $header_dependency_aggregates = array_filter($script_urls, function (string $url): bool {
+      $query = UrlHelper::parse($this->getAbsoluteUrl($url))['query'];
+      return isset($query['libraries']) && str_contains(UrlHelper::uncompressQueryParameter($query['libraries']), 'core/drupal');
+    });
+    $this->assertNotEmpty($header_dependency_aggregates);
     foreach ($style_urls as $url) {
       $this->assertAggregate($url, TRUE, 'text/css');
       // Once the file has been requested once, it's on disk. It is possible for

@@ -1,0 +1,5 @@
+name: 'Header assets test'
+type: module
+description: 'Tests aggregation of libraries loaded in the header via a dependency.'
+package: Testing
+version: VERSION
