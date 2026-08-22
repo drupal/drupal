@@ -104,7 +104,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'node_type' => 13,
       'shortcut' => 0,
       'shortcut_set' => 1,
-      'action' => 30,
+      'action' => 24,
       'menu' => 10,
       'path_alias' => 8,
       'taxonomy_term' => 15,

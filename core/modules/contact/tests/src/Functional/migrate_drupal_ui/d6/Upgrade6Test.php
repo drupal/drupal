@@ -65,7 +65,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts(): array {
     return [
-      'action' => 30,
+      'action' => 24,
       'base_field_override' => 6,
       'block' => 28,
       'block_content' => 1,
