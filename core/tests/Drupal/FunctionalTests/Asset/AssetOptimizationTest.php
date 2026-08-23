@@ -114,6 +114,8 @@ class AssetOptimizationTest extends BrowserTestBase {
       return isset($query['libraries']) && str_contains(UrlHelper::uncompressQueryParameter($query['libraries']), 'core/drupal');
     });
     $this->assertNotEmpty($header_dependency_aggregates);
+
+    // Test requesting asset URLs.
     foreach ($style_urls as $url) {
       $this->assertAggregate($url, TRUE, 'text/css');
       // Once the file has been requested once, it's on disk. It is possible for
@@ -124,13 +126,11 @@ class AssetOptimizationTest extends BrowserTestBase {
       // routing, we can force the request to be served by Drupal.
       $this->assertAggregate(str_replace($this->fileAssetsPath, strtoupper($this->fileAssetsPath), $url), TRUE, 'text/css', FALSE);
       $this->assertAggregate($url, FALSE, 'text/css');
-      $this->assertInvalidAggregates($url);
     }
 
     foreach ($script_urls as $url) {
       $this->assertAggregate($url);
       $this->assertAggregate($url, FALSE);
-      $this->assertInvalidAggregates($url);
     }
 
     // The aggregates have just been created, so ::deleteAll() should avoid
@@ -167,6 +167,16 @@ class AssetOptimizationTest extends BrowserTestBase {
 
     foreach ($script_urls as $url) {
       $this->assertAggregate($url, TRUE);
+    }
+
+    // Check manipulating asset URL parameters.
+    \Drupal::service('file_system')->deleteRecursive($this->fileAssetsPath);
+    foreach ($style_urls as $url) {
+      $this->assertInvalidAggregates($url);
+    }
+
+    foreach ($script_urls as $url) {
+      $this->assertInvalidAggregates($url);
     }
   }
 
@@ -256,10 +266,12 @@ class AssetOptimizationTest extends BrowserTestBase {
       return;
     }
     $session = $this->getSession();
-    $session->visit($this->replaceGroupDelta($url));
-    $this->assertSession()->statusCodeEquals(200);
+
     $parts = UrlHelper::parse($url);
     if (isset($parts['query']['include'])) {
+      $session->visit($this->replaceGroupDelta($url, 100));
+      $this->assertSession()->statusCodeEquals(400);
+
       $session->visit($this->omitInclude($url));
       $this->assertSession()->statusCodeEquals(400);
 
@@ -268,7 +280,12 @@ class AssetOptimizationTest extends BrowserTestBase {
 
       $session->visit($this->invalidExclude($url));
       $this->assertSession()->statusCodeEquals(400);
-      $session->visit($this->setInvalidLibrary($url));
+
+      // Library name must include at least one slash.
+      $session->visit($this->setInvalidLibrary($url, 'abcdefghijklmnop'));
+      $this->assertSession()->statusCodeEquals(400);
+
+      $session->visit($this->setInvalidLibrary($url, 'system/llama'));
       $this->assertSession()->statusCodeEquals(200);
     }
     else {
@@ -306,13 +323,17 @@ class AssetOptimizationTest extends BrowserTestBase {
    *
    * @param string $url
    *   The source URL.
+   * @param int $delta
+   *   The delta to apply.
    *
    * @return string
    *   The URL with the delta replaced.
    */
-  protected function replaceGroupDelta(string $url): string {
+  protected function replaceGroupDelta(string $url, int $delta): string {
+    // First replace the hash, so we don't get served the actual file on disk.
+    $url = $this->replaceGroupHash($url);
     $parts = UrlHelper::parse($url);
-    $parts['query']['delta'] = 100;
+    $parts['query']['delta'] = $delta;
     $query = UrlHelper::buildQuery($parts['query']);
     return $this->getAbsoluteUrl($parts['path'] . '?' . $query . '#' . $parts['fragment']);
   }
@@ -329,7 +350,7 @@ class AssetOptimizationTest extends BrowserTestBase {
   protected function replaceGroupHash(string $url): string {
     $parts = explode('_', $url, 2);
     $hash = strtok($parts[1], '.');
-    $parts[1] = str_replace($hash, 'abcdefghijklmnop', $parts[1]);
+    $parts[1] = str_replace($hash, $this->randomMachineName(), $parts[1]);
     return $this->getAbsoluteUrl(implode('_', $parts));
   }
 
@@ -351,16 +372,18 @@ class AssetOptimizationTest extends BrowserTestBase {
    *
    * @param string $url
    *   The source URL.
+   * @param string $library
+   *   The library to add.
    *
    * @return string
    *   The URL with the 'include' query set to an invalid value.
    */
-  protected function setInvalidLibrary(string $url): string {
+  protected function setInvalidLibrary(string $url, string $library): string {
     // First replace the hash, so we don't get served the actual file on disk.
     $url = $this->replaceGroupHash($url);
     $parts = UrlHelper::parse($url);
     $include = explode(',', UrlHelper::uncompressQueryParameter($parts['query']['include']));
-    $include[] = 'system/llama';
+    $include[] = $library;
     $parts['query']['include'] = UrlHelper::compressQueryParameter(implode(',', $include));
 
     $query = UrlHelper::buildQuery($parts['query']);
