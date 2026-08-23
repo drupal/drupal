@@ -11,6 +11,14 @@ files:
     theme:
       bar.css: {}
 
+# Library to test CSS and JS file assets excluded from aggregation.
+no-preprocess:
+  js:
+    no_preprocess.js: { preprocess: false }
+  css:
+    theme:
+      no_preprocess.css: { preprocess: false }
+
 # Library to test external CSS and JS file assets.
 external:
   version: 1
