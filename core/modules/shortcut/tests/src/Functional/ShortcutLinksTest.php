@@ -140,7 +140,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->drupalGet('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link');
     $this->submitForm($form_data, 'Save');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains("The path '/admin' is inaccessible.");
+    $this->assertSession()->pageTextContains("The URL '/admin' is inaccessible.");
 
     $form_data = [
       'title[0][value]' => $title,

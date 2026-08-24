@@ -19,7 +19,7 @@ class LinkExternalProtocolsConstraint extends SymfonyConstraint {
   #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
-    public string $message = "The path '@uri' is invalid.",
+    public string $message = "The URL '@uri' has an invalid protocol.",
     ?array $groups = NULL,
     mixed $payload = NULL,
   ) {

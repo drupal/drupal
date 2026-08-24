@@ -19,7 +19,7 @@ class LinkAccessConstraint extends SymfonyConstraint {
   #[HasNamedArguments]
   public function __construct(
     mixed $options = NULL,
-    public string $message = "The path '@uri' is inaccessible.",
+    public string $message = "The URL '@uri' is inaccessible.",
     ?array $groups = NULL,
     mixed $payload = NULL,
   ) {

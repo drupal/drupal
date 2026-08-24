@@ -818,7 +818,7 @@ class MenuUiTest extends BrowserTestBase {
       ];
       $this->drupalGet("admin/structure/menu/manage/{$this->menu->id()}/add");
       $this->submitForm($edit, 'Save');
-      $this->assertSession()->pageTextContains("The path '{$link_path}' is inaccessible.");
+      $this->assertSession()->pageTextContains("The URL '{$link_path}' is inaccessible.");
     }
   }
 

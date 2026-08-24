@@ -189,14 +189,20 @@ class LinkFieldTest extends BrowserTestBase {
     ];
 
     // Define some invalid URLs.
-    $validation_error_1 = "The path '@link_path' is invalid.";
+    $validation_error_1 = "The URL '@link_path' is invalid.";
     $validation_error_2 = "Enter a content title to select it, or enter an internal path starting with /, ? or #. External links must be a full URL including the protocol, such as";
-    $validation_error_3 = "The path '@link_path' is inaccessible.";
+    $validation_error_3 = "The URL '@link_path' is inaccessible.";
     $validation_error_4 = 'Enter a content title to select it, or enter an internal path starting with /, ? or #.';
     $validation_error_5 = "External links must be a full URL including the protocol, such as";
+    $validation_error_6 = "The URL '@link_path' doesn't exist.";
+    $validation_error_7 = "The URL '@link_path' has an invalid parameter.";
+    $validation_error_8 = "The URL '@uri' is internal, but the {$field_name} field only supports external URLs.";
+    $validation_error_9 = "The URL '@uri' is external, but the {$field_name} field only supports internal paths.";
+    $validation_error_10 = "The URL '@link_path' has an invalid protocol.";
+
     $invalid_external_entries = [
       // Invalid protocol.
-      'invalid://not-a-valid-protocol' => $validation_error_1,
+      'invalid://not-a-valid-protocol' => $validation_error_10,
       // Missing host name.
       'http://' => $validation_error_1,
       // Missing protocol schema.
@@ -204,9 +210,15 @@ class LinkFieldTest extends BrowserTestBase {
     ];
     $invalid_internal_entries = [
       'no-leading-slash' => $validation_error_2,
-      'entity:non_existing_entity_type/yar' => $validation_error_1,
+      'entity:non_existing_entity_type/yar' => $validation_error_6,
       // URI for an entity that doesn't exist, with an invalid ID.
-      'entity:user/invalid-parameter' => $validation_error_1,
+      'entity:user/invalid-parameter' => $validation_error_7,
+    ];
+    $only_external = [
+      '/entity_test/add' => $validation_error_8,
+    ];
+    $only_internal = [
+      'http://www.example.com/' => $validation_error_9,
     ];
 
     // Test external and internal URLs for
@@ -219,14 +231,14 @@ class LinkFieldTest extends BrowserTestBase {
     $this->field->setSetting('link_type', LinkItemInterface::LINK_EXTERNAL);
     $this->field->save();
     $this->assertValidEntries($field_name, $valid_external_entries);
-    $this->assertInvalidEntries($field_name, $valid_internal_entries + $invalid_external_entries);
+    $this->assertInvalidEntries($field_name, $valid_internal_entries + $invalid_external_entries + $only_external);
 
     // Test external URLs for 'link_type' = LinkItemInterface::LINK_INTERNAL.
     $invalid_internal_entries['no-leading-slash'] = $validation_error_4;
     $this->field->setSetting('link_type', LinkItemInterface::LINK_INTERNAL);
     $this->field->save();
     $this->assertValidEntries($field_name, $valid_internal_entries);
-    $this->assertInvalidEntries($field_name, $valid_external_entries + $invalid_internal_entries);
+    $this->assertInvalidEntries($field_name, $valid_external_entries + $invalid_internal_entries + $only_internal);
 
     // Ensure that users with 'link to any page', don't apply access checking.
     $this->drupalLogin($this->drupalCreateUser([
