@@ -56,10 +56,11 @@ class LinkItemUrlValidationTest extends FieldKernelTestBase {
    *   value is an array of expected violation messages.
    */
   protected function getTestLinks(): array {
-    $violation_0 = "The path '%s' is invalid.";
+    $violation_0 = "The URL '%s' is invalid.";
     $violation_1 = 'This value should be of the correct primitive type.';
+    $violation_2 = "The URL '%s' has an invalid protocol.";
     return [
-      ['invalid://not-a-valid-protocol', [$violation_0]],
+      ['invalid://not-a-valid-protocol', [$violation_2]],
       ['http://www.example.com/', []],
       // Strings within parenthesis without leading space char.
       ['http://www.example.com/strings_(string_within_parenthesis)', []],
@@ -104,9 +105,9 @@ class LinkItemUrlValidationTest extends FieldKernelTestBase {
       ["http://-.~_!$&'()*+,;=:%40:80%2f::::::@example.com", []],
       ["http://1337.net", []],
       ["http://a.b-c.de", []],
-      ["radar://1234", [$violation_0]],
-      ["h://test", [$violation_0]],
-      ["ftps://foo.bar/", [$violation_0]],
+      ["radar://1234", [$violation_2]],
+      ["h://test", [$violation_2]],
+      ["ftps://foo.bar/", [$violation_2]],
       // Use invalid URLS from
       // https://cran.r-project.org/web/packages/rex/vignettes/url_parsing.html.
       ['http://', [$violation_0, $violation_1]],

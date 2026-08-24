@@ -23,34 +23,34 @@ class LinkTypeConstraintValidator extends ConstraintValidator {
       return;
     }
 
-    $uri_is_valid = TRUE;
-
-    /** @var \Drupal\link\LinkItemInterface $link_item */
-    $link_item = $value;
-    $link_type = $link_item->getFieldDefinition()->getSetting('link_type');
-
     // Try to resolve the given URI to a URL. It may fail if it's schemeless.
     try {
-      $url = $link_item->getUrl();
+      $url = $value->getUrl();
+      $field_definition = $value->getFieldDefinition();
+
+      // If the link field doesn't support both internal and external links,
+      // check whether the URL (a resolved URI) is in fact violating either
+      // restriction.
+      $link_type = $field_definition->getSetting('link_type');
+      if ($url->isExternal() && !($link_type & LinkItemInterface::LINK_EXTERNAL)) {
+        $this->context->buildViolation($constraint->onlyInternalMessage, [
+          '@uri' => $value->uri,
+          '@field-label' => $field_definition->getLabel(),
+        ])
+          ->atPath('uri')
+          ->addViolation();
+      }
+      elseif (!$url->isExternal() && !($link_type & LinkItemInterface::LINK_INTERNAL)) {
+        $this->context->buildViolation($constraint->onlyExternalMessage, [
+          '@uri' => $value->uri,
+          '@field-label' => $field_definition->getLabel(),
+        ])
+          ->atPath('uri')
+          ->addViolation();
+      }
     }
     catch (\InvalidArgumentException) {
-      $uri_is_valid = FALSE;
-    }
-
-    // If the link field doesn't support both internal and external links,
-    // check whether the URL (a resolved URI) is in fact violating either
-    // restriction.
-    if ($uri_is_valid && $link_type !== LinkItemInterface::LINK_GENERIC) {
-      if (!($link_type & LinkItemInterface::LINK_EXTERNAL) && $url->isExternal()) {
-        $uri_is_valid = FALSE;
-      }
-      if (!($link_type & LinkItemInterface::LINK_INTERNAL) && !$url->isExternal()) {
-        $uri_is_valid = FALSE;
-      }
-    }
-
-    if (!$uri_is_valid) {
-      $this->context->buildViolation($constraint->message, ['@uri' => $link_item->uri])
+      $this->context->buildViolation($constraint->invalidMessage, ['@uri' => $value->uri])
         ->atPath('uri')
         ->addViolation();
     }

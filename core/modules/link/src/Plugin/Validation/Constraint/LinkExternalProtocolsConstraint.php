@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 class LinkExternalProtocolsConstraint extends SymfonyConstraint {
 
   public function __construct(
-    public string $message = "The path '@uri' is invalid.",
+    public string $message = "The URL '@uri' has an invalid protocol.",
     ?array $groups = NULL,
     mixed $payload = NULL,
   ) {

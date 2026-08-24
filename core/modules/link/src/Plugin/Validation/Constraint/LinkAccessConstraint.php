@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 class LinkAccessConstraint extends SymfonyConstraint {
 
   public function __construct(
-    public string $message = "The path '@uri' is inaccessible.",
+    public string $message = "The URL '@uri' is inaccessible.",
     ?array $groups = NULL,
     mixed $payload = NULL,
   ) {
