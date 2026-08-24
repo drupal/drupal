@@ -695,10 +695,6 @@ services:
   container.namespaces:
     class: ArrayObject
     arguments: [ '%container.namespaces%' ]
-  container.trait:
-    abstract: true
-    calls:
-      - [setContainer, ['@service_container']]
   default_plugin_manager:
     abstract: true
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
