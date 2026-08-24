@@ -28,6 +28,7 @@ class HelpSearchHelpUpgradeTest extends UpdatePathTestBase {
   protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../system/tests/fixtures/update/drupal-11.3.0.bare.standard.php.gz',
+      __DIR__ . '/../../../../system/tests/fixtures/update/uninstall-shortcut.php',
     ];
   }
 
@@ -45,7 +46,7 @@ class HelpSearchHelpUpgradeTest extends UpdatePathTestBase {
     $this->runUpdates();
 
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('search_help'));
-    $this->assertSame(76, (int) \Drupal::database()->query('SELECT COUNT(*) FROM {help_search_items}')->fetchField());
+    $this->assertSame(75, (int) \Drupal::database()->query('SELECT COUNT(*) FROM {help_search_items}')->fetchField());
 
     $this->assertSame(['search_help'], $this->config('search.page.help_search')->get('dependencies.module'));
   }

@@ -27,6 +27,7 @@ class HelpNoSearchUpgradeTest extends UpdatePathTestBase {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../system/tests/fixtures/update/drupal-11.3.0.bare.standard.php.gz',
       __DIR__ . '/../../fixtures/uninstall-search.php',
+      __DIR__ . '/../../../../system/tests/fixtures/update/uninstall-shortcut.php',
     ];
   }
 

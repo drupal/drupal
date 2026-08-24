@@ -49,6 +49,7 @@ class SystemRequirements implements InstallRequirementsInterface {
     'quickedit' => 'Quick Edit',
     'rdf' => 'RDF',
     'settings_tray' => 'Settings Tray',
+    'shortcut' => 'Shortcut',
     'statistics' => 'Statistics',
     'telephone' => 'Telephone',
     'tour' => 'Tour',
