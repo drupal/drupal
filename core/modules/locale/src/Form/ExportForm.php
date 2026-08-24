@@ -8,8 +8,8 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\locale\LocaleLanguages;
 use Drupal\locale\PoDatabaseReader;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
@@ -19,42 +19,11 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  */
 class ExportForm extends FormBase {
 
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
-   * Constructs a new ExportForm.
-   *
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
-   *   The file system service.
-   */
-  public function __construct(LanguageManagerInterface $language_manager, FileSystemInterface $file_system) {
-    $this->languageManager = $language_manager;
-    $this->fileSystem = $file_system;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('language_manager'),
-      $container->get('file_system')
-    );
-  }
+  public function __construct(
+    protected LanguageManagerInterface $languageManager,
+    protected FileSystemInterface $fileSystem,
+    protected LocaleLanguages $localeLanguages,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -70,7 +39,7 @@ class ExportForm extends FormBase {
     $languages = $this->languageManager->getLanguages();
     $language_options = [];
     foreach ($languages as $langcode => $language) {
-      if (locale_is_translatable($langcode)) {
+      if ($this->localeLanguages->isTranslatable($langcode)) {
         $language_options[$langcode] = $language->getName();
       }
     }

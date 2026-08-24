@@ -5,6 +5,7 @@ namespace Drupal\locale\Form;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\locale\LocaleXss;
 use Drupal\locale\SourceString;
 
 /**
@@ -158,7 +159,7 @@ class TranslateEditForm extends TranslateFormBase {
     $langcode = $form_state->getValue('langcode');
     foreach ($form_state->getValue('strings') as $lid => $translations) {
       foreach ($translations['translations'] as $key => $value) {
-        if (!locale_string_is_safe($value)) {
+        if (!LocaleXss::stringIsSafe($value)) {
           $form_state->setErrorByName("strings][$lid][translations][$key", $this->t('The submitted string contains disallowed HTML: %string', ['%string' => $value]));
           $form_state->setErrorByName("translations][$langcode][$key", $this->t('The submitted string contains disallowed HTML: %string', ['%string' => $value]));
           $this->logger('locale')->warning('Attempted submission of a translation string with disallowed HTML: %string', ['%string' => $value]);

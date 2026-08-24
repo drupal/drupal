@@ -60,6 +60,7 @@ class LocaleConfigManager {
     protected ConfigurableLanguageManagerInterface $languageManager,
     protected LocaleDefaultConfigStorage $defaultConfigStorage,
     protected ConfigManagerInterface $configManager,
+    protected readonly LocaleLanguages $localeLanguages,
   ) {}
 
   /**
@@ -163,7 +164,7 @@ class LocaleConfigManager {
         }
       }
       else {
-        if (locale_is_translatable($langcode)) {
+        if ($this->localeLanguages->isTranslatable($langcode)) {
           $value = $this->translateString($name, $langcode, $item->getUntranslatedString(), $item->getOption('context'));
         }
         else {
@@ -547,7 +548,7 @@ class LocaleConfigManager {
             $count++;
           }
         }
-        elseif (locale_is_translatable($langcode)) {
+        elseif ($this->localeLanguages->isTranslatable($langcode)) {
           // If the language code is the active storage language, we should
           // update. If it is English, we should only update if English is also
           // translatable.

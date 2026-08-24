@@ -6,6 +6,7 @@ namespace Drupal\locale;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -31,6 +32,8 @@ class LocaleProjectChecker {
     protected readonly ModuleHandlerInterface $moduleHandler,
     protected readonly TranslationInterface $translationManager,
     protected readonly AccountProxyInterface $currentUser,
+    protected readonly ConfigFactoryInterface $configFactory,
+    protected readonly LocaleLanguages $localeLanguages,
   ) {}
 
   /**
@@ -42,7 +45,7 @@ class LocaleProjectChecker {
    *   Array of language codes. Defaults to all translatable languages.
    */
   public function checkProjects(array $projects, array $langcodes = []): void {
-    if (locale_translation_use_remote_source()) {
+    if ($this->configFactory->get('locale.settings')->get('translation.use_source') == LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL) {
       // Retrieve the status of both remote and local translation sources by
       // using a batch process.
       $this->triggerBatch($projects, $langcodes);
@@ -74,7 +77,7 @@ class LocaleProjectChecker {
    *   Array of language codes. Defaults to all translatable languages.
    */
   public function checkLocalProjects(array $projects, array $langcodes = []): void {
-    $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+    $langcodes = $langcodes ?: array_keys($this->localeLanguages->getTranslatableLanguages());
 
     // For each project and each language we check if a local po file is
     // available. When found the source object is updated with the appropriate
@@ -105,7 +108,7 @@ class LocaleProjectChecker {
    *   Array of language codes. Defaults to all translatable languages.
    */
   public function triggerBatch(array $projects, array $langcodes = []): void {
-    $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+    $langcodes = $langcodes ?: array_keys($this->localeLanguages->getTranslatableLanguages());
     $options = LocaleDefaultOptions::updateOptions();
 
     $operations = $this->localeFetch->getStatusOperations($projects, $langcodes, $options);

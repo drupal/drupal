@@ -11,6 +11,7 @@ use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\LocaleTranslatableProject;
 use Drupal\locale\LocaleProjectRepository;
+use Drupal\locale\LocaleLanguages;
 
 /**
  * Cron Hook implementation for locale.
@@ -24,6 +25,7 @@ class LocaleCronHooks {
     protected readonly TimeInterface $time,
     protected readonly ConfigFactoryInterface $configFactory,
     protected readonly QueueFactory $queueFactory,
+    protected readonly LocaleLanguages $localeLanguages,
   ) {
   }
 
@@ -38,7 +40,7 @@ class LocaleCronHooks {
     // Update translations only when an update frequency was set by the admin
     // and a translatable language was set.
     // Update tasks are added to the queue here but processed by Drupal's cron.
-    if ($config->get('translation.update_interval_days') && locale_translatable_language_list()) {
+    if ($config->get('translation.update_interval_days') && $this->localeLanguages->getTranslatableLanguages()) {
       // Determine which project+language should be updated.
       $request_time = $this->time->getRequestTime();
       $check_time = $request_time - $config->get('translation.update_interval_days') * 3600 * 24;

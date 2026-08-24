@@ -14,6 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\locale\CurrentImportStorage;
 use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleSource;
+use Drupal\locale\LocaleLanguages;
 use Drupal\locale\StreamWrapper\TranslationsStream;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
@@ -37,6 +38,7 @@ class LocaleFileManager {
     protected readonly LoggerChannelFactoryInterface $loggerFactory,
     protected readonly MessengerInterface $messenger,
     protected readonly CurrentImportStorage $currentImportStorage,
+    protected readonly LocaleLanguages $localeLanguages,
   ) {}
 
   /**
@@ -55,7 +57,7 @@ class LocaleFileManager {
   public function getInterfaceTranslationFiles(array $projects = [], array $langcodes = []): array {
     $files = [];
     $projects = $projects ?: array_keys($this->localeProjectRepository->getAll());
-    $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+    $langcodes = $langcodes ?: array_keys($this->localeLanguages->getTranslatableLanguages());
 
     // Scan the translations directory for files matching a name pattern
     // containing a project name and language code: {project}.{langcode}.po or

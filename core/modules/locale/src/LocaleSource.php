@@ -31,6 +31,7 @@ class LocaleSource {
     protected readonly CurrentImportStorage $currentImportStorage,
     protected readonly KeyValueFactoryInterface $keyValueFactory,
     protected readonly TimeInterface $time,
+    protected readonly LocaleLanguages $localeLanguages,
   ) {}
 
   /**
@@ -48,7 +49,7 @@ class LocaleSource {
    */
   public function loadSources(?array $projects = NULL, ?array $langcodes = NULL): array {
     $projects = $projects ?: array_keys($this->localeProjectRepository->getAll());
-    $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+    $langcodes = $langcodes ?: array_keys($this->localeLanguages->getTranslatableLanguages());
 
     // If there are no translatable languages, return early.
     if (!$langcodes) {
@@ -230,7 +231,7 @@ class LocaleSource {
   public function buildSources(array $projects, array $langcodes = []): array {
     $sources = [];
     $projects = $this->localeProjectRepository->getMultiple($projects);
-    $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+    $langcodes = $langcodes ?: array_keys($this->localeLanguages->getTranslatableLanguages());
 
     foreach ($projects as $project) {
       foreach ($langcodes as $langcode) {

@@ -6,9 +6,7 @@
 
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Installer\InstallerKernel;
@@ -24,8 +22,11 @@ use Drupal\locale\File\LocaleFileManager;
 use Drupal\locale\LocaleConfigBatch;
 use Drupal\locale\CurrentImportStorage;
 use Drupal\locale\Hook\LocaleFormHooks;
+use Drupal\locale\LocaleJs;
 use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleSource;
+use Drupal\locale\LocaleLanguages;
+use Drupal\locale\LocaleXss;
 
 /**
  * Regular expression pattern used to localize JavaScript strings.
@@ -141,13 +142,16 @@ const LOCALE_TRANSLATION_CURRENT = 'current';
  * @return array
  *   Array of installed languages keyed by language name. English is omitted
  *   unless it is marked as translatable.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleLanguages::class)->getTranslatableLanguages()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3616293
  */
 function locale_translatable_language_list() {
-  $languages = \Drupal::languageManager()->getLanguages();
-  if (!locale_is_translatable('en')) {
-    unset($languages['en']);
-  }
-  return $languages;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleLanguages::class)->getTranslatableLanguages() instead. See https://www.drupal.org/node/3616293', E_USER_DEPRECATED);
+  return \Drupal::service(LocaleLanguages::class)->getTranslatableLanguages();
 }
 
 /**
@@ -239,7 +243,7 @@ function locale_system_update(array $components): void {
   // Skip running the translation imports if in the installer,
   // because it would break out of the installer flow. We have
   // built-in support for translation imports in the installer.
-  if (!InstallerKernel::installationAttempted() && locale_translatable_language_list()) {
+  if (!InstallerKernel::installationAttempted() && \Drupal::service(LocaleLanguages::class)->getTranslatableLanguages()) {
     $module_handler = \Drupal::moduleHandler();
     if (\Drupal::config('locale.settings')->get('translation.import_enabled')) {
       $module_handler->loadInclude('locale', 'inc', 'locale.compare');
@@ -289,7 +293,7 @@ function locale_system_remove($components): void {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3595086', E_USER_DEPRECATED);
   $components += ['module' => [], 'theme' => []];
   $list = array_merge($components['module'], $components['theme']);
-  if (locale_translatable_language_list()) {
+  if (\Drupal::service(LocaleLanguages::class)->getTranslatableLanguages()) {
     $module_handler = \Drupal::moduleHandler();
     $module_handler->loadInclude('locale', 'inc', 'locale.compare');
     $module_handler->loadInclude('locale', 'inc', 'locale.bulk');
@@ -328,58 +332,15 @@ function locale_system_remove($components): void {
  * @return string|null
  *   The filepath to the translation file or NULL if no translation is
  *   applicable.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleJs::class)->jsTranslate() instead.
+ *
+ * @see https://www.drupal.org/node/3616293
  */
 function locale_js_translate(array $files = [], $language_interface = NULL) {
-  if (!isset($language_interface)) {
-    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-  }
-
-  $dir = 'assets://' . \Drupal::config('locale.settings')->get('javascript.directory');
-  $parsed = \Drupal::state()->get('system.javascript_parsed', []);
-  $new_files = FALSE;
-
-  foreach ($files as $filepath) {
-    if (!in_array($filepath, $parsed)) {
-      // Don't parse our own translations files.
-      if (!str_starts_with($filepath, $dir)) {
-        _locale_parse_js_file($filepath);
-        $parsed[] = $filepath;
-        $new_files = TRUE;
-      }
-    }
-  }
-
-  // If there are any new source files we parsed, invalidate existing
-  // JavaScript translation files for all languages, adding the refresh
-  // flags into the existing array.
-  if ($new_files) {
-    $parsed += _locale_invalidate_js();
-  }
-
-  // If necessary, rebuild the translation file for the current language.
-  if (!empty($parsed['refresh:' . $language_interface->getId()])) {
-    // Don't clear the refresh flag on failure, so that another try will
-    // be performed later.
-    if (_locale_rebuild_js()) {
-      unset($parsed['refresh:' . $language_interface->getId()]);
-    }
-    // Store any changes after refresh was attempted.
-    \Drupal::state()->set('system.javascript_parsed', $parsed);
-  }
-  // If no refresh was attempted, but we have new source files, we need
-  // to store them too. This occurs if current page is in English.
-  elseif ($new_files) {
-    \Drupal::state()->set('system.javascript_parsed', $parsed);
-  }
-
-  // Add the translation JavaScript file to the page.
-  $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
-  $translation_file = NULL;
-  if (!empty($files) && !empty($locale_javascripts[$language_interface->getId()])) {
-    // Add the translation JavaScript file to the page.
-    $translation_file = $dir . '/' . $language_interface->getId() . '_' . $locale_javascripts[$language_interface->getId()] . '.js';
-  }
-  return $translation_file;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleJs::class)->jsTranslate() instead. See https://www.drupal.org/node/3616293', E_USER_DEPRECATED);
+  return \Drupal::service(LocaleJs::class)->jsTranslate($files, $language_interface);
 }
 
 /**
@@ -422,9 +383,16 @@ function locale_form_language_admin_edit_form_alter_submit($form, FormStateInter
  *
  * @return bool
  *   Whether $langcode can be translated to in locale.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleLanguages::class)->isTranslatable()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3616293
  */
 function locale_is_translatable($langcode) {
-  return $langcode != 'en' || \Drupal::config('locale.settings')->get('translate_english');
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleLanguages::class)->isTranslatable() instead. See https://www.drupal.org/node/3616293', E_USER_DEPRECATED);
+  return \Drupal::service(LocaleLanguages::class)->isTranslatable($langcode);
 }
 
 /**
@@ -609,8 +577,14 @@ function locale_translation_clear_status(): void {
  * @return bool
  *   Returns TRUE if remote translations sources should be taken into account
  *   when checking or importing translation files, FALSE otherwise.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3616293
  */
 function locale_translation_use_remote_source() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3616293', E_USER_DEPRECATED);
   return \Drupal::config('locale.settings')->get('translation.use_source') == LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL;
 }
 
@@ -628,87 +602,15 @@ function locale_translation_use_remote_source() {
  * The allowed tag list is like \Drupal\Component\Utility\Xss::filterAdmin(),
  * but omitting div and img as not needed for translation and likely to cause
  * layout issues (div) or a possible attack vector (img).
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   LocaleXss::stringIsSafe() instead.
+ *
+ * @see https://www.drupal.org/node/3595086
  */
 function locale_string_is_safe($string) {
-  // Some strings have tokens in them. For tokens in the first part of href or
-  // src HTML attributes, \Drupal\Component\Utility\Xss::filter() removes part
-  // of the token, the part before the first colon.
-  // \Drupal\Component\Utility\Xss::filter() assumes it could be an attempt to
-  // inject javascript. When \Drupal\Component\Utility\Xss::filter() removes
-  // part of tokens, it causes the string to not be translatable when it should
-  // be translatable.
-  // @see \Drupal\Tests\locale\Kernel\LocaleStringIsSafeTest::testLocaleStringIsSafe()
-  //
-  // We can recognize tokens since they are wrapped with brackets and are only
-  // composed of alphanumeric characters, colon, underscore, and dashes. We can
-  // be sure these strings are safe to strip out before the string is checked in
-  // \Drupal\Component\Utility\Xss::filter() because no dangerous javascript
-  // will match that pattern.
-  //
-  // Strings with tokens should not be assumed to be dangerous because even if
-  // we evaluate them to be safe here, later replacing the token inside the
-  // string will automatically mark it as unsafe as it is not the same string
-  // anymore.
-  //
-  // @todo Do not strip out the token. Fix
-  //   \Drupal\Component\Utility\Xss::filter() to not incorrectly alter the
-  //   string. https://www.drupal.org/node/2372127
-  $string = preg_replace('/\[[a-z0-9_-]+(:[a-z0-9_-]+)+\]/i', '', $string);
-
-  return Html::decodeEntities($string) == Html::decodeEntities(Xss::filter($string, [
-    'a',
-    'abbr',
-    'acronym',
-    'address',
-    'b',
-    'bdo',
-    'big',
-    'blockquote',
-    'br',
-    'caption',
-    'cite',
-    'code',
-    'col',
-    'colgroup',
-    'dd',
-    'del',
-    'dfn',
-    'dl',
-    'dt',
-    'em',
-    'h1',
-    'h2',
-    'h3',
-    'h4',
-    'h5',
-    'h6',
-    'hr',
-    'i',
-    'ins',
-    'kbd',
-    'li',
-    'ol',
-    'p',
-    'pre',
-    'q',
-    'samp',
-    'small',
-    'span',
-    'strong',
-    'sub',
-    'sup',
-    'table',
-    'tbody',
-    'td',
-    'tfoot',
-    'th',
-    'thead',
-    'tr',
-    'tt',
-    'ul',
-    'var',
-    'wbr',
-  ]));
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use LocaleXss::stringIsSafe() instead. See https://www.drupal.org/node/3595086', E_USER_DEPRECATED);
+  return LocaleXss::stringIsSafe($string);
 }
 
 /**
@@ -879,7 +781,7 @@ function _locale_invalidate_js($langcode = NULL) {
 
   if (empty($langcode)) {
     // Invalidate all languages.
-    $languages = locale_translatable_language_list();
+    $languages = \Drupal::service(LocaleLanguages::class)->getTranslatableLanguages();
     foreach ($languages as $language_code => $data) {
       $parsed['refresh:' . $language_code] = 'waiting';
     }
@@ -1053,8 +955,15 @@ function _locale_rebuild_js($langcode = NULL) {
  *
  * Adds labels to the languages and removes checkboxes from languages from which
  * translation files could not be found.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3616293
  */
 function locale_translation_language_table($form_element) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3616293', E_USER_DEPRECATED);
+
   // Remove checkboxes of languages without updates.
   if ($form_element['#not_found']) {
     foreach ($form_element['#not_found'] as $langcode) {

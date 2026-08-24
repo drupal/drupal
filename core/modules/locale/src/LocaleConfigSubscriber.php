@@ -33,39 +33,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class LocaleConfigSubscriber implements EventSubscriberInterface {
 
-  /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The typed configuration manager.
-   *
-   * @var \Drupal\locale\LocaleConfigManager
-   */
-  protected $localeConfigManager;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * Constructs a LocaleConfigSubscriber.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The configuration factory.
-   * @param \Drupal\locale\LocaleConfigManager $locale_config_manager
-   *   The typed configuration manager.
-   */
-  public function __construct(ConfigFactoryInterface $config_factory, LocaleConfigManager $locale_config_manager) {
-    $this->configFactory = $config_factory;
-    $this->localeConfigManager = $locale_config_manager;
-  }
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory,
+    protected LocaleConfigManager $localeConfigManager,
+    protected readonly LocaleLanguages $localeLanguages,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -124,7 +96,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    */
   public function updateLocaleStorage(StorableConfigBase $config, $langcode, array $reference_config = []) {
     $name = $config->getName();
-    if ($this->localeConfigManager->isSupported($name) && locale_is_translatable($langcode)) {
+    if ($this->localeConfigManager->isSupported($name) && $this->localeLanguages->isTranslatable($langcode)) {
       $translatables = $this->localeConfigManager->getTranslatableDefaultConfig($name);
       $this->processTranslatableData($name, $config->get(), $translatables, $langcode, $reference_config);
     }
