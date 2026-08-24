@@ -26,6 +26,22 @@ use Twig\Markup as TwigMarkup;
 class AttributeTest extends UnitTestCase {
 
   /**
+   * Tests AttributeValueBase copy.
+   */
+  public function testAttributeValueBaseCopy(): void {
+    $original_attributes = new Attribute([
+      'checked' => TRUE,
+      'class' => ['who', 'is', 'on'],
+      'id' => 'first',
+    ]);
+    $attributes['selected'] = $original_attributes['checked'];
+    $attributes['id'] = $original_attributes['id'];
+    $attributes = new Attribute($attributes);
+    $this->assertSame(' checked class="who is on" id="first"', (string) $original_attributes, 'Original boolean value used with original name.');
+    $this->assertSame(' selected id="first"', (string) $attributes, 'Original boolean value used with new name.');
+  }
+
+  /**
    * Tests the constructor of the attribute class.
    */
   public function testConstructor(): void {
@@ -372,7 +388,24 @@ class AttributeTest extends UnitTestCase {
   }
 
   public static function providerTestAttributeValues(): array {
-    $data = [];
+    $data = [
+      'HTML-encoded attribute name' => [['&"\'<>' => 'value'], ' &amp;&quot;&#039;&lt;&gt;="value"'],
+      'HTML-encoded attribute value' => [['title' => '&"\'<>'], ' title="&amp;&quot;&#039;&lt;&gt;"'],
+      'multi-value attribute' => [['class' => ['first', 'last']], ' class="first last"'],
+      'true boolean attribute' => [['disabled' => TRUE], ' disabled'],
+      'false boolean attribute' => [['disabled' => FALSE], ''],
+      'empty attribute value' => [['alt' => ''], ' alt=""'],
+      'null attribute value' => [['alt' => NULL], ''],
+      'multiple attributes' => [
+        [
+          'id' => 'id-test',
+          'class' => ['first', 'last'],
+          'alt' => 'Alternate',
+        ],
+        ' id="id-test" class="first last" alt="Alternate"',
+      ],
+      'empty attributes array' => [[], ''],
+    ];
 
     $string = '"> <script>alert(123)</script>"';
     $data['safe-object-xss1'] = [['title' => Markup::create($string)], ' title="&quot;&gt; alert(123)&quot;"'];
