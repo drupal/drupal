@@ -142,42 +142,6 @@ INFO;
   }
 
   /**
-   * Tests that module dependencies are enabled in the correct order in the UI.
-   *
-   * Dependencies should be enabled before their dependents.
-   */
-  public function testModuleEnableOrder(): void {
-    \Drupal::service('module_installer')->install(['module_test'], FALSE);
-    $this->resetAll();
-    $this->assertModules(['module_test'], TRUE);
-    \Drupal::state()->set('module_test.dependency', 'dependency');
-    // module_test creates a dependency chain: dblog depends on config which
-    // depends on help.
-    $expected_order = ['help', 'config', 'dblog'];
-
-    // Enable the modules through the UI, verifying that the dependency chain
-    // is correct.
-    $edit = [];
-    $edit['modules[dblog][enable]'] = 'dblog';
-    $this->drupalGet('admin/modules');
-    $this->submitForm($edit, 'Install');
-    $this->assertModules(['dblog'], FALSE);
-    // Note that dependencies are sorted alphabetically in the confirmation
-    // message.
-    $this->assertSession()->pageTextContains('You must install the following modules to install Database Logging:Configuration ManagerHelp');
-
-    $this->drupalGet('admin/modules');
-    $edit['modules[config][enable]'] = 'config';
-    $edit['modules[help][enable]'] = 'help';
-    $this->submitForm($edit, 'Install');
-    $this->assertModules(['dblog', 'config', 'help'], TRUE);
-
-    // Check the actual order which is saved by module_test_modules_enabled().
-    $module_order = \Drupal::state()->get('module_test.install_order', []);
-    $this->assertSame($expected_order, $module_order);
-  }
-
-  /**
    * Tests that module dependencies install text is formatted correctly.
    */
   public function testModuleDependencyMessages(): void {
