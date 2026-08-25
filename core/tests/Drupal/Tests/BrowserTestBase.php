@@ -503,8 +503,6 @@ abstract class BrowserTestBase extends DrupalTestCase {
     $this->initSettings();
     $this->container = $container = $this->initKernel(\Drupal::request());
     $this->initConfig($container);
-    $this->installDefaultThemeFromClassProperty($container);
-    $this->installModulesFromClassProperty($container);
 
     // Clear the static cache so that subsequent cache invalidations will work
     // as expected.

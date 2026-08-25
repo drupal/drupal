@@ -3,3 +3,5 @@ type: module
 description: 'Support module for testing layout building defaults.'
 package: Testing
 version: VERSION
+dependencies:
+  - drupal:layout_builder

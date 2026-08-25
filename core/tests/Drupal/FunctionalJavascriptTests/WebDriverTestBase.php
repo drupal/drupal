@@ -9,7 +9,6 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\WebAssert;
 use PHPUnit\Framework\Attributes\PostCondition;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Runs a browser test using a driver that supports JavaScript.
@@ -74,15 +73,13 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function installModulesFromClassProperty(ContainerInterface $container): void {
-    self::$modules = [
-      'js_testing_ajax_request_test',
-      'js_testing_log_test',
-    ];
+  protected function getModulesFromClassProperty(): array {
+    $modules = parent::getModulesFromClassProperty();
+    $modules = array_merge($modules, ['js_testing_ajax_request_test', 'js_testing_log_test']);
     if ($this->disableCssAnimations) {
-      self::$modules[] = 'css_disable_transitions_test';
+      $modules[] = 'css_disable_transitions_test';
     }
-    parent::installModulesFromClassProperty($container);
+    return $modules;
   }
 
   /**
@@ -90,6 +87,9 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    */
   protected function initFrontPage(): void {
     parent::initFrontPage();
+    // Without this assertion, tests that only use AssertSession get marked as
+    // risky.
+    $this->assertTrue(TRUE);
     // Set a standard window size so that all javascript tests start with the
     // same viewport.
     $this->getSession()->resizeWindow(1024, 768);

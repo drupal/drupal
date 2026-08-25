@@ -1582,6 +1582,13 @@ function install_profile_modules(&$install_state) {
   install_core_entity_type_definitions();
 
   $modules = $install_state['profile_info']['install'];
+
+  // Extra module support is only implemented by the testing framework, to
+  // reduce the number of container rebuilds during test runs.
+  $extra_modules = $install_state['extra_modules'] ?? [];
+  if ($extra_modules) {
+    $modules = array_merge($modules, $extra_modules);
+  }
   $files = \Drupal::service('extension.list.module')->getList();
 
   // Always install required modules first. Respect the dependencies between
@@ -1682,6 +1689,12 @@ function install_core_entity_type_definitions(): void {
 function install_profile_themes(&$install_state): void {
   // Install the themes specified by the installation profile.
   $themes = $install_state['profile_info']['themes'];
+
+  // Default theme support is only implemented by the testing framework, to
+  // reduce the number of container rebuilds during test runs.
+  if (isset($install_state['default_theme'])) {
+    $themes = array_unique(array_merge($themes, [$install_state['default_theme']]));
+  }
   \Drupal::service('theme_installer')->install($themes);
 
   // Ensure that the install profile's theme is used.
@@ -1707,6 +1720,12 @@ function install_install_profile(&$install_state): void {
 
   if (empty($install_state['profile_info']['opt_out_install'])) {
     \Drupal::service('module_installer')->install([$install_state['parameters']['profile']], FALSE);
+  }
+
+  if (isset($install_state['default_theme'])) {
+    \Drupal::service('config.factory')->getEditable('system.theme')
+      ->set('default', $install_state['default_theme'])
+      ->save();
   }
 
   // Ensure that the install profile's theme is used.
