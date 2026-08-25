@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Component\Utility\Bytes;
+use Drupal\Core\Database\Database;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
@@ -123,6 +124,31 @@ class StatusTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->elementExists('xpath', '//details[contains(@class, "system-status-report__entry")]//div[contains(text(), "Cron has not run recently")]');
     \Drupal::state()->set('system.cron_last', $cron_last_run);
+
+    // Check the connection information.
+    $this->assertSession()->pageTextContains('Database connection');
+    $connection = Database::getConnection();
+    $options = $connection->getConnectionOptions();
+    if ($connection->databaseType() === 'sqlite') {
+      $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
+        ':text' => 'Database: ',
+      ]);
+      $this->assertCount(1, $elements);
+    }
+    else {
+      $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
+        ':text' => 'Host: ',
+      ]);
+      $this->assertCount(1, $elements);
+      $this->assertSession()->pageTextContains('Host: ' . $options['host']);
+    }
+    $this->assertSession()->pageTextContains('Database: ' . $options['database']);
+    if ($options['prefix']) {
+      $this->assertSession()->pageTextContains('Prefix: ' . $options['prefix']);
+    }
+    else {
+      $this->assertSession()->pageTextContains('No prefix');
+    }
 
     // Check if JSON database support is enabled.
     $this->assertSession()->pageTextContains('Database support for JSON');
