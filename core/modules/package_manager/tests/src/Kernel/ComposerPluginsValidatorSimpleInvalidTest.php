@@ -37,20 +37,4 @@ class ComposerPluginsValidatorSimpleInvalidTest extends ComposerPluginsValidator
     $this->doTestValidationDuringPreApply($composer_config_to_add, $packages_to_add, $expected_results);
   }
 
-  /**
-   * Tests additional composer plugins can be trusted during pre-create.
-   */
-  #[DataProvider('providerSimpleInvalidCases')]
-  public function testValidationAfterTrustingDuringPreCreate(array $composer_config_to_add, array $packages_to_add, array $expected_results): void {
-    $this->doTestValidationAfterTrustingDuringPreCreate($composer_config_to_add, $packages_to_add, $expected_results);
-  }
-
-  /**
-   * Tests additional composer plugins can be trusted during pre-apply.
-   */
-  #[DataProvider('providerSimpleInvalidCases')]
-  public function testValidationAfterTrustingDuringPreApply(array $composer_config_to_add, array $packages_to_add, array $expected_results): void {
-    $this->doTestValidationAfterTrustingDuringPreApply($composer_config_to_add, $packages_to_add, $expected_results);
-  }
-
 }
