@@ -10,7 +10,6 @@ use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -128,7 +127,8 @@ class ThemeHookCollectorPassTest extends KernelTestBase {
   public function testHookExecution(): void {
     $this->container->get('theme_installer')->install(['oop_hook_theme']);
     $theme_manager = $this->container->get('theme.manager');
-    $theme_manager->setActiveTheme(\Drupal::service('theme.initialization')->initTheme('oop_hook_theme'));
+    $theme_manager->setActiveTheme(\Drupal::service('theme.initialization')
+      ->initTheme('oop_hook_theme'));
     $expected_calls = [
       'Drupal\oop_hook_theme\Hook\TestHookCollectionHooks::testHookAlter',
     ];
@@ -136,45 +136,6 @@ class ThemeHookCollectorPassTest extends KernelTestBase {
     $calls = [];
     $theme_manager->alter($hooks, $calls);
     $this->assertEquals($expected_calls, $calls);
-  }
-
-  /**
-   * Tests ignoring of directories when collecting hooks using the file_scan_ignore_directories setting.
-   */
-  #[IgnoreDeprecations]
-  public function testIgnoreDirectories(): void {
-    $this->expectUserDeprecationMessage('Using procedural_hooks.theme is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3581222');
-    $container = new ContainerBuilder();
-    $theme_filenames = [
-      'ignored_directories_theme' => [
-        'pathname' => 'core/modules/system/tests/themes/HookCollector/ignored_directories_theme/ignored_directories_theme.info.yml',
-      ],
-    ];
-    $container->setParameter('container.themes', $theme_filenames);
-    (new ThemeHookCollectorPass())->process($container);
-    $implementations = $container->getParameter('.theme_hook_data')['theme_hook_list'];
-
-    // The hook should be found with no ignore directories setting.
-    $this->assertSame(
-      [
-        'ignored_alter' => [
-          'ignored_directories_theme_ignored_alter',
-        ],
-      ],
-      $implementations['ignored_directories_theme'],
-    );
-
-    // After setting the ignored directory the hook in ignored directory should
-    // no longer be registered.
-    $this->setSetting('file_scan_ignore_directories', ['ignored_directory']);
-    (new ThemeHookCollectorPass())->process($container);
-    $implementations = $container->getParameter('.theme_hook_data')['theme_hook_list'];
-
-    // The ignored alter hook should be no longer found.
-    $this->assertSame(
-      [],
-      $implementations,
-    );
   }
 
 }

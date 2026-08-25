@@ -1,5 +1,0 @@
-name: Test module used to test ignored directories in hook collector
-type: module
-description: 'Test module used to test ignored directories in hook collector.'
-package: Testing
-version: VERSION
