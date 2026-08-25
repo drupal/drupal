@@ -57,7 +57,7 @@ Core JavaScript packages
 
 Team facilitators
 - Pamela Barone 'pameeela' (pameeela) https://www.drupal.org/u/pameeela
-- (provisional) Griffyn Heels 'griffynh' (griffynh) https://www.drupal.org/u/griffynh
+- Griffyn Heels 'griffynh' (griffynh) https://www.drupal.org/u/griffynh
 
 Initiative facilitators
 - Gábor Hojtsy 'Gábor Hojtsy' (goba) https://www.drupal.org/u/gábor-hojtsy
