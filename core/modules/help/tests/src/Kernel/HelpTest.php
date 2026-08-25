@@ -9,6 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\HttpKernelUiHelperTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -47,17 +48,13 @@ class HelpTest extends KernelTestBase {
 
   /**
    * The admin user that will be created.
-   *
-   * @var \Drupal\user\Entity\User|false
    */
-  protected $adminUser;
+  protected UserInterface $adminUser;
 
   /**
-   * The anonymous user that will be created.
-   *
-   * @var \Drupal\user\Entity\User|false
+   * A regular authenticated user without additional permissions.
    */
-  protected $anyUser;
+  protected UserInterface $anyUser;
 
   /**
    * {@inheritdoc}
