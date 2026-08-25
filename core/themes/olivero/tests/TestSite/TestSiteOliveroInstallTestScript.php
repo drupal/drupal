@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Drupal\TestSite;
+namespace Drupal\Tests\olivero\TestSite;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\node\Entity\Node;
+use Drupal\TestSite\TestSetupInterface;
 
 /**
  * Setup file used by TestSiteInstallTestScript.

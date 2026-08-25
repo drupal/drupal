@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\FunctionalTests\Theme;
+namespace Drupal\Tests\olivero\Functional;
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\BrowserTestBase;
