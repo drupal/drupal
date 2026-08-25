@@ -10,6 +10,7 @@ use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\LocaleProjectChecker;
 use Drupal\locale\LocaleProjectRepository;
+use Drupal\locale\LocaleLanguages;
 
 /**
  * Load common APIs.
@@ -229,7 +230,7 @@ function locale_translation_check_projects_batch($projects = [], $langcodes = []
 function locale_translation_batch_status_build($projects = [], $langcodes = []) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleProjectChecker::class)->triggerBatch() instead, this now calls batch_set immediately instead of returning the array. See https://www.drupal.org/node/3589759', E_USER_DEPRECATED);
   $projects = $projects ?: array_keys(\Drupal::service(LocaleProjectRepository::class)->getAll());
-  $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+  $langcodes = $langcodes ?: array_keys(\Drupal::service(LocaleLanguages::class)->getTranslatableLanguages());
   $options = LocaleDefaultOptions::updateOptions();
 
   $operations = \Drupal::service(LocaleFetch::class)->getStatusOperations($projects, $langcodes, $options);

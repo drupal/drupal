@@ -11,6 +11,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\locale\LocaleConfigBatch;
 use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
+use Drupal\locale\LocaleLanguages;
 use Drupal\locale\StreamWrapper\TranslationsStream;
 use Drupal\locale\StringStorageInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
@@ -35,6 +36,7 @@ class LocaleFormHooks {
      */
     #[AutowireServiceClosure(LocaleConfigBatch::class)]
     protected \Closure $localeConfigBatchClosure,
+    protected readonly LocaleLanguages $localeLanguages,
   ) {
   }
 
@@ -59,7 +61,7 @@ class LocaleFormHooks {
     array_splice($form['languages']['#header'], -1, 0, ['translation-interface' => $this->t('Interface translation')]);
     foreach ($languages as $langcode => $language) {
       $stats[$langcode] += ['translated' => 0, 'ratio' => 0];
-      if (!$language->isLocked() && locale_is_translatable($langcode)) {
+      if (!$language->isLocked() && $this->localeLanguages->isTranslatable($langcode)) {
         $form['languages'][$langcode]['locale_statistics'] = Link::fromTextAndUrl($this->t('@translated/@total (@ratio%)', [
           '@translated' => $stats[$langcode]['translated'],
           '@total' => $total_strings,

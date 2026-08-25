@@ -24,7 +24,7 @@ class LocaleDefaultOptions {
         'customized' => $config->get('translation.overwrite_customized'),
       ],
       'finish_feedback' => TRUE,
-      'use_remote' => locale_translation_use_remote_source(),
+      'use_remote' => $config->get('translation.use_source') == LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL,
     ];
   }
 

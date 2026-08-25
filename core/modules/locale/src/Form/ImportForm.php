@@ -12,6 +12,7 @@ use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\File\LocaleFile;
 use Drupal\locale\LocaleConfigBatch;
 use Drupal\locale\LocaleImportBatch;
+use Drupal\locale\LocaleLanguages;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
@@ -34,6 +35,7 @@ class ImportForm extends FormBase {
     protected ConfigurableLanguageManagerInterface $languageManager,
     protected LocaleImportBatch $localeImportBatch,
     protected LocaleConfigBatch $localeConfigBatch,
+    protected LocaleLanguages $localeLanguages,
   ) {}
 
   /**
@@ -53,7 +55,7 @@ class ImportForm extends FormBase {
     // are to translate Drupal to English as well.
     $existing_languages = [];
     foreach ($languages as $langcode => $language) {
-      if (locale_is_translatable($langcode)) {
+      if ($this->localeLanguages->isTranslatable($langcode)) {
         $existing_languages[$langcode] = $language->getName();
       }
     }

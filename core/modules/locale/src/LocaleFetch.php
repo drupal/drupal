@@ -4,6 +4,7 @@ namespace Drupal\locale;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -25,7 +26,18 @@ class LocaleFetch {
     protected readonly StateInterface $state,
     protected readonly TimeInterface $time,
     protected readonly LocaleImportBatch $localeImportBatch,
-  ) {}
+    protected ?ConfigFactoryInterface $configFactory = NULL,
+    protected ?LocaleLanguages $localeLanguages = NULL,
+  ) {
+    if ($this->configFactory === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $configFactory argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3616293', E_USER_DEPRECATED);
+      $this->configFactory = \Drupal::service(ConfigFactoryInterface::class);
+    }
+    if ($this->localeLanguages === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $localeLanguages argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3616293', E_USER_DEPRECATED);
+      $this->localeLanguages = \Drupal::service(LocaleLanguages::class);
+    }
+  }
 
   /**
    * Builds a batch to check, download and import project translations.
@@ -44,7 +56,7 @@ class LocaleFetch {
    */
   public function buildUpdateBatch(array $projects = [], array $langcodes = [], array $options = []): array {
     $projects = $projects ?: array_keys($this->localeProjectRepository->getAll());
-    $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+    $langcodes = $langcodes ?: array_keys($this->localeLanguages->getTranslatableLanguages());
     $status_options = $options;
     $status_options['finish_feedback'] = FALSE;
 
@@ -80,7 +92,7 @@ class LocaleFetch {
    */
   public function buildFetchBatch(array $projects = [], array $langcodes = [], array $options = []): array {
     $projects = $projects ?: array_keys($this->localeProjectRepository->getAll());
-    $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+    $langcodes = $langcodes ?: array_keys($this->localeLanguages->getTranslatableLanguages());
 
     $batch_builder = (new BatchBuilder())
       ->setTitle($this->t('Updating translations.'))
@@ -110,10 +122,11 @@ class LocaleFetch {
    */
   protected function getFetchOperations(array $projects, array $langcodes, array $options): array {
     $operations = [];
+    $useRemote = $this->configFactory->get('locale.settings')->get('translation.use_source') == LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL;
 
     foreach ($projects as $project) {
       foreach ($langcodes as $langcode) {
-        if (locale_translation_use_remote_source()) {
+        if ($useRemote) {
           $operations[] = [self::class . ':batchDownload', [$project, $langcode]];
         }
         $operations[] = [self::class . ':batchImport', [$project, $langcode, $options]];
@@ -311,7 +324,7 @@ class LocaleFetch {
     $failure = $checked = FALSE;
     $options += [
       'finish_feedback' => TRUE,
-      'use_remote' => locale_translation_use_remote_source(),
+      'use_remote' => $this->configFactory->get('locale.settings')->get('translation.use_source') == LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL,
     ];
     $source = $this->localeSource->loadSource($project, $langcode);
 

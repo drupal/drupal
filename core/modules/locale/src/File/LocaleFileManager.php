@@ -14,6 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\locale\CurrentImportStorage;
 use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleSource;
+use Drupal\locale\LocaleLanguages;
 use Drupal\locale\StreamWrapper\TranslationsStream;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
@@ -37,7 +38,13 @@ class LocaleFileManager {
     protected readonly LoggerChannelFactoryInterface $loggerFactory,
     protected readonly MessengerInterface $messenger,
     protected readonly CurrentImportStorage $currentImportStorage,
-  ) {}
+    protected ?LocaleLanguages $localeLanguages = NULL,
+  ) {
+    if ($this->localeLanguages === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $localeLanguages argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3616293', E_USER_DEPRECATED);
+      $this->localeLanguages = \Drupal::service(LocaleLanguages::class);
+    }
+  }
 
   /**
    * Get interface translation files present in the translations directory.
@@ -55,7 +62,7 @@ class LocaleFileManager {
   public function getInterfaceTranslationFiles(array $projects = [], array $langcodes = []): array {
     $files = [];
     $projects = $projects ?: array_keys($this->localeProjectRepository->getAll());
-    $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+    $langcodes = $langcodes ?: array_keys($this->localeLanguages->getTranslatableLanguages());
 
     // Scan the translations directory for files matching a name pattern
     // containing a project name and language code: {project}.{langcode}.po or

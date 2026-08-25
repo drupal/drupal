@@ -13,6 +13,7 @@ use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleSource;
+use Drupal\locale\LocaleLanguages;
 
 /**
  * Provides a translation status form.
@@ -28,6 +29,7 @@ class TranslationStatusForm extends FormBase {
     protected LocaleFetch $localeFetch,
     protected LocaleConfigBatch $localeConfigBatch,
     protected LocaleSource $localeSource,
+    protected LocaleLanguages $localeLanguages,
   ) {
   }
 
@@ -44,7 +46,7 @@ class TranslationStatusForm extends FormBase {
    * @ingroup forms
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $languages = locale_translatable_language_list();
+    $languages = $this->localeLanguages->getTranslatableLanguages();
     $sources = $this->localeSource->loadSources();
     $options = [];
     $languages_update = [];
@@ -137,7 +139,7 @@ class TranslationStatusForm extends FormBase {
       '#multiple' => TRUE,
       '#required' => TRUE,
       '#not_found' => $languages_not_found,
-      '#after_build' => ['locale_translation_language_table'],
+      '#after_build' => ['::translationLanguageTable'],
     ];
 
     $form['#attached']['library'][] = 'locale/drupal.locale.admin';
@@ -220,7 +222,7 @@ class TranslationStatusForm extends FormBase {
     $remote_path = $project_info->files['remote']->uri ?? FALSE;
     $local_path = $project_info->files['local']->uri ?? FALSE;
 
-    if (locale_translation_use_remote_source() && $remote_path && $local_path) {
+    if ($this->configFactory()->get('locale.settings')->get('translation.use_source') == LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL && $remote_path && $local_path) {
       return $this->t('File not found at %remote_path nor at %local_path', [
         '%remote_path' => $remote_path,
         '%local_path' => $local_path,
@@ -274,6 +276,28 @@ class TranslationStatusForm extends FormBase {
         batch_set($batch);
       }
     }
+  }
+
+  /**
+   * Form element callback: After build changes to the language update table.
+   *
+   * Adds labels to the languages and removes checkboxes from languages from
+   * which translation files could not be found.
+   *
+   * @param array $form_element
+   *   Form element for the translation table.
+   *
+   * @return array
+   *   Populated table.
+   */
+  public function translationLanguageTable(array $form_element): array {
+    // Remove checkboxes of languages without updates.
+    if ($form_element['#not_found']) {
+      foreach ($form_element['#not_found'] as $langcode) {
+        $form_element[$langcode] = [];
+      }
+    }
+    return $form_element;
   }
 
 }
