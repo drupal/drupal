@@ -1,0 +1,120 @@
+QueryCount: 54
+CacheGetCount: 170
+CacheGetCountByBin:
+  page: 1
+  config: 40
+  bootstrap: 13
+  discovery: 60
+  data: 8
+  dynamic_page_cache: 1
+  render: 23
+  default: 5
+  entity: 16
+  routes: 3
+CacheSetCount: 75
+CacheDeleteCount: 0
+CacheTagInvalidationCount: 0
+CacheTagLookupQueryCount: 19
+CacheTagGroupedLookups:
+  -
+    - entity_types
+    - route_match
+    - access_policies
+    - routes
+    - router
+    - entity_field_info
+    - entity_bundles
+    - local_task
+    - library_info
+    - http_response
+  -
+    - 'config:core.extension'
+    - views_data
+  -
+    - 'config:views.view.frontpage'
+    - 'node:10'
+    - 'node:7'
+    - 'node:8'
+    - 'node:9'
+    - node_list
+  -
+    - breakpoints
+  -
+    - 'config:image.style.large_3_2_2x'
+    - 'config:image.style.large_3_2_768x512'
+    - 'config:image.style.medium_3_2_2x'
+    - 'config:image.style.medium_3_2_600x400'
+    - 'config:responsive_image.styles.3_2_image'
+    - 'media:21'
+    - media_view
+    - rendered
+  -
+    - node_view
+    - 'user:6'
+  -
+    - 'media:9'
+  -
+    - 'media:8'
+  -
+    - 'media:7'
+  -
+    - 'config:filter.format.full_html'
+  -
+    - 'config:block_list'
+  -
+    - 'block_content:1'
+    - 'block_content:2'
+    - 'block_content:3'
+    - 'config:configurable_language_list'
+  -
+    - 'config:filter.format.basic_html'
+    - 'config:system.menu.footer'
+  -
+    - 'config:system.menu.account'
+    - 'config:system.site'
+    - block_content_view
+    - 'config:image.style.medium_8_7'
+    - 'file:37'
+    - 'media:19'
+    - 'config:system.menu.main'
+    - 'config:views.view.recipe_collections'
+    - 'taxonomy_term:1'
+    - 'taxonomy_term:10'
+    - 'taxonomy_term:11'
+    - 'taxonomy_term:12'
+    - 'taxonomy_term:13'
+    - 'taxonomy_term:14'
+    - 'taxonomy_term:15'
+    - 'taxonomy_term:16'
+    - 'taxonomy_term:2'
+    - 'taxonomy_term:3'
+    - 'taxonomy_term:4'
+    - 'taxonomy_term:5'
+    - 'taxonomy_term:6'
+    - 'taxonomy_term:7'
+    - 'taxonomy_term:8'
+    - 'taxonomy_term:9'
+    - taxonomy_term_list
+  -
+    - 'config:views.view.promoted_items'
+    - 'node:18'
+  -
+    - 'media:17'
+  -
+    - 'config:image.style.scale_crop_7_3_large'
+    - 'config:image.style.scale_crop_7_3_medium'
+    - 'config:image.style.scale_crop_7_3_tiny'
+    - 'config:image.style.scale_crop_7_3_wide'
+    - 'config:responsive_image.styles.hero'
+    - 'media:18'
+  -
+    - 'config:image.style.square_large'
+    - 'config:image.style.square_medium'
+    - 'config:image.style.square_small'
+    - 'config:responsive_image.styles.square'
+  -
+    - 'config:user.role.anonymous'
+ScriptCount: 3
+ScriptBytes: 12006
+StylesheetCount: 7
+StylesheetBytes: 39036

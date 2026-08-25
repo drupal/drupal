@@ -63,19 +63,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     }, 'umamiNodePageColdCache');
     $this->assertSession()->pageTextContains('quiche');
 
-    $expected = [
-      'QueryCount' => 195,
-      'CacheGetCount' => 217,
-      'CacheSetCount' => 226,
-      'CacheDeleteCount' => 0,
-      'CacheTagLookupQueryCount' => 24,
-      'CacheTagInvalidationCount' => 0,
-      'ScriptCount' => 3,
-      'ScriptBytes' => 12000,
-      'StylesheetCount' => 7,
-      'StylesheetBytes' => 40800,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertMetricsByName('umamiNodePageColdCache', $performance_data);
   }
 
   /**
@@ -94,19 +82,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     }, 'umamiNodePageHotCache');
     $this->assertSession()->pageTextContains('quiche');
 
-    $expected = [
-      'QueryCount' => 0,
-      'CacheGetCount' => 1,
-      'CacheSetCount' => 0,
-      'CacheDeleteCount' => 0,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 1,
-      'ScriptCount' => 3,
-      'ScriptBytes' => 12000,
-      'StylesheetCount' => 7,
-      'StylesheetBytes' => 40800,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertMetricsByName('umamiNodePageHotCache', $performance_data);
   }
 
   /**
@@ -126,19 +102,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     }, 'umamiNodePageCoolCache');
     $this->assertSession()->pageTextContains('quiche');
 
-    $expected = [
-      'QueryCount' => 66,
-      'CacheGetCount' => 168,
-      'CacheSetCount' => 59,
-      'CacheDeleteCount' => 0,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 19,
-      'ScriptCount' => 3,
-      'ScriptBytes' => 12000,
-      'StylesheetCount' => 7,
-      'StylesheetBytes' => 40800,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertMetricsByName('umamiNodePageCoolCache', $performance_data);
   }
 
   /**
@@ -162,169 +126,8 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     $this->assertSession()->pageTextContains('quiche');
     // Check the actual queries so that if a change simultaneously adds and
     // removes a query the change is detected.
-    $expected_queries = [
-      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/recipes/deep-mediterranean-quiche" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "name", "route", "fit" FROM "router" WHERE "pattern_outline" IN ( "/node/1", "/node/%", "/node" ) AND "number_parts" >= 2',
-      'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_uid" AS "revision_uid", "revision"."revision_timestamp" AS "revision_timestamp", "revision"."revision_log" AS "revision_log", "revision"."revision_default" AS "revision_default", "base"."nid" AS "nid", "base"."type" AS "type", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "node" "base" INNER JOIN "node_revision" "revision" ON "revision"."vid" = "base"."vid" WHERE "base"."nid" IN (1)',
-      'SELECT "node_field_data".*, "node_field_data"."langcode" AS "node_field_data__langcode", "node__field_cooking_time"."field_cooking_time_value" AS "field_cooking_time_value", "node__field_difficulty"."field_difficulty_value" AS "field_difficulty_value", "node__field_media_image"."field_media_image_target_id" AS "field_media_image_target_id", "node__field_number_of_servings"."field_number_of_servings_value" AS "field_number_of_servings_value", "node__field_preparation_time"."field_preparation_time_value" AS "field_preparation_time_value", "node__field_recipe_instruction"."field_recipe_instruction_value" AS "field_recipe_instruction_value", "node__field_recipe_instruction"."field_recipe_instruction_format" AS "field_recipe_instruction_format", "node__field_summary"."field_summary_value" AS "field_summary_value", "node__field_summary"."field_summary_format" AS "field_summary_format" FROM "node_field_data" "node_field_data" LEFT OUTER JOIN "node__field_cooking_time" "node__field_cooking_time" ON "node__field_cooking_time"."entity_id" = "node_field_data"."nid" AND "node__field_cooking_time"."langcode" = "node_field_data"."langcode" AND "node__field_cooking_time"."deleted" = 0 LEFT OUTER JOIN "node__field_difficulty" "node__field_difficulty" ON "node__field_difficulty"."entity_id" = "node_field_data"."nid" AND "node__field_difficulty"."langcode" = "node_field_data"."langcode" AND "node__field_difficulty"."deleted" = 0 LEFT OUTER JOIN "node__field_media_image" "node__field_media_image" ON "node__field_media_image"."entity_id" = "node_field_data"."nid" AND "node__field_media_image"."langcode" = "node_field_data"."langcode" AND "node__field_media_image"."deleted" = 0 LEFT OUTER JOIN "node__field_number_of_servings" "node__field_number_of_servings" ON "node__field_number_of_servings"."entity_id" = "node_field_data"."nid" AND "node__field_number_of_servings"."langcode" = "node_field_data"."langcode" AND "node__field_number_of_servings"."deleted" = 0 LEFT OUTER JOIN "node__field_preparation_time" "node__field_preparation_time" ON "node__field_preparation_time"."entity_id" = "node_field_data"."nid" AND "node__field_preparation_time"."langcode" = "node_field_data"."langcode" AND "node__field_preparation_time"."deleted" = 0 LEFT OUTER JOIN "node__field_recipe_instruction" "node__field_recipe_instruction" ON "node__field_recipe_instruction"."entity_id" = "node_field_data"."nid" AND "node__field_recipe_instruction"."langcode" = "node_field_data"."langcode" AND "node__field_recipe_instruction"."deleted" = 0 LEFT OUTER JOIN "node__field_summary" "node__field_summary" ON "node__field_summary"."entity_id" = "node_field_data"."nid" AND "node__field_summary"."langcode" = "node_field_data"."langcode" AND "node__field_summary"."deleted" = 0 WHERE "node_field_data"."nid" IN (1)',
-      'SELECT "delta_join"."id" AS "id", "delta_join"."langcode" AS "langcode", "node__field_ingredients"."field_ingredients_value" AS "field_ingredients_value", "node__field_ingredients"."delta" AS "field_ingredients_delta", "node__field_recipe_category"."field_recipe_category_target_id" AS "field_recipe_category_target_id", "node__field_recipe_category"."delta" AS "field_recipe_category_delta", "node__field_tags"."field_tags_target_id" AS "field_tags_target_id", "node__field_tags"."delta" AS "field_tags_delta", "node__layout_builder__layout"."layout_builder__layout_section" AS "layout_builder__layout_section", "node__layout_builder__layout"."delta" AS "layout_builder__layout_delta" FROM (SELECT "node__field_ingredients"."entity_id" AS "id", "node__field_ingredients"."langcode" AS "langcode", "node__field_ingredients"."delta" AS "delta" FROM "node__field_ingredients" "node__field_ingredients" WHERE ("node__field_ingredients"."entity_id" IN (1)) AND ("node__field_ingredients"."deleted" = 0) UNION SELECT "node__field_recipe_category"."entity_id" AS "id", "node__field_recipe_category"."langcode" AS "langcode", "node__field_recipe_category"."delta" AS "delta" FROM "node__field_recipe_category" "node__field_recipe_category" WHERE ("node__field_recipe_category"."entity_id" IN (1)) AND ("node__field_recipe_category"."deleted" = 0) UNION SELECT "node__field_tags"."entity_id" AS "id", "node__field_tags"."langcode" AS "langcode", "node__field_tags"."delta" AS "delta" FROM "node__field_tags" "node__field_tags" WHERE ("node__field_tags"."entity_id" IN (1)) AND ("node__field_tags"."deleted" = 0) UNION SELECT "node__layout_builder__layout"."entity_id" AS "id", "node__layout_builder__layout"."langcode" AS "langcode", "node__layout_builder__layout"."delta" AS "delta" FROM "node__layout_builder__layout" "node__layout_builder__layout" WHERE ("node__layout_builder__layout"."entity_id" IN (1)) AND ("node__layout_builder__layout"."deleted" = 0)) "delta_join" LEFT OUTER JOIN "node__field_ingredients" "node__field_ingredients" ON "node__field_ingredients"."entity_id" = "delta_join"."id" AND "node__field_ingredients"."langcode" = "delta_join"."langcode" AND "node__field_ingredients"."delta" = "delta_join"."delta" AND "node__field_ingredients"."deleted" = 0 LEFT OUTER JOIN "node__field_recipe_category" "node__field_recipe_category" ON "node__field_recipe_category"."entity_id" = "delta_join"."id" AND "node__field_recipe_category"."langcode" = "delta_join"."langcode" AND "node__field_recipe_category"."delta" = "delta_join"."delta" AND "node__field_recipe_category"."deleted" = 0 LEFT OUTER JOIN "node__field_tags" "node__field_tags" ON "node__field_tags"."entity_id" = "delta_join"."id" AND "node__field_tags"."langcode" = "delta_join"."langcode" AND "node__field_tags"."delta" = "delta_join"."delta" AND "node__field_tags"."deleted" = 0 LEFT OUTER JOIN "node__layout_builder__layout" "node__layout_builder__layout" ON "node__layout_builder__layout"."entity_id" = "delta_join"."id" AND "node__layout_builder__layout"."langcode" = "delta_join"."langcode" AND "node__layout_builder__layout"."delta" = "delta_join"."delta" AND "node__layout_builder__layout"."deleted" = 0 ORDER BY "delta_join"."delta" ASC',
-      'SELECT "revision"."revision_id" AS "revision_id", "revision"."langcode" AS "langcode", "revision"."revision_user" AS "revision_user", "revision"."revision_created" AS "revision_created", "revision"."revision_log_message" AS "revision_log_message", "revision"."revision_default" AS "revision_default", "base"."tid" AS "tid", "base"."vid" AS "vid", "base"."uuid" AS "uuid", CASE "base"."revision_id" WHEN "revision"."revision_id" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "taxonomy_term_data" "base" INNER JOIN "taxonomy_term_revision" "revision" ON "revision"."revision_id" = "base"."revision_id" WHERE "base"."tid" IN (31)',
-      'SELECT "taxonomy_term_field_data".*, "taxonomy_term_field_data"."langcode" AS "taxonomy_term_field_data__langcode" FROM "taxonomy_term_field_data" "taxonomy_term_field_data" WHERE "taxonomy_term_field_data"."tid" IN (31)',
-      'SELECT "taxonomy_term__parent"."entity_id" AS "id", "taxonomy_term__parent"."langcode" AS "langcode", "taxonomy_term__parent"."parent_target_id" AS "parent_target_id", "taxonomy_term__parent"."delta" AS "parent_delta" FROM "taxonomy_term__parent" "taxonomy_term__parent" WHERE ("taxonomy_term__parent"."entity_id" IN (31)) AND ("taxonomy_term__parent"."deleted" = 0) ORDER BY "taxonomy_term__parent"."delta" ASC',
-      'SELECT "revision"."revision_id" AS "revision_id", "revision"."langcode" AS "langcode", "revision"."revision_user" AS "revision_user", "revision"."revision_created" AS "revision_created", "revision"."revision_log_message" AS "revision_log_message", "revision"."revision_default" AS "revision_default", "base"."tid" AS "tid", "base"."vid" AS "vid", "base"."uuid" AS "uuid", CASE "base"."revision_id" WHEN "revision"."revision_id" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "taxonomy_term_data" "base" INNER JOIN "taxonomy_term_revision" "revision" ON "revision"."revision_id" = "base"."revision_id" WHERE "base"."tid" IN (22)',
-      'SELECT "taxonomy_term_field_data".*, "taxonomy_term_field_data"."langcode" AS "taxonomy_term_field_data__langcode" FROM "taxonomy_term_field_data" "taxonomy_term_field_data" WHERE "taxonomy_term_field_data"."tid" IN (22)',
-      'SELECT "taxonomy_term__parent"."entity_id" AS "id", "taxonomy_term__parent"."langcode" AS "langcode", "taxonomy_term__parent"."parent_target_id" AS "parent_target_id", "taxonomy_term__parent"."delta" AS "parent_delta" FROM "taxonomy_term__parent" "taxonomy_term__parent" WHERE ("taxonomy_term__parent"."entity_id" IN (22)) AND ("taxonomy_term__parent"."deleted" = 0) ORDER BY "taxonomy_term__parent"."delta" ASC',
-      'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_user" AS "revision_user", "revision"."revision_created" AS "revision_created", "revision"."revision_log_message" AS "revision_log_message", "revision"."revision_default" AS "revision_default", "base"."mid" AS "mid", "base"."bundle" AS "bundle", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "media" "base" INNER JOIN "media_revision" "revision" ON "revision"."vid" = "base"."vid" WHERE "base"."mid" IN (1)',
-      'SELECT "media_field_data".*, "media_field_data"."langcode" AS "media_field_data__langcode", "media__field_media_image"."field_media_image_target_id" AS "field_media_image_target_id", "media__field_media_image"."field_media_image_alt" AS "field_media_image_alt", "media__field_media_image"."field_media_image_title" AS "field_media_image_title", "media__field_media_image"."field_media_image_width" AS "field_media_image_width", "media__field_media_image"."field_media_image_height" AS "field_media_image_height" FROM "media_field_data" "media_field_data" LEFT OUTER JOIN "media__field_media_image" "media__field_media_image" ON "media__field_media_image"."entity_id" = "media_field_data"."mid" AND "media__field_media_image"."langcode" = "media_field_data"."langcode" AND "media__field_media_image"."deleted" = 0 WHERE "media_field_data"."mid" IN (1)',
-      'SELECT "node_field_data"."created" AS "node_field_data_created", "node_field_data"."nid" AS "nid", "node_field_data"."langcode" AS "node_field_data_langcode" FROM "node_field_data" "node_field_data" LEFT JOIN "node__field_recipe_category" "node__field_recipe_category" ON node_field_data.nid = node__field_recipe_category.entity_id AND node__field_recipe_category.deleted = 0 WHERE (((node_field_data.nid != "1" OR node_field_data.nid IS NULL)) AND ((node__field_recipe_category.field_recipe_category_target_id IN("31", "22", "13")))) AND (("node_field_data"."status" = 1) AND ("node_field_data"."type" IN ("recipe")) AND ("node_field_data"."langcode" IN ("en"))) ORDER BY "node_field_data_created" DESC LIMIT 4 OFFSET 0',
-      'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_uid" AS "revision_uid", "revision"."revision_timestamp" AS "revision_timestamp", "revision"."revision_log" AS "revision_log", "revision"."revision_default" AS "revision_default", "base"."nid" AS "nid", "base"."type" AS "type", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "node" "base" INNER JOIN "node_revision" "revision" ON "revision"."vid" = "base"."vid" WHERE "base"."nid" IN (10, 7, 6, 3)',
-      'SELECT "node_field_data".*, "node_field_data"."langcode" AS "node_field_data__langcode", "node__field_cooking_time"."field_cooking_time_value" AS "field_cooking_time_value", "node__field_difficulty"."field_difficulty_value" AS "field_difficulty_value", "node__field_media_image"."field_media_image_target_id" AS "field_media_image_target_id", "node__field_number_of_servings"."field_number_of_servings_value" AS "field_number_of_servings_value", "node__field_preparation_time"."field_preparation_time_value" AS "field_preparation_time_value", "node__field_recipe_instruction"."field_recipe_instruction_value" AS "field_recipe_instruction_value", "node__field_recipe_instruction"."field_recipe_instruction_format" AS "field_recipe_instruction_format", "node__field_summary"."field_summary_value" AS "field_summary_value", "node__field_summary"."field_summary_format" AS "field_summary_format" FROM "node_field_data" "node_field_data" LEFT OUTER JOIN "node__field_cooking_time" "node__field_cooking_time" ON "node__field_cooking_time"."entity_id" = "node_field_data"."nid" AND "node__field_cooking_time"."langcode" = "node_field_data"."langcode" AND "node__field_cooking_time"."deleted" = 0 LEFT OUTER JOIN "node__field_difficulty" "node__field_difficulty" ON "node__field_difficulty"."entity_id" = "node_field_data"."nid" AND "node__field_difficulty"."langcode" = "node_field_data"."langcode" AND "node__field_difficulty"."deleted" = 0 LEFT OUTER JOIN "node__field_media_image" "node__field_media_image" ON "node__field_media_image"."entity_id" = "node_field_data"."nid" AND "node__field_media_image"."langcode" = "node_field_data"."langcode" AND "node__field_media_image"."deleted" = 0 LEFT OUTER JOIN "node__field_number_of_servings" "node__field_number_of_servings" ON "node__field_number_of_servings"."entity_id" = "node_field_data"."nid" AND "node__field_number_of_servings"."langcode" = "node_field_data"."langcode" AND "node__field_number_of_servings"."deleted" = 0 LEFT OUTER JOIN "node__field_preparation_time" "node__field_preparation_time" ON "node__field_preparation_time"."entity_id" = "node_field_data"."nid" AND "node__field_preparation_time"."langcode" = "node_field_data"."langcode" AND "node__field_preparation_time"."deleted" = 0 LEFT OUTER JOIN "node__field_recipe_instruction" "node__field_recipe_instruction" ON "node__field_recipe_instruction"."entity_id" = "node_field_data"."nid" AND "node__field_recipe_instruction"."langcode" = "node_field_data"."langcode" AND "node__field_recipe_instruction"."deleted" = 0 LEFT OUTER JOIN "node__field_summary" "node__field_summary" ON "node__field_summary"."entity_id" = "node_field_data"."nid" AND "node__field_summary"."langcode" = "node_field_data"."langcode" AND "node__field_summary"."deleted" = 0 WHERE "node_field_data"."nid" IN (3, 6, 7, 10)',
-      'SELECT "delta_join"."id" AS "id", "delta_join"."langcode" AS "langcode", "node__field_ingredients"."field_ingredients_value" AS "field_ingredients_value", "node__field_ingredients"."delta" AS "field_ingredients_delta", "node__field_recipe_category"."field_recipe_category_target_id" AS "field_recipe_category_target_id", "node__field_recipe_category"."delta" AS "field_recipe_category_delta", "node__field_tags"."field_tags_target_id" AS "field_tags_target_id", "node__field_tags"."delta" AS "field_tags_delta", "node__layout_builder__layout"."layout_builder__layout_section" AS "layout_builder__layout_section", "node__layout_builder__layout"."delta" AS "layout_builder__layout_delta" FROM (SELECT "node__field_ingredients"."entity_id" AS "id", "node__field_ingredients"."langcode" AS "langcode", "node__field_ingredients"."delta" AS "delta" FROM "node__field_ingredients" "node__field_ingredients" WHERE ("node__field_ingredients"."entity_id" IN (3, 6, 7, 10)) AND ("node__field_ingredients"."deleted" = 0) UNION SELECT "node__field_recipe_category"."entity_id" AS "id", "node__field_recipe_category"."langcode" AS "langcode", "node__field_recipe_category"."delta" AS "delta" FROM "node__field_recipe_category" "node__field_recipe_category" WHERE ("node__field_recipe_category"."entity_id" IN (3, 6, 7, 10)) AND ("node__field_recipe_category"."deleted" = 0) UNION SELECT "node__field_tags"."entity_id" AS "id", "node__field_tags"."langcode" AS "langcode", "node__field_tags"."delta" AS "delta" FROM "node__field_tags" "node__field_tags" WHERE ("node__field_tags"."entity_id" IN (3, 6, 7, 10)) AND ("node__field_tags"."deleted" = 0) UNION SELECT "node__layout_builder__layout"."entity_id" AS "id", "node__layout_builder__layout"."langcode" AS "langcode", "node__layout_builder__layout"."delta" AS "delta" FROM "node__layout_builder__layout" "node__layout_builder__layout" WHERE ("node__layout_builder__layout"."entity_id" IN (3, 6, 7, 10)) AND ("node__layout_builder__layout"."deleted" = 0)) "delta_join" LEFT OUTER JOIN "node__field_ingredients" "node__field_ingredients" ON "node__field_ingredients"."entity_id" = "delta_join"."id" AND "node__field_ingredients"."langcode" = "delta_join"."langcode" AND "node__field_ingredients"."delta" = "delta_join"."delta" AND "node__field_ingredients"."deleted" = 0 LEFT OUTER JOIN "node__field_recipe_category" "node__field_recipe_category" ON "node__field_recipe_category"."entity_id" = "delta_join"."id" AND "node__field_recipe_category"."langcode" = "delta_join"."langcode" AND "node__field_recipe_category"."delta" = "delta_join"."delta" AND "node__field_recipe_category"."deleted" = 0 LEFT OUTER JOIN "node__field_tags" "node__field_tags" ON "node__field_tags"."entity_id" = "delta_join"."id" AND "node__field_tags"."langcode" = "delta_join"."langcode" AND "node__field_tags"."delta" = "delta_join"."delta" AND "node__field_tags"."deleted" = 0 LEFT OUTER JOIN "node__layout_builder__layout" "node__layout_builder__layout" ON "node__layout_builder__layout"."entity_id" = "delta_join"."id" AND "node__layout_builder__layout"."langcode" = "delta_join"."langcode" AND "node__layout_builder__layout"."delta" = "delta_join"."delta" AND "node__layout_builder__layout"."deleted" = 0 ORDER BY "delta_join"."delta" ASC',
-      'SELECT "base_table"."path" AS "path", "base_table"."alias" AS "alias" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/taxonomy/term/31" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "base_table"."path" AS "path", "base_table"."alias" AS "alias" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/taxonomy/term/22" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "base_table"."path" AS "path", "base_table"."alias" AS "alias" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/taxonomy/term/13" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "base"."fid" AS "fid", "base"."uuid" AS "uuid", "base"."langcode" AS "langcode", "base"."uid" AS "uid", "base"."filename" AS "filename", "base"."uri" AS "uri", "base"."filemime" AS "filemime", "base"."filesize" AS "filesize", "base"."status" AS "status", "base"."created" AS "created", "base"."changed" AS "changed" FROM "file_managed" "base" WHERE "base"."fid" IN (1)',
-      'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_user" AS "revision_user", "revision"."revision_created" AS "revision_created", "revision"."revision_log_message" AS "revision_log_message", "revision"."revision_default" AS "revision_default", "base"."mid" AS "mid", "base"."bundle" AS "bundle", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "media" "base" INNER JOIN "media_revision" "revision" ON "revision"."vid" = "base"."vid" WHERE "base"."mid" IN (21)',
-      'SELECT "media_field_data".*, "media_field_data"."langcode" AS "media_field_data__langcode", "media__field_media_image"."field_media_image_target_id" AS "field_media_image_target_id", "media__field_media_image"."field_media_image_alt" AS "field_media_image_alt", "media__field_media_image"."field_media_image_title" AS "field_media_image_title", "media__field_media_image"."field_media_image_width" AS "field_media_image_width", "media__field_media_image"."field_media_image_height" AS "field_media_image_height" FROM "media_field_data" "media_field_data" LEFT OUTER JOIN "media__field_media_image" "media__field_media_image" ON "media__field_media_image"."entity_id" = "media_field_data"."mid" AND "media__field_media_image"."langcode" = "media_field_data"."langcode" AND "media__field_media_image"."deleted" = 0 WHERE "media_field_data"."mid" IN (21)',
-      'SELECT "base_table"."path" AS "path", "base_table"."alias" AS "alias" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/node/10" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "base"."fid" AS "fid", "base"."uuid" AS "uuid", "base"."langcode" AS "langcode", "base"."uid" AS "uid", "base"."filename" AS "filename", "base"."uri" AS "uri", "base"."filemime" AS "filemime", "base"."filesize" AS "filesize", "base"."status" AS "status", "base"."created" AS "created", "base"."changed" AS "changed" FROM "file_managed" "base" WHERE "base"."fid" IN (41)',
-      'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_user" AS "revision_user", "revision"."revision_created" AS "revision_created", "revision"."revision_log_message" AS "revision_log_message", "revision"."revision_default" AS "revision_default", "base"."mid" AS "mid", "base"."bundle" AS "bundle", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "media" "base" INNER JOIN "media_revision" "revision" ON "revision"."vid" = "base"."vid" WHERE "base"."mid" IN (7)',
-      'SELECT "media_field_data".*, "media_field_data"."langcode" AS "media_field_data__langcode", "media__field_media_image"."field_media_image_target_id" AS "field_media_image_target_id", "media__field_media_image"."field_media_image_alt" AS "field_media_image_alt", "media__field_media_image"."field_media_image_title" AS "field_media_image_title", "media__field_media_image"."field_media_image_width" AS "field_media_image_width", "media__field_media_image"."field_media_image_height" AS "field_media_image_height" FROM "media_field_data" "media_field_data" LEFT OUTER JOIN "media__field_media_image" "media__field_media_image" ON "media__field_media_image"."entity_id" = "media_field_data"."mid" AND "media__field_media_image"."langcode" = "media_field_data"."langcode" AND "media__field_media_image"."deleted" = 0 WHERE "media_field_data"."mid" IN (7)',
-      'SELECT "base_table"."path" AS "path", "base_table"."alias" AS "alias" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/node/7" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "base"."fid" AS "fid", "base"."uuid" AS "uuid", "base"."langcode" AS "langcode", "base"."uid" AS "uid", "base"."filename" AS "filename", "base"."uri" AS "uri", "base"."filemime" AS "filemime", "base"."filesize" AS "filesize", "base"."status" AS "status", "base"."created" AS "created", "base"."changed" AS "changed" FROM "file_managed" "base" WHERE "base"."fid" IN (13)',
-      'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_user" AS "revision_user", "revision"."revision_created" AS "revision_created", "revision"."revision_log_message" AS "revision_log_message", "revision"."revision_default" AS "revision_default", "base"."mid" AS "mid", "base"."bundle" AS "bundle", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "media" "base" INNER JOIN "media_revision" "revision" ON "revision"."vid" = "base"."vid" WHERE "base"."mid" IN (6)',
-      'SELECT "media_field_data".*, "media_field_data"."langcode" AS "media_field_data__langcode", "media__field_media_image"."field_media_image_target_id" AS "field_media_image_target_id", "media__field_media_image"."field_media_image_alt" AS "field_media_image_alt", "media__field_media_image"."field_media_image_title" AS "field_media_image_title", "media__field_media_image"."field_media_image_width" AS "field_media_image_width", "media__field_media_image"."field_media_image_height" AS "field_media_image_height" FROM "media_field_data" "media_field_data" LEFT OUTER JOIN "media__field_media_image" "media__field_media_image" ON "media__field_media_image"."entity_id" = "media_field_data"."mid" AND "media__field_media_image"."langcode" = "media_field_data"."langcode" AND "media__field_media_image"."deleted" = 0 WHERE "media_field_data"."mid" IN (6)',
-      'SELECT "base_table"."path" AS "path", "base_table"."alias" AS "alias" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/node/6" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "base"."fid" AS "fid", "base"."uuid" AS "uuid", "base"."langcode" AS "langcode", "base"."uid" AS "uid", "base"."filename" AS "filename", "base"."uri" AS "uri", "base"."filemime" AS "filemime", "base"."filesize" AS "filesize", "base"."status" AS "status", "base"."created" AS "created", "base"."changed" AS "changed" FROM "file_managed" "base" WHERE "base"."fid" IN (11)',
-      'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_user" AS "revision_user", "revision"."revision_created" AS "revision_created", "revision"."revision_log_message" AS "revision_log_message", "revision"."revision_default" AS "revision_default", "base"."mid" AS "mid", "base"."bundle" AS "bundle", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "media" "base" INNER JOIN "media_revision" "revision" ON "revision"."vid" = "base"."vid" WHERE "base"."mid" IN (3)',
-      'SELECT "media_field_data".*, "media_field_data"."langcode" AS "media_field_data__langcode", "media__field_media_image"."field_media_image_target_id" AS "field_media_image_target_id", "media__field_media_image"."field_media_image_alt" AS "field_media_image_alt", "media__field_media_image"."field_media_image_title" AS "field_media_image_title", "media__field_media_image"."field_media_image_width" AS "field_media_image_width", "media__field_media_image"."field_media_image_height" AS "field_media_image_height" FROM "media_field_data" "media_field_data" LEFT OUTER JOIN "media__field_media_image" "media__field_media_image" ON "media__field_media_image"."entity_id" = "media_field_data"."mid" AND "media__field_media_image"."langcode" = "media_field_data"."langcode" AND "media__field_media_image"."deleted" = 0 WHERE "media_field_data"."mid" IN (3)',
-      'SELECT "base_table"."path" AS "path", "base_table"."alias" AS "alias" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/node/3" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "base"."fid" AS "fid", "base"."uuid" AS "uuid", "base"."langcode" AS "langcode", "base"."uid" AS "uid", "base"."filename" AS "filename", "base"."uri" AS "uri", "base"."filemime" AS "filemime", "base"."filesize" AS "filesize", "base"."status" AS "status", "base"."created" AS "created", "base"."changed" AS "changed" FROM "file_managed" "base" WHERE "base"."fid" IN (5)',
-      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:umami" ) AND "collection" = "config.entity.key_store.block"',
-      'SELECT "base_table"."path" AS "path", "base_table"."alias" AS "alias" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/node/1" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("es", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/recipes" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/node" ESCAPE \'\\\\\') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "base_table"."vid" AS "vid", "base_table"."nid" AS "nid" FROM "node_revision" "base_table" INNER JOIN "node_field_data" "node_field_data" ON "node_field_data"."nid" = "base_table"."nid" INNER JOIN "node_field_revision" "node_field_revision" ON "node_field_revision"."vid" = "base_table"."vid" AND "node_field_revision"."langcode" = "en" WHERE ("node_field_data"."nid" = "1") AND ("node_field_revision"."revision_translation_affected" = 1) ORDER BY "base_table"."vid" DESC LIMIT 1 OFFSET 0',
-      'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_uid" AS "revision_uid", "revision"."revision_timestamp" AS "revision_timestamp", "revision"."revision_log" AS "revision_log", "revision"."revision_default" AS "revision_default", "base"."nid" AS "nid", "base"."type" AS "type", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "node" "base" INNER JOIN "node_revision" "revision" ON "revision"."nid" = "base"."nid" AND "revision"."vid" IN (75)',
-      'SELECT "node_field_revision".*, "node_field_revision"."langcode" AS "node_field_revision__langcode", "node_revision__field_cooking_time"."field_cooking_time_value" AS "field_cooking_time_value", "node_revision__field_difficulty"."field_difficulty_value" AS "field_difficulty_value", "node_revision__field_media_image"."field_media_image_target_id" AS "field_media_image_target_id", "node_revision__field_number_of_servings"."field_number_of_servings_value" AS "field_number_of_servings_value", "node_revision__field_preparation_time"."field_preparation_time_value" AS "field_preparation_time_value", "node_revision__field_recipe_instruction"."field_recipe_instruction_value" AS "field_recipe_instruction_value", "node_revision__field_recipe_instruction"."field_recipe_instruction_format" AS "field_recipe_instruction_format", "node_revision__field_summary"."field_summary_value" AS "field_summary_value", "node_revision__field_summary"."field_summary_format" AS "field_summary_format" FROM "node_field_revision" "node_field_revision" LEFT OUTER JOIN "node_revision__field_cooking_time" "node_revision__field_cooking_time" ON "node_revision__field_cooking_time"."revision_id" = "node_field_revision"."vid" AND "node_revision__field_cooking_time"."langcode" = "node_field_revision"."langcode" AND "node_revision__field_cooking_time"."deleted" = 0 LEFT OUTER JOIN "node_revision__field_difficulty" "node_revision__field_difficulty" ON "node_revision__field_difficulty"."revision_id" = "node_field_revision"."vid" AND "node_revision__field_difficulty"."langcode" = "node_field_revision"."langcode" AND "node_revision__field_difficulty"."deleted" = 0 LEFT OUTER JOIN "node_revision__field_media_image" "node_revision__field_media_image" ON "node_revision__field_media_image"."revision_id" = "node_field_revision"."vid" AND "node_revision__field_media_image"."langcode" = "node_field_revision"."langcode" AND "node_revision__field_media_image"."deleted" = 0 LEFT OUTER JOIN "node_revision__field_number_of_servings" "node_revision__field_number_of_servings" ON "node_revision__field_number_of_servings"."revision_id" = "node_field_revision"."vid" AND "node_revision__field_number_of_servings"."langcode" = "node_field_revision"."langcode" AND "node_revision__field_number_of_servings"."deleted" = 0 LEFT OUTER JOIN "node_revision__field_preparation_time" "node_revision__field_preparation_time" ON "node_revision__field_preparation_time"."revision_id" = "node_field_revision"."vid" AND "node_revision__field_preparation_time"."langcode" = "node_field_revision"."langcode" AND "node_revision__field_preparation_time"."deleted" = 0 LEFT OUTER JOIN "node_revision__field_recipe_instruction" "node_revision__field_recipe_instruction" ON "node_revision__field_recipe_instruction"."revision_id" = "node_field_revision"."vid" AND "node_revision__field_recipe_instruction"."langcode" = "node_field_revision"."langcode" AND "node_revision__field_recipe_instruction"."deleted" = 0 LEFT OUTER JOIN "node_revision__field_summary" "node_revision__field_summary" ON "node_revision__field_summary"."revision_id" = "node_field_revision"."vid" AND "node_revision__field_summary"."langcode" = "node_field_revision"."langcode" AND "node_revision__field_summary"."deleted" = 0 WHERE "node_field_revision"."vid" IN ("75")',
-      'SELECT "delta_join"."id" AS "id", "delta_join"."langcode" AS "langcode", "node_revision__field_ingredients"."field_ingredients_value" AS "field_ingredients_value", "node_revision__field_ingredients"."delta" AS "field_ingredients_delta", "node_revision__field_recipe_category"."field_recipe_category_target_id" AS "field_recipe_category_target_id", "node_revision__field_recipe_category"."delta" AS "field_recipe_category_delta", "node_revision__field_tags"."field_tags_target_id" AS "field_tags_target_id", "node_revision__field_tags"."delta" AS "field_tags_delta", "node_revision__layout_builder__layout"."layout_builder__layout_section" AS "layout_builder__layout_section", "node_revision__layout_builder__layout"."delta" AS "layout_builder__layout_delta" FROM (SELECT "node_revision__field_ingredients"."revision_id" AS "id", "node_revision__field_ingredients"."langcode" AS "langcode", "node_revision__field_ingredients"."delta" AS "delta" FROM "node_revision__field_ingredients" "node_revision__field_ingredients" WHERE ("node_revision__field_ingredients"."revision_id" IN ("75")) AND ("node_revision__field_ingredients"."deleted" = 0) UNION SELECT "node_revision__field_recipe_category"."revision_id" AS "id", "node_revision__field_recipe_category"."langcode" AS "langcode", "node_revision__field_recipe_category"."delta" AS "delta" FROM "node_revision__field_recipe_category" "node_revision__field_recipe_category" WHERE ("node_revision__field_recipe_category"."revision_id" IN ("75")) AND ("node_revision__field_recipe_category"."deleted" = 0) UNION SELECT "node_revision__field_tags"."revision_id" AS "id", "node_revision__field_tags"."langcode" AS "langcode", "node_revision__field_tags"."delta" AS "delta" FROM "node_revision__field_tags" "node_revision__field_tags" WHERE ("node_revision__field_tags"."revision_id" IN ("75")) AND ("node_revision__field_tags"."deleted" = 0) UNION SELECT "node_revision__layout_builder__layout"."revision_id" AS "id", "node_revision__layout_builder__layout"."langcode" AS "langcode", "node_revision__layout_builder__layout"."delta" AS "delta" FROM "node_revision__layout_builder__layout" "node_revision__layout_builder__layout" WHERE ("node_revision__layout_builder__layout"."revision_id" IN ("75")) AND ("node_revision__layout_builder__layout"."deleted" = 0)) "delta_join" LEFT OUTER JOIN "node_revision__field_ingredients" "node_revision__field_ingredients" ON "node_revision__field_ingredients"."revision_id" = "delta_join"."id" AND "node_revision__field_ingredients"."langcode" = "delta_join"."langcode" AND "node_revision__field_ingredients"."delta" = "delta_join"."delta" AND "node_revision__field_ingredients"."deleted" = 0 LEFT OUTER JOIN "node_revision__field_recipe_category" "node_revision__field_recipe_category" ON "node_revision__field_recipe_category"."revision_id" = "delta_join"."id" AND "node_revision__field_recipe_category"."langcode" = "delta_join"."langcode" AND "node_revision__field_recipe_category"."delta" = "delta_join"."delta" AND "node_revision__field_recipe_category"."deleted" = 0 LEFT OUTER JOIN "node_revision__field_tags" "node_revision__field_tags" ON "node_revision__field_tags"."revision_id" = "delta_join"."id" AND "node_revision__field_tags"."langcode" = "delta_join"."langcode" AND "node_revision__field_tags"."delta" = "delta_join"."delta" AND "node_revision__field_tags"."deleted" = 0 LEFT OUTER JOIN "node_revision__layout_builder__layout" "node_revision__layout_builder__layout" ON "node_revision__layout_builder__layout"."revision_id" = "delta_join"."id" AND "node_revision__layout_builder__layout"."langcode" = "delta_join"."langcode" AND "node_revision__layout_builder__layout"."delta" = "delta_join"."delta" AND "node_revision__layout_builder__layout"."deleted" = 0 ORDER BY "delta_join"."delta" ASC',
-      'SELECT "base_table"."vid" AS "vid", "base_table"."nid" AS "nid" FROM "node_revision" "base_table" INNER JOIN (SELECT "subquery_base_table"."nid" AS "nid", MAX(subquery_base_table.vid) AS "maximum_revision_id" FROM "node_revision" "subquery_base_table" WHERE "nid" = "1" GROUP BY "subquery_base_table"."nid") "sq_base_table" ON base_table.nid = sq_base_table.nid AND base_table.vid = sq_base_table.maximum_revision_id INNER JOIN "node_field_data" "node_field_data" ON "node_field_data"."nid" = "base_table"."nid" WHERE "node_field_data"."nid" = "1"',
-      'SELECT "base_table"."revision_id" AS "revision_id", "base_table"."id" AS "id" FROM "content_moderation_state_revision" "base_table" INNER JOIN "content_moderation_state_field_revision" "content_moderation_state_field_revision" ON "content_moderation_state_field_revision"."revision_id" = "base_table"."revision_id" WHERE ("content_moderation_state_field_revision"."content_entity_type_id" LIKE "node" ESCAPE \'\\\\\') AND ("content_moderation_state_field_revision"."content_entity_id" = "1") AND ("content_moderation_state_field_revision"."content_entity_revision_id" = "76") AND ("content_moderation_state_field_revision"."workflow" = "editorial") AND ("content_moderation_state_field_revision"."langcode" = "en") ORDER BY "base_table"."revision_id" DESC',
-      'SELECT "revision"."revision_id" AS "revision_id", "revision"."langcode" AS "langcode", "revision"."revision_default" AS "revision_default", "base"."id" AS "id", "base"."uuid" AS "uuid", CASE "base"."revision_id" WHEN "revision"."revision_id" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "content_moderation_state" "base" INNER JOIN "content_moderation_state_revision" "revision" ON "revision"."id" = "base"."id" AND "revision"."revision_id" IN (76)',
-      'SELECT "content_moderation_state_field_revision".*, "content_moderation_state_field_revision"."langcode" AS "content_moderation_state_field_revision__langcode" FROM "content_moderation_state_field_revision" "content_moderation_state_field_revision" WHERE "content_moderation_state_field_revision"."revision_id" IN ("76")',
-      'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("theme_registry:runtime:umami:Drupal\Core\Cache\CacheCollector", "LOCK_ID", "EXPIRE")',
-      'DELETE FROM "semaphore"  WHERE ("name" = "theme_registry:runtime:umami:Drupal\Core\Cache\CacheCollector") AND ("value" = "LOCK_ID")',
-    ];
-    $recorded_queries = $performance_data->getQueries();
-    $this->assertSame($expected_queries, $recorded_queries);
-
-    $expected = [
-      'QueryCount' => 51,
-      'CacheGetCount' => 163,
-      'CacheGetCountByBin' => [
-        'page' => 1,
-        'config' => 34,
-        'bootstrap' => 12,
-        'discovery' => 67,
-        'data' => 6,
-        'entity' => 21,
-        'dynamic_page_cache' => 1,
-        'routes' => 5,
-        'render' => 13,
-        'default' => 3,
-      ],
-      'CacheSetCount' => 41,
-      'CacheDeleteCount' => 0,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 19,
-      'CacheTagGroupedLookups' => [
-        [
-          'entity_types',
-          'route_match',
-          'access_policies',
-          'routes',
-          'router',
-          'entity_field_info',
-          'entity_bundles',
-          'local_task',
-          'library_info',
-          'http_response',
-        ],
-        ['config:core.extension', 'views_data'],
-        ['config:views.view.related_recipes', 'node:10', 'node:3', 'node:6', 'node:7', 'node_list'],
-        ['breakpoints'],
-        [
-          'config:image.style.large_3_2_2x',
-          'config:image.style.large_3_2_768x512',
-          'config:image.style.medium_3_2_2x',
-          'config:image.style.medium_3_2_600x400',
-          'config:responsive_image.styles.3_2_image',
-          'media:1',
-          'media_view',
-          'rendered',
-        ],
-        ['media:21'],
-        [
-          'node_view',
-          'user:6',
-        ],
-        ['media:7'],
-        ['media:6'],
-        ['media:3'],
-        [
-          'config:core.entity_view_display.node.recipe.full',
-          'config:filter.format.basic_html',
-          'node:1',
-          'taxonomy_term:13',
-          'taxonomy_term:22',
-          'taxonomy_term:31',
-        ],
-        [
-          'config:block_list',
-        ],
-        [
-          'block_content:1',
-          'block_content:2',
-          'config:configurable_language_list',
-        ],
-        ['config:system.menu.footer'],
-        [
-          'config:system.menu.account',
-          'config:system.site',
-          'block_content_view',
-          'config:image.style.medium_8_7',
-          'file:37',
-          'media:19',
-          'config:system.menu.main',
-          'config:views.view.recipe_collections',
-          'taxonomy_term:1',
-          'taxonomy_term:10',
-          'taxonomy_term:11',
-          'taxonomy_term:12',
-          'taxonomy_term:14',
-          'taxonomy_term:15',
-          'taxonomy_term:16',
-          'taxonomy_term:2',
-          'taxonomy_term:3',
-          'taxonomy_term:4',
-          'taxonomy_term:5',
-          'taxonomy_term:6',
-          'taxonomy_term:7',
-          'taxonomy_term:8',
-          'taxonomy_term:9',
-          'taxonomy_term_list',
-        ],
-        ['node:1:revisions'],
-        ['content_moderation_state:1:revisions'],
-        ['config:workflows.workflow.editorial'],
-        ['config:user.role.anonymous'],
-      ],
-      'ScriptCount' => 3,
-      'ScriptBytes' => 12000,
-      'StylesheetCount' => 7,
-      'StylesheetBytes' => 40500,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertQueriesByName('umamiNodePageWarmCache', $performance_data->getQueries());
+    $this->assertMetricsByName('umamiNodePageWarmCache', $performance_data);
   }
 
   /**
@@ -345,19 +148,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     }, 'umamiFrontPageColdCache');
     $this->assertSession()->pageTextContains('Umami');
 
-    $expected = [
-      'QueryCount' => 178,
-      'CacheGetCount' => 225,
-      'CacheSetCount' => 240,
-      'CacheDeleteCount' => 0,
-      'CacheTagLookupQueryCount' => 25,
-      'CacheTagInvalidationCount' => 0,
-      'ScriptCount' => 3,
-      'ScriptBytes' => 12000,
-      'StylesheetCount' => 7,
-      'StylesheetBytes' => 39150,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertMetricsByName('umamiFrontPageColdCache', $performance_data);
   }
 
   /**
@@ -379,23 +170,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     }, 'umamiFrontPageHotCache');
     $this->assertSession()->pageTextContains('Umami');
 
-    $expected_queries = [];
-    $recorded_queries = $performance_data->getQueries();
-    $this->assertSame($expected_queries, $recorded_queries);
-
-    $expected = [
-      'QueryCount' => 0,
-      'CacheGetCount' => 1,
-      'CacheSetCount' => 0,
-      'CacheDeleteCount' => 0,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 1,
-      'ScriptCount' => 3,
-      'ScriptBytes' => 11850,
-      'StylesheetCount' => 7,
-      'StylesheetBytes' => 38850,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertMetricsByName('umamiFrontPageHotCache', $performance_data);
   }
 
   /**
@@ -415,19 +190,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('<front>');
     }, 'umamiFrontPageCoolCache');
 
-    $expected = [
-      'QueryCount' => 54,
-      'CacheGetCount' => 170,
-      'CacheSetCount' => 75,
-      'CacheDeleteCount' => 0,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 19,
-      'ScriptCount' => 3,
-      'ScriptBytes' => 12000,
-      'StylesheetCount' => 7,
-      'StylesheetBytes' => 38850,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertMetricsByName('umamiFrontPageCoolCache', $performance_data);
   }
 
   /**
@@ -448,36 +211,8 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('<front>');
     }, 'authenticatedFrontPage');
 
-    $expected_queries = [
-      'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
-      'SELECT * FROM "users_field_data" "u" WHERE "u"."uid" = "10" AND "u"."default_langcode" = 1',
-      'SELECT "roles_target_id" FROM "user__roles" WHERE "entity_id" = "10"',
-    ];
-    $recorded_queries = $performance_data->getQueries();
-    $this->assertSame($expected_queries, $recorded_queries);
-
-    $expected = [
-      'QueryCount' => 3,
-      'CacheGetCount' => 34,
-      'CacheGetCountByBin' => [
-        'config' => 12,
-        'bootstrap' => 7,
-        'discovery' => 5,
-        'data' => 4,
-        'dynamic_page_cache' => 2,
-        'render' => 2,
-        'routes' => 2,
-      ],
-      'CacheSetCount' => 0,
-      'CacheDeleteCount' => 0,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 4,
-      'ScriptCount' => 3,
-      'ScriptBytes' => 13150,
-      'StylesheetCount' => 7,
-      'StylesheetBytes' => 39163,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertQueriesByName('authenticatedFrontPage', $performance_data->getQueries());
+    $this->assertMetricsByName('authenticatedFrontPage', $performance_data);
   }
 
   /**
@@ -487,8 +222,8 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     // Create a user with most important admin permissions, but not access to
     // contextual links. This is because contextual module makes an AJAX request
     // dependent on the content of browser local storage, which can make
-    // performance testing indeterminate.
-    $user = $this->drupalCreateUser([
+    // performance testing indeterminate, use a deterministic user role.
+    $this->createRole([
       'administer nodes',
       'bypass node access',
       'access administration pages',
@@ -504,7 +239,8 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       'administer block content',
       'administer taxonomy',
       'administer menu',
-    ]);
+    ], 'test_admin');
+    $user = $this->drupalCreateUser(values: ['roles' => ['test_admin']]);
 
     $this->drupalLogin($user);
 
@@ -523,32 +259,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('node/1');
     }, 'administratorNodePage');
 
-    $expected = [
-      'QueryCount' => 264,
-      'CacheGetCount' => 257,
-      'CacheGetCountByBin' => [
-        'config' => 52,
-        'bootstrap' => 15,
-        'discovery' => 75,
-        'data' => 14,
-        'entity' => 24,
-        'dynamic_page_cache' => 1,
-        'default' => 20,
-        'routes' => 18,
-        'render' => 14,
-        'file_parsing' => 2,
-        'menu' => 22,
-      ],
-      'CacheSetCount' => 266,
-      'CacheDeleteCount' => 0,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 29,
-      'ScriptCount' => 12,
-      'ScriptBytes' => 200400,
-      'StylesheetCount' => 12,
-      'StylesheetBytes' => 79412,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertMetricsByName('administratorNodePage', $performance_data);
   }
 
   /**
@@ -560,13 +271,12 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       $this->doRequests();
     }, 'umamiFrontAndRecipePages');
 
-    $expected = [
-      'ScriptCount' => 3,
-      'ScriptBytes' => 11700,
-      'StylesheetCount' => 15,
-      'StylesheetBytes' => 69629,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertMetricsByName('umamiFrontAndRecipePages', $performance_data, [
+      'ScriptCount',
+      'ScriptBytes',
+      'StylesheetCount',
+      'StylesheetBytes',
+    ]);
   }
 
   /**
@@ -580,13 +290,12 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       $this->doRequests();
     }, 'umamiFrontAndRecipePagesAuthenticated');
 
-    $expected = [
-      'ScriptCount' => 7,
-      'ScriptBytes' => 73750,
-      'StylesheetCount' => 12,
-      'StylesheetBytes' => 55581,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertMetricsByName('umamiFrontAndRecipePagesAuthenticated', $performance_data, [
+      'ScriptCount',
+      'ScriptBytes',
+      'StylesheetCount',
+      'StylesheetBytes',
+    ]);
   }
 
   /**
@@ -601,13 +310,12 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () {
       $this->doRequests();
     }, 'umamiFrontAndRecipePagesEditor');
-    $expected = [
-      'ScriptCount' => 12,
-      'ScriptBytes' => 207212,
-      'StylesheetCount' => 12,
-      'StylesheetBytes' => 141652,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertMetricsByName('umamiFrontAndRecipePagesEditor', $performance_data, [
+      'ScriptCount',
+      'ScriptBytes',
+      'StylesheetCount',
+      'StylesheetBytes',
+    ]);
   }
 
   /**
@@ -629,13 +337,12 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
       sleep(2);
       $this->drupalGet('node/add/page');
     }, 'umamiNodeAddEditor');
-    $expected = [
-      'ScriptCount' => 20,
-      'ScriptBytes' => 2976611,
-      'StylesheetCount' => 27,
-      'StylesheetBytes' => 640654,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertMetricsByName('umamiNodeAddEditor', $performance_data, [
+      'ScriptCount',
+      'ScriptBytes',
+      'StylesheetCount',
+      'StylesheetBytes',
+    ]);
   }
 
   /**

@@ -1,0 +1,48 @@
+QueryCount: 23
+CacheGetCount: 75
+CacheGetCountByBin:
+  page: 1
+  config: 19
+  data: 4
+  discovery: 26
+  bootstrap: 10
+  entity: 2
+  dynamic_page_cache: 1
+  routes: 4
+  render: 7
+  default: 1
+CacheSetCount: 39
+CacheDeleteCount: 0
+CacheTagInvalidationCount: 0
+CacheTagLookupQueryCount: 6
+CacheTagGroupedLookups:
+  -
+    - route_match
+    - access_policies
+    - routes
+    - router
+    - entity_types
+    - entity_field_info
+    - entity_bundles
+    - local_task
+    - library_info
+    - http_response
+  -
+    - rendered
+    - 'user:0'
+    - user_view
+  -
+    - 'config:filter.format.restricted_html'
+    - 'node:1'
+    - node_view
+  -
+    - 'config:block_list'
+  -
+    - 'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form'
+    - 'config:system.site'
+  -
+    - 'config:user.role.anonymous'
+ScriptCount: 0
+ScriptBytes: 0
+StylesheetCount: 2
+StylesheetBytes: 1282

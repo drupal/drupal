@@ -86,138 +86,16 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('');
     }, 'standardFrontPage');
     $this->assertNoJavaScript($performance_data);
-
-    $expected_queries = [
-      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/admin/welcome" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "name", "route", "fit" FROM "router" WHERE "pattern_outline" IN ( "/admin/welcome", "/admin/%", "/admin" ) AND "number_parts" >= 2',
-      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "standard.show_welcome" ) AND "collection" = "state"',
-      'INSERT INTO "watchdog" ("uid", "type", "message", "variables", "severity", "link", "location", "referer", "hostname", "timestamp") VALUES (0, "access denied", "Path: @uri. %type: @message in %function (line %line of %file).", "WATCHDOG_DATA", 4, "", "LOCATION", "REFERER", "CLIENT_IP", "TIMESTAMP")',
-      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/system/403" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "name", "route", "fit" FROM "router" WHERE "pattern_outline" IN ( "/system/403", "/system/%", "/system" ) AND "number_parts" >= 2',
-      'SELECT "name", "route" FROM "router" WHERE "name" IN ( "<current>" )',
-      'SELECT 1 AS "expression" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/admin%" ESCAPE ' . "'\\\\'" . ') LIMIT 1 OFFSET 0',
-      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
-      'SELECT "name", "route" FROM "router" WHERE "name" IN ( "system.403" )',
-      'SELECT 1 AS "expression" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/system%" ESCAPE ' . "'\\\\'" . ') LIMIT 1 OFFSET 0',
-      'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("state:Drupal\\Core\\Cache\\CacheCollector", "LOCK_ID", "EXPIRE")',
-      'DELETE FROM "semaphore"  WHERE ("name" = "state:Drupal\\Core\\Cache\\CacheCollector") AND ("value" = "LOCK_ID")',
-      'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("theme_registry:runtime:stark:Drupal\\Core\\Cache\\CacheCollector", "LOCK_ID", "EXPIRE")',
-      'DELETE FROM "semaphore"  WHERE ("name" = "theme_registry:runtime:stark:Drupal\\Core\\Cache\\CacheCollector") AND ("value" = "LOCK_ID")',
-      'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("library_info:stark:Drupal\\Core\\Cache\\CacheCollector", "LOCK_ID", "EXPIRE")',
-      'DELETE FROM "semaphore"  WHERE ("name" = "library_info:stark:Drupal\\Core\\Cache\\CacheCollector") AND ("value" = "LOCK_ID")',
-      'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("path_alias_prefix_list:Drupal\\Core\\Cache\\CacheCollector", "LOCK_ID", "EXPIRE")',
-      'DELETE FROM "semaphore"  WHERE ("name" = "path_alias_prefix_list:Drupal\\Core\\Cache\\CacheCollector") AND ("value" = "LOCK_ID")',
-    ];
-    $recorded_queries = $performance_data->getQueries();
-    $this->assertSame($expected_queries, $recorded_queries);
-    $expected = [
-      'QueryCount' => 19,
-      'CacheGetCount' => 49,
-      'CacheGetCountByBin' => [
-        'page' => 1,
-        'config' => 10,
-        'data' => 4,
-        'bootstrap' => 11,
-        'discovery' => 11,
-        'routes' => 4,
-        'dynamic_page_cache' => 1,
-        'render' => 4,
-        'default' => 2,
-        'file_parsing' => 1,
-      ],
-      'CacheSetCount' => 22,
-      'CacheDeleteCount' => 0,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 4,
-      'CacheTagGroupedLookups' => [
-        [
-          'route_match',
-          'access_policies',
-          'routes',
-          'router',
-          'entity_types',
-          'entity_field_info',
-          'entity_bundles',
-          'local_task',
-          'library_info',
-          'http_response',
-        ],
-        ['config:block_list', 'rendered'],
-        ['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form', 'config:system.site'],
-        ['4xx-response', 'config:user.role.anonymous'],
-      ],
-      'StylesheetCount' => 2,
-      'StylesheetBytes' => 1450,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertQueriesByName('standardFrontPage', $performance_data->getQueries());
+    $this->assertMetricsByName('standardFrontPage', $performance_data);
 
     // Test node page.
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
     }, 'standardNodePage');
-    $this->assertNoJavaScript($performance_data);
 
-    $expected_queries = [
-      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/node/1" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "name", "route", "fit" FROM "router" WHERE "pattern_outline" IN ( "/node/1", "/node/%", "/node" ) AND "number_parts" >= 2',
-      'SELECT "revision"."vid" AS "vid", "revision"."langcode" AS "langcode", "revision"."revision_uid" AS "revision_uid", "revision"."revision_timestamp" AS "revision_timestamp", "revision"."revision_log" AS "revision_log", "revision"."revision_default" AS "revision_default", "base"."nid" AS "nid", "base"."type" AS "type", "base"."uuid" AS "uuid", CASE "base"."vid" WHEN "revision"."vid" THEN 1 ELSE 0 END AS "isDefaultRevision" FROM "node" "base" INNER JOIN "node_revision" "revision" ON "revision"."vid" = "base"."vid" WHERE "base"."nid" IN (1)',
-      'SELECT "node_field_data".*, "node_field_data"."langcode" AS "node_field_data__langcode", "node__body"."body_value" AS "body_value", "node__body"."body_format" AS "body_format" FROM "node_field_data" "node_field_data" LEFT OUTER JOIN "node__body" "node__body" ON "node__body"."entity_id" = "node_field_data"."nid" AND "node__body"."langcode" = "node_field_data"."langcode" AND "node__body"."deleted" = 0 WHERE "node_field_data"."nid" IN (1)',
-      'SELECT "name", "route" FROM "router" WHERE "name" IN ( "entity.node.canonical" )',
-      'SELECT 1 AS "expression" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."path" LIKE "/node%" ESCAPE ' . "'\\\\'" . ') LIMIT 1 OFFSET 0',
-      'SELECT "name", "data" FROM "config" WHERE "collection" = "" AND "name" IN ( "core.entity_view_display.node.test_content.full" )',
-      'SELECT "config"."name" AS "name" FROM "config" "config" WHERE ("collection" = "") AND ("name" LIKE "node.type.%" ESCAPE ' . "'\\\\'" . ') ORDER BY "collection" ASC, "name" ASC',
-      'SELECT "base"."uid" AS "uid", "base"."uuid" AS "uuid", "base"."langcode" AS "langcode" FROM "users" "base" WHERE "base"."uid" IN (0)',
-      'SELECT "users_field_data".*, "users_field_data"."langcode" AS "users_field_data__langcode", "user__user_picture"."user_picture_target_id" AS "user_picture_target_id", "user__user_picture"."user_picture_alt" AS "user_picture_alt", "user__user_picture"."user_picture_title" AS "user_picture_title", "user__user_picture"."user_picture_width" AS "user_picture_width", "user__user_picture"."user_picture_height" AS "user_picture_height" FROM "users_field_data" "users_field_data" LEFT OUTER JOIN "user__user_picture" "user__user_picture" ON "user__user_picture"."entity_id" = "users_field_data"."uid" AND "user__user_picture"."langcode" = "users_field_data"."langcode" AND "user__user_picture"."deleted" = 0 WHERE "users_field_data"."uid" IN (0)',
-      'SELECT "user__roles"."entity_id" AS "id", "user__roles"."langcode" AS "langcode", "user__roles"."roles_target_id" AS "roles_target_id", "user__roles"."delta" AS "roles_delta" FROM "user__roles" "user__roles" WHERE ("user__roles"."entity_id" IN (0)) AND ("user__roles"."deleted" = 0) ORDER BY "user__roles"."delta" ASC',
-      'SELECT "name", "data" FROM "config" WHERE "collection" = "" AND "name" IN ( "core.date_format.medium" )',
-      'SELECT "name", "data" FROM "config" WHERE "collection" = "" AND "name" IN ( "core.date_format.long" )',
-      'SELECT "name", "data" FROM "config" WHERE "collection" = "" AND "name" IN ( "filter.format.restricted_html" )',
-      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
-      'SELECT "name", "route" FROM "router" WHERE "name" IN ( "layout_builder.overrides.node.view", "entity.node.edit_form", "entity.node.delete_form", "entity.node.version_history" )',
-      'SELECT "base_table"."vid" AS "vid", "base_table"."nid" AS "nid" FROM "node_revision" "base_table" INNER JOIN (SELECT "subquery_base_table"."nid" AS "nid", MAX(subquery_base_table.vid) AS "maximum_revision_id" FROM "node_revision" "subquery_base_table" WHERE "nid" = "1" GROUP BY "subquery_base_table"."nid") "sq_base_table" ON base_table.nid = sq_base_table.nid AND base_table.vid = sq_base_table.maximum_revision_id INNER JOIN "node_field_data" "node_field_data" ON "node_field_data"."nid" = "base_table"."nid" WHERE "node_field_data"."nid" = "1"',
-      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/node" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "name", "route", "fit" FROM "router" WHERE "pattern_outline" IN ( "/node" ) AND "number_parts" >= 1',
-      'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("theme_registry:runtime:stark:Drupal\Core\Cache\CacheCollector", "LOCK_ID", "EXPIRE")',
-      'DELETE FROM "semaphore"  WHERE ("name" = "theme_registry:runtime:stark:Drupal\Core\Cache\CacheCollector") AND ("value" = "LOCK_ID")',
-      'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("path_alias_prefix_list:Drupal\Core\Cache\CacheCollector", "LOCK_ID", "EXPIRE")',
-      'DELETE FROM "semaphore"  WHERE ("name" = "path_alias_prefix_list:Drupal\Core\Cache\CacheCollector") AND ("value" = "LOCK_ID")',
-    ];
-
-    $recorded_queries = $performance_data->getQueries();
-    $this->assertSame($expected_queries, $recorded_queries);
-    $expected = [
-      'QueryCount' => 23,
-      'CacheGetCount' => 75,
-      'CacheSetCount' => 39,
-      'CacheDeleteCount' => 0,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 6,
-      'CacheTagGroupedLookups' => [
-        [
-          'route_match',
-          'access_policies',
-          'routes',
-          'router',
-          'entity_types',
-          'entity_field_info',
-          'entity_bundles',
-          'local_task',
-          'library_info',
-          'http_response',
-        ],
-        ['rendered', 'user:0', 'user_view'],
-        ['config:filter.format.restricted_html', 'node:1', 'node_view'],
-        ['config:block_list'],
-        [
-          'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
-          'config:system.site',
-        ],
-        ['config:user.role.anonymous'],
-      ],
-      'StylesheetCount' => 2,
-      'StylesheetBytes' => 1000,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertQueriesByName('standardNodePage', $performance_data->getQueries());
+    $this->assertMetricsByName('standardNodePage', $performance_data);
 
     // Test user profile page.
     $this->user = $this->drupalCreateUser();
@@ -225,30 +103,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('user/' . $this->user->id());
     }, 'standardUserPage');
     $this->assertNoJavaScript($performance_data);
-
-    $expected_queries = [
-      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/user/2" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "name", "route", "fit" FROM "router" WHERE "pattern_outline" IN ( "/user/2", "/user/%", "/user" ) AND "number_parts" >= 2',
-      'SELECT "base"."uid" AS "uid", "base"."uuid" AS "uuid", "base"."langcode" AS "langcode" FROM "users" "base" WHERE "base"."uid" IN (2)',
-      'SELECT "users_field_data".*, "users_field_data"."langcode" AS "users_field_data__langcode", "user__user_picture"."user_picture_target_id" AS "user_picture_target_id", "user__user_picture"."user_picture_alt" AS "user_picture_alt", "user__user_picture"."user_picture_title" AS "user_picture_title", "user__user_picture"."user_picture_width" AS "user_picture_width", "user__user_picture"."user_picture_height" AS "user_picture_height" FROM "users_field_data" "users_field_data" LEFT OUTER JOIN "user__user_picture" "user__user_picture" ON "user__user_picture"."entity_id" = "users_field_data"."uid" AND "user__user_picture"."langcode" = "users_field_data"."langcode" AND "user__user_picture"."deleted" = 0 WHERE "users_field_data"."uid" IN (2)',
-      'SELECT "user__roles"."entity_id" AS "id", "user__roles"."langcode" AS "langcode", "user__roles"."roles_target_id" AS "roles_target_id", "user__roles"."delta" AS "roles_delta" FROM "user__roles" "user__roles" WHERE ("user__roles"."entity_id" IN (2)) AND ("user__roles"."deleted" = 0) ORDER BY "user__roles"."delta" ASC',
-      'SELECT "name", "route" FROM "router" WHERE "name" IN ( "entity.user.canonical" )',
-      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
-      'SELECT "name", "route" FROM "router" WHERE "name" IN ( "layout_builder.overrides.user.view", "entity.user.edit_form" )',
-    ];
-    $recorded_queries = $performance_data->getQueries();
-    $this->assertSame($expected_queries, $recorded_queries);
-    $expected = [
-      'QueryCount' => 8,
-      'CacheGetCount' => 54,
-      'CacheSetCount' => 16,
-      'CacheDeleteCount' => 0,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 4,
-      'StylesheetCount' => 1,
-      'StylesheetBytes' => 1150,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertQueriesByName('standardUserPage', $performance_data->getQueries());
+    $this->assertMetricsByName('standardUserPage', $performance_data);
   }
 
   /**
@@ -270,71 +126,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->submitLoginForm($this->user);
     }, 'standardLogin');
 
-    $expected_queries = [
-      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
-      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/system" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
-      'SELECT "name", "value" FROM "key_value_expire" WHERE "expire" > "NOW" AND "name" IN ( "KEY" ) AND "collection" = "form"',
-      'SELECT COUNT(*) AS "expression" FROM (SELECT 1 AS "expression" FROM "flood" "f" WHERE ("event" = "user.failed_login_ip") AND ("identifier" = "CLIENT_IP") AND ("timestamp" > "TIMESTAMP")) "subquery"',
-      'SELECT "base_table"."uid" AS "uid", "base_table"."uid" AS "base_table_uid" FROM "users" "base_table" INNER JOIN "users_field_data" "users_field_data" ON "users_field_data"."uid" = "base_table"."uid" WHERE ("users_field_data"."name" IN ("ACCOUNT_NAME")) AND ("users_field_data"."default_langcode" IN (1))',
-      'SELECT "base"."uid" AS "uid", "base"."uuid" AS "uuid", "base"."langcode" AS "langcode" FROM "users" "base" WHERE "base"."uid" IN (2)',
-      'SELECT "users_field_data".*, "users_field_data"."langcode" AS "users_field_data__langcode", "user__user_picture"."user_picture_target_id" AS "user_picture_target_id", "user__user_picture"."user_picture_alt" AS "user_picture_alt", "user__user_picture"."user_picture_title" AS "user_picture_title", "user__user_picture"."user_picture_width" AS "user_picture_width", "user__user_picture"."user_picture_height" AS "user_picture_height" FROM "users_field_data" "users_field_data" LEFT OUTER JOIN "user__user_picture" "user__user_picture" ON "user__user_picture"."entity_id" = "users_field_data"."uid" AND "user__user_picture"."langcode" = "users_field_data"."langcode" AND "user__user_picture"."deleted" = 0 WHERE "users_field_data"."uid" IN (2)',
-      'SELECT "user__roles"."entity_id" AS "id", "user__roles"."langcode" AS "langcode", "user__roles"."roles_target_id" AS "roles_target_id", "user__roles"."delta" AS "roles_delta" FROM "user__roles" "user__roles" WHERE ("user__roles"."entity_id" IN (2)) AND ("user__roles"."deleted" = 0) ORDER BY "user__roles"."delta" ASC',
-      'SELECT COUNT(*) AS "expression" FROM (SELECT 1 AS "expression" FROM "flood" "f" WHERE ("event" = "user.failed_login_user") AND ("identifier" = "CLIENT_IP") AND ("timestamp" > "TIMESTAMP")) "subquery"',
-      'INSERT INTO "watchdog" ("uid", "type", "message", "variables", "severity", "link", "location", "referer", "hostname", "timestamp") VALUES ("2", "user", "Session opened for %name.", "WATCHDOG_DATA", 6, "", "LOCATION", "REFERER", "CLIENT_IP", "TIMESTAMP")',
-      'UPDATE "users_field_data" SET "login"="TIMESTAMP" WHERE "uid" = "2"',
-      'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
-      'INSERT INTO "sessions" ("sid", "uid", "hostname", "session", "timestamp") VALUES ("SESSION_ID", "2", "CLIENT_IP", "SESSION_DATA", "TIMESTAMP") ON DUPLICATE KEY UPDATE "uid" = VALUES("uid"), "hostname" = VALUES("hostname"), "session" = VALUES("session"), "timestamp" = VALUES("timestamp")',
-      'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
-      'SELECT * FROM "users_field_data" "u" WHERE "u"."uid" = "2" AND "u"."default_langcode" = 1',
-      'SELECT "roles_target_id" FROM "user__roles" WHERE "entity_id" = "2"',
-      'INSERT INTO "watchdog" ("uid", "type", "message", "variables", "severity", "link", "location", "referer", "hostname", "timestamp") VALUES ("2", "access denied", "Path: @uri. %type: @message in %function (line %line of %file).", "WATCHDOG_DATA", 4, "", "LOCATION", "REFERER", "CLIENT_IP", "TIMESTAMP")',
-    ];
-    $recorded_queries = $performance_data->getQueries();
-    $this->assertSame($expected_queries, $recorded_queries);
-    $expected = [
-      'ScriptBytes' => 6500,
-      'ScriptCount' => 2,
-      'StylesheetBytes' => 1429,
-      'StylesheetCount' => 1,
-      'QueryCount' => 17,
-      'CacheGetCount' => 71,
-      'CacheSetCount' => 1,
-      'CacheDeleteCount' => 1,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 5,
-      'CacheTagGroupedLookups' => [
-        // Form submission and login.
-        [
-          'route_match',
-          'access_policies',
-          'routes',
-          'router',
-          'entity_types',
-          'entity_field_info',
-          'entity_bundles',
-          'local_task',
-          'library_info',
-          'http_response',
-        ],
-        ['config:block_list', 'rendered'],
-        ['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form', 'config:system.site'],
-        // The user page after the redirect.
-        [
-          'route_match',
-          'access_policies',
-          'routes',
-          'router',
-          'entity_types',
-          'entity_field_info',
-          'entity_bundles',
-          'local_task',
-          'library_info',
-          'http_response',
-        ],
-        ['config:block_list', 'rendered'],
-      ],
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertQueriesByName('standardLogin', $performance_data->getQueries());
+    $this->assertMetricsByName('standardLogin', $performance_data);
     $this->drupalLogout();
   }
 
@@ -360,34 +153,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->submitLoginForm($this->user);
     }, 'standardBlockLogin');
 
-    $expected_queries = [
-      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
-      'SELECT "name", "value" FROM "key_value_expire" WHERE "expire" > "NOW" AND "name" IN ( "KEY" ) AND "collection" = "form"',
-      'SELECT COUNT(*) AS "expression" FROM (SELECT 1 AS "expression" FROM "flood" "f" WHERE ("event" = "user.failed_login_ip") AND ("identifier" = "CLIENT_IP") AND ("timestamp" > "TIMESTAMP")) "subquery"',
-      'SELECT "base_table"."uid" AS "uid", "base_table"."uid" AS "base_table_uid" FROM "users" "base_table" INNER JOIN "users_field_data" "users_field_data" ON "users_field_data"."uid" = "base_table"."uid" WHERE ("users_field_data"."name" IN ("ACCOUNT_NAME")) AND ("users_field_data"."default_langcode" IN (1))',
-      'SELECT "base"."uid" AS "uid", "base"."uuid" AS "uuid", "base"."langcode" AS "langcode" FROM "users" "base" WHERE "base"."uid" IN (2)',
-      'SELECT "users_field_data".*, "users_field_data"."langcode" AS "users_field_data__langcode", "user__user_picture"."user_picture_target_id" AS "user_picture_target_id", "user__user_picture"."user_picture_alt" AS "user_picture_alt", "user__user_picture"."user_picture_title" AS "user_picture_title", "user__user_picture"."user_picture_width" AS "user_picture_width", "user__user_picture"."user_picture_height" AS "user_picture_height" FROM "users_field_data" "users_field_data" LEFT OUTER JOIN "user__user_picture" "user__user_picture" ON "user__user_picture"."entity_id" = "users_field_data"."uid" AND "user__user_picture"."langcode" = "users_field_data"."langcode" AND "user__user_picture"."deleted" = 0 WHERE "users_field_data"."uid" IN (2)',
-      'SELECT "user__roles"."entity_id" AS "id", "user__roles"."langcode" AS "langcode", "user__roles"."roles_target_id" AS "roles_target_id", "user__roles"."delta" AS "roles_delta" FROM "user__roles" "user__roles" WHERE ("user__roles"."entity_id" IN (2)) AND ("user__roles"."deleted" = 0) ORDER BY "user__roles"."delta" ASC',
-      'SELECT COUNT(*) AS "expression" FROM (SELECT 1 AS "expression" FROM "flood" "f" WHERE ("event" = "user.failed_login_user") AND ("identifier" = "CLIENT_IP") AND ("timestamp" > "TIMESTAMP")) "subquery"',
-      'INSERT INTO "watchdog" ("uid", "type", "message", "variables", "severity", "link", "location", "referer", "hostname", "timestamp") VALUES ("2", "user", "Session opened for %name.", "WATCHDOG_DATA", 6, "", "LOCATION", "REFERER", "CLIENT_IP", "TIMESTAMP")',
-      'UPDATE "users_field_data" SET "login"="TIMESTAMP" WHERE "uid" = "2"',
-      'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
-      'INSERT INTO "sessions" ("sid", "uid", "hostname", "session", "timestamp") VALUES ("SESSION_ID", "2", "CLIENT_IP", "SESSION_DATA", "TIMESTAMP") ON DUPLICATE KEY UPDATE "uid" = VALUES("uid"), "hostname" = VALUES("hostname"), "session" = VALUES("session"), "timestamp" = VALUES("timestamp")',
-      'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
-      'SELECT * FROM "users_field_data" "u" WHERE "u"."uid" = "2" AND "u"."default_langcode" = 1',
-      'SELECT "roles_target_id" FROM "user__roles" WHERE "entity_id" = "2"',
-    ];
-    $recorded_queries = $performance_data->getQueries();
-    $this->assertSame($expected_queries, $recorded_queries);
-    $expected = [
-      'QueryCount' => 15,
-      'CacheGetCount' => 89,
-      'CacheSetCount' => 1,
-      'CacheDeleteCount' => 1,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 6,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertQueriesByName('standardBlockLogin', $performance_data->getQueries());
+    $this->assertMetricsByName('standardBlockLogin', $performance_data);
   }
 
   /**
@@ -419,42 +186,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('node/1');
     }, 'testAdmin');
 
-    $expected_queries = [
-      'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
-      'SELECT * FROM "users_field_data" "u" WHERE "u"."uid" = "3" AND "u"."default_langcode" = 1',
-      'SELECT "roles_target_id" FROM "user__roles" WHERE "entity_id" = "3"',
-      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
-      'SELECT "base_table"."vid" AS "vid", "base_table"."nid" AS "nid" FROM "node_revision" "base_table" INNER JOIN (SELECT "subquery_base_table"."nid" AS "nid", MAX(subquery_base_table.vid) AS "maximum_revision_id" FROM "node_revision" "subquery_base_table" WHERE "nid" = "1" GROUP BY "subquery_base_table"."nid") "sq_base_table" ON base_table.nid = sq_base_table.nid AND base_table.vid = sq_base_table.maximum_revision_id INNER JOIN "node_field_data" "node_field_data" ON "node_field_data"."nid" = "base_table"."nid" WHERE "node_field_data"."nid" = "1"',
-    ];
-    $recorded_queries = $performance_data->getQueries();
-    $this->assertSame($expected_queries, $recorded_queries);
-
-    $expected = [
-      'QueryCount' => 5,
-      'CacheGetCount' => 58,
-      'CacheGetCountByBin' => [
-        'config' => 11,
-        'data' => 4,
-        'discovery' => 20,
-        'bootstrap' => 8,
-        'entity' => 1,
-        'dynamic_page_cache' => 1,
-        'routes' => 5,
-        'render' => 8,
-      ],
-      'CacheSetCount' => 2,
-      'CacheSetCountByBin' => [
-        'dynamic_page_cache' => 2,
-      ],
-      'CacheDeleteCount' => 0,
-      'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 6,
-      'ScriptCount' => 8,
-      'ScriptBytes' => 141736,
-      'StylesheetCount' => 3,
-      'StylesheetBytes' => 42533,
-    ];
-    $this->assertMetrics($expected, $performance_data);
+    $this->assertQueriesByName('testAdmin', $performance_data->getQueries());
+    $this->assertMetricsByName('testAdmin', $performance_data);
 
     // The navigation toolbar must be cached under low-cardinality contexts,
     // not per-user, to ensure it scales for authenticated admins.
