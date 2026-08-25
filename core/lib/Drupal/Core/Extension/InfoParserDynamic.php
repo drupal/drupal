@@ -29,7 +29,36 @@ class InfoParserDynamic implements InfoParserInterface {
     }
 
     try {
-      $parsed_info = Yaml::decode(file_get_contents($filename));
+      // If the PECL YAML extension is available, use that to parse .info.yml
+      // files. The PECL YAML extension can be as much as five times faster as
+      // Symfony's YAML parser, however it does not support the advanced YAML
+      // features that we rely on in e.g. the configuration system. We do not
+      // need those advanced features in .info.yml files, but they are also
+      // parsed very frequently during tests, so in this specific case it's
+      // worth using where available and falling back to Symfony's parser
+      // otherwise.
+      if (extension_loaded('yaml')) {
+        // The PECL YAML parser triggers PHP warnings when YAML is invalid. For
+        // consistency with the Symfony parser, convert these to exceptions.
+        set_error_handler(function ($error_number, $error_string, $error_file, $error_line) {
+          throw new \ErrorException($error_string, 0, $error_number, $error_file, $error_line);
+        });
+        try {
+          $parsed_info = yaml_parse(file_get_contents($filename));
+        }
+        catch (\ErrorException $e) {
+          throw new InvalidDataTypeException($e->getMessage());
+        }
+        finally {
+          restore_error_handler();
+        }
+        if ($parsed_info === FALSE) {
+          throw new InvalidDataTypeException();
+        }
+      }
+      else {
+        $parsed_info = Yaml::decode(file_get_contents($filename));
+      }
     }
     catch (InvalidDataTypeException $e) {
       throw new InfoParserException("Unable to parse $filename " . $e->getMessage());
