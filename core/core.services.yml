@@ -1960,7 +1960,7 @@ services:
   Drupal\Core\Update\UpdateHookRegistry: '@update.update_hook_registry'
   update.post_update_registry:
     class: Drupal\Core\Update\UpdateRegistry
-    arguments: ['%app.root%', '%site.path%', '%container.modules%', '@update.key_value.post_update', '@theme_handler', 'post_update']
+    arguments: ['%app.root%', '%site.path%', '%container.modules%', '@update.key_value.post_update', '@theme_handler', '@cache.memory', 'post_update']
   update.key_value.post_update:
     class: Drupal\Core\KeyValueStore\KeyValueStoreInterface
     factory: ['@keyvalue', 'get']
