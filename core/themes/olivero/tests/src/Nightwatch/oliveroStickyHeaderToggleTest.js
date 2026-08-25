@@ -6,7 +6,7 @@ module.exports = {
   before(browser) {
     browser.drupalInstall({
       setupFile:
-        'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
+        'core/themes/olivero/tests/TestSite/TestSiteOliveroInstallTestScript.php',
       installProfile: 'minimal',
     });
     browser.window.setSize(1400, 800);

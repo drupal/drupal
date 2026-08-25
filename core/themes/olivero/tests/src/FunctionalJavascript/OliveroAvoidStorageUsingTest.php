@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\FunctionalJavascriptTests\Theme;
+namespace Drupal\Tests\olivero\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
