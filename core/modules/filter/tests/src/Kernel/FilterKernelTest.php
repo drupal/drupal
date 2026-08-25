@@ -445,14 +445,14 @@ class FilterKernelTest extends KernelTestBase {
         "<!--\nThree.\n-->" => TRUE,
       ],
       // Do not add paragraph tags around Twig theme debugging.
-      "<p>Text here\n<!-- THEME DEBUG -->\n<!-- THEME HOOK: 'html' -->\n<!-- FILE NAME SUGGESTIONS:\n* html--node.html.twig\nx html.html.twig\n-->\n<!-- BEGIN OUTPUT from 'core/themes/olivero/templates/layout/html.html.twig' -->\n<span>Test</span></p>" => [
+      "<p>Text here<!--\n\nTHEME DEBUG --><!--\nTHEME HOOK: 'html' --><!--\nFILE NAME SUGGESTIONS:\n* html--node.html.twig\nx html.html.twig\n--><!--\nBEGIN OUTPUT from 'core/themes/olivero/templates/layout/html.html.twig'\n--><span>Test</span></p>" => [
         "<p>Text here" => TRUE,
         "<p>Text here</p>" => FALSE,
         "<span>Test</span></p>" => TRUE,
         "<p><span>Test</span></p>" => FALSE,
       ],
       // Do not add paragraph tags around custom template Twig theme debugging.
-      "<p>Text here\n<!-- THEME DEBUG -->\n<!-- THEME HOOK: 'html' -->\n<!-- FILE NAME SUGGESTIONS:\n* html--node.html.twig\nx html.html.twig\n-->\n<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'custom/themes/custom-theme/templates/layout/html.html.twig' -->\n<span>Test</span></p>" => [
+      "<p>Text here<!--\n\nTHEME DEBUG --><!--\nTHEME HOOK: 'html' --><!--\nFILE NAME SUGGESTIONS:\n* html--node.html.twig\nx html.html.twig\n--><!--\n💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'custom/themes/custom-theme/templates/layout/html.html.twig'\n--><span>Test</span></p>" => [
         "<p>Text here" => TRUE,
         "<p>Text here</p>" => FALSE,
         "<span>Test</span></p>" => TRUE,
@@ -529,21 +529,32 @@ class FilterKernelTest extends KernelTestBase {
     $render = trim($render);
 
     // Render text before applying the auto paragraph filter.
-    $this->assertSame("<!-- THEME DEBUG -->
-<!-- THEME HOOK: 'container' -->
-<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'container.html.twig' -->
-<div>Test two</div>
+    $this->assertSame("<!--
 
-<!-- END CUSTOM TEMPLATE OUTPUT from 'container.html.twig' -->", $render);
+THEME DEBUG --><!--
+THEME HOOK: 'container' --><!--
+💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'container.html.twig'
+--><div>Test two</div>
+<!--
+END CUSTOM TEMPLATE OUTPUT from 'container.html.twig'
+
+-->", $render);
     $plugin = \Drupal::service('plugin.manager.filter')->createInstance('filter_autop');
     assert($plugin instanceof FilterAutoP);
     $result = $plugin->process($render, 'en');
 
     // After auto-p is applied, the theme debug should no longer have
     // line breaks but the true line breaks should still.
-    $this->assertSame("<!-- THEME DEBUG --><!-- THEME HOOK: 'container' --><!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'container.html.twig' --><div>Test two</div>
+    $this->assertSame("<!--
 
-<!-- END CUSTOM TEMPLATE OUTPUT from 'container.html.twig' -->", $result->getProcessedText());
+THEME DEBUG --><!--
+THEME HOOK: 'container' --><!--
+💡 BEGIN CUSTOM TEMPLATE OUTPUT from 'container.html.twig'
+--><div>Test two</div>
+<!--
+END CUSTOM TEMPLATE OUTPUT from 'container.html.twig'
+
+-->", $result->getProcessedText());
   }
 
   /**

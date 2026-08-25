@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Theme;
 
+use Dom\HTMLDocument;
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -27,18 +29,31 @@ class TwigDebugMarkupTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests debug markup added to Twig template output.
+   * {@inheritdoc}
    */
-  public function testTwigDebugMarkup(): void {
-    \Drupal::service('theme_installer')->install(['test_theme']);
-    $this->config('system.theme')->set('default', 'test_theme')->save();
+  protected function setUp(): void {
+    parent::setUp();
     $this->drupalCreateContentType(['type' => 'page']);
-    // Enable debug, rebuild the service container, and clear all caches.
+  }
+
+  /**
+   * Enable debug, rebuild the service container, and clear all caches.
+   */
+  protected function enableTwigDebug(): void {
     $parameters = $this->container->getParameter('twig.config');
     $parameters['debug'] = TRUE;
     $this->setContainerParameter('twig.config', $parameters);
     $this->rebuildContainer();
     $this->resetAll();
+  }
+
+  /**
+   * Tests debug markup added to Twig template output.
+   */
+  public function testTwigDebugMarkup(): void {
+    \Drupal::service('theme_installer')->install(['test_theme']);
+    $this->config('system.theme')->set('default', 'test_theme')->save();
+    $this->enableTwigDebug();
 
     $cache = $this->container->get('theme.registry')->get();
     // Create array of Twig templates.
@@ -50,11 +65,11 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $builder = \Drupal::entityTypeManager()->getViewBuilder('node');
     $build = $builder->view($node);
     $output = (string) $this->container->get('renderer')->renderRoot($build);
-    $this->assertStringContainsString('<!-- THEME DEBUG -->', $output, 'Twig debug markup found in theme output when debug is enabled.');
+    $this->assertStringContainsString("<!--\n\nTHEME DEBUG -->", $output, 'Twig debug markup found in theme output when debug is enabled.');
     $this->assertStringContainsString("THEME HOOK: 'node'", $output, 'Theme call information found.');
     $this->assertStringContainsString('▪️ node--1--full.html.twig' . PHP_EOL . '   ✅ node--1.html.twig' . PHP_EOL . '   ▪️ node--page--full.html.twig' . PHP_EOL . '   ▪️ node--page.html.twig' . PHP_EOL . '   ▪️ node--full.html.twig' . PHP_EOL . '   ▪️ node.html.twig', $output, 'Suggested template files found in order and node ID specific template shown as current template.');
     $this->assertStringContainsString(Html::escape('node--<script type="text/javascript">alert(\'yo\');</script>'), $output);
-    $this->assertStringContainsString('<!-- INVALID FILE NAME SUGGESTIONS:' . PHP_EOL . '   See https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/function/hook_theme_suggestions_alter' . PHP_EOL . '   invalid_theme_suggestions' . PHP_EOL . '-->', $output, 'Twig debug markup found invalid suggestions.');
+    $this->assertStringContainsString("<!--\nINVALID FILE NAME SUGGESTIONS:" . PHP_EOL . '   See https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/function/hook_theme_suggestions_alter' . PHP_EOL . '   invalid_theme_suggestions' . PHP_EOL . '-->', $output, 'Twig debug markup found invalid suggestions.');
     $template_filename = $templates['node__1']['path'] . '/' . $templates['node__1']['template'] . '.html.twig';
     $this->assertStringContainsString("💡 BEGIN CUSTOM TEMPLATE OUTPUT from '$template_filename'", $output, 'Full path to current template file found.');
 
@@ -83,7 +98,47 @@ class TwigDebugMarkupTest extends BrowserTestBase {
 
     $build = $builder->view($node);
     $output = (string) $this->container->get('renderer')->renderRoot($build);
-    $this->assertStringNotContainsString('<!-- THEME DEBUG -->', $output, 'Twig debug markup not found in theme output when debug is disabled.');
+    $this->assertStringNotContainsString("<!--\n\nTHEME DEBUG -->", $output, 'Twig debug markup not found in theme output when debug is disabled.');
+  }
+
+  /**
+   * Tests that the debug markup does not significantly alter the DOM.
+   *
+   * This is done by comparing the textContent property of the document body
+   * with and without the debug output. Since textContent is the concatenation
+   * of all child nodes, including whitespace and text nodes, it will
+   * significantly differ if new whitespace is added by the HTML comments. The
+   * comments themselves will not be part of the textContent.
+   *
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent
+   */
+  public function testTwigDebugMarkupDomParity(): void {
+    $node = $this->drupalCreateNode();
+
+    /**
+     * @return array{textContent: string, innerHTML: string}
+     */
+    $get_text_and_html = function () use ($node): array {
+      $html = $this->drupalGet(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
+      $dom = HTMLDocument::createFromString($html);
+      $element = $dom->querySelector('body');
+      return [
+        'textContent' => trim($element->textContent),
+        'innerHTML' => $element->innerHTML,
+      ];
+    };
+
+    $twig_debug_output_needle = "<!--\n\nTHEME DEBUG -->";
+
+    $text_and_html = $get_text_and_html();
+    $this->assertStringNotContainsString($twig_debug_output_needle, $text_and_html['innerHTML']);
+
+    $this->enableTwigDebug();
+    $text_and_html_debug = $get_text_and_html();
+    $this->assertStringContainsString($twig_debug_output_needle, $text_and_html_debug['innerHTML']);
+
+    $this->assertEquals($text_and_html['textContent'], $text_and_html_debug['textContent']);
+
   }
 
 }

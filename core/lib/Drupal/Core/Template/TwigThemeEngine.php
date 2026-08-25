@@ -52,8 +52,8 @@ class TwigThemeEngine implements ThemeEngineInterface {
         'debug_suffix' => '',
       ];
 
-      $output['debug_prefix'] .= "\n\n<!-- THEME DEBUG -->";
-      $output['debug_prefix'] .= "\n<!-- THEME HOOK: '" . Html::escape($variables['theme_hook_original']) . "' -->";
+      $output['debug_prefix'] .= "<!--\n\nTHEME DEBUG -->";
+      $output['debug_prefix'] .= "<!--\nTHEME HOOK: '" . Html::escape($variables['theme_hook_original']) . "' -->";
       // If there are theme suggestions, reverse the array so more specific
       // suggestions are shown first.
       if (!empty($variables['theme_hook_suggestions'])) {
@@ -100,10 +100,10 @@ class TwigThemeEngine implements ThemeEngineInterface {
           }
           $suggestion = $prefix . ' ' . $template;
         }
-        $output['debug_info'] .= "\n<!-- FILE NAME SUGGESTIONS:\n   " . Html::escape(implode("\n   ", $suggestions)) . "\n-->";
+        $output['debug_info'] .= "<!--\nFILE NAME SUGGESTIONS:\n   " . Html::escape(implode("\n   ", $suggestions)) . "\n-->";
 
         if (!empty($invalid_suggestions)) {
-          $output['debug_info'] .= "\n<!-- INVALID FILE NAME SUGGESTIONS:";
+          $output['debug_info'] .= "<!--\nINVALID FILE NAME SUGGESTIONS:";
           $output['debug_info'] .= "\n   See https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/function/hook_theme_suggestions_alter";
           $output['debug_info'] .= "\n   " . Html::escape(implode("\n   ", $invalid_suggestions));
           $output['debug_info'] .= "\n-->";
@@ -116,8 +116,8 @@ class TwigThemeEngine implements ThemeEngineInterface {
         $template_override_status_output = "💡 BEGIN CUSTOM TEMPLATE OUTPUT";
         $template_override_suffix_output = "END CUSTOM TEMPLATE OUTPUT";
       }
-      $output['debug_info']   .= "\n<!-- " . $template_override_status_output . " from '" . Html::escape($template_file) . "' -->\n";
-      $output['debug_suffix'] .= "\n<!-- " . $template_override_suffix_output . " from '" . Html::escape($template_file) . "' -->\n\n";
+      $output['debug_info']   .= "<!--\n" . $template_override_status_output . " from '" . Html::escape($template_file) . "'\n-->";
+      $output['debug_suffix'] .= "<!--\n" . $template_override_suffix_output . " from '" . Html::escape($template_file) . "'\n\n-->";
       // This output has already been rendered and is therefore considered safe.
       return Markup::create(implode('', $output));
     }

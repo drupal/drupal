@@ -60,7 +60,7 @@ class FilterCaptionTwigDebugTest extends KernelTestBase {
     $expected = '<img src="llama.jpg">' . "\n" . '<figcaption>Loquacious llama!</figcaption>';
     $output = $test($input)->getProcessedText();
     $this->assertStringContainsString($expected, $output);
-    $this->assertStringContainsString("<!-- THEME HOOK: 'filter_caption' -->", $output);
+    $this->assertStringContainsString("<!--\nTHEME HOOK: 'filter_caption' -->", $output);
   }
 
 }
