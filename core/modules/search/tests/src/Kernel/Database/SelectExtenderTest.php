@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\KernelTests\Core\Database;
+namespace Drupal\Tests\search\Kernel\Database;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Query\Select;
@@ -34,44 +34,44 @@ class SelectExtenderTest extends KernelTestBase {
   public static function providerExtend(): array {
     return [
       [
-        'Drupal\Core\Database\Query\PagerSelectExtender',
-        'Drupal\CoreFake\Driver\Database\CoreFake',
-        'Drupal\Core\Database\Query\PagerSelectExtender',
+        'Drupal\search\SearchQuery',
+        'Drupal\SearchFake\Driver\Database\SearchFake',
+        'Drupal\search\SearchQuery',
       ],
       [
-        'Drupal\Core\Database\Query\PagerSelectExtender',
-        'Drupal\CoreFake\Driver\Database\CoreFake',
-        '\Drupal\Core\Database\Query\PagerSelectExtender',
+        'Drupal\search\SearchQuery',
+        'Drupal\SearchFake\Driver\Database\SearchFake',
+        '\Drupal\search\SearchQuery',
       ],
       [
-        'Drupal\Core\Database\Query\TableSortExtender',
-        'Drupal\CoreFake\Driver\Database\CoreFake',
-        'Drupal\Core\Database\Query\TableSortExtender',
+        'Drupal\search\ViewsSearchQuery',
+        'Drupal\SearchFake\Driver\Database\SearchFake',
+        'Drupal\search\ViewsSearchQuery',
       ],
       [
-        'Drupal\Core\Database\Query\TableSortExtender',
-        'Drupal\CoreFake\Driver\Database\CoreFake',
-        '\Drupal\Core\Database\Query\TableSortExtender',
+        'Drupal\search\ViewsSearchQuery',
+        'Drupal\SearchFake\Driver\Database\SearchFake',
+        '\Drupal\search\ViewsSearchQuery',
       ],
       [
-        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\PagerSelectExtender',
-        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
-        'Drupal\Core\Database\Query\PagerSelectExtender',
+        'Drupal\search_fake\Driver\Database\SearchFakeWithAllCustomClasses\SearchQuery',
+        'Drupal\search_fake\Driver\Database\SearchFakeWithAllCustomClasses',
+        'Drupal\search\SearchQuery',
       ],
       [
-        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\PagerSelectExtender',
-        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
-        '\Drupal\Core\Database\Query\PagerSelectExtender',
+        'Drupal\search_fake\Driver\Database\SearchFakeWithAllCustomClasses\SearchQuery',
+        'Drupal\search_fake\Driver\Database\SearchFakeWithAllCustomClasses',
+        '\Drupal\search\SearchQuery',
       ],
       [
-        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\TableSortExtender',
-        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
-        'Drupal\Core\Database\Query\TableSortExtender',
+        'Drupal\search_fake\Driver\Database\SearchFakeWithAllCustomClasses\ViewsSearchQuery',
+        'Drupal\search_fake\Driver\Database\SearchFakeWithAllCustomClasses',
+        'Drupal\search\ViewsSearchQuery',
       ],
       [
-        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses\TableSortExtender',
-        'Drupal\core_fake\Driver\Database\CoreFakeWithAllCustomClasses',
-        '\Drupal\Core\Database\Query\TableSortExtender',
+        'Drupal\search_fake\Driver\Database\SearchFakeWithAllCustomClasses\ViewsSearchQuery',
+        'Drupal\search_fake\Driver\Database\SearchFakeWithAllCustomClasses',
+        '\Drupal\search\ViewsSearchQuery',
       ],
     ];
   }
@@ -85,8 +85,8 @@ class SelectExtenderTest extends KernelTestBase {
   #[DataProvider('providerExtend')]
   public function testExtend(string $expected, string $namespace, string $extend): void {
     $additional_class_loader = new ClassLoader();
-    $additional_class_loader->addPsr4("Drupal\\core_fake\\Driver\\Database\\coreFake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/core_fake/src/Driver/Database/CoreFake");
-    $additional_class_loader->addPsr4("Drupal\\core_fake\\Driver\\Database\\CoreFakeWithAllCustomClasses\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/core_fake/src/Driver/Database/CoreFakeWithAllCustomClasses");
+    $additional_class_loader->addPsr4("Drupal\\search_fake\\Driver\\Database\\SearchFake\\", __DIR__ . "/../../../modules/search_fake/src/Driver/Database/SearchFake");
+    $additional_class_loader->addPsr4("Drupal\\search_fake\\Driver\\Database\\SearchFakeWithAllCustomClasses\\", __DIR__ . "/../../../modules/search_fake/src/Driver/Database/SearchFakeWithAllCustomClasses");
     $additional_class_loader->register(TRUE);
 
     $connection = new StubConnection($this->createStub(\PDO::class), ['namespace' => $namespace]);
