@@ -1247,6 +1247,8 @@ final class HTMLRestrictions {
       array_push($readable, $joined);
     }
     assert(Inspector::assertAllStrings($readable));
+
+    sort($readable);
     return $readable;
   }
 

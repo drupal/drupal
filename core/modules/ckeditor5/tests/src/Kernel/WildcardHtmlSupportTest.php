@@ -203,12 +203,6 @@ class WildcardHtmlSupportTest extends KernelTestBase {
         ['<$text-container data-llama>', '<div>', '<mark>', '<abbr title>'],
         [
           [
-            'name' => 'div',
-          ],
-          [
-            'name' => 'mark',
-          ],
-          [
             'name' => 'abbr',
             'attributes' => [
               [
@@ -216,6 +210,12 @@ class WildcardHtmlSupportTest extends KernelTestBase {
                 'value' => TRUE,
               ],
             ],
+          ],
+          [
+            'name' => 'div',
+          ],
+          [
+            'name' => 'mark',
           ],
           [
             'name' => 'p',

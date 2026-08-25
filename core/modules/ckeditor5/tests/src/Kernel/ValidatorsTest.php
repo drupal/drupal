@@ -994,7 +994,7 @@ class ValidatorsTest extends KernelTestBase {
           'status' => TRUE,
           'weight' => 0,
           'settings' => [
-            'allowed_html' => "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <p> <br>",
+            'allowed_html' => "<a href hreflang> <blockquote cite> <cite> <code> <dd> <dl> <dt> <em> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <li> <ol start type='1 A I'> <strong> <ul type> <p> <br>",
             'filter_html_help' => TRUE,
             'filter_html_nofollow' => TRUE,
           ],
@@ -1003,8 +1003,8 @@ class ValidatorsTest extends KernelTestBase {
       'expected_violations' => [
         'filters.filter_html' => sprintf(
           'The current CKEditor 5 build requires the following elements and attributes: <br><code>%s</code><br>The following elements are not supported: <br><code>%s</code>',
-          Html::escape('<br> <p> <* dir="ltr rtl" lang>'),
-          Html::escape('<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type="1 A I"> <li> <dl> <dt> <dd> <h2 id="jump-*"> <h3 id> <h4 id> <h5 id> <h6 id>'),
+          Html::escape('<* dir="ltr rtl" lang> <br> <p>'),
+          Html::escape('<a href hreflang> <blockquote cite> <cite> <code> <dd> <dl> <dt> <em> <h2 id="jump-*"> <h3 id> <h4 id> <h5 id> <h6 id> <li> <ol start type="1 A I"> <strong> <ul type>'),
         ),
       ],
     ];
@@ -1025,7 +1025,7 @@ class ValidatorsTest extends KernelTestBase {
           'status' => TRUE,
           'weight' => 0,
           'settings' => [
-            'allowed_html' => "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id>",
+            'allowed_html' => "<a href hreflang> <blockquote cite> <cite> <code> <dd> <dl> <dt> <em> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <li> <ol start type='1 A I'> <strong> <ul type>",
             'filter_html_help' => TRUE,
             'filter_html_nofollow' => TRUE,
           ],
@@ -1335,7 +1335,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'expected_violations' => [
-        'filters.filter_html' => 'The current CKEditor 5 build requires the following elements and attributes: <br><code>&lt;br&gt; &lt;p onhover style&gt; &lt;* dir=&quot;ltr rtl&quot; lang&gt; &lt;img on*&gt; &lt;blockquote style&gt; &lt;marquee&gt; &lt;a onclick=&quot;javascript:*&quot;&gt; &lt;code style=&quot;foo: bar;&quot;&gt;</code><br>The following elements are missing: <br><code>&lt;p onhover style&gt; &lt;img on*&gt; &lt;blockquote style&gt; &lt;code style=&quot;foo: bar;&quot;&gt;</code>',
+        'filters.filter_html' => 'The current CKEditor 5 build requires the following elements and attributes: <br><code>&lt;* dir=&quot;ltr rtl&quot; lang&gt; &lt;a onclick=&quot;javascript:*&quot;&gt; &lt;blockquote style&gt; &lt;br&gt; &lt;code style=&quot;foo: bar;&quot;&gt; &lt;img on*&gt; &lt;marquee&gt; &lt;p onhover style&gt;</code><br>The following elements are missing: <br><code>&lt;blockquote style&gt; &lt;code style=&quot;foo: bar;&quot;&gt; &lt;img on*&gt; &lt;p onhover style&gt;</code>',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;p onhover&gt;</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.1' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;img on*&gt;</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.2' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;blockquote style&gt;</em>.',
