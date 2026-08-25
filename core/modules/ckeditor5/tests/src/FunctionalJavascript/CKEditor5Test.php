@@ -85,7 +85,7 @@ class CKEditor5Test extends CKEditor5TestBase {
 
     $this->addNewTextFormat();
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
-    $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', '<br> <p> <h2> <h3> <h4> <h5> <h6> <strong> <em>');
+    $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', '<br> <em> <h2> <h3> <h4> <h5> <h6> <p> <strong>');
 
     $this->drupalGet('node/add/page');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-heading-dropdown button'));
@@ -123,7 +123,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     $page->uncheckField('editor[settings][plugins][ckeditor5_heading][enabled_headings][heading4]');
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][ckeditor5_heading][enabled_headings][heading4]'));
-    $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', '<br> <p> <h1> <h3> <h5> <h6> <strong> <em>');
+    $this->assertHtmlEsqueFieldValueEquals('filters[filter_html][settings][allowed_html]', '<br> <em> <h1> <h3> <h5> <h6> <p> <strong>');
     $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][ckeditor5_heading][enabled_headings][heading4]'));
 
     $page->pressButton('Save configuration');

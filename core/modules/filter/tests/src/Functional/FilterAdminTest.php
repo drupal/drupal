@@ -228,7 +228,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $restricted);
     $this->drupalGet('admin/config/content/formats/manage/' . $restricted);
     // Check that the allowed HTML tag was added and the string reformatted.
-    $this->assertSession()->fieldValueEquals('filters[filter_html][settings][allowed_html]', "<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>");
+    $this->assertSession()->fieldValueEquals('filters[filter_html][settings][allowed_html]', "<a> <cite> <code> <dd> <dl> <dt> <em> <li> <ol> <quote> <strong> <ul>");
     $this->assertSession()->elementExists('xpath', "//select[@name='filters[" . $first_filter . "][weight]']/following::select[@name='filters[" . $second_filter . "][weight]']");
 
     // Reorder filters.
@@ -342,7 +342,7 @@ class FilterAdminTest extends BrowserTestBase {
     // Clean up.
     // Allowed tags.
     $edit = [];
-    $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>';
+    $edit['filters[filter_html][settings][allowed_html]'] = '<a> <cite> <code> <dd> <dl> <dt> <em> <li> <ol> <strong> <ul>';
     $this->drupalGet('admin/config/content/formats/manage/' . $basic);
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $basic);

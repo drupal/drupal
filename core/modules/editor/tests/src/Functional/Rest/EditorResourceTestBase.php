@@ -51,7 +51,7 @@ abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <a> <b> <lo>',
+            'allowed_html' => '<a> <b> <lo> <p>',
           ],
         ],
       ],

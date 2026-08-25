@@ -89,7 +89,7 @@ abstract class MediaEmbedFilterTestBase extends MediaJavascriptTestBase {
         'filter_caption_status' => FALSE,
         'filter_html_image_secure_status' => FALSE,
         'media_embed' => TRUE,
-        'allowed_html' => "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <drupal-media>",
+        'allowed_html' => "<a href hreflang> <blockquote cite> <cite> <code> <dd> <dl> <dt> <em> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <li> <ol start type='1 A I'> <strong> <ul type> <drupal-media>",
         'expected_error_message' => 'The <drupal-media> tag in the allowed HTML tags is missing the following attributes: data-entity-type, data-entity-uuid.',
       ],
       'Tests validation when drupal-media element lacks some required attributes.' => [
@@ -98,7 +98,7 @@ abstract class MediaEmbedFilterTestBase extends MediaJavascriptTestBase {
         'filter_caption_status' => FALSE,
         'filter_html_image_secure_status' => FALSE,
         'media_embed' => TRUE,
-        'allowed_html' => "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <drupal-media data-entity-uuid data-align>",
+        'allowed_html' => "<a href hreflang> <blockquote cite> <cite> <code> <dd> <dl> <dt> <em> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <li> <ol start type='1 A I'> <strong> <ul type> <drupal-media data-entity-uuid data-align>",
         'expected_error_message' => 'The <drupal-media> tag in the allowed HTML tags is missing the following attributes: data-entity-type.',
       ],
       'Tests validation when both filter_html and media_embed are enabled and configured correctly' => [
@@ -107,7 +107,7 @@ abstract class MediaEmbedFilterTestBase extends MediaJavascriptTestBase {
         'filter_caption_status' => FALSE,
         'filter_html_image_secure_status' => FALSE,
         'media_embed' => TRUE,
-        'allowed_html' => "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <drupal-media data-entity-type data-entity-uuid data-view-mode>",
+        'allowed_html' => "<a href hreflang> <blockquote cite> <cite> <code> <dd> <dl> <dt> <em> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <li> <ol start type='1 A I'> <strong> <ul type> <drupal-media data-entity-type data-entity-uuid data-view-mode>",
         'expected_error_message' => FALSE,
       ],
       'Order validation: media_embed before all filters' => [
@@ -116,7 +116,7 @@ abstract class MediaEmbedFilterTestBase extends MediaJavascriptTestBase {
         'filter_caption_status' => TRUE,
         'filter_html_image_secure_status' => TRUE,
         'media_embed' => '-5',
-        'allowed_html' => "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <drupal-media data-entity-type data-entity-uuid data-view-mode>",
+        'allowed_html' => "<a href hreflang> <blockquote cite> <cite> <code> <dd> <dl> <dt> <em> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <li> <ol start type='1 A I'> <strong> <ul type> <drupal-media data-entity-type data-entity-uuid data-view-mode>",
         'expected_error_message' => 'The Embed media filter needs to be placed after the following filters: Align images, Caption images, Restrict images to this site.',
       ],
       'Order validation: media_embed before filter_align' => [
@@ -152,7 +152,7 @@ abstract class MediaEmbedFilterTestBase extends MediaJavascriptTestBase {
         'filter_caption_status' => TRUE,
         'filter_html_image_secure_status' => TRUE,
         'media_embed' => '5',
-        'allowed_html' => "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <drupal-media data-entity-type data-entity-uuid data-view-mode>",
+        'allowed_html' => "<a href hreflang> <blockquote cite> <cite> <code> <dd> <dl> <dt> <em> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <li> <ol start type='1 A I'> <strong> <ul type> <drupal-media data-entity-type data-entity-uuid data-view-mode>",
         'expected_error_message' => 'The Embed media filter needs to be placed after the Restrict images to this site filter.',
       ],
     ];

@@ -27,7 +27,7 @@ use Masterminds\HTML5\Parser\Tokenizer;
   type: FilterInterface::TYPE_HTML_RESTRICTOR,
   weight: -10,
   settings: [
-    "allowed_html" => "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id>",
+    "allowed_html" => "<a href hreflang> <blockquote cite> <cite> <code> <dd> <dl> <dt> <em> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id> <li> <ol start type='1 A I'> <strong> <ul type>",
     "filter_html_help" => TRUE,
     "filter_html_nofollow" => FALSE,
   ],
@@ -73,10 +73,39 @@ class FilterHtml extends FilterBase {
       // removes new lines and double spaces so, for consistency when javascript
       // is disabled, remove them.
       $configuration['settings']['allowed_html'] = preg_replace('/\s+/', ' ', $configuration['settings']['allowed_html']);
+
+      $tags = self::sortAllowedHtmlTags($configuration['settings']['allowed_html']);
+
+      $configuration['settings']['allowed_html'] = $tags;
     }
     parent::setConfiguration($configuration);
     // Force restrictions to be calculated again.
     $this->restrictions = NULL;
+  }
+
+  /**
+   * Sort the allowed HTML tags.
+   *
+   * We want to sort the data to make sure that the order of the tags is
+   * consistent. This makes reading diffs a lot easier when exporting config.
+   *
+   * @param string $html_tags
+   *   HTML tags as used by the allowed_html setting.
+   *
+   * @return string
+   *   Sorted string of HTML tags.
+   */
+  public static function sortAllowedHtmlTags(string $html_tags): string {
+    $matches = [];
+    preg_match_all('/<[^>]+>/', $html_tags, $matches);
+
+    // Extract the tags into an array.
+    $tags = $matches[0];
+
+    // Sort the tags alphabetically.
+    sort($tags, SORT_STRING);
+
+    return implode(' ', $tags);
   }
 
   /**

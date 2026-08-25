@@ -1386,7 +1386,7 @@ PHP,
             'class' => $text_align_classes,
           ],
         ],
-        'expected_readable_string' => '<p class="text-align-left text-align-center text-align-right text-align-justify"> <h2 class="text-align-left text-align-center text-align-right text-align-justify"> <h3 class="text-align-left text-align-center text-align-right text-align-justify"> <h4 class="text-align-left text-align-center text-align-right text-align-justify"> <h5 class="text-align-left text-align-center text-align-right text-align-justify"> <h6 class="text-align-left text-align-center text-align-right text-align-justify">',
+        'expected_readable_string' => '<h2 class="text-align-left text-align-center text-align-right text-align-justify"> <h3 class="text-align-left text-align-center text-align-right text-align-justify"> <h4 class="text-align-left text-align-center text-align-right text-align-justify"> <h5 class="text-align-left text-align-center text-align-right text-align-justify"> <h6 class="text-align-left text-align-center text-align-right text-align-justify"> <p class="text-align-left text-align-center text-align-right text-align-justify">',
       ],
       'alignment and heading, but all class values allowed for headings' => [
         'plugins' => [
@@ -1423,7 +1423,7 @@ PHP,
             'class' => TRUE,
           ],
         ],
-        'expected_readable_string' => '<p class="text-align-left text-align-center text-align-right text-align-justify"> <h2 class> <h3 class> <h4 class> <h5 class> <h6 class> <h1 class>',
+        'expected_readable_string' => '<h1 class> <h2 class> <h3 class> <h4 class> <h5 class> <h6 class> <p class="text-align-left text-align-center text-align-right text-align-justify">',
       ],
       'heading text container combo' => [
         'plugins' => [
@@ -1446,7 +1446,7 @@ PHP,
             'data-everytextcontainer' => TRUE,
           ],
         ],
-        'expected_readable_string' => '<p data-everytextcontainer> <h1 data-justheading data-everytextcontainer>',
+        'expected_readable_string' => '<h1 data-justheading data-everytextcontainer> <p data-everytextcontainer>',
       ],
       'headings plus headings with attributes' => [
         'plugins' => [
@@ -1482,7 +1482,7 @@ PHP,
             'data-just-h1' => TRUE,
           ],
         ],
-        'expected_readable_string' => '<h2 class="additional-allowed-class"> <h3 data-just-h3 data-just-h3-limited="i-am-the-only-allowed-value"> <h4> <h5 data-just-h5-limited="first-allowed-value second-allowed-value"> <h6> <h1 data-just-h1>',
+        'expected_readable_string' => '<h1 data-just-h1> <h2 class="additional-allowed-class"> <h3 data-just-h3 data-just-h3-limited="i-am-the-only-allowed-value"> <h4> <h5 data-just-h5-limited="first-allowed-value second-allowed-value"> <h6>',
       ],
       'headings plus headings with attributes and alignment' => [
         'plugins' => [
@@ -1524,7 +1524,7 @@ PHP,
             'class' => $text_align_classes,
           ],
         ],
-        'expected_readable_string' => '<h2 class="additional-allowed-class text-align-left text-align-center text-align-right text-align-justify"> <h3 data-just-h3 data-just-h3-limited="i-am-the-only-allowed-value" class="text-align-left text-align-center text-align-right text-align-justify"> <h4 class="text-align-left text-align-center text-align-right text-align-justify"> <h5 data-just-h5-limited="first-allowed-value second-allowed-value" class="text-align-left text-align-center text-align-right text-align-justify"> <h6 class="text-align-left text-align-center text-align-right text-align-justify"> <h1 data-just-h1 class="text-align-left text-align-center text-align-right text-align-justify">',
+        'expected_readable_string' => '<h1 data-just-h1 class="text-align-left text-align-center text-align-right text-align-justify"> <h2 class="additional-allowed-class text-align-left text-align-center text-align-right text-align-justify"> <h3 data-just-h3 data-just-h3-limited="i-am-the-only-allowed-value" class="text-align-left text-align-center text-align-right text-align-justify"> <h4 class="text-align-left text-align-center text-align-right text-align-justify"> <h5 data-just-h5-limited="first-allowed-value second-allowed-value" class="text-align-left text-align-center text-align-right text-align-justify"> <h6 class="text-align-left text-align-center text-align-right text-align-justify">',
       ],
     ];
   }
