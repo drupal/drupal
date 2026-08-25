@@ -36,6 +36,7 @@ class ServiceProviderTest extends KernelTestBase {
       ->register('cache_factory', CacheFactory::class)
       ->addArgument(new Reference('settings'))
       ->addArgument(new Parameter('cache_default_bin_backends'))
+      ->addArgument(new Parameter('memory_cache_default_bin_backends'))
       ->addMethodCall('setContainer', [new Reference('service_container')]);
   }
 

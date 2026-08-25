@@ -4,6 +4,7 @@ namespace Drupal\Core\Update;
 
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -46,29 +47,29 @@ class UpdateRegistry implements EventSubscriberInterface {
   protected static array $loadedFiles = [];
 
   /**
-   * Constructs a new UpdateRegistry.
-   *
-   * @param string $root
-   *   The app root.
-   * @param string $sitePath
-   *   The site path.
-   * @param array $module_list
-   *   An associative array whose keys are the names of installed modules.
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyValue
-   *   The key value store.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
-   * @param string $updateType
-   *   The used update name.
+   * The memory cache.
    */
+  protected MemoryCacheInterface $memoryCache;
+
   public function __construct(
     protected $root,
     protected $sitePath,
     array $module_list,
     protected KeyValueStoreInterface $keyValue,
     ThemeHandlerInterface $theme_handler,
+    MemoryCacheInterface|string|null $memoryCache = NULL,
     protected string $updateType = 'post_update',
   ) {
+    if (is_string($memoryCache)) {
+      $updateType = $memoryCache;
+      $memoryCache = NULL;
+    }
+    if (!isset($memoryCache)) {
+      $memoryCache = \Drupal::service('cache.memory');
+      @trigger_error('Calling ' . __METHOD__ . '() without the $memoryCache argument is deprecated in drupal:11.5.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3618917', E_USER_DEPRECATED);
+    }
+    $this->updateType = $updateType;
+    $this->memoryCache = $memoryCache;
     $this->enabledExtensions = array_merge(array_keys($module_list), array_keys($theme_handler->listInfo()));
   }
 
@@ -243,6 +244,29 @@ class UpdateRegistry implements EventSubscriberInterface {
   }
 
   /**
+   * Discovers all module, theme, and profile extensions.
+   *
+   * @return \Drupal\Core\Extension\Extension[]
+   *   The discovered extensions, keyed by name.
+   */
+  protected function discoverExtensions(): array {
+    $cache_id = 'update_registry.extensions';
+    if ($cache = $this->memoryCache->get($cache_id)) {
+      $extensions = $cache->data;
+    }
+    else {
+      $extension_discovery = new ExtensionDiscovery($this->root, TRUE, [], $this->sitePath);
+      $module_extensions = $extension_discovery->scan('module');
+      $theme_extensions = $this->includeThemes() ? $extension_discovery->scan('theme') : [];
+      $profile_extensions = $extension_discovery->scan('profile');
+      $extensions = array_merge($module_extensions, $theme_extensions, $profile_extensions);
+      $this->memoryCache->set($cache_id, $extensions, tags: ['config:core.extension']);
+    }
+
+    return $extensions;
+  }
+
+  /**
    * Scans all module, theme, and profile extensions and load the update files.
    *
    * @param string|null $extension
@@ -254,12 +278,7 @@ class UpdateRegistry implements EventSubscriberInterface {
       // We've already checked for this file and, if it exists, loaded it.
       return;
     }
-    // Scan for extensions.
-    $extension_discovery = new ExtensionDiscovery($this->root, TRUE, [], $this->sitePath);
-    $module_extensions = $extension_discovery->scan('module');
-    $theme_extensions = $this->includeThemes() ? $extension_discovery->scan('theme') : [];
-    $profile_extensions = $extension_discovery->scan('profile');
-    $extensions = array_merge($module_extensions, $theme_extensions, $profile_extensions);
+    $extensions = $this->discoverExtensions();
 
     // Limit to a single extension.
     if ($extension) {
@@ -323,7 +342,6 @@ class UpdateRegistry implements EventSubscriberInterface {
       // Set the list of enabled extensions correctly so update function
       // discovery works as expected.
       $this->enabledExtensions = $new_extension_list;
-
       foreach ($uninstalled_extensions as $uninstalled_extension) {
         $this->filterOutInvokedUpdatesByExtension($uninstalled_extension);
       }
