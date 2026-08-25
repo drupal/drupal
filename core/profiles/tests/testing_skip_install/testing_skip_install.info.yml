@@ -1,0 +1,6 @@
+name: Testing skip install
+type: profile
+description: 'An install profile that opts out of being installed.'
+version: VERSION
+hidden: true
+opt_out_install: true

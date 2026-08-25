@@ -31,6 +31,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    */
   protected static $modules = [
     'block_content',
+    'body_field',
     'field_ui',
     'layout_builder',
     'layout_test',

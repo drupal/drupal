@@ -27,6 +27,11 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $profile = 'testing_locale';
+
+  /**
    * Tests update changes configuration translations if enabled after language.
    */
   public function testConfigTranslationImport(): void {

@@ -24,6 +24,11 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
 
   /**
    * {@inheritdoc}
+   */
+  protected $profile = 'testing_locale';
+
+  /**
+   * {@inheritdoc}
    *
    * Configures a preexisting settings.php file without an install_profile
    * setting before invoking the interactive installer.
@@ -70,7 +75,7 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
   public function testInstaller(): void {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertEquals('testing', \Drupal::installProfile());
+    $this->assertEquals('testing_locale', \Drupal::installProfile());
   }
 
 }

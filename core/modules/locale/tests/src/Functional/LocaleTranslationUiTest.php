@@ -32,6 +32,11 @@ class LocaleTranslationUiTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $profile = 'testing_locale';
+
+  /**
+   * {@inheritdoc}
+   */
   protected $defaultTheme = 'stark';
 
   /**

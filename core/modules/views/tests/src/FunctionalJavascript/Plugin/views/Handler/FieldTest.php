@@ -25,6 +25,7 @@ class FieldTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'body_field',
     'node',
     'views',
     'views_ui',

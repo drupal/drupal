@@ -34,12 +34,18 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     'node',
     'views',
     'views_ui',
+    'body_field',
   ];
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $profile = 'testing_locale';
 
   /**
    * Languages to enable.

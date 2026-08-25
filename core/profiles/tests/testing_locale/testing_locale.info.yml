@@ -1,0 +1,5 @@
+name: Testing locale
+type: profile
+description: 'Minimal profile with additional locale config.'
+version: VERSION
+hidden: true

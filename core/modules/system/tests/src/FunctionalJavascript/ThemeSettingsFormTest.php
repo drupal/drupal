@@ -28,6 +28,11 @@ class ThemeSettingsFormTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $profile = 'testing_locale';
+
+  /**
+   * {@inheritdoc}
+   */
   protected $defaultTheme = 'stark';
 
   /**

@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the testing_skip_install profile.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_install().
+ *
+ * Throw an exception so that tests will fail if this profile is installed.
+ */
+function testing_skip_install_install(): void {
+  throw new \Exception("If you're close enough to read this you're driving too fast");
+}

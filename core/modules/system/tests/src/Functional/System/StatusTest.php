@@ -34,6 +34,11 @@ class StatusTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $profile = 'testing_locale';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -220,7 +225,7 @@ class StatusTest extends BrowserTestBase {
 
     // Check that the installation profile information is displayed.
     $this->drupalGet('admin/reports/status');
-    $this->assertSession()->pageTextContains('Testing (testing-' . \Drupal::VERSION . ')');
+    $this->assertSession()->pageTextContains('Testing locale (testing_locale-' . \Drupal::VERSION . ')');
 
     // Check if pg_trgm extension is enabled on postgres.
     if (\Drupal::database()->databaseType() == 'pgsql') {

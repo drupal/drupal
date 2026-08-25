@@ -216,7 +216,8 @@ function drupal_install_system($install_state): void {
   // Store the installation profile in configuration to populate the
   // 'install_profile' container parameter.
   $config = \Drupal::configFactory()->getEditable('core.extension');
-  if ($install_state['parameters']['profile'] === FALSE) {
+  if ($install_state['parameters']['profile'] === FALSE
+    || !empty($install_state['profile_info']['opt_out_install'])) {
     $config->clear('profile');
   }
   else {

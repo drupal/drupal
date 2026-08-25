@@ -1705,7 +1705,9 @@ function install_install_profile(&$install_state): void {
   // any disparities that this creates.
   \Drupal::service('config.installer')->installOptionalConfig();
 
-  \Drupal::service('module_installer')->install([$install_state['parameters']['profile']], FALSE);
+  if (empty($install_state['profile_info']['opt_out_install'])) {
+    \Drupal::service('module_installer')->install([$install_state['parameters']['profile']], FALSE);
+  }
 
   // Ensure that the install profile's theme is used.
   // @see _drupal_maintenance_theme()
