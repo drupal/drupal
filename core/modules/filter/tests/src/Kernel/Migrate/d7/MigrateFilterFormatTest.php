@@ -116,7 +116,7 @@ class MigrateFilterFormatTest extends MigrateDrupal7TestBase implements MigrateD
     $format = FilterFormat::load('filtered_html');
     $this->assertInstanceOf(FilterFormatInterface::class, $format);
     $config = $format->filters('filter_html')->getConfiguration();
-    $this->assertSame('<div> <span> <ul type> <li> <ol start type> <a href hreflang> <img src alt height width>', $config['settings']['allowed_html']);
+    $this->assertSame('<a href hreflang> <div> <img src alt height width> <li> <ol start type> <span> <ul type>', $config['settings']['allowed_html']);
     $config = $format->filters('filter_url')->getConfiguration();
     $this->assertSame(128, $config['settings']['filter_url_length']);
 
