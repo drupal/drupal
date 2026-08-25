@@ -1165,12 +1165,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // a response header.
       $element['#attached']['drupalSettings']['ajaxTrustedUrl'][$element['#action']] = TRUE;
 
-      // If a form contains a single textfield, and the ENTER key is pressed
-      // within it, Internet Explorer submits the form with no POST data
-      // identifying any submit button. Other browsers submit POST data as
-      // though the user clicked the first button. Therefore, to be as
-      // consistent as we can be across browsers, if no 'triggering_element' has
-      // been identified yet, default it to the first button.
+      // A form submission can contain no data identifying a submit button,
+      // for example when a form is submitted via GET, or when the ENTER key
+      // is pressed within a single textfield. If no triggering element has
+      // been identified, default it to the first button to keep form
+      // processing consistent with submissions that include button data.
       $buttons = $form_state->getButtons();
       if (!$form_state->isProgrammed() && !$form_state->getTriggeringElement() && !empty($buttons)) {
         $form_state->setTriggeringElement($buttons[0]);
