@@ -1,0 +1,8 @@
+standard.welcome:
+  path: '/admin/welcome'
+  defaults:
+    _controller: '\Drupal\standard\Controller\WelcomeController::welcome'
+    _title: 'Welcome to Drupal Core'
+  requirements:
+    _custom_access: '\Drupal\standard\Controller\WelcomeController::access'
+    _permission: 'access administration pages'

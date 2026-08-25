@@ -34,6 +34,8 @@ global-styling:
       css/components/container-inline.css: {}
       css/components/container-inline.module.css: {}
       css/components/breadcrumb.css: {}
+      css/components/button.css: {}
+      css/components/user-login-block.css: {}
       css/components/details.css: {}
       css/components/divider.css: {}
       css/components/messages.css: {}

@@ -2,3 +2,13 @@ standard.front_page:
   title: 'Home'
   route_name: '<front>'
   menu_name: main
+
+standard.welcome:
+  title: 'Welcome'
+  description: 'Learn about Drupal Core and Drupal CMS.'
+  route_name: standard.welcome
+  parent: system.admin
+  weight: -15
+  options:
+    icon:
+      icon_id: signpost

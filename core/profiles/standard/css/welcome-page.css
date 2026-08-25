@@ -1,0 +1,79 @@
+/*
+ * @file
+ * Welcome page styling.
+ */
+
+.welcome-page {
+  --welcome-page-border: var(--admin-color-border, #d8dde7);
+  --welcome-page-surface: var(--admin-color-bg-header, #eef0f9);
+  --welcome-page-radius: var(--admin-radius-m, 0px);
+  --welcome-page-product-background: var(--admin-color-bg-surface, transparent);
+}
+
+.welcome-page__intro {
+  margin-block-end: 2rem;
+}
+
+.welcome-page__logo {
+  display: block;
+  max-width: min(12rem, 32vw);
+  margin: 0 auto 1rem;
+
+  @media (min-width: 48rem) {
+    float: inline-end;
+    max-width: 10rem;
+    margin: 0 0 1rem;
+    margin-inline-start: 2.5rem;
+  }
+}
+
+.welcome-page__products {
+  display: grid;
+  gap: 1.5rem;
+  margin-block: 2rem;
+  clear: both;
+
+  @media (min-width: 48rem) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    align-items: stretch;
+  }
+}
+
+.welcome-page__product {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border: 1px solid var(--welcome-page-border);
+  border-radius: var(--welcome-page-radius);
+  background: var(--welcome-page-product-background);
+
+  ul,
+  ol {
+    margin-bottom: 0;
+  }
+
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.welcome-page__eyebrow {
+  margin: 0 0 0.5rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.welcome-page__tip {
+  margin-block: 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--welcome-page-border);
+  border-radius: var(--welcome-page-radius);
+  background: var(--welcome-page-surface);
+}
+
+.welcome-page__tip-content > :last-child {
+  margin-bottom: 0;
+}

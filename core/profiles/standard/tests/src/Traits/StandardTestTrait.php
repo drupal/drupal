@@ -17,6 +17,7 @@ use Drupal\Tests\RequirementsPageTrait;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -37,10 +38,34 @@ trait StandardTestTrait {
    * Tests Standard installation profile or recipe.
    */
   public function testStandard(): void {
-    $this->drupalGet('');
-    $this->assertSession()->pageTextContains('Powered by Drupal');
+    // Assert the configured front page and derive expected anonymous status.
+    // - /admin/welcome: Standard profile front page. 403 while the route
+    //   exists; 404 after the profile was uninstalled.
+    // - /user/login: Standard recipe front page for anonymous users.
+    $front_page_path = (string) $this->config('system.site')->get('page.front');
+    $this->assertContains($front_page_path, ['/admin/welcome', '/user/login']);
+    try {
+      \Drupal::service('router.route_provider')->getRouteByName('standard.welcome');
+      $has_standard_welcome_route = TRUE;
+    }
+    catch (RouteNotFoundException) {
+      $has_standard_welcome_route = FALSE;
+    }
+    switch ($front_page_path) {
+      case '/admin/welcome':
+        $expected_anonymous_front_status = $has_standard_welcome_route ? 403 : 404;
+        break;
 
-    // Test anonymous user can access 'Main navigation' block.
+      case '/user/login':
+        $expected_anonymous_front_status = 200;
+        break;
+    }
+
+    $this->drupalGet('');
+    $anonymous_front_status = $this->getSession()->getStatusCode();
+    $this->assertSame($expected_anonymous_front_status, $anonymous_front_status);
+
+    // Test admin users configure and access the main navigation block.
     $this->adminUser = $this->drupalCreateUser([
       'administer nodes',
       'administer blocks',
@@ -48,9 +73,9 @@ trait StandardTestTrait {
     ]);
     $this->drupalLogin($this->adminUser);
     // Configure the block.
-    $this->drupalGet('admin/structure/block/add/system_menu_block:main/olivero');
+    $this->drupalGet('admin/structure/block/add/system_menu_block:main/claro');
     $this->submitForm([
-      'region' => 'sidebar',
+      'region' => 'header',
       'id' => 'main_navigation',
     ], 'Save block');
     // Verify admin user can see the block.
@@ -59,10 +84,12 @@ trait StandardTestTrait {
 
     // Verify we have role = complementary on help_block blocks.
     $this->drupalGet('admin/structure/block');
-    $this->assertSession()->elementAttributeContains('xpath', "//div[@id='block-olivero-help']", 'role', 'complementary');
+    $this->assertSession()->elementAttributeContains('xpath', "//div[@id='block-claro-help']", 'role', 'complementary');
 
-    // Verify anonymous user can see the block.
+    // Verify anonymous visibility on front page in each install mode.
     $this->drupalLogout();
+    $this->drupalGet('');
+    $this->assertSession()->statusCodeEquals($anonymous_front_status);
     $this->assertSession()->pageTextContains('Main navigation');
 
     $this->drupalLogin($this->adminUser);

@@ -1,0 +1,72 @@
+{#
+/**
+ * @file
+ * Theme implementation for the Standard profile welcome page.
+ *
+ * Shown as the default front page after a fresh Standard profile installation.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ */
+#}
+
+{% set drupal_community = 'https://www.drupal.org/community' %}
+{% set drupal_values = 'https://www.drupal.org/about/values-and-principles' %}
+{% set drupal_cms = 'https://drupal.org/drupal-cms' %}
+{% set drupal_user_guide = 'https://www.drupal.org/docs/user_guide/en/index.html' %}
+{% set drupal_themes = 'https://www.drupal.org/project/project_theme' %}
+{% set add_content_type = path('node.type_add') %}
+{% set set_front_page = path('system.site_information_settings') %}
+{% set uninstall_modules = path('system.modules_uninstall') %}
+{% set drupal_extend = 'https://www.drupal.org/docs/extending-drupal' %}
+{% set drupal_events = 'https://www.drupal.org/community/events' %}
+{% set drupal_slack = 'https://www.drupal.org/slack' %}
+{% set drupal_support = 'https://www.drupal.org/support' %}
+{% set drupal_logo = '/' ~ (base_path ~ 'core/misc/logo/drupal-logo.svg')|trim('/') %}
+
+<div{{ attributes.addClass('welcome-page') }}>
+  <div class="text-content">
+    <div class="welcome-page__intro">
+      <img class="welcome-page__logo" src="{{ drupal_logo }}" alt="{% trans %}Drupal logo{% endtrans %}">
+      <p>{% trans %}Drupal is open source software shaped by <a href="{{ drupal_community }}">a worldwide community</a> of site builders, developers, designers, strategists, and content experts with <a href="{{ drupal_values }}">shared values</a>. Our community creates, teaches, supports, and improves Drupal together. As we like to say:{% endtrans %}</p>
+      <blockquote>{% trans %}Come for the code, stay for the community.{% endtrans %}</blockquote>
+      <p>{% trans %}The same community now ships two products. Drupal CMS is built on Drupal Core. You installed Core. Here is the difference:{% endtrans %}</p>
+    </div>
+    <div class="welcome-page__products">
+      <section class="welcome-page__product" aria-labelledby="welcome-page-core-title">
+        <p class="welcome-page__eyebrow">{% trans %}Installed now{% endtrans %}</p>
+        <h2 id="welcome-page-core-title">{% trans %}Drupal Core{% endtrans %}</h2>
+        <p>{% trans %}Drupal Core is the platform for building custom digital experiences. It gives you strong foundations: content modeling, workflows, multilingual publishing, APIs, accessibility, and security.{% endtrans %}</p>
+        <p>{% trans %}It supports low-code and high-code projects, including headless builds, but you decide how the site is assembled. Extra setup is the tradeoff for deeper control.{% endtrans %}</p>
+        <h3>{% trans %}Get started with the site you installed{% endtrans %}</h3>
+        <ol>
+          <li>{% trans %}<a href="{{ add_content_type }}">Build your content model</a> and start creating content.{% endtrans %}</li>
+          <li>{% trans %}<a href="{{ drupal_themes }}">Pick a modern layout tool and component system</a> to shape the look of your site.{% endtrans %}</li>
+          <li>{% trans %}<a href="{{ drupal_extend }}">Extend Drupal</a> with modules for SEO, media management, and the integrations your project needs.{% endtrans %}</li>
+
+        </ol>
+        <p>{% trans %}<a href="{{ drupal_user_guide }}">Read the User Guide</a> for a practical introduction to administering and building a Drupal site.{% endtrans %}</p>
+      </section>
+      <section class="welcome-page__product" aria-labelledby="welcome-page-cms-title">
+        <p class="welcome-page__eyebrow">{% trans %}Faster start{% endtrans %}</p>
+        <h2 id="welcome-page-cms-title">{% trans %}Drupal CMS{% endtrans %}</h2>
+        <p>{% trans %}<a href="{{ drupal_cms }}">Drupal CMS</a> is the faster path when you want Drupal's power with more guidance. Built on Drupal Core, it ships curated defaults, recipes, and site templates that use Drupal Canvas, a modern component-based layout tool.{% endtrans %}</p>
+        <p>{% trans %}It gets you to a working site faster: AI-assisted setup, editorial workflows, and content governance built in, helping teams launch and maintain sites without starting from a blank canvas.{% endtrans %}</p>
+        <h3>{% trans %}Why choose Drupal CMS{% endtrans %}</h3>
+        <ul>
+          <li>{% trans %}Guided setup with sensible defaults.{% endtrans %}</li>
+          <li>{% trans %}Site templates and recipes that speed delivery.{% endtrans %}</li>
+          <li>{% trans %}AI-assisted site building and editorial workflows with people still in control.{% endtrans %}</li>
+          <li>{% trans %}A clearer path to production-ready websites for agencies and teams.{% endtrans %}</li>
+        </ul>
+      </section>
+    </div>
+    <aside class="welcome-page__tip" aria-labelledby="welcome-page-tip-title">
+      <div class="welcome-page__tip-content">
+        <p id="welcome-page-tip-title" class="welcome-page__eyebrow">{% trans %}Tip{% endtrans %}</p>
+        <p><em>{% trans %}To replace this welcome message as your site's default front page, go to <a href="{{ set_front_page }}">Basic site settings</a>. To remove this page altogether, <a href="{{ uninstall_modules }}">Uninstall the Standard profile</a>.{% endtrans %}</em></p>
+      </div>
+    </aside>
+    <p>{% trans %}More questions? <a href="{{ drupal_slack }}">Chat on Slack</a>, <a href="{{ drupal_support }}">get support</a> or join at an <a href="{{ drupal_events }}">upcoming event</a>.{% endtrans %}</p>
+  </div>
+</div>

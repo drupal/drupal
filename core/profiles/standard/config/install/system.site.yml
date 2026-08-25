@@ -6,7 +6,7 @@ slogan: ''
 page:
   403: ''
   404: ''
-  front: /user/login
+  front: /admin/welcome
 weight_select_max: 100
 default_langcode: en
 mail_notification: null

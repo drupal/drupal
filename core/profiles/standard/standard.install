@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall hooks for the Standard profile.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function standard_install(): void {
+  // Mark fresh Standard installs so updated sites don't get the welcome page.
+  \Drupal::state()->set('standard.show_welcome', TRUE);
+}
