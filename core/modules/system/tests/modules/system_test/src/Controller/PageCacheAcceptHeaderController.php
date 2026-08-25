@@ -8,6 +8,7 @@ use Drupal\Core\Cache\CacheableAjaxResponse;
 use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponse;
+use Drupal\Core\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -24,6 +25,11 @@ class PageCacheAcceptHeaderController {
    * @return mixed
    *   The processed response object.
    */
+  #[Route(
+    path: '/system-test/page-cache/accept-header',
+    name: 'system_test.page_cache_accept_header',
+    requirements: ['_access' => 'TRUE'],
+  )]
   public function content(Request $request) {
     if ($request->getRequestFormat() === 'json' && $request->query->get('_wrapper_format') === 'drupal_ajax') {
       $response = new CacheableAjaxResponse(['content' => 'oh hai this is ajax']);
