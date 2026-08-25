@@ -824,6 +824,9 @@ class Htmx {
    * - A polling definition of the form every <timing declaration>
    * - A comma-separated list of such events.
    *
+   * The definition should not be provided by untrusted users. A polling
+   * definition with a very low interval could be used to cause a DDOS attack.
+   *
    * @param string|string[] $triggerDefinition
    *   The trigger definition.
    *
