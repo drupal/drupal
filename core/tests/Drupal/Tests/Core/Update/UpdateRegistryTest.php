@@ -16,6 +16,7 @@ use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -53,6 +54,7 @@ class UpdateRegistryTest extends UnitTestCase {
   /**
    * Tests the deprecated constructor signature.
    */
+  #[IgnoreDeprecations]
   public function testDeprecatedConstructorSignature(): void {
     $container = new ContainerBuilder();
     $container->set('cache.memory', $this->memoryCache);
