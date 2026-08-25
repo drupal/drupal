@@ -2,29 +2,35 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\navigation\Functional;
+namespace Drupal\Tests\navigation\Kernel;
 
 use Drupal\Core\Url;
-use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Tests the default block provider logic.
  */
 #[Group('navigation')]
 #[RunTestsInSeparateProcesses]
-class NavigationDefaultBlockDefinitionTest extends BrowserTestBase {
+class NavigationDefaultBlockDefinitionTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['test_page_test', 'block'];
+  protected static $modules = ['test_page_test', 'block', 'user', 'system', 'layout_discovery', 'layout_builder'];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installEntitySchema('user');
+  }
 
   /**
    * Tests the default block flow enabling Navigation module first.
@@ -35,13 +41,18 @@ class NavigationDefaultBlockDefinitionTest extends BrowserTestBase {
 
     // After installing Navigation, the bar is present, but not the block.
     $module_installer->install(['navigation']);
-    $this->drupalLogin($this->drupalCreateUser(['access navigation']));
+    $this->installConfig(['navigation']);
+    $this->setCurrentUser($this->createUser(['access navigation']));
     $this->drupalGet($test_page_url);
     $this->assertSession()->elementExists('css', '.admin-toolbar');
     $this->assertSession()->elementNotExists('css', '.toolbar-button--icon--test-block');
 
     // After installing Navigation Test Block, both elements are present.
     $module_installer->install(['navigation_test_block']);
+    // Refresh the mink session so we don't have a stale container.
+    // @todo remove after https://www.drupal.org/project/drupal/issues/3609730
+    $this->initMink();
+
     $this->drupalGet($test_page_url);
     $this->assertSession()->elementExists('css', '.admin-toolbar');
     $this->assertSession()->elementContains('css', '.toolbar-button--icon--test-block', 'Test Navigation Block');
@@ -62,7 +73,10 @@ class NavigationDefaultBlockDefinitionTest extends BrowserTestBase {
 
     // After installing Navigation, both elements are present.
     $module_installer->install(['navigation']);
-    $this->drupalLogin($this->drupalCreateUser(['access navigation']));
+    // Refresh the mink session so we don't have a stale container.
+    $this->initMink();
+
+    $this->setCurrentUser($this->createUser(['access navigation']));
     $this->drupalGet($test_page_url);
     $this->assertSession()->elementExists('css', '.admin-toolbar');
     $this->assertSession()->elementContains('css', '.toolbar-button--icon--test-block', 'Test Navigation Block');

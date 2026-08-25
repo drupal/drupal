@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\navigation\Functional;
+namespace Drupal\Tests\navigation\Kernel;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
-use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 // cspell:ignore foobarbaz baznew
 /**
@@ -16,17 +17,22 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('navigation')]
 #[RunTestsInSeparateProcesses]
-class NavigationContentTopTest extends BrowserTestBase {
+class NavigationContentTopTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['navigation', 'navigation_test', 'test_page_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  protected static $modules = [
+    'navigation',
+    'navigation_test',
+    'test_page_test',
+    'user',
+    'system',
+    'layout_builder',
+    'layout_discovery',
+  ];
 
   /**
    * {@inheritdoc}
@@ -34,7 +40,9 @@ class NavigationContentTopTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->drupalLogin($this->createUser([
+    $this->installConfig('navigation');
+    $this->installEntitySchema('user');
+    $this->setCurrentUser($this->createUser([
       'access navigation',
     ]));
   }

@@ -490,6 +490,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
   /**
    * Provides an empty implementation to prevent the resetting of caches.
    */
-  protected function refreshVariables() {}
+  protected function refreshVariables(): void {}
 
 }

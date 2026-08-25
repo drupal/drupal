@@ -32812,12 +32812,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/profiles/demo_umami/modules/demo_umami_content/tests/src/Functional/UninstallDefaultContentTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\standard\\\\FunctionalJavascript\\\\StandardPerformanceTest\\:\\:refreshVariables\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/standard/tests/src/FunctionalJavascript/StandardPerformanceTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\drupal_system_listing_compatible_test\\\\Kernel\\\\SystemListingCrossProfileCompatibleTest\\:\\:testSystemListing\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -33090,12 +33084,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:refreshVariables\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:resetAll\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -33249,12 +33237,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:rebuildContainer\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/BrowserTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:refreshVariables\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 2,
 	'path' => __DIR__ . '/tests/Drupal/Tests/BrowserTestBase.php',
 ];
 $ignoreErrors[] = [

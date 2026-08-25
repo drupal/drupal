@@ -78,6 +78,7 @@ trait HttpKernelUiHelperTrait {
 
     foreach ($headers as $header_name => $header_value) {
       assert(is_string($header_name));
+      assert(!is_null($header_name));
 
       $session->setRequestHeader($header_name, $header_value);
     }
@@ -85,6 +86,7 @@ trait HttpKernelUiHelperTrait {
     $session->visit($path);
 
     $out = $session->getPage()->getContent();
+    $this->content = $out;
 
     if ($this->htmlOutputEnabled) {
       $html_output = 'GET request to: ' . $path;
@@ -182,6 +184,10 @@ trait HttpKernelUiHelperTrait {
    * Initializes Mink sessions.
    *
    * Helper for static::getSession().
+   *
+   * This should be called after changes to the service container, such as
+   * installing modules, as otherwise it will contain a reference to a stale
+   * container.
    */
   protected function initMink(): void {
     $driver = $this->getDefaultDriverInstance();
