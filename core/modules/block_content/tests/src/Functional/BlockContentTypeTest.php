@@ -235,7 +235,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
       ->getStorage('block_content');
 
     // Install all themes.
-    $themes = ['olivero', 'stark', 'claro'];
+    $themes = ['stark', 'claro'];
     \Drupal::service('theme_installer')->install($themes);
     $theme_settings = $this->config('system.theme');
     foreach ($themes as $default_theme) {

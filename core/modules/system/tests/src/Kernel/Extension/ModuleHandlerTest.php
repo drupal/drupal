@@ -338,10 +338,10 @@ class ModuleHandlerTest extends KernelTestBase {
   public function testThemeMetaData(): void {
     // Generate the list of available themes.
     $themes = \Drupal::service('extension.list.theme')->reset()->getList();
-    // Check that the mtime field exists for the olivero theme.
-    $this->assertNotEmpty($themes['olivero']->info['mtime'], 'The olivero.info.yml file modification time field is present.');
+    // Check that the mtime field exists for the Stark theme.
+    $this->assertNotEmpty($themes['stark']->info['mtime'], 'The stark.info.yml file modification time field is present.');
     // Use 0 if mtime isn't present, to avoid an array index notice.
-    $test_mtime = !empty($themes['olivero']->info['mtime']) ? $themes['olivero']->info['mtime'] : 0;
+    $test_mtime = !empty($themes['stark']->info['mtime']) ? $themes['stark']->info['mtime'] : 0;
     // Ensure the mtime field contains a number that is greater than zero.
     $this->assertIsNumeric($test_mtime);
     $this->assertGreaterThan(0, $test_mtime);

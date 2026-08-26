@@ -59,7 +59,7 @@ module.exports = {
   test_settings: {
     default: {
       globals: {
-        defaultTheme: 'olivero',
+        defaultTheme: 'stark',
         adminTheme: 'claro',
       },
       selenium_port: process.env.DRUPAL_TEST_WEBDRIVER_PORT,
