@@ -37,7 +37,9 @@ class ToolbarHooks {
     switch ($route_name) {
       case 'help.page.toolbar':
         $output = '<h2>' . $this->t('About') . '</h2>';
-        $output .= '<p>' . $this->t('The Toolbar module provides a toolbar for site administrators, which displays tabs and trays provided by the Toolbar module itself and other modules. For more information, see the <a href=":toolbar_docs">online documentation for the Toolbar module</a>.', [':toolbar_docs' => 'https://www.drupal.org/docs/8/core/modules/toolbar']) . '</p>';
+        $output .= '<p>' . $this->t('The Toolbar module provides a toolbar for site administrators to navigate the menu system to find pages for administrative tasks. The menu displays tabs and trays provided by the Toolbar module itself and other modules. The toolbar displays on the top or left side of the page (right side in right-to-left languages).') . '</p>';
+        $output .= '<p>' . $this->t('If you have the Announcements module enabled, you will see a direct link to announcements in the toolbar.') . '</p>';
+        $output .= '<p>' . $this->t('For more information, see the <a href=":toolbar_docs">online documentation for the Toolbar module</a>.', [':toolbar_docs' => 'https://www.drupal.org/docs/8/core/modules/toolbar']) . '</p>';
         $output .= '<h4>' . $this->t('Terminology') . '</h4>';
         $output .= '<dl>';
         $output .= '<dt>' . $this->t('Tabs') . '</dt>';
