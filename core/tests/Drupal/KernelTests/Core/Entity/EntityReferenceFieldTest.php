@@ -138,6 +138,52 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests fiber suspension with isset on reference field item list properties.
+   */
+  public function testEntityReferenceListIssetFiberSuspension(): void {
+    $referenced_entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->referencedEntityType)
+      ->create(['type' => $this->bundle]);
+    $referenced_entity->save();
+
+    $storage = $this->container->get('entity_type.manager')->getStorage($this->entityType);
+
+    $entity = $storage->create(['type' => $this->bundle]);
+    $entity->{$this->fieldName}->target_id = $referenced_entity->id();
+    $entity->save();
+
+    $entity = $storage->load($entity->id());
+
+    $fiber = new \Fiber(fn() => isset($entity->{$this->fieldName}->entity));
+    $fiber->start();
+    $this->assertTrue(isset($entity->{$this->fieldName}->entity));
+  }
+
+  /**
+   * Tests fiber suspension with isset on reference field item properties.
+   */
+  public function testEntityReferenceItemIssetFiberSuspension(): void {
+    $referenced_entity = $this->container->get('entity_type.manager')
+      ->getStorage($this->referencedEntityType)
+      ->create(['type' => $this->bundle]);
+    $referenced_entity->save();
+
+    $storage = $this->container->get('entity_type.manager')->getStorage($this->entityType);
+
+    $entity = $storage->create(['type' => $this->bundle]);
+    $entity->{$this->fieldName}->target_id = $referenced_entity->id();
+    $entity->save();
+
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
+    $entity = $storage->load($entity->id());
+    $field_item = $entity->get($this->fieldName)->first();
+
+    $fiber = new \Fiber(fn() => isset($field_item->entity));
+    $fiber->start();
+    $this->assertTrue(isset($field_item->entity));
+  }
+
+  /**
    * Tests reference field validation.
    */
   public function testEntityReferenceFieldValidation(): void {

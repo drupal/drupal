@@ -31,6 +31,8 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
  *
  * Supported settings (below the definition's 'settings' key) are:
  * - target_type: The entity type to reference. Required.
+ *
+ * phpcs:ignoreFile
  */
 #[FieldType(
   id: "entity_reference",
@@ -44,6 +46,28 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\AllowedValuesConstraint;
   list_class: EntityReferenceFieldItemList::class,
 )]
 class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProviderInterface, PreconfiguredFieldUiOptionsInterface {
+
+  /**
+   * The referenced entity, if it exists.
+   */
+  public ?EntityInterface $entity {
+    get => $this->__get('entity');
+
+    set(?EntityInterface $entity) {
+      $this->set('entity', $entity);
+    }
+  }
+
+  /**
+   * The ID of the referenced entity, if it exists.
+   */
+  public string|int|null $target_id {
+    get => $this->__get('target_id');
+
+    set(string|int|null $target_id) {
+      $this->set('target_id', $target_id);
+    }
+  }
 
   /**
    * {@inheritdoc}

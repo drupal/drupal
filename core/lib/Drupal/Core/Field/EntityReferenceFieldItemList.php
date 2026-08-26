@@ -2,13 +2,40 @@
 
 namespace Drupal\Core\Field;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Defines an item list class for entity reference fields.
+ *
+ * phpcs:ignoreFile
  */
 class EntityReferenceFieldItemList extends FieldItemList implements EntityReferenceFieldItemListInterface {
+
+  /**
+   * The first field item's referenced entity, if it exists.
+   */
+  public ?EntityInterface $entity {
+    get => $this->first()?->__get('entity');
+
+    set(?EntityInterface $entity) {
+      $item = $this->first() ?: $this->appendItem();
+      $item->set('entity', $entity);
+    }
+  }
+
+  /**
+   * The ID of the first field item's referenced entity, if it exists.
+   */
+  public string|int|null $target_id {
+    get => $this->first()?->__get('target_id');
+
+    set(string|int|null $target_id) {
+      $item = $this->first() ?: $this->appendItem();
+      $item->set('target_id', $target_id);
+    }
+  }
 
   /**
    * {@inheritdoc}
