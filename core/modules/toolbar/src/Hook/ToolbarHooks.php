@@ -4,6 +4,7 @@ namespace Drupal\toolbar\Hook;
 
 use Drupal\announcements_feed\RenderCallbacks;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Hook\Attribute\HookDependsOnModule;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Routing\AdminContext;
 use Drupal\Core\Session\AccountInterface;
@@ -418,6 +419,23 @@ class ToolbarHooks {
     $items['workspace']['#pre_render'][] = 'workspaces_ui.lazy_builders:removeTabAttributes';
 
     return $items;
+  }
+
+  /**
+   * Implements hook_toolbar_alter().
+   */
+  #[Hook('toolbar_alter')]
+  #[HookDependsOnModule('announcements_feed')]
+  public function toolbarAlter(&$items): void {
+    // As the "Announcements" link is shown already in the top toolbar bar, we
+    // don't need it again in the administration menu tray, so hide it.
+    if (!empty($items['administration']['tray'])) {
+      $callable = function (array $element) {
+        unset($element['administration_menu']['#items']['announcements_feed.announcement']);
+        return $element;
+      };
+      $items['administration']['tray']['toolbar_administration']['#pre_render'][] = $callable;
+    }
   }
 
 }
