@@ -3,7 +3,7 @@
  * Semantic CSS color variables.
  */
 
-.root,
+:root,
 [data-gin-accent] {
   /*
   * Accent colors.
