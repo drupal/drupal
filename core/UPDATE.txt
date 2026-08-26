@@ -6,42 +6,27 @@ CONTENTS OF THIS FILE
  * Is my site using Composer?
  * Updating code with Composer
  * Updating code manually
+ * Updating Drupal 11 to Drupal 12
+ * Updating Drupal 10 to Drupal 11
  * Updating Drupal 9 to Drupal 10
  * Updating Drupal 8 to Drupal 9
- * Updating Drupal 6 or Drupal 7
 
 
 INTRODUCTION
 ------------
 
-This document provides links to resources on how to update or migrate your
-Drupal site.
+This document provides links to resources on how to update a Drupal site.
 
 
 MINOR AND PATCH VERSION UPDATES
 -------------------------------
 
-Minor and patch updates are done either manually or with Composer, depending on
-how the site was installed. Refer to the sections below on updating with
-Composer or updating manually for tarball/zip installations.
+Minor and patch updates are done with Composer.
 
 Minor and patch versions are updates such as:
  * Patch releases (e.g. 9.1.2 to 9.1.3)
  * Scheduled minor releases (e.g 9.3.5 to 9.4.0)
  * Beta to final releases (e.g. 9.1.0-beta2 to 9.1.0)
-
-
-IS MY SITE USING COMPOSER?
---------------------------
-
-Before updating, determine if your site is currently managed by Composer.
-
-On a typical Unix/Linux command line, this can be determined by running the
-following command (replace /PATH/TO/composer with the appropriate location
-for your system):
-
-  /PATH/TO/composer info drupal/core
-
 
 UPDATING CODE WITH COMPOSER
 ---------------------------
@@ -50,11 +35,18 @@ UPDATING CODE WITH COMPOSER
    https://www.drupal.org/docs/updating-drupal/updating-drupal-core-via-composer
 
 
-UPDATING CODE MANUALLY
-----------------------
+UPDATING DRUPAL 11 TO DRUPAL 12
+------------------------------
 
- * Refer to 'Updating the Core Software' for details on updating manually:
-   https://www.drupal.org/docs/updating-drupal/updating-drupal-core-manually
+ * Refer to 'Upgrading from Drupal 11 to Drupal 12' for details:
+   https://www.drupal.org/docs/upgrading-drupal/upgrading-drupal/how-to-upgrade-from-drupal-11-to-drupal-12
+
+
+UPDATING DRUPAL 10 TO DRUPAL 11
+------------------------------
+
+ * Refer to 'Upgrading from Drupal 10 to Drupal 11' for details:
+   https://www.drupal.org/docs/upgrading-drupal/upgrading-drupal/how-to-upgrade-from-drupal-10-to-drupal-11
 
 
 UPDATING DRUPAL 9 TO DRUPAL 10
@@ -69,12 +61,3 @@ UPDATING DRUPAL 8 TO DRUPAL 9
 
  * Refer to 'Upgrading from Drupal 8 to Drupal 9' for details:
    https://www.drupal.org/docs/upgrading-drupal/upgrading-from-drupal-8-or-later/upgrading-from-drupal-8-to-drupal-9
-
-
-UPDATING DRUPAL 6 OR DRUPAL 7
------------------------------
-
- * Updating Drupal 6 or Drupal 7 requires importing the old site configuration
-   and content into a new Drupal site. Refer to the 'Upgrading from Drupal 6 or
-   Drupal 7' for more details.
-   https://www.drupal.org/docs/upgrading-drupal/upgrading-from-drupal-6-or-drupal-7
