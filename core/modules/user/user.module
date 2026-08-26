@@ -11,6 +11,7 @@ use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\user\Entity\User;
 use Drupal\user\Hook\UserThemeHooks;
 use Drupal\user\OneTimeAuthentication;
+use Drupal\user\NotificationHandler;
 use Drupal\user\UserInterface;
 
 /**
@@ -264,6 +265,7 @@ function user_cancel($edit, $uid, $method): void {
  */
 function _user_cancel($edit, $account, $method): void {
   $logger = \Drupal::logger('user');
+  $notificationHandler = \Drupal::service(NotificationHandler::class);
 
   switch ($method) {
     case 'user_cancel_block':
@@ -271,7 +273,7 @@ function _user_cancel($edit, $account, $method): void {
     default:
       // Send account blocked notification if option was checked.
       if (!empty($edit['user_cancel_notify'])) {
-        _user_mail_notify('status_blocked', $account);
+        $notificationHandler->sendStatusBlocked($account);
       }
       $account->block();
       $account->save();
@@ -286,7 +288,7 @@ function _user_cancel($edit, $account, $method): void {
     case 'user_cancel_delete':
       // Send account canceled notification if option was checked.
       if (!empty($edit['user_cancel_notify'])) {
-        _user_mail_notify('status_canceled', $account);
+        $notificationHandler->sendStatusCancelled($account);
       }
       $account->delete();
       \Drupal::messenger()->addStatus(t('Account %name has been deleted.', ['%name' => $account->getDisplayName()]));
@@ -516,9 +518,14 @@ function user_role_revoke_permissions($rid, array $permissions = []): void {
  *   account does not have an email address.
  *
  * @see \Drupal\user\OneTimeAuthentication::tokens()
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use the
+ *   methods from Drupal\user\NotificationHandler service instead.
+ *
+ * @see https://www.drupal.org/node/3539363
  */
 function _user_mail_notify($op, AccountInterface $account) {
-
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use the methods from Drupal\user\NotificationHandler service instead. See https://www.drupal.org/node/3539363', E_USER_DEPRECATED);
   if (\Drupal::config('user.settings')->get('notify.' . $op)) {
     $params['account'] = $account;
     // Get the custom site notification email to use as the from email address

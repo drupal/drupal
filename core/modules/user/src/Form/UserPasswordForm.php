@@ -11,6 +11,7 @@ use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element\Email;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\user\NotificationHandler;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
 use Drupal\user\UserNameValidator;
@@ -68,21 +69,10 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
   protected $emailValidator;
 
   /**
-   * Constructs a UserPasswordForm object.
-   *
-   * @param \Drupal\user\UserStorageInterface $user_storage
-   *   The user storage.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
-   *   The config factory.
-   * @param \Drupal\Core\Flood\FloodInterface $flood
-   *   The flood service.
-   * @param \Drupal\user\UserNameValidator $userNameValidator
-   *   The user validator service.
-   * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
-   *   The email validator service.
+   * The user notification handler.
    */
+  protected NotificationHandler $notificationHandler;
+
   public function __construct(
     UserStorageInterface $user_storage,
     LanguageManagerInterface $language_manager,
@@ -90,12 +80,17 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
     FloodInterface $flood,
     protected UserNameValidator $userNameValidator,
     EmailValidatorInterface $email_validator,
+    ?NotificationHandler $notification_handler = NULL,
   ) {
     $this->userStorage = $user_storage;
     $this->languageManager = $language_manager;
     $this->configFactory = $config_factory;
     $this->flood = $flood;
     $this->emailValidator = $email_validator;
+    if ($notification_handler === NULL) {
+      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $notificationHandler argument is deprecated in drupal:11.5.0 and it will be required in drupal:13.0.0. See https://www.drupal.org/node/3539363', E_USER_DEPRECATED);
+    }
+    $this->notificationHandler = $notification_handler ?? \Drupal::service(NotificationHandler::class);
   }
 
   /**
@@ -109,6 +104,7 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
       $container->get('flood'),
       $container->get('user.name_validator'),
       $container->get('email.validator'),
+      $container->get(NotificationHandler::class),
     );
   }
 
@@ -211,8 +207,7 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
     $account = $form_state->getValue('account');
     if ($account) {
       // Mail one time login URL and instructions using current language.
-      $mail = _user_mail_notify('password_reset', $account);
-      if (!empty($mail)) {
+      if ($this->notificationHandler->sendPasswordReset($account)) {
         $this->logger('user')
           ->info('Password reset instructions mailed to %name at %email.', [
             '%name' => $account->getAccountName(),

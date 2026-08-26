@@ -2,7 +2,12 @@
 
 namespace Drupal\user;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form handler for the user register forms.
@@ -10,6 +15,38 @@ use Drupal\Core\Form\FormStateInterface;
  * @internal
  */
 class RegisterForm extends AccountForm {
+
+  /**
+   * The user notification handler.
+   */
+  protected NotificationHandler $notificationHandler;
+
+  public function __construct(
+    EntityRepositoryInterface $entity_repository,
+    LanguageManagerInterface $language_manager,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    TimeInterface $time,
+    ?NotificationHandler $notification_handler = NULL,
+  ) {
+    parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
+    if ($notification_handler === NULL) {
+      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $notificationHandler argument is deprecated in drupal:11.5.0 and it will be required in drupal:13.0.0. See https://www.drupal.org/node/3539363', E_USER_DEPRECATED);
+    }
+    $this->notificationHandler = $notification_handler ?? \Drupal::service(NotificationHandler::class);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container): static {
+    return new static(
+      $container->get(EntityRepositoryInterface::class),
+      $container->get(LanguageManagerInterface::class),
+      $container->get(EntityTypeBundleInfoInterface::class),
+      $container->get(TimeInterface::class),
+      $container->get(NotificationHandler::class),
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -118,7 +155,7 @@ class RegisterForm extends AccountForm {
     }
     // No email verification required; log in user immediately.
     elseif (!$admin && !\Drupal::config('user.settings')->get('verify_mail') && $account->isActive()) {
-      _user_mail_notify('register_no_approval_required', $account);
+      $this->notificationHandler->sendRegisterNoApprovalRequired($account);
       user_login_finalize($account);
       $this->messenger()->addStatus($this->t('Registration successful. You are now logged in.'));
       $form_state->setRedirect('<front>');
@@ -134,9 +171,8 @@ class RegisterForm extends AccountForm {
           ]));
       }
       else {
-        $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
-        if (_user_mail_notify($op, $account)) {
-          if ($notify) {
+        if ($notify) {
+          if ($this->notificationHandler->sendRegisterAdminCreated($account)) {
             $this->messenger()
               ->addStatus($this->t('A welcome message with further instructions has been emailed to the new user <a href=":url">%name</a>.', [
                 ':url' => $account->toUrl()
@@ -144,7 +180,9 @@ class RegisterForm extends AccountForm {
                 '%name' => $account->getAccountName(),
               ]));
           }
-          else {
+        }
+        else {
+          if ($this->notificationHandler->sendRegisterNoApprovalRequired($account)) {
             $this->messenger()->addStatus($this->t('A welcome message with further instructions has been sent to your email address.'));
             $form_state->setRedirect('<front>');
           }
@@ -153,7 +191,7 @@ class RegisterForm extends AccountForm {
     }
     // Administrator approval required.
     else {
-      _user_mail_notify('register_pending_approval', $account);
+      $this->notificationHandler->sendRegisterPendingApproval($account);
       $this->messenger()->addStatus($this->t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your email address.'));
       $form_state->setRedirect('<front>');
     }

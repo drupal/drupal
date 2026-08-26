@@ -7,6 +7,7 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\user\NotificationHandler;
 use Drupal\user\UserAuthenticationInterface;
 use Drupal\user\UserFloodControlInterface;
 use Drupal\user\UserInterface;
@@ -97,26 +98,21 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
   protected $logger;
 
   /**
-   * Constructs a new UserAuthenticationController object.
-   *
-   * @param \Drupal\user\UserFloodControlInterface $user_flood_control
-   *   The user flood control service.
-   * @param \Drupal\user\UserStorageInterface $user_storage
-   *   The user storage.
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
-   *   The CSRF token generator.
-   * @param \Drupal\user\UserAuthenticationInterface $user_auth
-   *   The user authentication.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
-   *   The route provider.
-   * @param \Symfony\Component\Serializer\Serializer $serializer
-   *   The serializer.
-   * @param array $serializer_formats
-   *   The available serialization formats.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger instance.
+   * The user notification handler.
    */
-  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, CsrfTokenGenerator $csrf_token, UserAuthenticationInterface $user_auth, RouteProviderInterface $route_provider, Serializer $serializer, array $serializer_formats, LoggerInterface $logger) {
+  protected readonly NotificationHandler $notificationHandler;
+
+  public function __construct(
+    UserFloodControlInterface $user_flood_control,
+    UserStorageInterface $user_storage,
+    CsrfTokenGenerator $csrf_token,
+    UserAuthenticationInterface $user_auth,
+    RouteProviderInterface $route_provider,
+    Serializer $serializer,
+    array $serializer_formats,
+    LoggerInterface $logger,
+    ?NotificationHandler $notification_handler = NULL,
+  ) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
     $this->csrfToken = $csrf_token;
@@ -125,6 +121,10 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     $this->serializerFormats = $serializer_formats;
     $this->routeProvider = $route_provider;
     $this->logger = $logger;
+    if ($notification_handler === NULL) {
+      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $notificationHandler argument is deprecated in drupal:11.5.0 and it will be required in drupal:13.0.0. See https://www.drupal.org/node/3539363', E_USER_DEPRECATED);
+    }
+    $this->notificationHandler = $notification_handler ?? \Drupal::service(NotificationHandler::class);
   }
 
   /**
@@ -149,7 +149,8 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       $container->get('router.route_provider'),
       $serializer,
       $formats,
-      $container->get('logger.factory')->get('user')
+      $container->get('logger.factory')->get('user'),
+      $container->get(NotificationHandler::class),
     );
   }
 
@@ -282,8 +283,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       }
 
       // Send the password reset email.
-      $mail = _user_mail_notify('password_reset', $account);
-      if (empty($mail)) {
+      if (!$this->notificationHandler->sendPasswordReset($account)) {
         throw new BadRequestHttpException('Unable to send email. Contact the site administrator if the problem persists.');
       }
       else {
