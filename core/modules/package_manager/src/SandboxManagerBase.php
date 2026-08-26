@@ -40,28 +40,29 @@ use Psr\Log\LoggerAwareTrait;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Creates and manages a stage directory in which to install or update code.
+ * Creates and manages a sandbox directory in which to install or update code.
  *
- * Allows calling code to copy the current Drupal site into a temporary stage
- * directory, use Composer to require packages into it, sync changes from the
- * stage directory back into the active code base, and then delete the
- * stage directory.
+ * Allows calling code to copy the current Drupal site into a sandbox
+ * directory, use Composer to require packages into it, and sync changes from
+ * the sandbox directory back into the active code base.
  *
- * Only one stage directory can exist at any given time, and the stage is
- * owned by the user or session that originally created it. Only the owner can
- * perform operations on the stage directory, and the stage must be "claimed"
- * by its owner before any such operations are done. A stage is claimed by
- * presenting a unique token that is generated when the stage is created.
+ * The sandbox directory is long-lived: it persists on disk after destroy() to
+ * be reused by future stage operations, reducing file operations since rsync
+ * only needs to sync changed files. Stale sandbox directories are cleaned up
+ * by cron based on a configurable maximum age.
  *
- * Although a site can only have one stage directory, it is possible for
- * privileged users to destroy a stage created by another user. To prevent such
- * actions from putting the file system into an uncertain state (for example, if
- * a stage is destroyed by another user while it is still being created), the
- * stage directory has a randomly generated name. For additional cleanliness,
- * all stage directories created by a specific site live in a single directory
- * ,called the "stage root directory" and identified by the UUID of the current
- * site (e.g. `/tmp/.package_managerSITE_UUID`), which is deleted when any stage
- * created by that site is destroyed.
+ * Only one sandbox manager can be active at any given time, and the sandbox
+ * manager is owned by the user or session that originally created it. Only the
+ * owner can perform operations on the sandbox manager, and the sandbox manager
+ * must be "claimed" by its owner before any such operations are done. A sandbox
+ * manager is claimed by presenting a unique token that is generated when the
+ * sandbox manager is created.
+ *
+ * Although a site can only have one active sandbox manager, it is possible for
+ * privileged users to destroy a sandbox manager created by another user. The
+ * sandbox directory uses a fixed name within the "sandbox root directory",
+ * which is identified by the UUID of the current site (e.g.
+ * `/tmp/.package_managerSITE_UUID`).
  */
 abstract class SandboxManagerBase implements LoggerAwareInterface {
 
@@ -143,6 +144,13 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
    * @see ::validateRequirements()
    */
   private const COMPOSER_PACKAGE_REGEX = '/^[a-z0-9]([_.-]?[a-z0-9]+)*\/[a-z0-9](([_.]?|-{0,2})[a-z0-9]+)*$/';
+
+  /**
+   * The name of the long-lived sandbox directory to maintain.
+   *
+   * @var string
+   */
+  private const string COMPOSER_SANDBOX_DIRECTORY = 'sandbox_directory';
 
   /**
    * The lock info for the stage.
@@ -302,9 +310,8 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
    *   as long as the stage needs to exist.
    *
    * @throws \Drupal\package_manager\Exception\SandboxException
-   *   Thrown if a stage directory already exists, or if an error occurs while
-   *   creating the stage directory. In the latter situation, the stage
-   *   directory will be destroyed.
+   *   Thrown if an error occurs while creating the stage directory. In this
+   *   situation, the stage will be released.
    *
    * @see ::claim()
    */
@@ -561,13 +568,17 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
   }
 
   /**
-   * Deletes the stage directory.
+   * Releases the stage lock and marks the stage as available.
+   *
+   * The sandbox directory is not deleted; it persists on disk for reuse by
+   * future stage operations. Cleanup of stale sandbox directories is handled
+   * by cron based on the configured maximum age.
    *
    * @param bool $force
-   *   (optional) If TRUE, the stage directory will be destroyed even if it is
-   *   not owned by the current user or session. Defaults to FALSE.
+   *   (optional) If TRUE, the stage will be released even if it is not owned
+   *   by the current user or session. Defaults to FALSE.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $message
-   *   (optional) A message about why the stage was destroyed.
+   *   (optional) A message about why the stage was released.
    *
    * @throws \Drupal\package_manager\Exception\SandboxException
    *   If the staged changes are being applied to the active directory.
@@ -579,14 +590,6 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
     }
     if ($this->isApplying()) {
       throw new SandboxException($this, 'Cannot destroy the stage directory while it is being applied to the active directory.');
-    }
-
-    // If the stage directory exists, queue it to be automatically cleaned up
-    // later by a queue (which may or may not happen during cron).
-    // @see \Drupal\package_manager\Plugin\QueueWorker\Cleaner
-    if ($this->sandboxDirectoryExists() && !$this->isDirectWrite()) {
-      $this->queueFactory->get('package_manager_cleanup')
-        ->createItem($this->getSandboxDirectory());
     }
 
     $this->storeDestroyInfo($force, $message);
@@ -754,19 +757,12 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
    *   The absolute path of the directory where changes should be staged. If
    *   this sandbox manager is operating in direct-write mode, this will be
    *   path of the active directory.
-   *
-   * @throws \LogicException
-   *   If this method is called before the stage has been created or claimed.
    */
   public function getSandboxDirectory(): string {
-    if (!$this->lock) {
-      throw new \LogicException(__METHOD__ . '() cannot be called because the stage has not been created or claimed.');
-    }
-
     if ($this->isDirectWrite()) {
       return $this->pathLocator->getProjectRoot();
     }
-    return $this->getStagingRoot() . DIRECTORY_SEPARATOR . $this->lock[0];
+    return $this->getStagingRoot() . DIRECTORY_SEPARATOR . self::COMPOSER_SANDBOX_DIRECTORY;
   }
 
   /**
@@ -779,28 +775,36 @@ abstract class SandboxManagerBase implements LoggerAwareInterface {
   private function getStagingRoot(): string {
     // Since the stage root can depend on site settings, store it so that
     // things won't break if the settings change during this stage's life
-    // cycle.
-    $dir = $this->tempStore->get(self::TEMPSTORE_STAGING_ROOT_KEY);
-    if (empty($dir)) {
-      $dir = $this->pathLocator->getStagingRoot();
-      $this->tempStore->set(self::TEMPSTORE_STAGING_ROOT_KEY, $dir);
+    // cycle. Only cache when a lock is held (i.e., during an active stage
+    // operation) to avoid polluting the shared tempstore from ad-hoc lookups.
+    if ($this->lock) {
+      $dir = $this->tempStore->get(self::TEMPSTORE_STAGING_ROOT_KEY);
+      if (empty($dir)) {
+        $dir = $this->pathLocator->getStagingRoot();
+        $this->tempStore->set(self::TEMPSTORE_STAGING_ROOT_KEY, $dir);
+      }
+      return $dir;
     }
-    return $dir;
+    return $this->pathLocator->getStagingRoot();
   }
 
   /**
-   * Determines if the stage directory exists.
+   * Determines if there is an active sandbox with a directory on disk.
+   *
+   * This checks both that the sandbox manager is currently claimed (i.e., has
+   * an active lock) and that the sandbox directory physically exists. A sandbox
+   * directory that exists on disk but has no active lock (e.g., a long-lived
+   * sandbox after destroy()) is not considered active.
    *
    * @return bool
-   *   TRUE if the directory exists, otherwise FALSE.
+   *   TRUE if the sandbox manager is claimed and the sandbox directory exists
+   *   on disk, otherwise FALSE.
    */
   public function sandboxDirectoryExists(): bool {
-    try {
-      return is_dir($this->getSandboxDirectory());
-    }
-    catch (\LogicException) {
+    if ($this->isAvailable()) {
       return FALSE;
     }
+    return is_dir($this->getSandboxDirectory());
   }
 
   /**
