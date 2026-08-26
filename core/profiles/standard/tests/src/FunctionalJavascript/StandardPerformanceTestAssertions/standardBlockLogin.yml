@@ -1,0 +1,79 @@
+QueryCount: 15
+CacheGetCount: 100
+CacheGetCountByBin:
+  config: 17
+  data: 5
+  discovery: 30
+  bootstrap: 12
+  render: 22
+  default: 3
+  routes: 5
+  entity: 2
+  menu: 2
+  dynamic_page_cache: 2
+CacheSetCount: 1
+CacheDeleteCount: 1
+CacheTagInvalidationCount: 0
+CacheTagLookupQueryCount: 10
+CacheTagGroupedLookups:
+  -
+    - route_match
+    - access_policies
+    - routes
+    - router
+    - entity_types
+    - entity_field_info
+    - entity_bundles
+    - local_task
+    - library_info
+    - http_response
+  -
+    - 'config:core.extension'
+    - views_data
+  -
+    - 'config:views.view.frontpage'
+    - 'node:1'
+    - node_list
+  -
+    - 'config:filter.format.restricted_html'
+    - node_view
+    - rendered
+    - 'user:0'
+    - user_view
+  -
+    - 'config:block_list'
+    - 'config:system.site'
+  -
+    - 'config:system.menu.account'
+    - 'config:system.menu.main'
+  -
+    - 'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form'
+  -
+    - route_match
+    - access_policies
+    - routes
+    - router
+    - entity_types
+    - entity_field_info
+    - entity_bundles
+    - local_task
+    - library_info
+    - http_response
+  -
+    - 'config:block_list'
+    - 'config:filter.format.restricted_html'
+    - 'config:system.site'
+    - 'config:views.view.frontpage'
+    - 'node:1'
+    - node_list
+    - node_view
+    - rendered
+    - 'user:0'
+    - user_view
+  -
+    - 'config:system.menu.account'
+    - 'config:system.menu.main'
+ScriptCount: 2
+ScriptBytes: 6519
+StylesheetCount: 2
+StylesheetBytes: 1274

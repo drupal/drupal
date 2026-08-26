@@ -1,0 +1,82 @@
+QueryCount: 0
+CacheGetCount: 1
+CacheGetCountByBin:
+  page: 1
+CacheSetCount: 0
+CacheDeleteCount: 0
+CacheTagInvalidationCount: 0
+CacheTagLookupQueryCount: 1
+CacheTagGroupedLookups:
+  -
+    - 'block_content:1'
+    - 'block_content:2'
+    - 'block_content:3'
+    - block_content_view
+    - 'config:block_list'
+    - 'config:configurable_language_list'
+    - 'config:filter.format.basic_html'
+    - 'config:filter.format.full_html'
+    - 'config:image.style.large_3_2_2x'
+    - 'config:image.style.large_3_2_768x512'
+    - 'config:image.style.medium_3_2_2x'
+    - 'config:image.style.medium_3_2_600x400'
+    - 'config:image.style.medium_8_7'
+    - 'config:image.style.scale_crop_7_3_large'
+    - 'config:image.style.scale_crop_7_3_medium'
+    - 'config:image.style.scale_crop_7_3_tiny'
+    - 'config:image.style.scale_crop_7_3_wide'
+    - 'config:image.style.square_large'
+    - 'config:image.style.square_medium'
+    - 'config:image.style.square_small'
+    - 'config:responsive_image.styles.3_2_image'
+    - 'config:responsive_image.styles.hero'
+    - 'config:responsive_image.styles.square'
+    - 'config:system.menu.account'
+    - 'config:system.menu.footer'
+    - 'config:system.menu.main'
+    - 'config:system.site'
+    - 'config:user.role.anonymous'
+    - 'config:views.view.frontpage'
+    - 'config:views.view.promoted_items'
+    - 'config:views.view.recipe_collections'
+    - 'file:37'
+    - http_response
+    - local_task
+    - 'media:17'
+    - 'media:18'
+    - 'media:19'
+    - 'media:21'
+    - 'media:7'
+    - 'media:8'
+    - 'media:9'
+    - media_view
+    - 'node:10'
+    - 'node:18'
+    - 'node:7'
+    - 'node:8'
+    - 'node:9'
+    - node_list
+    - node_view
+    - rendered
+    - 'taxonomy_term:1'
+    - 'taxonomy_term:10'
+    - 'taxonomy_term:11'
+    - 'taxonomy_term:12'
+    - 'taxonomy_term:13'
+    - 'taxonomy_term:14'
+    - 'taxonomy_term:15'
+    - 'taxonomy_term:16'
+    - 'taxonomy_term:2'
+    - 'taxonomy_term:3'
+    - 'taxonomy_term:4'
+    - 'taxonomy_term:5'
+    - 'taxonomy_term:6'
+    - 'taxonomy_term:7'
+    - 'taxonomy_term:8'
+    - 'taxonomy_term:9'
+    - taxonomy_term_list
+    - 'user:6'
+ScriptCount: 3
+ScriptBytes: 12006
+StylesheetCount: 7
+StylesheetBytes: 39076

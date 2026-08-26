@@ -1,0 +1,37 @@
+QueryCount: 6
+CacheGetCount: 42
+CacheGetCountByBin:
+  config: 7
+  data: 1
+  discovery: 13
+  bootstrap: 4
+  entity: 2
+  default: 4
+  dynamic_page_cache: 2
+  routes: 7
+  jsonapi_normalizations: 2
+CacheSetCount: 3
+CacheDeleteCount: 0
+CacheTagInvalidationCount: 0
+CacheTagLookupQueryCount: 3
+CacheTagGroupedLookups:
+  -
+    - route_match
+    - access_policies
+    - routes
+    - router
+    - entity_types
+    - entity_field_info
+    - entity_bundles
+    - local_task
+    - library_info
+    - http_response
+  -
+    - jsonapi_resource_types
+  -
+    - 'config:filter.format.plain_text'
+    - 'node:1'
+ScriptCount: 0
+ScriptBytes: 0
+StylesheetCount: 0
+StylesheetBytes: 0

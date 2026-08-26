@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests;
 
 use Drupal\Core\Database\Event\DatabaseEvent;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Serialization\Yaml;
 use Drupal\performance_test\Cache\CacheTagOperation;
 use OpenTelemetry\API\Trace\SpanKind;
 use OpenTelemetry\Contrib\Otlp\OtlpHttpTransportFactory;
@@ -730,6 +732,118 @@ trait PerformanceTestTrait {
    */
   protected static function normalizeQuery(string $query_string, string $database_prefix): string {
     return str_replace([$database_prefix, "\r\n", "\r", "\n"], ['', ' ', ' ', ' '], $query_string);
+  }
+
+  /**
+   * Asserts queries against the stored expectations.
+   *
+   * Expected queries are stored in the folder named TestClassNameAssertions
+   * in the same directory.
+   *
+   * @param string $name
+   *   A identifier for the expected queries. Must be unique for the given test.
+   * @param array $queries
+   *   List of executed queries.
+   */
+  protected function assertQueriesByName(string $name, array $queries): void {
+
+    $filename = $this->getExpectationsFilename($name, 'sql');
+
+    $content = file_exists($filename) ? trim(file_get_contents($filename)) : '';
+
+    if (empty($content) || $this->shouldUpdate()) {
+      file_put_contents($filename, implode("\n", $queries) . "\n");
+    }
+    else {
+      $this->assertEquals(explode("\n", $content), $queries);
+    }
+  }
+
+  /**
+   * Asserts metrics against the stored expectations.
+   *
+   * Expected queries are stored in the folder named TestClassNameAssertions
+   * in the same directory.
+   *
+   * @param string $name
+   *   A identifier for the expected queries. Must be unique for the given test.
+   * @param \Drupal\Tests\PerformanceData $performance_data
+   *   An instance of the performance data value object.
+   * @param array $metrics
+   *   Customize the number of default metrics to assert in case no data is
+   *   stored yet.
+   */
+  protected function assertMetricsByName(string $name, PerformanceData $performance_data, array $metrics = []): void {
+
+    $filename = $this->getExpectationsFilename($name, 'yml');
+
+    $content = file_exists($filename) ? file_get_contents($filename) : '';
+
+    if (!empty($content)) {
+      $expected = Yaml::decode($content);
+    }
+    else {
+      // No existing data found. Use a default list of metrics to update if no
+      // custom list is provided.
+      $expected = array_flip($metrics) ?: [
+        'QueryCount' => 0,
+        'CacheGetCount' => 0,
+        'CacheGetCountByBin' => [],
+        'CacheSetCount' => 0,
+        'CacheDeleteCount' => 0,
+        'CacheTagInvalidationCount' => 0,
+        'CacheTagLookupQueryCount' => 0,
+        'CacheTagGroupedLookups' => [],
+        'ScriptCount' => 0,
+        'ScriptBytes' => 0,
+        'StylesheetCount' => 0,
+        'StylesheetBytes' => 0,
+      ];
+    }
+
+    if (empty($content) || $this->shouldUpdate()) {
+      foreach ($expected as $name => $metric) {
+        $expected[$name] = $performance_data->{"get$name"}();
+      }
+      file_put_contents($filename, Yaml::encode($expected));
+    }
+    else {
+      $this->assertMetrics($expected, $performance_data);
+    }
+  }
+
+  /**
+   * Whether the test should run in update mode.
+   *
+   * @return bool
+   *   Whether the test should update expectations.
+   */
+  protected function shouldUpdate(): bool {
+    return (bool) getenv('PERF_TEST_UPDATE');
+  }
+
+  /**
+   * Returns the filename for a given performance test assertions file.
+   *
+   * @param string $name
+   *   The base name of the file.
+   * @param string $extension
+   *   The file extension.
+   *
+   * @return string
+   *   The full path to the file.
+   */
+  protected function getExpectationsFilename(string $name, string $extension): string {
+    // Find the location of the test class and use it to calculate the directory
+    // for the assertions. __DIR__ points to the location of
+    // the trait.
+    $dir = str_replace('.php', 'Assertions', $this->classLoader->findFile(static::class));
+
+    if (!is_dir($dir)) {
+      \Drupal::service(FileSystemInterface::class)->prepareDirectory($dir, FileSystemInterface::CREATE_DIRECTORY);
+    }
+
+    return $dir . '/' . $name . '.' . $extension;
   }
 
 }

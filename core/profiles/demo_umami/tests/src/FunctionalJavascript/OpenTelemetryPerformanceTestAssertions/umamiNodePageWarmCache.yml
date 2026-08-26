@@ -1,0 +1,113 @@
+QueryCount: 51
+CacheGetCount: 167
+CacheGetCountByBin:
+  page: 1
+  config: 34
+  bootstrap: 12
+  discovery: 67
+  data: 6
+  entity: 21
+  dynamic_page_cache: 1
+  routes: 5
+  render: 17
+  default: 3
+CacheSetCount: 41
+CacheDeleteCount: 0
+CacheTagInvalidationCount: 0
+CacheTagLookupQueryCount: 19
+CacheTagGroupedLookups:
+  -
+    - entity_types
+    - route_match
+    - access_policies
+    - routes
+    - router
+    - entity_field_info
+    - entity_bundles
+    - local_task
+    - library_info
+    - http_response
+  -
+    - 'config:core.extension'
+    - views_data
+  -
+    - 'config:views.view.related_recipes'
+    - 'node:10'
+    - 'node:3'
+    - 'node:6'
+    - 'node:7'
+    - node_list
+  -
+    - breakpoints
+  -
+    - 'config:image.style.large_3_2_2x'
+    - 'config:image.style.large_3_2_768x512'
+    - 'config:image.style.medium_3_2_2x'
+    - 'config:image.style.medium_3_2_600x400'
+    - 'config:responsive_image.styles.3_2_image'
+    - 'media:1'
+    - media_view
+    - rendered
+  -
+    - 'media:21'
+  -
+    - node_view
+    - 'user:6'
+  -
+    - 'media:7'
+  -
+    - 'media:6'
+  -
+    - 'media:3'
+  -
+    - 'config:core.entity_view_display.node.recipe.full'
+    - 'config:filter.format.basic_html'
+    - 'node:1'
+    - 'taxonomy_term:13'
+    - 'taxonomy_term:22'
+    - 'taxonomy_term:31'
+  -
+    - 'config:block_list'
+    - 'config:system.site'
+  -
+    - 'block_content:1'
+    - 'block_content:2'
+    - 'config:configurable_language_list'
+  -
+    - 'config:system.menu.footer'
+  -
+    - 'config:system.menu.account'
+    - block_content_view
+    - 'config:image.style.medium_8_7'
+    - 'file:37'
+    - 'media:19'
+    - 'config:system.menu.main'
+    - 'config:views.view.recipe_collections'
+    - 'taxonomy_term:1'
+    - 'taxonomy_term:10'
+    - 'taxonomy_term:11'
+    - 'taxonomy_term:12'
+    - 'taxonomy_term:14'
+    - 'taxonomy_term:15'
+    - 'taxonomy_term:16'
+    - 'taxonomy_term:2'
+    - 'taxonomy_term:3'
+    - 'taxonomy_term:4'
+    - 'taxonomy_term:5'
+    - 'taxonomy_term:6'
+    - 'taxonomy_term:7'
+    - 'taxonomy_term:8'
+    - 'taxonomy_term:9'
+    - taxonomy_term_list
+  -
+    - 'node:1:revisions'
+  -
+    - 'content_moderation_state:1:revisions'
+  -
+    - 'config:workflows.workflow.editorial'
+  -
+    - 'config:user.role.anonymous'
+ScriptCount: 3
+ScriptBytes: 12006
+StylesheetCount: 7
+StylesheetBytes: 40716
