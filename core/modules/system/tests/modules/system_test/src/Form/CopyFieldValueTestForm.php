@@ -6,10 +6,18 @@ namespace Drupal\system_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\Attribute\Route;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Provides a form to test Drupal.behaviors.copyFieldValue.
  */
+#[Route(
+  path: '/system-test/copy-field-value-test-form',
+  name: 'system_test.copy_field_value',
+  title: new TranslatableMarkup('Copy Field Value Test Form'),
+  requirements: ['_access' => 'TRUE'],
+)]
 class CopyFieldValueTestForm extends FormBase {
 
   /**
