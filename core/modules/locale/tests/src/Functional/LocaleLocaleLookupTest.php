@@ -6,6 +6,7 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Component\Gettext\PoItem;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\locale\LocaleJs;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\WaitTerminateTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -89,7 +90,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
       'language' => 'fr',
       'translation' => $translation_value,
     ])->save();
-    _locale_refresh_translations(['fr'], [$lid]);
+    \Drupal::service(LocaleJs::class)->refreshTranslations(['fr'], [$lid]);
 
     // Check that 'count[2]' was fixed for render value.
     $this->drupalGet('');

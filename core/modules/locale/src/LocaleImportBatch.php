@@ -37,7 +37,13 @@ class LocaleImportBatch {
      */
     #[AutowireServiceClosure('logger.channel.locale')]
     protected readonly \Closure $logger,
-  ) {}
+    protected ?LocaleJs $localeJs,
+  ) {
+    if ($this->localeJs === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $localeJs argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3619103', E_USER_DEPRECATED);
+      $this->localeJs = \Drupal::service(LocaleJs::class);
+    }
+  }
 
   /**
    * Build a locale batch from an array of files.
@@ -272,7 +278,7 @@ class LocaleImportBatch {
       $next = array_slice($context['sandbox']['refresh']['strings'], 0, 100);
       array_splice($context['sandbox']['refresh']['strings'], 0, count($next));
       // Clear cache and force refresh of JavaScript translations.
-      _locale_refresh_translations($context['sandbox']['refresh']['languages'], $next);
+      $this->localeJs->refreshTranslations($context['sandbox']['refresh']['languages'], $next);
       // Check whether we need to refresh configuration objects.
       if ($names = $this->localeConfigManager->getStringNames($next)) {
         $context['sandbox']['refresh']['names_finished'] = $context['finished'];

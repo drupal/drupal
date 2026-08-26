@@ -133,7 +133,7 @@ class LocaleExportTest extends BrowserTestBase {
    */
   public function testExportTranslationTemplateFile(): void {
     // Load an admin page with JavaScript so _drupal_add_library() fires at
-    // least once and _locale_parse_js_file() gets to run at least once so that
+    // least once and LocaleJs::parseJsFile() gets to run at least once so that
     // the locales_source table gets populated with something.
     $this->drupalGet('admin/config/regional/language');
     // Get the translation template file.
