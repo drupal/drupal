@@ -18,6 +18,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\file\FileInterface;
 use Drupal\file\Upload\FileUploadHandlerInterface;
 use Drupal\file\Upload\FormUploadedFile;
+use Drupal\Core\File\UploadedFilesExtractor;
 
 /**
  * Saves form file uploads.
@@ -140,12 +141,10 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
 function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, FileExists $fileExists = FileExists::Rename) {
   static $upload_cache;
 
-  $all_files = \Drupal::request()->files->get('files', []);
-  // Make sure there's an upload to process.
-  if (empty($all_files[$form_field_name])) {
+  $uploaded_files = \Drupal::service(UploadedFilesExtractor::class)->extractUploadedFiles($form_field_name);
+  if (empty($uploaded_files)) {
     return NULL;
   }
-  $file_upload = $all_files[$form_field_name];
 
   // Return cached objects without processing since the file will have
   // already been processed and the paths in $_FILES will be invalid.
@@ -154,13 +153,6 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
       return $upload_cache[$form_field_name][$delta];
     }
     return $upload_cache[$form_field_name];
-  }
-
-  // Prepare uploaded files info. Representation is slightly different
-  // for multiple uploads and we fix that here.
-  $uploaded_files = $file_upload;
-  if (!is_array($file_upload)) {
-    $uploaded_files = [$file_upload];
   }
 
   if ($destination === FALSE || $destination === NULL) {
@@ -257,11 +249,7 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
  */
 function file_managed_file_save_upload($element, FormStateInterface $form_state) {
   $upload_name = implode('_', $element['#parents']);
-  $all_files = \Drupal::request()->files->get('files', []);
-  if (empty($all_files[$upload_name])) {
-    return FALSE;
-  }
-  $file_upload = $all_files[$upload_name];
+  $file_upload = \Drupal::service(UploadedFilesExtractor::class)->extractUploadedFiles($upload_name);
 
   $destination = $element['#upload_location'] ?? NULL;
   if (isset($destination) && !\Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {

@@ -1901,6 +1901,8 @@ services:
     class: Drupal\Core\File\HtaccessWriter
     arguments: ['@logger.channel.security', '@stream_wrapper_manager', '@settings']
   Drupal\Core\File\HtaccessWriterInterface: '@file.htaccess_writer'
+  Drupal\Core\File\UploadedFilesExtractor:
+    autowire: true
   file.mime_type.guesser:
     class: Drupal\Core\File\MimeType\MimeTypeGuesser
     arguments: ['@stream_wrapper_manager', !tagged_iterator mime_type_guesser]
