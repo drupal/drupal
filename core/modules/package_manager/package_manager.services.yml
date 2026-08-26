@@ -32,6 +32,9 @@ services:
   Drupal\package_manager\LoggingCommitter:
     public: false
     decorates: 'PhpTuf\ComposerStager\API\Core\CommitterInterface'
+  Drupal\package_manager\StagingDirDoesNotExist:
+    public: false
+    decorates: 'PhpTuf\ComposerStager\API\Precondition\Service\StagingDirDoesNotExistInterface'
   logger.channel.package_manager:
     parent: logger.channel_base
     arguments:
@@ -51,6 +54,9 @@ services:
     calls:
       - [setLogger, ['@logger.channel.package_manager_change_log']]
   Drupal\package_manager\EventSubscriber\DirectWriteSubscriber: {}
+  Drupal\package_manager\EventSubscriber\LongLivedSandboxSubscriber:
+    arguments:
+      $container: '@service_container'
   Drupal\package_manager\ComposerInspector: {}
 
   # Validators.
