@@ -30185,6 +30185,18 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Migrate/d6/MigrateUserTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\NotificationHandlerTest\\:\\:assertMailPattern\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/tests/src/Kernel/NotificationHandlerTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\NotificationHandlerTest\\:\\:assertMailString\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/tests/src/Kernel/NotificationHandlerTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\UserMailNotifyTest\\:\\:assertMailPattern\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

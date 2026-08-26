@@ -2,8 +2,13 @@
 
 namespace Drupal\user\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\NotificationHandler;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a confirmation form for cancelling user account.
@@ -32,6 +37,36 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
    * @var \Drupal\user\UserInterface
    */
   protected $entity;
+
+  /**
+   * The user notification handler.
+   */
+  protected NotificationHandler $notificationHandler;
+
+  public function __construct(
+    EntityRepositoryInterface $entity_repository,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    TimeInterface $time,
+    ?NotificationHandler $notification_handler = NULL,
+  ) {
+    parent::__construct($entity_repository, $entity_type_bundle_info, $time);
+    if ($notification_handler === NULL) {
+      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $notificationHandler argument is deprecated in drupal:11.5.0 and it will be required in drupal:13.0.0. See https://www.drupal.org/node/3539363', E_USER_DEPRECATED);
+    }
+    $this->notificationHandler = $notification_handler ?? \Drupal::service(NotificationHandler::class);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container): static {
+    return new static(
+      $container->get(EntityRepositoryInterface::class),
+      $container->get(EntityTypeBundleInfoInterface::class),
+      $container->get(TimeInterface::class),
+      $container->get(NotificationHandler::class),
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -148,7 +183,7 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
       $this->entity->user_cancel_method = $form_state->getValue('user_cancel_method');
       $this->entity->user_cancel_notify = $form_state->getValue('user_cancel_notify');
       $this->entity->save();
-      _user_mail_notify('cancel_confirm', $this->entity);
+      $this->notificationHandler->sendCancelConfirm($this->entity);
       $this->logger('user')
         ->info('Sent account cancellation request to %name %email.', [
           '%name' => $this->entity->label(),

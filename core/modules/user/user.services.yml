@@ -83,3 +83,5 @@ services:
   Drupal\user\UserNameValidator: '@user.name_validator'
   Drupal\user\OneTimeAuthentication:
     arguments: ['@datetime.time', '@language_manager']
+  Drupal\user\NotificationHandler:
+    autowire: true
