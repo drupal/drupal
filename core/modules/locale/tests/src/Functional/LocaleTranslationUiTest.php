@@ -10,6 +10,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\locale\LocaleJs;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -311,7 +312,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save translations');
 
     // Trigger JavaScript translation parsing and building.
-    _locale_rebuild_js($langcode);
+    \Drupal::service(LocaleJs::class)->rebuild($langcode);
 
     $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
     $js_file = 'assets://' . $config->get('javascript.directory') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
@@ -320,7 +321,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Test JavaScript translation rebuilding.
     \Drupal::service('file_system')->delete($js_file);
     $this->assertFileDoesNotExist($js_file);
-    _locale_rebuild_js($langcode);
+    \Drupal::service(LocaleJs::class)->rebuild($langcode);
     $this->assertFileExists($js_file);
 
     // Test if JavaScript translation contains a custom string override.
@@ -329,7 +330,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $settings['locale_custom_strings_' . $langcode] = ['' => [$string_override => $string_override]];
     // Recreate the settings static.
     new Settings($settings);
-    _locale_rebuild_js($langcode);
+    \Drupal::service(LocaleJs::class)->rebuild($langcode);
     $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
     $js_file = 'assets://' . $config->get('javascript.directory') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
     $content = file_get_contents($js_file);

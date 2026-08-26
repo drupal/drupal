@@ -4,21 +4,12 @@
  * @file
  */
 
-use Drupal\Component\Gettext\PoItem;
-use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Installer\InstallerKernel;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Component\Utility\Crypt;
 use Drupal\locale\CurrentImport;
 use Drupal\locale\CurrentImportStorage;
 use Drupal\locale\Hook\LocaleThemeHooks;
 use Drupal\locale\LocaleDefaultOptions;
-use Drupal\locale\LocaleEvent;
-use Drupal\locale\LocaleEvents;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\File\LocaleFileManager;
 use Drupal\locale\Hook\LocaleFormHooks;
@@ -638,18 +629,15 @@ function locale_string_is_safe($string) {
  * @param array $lids
  *   (optional) List of string identifiers that have been updated / created.
  *   If not provided, all caches for the affected languages are cleared.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleJs::class)->refreshTranslations() instead.
+ *
+ * @see https://www.drupal.org/node/3619103
  */
 function _locale_refresh_translations($langcodes, $lids = []): void {
-  if (!empty($langcodes)) {
-    // Update javascript translations if any of the strings has a javascript
-    // location, or if no string ids were provided, update all languages.
-    if (empty($lids) || !empty(\Drupal::service('locale.storage')->getStrings(['lid' => $lids, 'type' => 'javascript']))) {
-      array_map('_locale_invalidate_js', $langcodes);
-    }
-  }
-
-  // Throw locale.save_translation event.
-  \Drupal::service('event_dispatcher')->dispatch(new LocaleEvent($langcodes, $lids), LocaleEvents::SAVE_TRANSLATION);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleJs::class)->refreshTranslations() instead. See https://www.drupal.org/node/3619103', E_USER_DEPRECATED);
+  \Drupal::service(LocaleJs::class)->refreshTranslations($langcodes, $lids);
 }
 
 /**
@@ -659,8 +647,14 @@ function _locale_refresh_translations($langcodes, $lids = []): void {
  *   Language codes for updated translations.
  * @param array $lids
  *   List of string identifiers that have been updated / created.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3619103
  */
 function _locale_refresh_configuration(array $langcodes, array $lids): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3619103', E_USER_DEPRECATED);
   $locale_config_manager = \Drupal::service('locale.config_manager');
   if ($lids && $langcodes && $names = $locale_config_manager->getStringNames($lids)) {
     $locale_config_manager->updateConfigTranslations($names, $langcodes);
@@ -675,8 +669,14 @@ function _locale_refresh_configuration(array $langcodes, array $lids): void {
  *
  * @return string
  *   String with leading and trailing quotes removed.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3619103
  */
 function _locale_strip_quotes($string) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3619103', E_USER_DEPRECATED);
   return implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($string, 1, -1)));
 }
 
@@ -690,87 +690,15 @@ function _locale_strip_quotes($string) {
  *
  * @throws Exception
  *   If a non-local file is attempted to be parsed.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleJs::class)->parseJsFile() instead.
+ *
+ * @see https://www.drupal.org/node/3619103
  */
 function _locale_parse_js_file($filepath): void {
-  // The file path might contain a query string, so make sure we only use the
-  // actual file.
-  $parsed_url = UrlHelper::parse($filepath);
-  $filepath = $parsed_url['path'];
-
-  // If there is still a protocol component in the path, reject that.
-  if (strpos($filepath, ':')) {
-    throw new Exception('Only local files should be passed to _locale_parse_js_file().');
-  }
-
-  // Load the JavaScript file.
-  $file = file_get_contents($filepath);
-
-  // Match all calls to Drupal.t() in an array.
-  // Note: \s also matches newlines with the 's' modifier.
-  preg_match_all('~
-    [^\w]Drupal\s*\.\s*t\s*                       # match "Drupal.t" with whitespace
-    \(\s*                                         # match "(" argument list start
-    (' . LOCALE_JS_STRING . ')\s*                 # capture string argument
-    (?:,\s*' . LOCALE_JS_OBJECT . '\s*            # optionally capture str args
-      (?:,\s*' . LOCALE_JS_OBJECT_CONTEXT . '\s*) # optionally capture context
-    ?)?                                           # close optional args
-    [,\)]                                         # match ")" or "," to finish
-    ~sx', $file, $t_matches);
-
-  // Match all Drupal.formatPlural() calls in another array.
-  preg_match_all('~
-    [^\w]Drupal\s*\.\s*formatPlural\s*  # match "Drupal.formatPlural" with whitespace
-    \(                                  # match "(" argument list start
-    \s*.+?\s*,\s*                       # match count argument
-    (' . LOCALE_JS_STRING . ')\s*,\s*   # match singular string argument
-    (                             # capture plural string argument
-      (?:                         # non-capturing group to repeat string pieces
-        (?:
-          \'(?:\\\\\'|[^\'])*\'   # match single-quoted string with any character except unescaped single-quote
-          |
-          "(?:\\\\"|[^"])*"       # match double-quoted string with any character except unescaped double-quote
-        )
-        (?:\s*\+\s*)?             # match "+" with possible whitespace, for str concat
-      )+                          # match multiple because we supports concatenating strs
-    )\s*                          # end capturing of plural string argument
-    (?:,\s*' . LOCALE_JS_OBJECT . '\s*          # optionally capture string args
-      (?:,\s*' . LOCALE_JS_OBJECT_CONTEXT . '\s*)?  # optionally capture context
-    )?
-    [,\)]
-    ~sx', $file, $plural_matches);
-
-  $matches = [];
-
-  // Add strings from Drupal.t().
-  foreach ($t_matches[1] as $key => $string) {
-    $matches[] = [
-      'source'  => _locale_strip_quotes($string),
-      'context' => _locale_strip_quotes($t_matches[2][$key]),
-    ];
-  }
-
-  // Add string from Drupal.formatPlural().
-  foreach ($plural_matches[1] as $key => $string) {
-    $matches[] = [
-      'source'  => _locale_strip_quotes($string) . PoItem::DELIMITER . _locale_strip_quotes($plural_matches[2][$key]),
-      'context' => _locale_strip_quotes($plural_matches[3][$key]),
-    ];
-  }
-
-  // Loop through all matches and process them.
-  foreach ($matches as $match) {
-    $source = \Drupal::service('locale.storage')->findString($match);
-
-    if (!$source) {
-      // We don't have the source string yet, thus we insert it into the
-      // database.
-      $source = \Drupal::service('locale.storage')->createString($match);
-    }
-
-    // Besides adding the location this will tag it for current version.
-    $source->addLocation('javascript', $filepath);
-    $source->save();
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleJs::class)->parseJsFile() instead. See https://www.drupal.org/node/3619103', E_USER_DEPRECATED);
+  \Drupal::service(LocaleJs::class)->parseJsFile($filepath);
 }
 
 /**
@@ -787,24 +715,15 @@ function _locale_parse_js_file($filepath): void {
  *
  * @return array
  *   New content of the 'system.javascript_parsed' variable.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleJs::class)->invalidate() instead.
+ *
+ * @see https://www.drupal.org/node/3619103
  */
 function _locale_invalidate_js($langcode = NULL) {
-  $parsed = \Drupal::state()->get('system.javascript_parsed', []);
-
-  if (empty($langcode)) {
-    // Invalidate all languages.
-    $languages = \Drupal::service(LocaleLanguages::class)->getTranslatableLanguages();
-    foreach ($languages as $language_code => $data) {
-      $parsed['refresh:' . $language_code] = 'waiting';
-    }
-  }
-  else {
-    // Invalidate single language.
-    $parsed['refresh:' . $langcode] = 'waiting';
-  }
-
-  \Drupal::state()->set('system.javascript_parsed', $parsed);
-  return $parsed;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleJs::class)->invalidate() instead. See https://www.drupal.org/node/3619103', E_USER_DEPRECATED);
+  return \Drupal::service(LocaleJs::class)->invalidate($langcode);
 }
 
 /**
@@ -816,150 +735,15 @@ function _locale_invalidate_js($langcode = NULL) {
  *
  * @return bool
  *   TRUE if translation file exists, FALSE otherwise.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(LocaleJs::class)->rebuild() instead.
+ *
+ * @see https://www.drupal.org/node/3619103
  */
 function _locale_rebuild_js($langcode = NULL) {
-  $config = \Drupal::config('locale.settings');
-  if (!isset($langcode)) {
-    $language = \Drupal::languageManager()->getCurrentLanguage();
-  }
-  else {
-    // Get information about the locale.
-    $languages = \Drupal::languageManager()->getLanguages();
-    $language = $languages[$langcode];
-  }
-
-  // Construct the array for JavaScript translations.
-  // Only add strings with a translation to the translations array.
-  $conditions = [
-    'type' => 'javascript',
-    'language' => $language->getId(),
-    'translated' => TRUE,
-  ];
-  $translations = [];
-  foreach (\Drupal::service('locale.storage')->getTranslations($conditions) as $data) {
-    $translations[$data->context][$data->source] = $data->translation;
-  }
-
-  // Include custom string overrides.
-  $custom_strings = Settings::get('locale_custom_strings_' . $language->getId(), []);
-  foreach ($custom_strings as $context => $strings) {
-    foreach ($strings as $source => $translation) {
-      $translations[$context][$source] = $translation;
-    }
-  }
-
-  // Construct the JavaScript file, if there are translations.
-  $data_hash = NULL;
-  $data = $status = '';
-  if (!empty($translations)) {
-    $data = [
-      'strings' => $translations,
-    ];
-
-    $locale_plurals = \Drupal::service('locale.plural.formula')->getFormula($language->getId());
-    if ($locale_plurals) {
-      $data['pluralFormula'] = $locale_plurals;
-    }
-
-    $data = 'window.drupalTranslations = ' . Json::encode($data) . ';';
-    $data_hash = Crypt::hashBase64($data);
-  }
-
-  // Construct the filepath where JS translation files are stored.
-  // There is (on purpose) no front end to edit that variable.
-  $dir = 'assets://' . $config->get('javascript.directory');
-
-  // Delete old file, if we have no translations anymore, or a different file to
-  // be saved.
-  $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
-  $changed_hash = !isset($locale_javascripts[$language->getId()]) || ($locale_javascripts[$language->getId()] != $data_hash);
-
-  /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-  $file_system = \Drupal::service('file_system');
-
-  if (!empty($locale_javascripts[$language->getId()]) && (!$data || $changed_hash)) {
-    try {
-      $file_system->delete($dir . '/' . $language->getId() . '_' . $locale_javascripts[$language->getId()] . '.js');
-    }
-    catch (FileException) {
-      // Ignore.
-    }
-    $locale_javascripts[$language->getId()] = '';
-    $status = 'deleted';
-  }
-
-  // Only create a new file if the content has changed or the original file got
-  // lost.
-  $dest = $dir . '/' . $language->getId() . '_' . $data_hash . '.js';
-  if ($data && ($changed_hash || !file_exists($dest))) {
-    // Ensure that the directory exists and is writable, if possible.
-    $file_system->prepareDirectory($dir, FileSystemInterface::CREATE_DIRECTORY);
-
-    // Save the file.
-    try {
-      if ($file_system->saveData($data, $dest)) {
-        $locale_javascripts[$language->getId()] = $data_hash;
-        // If we deleted a previous version of the file and we replace it with a
-        // new one we have an update.
-        if ($status == 'deleted') {
-          $status = 'updated';
-        }
-        // If the file did not exist previously and the data has changed we have
-        // a fresh creation.
-        elseif ($changed_hash) {
-          $status = 'created';
-        }
-        // If the data hash is unchanged the translation was lost and has to be
-        // rebuilt.
-        else {
-          $status = 'rebuilt';
-        }
-      }
-      else {
-        $locale_javascripts[$language->getId()] = '';
-        $status = 'error';
-      }
-    }
-    catch (FileException) {
-      // Do nothing.
-    }
-  }
-
-  // Save the new JavaScript hash (or an empty value if the file just got
-  // deleted). Act only if some operation was executed that changed the hash
-  // code.
-  if ($status && $changed_hash) {
-    \Drupal::state()->set('locale.translation.javascript', $locale_javascripts);
-  }
-
-  // Log the operation and return success flag.
-  $logger = \Drupal::logger('locale');
-  switch ($status) {
-    case 'updated':
-      $logger->notice('Updated JavaScript translation file for the language %language.', ['%language' => $language->getName()]);
-      return TRUE;
-
-    case 'rebuilt':
-      $logger->warning('JavaScript translation file %file.js was lost.', ['%file' => $locale_javascripts[$language->getId()]]);
-      // Proceed to the 'created' case as the JavaScript translation file has
-      // been created again.
-
-    case 'created':
-      $logger->notice('Created JavaScript translation file for the language %language.', ['%language' => $language->getName()]);
-      return TRUE;
-
-    case 'deleted':
-      $logger->notice('Removed JavaScript translation file for the language %language because no translations currently exist for that language.', ['%language' => $language->getName()]);
-      return TRUE;
-
-    case 'error':
-      $logger->error('An error occurred during creation of the JavaScript translation file for the language %language.', ['%language' => $language->getName()]);
-      return FALSE;
-
-    default:
-      // No operation needed.
-      return TRUE;
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleJs::class)->rebuild() instead. See https://www.drupal.org/node/3619103', E_USER_DEPRECATED);
+  return \Drupal::service(LocaleJs::class)->rebuild($langcode);
 }
 
 /**

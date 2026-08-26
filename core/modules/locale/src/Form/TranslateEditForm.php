@@ -5,6 +5,7 @@ namespace Drupal\locale\Form;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\locale\LocaleJs;
 use Drupal\locale\LocaleXss;
 use Drupal\locale\SourceString;
 
@@ -236,8 +237,11 @@ class TranslateEditForm extends TranslateFormBase {
 
     if ($updated) {
       // Clear cache and force refresh of JavaScript translations.
-      _locale_refresh_translations([$langcode], $updated);
-      _locale_refresh_configuration([$langcode], $updated);
+      \Drupal::service(LocaleJs::class)->refreshTranslations([$langcode], $updated);
+      $locale_config_manager = \Drupal::service('locale.config_manager');
+      if ($langcode && $names = $locale_config_manager->getStringNames($updated)) {
+        $locale_config_manager->updateConfigTranslations($names, [$langcode]);
+      }
     }
   }
 

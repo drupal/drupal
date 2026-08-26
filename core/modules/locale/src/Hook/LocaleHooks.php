@@ -9,6 +9,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\locale\LocaleSource;
 use Drupal\locale\File\LocaleFileManager;
+use Drupal\locale\LocaleJs;
 
 /**
  * Hook implementations for locale.
@@ -98,7 +99,7 @@ class LocaleHooks {
     // Changing the language settings impacts the interface: clear render cache.
     \Drupal::cache('render')->deleteAll();
     // Force JavaScript translation file re-creation for the new language.
-    _locale_invalidate_js($language->id());
+    \Drupal::service(LocaleJs::class)->invalidate($language->id());
   }
 
   /**
@@ -111,7 +112,7 @@ class LocaleHooks {
     // Changing the language settings impacts the interface: clear render cache.
     \Drupal::cache('render')->deleteAll();
     // Force JavaScript translation file re-creation for the modified language.
-    _locale_invalidate_js($language->id());
+    \Drupal::service(LocaleJs::class)->invalidate($language->id());
   }
 
   /**
@@ -127,7 +128,7 @@ class LocaleHooks {
     // Remove translated configuration objects.
     \Drupal::service('locale.config_manager')->deleteLanguageTranslations($language->id());
     // Changing the language settings impacts the interface:
-    _locale_invalidate_js($language->id());
+    \Drupal::service(LocaleJs::class)->invalidate($language->id());
     \Drupal::cache('render')->deleteAll();
     // Clear locale translation caches.
     \Drupal::service(LocaleSource::class)->deleteSourcesByLanguage($language->id());
