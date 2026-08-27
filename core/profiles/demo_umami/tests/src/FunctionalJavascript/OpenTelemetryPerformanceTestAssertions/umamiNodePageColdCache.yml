@@ -4,11 +4,11 @@ CacheGetCountByBin:
   page: 1
   config: 50
   bootstrap: 15
-  discovery: 71
+  discovery: 83
   data: 8
   entity: 24
   dynamic_page_cache: 1
-  default: 18
+  default: 6
   routes: 11
   render: 13
   menu: 3

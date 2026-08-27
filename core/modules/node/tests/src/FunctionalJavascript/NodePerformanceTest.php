@@ -97,14 +97,6 @@ class NodePerformanceTest extends PerformanceTestBase {
 
     $this->assertQueriesByName('nodePromotedContentPage', $performance_data->getQueries());
     $this->assertMetricsByName('nodePromotedContentPage', $performance_data);
-    $expected_default_cache_cids = [
-      'views_data:node_field_data:en',
-      'views_data:en',
-      'views_data:views:en',
-      'views_data:node:en',
-      'theme_registry:stark',
-    ];
-    $this->assertSame($expected_default_cache_cids, $performance_data->getCacheOperations()['get']['default']);
   }
 
   /**
@@ -124,12 +116,6 @@ class NodePerformanceTest extends PerformanceTestBase {
 
     $this->assertQueriesByName('nodePromotedContentAfterInvalidation', $performance_data->getQueries());
     $this->assertMetricsByName('nodePromotedContentAfterInvalidation', $performance_data);
-    $expected_default_cache_cids = [
-      'views_data:node_field_data:en',
-      'views_data:views:en',
-      'views_data:node:en',
-    ];
-    $this->assertSame($expected_default_cache_cids, $performance_data->getCacheOperations()['get']['default']);
   }
 
 }
