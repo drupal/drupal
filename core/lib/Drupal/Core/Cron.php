@@ -7,13 +7,11 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Queue\DelayableQueueInterface;
-use Drupal\Core\Queue\DelayedRequeueException;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueInterface;
+use Drupal\Core\Queue\QueueProcessTrait;
 use Drupal\Core\Queue\QueueWorkerInterface;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
-use Drupal\Core\Queue\RequeueException;
 use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -26,6 +24,7 @@ use Psr\Log\NullLogger;
  * The Drupal core Cron service.
  */
 class Cron implements CronInterface {
+  use QueueProcessTrait;
 
   /**
    * The queue config.
@@ -203,43 +202,10 @@ class Cron implements CronInterface {
   protected function processQueue(QueueInterface $queue, QueueWorkerInterface $worker) {
     $lease_time = $worker->getPluginDefinition()['cron']['time'];
     $end = $this->time->getCurrentTime() + $lease_time;
-    while ($this->time->getCurrentTime() < $end && ($item = $queue->claimItem($lease_time))) {
-      try {
-        $worker->processItem($item->data);
-        $queue->deleteItem($item);
-      }
-      catch (DelayedRequeueException $e) {
-        // The worker requested the task not be immediately re-queued.
-        // - If the queue doesn't support ::delayItem(), we should leave the
-        // item's current expiry time alone.
-        // - If the queue does support ::delayItem(), we should allow the
-        // queue to update the item's expiry using the requested delay.
-        if ($queue instanceof DelayableQueueInterface) {
-          // This queue can handle a custom delay; use the duration provided
-          // by the exception.
-          $queue->delayItem($item, $e->getDelay());
-        }
-      }
-      catch (RequeueException) {
-        // The worker requested the task be immediately requeued.
-        $queue->releaseItem($item);
-      }
-      catch (SuspendQueueException $e) {
-        // If the worker indicates the whole queue should be skipped, release
-        // the item and go to the next queue.
-        $queue->releaseItem($item);
-
-        $this->logger->debug('A worker for @queue queue suspended further processing of the queue.', [
-          '@queue' => $worker->getPluginId(),
-        ]);
-
-        // Skip to the next queue.
-        throw $e;
-      }
-      catch (\Exception $e) {
-        // In case of any other kind of exception, log it and leave the item
-        // in the queue to be processed again later.
-        Error::logException($this->logger, $e);
+    while ($this->time->getCurrentTime() < $end) {
+      $claimed = $this->processItem($queue, $worker);
+      if (!$claimed) {
+        break;
       }
     }
   }
