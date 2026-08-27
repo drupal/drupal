@@ -63,6 +63,11 @@
    * @fires event:dialogContentResize
    */
   function resetSize(event) {
+    // Ensure the UI dialog instance exists/is valid.
+    if (!event.data?.$element?.data('ui-dialog')) {
+      return;
+    }
+
     const positionOptions = [
       'width',
       'height',
@@ -129,6 +134,8 @@
         .dialog('option', { resizable: false, draggable: false })
         .dialog('widget');
       uiDialog[0].style.position = 'fixed';
+      // Keep a reference so that a scheduled call can be cancelled on close.
+      $element.data('drupalAutoResize', autoResize);
       $(window)
         .on('resize.dialogResize scroll.dialogResize', eventData, autoResize)
         .trigger('resize.dialogResize');
@@ -140,7 +147,12 @@
     }
   });
 
-  window.addEventListener('dialog:beforeclose', () => {
+  window.addEventListener('dialog:beforeclose', (e) => {
+    // Unbinding the handlers below does not stop a resize that is already
+    // scheduled. Closing a dialog removes its element from the DOM, which
+    // destroys the jQuery UI instance, so a call that runs after this point
+    // would act on a destroyed dialog and throw.
+    $(e.target).data('drupalAutoResize')?.cancel();
     $(window).off('.dialogResize');
     $(document).off('.dialogResize');
   });

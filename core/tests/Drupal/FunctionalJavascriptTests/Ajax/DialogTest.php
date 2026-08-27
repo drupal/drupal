@@ -263,4 +263,39 @@ class DialogTest extends WebDriverTestBase {
     $this->assertSame(808, $width);
   }
 
+  /**
+   * Tests that closing a dialog cancels a resize that is already scheduled.
+   *
+   * Dialog resizing is debounced by 20ms. Closing a dialog removes its element
+   * from the DOM, which destroys the jQuery UI instance, so a resize that runs
+   * after the dialog closed would act on a destroyed dialog and throw.
+   *
+   * @see https://www.drupal.org/node/3472624
+   */
+  public function testCloseCancelsScheduledResize(): void {
+    $this->drupalGet('ajax-test/dialog');
+    $this->getSession()->getPage()->clickLink('Link 1 (modal)');
+    $this->assertNotNull($this->assertSession()->waitForElementVisible('css', 'div.ui-dialog'));
+
+    // Schedule a resize, then close the dialog in the same tick so that the
+    // resize is always still pending when the dialog goes away. Flag the end
+    // of a period comfortably longer than the 20ms debounce, so that the test
+    // does not assert before a resize would have run.
+    $script = <<<SCRIPT
+      (function () {
+        window.dialogResizeElapsed = false;
+        jQuery(document).trigger('drupalViewportOffsetChange', Drupal.displace.offsets);
+        document.querySelector('.ui-dialog button[title="Close"]').click();
+        window.setTimeout(function () {
+          window.dialogResizeElapsed = true;
+        }, 200);
+      }())
+      SCRIPT;
+    $this->getSession()->executeScript($script);
+    $this->assertJsCondition('window.dialogResizeElapsed === true');
+
+    $errors = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.errors') || JSON.stringify([]))");
+    $this->assertSame([], $errors);
+  }
+
 }
