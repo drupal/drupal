@@ -4,11 +4,13 @@ namespace Drupal\config\Form;
 
 use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\DependencyInjection\AutowireTrait;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\UploadedFilesExtractor;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Site\Settings;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines the configuration import form.
@@ -17,53 +19,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ConfigImportForm extends FormBase {
 
-  /**
-   * The configuration storage.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $configStorage;
+  use AutowireTrait;
 
-  /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
-   * The settings object.
-   *
-   * @var \Drupal\Core\Site\Settings
-   */
-  protected $settings;
-
-  /**
-   * Constructs a new ConfigImportForm.
-   *
-   * @param \Drupal\Core\Config\StorageInterface $config_storage
-   *   The configuration storage.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
-   *   The file system service.
-   * @param \Drupal\Core\Site\Settings $settings
-   *   The settings object.
-   */
-  public function __construct(StorageInterface $config_storage, FileSystemInterface $file_system, Settings $settings) {
-    $this->configStorage = $config_storage;
-    $this->fileSystem = $file_system;
-    $this->settings = $settings;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.storage.sync'),
-      $container->get('file_system'),
-      $container->get('settings')
-    );
-  }
+  public function __construct(
+    #[Autowire(service: 'config.storage.sync')]
+    protected StorageInterface $configStorage,
+    protected FileSystemInterface $fileSystem,
+    protected Settings $settings,
+    protected UploadedFilesExtractor $uploadedFilesExtractor,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -99,9 +63,9 @@ class ConfigImportForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $all_files = $this->getRequest()->files->get('files', []);
-    if (!empty($all_files['import_tarball'])) {
-      $file_upload = $all_files['import_tarball'];
+    $uploaded_files = $this->uploadedFilesExtractor->extractUploadedFiles('import_tarball');
+    if (!empty($uploaded_files)) {
+      $file_upload = reset($uploaded_files);
       if ($file_upload->isValid()) {
         $form_state->setValue('import_tarball', $file_upload->getRealPath());
         return;
