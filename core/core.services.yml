@@ -73,6 +73,8 @@ parameters:
   tempstore.expire: 604800
   queue.config:
     suspendMaximumWait: 30.0
+  instant_queue.config:
+    maximumItems: 5
   stream_wrapper.allowed_file_extensions:
     module:
       - json
@@ -619,6 +621,9 @@ services:
   logger.channel.menu:
     parent: logger.channel_base
     arguments: ['menu']
+  logger.channel.queue:
+    parent: logger.channel_base
+    arguments: ['queue']
   logger.channel.router:
     parent: logger.channel_base
     arguments: ['router']
@@ -655,6 +660,11 @@ services:
   path.current:
     class: Drupal\Core\Path\CurrentPathStack
     arguments: ['@request_stack']
+  Drupal\Core\Queue\InstantQueueRunnerInterface:
+    class: 'Drupal\Core\Queue\InstantQueueRunner'
+    autowire: true
+    tags:
+      - { name: needs_destruction }
   Drupal\Core\Path\CurrentPathStack: '@path.current'
   http_handler_stack:
     class: GuzzleHttp\HandlerStack
