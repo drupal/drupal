@@ -6,6 +6,7 @@ namespace Drupal\Tests\file\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -37,8 +38,14 @@ class MultipleFileUploadTest extends BrowserTestBase {
 
   /**
    * Tests multiple file field with all file extensions.
+   *
+   * When theme-settings.php deprecation is complete then convert
+   * test_theme_settings theme-settings.php then remove the IgnoreDeprecations
+   * attribute.
    */
+  #[IgnoreDeprecations]
   public function testMultipleFileFieldWithAllFileExtensions(): void {
+    $this->expectUserDeprecationMessage('Using a theme-settings.php file in the test_theme_settings theme is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Convert the hooks to use attributes or move to the .theme file. See https://www.drupal.org/node/3587273');
     $theme = 'test_theme_settings';
     \Drupal::service('theme_installer')->install([$theme]);
     $this->drupalGet("admin/appearance/settings/$theme");

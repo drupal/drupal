@@ -9,6 +9,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -42,10 +43,18 @@ class ThemeSettingsFormTest extends WebDriverTestBase {
 
   /**
    * Tests that submission handler works correctly.
+   *
+   * When theme-settings.php deprecation is complete then convert
+   * test_theme_settings theme-settings.php then remove the IgnoreDeprecations
+   * attribute.
    */
+  #[IgnoreDeprecations]
   #[DataProvider('providerTestFormSettingsSubmissionHandler')]
   public function testFormSettingsSubmissionHandler($theme): void {
 
+    if ($theme === 'test_theme_settings') {
+      $this->expectUserDeprecationMessage('Using a theme-settings.php file in the test_theme_settings theme is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Convert the hooks to use attributes or move to the .theme file. See https://www.drupal.org/node/3587273');
+    }
     \Drupal::service('theme_installer')->install([$theme]);
 
     $page = $this->getSession()->getPage();
