@@ -50,7 +50,7 @@ class ExtensionStreamTest extends KernelTestBase {
       $this->streamWrappers[$scheme] = $this->container->get("stream_wrapper.$scheme");
     }
 
-    $this->container->get('theme_installer')->install(['olivero', 'claro']);
+    $this->container->get('theme_installer')->install(['claro']);
   }
 
   /**
@@ -122,11 +122,6 @@ class ExtensionStreamTest extends KernelTestBase {
     'theme://claro/style.css',
     'theme://claro',
     'core/themes/claro/style.css',
-  ])]
-  #[TestWith([
-    'theme://olivero/js/checkbox.js',
-    'theme://olivero/js',
-    'core/themes/olivero/js/checkbox.js',
   ])]
   public function testStreamWrapperMethods(string $uri, string $expected_dirname, string $expected_path): void {
     $base_url = $this->container->get('router.request_context')->getCompleteBaseUrl();

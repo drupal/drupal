@@ -298,7 +298,6 @@ class BlockTest extends BlockTestBase {
   public function testBlockThemeSelector(): void {
     // Install all themes.
     $themes = [
-      'olivero',
       'claro',
       'stark',
     ];

@@ -39,7 +39,7 @@ class ConfigEntityImportTest extends KernelTestBase {
    */
   public function testConfigUpdateImport(): void {
     $this->installConfig(['system', 'block', 'filter', 'image']);
-    $this->container->get('theme_installer')->install(['olivero']);
+    $this->container->get('theme_installer')->install(['stark']);
     $config_storage = $this->container->get('config.storage');
     // Ensure the 'system.site' config.
     $config_storage->write('system.site', ['uuid' => (new Php())->generate()]);
@@ -82,7 +82,7 @@ class ConfigEntityImportTest extends KernelTestBase {
     $block = $this->placeBlock('system_powered_by_block', [
       'id' => 'apple',
       'label' => 'Red Delicious',
-      'theme' => 'olivero',
+      'theme' => 'stark',
     ]);
 
     $this->checkSinglePluginConfigSync($block, 'settings', 'label', 'Red Delicious');

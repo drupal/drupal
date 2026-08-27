@@ -48,8 +48,8 @@ class AreaEntityTest extends ViewsKernelTestBase {
    */
   protected function setUpFixtures(): void {
     // Install the themes used for this test.
-    $this->container->get('theme_installer')->install(['olivero']);
-    $this->container->get('config.factory')->getEditable('system.theme')->set('default', 'olivero')->save();
+    $this->container->get('theme_installer')->install(['stark']);
+    $this->container->get('config.factory')->getEditable('system.theme')->set('default', 'stark')->save();
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');

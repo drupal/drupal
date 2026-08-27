@@ -280,8 +280,8 @@ JS;
    */
   public function testUiAjaxException(): void {
     $themes = [
-      'olivero',
       'claro',
+      'default_admin',
       'stark',
     ];
     \Drupal::service('theme_installer')->install($themes);
@@ -302,11 +302,11 @@ JS;
       $this->assertSession()
         ->statusMessageContainsAfterWait("Oops, something went wrong. Check your browser's developer console for more details.", 'error');
 
-      if ($theme === 'olivero') {
+      if ($theme === 'default_admin') {
         // Check that the message can be closed.
-        $this->click('.messages__close');
+        $this->click('.button--dismiss');
         $this->assertTrue($page->find('css', '.messages--error')
-          ->hasClass('hidden'));
+          ->hasClass('visually-hidden'));
       }
     }
 
