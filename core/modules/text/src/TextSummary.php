@@ -106,7 +106,7 @@ class TextSummary {
     $break_points[] = $line_breaks;
 
     // If the first paragraph is too long, split at the end of a sentence.
-    $break_points[] = ['. ' => 1, '! ' => 1, '? ' => 1, '。' => 0, '؟ ' => 1];
+    $break_points[] = ['.&nbsp;' => 6, '. ' => 1, '! ' => 1, '? ' => 1, '。' => 0, '؟ ' => 1];
 
     // Iterate over the groups of break points until a break point is found.
     foreach ($break_points as $points) {

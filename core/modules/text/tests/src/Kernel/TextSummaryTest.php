@@ -61,9 +61,9 @@ class TextSummaryTest extends KernelTestBase {
    * Tests summary with long example.
    */
   public function testLongSentence(): void {
-    // 125.
+    // Setup test strings and expectations.
     // cSpell:disable
-    $text =
+    $long_sentence_text =
       'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
       // 108.
       'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ' .
@@ -71,13 +71,30 @@ class TextSummaryTest extends KernelTestBase {
       'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ' .
       // 110.
       'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-    $expected = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
+    $long_sentence_expected = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
                 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ' .
                 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.';
+
+    $long_paragraph_text =
+      'Dr. Cras ultricies ligula sed magna dictum porta.&nbsp;Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.&nbsp;Pellentesque in ipsum ' .
+      'id orci porta dapibus.&nbsp;Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.&nbsp;Nulla porttitor.&nbsp;Cras ultricies&nbsp;ligula sed magna ' .
+      'dictum porta.&nbsp;Nulla quis lorem ut libero malesuada feugiat.&nbsp;Proin eget tortor risus.&nbsp;Curabitur non nulla sit amet nisl tempus convallis quis ac ' .
+      'lectus.&nbsp;Proin eget tortor risus.&nbsp;Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.&nbsp;Vivamus suscipit tortor eget felis ' .
+      'porttitor volutpat. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. ' .
+      'Quisque velit nisi, pretium ut lacinia in, elementum id enim. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; ' .
+      'Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Curabitur aliquet quam id dui posuere blandit. Curabitur aliquet quam id ' .
+      'dui posuere blandit. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Pellentesque in ipsum id orci porta dapibus';
+
+    $long_paragraph_expected = 'Dr. Cras ultricies ligula sed magna dictum porta.&nbsp;Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.&nbsp;Pellentesque in ipsum ' .
+      'id orci porta dapibus.&nbsp;Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.&nbsp;Nulla porttitor.';
     // cSpell:enable
+
     // First three sentences add up to: 336, so add one for space and then 3 to
     // get half-way into next word.
-    $this->assertTextSummary($text, $expected, NULL, 340);
+    $this->assertTextSummary($long_sentence_text, $long_sentence_expected, NULL, 340);
+
+    // Confirm long paragraph breaks correctly.
+    $this->assertTextSummary($long_paragraph_text, $long_paragraph_expected, NULL, 300);
   }
 
   /**
