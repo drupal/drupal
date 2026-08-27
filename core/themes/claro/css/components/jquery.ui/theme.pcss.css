@@ -716,7 +716,7 @@
 }
 .ui-progressbar .ui-progressbar-value {
   height: 1.5em;
-  background: var(--color-blue-600) url(../../../../misc/progress.gif);
+  background: var(--color-blue-600);
 }
 
 /**
