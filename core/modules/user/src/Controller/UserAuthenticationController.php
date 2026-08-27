@@ -7,6 +7,8 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
+use Drupal\user\LoginFinalizer;
+use Drupal\user\LogoutFinalizer;
 use Drupal\user\NotificationHandler;
 use Drupal\user\UserAuthenticationInterface;
 use Drupal\user\UserFloodControlInterface;
@@ -98,6 +100,16 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
   protected $logger;
 
   /**
+   * The login finalizer.
+   */
+  protected LoginFinalizer $loginFinalizer;
+
+  /**
+   * The logout finalizer.
+   */
+  protected LogoutFinalizer $logoutFinalizer;
+
+  /**
    * The user notification handler.
    */
   protected readonly NotificationHandler $notificationHandler;
@@ -111,6 +123,8 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     Serializer $serializer,
     array $serializer_formats,
     LoggerInterface $logger,
+    ?LoginFinalizer $loginFinalizer = NULL,
+    ?LogoutFinalizer $logoutFinalizer = NULL,
     ?NotificationHandler $notification_handler = NULL,
   ) {
     $this->userFloodControl = $user_flood_control;
@@ -121,6 +135,16 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     $this->serializerFormats = $serializer_formats;
     $this->routeProvider = $route_provider;
     $this->logger = $logger;
+    if ($loginFinalizer === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $loginFinalizer argument is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $loginFinalizer = \Drupal::service(LoginFinalizer::class);
+    }
+    $this->loginFinalizer = $loginFinalizer;
+    if ($logoutFinalizer === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $logoutFinalizer argument is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $logoutFinalizer = \Drupal::service(LogoutFinalizer::class);
+    }
+    $this->logoutFinalizer = $logoutFinalizer;
     if ($notification_handler === NULL) {
       @trigger_error('Calling ' . __CLASS__ . ' constructor without the $notificationHandler argument is deprecated in drupal:11.5.0 and it will be required in drupal:13.0.0. See https://www.drupal.org/node/3539363', E_USER_DEPRECATED);
     }
@@ -150,6 +174,8 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       $serializer,
       $formats,
       $container->get('logger.factory')->get('user'),
+      $container->get(LoginFinalizer::class),
+      $container->get(LogoutFinalizer::class),
       $container->get(NotificationHandler::class),
     );
   }
@@ -309,7 +335,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    *   The user.
    */
   protected function userLoginFinalize(UserInterface $user) {
-    user_login_finalize($user);
+    $this->loginFinalizer->finalizeLogin($user);
   }
 
   /**
@@ -337,7 +363,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * Logs the user out.
    */
   protected function userLogout() {
-    user_logout();
+    $this->logoutFinalizer->finalizeLogout();
   }
 
   /**

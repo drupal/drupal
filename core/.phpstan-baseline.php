@@ -24270,12 +24270,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/src/RegisterForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$account of function user_login_finalize expects Drupal\\\\user\\\\UserInterface, Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface\\|Drupal\\\\Core\\\\Entity\\\\RevisionLogInterface given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/RegisterForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\RoleForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

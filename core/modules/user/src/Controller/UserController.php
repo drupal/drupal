@@ -14,6 +14,8 @@ use Drupal\user\Form\UserPasswordResetForm;
 use Drupal\user\OneTimeAuthentication;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
+use Drupal\user\LoginFinalizer;
+use Drupal\user\LogoutFinalizer;
 use Drupal\user\UserStorageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -67,6 +69,16 @@ class UserController extends ControllerBase {
    */
   protected OneTimeAuthentication $oneTimeAuthentication;
 
+  /**
+   * The login finalizer service.
+   */
+  protected LoginFinalizer $loginFinalizer;
+
+  /**
+   * The logout finalizer service.
+   */
+  protected LogoutFinalizer $logoutFinalizer;
+
   public function __construct(
     DateFormatterInterface $date_formatter,
     UserStorageInterface $user_storage,
@@ -75,6 +87,8 @@ class UserController extends ControllerBase {
     FloodInterface $flood,
     protected TimeInterface $time,
     ?OneTimeAuthentication $one_time_authentication = NULL,
+    ?LoginFinalizer $loginFinalizer = NULL,
+    ?LogoutFinalizer $logoutFinalizer = NULL,
   ) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
@@ -85,6 +99,16 @@ class UserController extends ControllerBase {
       @trigger_error('Calling ' . __METHOD__ . '() without the $one_time_authentication argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
     }
     $this->oneTimeAuthentication = $one_time_authentication ?? \Drupal::service(OneTimeAuthentication::class);
+    if ($loginFinalizer === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $loginFinalizer argument is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $loginFinalizer = \Drupal::service(LoginFinalizer::class);
+    }
+    $this->loginFinalizer = $loginFinalizer;
+    if ($logoutFinalizer === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $logoutFinalizer argument is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $logoutFinalizer = \Drupal::service(LogoutFinalizer::class);
+    }
+    $this->logoutFinalizer = $logoutFinalizer;
   }
 
   /**
@@ -99,6 +123,8 @@ class UserController extends ControllerBase {
       $container->get('flood'),
       $container->get('datetime.time'),
       $container->get(OneTimeAuthentication::class),
+      $container->get(LoginFinalizer::class),
+      $container->get(LogoutFinalizer::class),
     );
   }
 
@@ -137,7 +163,7 @@ class UserController extends ControllerBase {
     if ($account->isAuthenticated()) {
       // The current user is already logged in.
       if ($account->id() == $uid) {
-        user_logout();
+        $this->logoutFinalizer->finalizeLogout();
         // We need to begin the redirect process again because logging out will
         // destroy the session.
         return $this->redirect(
@@ -286,7 +312,7 @@ class UserController extends ControllerBase {
     $this->flood->clear('user.failed_login_user', $identifier);
     $this->flood->clear('user.http_login', $identifier);
 
-    user_login_finalize($user);
+    $this->loginFinalizer->finalizeLogin($user);
     $this->logger->info('User %name used one-time login link at time %timestamp.', [
       '%name' => $user->getDisplayName(),
       '%timestamp' => $timestamp,
@@ -455,7 +481,7 @@ class UserController extends ControllerBase {
   )]
   public function logout() {
     if ($this->currentUser()->isAuthenticated()) {
-      user_logout();
+      $this->logoutFinalizer->finalizeLogout();
     }
     return $this->redirect('<front>');
   }

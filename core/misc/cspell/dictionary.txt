@@ -183,6 +183,7 @@ fieldgroups
 fieldnames
 fieldsets
 filemime
+finalizer
 findwith
 flickr
 flipfit

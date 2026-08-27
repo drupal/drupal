@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\user\LogoutFinalizer;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
@@ -25,6 +26,21 @@ use Symfony\Component\Routing\Attribute\Route;
   ],
 )]
 class UserLogoutConfirm extends ConfirmFormBase implements WorkspaceSafeFormInterface {
+
+  /**
+   * The user logout finalizer.
+   */
+  protected LogoutFinalizer $logoutFinalizer;
+
+  public function __construct(
+    ?LogoutFinalizer $logoutFinalizer = NULL,
+  ) {
+    if ($logoutFinalizer === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $logoutFinalizer argument is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $logoutFinalizer = \Drupal::service(LogoutFinalizer::class);
+    }
+    $this->logoutFinalizer = $logoutFinalizer;
+  }
 
   /**
    * {@inheritdoc}
@@ -66,7 +82,7 @@ class UserLogoutConfirm extends ConfirmFormBase implements WorkspaceSafeFormInte
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    user_logout();
+    $this->logoutFinalizer->finalizeLogout();
     $form_state->setRedirect('<front>');
   }
 

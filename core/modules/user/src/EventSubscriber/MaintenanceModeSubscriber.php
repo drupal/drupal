@@ -5,6 +5,8 @@ namespace Drupal\user\EventSubscriber;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\MaintenanceModeEvents;
 use Drupal\Core\Site\MaintenanceModeInterface;
+use Drupal\user\LogoutFinalizer;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
@@ -28,16 +30,23 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   protected $account;
 
   /**
-   * Constructs a new MaintenanceModeSubscriber.
-   *
-   * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
-   *   The maintenance mode.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The current user.
+   * The logout finalizer closure.
    */
-  public function __construct(MaintenanceModeInterface $maintenance_mode, AccountInterface $account) {
+  protected \Closure $logoutFinalizer;
+
+  public function __construct(
+    MaintenanceModeInterface $maintenance_mode,
+    AccountInterface $account,
+    #[AutowireServiceClosure(LogoutFinalizer::class)]
+    ?\Closure $logoutFinalizer = NULL,
+  ) {
     $this->maintenanceMode = $maintenance_mode;
     $this->account = $account;
+    if ($logoutFinalizer === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $logoutFinalizer argument is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $logoutFinalizer = fn () => \Drupal::service(LogoutFinalizer::class);
+    }
+    $this->logoutFinalizer = $logoutFinalizer;
   }
 
   /**
@@ -49,7 +58,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   public function onMaintenanceModeRequest(RequestEvent $event) {
     // If the site is offline, log out unprivileged users.
     if ($this->account->isAuthenticated()) {
-      user_logout();
+      ($this->logoutFinalizer)()->finalizeLogout();
     }
   }
 
