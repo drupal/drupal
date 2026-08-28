@@ -30,6 +30,7 @@ class PendingRevisionTest extends KernelTestBase {
     'user',
     'text',
     'field',
+    'filter',
     'system',
   ];
 
