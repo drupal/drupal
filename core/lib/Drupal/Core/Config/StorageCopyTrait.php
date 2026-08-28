@@ -34,20 +34,26 @@ trait StorageCopyTrait {
       foreach (array_diff($target_collection->listAll(), $names) as $name) {
         $target_collection->delete($name);
       }
-      // Then we loop over the config which needs to be there.
-      foreach ($names as $name) {
-        $data = $source_collection->read($name);
-        if ($data !== FALSE) {
-          if ($target_collection->read($name) !== $data) {
-            // Update the target collection if the data is different.
-            $target_collection->write($name, $data);
+
+      // Load the config in chunks of 500 items to conserve peak memory.
+      foreach (array_chunk($names, 500) as $chunked_names) {
+        // Then we loop over the config which needs to be there.
+        $source_data = $source_collection->readMultiple($chunked_names);
+        $target_data = $target_collection->readMultiple($chunked_names);
+
+        foreach ($chunked_names as $name) {
+          if (isset($source_data[$name])) {
+            if (!isset($target_data[$name]) || ($target_data[$name] !== $source_data[$name])) {
+              // Update the target collection if the data is different.
+              $target_collection->write($name, $source_data[$name]);
+            }
           }
-        }
-        else {
-          $target_collection->delete($name);
-          \Drupal::logger('config')->notice('Missing required data for configuration: %config', [
-            '%config' => $name,
-          ]);
+          else {
+            $target_collection->delete($name);
+            \Drupal::logger('config')->notice('Missing required data for configuration: %config', [
+              '%config' => $name,
+            ]);
+          }
         }
       }
     }
