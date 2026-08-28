@@ -51,6 +51,14 @@ class UserUpdateRoleMigrateTest extends UpdatePathTestBase {
     $authenticated = Role::load('authenticated');
     $this->assertTrue($authenticated->hasPermission('does_not_exist'), 'Authenticated role has a permission that does not exist');
 
+    $connection->insert('config')
+      ->fields([
+        'collection' => '',
+        'name' => 'user.role.broken_role',
+        'data' => serialize([]),
+      ])
+      ->execute();
+
     $this->runUpdates();
 
     $this->assertSession()->pageTextContains('The role Authenticated user has had non-existent permissions removed. Check the logs for details.');
@@ -62,6 +70,20 @@ class UserUpdateRoleMigrateTest extends UpdatePathTestBase {
     $this->drupalGet('admin/reports/dblog', ['query' => ['type[]' => 'update']]);
     $this->clickLink('The role Authenticated user has had the following non-…');
     $this->assertSession()->pageTextContains('The role Authenticated user has had the following non-existent permission(s) removed: does_not_exist.');
+
+    // Verify the broken role log message is recorded.
+    $this->drupalGet('admin/reports/dblog', ['query' => ['type[]' => 'update']]);
+    $this->clickLink('The role user.role.broken_role has no permissions and…');
+    $this->assertSession()->pageTextContains('The role user.role.broken_role has no permissions and should be removed.');
+
+    // Verify the broken role config still exists (it was skipped, not deleted).
+    $broken_role_exists = $connection
+      ->select('config', 'c')
+      ->condition('name', 'user.role.broken_role')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertEquals(1, $broken_role_exists, 'The broken role config still exists in the database.');
   }
 
 }

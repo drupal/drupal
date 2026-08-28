@@ -156,6 +156,17 @@ function user_update_10000() {
   $role_ids = $config_factory->listAll('user.role.');
   foreach ($role_ids as $role_id) {
     $role_config = $config_factory->getEditable($role_id);
+    if ($role_config->get('permissions') === NULL) {
+      // The data array for this role is empty. It is broken and should be
+      // removed.
+      \Drupal::logger('update')->notice(
+        'The role %role has no permissions and should be removed.',
+        [
+          '%role' => $role_config->getName(),
+        ]
+      );
+      continue;
+    }
     $removed_permissions = array_diff($role_config->get('permissions'), $existing_permissions);
     if (!empty($removed_permissions)) {
       $cleaned_roles[] = $role_config->get('label');
