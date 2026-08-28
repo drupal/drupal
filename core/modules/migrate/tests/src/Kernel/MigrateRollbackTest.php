@@ -22,7 +22,14 @@ class MigrateRollbackTest extends MigrateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'taxonomy', 'text', 'user', 'system'];
+  protected static $modules = [
+    'field',
+    'filter',
+    'taxonomy',
+    'text',
+    'user',
+    'system',
+  ];
 
   /**
    * {@inheritdoc}

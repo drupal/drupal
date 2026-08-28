@@ -25,6 +25,7 @@ class MigrateLookupTest extends MigrateTestBase {
     'system',
     'node',
     'field',
+    'filter',
     'user',
     'text',
     'migrate_lookup_test',
