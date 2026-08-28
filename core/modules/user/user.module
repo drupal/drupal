@@ -10,6 +10,8 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\user\Entity\User;
 use Drupal\user\Hook\UserThemeHooks;
+use Drupal\user\LoginFinalizer;
+use Drupal\user\LogoutFinalizer;
 use Drupal\user\OneTimeAuthentication;
 use Drupal\user\NotificationHandler;
 use Drupal\user\UserInterface;
@@ -152,29 +154,16 @@ function template_preprocess_username(&$variables): void {
  * @param \Drupal\user\UserInterface $account
  *   The account to log in.
  *
- * @see hook_user_login()
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *    \Drupal\user\LoginFinalizer::finalizeLogin() instead.
+ *
+ * @see https://www.drupal.org/node/3379194
  * @see \Drupal\user\Authentication\Provider\Cookie
+ * @see hook_user_login()
  */
 function user_login_finalize(UserInterface $account): void {
-  \Drupal::currentUser()->setAccount($account);
-  \Drupal::logger('user')->info('Session opened for %name.', ['%name' => $account->getAccountName()]);
-  // Update the user table timestamp noting user has logged in.
-  // This is also used to invalidate one-time login links.
-  $account->setLastLoginTime(\Drupal::time()->getRequestTime());
-  \Drupal::entityTypeManager()
-    ->getStorage('user')
-    ->updateLastLoginTimestamp($account);
-
-  // Regenerate the session ID to prevent against session fixation attacks.
-  // This is called before hook_user_login() in case one of those functions
-  // fails or incorrectly does a redirect which would leave the old session
-  // in place.
-  /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
-  $session = \Drupal::service('session');
-  $session->migrate();
-  $session->set('uid', $account->id());
-  $session->set('check_logged_in', TRUE);
-  \Drupal::moduleHandler()->invokeAll('user_login', [$account]);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\user\LoginFinalizer::finalizeLogin() instead. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+  \Drupal::service(LoginFinalizer::class)->finalizeLogin($account);
 }
 
 /**
@@ -680,21 +669,15 @@ function user_cookie_delete($cookie_name): void {
 
 /**
  * Logs the current user out.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\user\LogoutFinalizer::finalizeLogout() instead.
+ *
+ * @see https://www.drupal.org/node/3379194
  */
-function user_logout(): void {
-  $user = \Drupal::currentUser();
-
-  \Drupal::logger('user')->info('Session closed for %name.', ['%name' => $user->getAccountName()]);
-
-  \Drupal::moduleHandler()->invokeAll('user_logout', [$user]);
-
-  // Destroy the current session, and reset $user to the anonymous user.
-  // Note: In Symfony the session is intended to be destroyed with
-  // Session::invalidate(). Regrettably this method is currently broken and may
-  // lead to the creation of spurious session records in the database.
-  // @see https://github.com/symfony/symfony/issues/12375
-  \Drupal::service('session_manager')->destroy();
-  $user->setAccount(new AnonymousUserSession());
+function user_logout():void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\user\LogoutFinalizer::finalizeLogout() instead. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+  \Drupal::service(LogoutFinalizer::class)->finalizeLogout();
 }
 
 /**

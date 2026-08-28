@@ -9,6 +9,7 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\user\LoginFinalizer;
 use Drupal\user\UserAuthenticationInterface;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserInterface;
@@ -73,28 +74,31 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
   protected $bareHtmlPageRenderer;
 
   /**
-   * Constructs a new UserLoginForm.
-   *
-   * @param \Drupal\user\UserFloodControlInterface $user_flood_control
-   *   The user flood control service.
-   * @param \Drupal\user\UserStorageInterface $user_storage
-   *   The user storage.
-   * @param \Drupal\user\UserAuthInterface|\Drupal\user\UserAuthenticationInterface $user_auth
-   *   The user authentication object.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer.
-   * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_renderer
-   *   The renderer.
+   * The login finalizer.
    */
-  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, UserAuthInterface|UserAuthenticationInterface $user_auth, RendererInterface $renderer, BareHtmlPageRendererInterface $bare_html_renderer) {
+  protected LoginFinalizer $loginFinalizer;
+
+  public function __construct(
+    UserFloodControlInterface $user_flood_control,
+    UserStorageInterface $user_storage,
+    UserAuthInterface|UserAuthenticationInterface $user_auth,
+    RendererInterface $renderer,
+    BareHtmlPageRendererInterface $bare_html_renderer,
+    ?LoginFinalizer $loginFinalizer = NULL,
+  ) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
     if (!$user_auth instanceof UserAuthenticationInterface) {
-      @trigger_error('The $user_auth parameter not implementing UserAuthenticationInterface is deprecated in drupal:10.3.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3411040');
+      @trigger_error('The $user_auth parameter not implementing UserAuthenticationInterface is deprecated in drupal:10.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3411040');
     }
     $this->userAuth = $user_auth;
     $this->renderer = $renderer;
     $this->bareHtmlPageRenderer = $bare_html_renderer;
+    if ($loginFinalizer === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $loginFinalizer argument is deprecated in drupal:11.5.0 and it will be required from drupal:12.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $loginFinalizer = \Drupal::service(LoginFinalizer::class);
+    }
+    $this->loginFinalizer = $loginFinalizer;
   }
 
   /**
@@ -106,7 +110,8 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
       $container->get('entity_type.manager')->getStorage('user'),
       $container->get('user.auth'),
       $container->get('renderer'),
-      $container->get('bare_html_page_renderer')
+      $container->get('bare_html_page_renderer'),
+      $container->get(LoginFinalizer::class)
     );
   }
 
@@ -180,7 +185,7 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
       $this->getRequest()->query->set('destination', $this->getRequest()->request->get('destination'));
     }
 
-    user_login_finalize($account);
+    $this->loginFinalizer->finalizeLogin($account);
   }
 
   /**

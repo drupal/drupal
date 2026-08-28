@@ -33,7 +33,7 @@ services:
   Drupal\user\UserDataInterface: '@user.data'
   user_maintenance_mode_subscriber:
     class: Drupal\user\EventSubscriber\MaintenanceModeSubscriber
-    arguments: ['@maintenance_mode', '@current_user']
+    autowire: true
   user_access_denied_subscriber:
     class: Drupal\user\EventSubscriber\AccessDeniedSubscriber
     arguments: ['@current_user']
@@ -84,4 +84,8 @@ services:
   Drupal\user\OneTimeAuthentication:
     arguments: ['@datetime.time', '@language_manager']
   Drupal\user\NotificationHandler:
+    autowire: true
+  Drupal\user\LoginFinalizer:
+    autowire: true
+  Drupal\user\LogoutFinalizer:
     autowire: true

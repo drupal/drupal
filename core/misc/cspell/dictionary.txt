@@ -181,6 +181,7 @@ fieldgroups
 fieldnames
 fieldsets
 filemime
+finalizer
 findwith
 flipfit
 foat

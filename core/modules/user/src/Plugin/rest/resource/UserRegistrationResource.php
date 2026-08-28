@@ -54,7 +54,7 @@ class UserRegistrationResource extends ResourceBase {
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     if ($notification_handler === NULL) {
-      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $notificationHandler argument is deprecated in drupal:11.5.0 and it will be required in drupal:13.0.0. See https://www.drupal.org/node/3539363', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $notificationHandler argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3539363', E_USER_DEPRECATED);
     }
     $this->notificationHandler = $notification_handler ?? \Drupal::service(NotificationHandler::class);
   }

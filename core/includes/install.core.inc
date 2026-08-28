@@ -5,6 +5,7 @@
  * API functions for installing Drupal.
  */
 
+use Drupal\user\LoginFinalizer;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\NullBackend;
@@ -1833,7 +1834,7 @@ function install_finished(&$install_state): void {
     // This has to be done after drupal_flush_all_caches()
     // to avoid session regeneration.
     $account = User::load(1);
-    user_login_finalize($account);
+    \Drupal::service(LoginFinalizer::class)->finalizeLogin($account);
   }
 
   $success_message = t('Congratulations, you installed @drupal!', [
