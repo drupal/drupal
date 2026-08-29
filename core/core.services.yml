@@ -472,6 +472,14 @@ services:
     arguments: ['@config.storage', '@database', '@event_dispatcher', '@lock']
     public: false
   Drupal\Core\Config\StorageManagerInterface: '@config.storage.export.manager'
+  config.parsing_cache:
+    class: Drupal\Core\Utility\YamlCacheCollector
+    arguments: ['config.parsing_cache', '@cache.file_parsing', '@lock', '@datetime.time']
+    tags:
+      - { name: needs_destruction }
+  config.file_storage.factory:
+    class: Drupal\Core\Config\FileStorageFactory
+  Drupal\Core\Config\FileStorageFactory: '@config.file_storage.factory'
   config.storage.sync:
     class: Drupal\Core\Config\AutoloadingStorage
     factory: ['@Drupal\Core\Config\SyncFactory', 'get']

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Config;
 
+use Drupal\Core\Cache\CacheCollectorInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\ExtensionList;
 use Drupal\Core\Extension\ModuleExtensionList;
@@ -24,6 +25,8 @@ class SyncFactory {
     protected readonly StorageInterface $activeConfig,
     protected readonly ModuleExtensionList $moduleExtensionList,
     protected readonly ThemeExtensionList $themeExtensionList,
+    #[Autowire(service: 'config.parsing_cache')]
+    protected readonly CacheCollectorInterface $yamlCacheCollector,
   ) {
   }
 
@@ -45,7 +48,7 @@ class SyncFactory {
     if ($directory === FALSE) {
       throw new ConfigDirectoryNotDefinedException('The config sync directory is not defined in $settings["config_sync_directory"]');
     }
-    $storage = new FileStorage($directory);
+    $storage = new FileStorage($directory, StorageInterface::DEFAULT_COLLECTION, $this->yamlCacheCollector);
     return $this->wrapStorageWithAutoloadingStorage($storage);
   }
 
