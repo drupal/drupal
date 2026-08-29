@@ -31,6 +31,7 @@ use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\views\Plugin\views\field\EntityField;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 // cspell:ignore imce
@@ -1373,6 +1374,37 @@ final class PreprocessHooks implements TrustedCallbackInterface {
         $row['data'][0]['class'] = array_diff($row['data'][0]['class'], ['container-inline']);
       }
     }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for views_view_field__status.
+   *
+   * Determines the publication state of the entity the row belongs to, so that
+   * the template can wrap the output in a publication status marker. The
+   * template cannot do this on its own, because resolving the translation of
+   * the row requires the field handler.
+   *
+   * The theme suggestion is derived from the field ID, so this runs for every
+   * views field with the ID 'status', of every entity type. The publication
+   * state therefore stays unknown for anything that is not the publication
+   * status field of a publishable entity type.
+   *
+   * @see \Drupal\views\Plugin\views\field\FieldPluginBase::themeFunctions()
+   */
+  #[Hook('preprocess_views_view_field__status')]
+  public function preprocessViewsViewFieldStatus(array &$variables): void {
+    $field_handler = $variables['field'];
+    if (!($field_handler instanceof EntityField)) {
+      $variables['is_published'] = NULL;
+      return;
+    }
+
+    $entity = $field_handler->getEntity($variables['row']);
+    if ($entity?->get($field_handler->definition['field_name'])->getFieldDefinition()->getType() === 'boolean') {
+      $variables['is_published'] = (bool) $field_handler->getValue($variables['row']);
+      return;
+    }
+    $variables['is_published'] = NULL;
   }
 
   /**
