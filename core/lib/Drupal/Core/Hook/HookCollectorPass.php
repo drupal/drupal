@@ -41,7 +41,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @internal
  */
-class HookCollectorPass implements CompilerPassInterface {
+class HookCollectorPass extends HookCollectorBase implements CompilerPassInterface {
+
+  /**
+   * The extensions of procedural hook implementation files.
+   *
+   * @var string[]
+   */
+  protected array $proceduralFileExtensions = ['module', 'profile', 'install'];
 
   /**
    * OOP implementation module names keyed by hook name and "$class::$method".
@@ -256,38 +263,6 @@ class HookCollectorPass implements CompilerPassInterface {
   }
 
   /**
-   * Registers the hook implementation services.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-   *   The container builder.
-   * @param array<string, array<string, string>> $implementationsByHook
-   *   Implementations, as module names keyed by hook name and "$class::$method"
-   *   or $function identifier.
-   */
-  protected static function registerHookServices(
-    ContainerBuilder $container,
-    array $implementationsByHook,
-  ): void {
-    $classesMap = [];
-    foreach ($implementationsByHook as $hookImplementations) {
-      foreach (array_keys($hookImplementations) as $identifier) {
-        $parts = explode('::', $identifier, 2);
-        if (isset($parts[1])) {
-          $classesMap[$parts[0]] = TRUE;
-        }
-      }
-    }
-
-    foreach (array_keys($classesMap) as $class) {
-      if (!$container->hasDefinition($class)) {
-        $container
-          ->register($class, $class)
-          ->setAutowired(TRUE);
-      }
-    }
-  }
-
-  /**
    * Collects all hook implementations.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
@@ -360,11 +335,8 @@ class HookCollectorPass implements CompilerPassInterface {
     // Hash to prevent massive key sizes.
     $procedural_hook_file_cache = FileCacheFactory::get('procedural_hook_implementations:' . hash('xxh3', $all_modules_preg));
 
-    $iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS);
-    $iterator = new \RecursiveCallbackFilterIterator($iterator, static::filterIterator(...));
-    $iterator = new \RecursiveIteratorIterator($iterator);
-    /** @var \RecursiveDirectoryIterator | \RecursiveIteratorIterator $iterator*/
-    foreach ($iterator as $fileinfo) {
+    $procedural_files = array_map(fn (string $extension): string => "$module.$extension", $this->proceduralFileExtensions);
+    foreach ($this->getHookFileIterator($dir, $procedural_files) as $fileinfo) {
       assert($fileinfo instanceof \SplFileInfo);
       $extension = $fileinfo->getExtension();
       $filename = $fileinfo->getPathname();
@@ -383,7 +355,7 @@ class HookCollectorPass implements CompilerPassInterface {
           // forcibly invalidating the opcode cache.
           // @see https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.revalidate-freq
           OpCodeCache::invalidate($filename);
-          $namespace = preg_replace('#^src/#', "Drupal/$module/", $iterator->getSubPath());
+          $namespace = preg_replace('#^src/#', "Drupal/$module/", substr($fileinfo->getPath(), strlen($dir) + 1));
           $class = $namespace . '/' . $fileinfo->getBasename('.php');
           $class = str_replace('/', '\\', $class);
           $class_attributes = [];
@@ -520,21 +492,6 @@ class HookCollectorPass implements CompilerPassInterface {
   }
 
   /**
-   * Filter iterator callback. Allows include files and .php files in src/Hook.
-   */
-  protected static function filterIterator(\SplFileInfo $fileInfo, $key, \RecursiveDirectoryIterator $iterator): bool {
-    $sub_path_name = $iterator->getSubPathname();
-    $extension = $fileInfo->getExtension();
-    if (str_starts_with($sub_path_name, 'src/Hook/')) {
-      return $iterator->isDir() || $extension === 'php';
-    }
-    if ($iterator->isDir()) {
-      return $sub_path_name === 'src' || $sub_path_name === 'src/Hook';
-    }
-    return in_array($extension, ['module', 'profile', 'install']);
-  }
-
-  /**
    * Adds a procedural hook implementation.
    *
    * @param string $hook
@@ -577,28 +534,6 @@ class HookCollectorPass implements CompilerPassInterface {
     if (in_array($hookAttribute->hook, $staticDenyHooks) || preg_match('/^(post_update_|update_\d+$)/', $hookAttribute->hook)) {
       throw new \LogicException("The hook $hookAttribute->hook on class $class does not support attributes and must remain procedural.");
     }
-  }
-
-  /**
-   * Get attribute instances from class and method reflections.
-   *
-   * @param \ReflectionClass $reflectionClass
-   *   A reflected class.
-   *
-   * @return array<string, list<\Drupal\Core\Hook\Attribute\HookAttributeInterface>>
-   *   Lists of Hook attribute instances by method name.
-   */
-  protected static function getAttributeInstances(\ReflectionClass $reflectionClass): array {
-    $attributes = [];
-    $reflections = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
-    $reflections[] = $reflectionClass;
-    foreach ($reflections as $reflection) {
-      if ($reflectionAttributes = $reflection->getAttributes(HookAttributeInterface::class, \ReflectionAttribute::IS_INSTANCEOF)) {
-        $method = $reflection instanceof \ReflectionMethod ? $reflection->getName() : '__invoke';
-        $attributes[$method] = array_map(static fn (\ReflectionAttribute $ra) => $ra->newInstance(), $reflectionAttributes);
-      }
-    }
-    return $attributes;
   }
 
 }

@@ -9,7 +9,6 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Hook\Attribute\HookAttributeInterface;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\Attribute\RemoveHook;
 use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
@@ -35,7 +34,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @internal
  */
-class ThemeHookCollectorPass implements CompilerPassInterface {
+class ThemeHookCollectorPass extends HookCollectorBase implements CompilerPassInterface {
 
   /**
    * OOP implementation theme names keyed by hook name and "$class::$method".
@@ -227,11 +226,7 @@ class ThemeHookCollectorPass implements CompilerPassInterface {
     $hookFileCache = FileCacheFactory::get('theme_hook_implementations');
     $proceduralHookFileCache = FileCacheFactory::get('theme_procedural_hook_implementations:' . $allThemesPreg);
 
-    $iterator = new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS | \FilesystemIterator::FOLLOW_SYMLINKS);
-    $iterator = new \RecursiveCallbackFilterIterator($iterator, static::filterIterator(...));
-    $iterator = new \RecursiveIteratorIterator($iterator);
-    /** @var \RecursiveDirectoryIterator | \RecursiveIteratorIterator $iterator*/
-    foreach ($iterator as $fileinfo) {
+    foreach ($this->getHookFileIterator($dir, ["$theme.theme", 'theme-settings.php']) as $fileinfo) {
       assert($fileinfo instanceof \SplFileInfo);
       $fileExtension = $fileinfo->getExtension();
       $filename = $fileinfo->getPathname();
@@ -259,7 +254,7 @@ class ThemeHookCollectorPass implements CompilerPassInterface {
           // forcibly invalidating the opcode cache.
           // @see https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.revalidate-freq
           OpCodeCache::invalidate($filename);
-          $namespace = preg_replace('#^src/#', "Drupal/$theme/", $iterator->getSubPath());
+          $namespace = preg_replace('#^src/#', "Drupal/$theme/", substr($fileinfo->getPath(), strlen($dir) + 1));
           $class = $namespace . '/' . $fileinfo->getBasename('.php');
           $class = str_replace('/', '\\', $class);
           $attributes = [];
@@ -343,56 +338,6 @@ class ThemeHookCollectorPass implements CompilerPassInterface {
   }
 
   /**
-   * Registers the hook implementation services.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
-   *   The container builder.
-   * @param array<string, array<string, string>> $implementationsByHook
-   *   Implementations, as module names keyed by hook name and "$class::$method"
-   *   or $function identifier.
-   */
-  protected static function registerHookServices(
-    ContainerBuilder $container,
-    array $implementationsByHook,
-  ): void {
-    $classesMap = [];
-    foreach ($implementationsByHook as $hookImplementations) {
-      foreach (array_keys($hookImplementations) as $identifier) {
-        $parts = explode('::', $identifier, 2);
-        if (isset($parts[1])) {
-          $classesMap[$parts[0]] = TRUE;
-        }
-      }
-    }
-
-    foreach (array_keys($classesMap) as $class) {
-      if (!$container->hasDefinition($class)) {
-        $container
-          ->register($class, $class)
-          ->setAutowired(TRUE);
-      }
-    }
-  }
-
-  /**
-   * Filter iterator callback. Allows include files and .php files in src/Hook.
-   */
-  protected static function filterIterator(\SplFileInfo $fileInfo, $key, \RecursiveDirectoryIterator $iterator): bool {
-    $subPathName = $iterator->getSubPathname();
-    $extension = $fileInfo->getExtension();
-    if (str_starts_with($subPathName, 'src/Hook/')) {
-      return $iterator->isDir() || $extension === 'php';
-    }
-    if ($iterator->isDir()) {
-      return $subPathName === 'src' || $subPathName === 'src/Hook';
-    }
-    if ($fileInfo->getFilename() === 'theme-settings.php') {
-      return TRUE;
-    }
-    return in_array($extension, ['theme']);
-  }
-
-  /**
    * Checks for hooks which can't be supported in theme classes.
    *
    * @param \Drupal\Core\Hook\Attribute\Hook $hookAttribute
@@ -409,28 +354,6 @@ class ThemeHookCollectorPass implements CompilerPassInterface {
     if ($hookAttribute->order !== NULL) {
       throw new \LogicException("The 'order' parameter on the #[Hook] attribute is not allowed in themes. Found in $class.");
     }
-  }
-
-  /**
-   * Get attribute instances from class and method reflections.
-   *
-   * @param \ReflectionClass $reflectionClass
-   *   A reflected class.
-   *
-   * @return array<string, list<\Drupal\Core\Hook\Attribute\HookAttributeInterface>>
-   *   Lists of Hook attribute instances by method name.
-   */
-  protected static function getAttributeInstances(\ReflectionClass $reflectionClass): array {
-    $attributes = [];
-    $reflections = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
-    $reflections[] = $reflectionClass;
-    foreach ($reflections as $reflection) {
-      if ($reflectionAttributes = $reflection->getAttributes(HookAttributeInterface::class, \ReflectionAttribute::IS_INSTANCEOF)) {
-        $method = $reflection instanceof \ReflectionMethod ? $reflection->getName() : '__invoke';
-        $attributes[$method] = array_map(static fn(\ReflectionAttribute $ra) => $ra->newInstance(), $reflectionAttributes);
-      }
-    }
-    return $attributes;
   }
 
 }
