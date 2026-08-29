@@ -1,13 +1,16 @@
 {#
 /**
  * @file
- * Default theme implementation for a single field in a view.
+ * Default theme implementation for a status field in a view.
  *
  * Available variables:
  * - view: The view that the field belongs to.
  * - field: The field handler that can process the input.
  * - row: The raw result of the database query that generated this field.
  * - output: The processed output that will normally be used.
+ * - is_published: TRUE if the entity of the row is published, FALSE if it is
+ *   unpublished, NULL if the publication state is unknown. The output gets no
+ *   status marker when the state is unknown.
  *
  * When fetching output from the row this construct should be used:
  * data = row[field.field_alias]
@@ -15,17 +18,15 @@
  * The above will guarantee that you'll always get the correct data, regardless
  * of any changes in the aliasing that might happen if the view is modified.
  *
- * @see template_preprocess_views_view_field()
+ * @see \Drupal\views\Hook\ViewsThemeHooks::preprocessViewsViewField()
+ * @see \Drupal\default_admin\Hook\PreprocessHooks::preprocessViewsViewFieldStatus()
  *
  * @ingroup themeable
  */
 #}
-{% set entity = row._entity %}
-{% if entity.hasTranslation(row.node_field_data_langcode) %}
-  {% set entity = row._entity.getTranslation(row.node_field_data_langcode) %}
-{% endif %}
-
-{% if entity.isPublished() %}
+{% if is_published is null %}
+  {{ output -}}
+{% elseif is_published %}
   <span class="marker marker--published">{{ output -}}</span>
 {% else %}
   <span class="marker">{{ output -}}</span>
