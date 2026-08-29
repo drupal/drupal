@@ -656,6 +656,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $cache_backend->deleteAll();
     }
 
+    // The config parsing cache isn't tagged as a cache bin because it is
+    // designed to persist across cache clears. However when a module is
+    // uninstalled we want to ensure that parsed configuration for that module
+    // is also deleted, both to free up space and to avoid missing class
+    // dependencies in the cache entry.
+    \Drupal::service('config.parsing_cache')->clear();
+
     return TRUE;
   }
 

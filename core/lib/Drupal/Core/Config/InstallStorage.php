@@ -41,13 +41,6 @@ class InstallStorage extends FileStorage {
   protected $folders;
 
   /**
-   * The directory to scan in each extension to scan for files.
-   *
-   * @var string
-   */
-  protected $directory;
-
-  /**
    * Constructs an InstallStorage object.
    *
    * @param string $directory

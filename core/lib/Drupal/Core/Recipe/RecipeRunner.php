@@ -355,7 +355,7 @@ final class RecipeRunner {
     // Allow the recipe to override simple configuration from the theme.
     $storage = new RecipeOverrideConfigStorage(
       $recipeConfigStorage,
-      new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION)
+      new FileStorage($default_install_path)
     );
     \Drupal::service('config.installer')->setSourceStorage($storage);
 
