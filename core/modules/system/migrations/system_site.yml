@@ -16,7 +16,6 @@ source:
     - site_403
     - site_404
     - drupal_weight_select_max
-    - admin_compact_mode
   source_module: system
 process:
   name: site_name
@@ -64,7 +63,6 @@ process:
     source: drupal_weight_select_max
     strict: true
     default_value: 100
-  admin_compact_mode: admin_compact_mode
 destination:
   plugin: config
   config_name: system.site

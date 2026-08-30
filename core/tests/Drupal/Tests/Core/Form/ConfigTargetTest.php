@@ -37,13 +37,13 @@ class ConfigTargetTest extends UnitTestCase {
       'test' => [
         '#type' => 'text',
         '#default_value' => 'A test',
-        '#config_target' => new ConfigTarget('system.site', 'admin_compact_mode', 'intval', 'boolval'),
+        '#config_target' => new ConfigTarget('system.cron', 'logging', 'intval', 'boolval'),
         '#name' => 'test',
         '#array_parents' => ['test'],
       ],
       'duplicate' => [
         '#type' => 'text',
-        '#config_target' => new ConfigTarget('system.site', 'admin_compact_mode', 'intval', 'boolval'),
+        '#config_target' => new ConfigTarget('system.cron', 'logging', 'intval', 'boolval'),
         '#name' => 'duplicate',
         '#array_parents' => ['duplicate'],
       ],
@@ -63,7 +63,7 @@ class ConfigTargetTest extends UnitTestCase {
     $form_state = new FormState();
 
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessageIs('Two #config_targets both target "admin_compact_mode" in the "system.site" config: `$form[\'test\']` and `$form[\'duplicate\']`.');
+    $this->expectExceptionMessageIs('Two #config_targets both target "logging" in the "system.cron" config: `$form[\'test\']` and `$form[\'duplicate\']`.');
     $test_form->storeConfigKeyToFormElementMap($form, $form_state);
   }
 
@@ -78,7 +78,7 @@ class ConfigTargetTest extends UnitTestCase {
       'test' => [
         '#type' => 'text',
         '#default_value' => 'A test',
-        '#config_target' => new ConfigTarget('system.site', 'admin_compact_mode', $fromConfig, $toConfig),
+        '#config_target' => new ConfigTarget('system.cron', 'logging', $fromConfig, $toConfig),
         '#name' => 'test',
         '#array_parents' => ['test'],
       ],
@@ -87,7 +87,7 @@ class ConfigTargetTest extends UnitTestCase {
     $config = $this->prophesize(Config::class);
     $config->getCacheTags()->willReturn([]);
     $config_factory = $this->prophesize(ConfigFactoryInterface::class);
-    $config_factory->getEditable('system.site')->willReturn($config->reveal());
+    $config_factory->getEditable('system.cron')->willReturn($config->reveal());
     $test_form = new class(
       $config_factory->reveal(),
       $this->prophesize(TypedConfigManagerInterface::class)->reveal(),
@@ -158,14 +158,14 @@ class ConfigTargetTest extends UnitTestCase {
       'test' => [
         '#type' => 'text',
         '#default_value' => 'A test',
-        '#config_target' => new ConfigTarget('system.site', 'admin_compact_mode', 'intval', 'boolval'),
+        '#config_target' => new ConfigTarget('system.cron', 'logging', 'intval', 'boolval'),
         '#name' => 'test',
         '#parents' => ['test'],
       ],
     ];
     $config_target = ConfigTarget::fromForm(['test'], $form);
-    $this->assertSame('system.site', $config_target->configName);
-    $this->assertSame(['admin_compact_mode'], $config_target->propertyPaths);
+    $this->assertSame('system.cron', $config_target->configName);
+    $this->assertSame(['logging'], $config_target->propertyPaths);
     $this->assertSame(['test'], $config_target->elementParents);
     $this->assertSame(1, ($config_target->fromConfig)(TRUE));
     $this->assertFalse(($config_target->toConfig)('0'));

@@ -190,6 +190,11 @@ class SystemController extends ControllerBase {
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response to the front page.
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3588109
    */
   #[Route(
     path: '/admin/compact/{mode}',
@@ -198,6 +203,7 @@ class SystemController extends ControllerBase {
     defaults: ['mode' => 'off'],
   )]
   public function compactPage($mode) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3588109', E_USER_DEPRECATED);
     $response = $this->redirect('<front>');
     if ($mode === 'on') {
       $response->headers->setCookie(new Cookie('Drupal.visitor.admin_compact_mode', '1', $this->time->getRequestTime() + 31536000));

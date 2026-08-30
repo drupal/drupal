@@ -70,6 +70,17 @@ drupal.system.modules:
     - core/once
     - core/drupal.announce
 
+drupal.system.admin_compact:
+  version: VERSION
+  css:
+    theme:
+      css/system.admin_compact.css: { weight: -10 }
+  js:
+    js/system.admin_compact.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
 diff:
   version: VERSION
   css:

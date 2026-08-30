@@ -7,6 +7,7 @@ namespace Drupal\Tests\system\Functional\System;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -154,6 +155,7 @@ class AdminTest extends BrowserTestBase {
   /**
    * Tests compact mode.
    */
+  #[IgnoreDeprecations]
   public function testCompactMode(): void {
     $session = $this->getSession();
 
