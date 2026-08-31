@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Install functions for the text module.
+ */
+
+/**
+ * Installs the text_with_summary module when text_with_summary fields exist.
+ */
+function text_update_12001(): void {
+  if (\Drupal::moduleHandler()->moduleExists('text_with_summary')) {
+    return;
+  }
+  $storages = \Drupal::entityTypeManager()
+    ->getStorage('field_storage_config')
+    ->loadByProperties(['type' => 'text_with_summary']);
+  if ($storages !== []) {
+    \Drupal::service('module_installer')->install(['text_with_summary']);
+  }
+}

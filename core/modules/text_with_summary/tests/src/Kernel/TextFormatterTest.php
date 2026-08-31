@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\text\Kernel;
+namespace Drupal\Tests\text_with_summary\Kernel;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -12,9 +12,9 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests the text formatters functionality.
+ * Tests the text_with_summary formatters functionality.
  */
-#[Group('text')]
+#[Group('text_with_summary')]
 #[RunTestsInSeparateProcesses]
 class TextFormatterTest extends EntityKernelTestBase {
 
@@ -73,8 +73,7 @@ class TextFormatterTest extends EntityKernelTestBase {
    */
   public function testFormatters(): void {
     $formatters = [
-      'text_default',
-      'text_trimmed',
+      'text_summary_or_trimmed',
     ];
 
     // Create the entity to be referenced.

@@ -1,20 +1,17 @@
 <?php
 
-namespace Drupal\text\Plugin\Field\FieldType;
+namespace Drupal\text_with_summary\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\text\Plugin\Field\FieldType\TextFieldItemList;
+use Drupal\text\Plugin\Field\FieldType\TextItemBase;
 
 /**
  * Plugin implementation of the 'text_with_summary' field type.
- *
- * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use
- * \Drupal\text_with_summary\Plugin\Field\FieldType\TextWithSummaryItem instead.
- *
- * @see https://www.drupal.org/node/3568381
  */
 #[FieldType(
   id: "text_with_summary",
@@ -35,7 +32,7 @@ class TextWithSummaryItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function defaultFieldSettings() {
+  public static function defaultFieldSettings(): array {
     return [
       'display_summary' => 0,
       'required_summary' => FALSE,
@@ -45,7 +42,7 @@ class TextWithSummaryItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
+  public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition): array {
     $properties = parent::propertyDefinitions($field_definition);
 
     $properties['summary'] = DataDefinition::create('string')
@@ -64,7 +61,7 @@ class TextWithSummaryItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(FieldStorageDefinitionInterface $field_definition) {
+  public static function schema(FieldStorageDefinitionInterface $field_definition): array {
     return [
       'columns' => [
         'value' => [
@@ -89,7 +86,7 @@ class TextWithSummaryItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public function isEmpty() {
+  public function isEmpty(): bool {
     $value = $this->get('summary')->getValue();
     return parent::isEmpty() && ($value === NULL || $value === '');
   }
@@ -97,7 +94,7 @@ class TextWithSummaryItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state): array {
     $element = parent::fieldSettingsForm($form, $form_state);
     $settings = $this->getSettings();
 
@@ -121,7 +118,7 @@ class TextWithSummaryItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public function getConstraints() {
+  public function getConstraints(): array {
     $constraints = parent::getConstraints();
     if ($this->getSetting('required_summary')) {
       $manager = $this->getTypedDataManager()->getValidationConstraintManager();

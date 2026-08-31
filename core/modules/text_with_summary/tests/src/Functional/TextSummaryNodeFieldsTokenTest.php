@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\text\Functional;
+namespace Drupal\Tests\text_with_summary\Functional;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Functional\Views\NodeTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -16,7 +17,8 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @see \Drupal\node\Tests\NodeTokenReplaceTest
  */
-#[Group('text')]
+#[Group('text_with_summary')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class TextSummaryNodeFieldsTokenTest extends NodeTestBase {
 
@@ -35,7 +37,7 @@ class TextSummaryNodeFieldsTokenTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['body_field'];
+  protected static $modules = ['body_field', 'text_with_summary'];
 
   /**
    * Tests token replacement for Views tokens supplied by the Node module.

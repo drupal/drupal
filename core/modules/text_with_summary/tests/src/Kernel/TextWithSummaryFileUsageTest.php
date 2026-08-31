@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\editor\Kernel;
+namespace Drupal\Tests\text_with_summary\Kernel;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\editor\Entity\Editor;
@@ -19,7 +19,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests tracking of file usage by the Text Editor module.
  */
-#[Group('editor')]
+#[Group('text_with_summary')]
 #[RunTestsInSeparateProcesses]
 class TextWithSummaryFileUsageTest extends EntityKernelTestBase {
 
@@ -28,7 +28,13 @@ class TextWithSummaryFileUsageTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['editor', 'editor_test', 'node', 'file'];
+  protected static $modules = [
+    'editor',
+    'editor_test',
+    'node',
+    'file',
+    'text_with_summary',
+  ];
 
   /**
    * {@inheritdoc}

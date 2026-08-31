@@ -1,5 +1,6 @@
 drupal.text:
   version: VERSION
+  deprecated: The "%library_id%" asset library is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3568381
   js:
     js/text.js: {}
   dependencies:

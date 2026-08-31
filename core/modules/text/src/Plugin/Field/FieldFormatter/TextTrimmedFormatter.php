@@ -12,11 +12,6 @@ use Drupal\text\TextSummary;
 
 /**
  * Plugin implementation of the 'text_trimmed' formatter.
- *
- * Note: This class also contains the implementations used by the
- * 'text_summary_or_trimmed' formatter.
- *
- * @see \Drupal\text\Field\Formatter\TextSummaryOrTrimmedFormatter
  */
 #[FieldFormatter(
   id: 'text_trimmed',
@@ -24,7 +19,6 @@ use Drupal\text\TextSummary;
   field_types: [
     'text',
     'text_long',
-    'text_with_summary',
   ],
 )]
 class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInterface {
@@ -69,36 +63,37 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
 
-    $render_as_summary = function (&$element) {
-      // Make sure any default #pre_render callbacks are set on the element,
-      // because text_pre_render_summary() must run last.
-      $element += \Drupal::service('element_info')->getInfo($element['#type']);
-      // Add the #pre_render callback that renders the text into a summary.
-      $element['#pre_render'][] = [TextTrimmedFormatter::class, 'preRenderSummary'];
-      // Pass on the trim length to the #pre_render callback via a property.
-      $element['#text_summary_trim_length'] = $this->getSetting('trim_length');
-    };
-
     // The ProcessedText element already handles cache context & tag bubbling.
     // @see \Drupal\filter\Element\ProcessedText::preRenderText()
     foreach ($items as $delta => $item) {
       $elements[$delta] = [
         '#type' => 'processed_text',
-        '#text' => NULL,
+        '#text' => $item->value,
         '#format' => $item->format,
         '#langcode' => $item->getLangcode(),
       ];
-
-      if ($this->getPluginId() == 'text_summary_or_trimmed' && !empty($item->summary)) {
-        $elements[$delta]['#text'] = $item->summary;
-      }
-      else {
-        $elements[$delta]['#text'] = $item->value;
-        $render_as_summary($elements[$delta]);
-      }
+      $this->addTrimPreRender($elements[$delta]);
     }
 
     return $elements;
+  }
+
+  /**
+   * Attaches the trim pre-render callback and trim length to an element.
+   *
+   * Subclasses that decide per item whether to trim can call this on the
+   * fallback branch.
+   *
+   * @param array $element
+   *   A processed_text render element to trim.
+   */
+  protected function addTrimPreRender(array &$element): void {
+    // Make sure any default #pre_render callbacks are set on the element,
+    // because text_pre_render_summary() must run last.
+    $element += \Drupal::service('element_info')->getInfo($element['#type']);
+    $element['#pre_render'][] = [static::class, 'preRenderSummary'];
+    // Pass on the trim length to the #pre_render callback via a property.
+    $element['#text_summary_trim_length'] = $this->getSetting('trim_length');
   }
 
   /**

@@ -4,4 +4,4 @@ description: 'Provides test hook implementations for text summary tests'
 package: Testing
 version: VERSION
 dependencies:
-  - drupal:text
+  - drupal:text_with_summary

@@ -1,21 +1,16 @@
 <?php
 
-namespace Drupal\text\Plugin\Field\FieldWidget;
+namespace Drupal\text_with_summary\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\text\Plugin\Field\FieldWidget\TextareaWidget;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'text_textarea_with_summary' widget.
- *
- * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use
- * \Drupal\text_with_summary\Plugin\Field\FieldWidget\TextareaWithSummaryWidget
- * instead.
- *
- * @see https://www.drupal.org/node/3568381
  */
 #[FieldWidget(
   id: 'text_textarea_with_summary',
@@ -27,7 +22,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultSettings(): array {
     return [
       'rows' => '9',
       'summary_rows' => '3',
@@ -39,7 +34,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state): array {
     $element = parent::settingsForm($form, $form_state);
     $element['summary_rows'] = [
       '#type' => 'number',
@@ -60,7 +55,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   /**
    * {@inheritdoc}
    */
-  public function settingsSummary() {
+  public function settingsSummary(): array {
     $summary = parent::settingsSummary();
 
     $summary[] = $this->t('Number of summary rows: @rows', ['@rows' => $this->getSetting('summary_rows')]);
@@ -74,7 +69,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state): array {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $display_summary = $items[$delta]->summary || $this->getFieldSetting('display_summary');
@@ -95,7 +90,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
 
     if (!$this->getSetting('show_summary') && !$required) {
       $element['summary']['#attributes']['class'][] = 'js-text-summary';
-      $element['summary']['#attached']['library'][] = 'text/drupal.text';
+      $element['summary']['#attached']['library'][] = 'text_with_summary/drupal.text';
     }
 
     return $element;
@@ -104,7 +99,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   /**
    * {@inheritdoc}
    */
-  public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state) {
+  public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, FormStateInterface $form_state): array|false {
     $element = parent::errorElement($element, $violation, $form, $form_state);
     if ($element === FALSE) {
       return FALSE;

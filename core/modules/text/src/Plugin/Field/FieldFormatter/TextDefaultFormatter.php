@@ -16,7 +16,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
   field_types: [
     'text',
     'text_long',
-    'text_with_summary',
   ],
 )]
 class TextDefaultFormatter extends FormatterBase {

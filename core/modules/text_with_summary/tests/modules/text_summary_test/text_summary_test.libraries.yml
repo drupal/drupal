@@ -4,4 +4,4 @@ text-summary-override:
   dependencies:
     - core/drupal
     - core/jquery
-    - core/drupal.text
+    - text_with_summary/drupal.text
