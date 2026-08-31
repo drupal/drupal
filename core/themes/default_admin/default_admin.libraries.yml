@@ -268,6 +268,9 @@ views:
   css:
     component:
       css/components/views-exposed-form.css: {}
+  after:
+    # Load after form.css.
+    - default_admin/global-styling
 
 views_ui:
   css:
