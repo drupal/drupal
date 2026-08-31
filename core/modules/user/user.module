@@ -23,8 +23,14 @@ use Drupal\user\UserInterface;
  * user picture implementations (e.g., Gravatar) should provide their own
  * add/edit/delete forms and populate the 'picture' variable during the
  * preprocess stage.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There
+ *   is no replacement, check the definition directly.
+ *
+ * @see https://www.drupal.org/node/3619932
  */
 function user_picture_enabled() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement, check the definition directly. See https://www.drupal.org/node/3619932', E_USER_DEPRECATED);
   $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('user', 'user');
   return isset($field_definitions['user_picture']);
 }
