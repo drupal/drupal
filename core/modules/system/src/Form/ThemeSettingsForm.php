@@ -192,7 +192,8 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     // Some features are not always available.
     $disabled = [];
-    if (!user_picture_enabled()) {
+    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('user', 'user');
+    if (!isset($field_definitions['user_picture'])) {
       $disabled['toggle_node_user_picture'] = TRUE;
       $disabled['toggle_comment_user_picture'] = TRUE;
     }

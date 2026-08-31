@@ -156,7 +156,8 @@ class UserHooks {
    */
   #[Hook('user_view_alter')]
   public function userViewAlter(array &$build, UserInterface $account, EntityViewDisplayInterface $display): void {
-    if (!empty($build['user_picture']) && user_picture_enabled()) {
+    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('user', 'user');
+    if (!empty($build['user_picture']) && isset($field_definitions['user_picture'])) {
       foreach (Element::children($build['user_picture']) as $key) {
         if (!isset($build['user_picture'][$key]['#item']) || !$build['user_picture'][$key]['#item'] instanceof ImageItem) {
           // User picture field is provided by standard profile install. If the
