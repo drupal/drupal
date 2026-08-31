@@ -39,9 +39,6 @@ class File extends FormElementBase {
       ],
       '#theme' => 'input__file',
       '#theme_wrappers' => ['form_element'],
-      '#value_callback' => [
-        [static::class, 'valueCallback'],
-      ],
     ];
   }
 
