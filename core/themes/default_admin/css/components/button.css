@@ -104,7 +104,12 @@
     font-weight: 900;
   }
 }
-/* Primary button styles. */
+/*
+ * Primary button styles.
+ */
+/* @todo the .toolbar-button--primary styling needs to be moved to the
+   Navigation module after Drupal core supports dark mode. */
+:is(#extra-specificity-hack, [data-drupal-admin-styles]) .top-bar__actions .toolbar-button--primary,
 #edit-submit.form-submit,
 .button--primary,
 .button--primary:not(:focus),
