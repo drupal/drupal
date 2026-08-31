@@ -98,16 +98,8 @@ abstract class TextItemBase extends FieldItemBase {
    * {@inheritdoc}
    */
   public function applyDefaultValue($notify = TRUE) {
-    $allowed_formats = $this->getSetting('allowed_formats') ?? [];
-    $format = \Drupal::service(FilterFormatRepositoryInterface::class)->getFallbackFormatId();
-
-    // If the site fallback format is not one of the allowed formats, fall back
-    // to the first allowed format so the default value is usable on save.
-    if (!empty($allowed_formats) && !in_array($format, $allowed_formats, TRUE)) {
-      $format = reset($allowed_formats);
-    }
-
-    $this->setValue(['format' => $format], $notify);
+    // @todo Add in the filter default format here.
+    $this->setValue(['format' => NULL], $notify);
     return $this;
   }
 

@@ -45,7 +45,6 @@ class ContentEntityTest extends KernelTestBase {
     'taxonomy',
     'field',
     'file',
-    'filter',
     'image',
     'media',
     'media_test_source',

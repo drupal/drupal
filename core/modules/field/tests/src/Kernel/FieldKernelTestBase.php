@@ -22,7 +22,6 @@ abstract class FieldKernelTestBase extends KernelTestBase {
     'user',
     'system',
     'field',
-    'filter',
     'text',
     'entity_test',
     'field_test',

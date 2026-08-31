@@ -25,7 +25,6 @@ class MenuUiNodeTypeTest extends KernelTestBase {
    */
   protected static $modules = [
     'field',
-    'filter',
     'menu_ui',
     'node',
     'system',
