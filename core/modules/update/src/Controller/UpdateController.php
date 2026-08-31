@@ -50,7 +50,7 @@ class UpdateController extends ControllerBase {
     $build = [
       '#theme' => 'update_report',
     ];
-    if ($available = update_get_available(TRUE)) {
+    if ($available = $this->updateManager->getAvailable(TRUE)) {
       $this->moduleHandler()->loadInclude('update', 'compare.inc');
       $build['#data'] = update_calculate_project_data($available);
 
@@ -78,12 +78,36 @@ class UpdateController extends ControllerBase {
     $this->updateManager->refreshUpdateData();
     $batch_builder = (new BatchBuilder())
       ->setTitle($this->t('Checking available update data'))
-      ->addOperation([$this->updateManager, 'fetchDataBatch'], [])
+      ->addOperation(UpdateManagerInterface::class . ':fetchDataBatch', [])
       ->setProgressMessage($this->t('Trying to check available update data ...'))
       ->setErrorMessage($this->t('Error checking available update data.'))
-      ->setFinishCallback('update_fetch_data_finished');
+      ->setFinishCallback(self::class . ':updateFetchDataFinished');
     batch_set($batch_builder->toArray());
     return batch_process('admin/reports/updates');
+  }
+
+  /**
+   * Finished batch callback.
+   *
+   * @param bool $success
+   *   TRUE if batch successfully completed.
+   * @param array $results
+   *   Batch results.
+   */
+  public function updateFetchDataFinished(bool $success, array $results): void {
+    if ($success) {
+      if (!empty($results)) {
+        if (!empty($results['updated'])) {
+          $this->messenger()->addStatus($this->formatPlural($results['updated'], 'Checked available update data for one project.', 'Checked available update data for @count projects.'));
+        }
+        if (!empty($results['failures'])) {
+          $this->messenger()->addError($this->formatPlural($results['failures'], 'Failed to get available update data for one project.', 'Failed to get available update data for @count projects.'));
+        }
+      }
+    }
+    else {
+      $this->messenger()->addError($this->t('An error occurred trying to get available update data.'), 'error');
+    }
   }
 
 }

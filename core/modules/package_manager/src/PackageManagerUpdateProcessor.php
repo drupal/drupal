@@ -23,7 +23,7 @@ use Drupal\update\UpdateProcessor;
  * information for projects not in the active code base this would add the
  * project information to Update Status module's cache which would result in
  * these projects being returned from the Update Status module's global
- * functions such as update_get_available().
+ * functions such as \Drupal\update\UpdateManagerInterface::getAvailable().
  *
  * @internal
  *   This is an internal part of Package Manager and may be changed or removed

@@ -36,7 +36,7 @@ class UpdateManager implements UpdateManagerInterface {
   protected $projects;
 
   /**
-   * The key/value store.
+   * The key/value store for the updates.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
    */
@@ -76,8 +76,8 @@ class UpdateManager implements UpdateManagerInterface {
     // of both the projects we care about, and the current update status of the
     // site. We do *not* want to clear the cache of available releases just yet,
     // since that data (even if it's stale) can be useful during
-    // \Drupal\update\UpdateManager::getProjects(); for example, to modules
-    // that implement hook_system_info_alter() such as cvs_deploy.
+    // \Drupal\update\UpdateManagerInterface::getProjects(); for example, to
+    // modules that implement hook_system_info_alter() such as cvs_deploy.
     $this->keyValueStore->delete('update_project_projects');
     $this->keyValueStore->delete('update_project_data');
 
@@ -188,6 +188,66 @@ class UpdateManager implements UpdateManagerInterface {
         return;
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAvailable(bool $refresh = FALSE): array {
+    \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.compare');
+    $needs_refresh = FALSE;
+
+    // Grab whatever data we currently have.
+    $available = $this->availableReleasesTempStore->getAll();
+    $projects = $this->getProjects();
+    foreach ($projects as $key => $project) {
+      // If there's no data at all, we clearly need to fetch some.
+      if (empty($available[$key])) {
+        $this->updateProcessor->createFetchTask($project);
+        $needs_refresh = TRUE;
+        continue;
+      }
+
+      // See if the .info.yml file is newer than the last time we checked for
+      // data, and if so, mark this project's data as needing to be re-fetched.
+      // Any time an admin upgrades their local installation, the .info.yml file
+      // will be changed, so this is the only way we can be sure we're not
+      // showing bogus information right after they upgrade.
+      if ($project['info']['_info_file_ctime'] > $available[$key]['last_fetch']) {
+        $available[$key]['fetch_status'] = UpdateFetcherInterface::FETCH_PENDING;
+      }
+
+      // If we have project data but no release data, we need to fetch. This
+      // can be triggered when we fail to contact a release history server.
+      if (empty($available[$key]['releases']) && !$available[$key]['last_fetch']) {
+        $available[$key]['fetch_status'] = UpdateFetcherInterface::FETCH_PENDING;
+      }
+
+      // If we think this project needs to fetch, actually create the task now
+      // and remember that we think we're missing some data.
+      if (!empty($available[$key]['fetch_status']) && $available[$key]['fetch_status'] == UpdateFetcherInterface::FETCH_PENDING) {
+        $this->updateProcessor->createFetchTask($project);
+        $needs_refresh = TRUE;
+      }
+    }
+
+    if ($needs_refresh && $refresh) {
+      // Attempt to drain the queue of fetch tasks.
+      $this->updateProcessor->fetchData();
+      // After processing the queue, we've (hopefully) got better data, so pull
+      // the latest data again and use that directly.
+      $available = $this->availableReleasesTempStore->getAll();
+    }
+
+    return $available;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function reset(): void {
+    $this->keyValueStore->deleteAll();
+    $this->availableReleasesTempStore->deleteAll();
   }
 
 }

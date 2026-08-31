@@ -75,7 +75,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertSession()->linkNotExists('AAA Update test');
     $this->assertSession()->linkByHrefNotExists('https://example.com/project/aaa_update_test');
 
-    $available = update_get_available();
+    $available = \Drupal::service('update.manager')->getAvailable();
     $this->assertFalse(isset($available['aaa_update_test']['fetch_status']), 'Results are cached even if no releases are available.');
   }
 

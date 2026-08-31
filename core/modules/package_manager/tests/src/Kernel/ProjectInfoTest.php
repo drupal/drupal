@@ -6,6 +6,7 @@ namespace Drupal\Tests\package_manager\Kernel;
 
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\package_manager\ProjectInfo;
+use Drupal\update\UpdateManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -54,7 +55,7 @@ class ProjectInfoTest extends PackageManagerKernelTestBase {
     }
     $metadata_fixtures[$project] = "$fixtures_directory$fixture";
     $this->setReleaseMetadata($metadata_fixtures);
-    $project_info = new ProjectInfo($project);
+    $project_info = new ProjectInfo($project, \Drupal::service(UpdateManagerInterface::class));
     $actual_releases = $project_info->getInstallableReleases();
     // Assert that we returned the correct releases in the expected order.
     $this->assertSame($expected_versions, array_keys($actual_releases));
@@ -140,14 +141,14 @@ class ProjectInfoTest extends PackageManagerKernelTestBase {
     $metadata_fixtures['drupal'] = $fixtures_directory . 'drupal.9.8.2.xml';
     $metadata_fixtures['package_manager_test_update'] = $fixtures_directory . 'package_manager_test_update.7.0.1.xml';
     $this->setReleaseMetadata($metadata_fixtures);
-    $available = update_get_available(TRUE);
+    $available = \Drupal::service(UpdateManagerInterface::class)->getAvailable(TRUE);
     $this->assertSame(['drupal'], array_keys($available));
     $this->setReleaseMetadata($metadata_fixtures);
     $state = $this->container->get('state');
     // Set the state that the Update Status module uses to store last checked
     // time ensure our calls do not affect it.
     $state->set('update.last_check', 123);
-    $project_info = new ProjectInfo('package_manager_test_update');
+    $project_info = new ProjectInfo('package_manager_test_update', \Drupal::service(UpdateManagerInterface::class));
     $project_data = $project_info->getProjectInfo();
     // Ensure the project information is correct.
     $this->assertSame('Package Manager Test Update', $project_data['title']);
@@ -191,7 +192,7 @@ class ProjectInfoTest extends PackageManagerKernelTestBase {
    */
   public function testNotPublishedProject(): void {
     $this->setReleaseMetadata(['drupal' => __DIR__ . '/../../fixtures/release-history/drupal.9.8.2_unknown_status.xml']);
-    $project_info = new ProjectInfo('drupal');
+    $project_info = new ProjectInfo('drupal', \Drupal::service(UpdateManagerInterface::class));
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessageIs("The project 'drupal' can not be updated because its status is any status besides published");
     $project_info->getInstallableReleases();
@@ -253,7 +254,7 @@ class ProjectInfoTest extends PackageManagerKernelTestBase {
     $this->setCoreVersion($installed_version);
     $this->setReleaseMetadata(['drupal' => $release_xml]);
 
-    $project_info = new ProjectInfo('drupal');
+    $project_info = new ProjectInfo('drupal', \Drupal::service(UpdateManagerInterface::class));
     $this->assertSame($expected_to_be_safe, $project_info->isInstalledVersionSafe());
   }
 
@@ -300,7 +301,7 @@ class ProjectInfoTest extends PackageManagerKernelTestBase {
   #[DataProvider('providerGetSupportedBranches')]
   public function testGetSupportedBranches(string $release_xml, array $expected_supported_branches): void {
     $this->setReleaseMetadata(['drupal' => $release_xml]);
-    $project_info = new ProjectInfo('drupal');
+    $project_info = new ProjectInfo('drupal', \Drupal::service(UpdateManagerInterface::class));
     $this->assertSame($expected_supported_branches, $project_info->getSupportedBranches());
   }
 

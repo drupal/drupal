@@ -225,7 +225,7 @@ class DbUpdateController extends ControllerBase {
     $this->assetQueryString->reset();
     // Flush the cache of all data for the update status module.
     $this->keyValueExpirableFactory->get('update')->deleteAll();
-    $this->keyValueExpirableFactory->get('update_available_release')->deleteAll();
+    $this->keyValueExpirableFactory->get('update_available_releases')->deleteAll();
 
     $build['info_header'] = [
       '#markup' => '<p>' . $this->t('Use this utility to update your database whenever a module, theme, or the core software is updated.') . '</p><p>' . $this->t('For more detailed information, see the <a href="https://www.drupal.org/docs/updating-drupal">Updating Drupal guide</a>. If you are unsure what these terms mean you should probably contact your hosting provider.') . '</p>',

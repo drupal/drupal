@@ -20,7 +20,7 @@ use Drupal\update\ProjectCoreCompatibility;
  *
  * @param array $projects
  *   Array of project information from
- *   \Drupal\update\UpdateManager::getProjects().
+ *   \Drupal\update\UpdateManagerInterface::getProjects().
  */
 function update_process_project_info(&$projects): void {
   foreach ($projects as $key => $project) {
@@ -80,8 +80,8 @@ function update_process_project_info(&$projects): void {
  * @return array
  *   An array of installed projects with current update status information.
  *
- * @see update_get_available()
- * @see \Drupal\update\UpdateManager::getProjects()
+ * @see \Drupal\update\UpdateManagerInterface::getAvailable()
+ * @see \Drupal\update\UpdateManagerInterface::getProjects()
  * @see update_process_project_info()
  * @see \Drupal\update\UpdateManagerInterface::projectStorage()
  * @see \Drupal\update\ProjectCoreCompatibility::setReleaseMessage()
