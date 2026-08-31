@@ -10,6 +10,7 @@ use Drupal\package_manager\ProjectInfo;
 use Drupal\package_manager\LegacyVersionUtility;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PreApplyEvent;
+use Drupal\update\UpdateManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -26,6 +27,7 @@ final class SupportedReleaseValidator implements EventSubscriberInterface {
   public function __construct(
     private readonly ComposerInspector $composerInspector,
     private readonly PathLocator $pathLocator,
+    private readonly UpdateManagerInterface $updateManager,
   ) {}
 
   /**
@@ -46,7 +48,7 @@ final class SupportedReleaseValidator implements EventSubscriberInterface {
    *   given version is not supported will return FALSE.
    */
   private function isSupportedRelease(string $name, string $semantic_version): bool {
-    $supported_releases = (new ProjectInfo($name))->getInstallableReleases();
+    $supported_releases = (new ProjectInfo($name, $this->updateManager))->getInstallableReleases();
     if (!$supported_releases) {
       return FALSE;
     }

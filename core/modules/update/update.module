@@ -13,8 +13,14 @@ use Drupal\update\UpdateManagerInterface;
 
 /**
  * Returns a warning message when there is no data about available updates.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\update\UpdateMessageTrait::noData() instead.
+ *
+ * @see https://www.drupal.org/node/3592959
  */
 function _update_no_data() {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\update\UpdateMessageTrait::noData() instead. See https://www.drupal.org/node/3592959', E_USER_DEPRECATED);
   $destination = \Drupal::destination()->getAsArray();
   return t('No update information available. <a href=":run_cron">Run cron</a> or <a href=":check_manually">check manually</a>.', [
     ':run_cron' => Url::fromRoute('system.run_cron', [], ['query' => $destination])->toString(),
@@ -40,57 +46,17 @@ function _update_no_data() {
  * @return array
  *   Array of data about available releases, keyed by project shortname.
  *
- * @see update_refresh()
- * @see \Drupal\update\UpdateManager::getProjects()
+ * @see \Drupal\update\UpdateManagerInterface::refreshUpdateData()
+ * @see \Drupal\update\UpdateManagerInterface::getProjects()
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\update\UpdateManagerInterface::getAvailable() instead.
+ *
+ * @see https://www.drupal.org/node/3592959
  */
 function update_get_available($refresh = FALSE) {
-  \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.compare');
-  $needs_refresh = FALSE;
-
-  // Grab whatever data we currently have.
-  $available = \Drupal::keyValueExpirable('update_available_releases')->getAll();
-  $projects = \Drupal::service('update.manager')->getProjects();
-  foreach ($projects as $key => $project) {
-    // If there's no data at all, we clearly need to fetch some.
-    if (empty($available[$key])) {
-      // update_create_fetch_task($project);
-      \Drupal::service('update.processor')->createFetchTask($project);
-      $needs_refresh = TRUE;
-      continue;
-    }
-
-    // See if the .info.yml file is newer than the last time we checked for
-    // data, and if so, mark this project's data as needing to be re-fetched.
-    // Any time an admin upgrades their local installation, the .info.yml file
-    // will be changed, so this is the only way we can be sure we're not showing
-    // bogus information right after they upgrade.
-    if ($project['info']['_info_file_ctime'] > $available[$key]['last_fetch']) {
-      $available[$key]['fetch_status'] = UpdateFetcherInterface::FETCH_PENDING;
-    }
-
-    // If we have project data but no release data, we need to fetch. This
-    // can be triggered when we fail to contact a release history server.
-    if (empty($available[$key]['releases']) && !$available[$key]['last_fetch']) {
-      $available[$key]['fetch_status'] = UpdateFetcherInterface::FETCH_PENDING;
-    }
-
-    // If we think this project needs to fetch, actually create the task now
-    // and remember that we think we're missing some data.
-    if (!empty($available[$key]['fetch_status']) && $available[$key]['fetch_status'] == UpdateFetcherInterface::FETCH_PENDING) {
-      \Drupal::service('update.processor')->createFetchTask($project);
-      $needs_refresh = TRUE;
-    }
-  }
-
-  if ($needs_refresh && $refresh) {
-    // Attempt to drain the queue of fetch tasks.
-    update_fetch_data();
-    // After processing the queue, we've (hopefully) got better data, so pull
-    // the latest data again and use that directly.
-    $available = \Drupal::keyValueExpirable('update_available_releases')->getAll();
-  }
-
-  return $available;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\update\UpdateManagerInterface::getAvailable() instead. See https://www.drupal.org/node/3592959', E_USER_DEPRECATED);
+  return \Drupal::service(UpdateManagerInterface::class)->getAvailable($refresh);
 }
 
 /**
@@ -101,29 +67,47 @@ function update_get_available($refresh = FALSE) {
  *
  * @param array $project
  *   Associative array of information about a project as created by
- *   \Drupal\update\UpdateManager::getProjects(), including keys such as 'name'
- *   (short name), and the 'info' array with data from a .info.yml file for the
- *   project.
+ *   \Drupal\update\UpdateManagerInterface::getProjects(), including keys such
+ *   as 'name' (short name), and the 'info' array with data from a .info.yml
+ *   file for the project.
  *
  * @see \Drupal\update\UpdateFetcher::createFetchTask()
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\update\UpdateProcessor::createFetchTask() instead.
+ *
+ * @see https://www.drupal.org/node/3592959
  */
 function update_create_fetch_task($project): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\update\UpdateProcessor::createFetchTask() instead. See https://www.drupal.org/node/3592959', E_USER_DEPRECATED);
   \Drupal::service('update.processor')->createFetchTask($project);
 }
 
 /**
  * Refreshes the release data after loading the necessary include file.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\update\UpdateManagerInterface::refreshUpdateData() instead.
+ *
+ * @see https://www.drupal.org/node/3592959
  */
 function update_refresh(): void {
-  \Drupal::service('update.manager')->refreshUpdateData();
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\update\UpdateManagerInterface::refreshUpdateData() instead. See https://www.drupal.org/node/3592959', E_USER_DEPRECATED);
+  \Drupal::service(UpdateManagerInterface::class)->refreshUpdateData();
 }
 
 /**
  * Attempts to fetch update data after loading the necessary include file.
  *
  * @see \Drupal\update\UpdateProcessor::fetchData()
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\update\UpdateProcessor::fetchData() instead.
+ *
+ * @see https://www.drupal.org/node/3592959
  */
 function update_fetch_data(): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\update\UpdateProcessor::fetchData() instead. See https://www.drupal.org/node/3592959', E_USER_DEPRECATED);
   \Drupal::service('update.processor')->fetchData();
 }
 
@@ -136,8 +120,14 @@ function update_fetch_data(): void {
  *   An associative array of results from the batch operation, including the key
  *   'updated' which holds the total number of projects we fetched available
  *   update data for.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There
+ *   is no replacement.
+ *
+ * @see https://www.drupal.org/node/3592959
  */
 function update_fetch_data_finished($success, $results): void {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3592959', E_USER_DEPRECATED);
   if ($success) {
     if (!empty($results)) {
       if (!empty($results['updated'])) {
@@ -175,8 +165,14 @@ function update_fetch_data_finished($success, $results): void {
  *
  * @return \Drupal\Core\StringTranslation\TranslatableMarkup
  *   The properly translated error message for the given key.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\update\UpdateMessageTrait::getText() instead.
+ *
+ * @see https://www.drupal.org/node/3592959
  */
 function _update_message_text($msg_type, $msg_reason, $langcode = NULL, bool $is_email = FALSE) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\update\UpdateMessageTrait::getText() instead. See https://www.drupal.org/node/3592959', E_USER_DEPRECATED);
   $text = '';
   switch ($msg_reason) {
     case UpdateManagerInterface::NOT_SECURE:
@@ -249,8 +245,14 @@ function _update_message_text($msg_type, $msg_reason, $langcode = NULL, bool $is
  * Orders projects based on their status.
  *
  * Callback for uasort() within update_requirements().
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There
+ *   is no replacement.
+ *
+ * @see https://www.drupal.org/node/3592959
  */
 function _update_project_status_sort($a, $b) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3592959', E_USER_DEPRECATED);
   // The status constants are numerically in the right order, so we can
   // usually subtract the two to compare in the order we want. However,
   // negative status values should be treated as if they are huge, since we
@@ -360,10 +362,15 @@ function template_preprocess_update_fetch_error_message(&$variables): void {
 
 /**
  * Invalidates stored data relating to update status.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\update\UpdateManagerInterface::reset() instead.
+ *
+ * @see https://www.drupal.org/node/3592959
  */
 function update_storage_clear(): void {
-  \Drupal::keyValueExpirable('update')->deleteAll();
-  \Drupal::keyValueExpirable('update_available_release')->deleteAll();
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\update\UpdateManagerInterface::reset() instead. See https://www.drupal.org/node/3592959', E_USER_DEPRECATED);
+  \Drupal::service(UpdateManagerInterface::class)->reset();
 }
 
 /**

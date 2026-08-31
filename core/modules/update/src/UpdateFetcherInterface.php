@@ -32,7 +32,7 @@ interface UpdateFetcherInterface {
    *
    * @param array $project
    *   The array of project information from
-   *   \Drupal\update\UpdateManager::getProjects().
+   *   \Drupal\update\UpdateManagerInterface::getProjects().
    *
    * @return string
    *   The base of the URL used for fetching available update data. This does
@@ -46,7 +46,7 @@ interface UpdateFetcherInterface {
    *
    * @param array $project
    *   The array of project information from
-   *   \Drupal\update\UpdateManager::getProjects().
+   *   \Drupal\update\UpdateManagerInterface::getProjects().
    * @param string $site_key
    *   (optional) The anonymous site key hash. Defaults to an empty string.
    *
@@ -64,7 +64,7 @@ interface UpdateFetcherInterface {
    *
    * @param array $project
    *   The array of project information from
-   *   \Drupal\update\UpdateManager::getProjects().
+   *   \Drupal\update\UpdateManagerInterface::getProjects().
    * @param string $site_key
    *   (optional) The anonymous site key hash. Defaults to an empty string.
    *
@@ -73,7 +73,7 @@ interface UpdateFetcherInterface {
    *
    * @see \Drupal\update\UpdateProcessor::fetchData()
    * @see \Drupal\update\UpdateProcessor::processFetchTask()
-   * @see \Drupal\update\UpdateManager::getProjects()
+   * @see \Drupal\update\UpdateManagerInterface::getProjects()
    */
   public function buildFetchUrl(array $project, $site_key = '');
 

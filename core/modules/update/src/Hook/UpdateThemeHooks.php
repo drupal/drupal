@@ -15,6 +15,7 @@ use Drupal\Core\Url;
 use Drupal\update\ProjectRelease;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
+use Drupal\update\UpdateMessageTrait;
 
 /**
  * Theme hooks for update module.
@@ -22,6 +23,7 @@ use Drupal\update\UpdateManagerInterface;
 class UpdateThemeHooks {
 
   use StringTranslationTrait;
+  use UpdateMessageTrait;
 
   public function __construct(
     protected StateInterface $state,
@@ -124,7 +126,7 @@ class UpdateThemeHooks {
 
     // For no project update data, populate no data message.
     if (empty($data)) {
-      $variables['no_updates_message'] = _update_no_data();
+      $variables['no_updates_message'] = $this->noData();
     }
 
     $rows = [];

@@ -110,7 +110,7 @@ class UpdateSettingsForm extends ConfigFormBase {
     // See if the update_check_disabled setting is being changed, and if so,
     // invalidate all update status data.
     if ($form_state->getValue('update_check_disabled') != $config->get('check.disabled_extensions')) {
-      update_storage_clear();
+      \Drupal::service('update.manager')->reset();
     }
 
     parent::submitForm($form, $form_state);

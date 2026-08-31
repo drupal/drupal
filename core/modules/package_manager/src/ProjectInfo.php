@@ -21,8 +21,10 @@ use Drupal\update\UpdateManagerInterface;
  */
 final class ProjectInfo {
 
-  public function __construct(private readonly string $name) {
-  }
+  public function __construct(
+    private readonly string $name,
+    private readonly UpdateManagerInterface $updateManager,
+  ) {}
 
   /**
    * Determines if a release can be installed.
@@ -154,9 +156,9 @@ final class ProjectInfo {
       }
 
       // TRICKY: Since this is relying on data coming from
-      // \Drupal\update\UpdateManager::getProjects(), we cannot be certain that
-      // we are actually receiving strings.
-      // @see \Drupal\update\UpdateManager::getProjects()
+      // \Drupal\update\UpdateManagerInterface::getProjects(), we cannot be
+      // certain that we are actually receiving strings.
+      // @see \Drupal\update\UpdateManagerInterface::getProjects()
       if (!is_string($existing_version)) {
         return NULL;
       }
@@ -171,19 +173,20 @@ final class ProjectInfo {
    *
    * @return array
    *   The available projects keyed by project machine name in the format
-   *   returned by update_get_available(). If the project specified in ::name is
-   *   not returned from update_get_available() this project will be explicitly
-   *   fetched and added the return value of this function.
+   *   returned by \Drupal\update\UpdateManagerInterface::getAvailable(). If
+   *   the project specified in ::name is not returned from
+   *   \Drupal\update\UpdateManagerInterface::getAvailable() this project will
+   *   be explicitly fetched and added the return value of this function.
    *
-   * @see \update_get_available()
+   * @see \Drupal\update\UpdateManagerInterface::getAvailable()
    */
   private function getAvailableProjects(): array {
-    $available_projects = update_get_available(TRUE);
-    // update_get_available() will only returns projects that are in the active
-    // codebase. If the project specified by ::name is not returned in
-    // $available_projects, it means it is not in the active codebase, therefore
-    // we will retrieve the project information from Package Manager's own
-    // update processor service.
+    $available_projects = $this->updateManager->getAvailable(TRUE);
+    // \Drupal\update\UpdateManagerInterface::getAvailable() will only return
+    // projects that are in the active codebase. If the project specified by
+    // ::name is not returned in $available_projects, it means it is not in the
+    // active codebase, therefore we will retrieve the project information from
+    // Package Manager's own update processor service.
     if (!isset($available_projects[$this->name])) {
       /** @var \Drupal\package_manager\PackageManagerUpdateProcessor $update_processor */
       $update_processor = \Drupal::service(PackageManagerUpdateProcessor::class);

@@ -68,17 +68,17 @@ class UpdateMiscTest extends UpdateTestBase {
     ];
     $queue = \Drupal::queue('update_fetch_tasks');
     $this->assertEquals(0, $queue->numberOfItems(), 'Queue is empty');
-    update_create_fetch_task($project_a);
+    \Drupal::service('update.processor')->createFetchTask($project_a);
     $this->assertEquals(1, $queue->numberOfItems(), 'Queue contains one item');
-    update_create_fetch_task($project_b);
+    \Drupal::service('update.processor')->createFetchTask($project_b);
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
     // Try to add a project again.
-    update_create_fetch_task($project_a);
+    \Drupal::service('update.processor')->createFetchTask($project_a);
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue still contains two items');
 
     // Clear storage and try again.
-    update_storage_clear();
-    update_create_fetch_task($project_a);
+    \Drupal::service('update.manager')->reset();
+    \Drupal::service('update.processor')->createFetchTask($project_a);
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
   }
 

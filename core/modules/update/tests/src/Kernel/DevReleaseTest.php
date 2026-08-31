@@ -135,8 +135,8 @@ class DevReleaseTest extends KernelTestBase {
     $this->config('update_test.settings')
       ->set('system_info', $system_info)
       ->save();
-    update_storage_clear();
-    $available = update_get_available(TRUE);
+    \Drupal::service('update.manager')->reset();
+    $available = \Drupal::service('update.manager')->getAvailable(TRUE);
     return update_calculate_project_data($available);
   }
 

@@ -94,7 +94,7 @@ class UpdateFetcherTest extends UnitTestCase {
    *
    * @param array $project
    *   A keyed array of project information matching results from
-   *   \Drupal\update\UpdateManager::getProjects().
+   *   \Drupal\update\UpdateManagerInterface::getProjects().
    * @param string $site_key
    *   A string to mimic an anonymous site key hash.
    * @param string $expected

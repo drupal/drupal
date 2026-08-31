@@ -30,7 +30,7 @@ final class UpdateDataSubscriber implements EventSubscriberInterface {
    */
   public function clearData(): void {
     $this->updateManager->refreshUpdateData();
-    update_storage_clear();
+    $this->updateManager->reset();
   }
 
   /**
