@@ -15,6 +15,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Htmx\Htmx;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\FormElementBase;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
@@ -1291,10 +1292,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // Set the element's #value property.
     if (!isset($element['#value']) && !array_key_exists('#value', $element)) {
-      $value_callable = $element['#value_callback'] ?? NULL;
-      if (!is_callable($value_callable)) {
-        $value_callable = '\Drupal\Core\Render\Element\FormElementBase::valueCallback';
-      }
+      $value_callable = $element['#value_callback'] ?? FormElementBase::class . '::valueCallback';
+      $value_callable = $this->callableResolver->getCallableFromDefinition($form_state->prepareCallback($value_callable));
 
       if ($process_input) {
         // Get the input for the current element. NULL values in the input need

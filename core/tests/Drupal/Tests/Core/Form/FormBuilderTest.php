@@ -201,7 +201,7 @@ class FormBuilderTest extends FormTestBase {
       });
 
     $this->callableResolver->method('getCallableFromDefinition')
-      ->willReturn([$form_arg, 'submitForm']);
+      ->willReturnCallback(fn ($definition) => is_callable($definition) ? $definition : [$form_arg, 'submitForm']);
 
     $form_state = new FormState();
     try {
@@ -253,7 +253,7 @@ class FormBuilderTest extends FormTestBase {
       });
 
     $this->callableResolver->method('getCallableFromDefinition')
-      ->willReturn([$form_arg, 'submitForm']);
+      ->willReturnCallback(fn ($definition) => is_callable($definition) ? $definition : [$form_arg, 'submitForm']);
 
     $form_state = new FormState();
     try {
@@ -579,7 +579,7 @@ class FormBuilderTest extends FormTestBase {
     $expected_form = self::buildTestFormStructure();
     $expected_form['#build_id'] = $form_build_id;
     $form_arg = $this->getMockForm($form_id, $expected_form);
-    $form_arg->expects($this->exactly(2))
+    $form_arg->expects($this->once())
       ->method('submitForm')
       ->willReturnCallback(function (array &$form, FormStateInterface $form_state): void {
         // Mimic EntityForm by cleaning the $form_state upon submit.
@@ -587,7 +587,7 @@ class FormBuilderTest extends FormTestBase {
       });
 
     $this->callableResolver->method('getCallableFromDefinition')
-      ->willReturn([$form_arg, 'submitForm']);
+      ->willReturnCallback(fn ($definition) => is_callable($definition) ? $definition : [$form_arg, 'submitForm']);
 
     $this->formCache->expects($this->once())
       ->method('deleteCache')
