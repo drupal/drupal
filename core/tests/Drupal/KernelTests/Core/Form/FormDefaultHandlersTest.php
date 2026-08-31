@@ -31,6 +31,10 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $form['#validate'][] = '::customValidateForm';
     $form['#submit'][] = '::customSubmitForm';
+    $form['name'] = [
+      '#type' => 'textfield',
+      '#value_callback' => $form_state->get('value_callback') ?? ValueCallbackTestHelper::class . ':upperCaseValue',
+    ];
     $form['submit'] = ['#type' => 'submit', '#value' => 'Save'];
     return $form;
   }
@@ -88,6 +92,28 @@ class FormDefaultHandlersTest extends KernelTestBase implements FormInterface {
     $this->assertCount(2, $handlers['submit']);
     $this->assertSame('customSubmitForm', $handlers['submit'][0]);
     $this->assertSame('submitForm', $handlers['submit'][1]);
+  }
+
+  /**
+   * Tests a #value_callback defined using service notation.
+   */
+  public function testValueCallbackServiceNotation(): void {
+    $form_state = (new FormState())->setValues(['name' => 'foo']);
+    $form_state->set('value_callback', ValueCallbackTestHelper::class . ':upperCaseValue');
+    $this->container->get('form_builder')->submitForm($this, $form_state);
+
+    $this->assertSame('FOO', $form_state->getValue('name'));
+  }
+
+  /**
+   * Tests that an unresolvable #value_callback throws an exception.
+   */
+  public function testValueCallbackInvalidDefinitionThrows(): void {
+    $form_state = (new FormState())->setValues(['name' => 'foo']);
+    $form_state->set('value_callback', 'this_callback_does_not_exist');
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->container->get('form_builder')->submitForm($this, $form_state);
   }
 
 }
