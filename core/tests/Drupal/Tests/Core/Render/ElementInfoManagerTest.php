@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
-use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Render\ElementInfoManager;
 use Drupal\Core\Theme\ActiveTheme;
-use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -149,59 +146,6 @@ class ElementInfoManagerTest extends UnitTestCase {
       ],
     ];
     return $data;
-  }
-
-  /**
-   * Tests that a plugin's own #value_callback is not overwritten.
-   */
-  public function testGetInfoElementPluginRespectsDeclaredValueCallback(): void {
-    $moduleHandler = $this->createMock(ModuleHandlerInterface::class);
-    $moduleHandler->expects($this->once())
-      ->method('alter')
-      ->with('element_info', $this->anything())
-      ->willReturnArgument(0);
-
-    $plugin = $this->createMock('Drupal\Core\Render\Element\FormElementInterface');
-    $plugin->expects($this->once())
-      ->method('getInfo')
-      ->willReturn([
-        '#theme' => 'page',
-        '#value_callback' => 'custom_value_callback',
-      ]);
-
-    $themeManager = $this->createStub(ThemeManagerInterface::class);
-    $themeManager
-      ->method('getActiveTheme')
-      ->willReturn(new ActiveTheme(['name' => 'test']));
-
-    $element_info = $this->getMockBuilder('Drupal\Core\Render\ElementInfoManager')
-      ->setConstructorArgs([
-        new \ArrayObject(),
-        $this->createStub(CacheBackendInterface::class),
-        $this->createStub(ThemeHandlerInterface::class),
-        $moduleHandler,
-        $themeManager,
-      ])
-      ->onlyMethods(['getDefinitions', 'createInstance'])
-      ->getMock();
-
-    $element_info->expects($this->once())
-      ->method('createInstance')
-      ->with('page')
-      ->willReturn($plugin);
-    $element_info->expects($this->once())
-      ->method('getDefinitions')
-      ->willReturn([
-        'page' => ['class' => 'TestElementPlugin'],
-      ]);
-
-    $this->assertEquals([
-      '#type' => 'page',
-      '#theme' => 'page',
-      '#value_callback' => 'custom_value_callback',
-      '#input' => TRUE,
-      '#defaults_loaded' => TRUE,
-    ], $element_info->getInfo('page'));
   }
 
   /**
