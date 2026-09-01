@@ -7,6 +7,7 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\Traits\Core\Locale\InstallerLanguageTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -22,6 +23,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class NodeTypeTranslationTest extends BrowserTestBase {
 
   use StringTranslationTrait;
+  use InstallerLanguageTrait;
 
   /**
    * {@inheritdoc}
@@ -39,13 +41,6 @@ class NodeTypeTranslationTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * The default language code to use in this test.
-   *
-   * @var array
-   */
-  protected $defaultLangcode = 'fr';
-
-  /**
    * Languages to enable.
    *
    * @var array
@@ -58,6 +53,13 @@ class NodeTypeTranslationTest extends BrowserTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getInstallLangcode(): string {
+    return 'fr';
+  }
 
   /**
    * {@inheritdoc}
@@ -82,26 +84,6 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     foreach ($this->additionalLangcodes as $langcode) {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * Install Drupal in a language other than English for this test. This is not
-   * needed to test the node type translation itself but acts as a regression
-   * test.
-   *
-   * @see https://www.drupal.org/node/2584603
-   */
-  protected function installParameters(): array {
-    $parameters = parent::installParameters();
-    $parameters['parameters']['langcode'] = $this->defaultLangcode;
-    // Create an empty po file so we don't attempt to download one from
-    // localize.drupal.org. It does not need to match the version exactly as the
-    // multi-lingual system will fallback.
-    \Drupal::service('file_system')->mkdir($this->publicFilesDirectory . '/translations', NULL, TRUE);
-    file_put_contents($this->publicFilesDirectory . '/translations/drupal-' . \Drupal::VERSION . ".{$this->defaultLangcode}.po", '');
-    return $parameters;
   }
 
   /**
