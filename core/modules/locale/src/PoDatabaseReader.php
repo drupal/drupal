@@ -120,14 +120,14 @@ class PoDatabaseReader implements PoReaderInterface {
       if ($options['customized']) {
         if (!$options['not_customized']) {
           // Filter for customized strings only.
-          $conditions['customized'] = LOCALE_CUSTOMIZED;
+          $conditions['customized'] = LocaleDefaultOptions::CUSTOMIZED;
         }
         // Else no filtering needed in this case.
       }
       else {
         if ($options['not_customized']) {
           // Filter for non-customized strings only.
-          $conditions['customized'] = LOCALE_NOT_CUSTOMIZED;
+          $conditions['customized'] = LocaleDefaultOptions::NOT_CUSTOMIZED;
         }
         else {
           // Filter for strings without translation.

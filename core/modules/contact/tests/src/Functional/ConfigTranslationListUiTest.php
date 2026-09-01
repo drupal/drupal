@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\contact\Functional;
 
 use Drupal\contact\Entity\ContactForm;
+use Drupal\locale\Model\TranslationUpdateMode;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
@@ -62,7 +63,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // tests.
     $this->config('locale.settings')
       ->set('translation.import_enabled', TRUE)
-      ->set('translation.use_source', LOCALE_TRANSLATION_USE_SOURCE_LOCAL)
+      ->set('translation.use_source', TranslationUpdateMode::Local->value)
       ->save();
     $this->drupalPlaceBlock('local_tasks_block');
   }

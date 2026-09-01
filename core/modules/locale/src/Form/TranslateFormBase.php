@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\locale\StringStorageInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleLanguages;
 
 /**
@@ -158,8 +159,8 @@ abstract class TranslateFormBase extends FormBase {
       'title' => $this->t('Translation type'),
       'options' => [
         'all' => $this->t('All'),
-        LOCALE_NOT_CUSTOMIZED => $this->t('Non-customized translation'),
-        LOCALE_CUSTOMIZED => $this->t('Customized translation'),
+        LocaleDefaultOptions::NOT_CUSTOMIZED => $this->t('Non-customized translation'),
+        LocaleDefaultOptions::CUSTOMIZED => $this->t('Customized translation'),
       ],
       'states' => [
         'visible' => [

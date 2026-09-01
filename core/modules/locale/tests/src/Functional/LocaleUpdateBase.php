@@ -9,6 +9,8 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\file\Entity\File;
+use Drupal\locale\LocaleDefaultOptions;
+use Drupal\locale\Model\TranslationUpdateMode;
 use Drupal\Tests\BrowserTestBase;
 
 // cspell:ignore februar januar juni marz
@@ -67,7 +69,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
     // tests.
     $this->config('locale.settings')
       ->set('translation.import_enabled', TRUE)
-      ->set('translation.use_source', LOCALE_TRANSLATION_USE_SOURCE_LOCAL)
+      ->set('translation.use_source', TranslationUpdateMode::Local->value)
       ->save();
   }
 
@@ -242,7 +244,7 @@ EOF;
         'lid' => $string->getId(),
         'language' => $langcode,
         'translation' => $translation,
-        'customized' => LOCALE_NOT_CUSTOMIZED,
+        'customized' => LocaleDefaultOptions::NOT_CUSTOMIZED,
       ])->save();
     }
 
@@ -262,7 +264,7 @@ EOF;
         'lid' => $string->getId(),
         'language' => $langcode,
         'translation' => $translation,
-        'customized' => LOCALE_CUSTOMIZED,
+        'customized' => LocaleDefaultOptions::CUSTOMIZED,
       ])->save();
     }
 

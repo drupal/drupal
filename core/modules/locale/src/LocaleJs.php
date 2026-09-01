@@ -148,6 +148,33 @@ class LocaleJs {
    * @internal
    */
   public function parseJsFile(string $filepath): void {
+    // Regular expression pattern used to localize JavaScript strings.
+    $jsStringRegex = '(?:(?:\'(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+';
+
+    // Regular expression pattern used to match simple JS object literal.
+    // This pattern matches a basic JS object, but will fail on an object with
+    // nested objects. Used in JS file parsing for string arg processing.
+    $jsObjectRegex = '\{.*?\}';
+
+    // Regular expression to match an object containing a key 'context'.
+    // Pattern to match a JS object containing a 'context key' with a string
+    // value, which is captured. Will fail if there are nested objects.
+    $jsObjectContextRegex = '
+      \{              # match object literal start
+      .*?             # match anything, non-greedy
+      (?:             # match a form of "context"
+        \'context\'
+        |
+        "context"
+        |
+        context
+      )
+      \s*:\s*         # match key-value separator ":"
+      (' . $jsStringRegex . ')  # match context string
+      .*?             # match anything, non-greedy
+      \}              # match end of object literal
+    ';
+
     // The file path might contain a query string, so make sure we only use the
     // actual file.
     $parsedUrl = UrlHelper::parse($filepath);
@@ -166,9 +193,9 @@ class LocaleJs {
     preg_match_all('~
       [^\w]Drupal\s*\.\s*t\s*                       # match "Drupal.t" with whitespace
       \(\s*                                         # match "(" argument list start
-      (' . LOCALE_JS_STRING . ')\s*                 # capture string argument
-      (?:,\s*' . LOCALE_JS_OBJECT . '\s*            # optionally capture str args
-        (?:,\s*' . LOCALE_JS_OBJECT_CONTEXT . '\s*) # optionally capture context
+      (' . $jsStringRegex . ')\s*                 # capture string argument
+      (?:,\s*' . $jsObjectRegex . '\s*            # optionally capture str args
+        (?:,\s*' . $jsObjectContextRegex . '\s*) # optionally capture context
       ?)?                                           # close optional args
       [,\)]                                         # match ")" or "," to finish
       ~sx', $file, $tMatches);
@@ -178,7 +205,7 @@ class LocaleJs {
       [^\w]Drupal\s*\.\s*formatPlural\s*  # match "Drupal.formatPlural" with whitespace
       \(                                  # match "(" argument list start
       \s*.+?\s*,\s*                       # match count argument
-      (' . LOCALE_JS_STRING . ')\s*,\s*   # match singular string argument
+      (' . $jsStringRegex . ')\s*,\s*   # match singular string argument
       (                             # capture plural string argument
         (?:                         # non-capturing group to repeat string pieces
           (?:
@@ -189,8 +216,8 @@ class LocaleJs {
           (?:\s*\+\s*)?             # match "+" with possible whitespace, for str concat
         )+                          # match multiple because we supports concatenating strs
       )\s*                          # end capturing of plural string argument
-      (?:,\s*' . LOCALE_JS_OBJECT . '\s*          # optionally capture string args
-        (?:,\s*' . LOCALE_JS_OBJECT_CONTEXT . '\s*)?  # optionally capture context
+      (?:,\s*' . $jsObjectRegex . '\s*          # optionally capture string args
+        (?:,\s*' . $jsObjectContextRegex . '\s*)?  # optionally capture context
       )?
       [,\)]
       ~sx', $file, $pluralMatches);

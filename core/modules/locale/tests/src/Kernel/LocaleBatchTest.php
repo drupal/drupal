@@ -8,6 +8,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\locale\File\LocaleFile;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\LocaleTranslationSource;
+use Drupal\locale\Model\SourceType;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -64,7 +65,7 @@ class LocaleBatchTest extends KernelTestBase {
       langcode: 'en',
     );
     $source->version = '1.0.0';
-    $source->files[LOCALE_TRANSLATION_REMOTE] = new LocaleFile('test_module-1.0.0.en.po', 'https://ftp.drupal.org/files/translations/all/test_module/test_module-1.0.0.en.po', '');
+    $source->files[SourceType::Remote->value] = new LocaleFile('test_module-1.0.0.en.po', 'https://ftp.drupal.org/files/translations/all/test_module/test_module-1.0.0.en.po', '');
 
     \Drupal::keyValue('locale.translation_status')->setMultiple(['test_module' => ['en' => $source]]);
 
@@ -95,7 +96,7 @@ class LocaleBatchTest extends KernelTestBase {
       langcode: 'de',
     );
     $source->version = '1.0.0';
-    $source->files[LOCALE_TRANSLATION_REMOTE] = new LocaleFile('test_module-1.0.0.en.po', 'https://ftp.drupal.org/files/translations/all/test_module/test_module-1.0.0.en.po', '');
+    $source->files[SourceType::Remote->value] = new LocaleFile('test_module-1.0.0.en.po', 'https://ftp.drupal.org/files/translations/all/test_module/test_module-1.0.0.en.po', '');
 
     \Drupal::keyValue('locale.translation_status')->setMultiple(['test_module' => ['de' => $source]]);
 

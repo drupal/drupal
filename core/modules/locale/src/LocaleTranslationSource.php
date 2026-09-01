@@ -2,6 +2,9 @@
 
 namespace Drupal\locale;
 
+use Drupal\locale\File\LocaleFile;
+use Drupal\locale\Model\SourceType;
+
 /**
  * Provides source and translation status information for a project/langcode.
  *
@@ -14,10 +17,7 @@ namespace Drupal\locale;
  *    - "files": Array of file objects containing properties of local and
  *      remote translation files.
  *    Other processes can add the following properties:
- *    - "type": Most recent translation source found. LOCALE_TRANSLATION_REMOTE
- *       and LOCALE_TRANSLATION_LOCAL indicate available new translations,
- *       LOCALE_TRANSLATION_CURRENT indicate that the current translation is
- *       them most recent. "type" corresponds with a key of the "files" array.
+ *    - "type": One of \Drupal\locale\Model\SourceType's values.
  *    - "timestamp": The creation time of the "type" translation (file).
  *    - "last_checked": The time when the "type" translation was last checked.
  */
@@ -26,7 +26,8 @@ class LocaleTranslationSource {
   /**
    * List of locale file object.
    *
-   * Valid keys are LOCALE_TRANSLATION_LOCAL or LOCALE_TRANSLATION_REMOTE.
+   * Valid keys are SourceType::Local->value or
+   * SourceType::Remote->value.
    *
    * @var \Drupal\locale\File\LocaleFile[]
    */
@@ -87,6 +88,36 @@ class LocaleTranslationSource {
     $source->server_pattern = $project->server_pattern;
     $source->version = $project->version;
     return $source;
+  }
+
+  /**
+   * Returns type of the source.
+   *
+   * @return \Drupal\locale\Model\SourceType|null
+   *   The source type.
+   */
+  public function getType(): SourceType|null {
+    return SourceType::tryFrom($this->type);
+  }
+
+  /**
+   * Returns file for the source.
+   *
+   * @return \Drupal\locale\File\LocaleFile|null
+   *   The file for the given source.
+   */
+  public function getFile(SourceType $translationSource): LocaleFile|null {
+    return $this->files[$translationSource->value] ?? NULL;
+  }
+
+  /**
+   * Returns whether an update is available.
+   *
+   * @return bool
+   *   There is an update available or not.
+   */
+  public function isUpdateAvailable(): bool {
+    return $this->getType() == SourceType::Local || $this->getType() == SourceType::Remote;
   }
 
 }

@@ -18,6 +18,7 @@ use Drupal\Core\Database\SchemaDefinition\StringValue;
 use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\StreamWrapper\TranslationsStream;
 
 /**
@@ -141,8 +142,7 @@ function locale_schema(): Schema {
         name: 'customized',
         description: 'Boolean indicating whether the translation is custom to this site.',
         notNull: TRUE,
-        // LOCALE_NOT_CUSTOMIZED.
-        default: new IntValue(0),
+        default: new IntValue(LocaleDefaultOptions::NOT_CUSTOMIZED),
       ),
     ],
     primaryKey: new PrimaryKey(['language', 'lid']),

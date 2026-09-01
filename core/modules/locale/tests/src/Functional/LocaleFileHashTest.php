@@ -6,6 +6,9 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\locale\CurrentImportStorage;
 use Drupal\locale\LocaleSource;
+use Drupal\locale\Model\Overwrite;
+use Drupal\locale\Model\SourceType;
+use Drupal\locale\Model\TranslationUpdateMode;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -43,8 +46,8 @@ class LocaleFileHashTest extends LocaleUpdateBase {
     $this->setCurrentTranslations();
 
     $edit = [
-      'use_source' => LOCALE_TRANSLATION_USE_SOURCE_LOCAL,
-      'overwrite' => LOCALE_TRANSLATION_OVERWRITE_ALL,
+      'use_source' => TranslationUpdateMode::Local->value,
+      'overwrite' => Overwrite::All->value,
     ];
     $this->drupalGet('admin/config/regional/translate/settings');
     $this->submitForm($edit, 'Save configuration');
@@ -125,7 +128,7 @@ class LocaleFileHashTest extends LocaleUpdateBase {
     touch($uri, time() + 20000);
     $status = \Drupal::service(LocaleSource::class)->loadSources(['contrib_module_two']);
     $status['contrib_module_two']['de']->hash = '';
-    $status['contrib_module_two']['de']->files[LOCALE_TRANSLATION_LOCAL]->hash = '';
+    $status['contrib_module_two']['de']->getFile(SourceType::Local)->hash = '';
     \Drupal::keyValue('locale.translation_status')->set('contrib_module_two', $status['contrib_module_two']);
 
     // Test fallback to mtime if the hash is not available.
@@ -152,7 +155,7 @@ class LocaleFileHashTest extends LocaleUpdateBase {
     $this->assertSame($history_hash, $current_import->hash);
     $status = \Drupal::service(LocaleSource::class)->loadSources([$project]);
     $this->assertSame($status_hash, $status[$project][$langcode]->hash);
-    $this->assertSame($status_hash, $status[$project][$langcode]->files[LOCALE_TRANSLATION_LOCAL]->hash);
+    $this->assertSame($status_hash, $status[$project][$langcode]->getFile(SourceType::Local)->hash);
   }
 
 }
