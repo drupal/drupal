@@ -18,9 +18,16 @@ use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleSource;
 use Drupal\locale\LocaleLanguages;
 use Drupal\locale\LocaleXss;
+use Drupal\locale\Model\SourceType;
+use Drupal\locale\Model\TranslationUpdateMode;
 
 /**
  * Regular expression pattern used to localize JavaScript strings.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0.
+ *   There is no replacement.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_JS_STRING = '(?:(?:\'(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+';
 
@@ -29,6 +36,11 @@ const LOCALE_JS_STRING = '(?:(?:\'(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*")(?:\s*\+
  *
  * This pattern matches a basic JS object, but will fail on an object with
  * nested objects. Used in JS file parsing for string arg processing.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0.
+ *   There is no replacement.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_JS_OBJECT = '\{.*?\}';
 
@@ -37,6 +49,11 @@ const LOCALE_JS_OBJECT = '\{.*?\}';
  *
  * Pattern to match a JS object containing a 'context key' with a string value,
  * which is captured. Will fail if there are nested objects.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0.
+ *   There is no replacement.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 define('LOCALE_JS_OBJECT_CONTEXT', '
   \{              # match object literal start
@@ -49,7 +66,7 @@ define('LOCALE_JS_OBJECT_CONTEXT', '
     context
   )
   \s*:\s*         # match key-value separator ":"
-  (' . LOCALE_JS_STRING . ')  # match context string
+  ((?:(?:\'(?:\\\\\'|[^\'])*\'|"(?:\\\\"|[^"])*")(?:\s*\+\s*)?)+)  # match context string
   .*?             # match anything, non-greedy
   \}              # match end of object literal
 ');
@@ -59,6 +76,11 @@ define('LOCALE_JS_OBJECT_CONTEXT', '
  *
  * Such translations are imported from .po files downloaded from
  * localize.drupal.org for example.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   LocaleDefaultOptions::NOT_CUSTOMIZED instead.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_NOT_CUSTOMIZED = 0;
 
@@ -67,6 +89,11 @@ const LOCALE_NOT_CUSTOMIZED = 0;
  *
  * Such translations are edited from their imported originals on the user
  * interface or are imported as customized.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   LocaleDefaultOptions::CUSTOMIZED instead.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_CUSTOMIZED = 1;
 
@@ -77,6 +104,11 @@ const LOCALE_CUSTOMIZED = 1;
  * used. Any remote translation file will be ignored. Also custom modules and
  * themes which have set a "server pattern" to use a remote translation server
  * will be ignored.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   TranslationUpdateMode::Local->value instead.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_TRANSLATION_USE_SOURCE_LOCAL = 'local';
 
@@ -85,16 +117,31 @@ const LOCALE_TRANSLATION_USE_SOURCE_LOCAL = 'local';
  *
  * When checking for available translation updates, both local and remote files
  * will be checked.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   TranslationUpdateMode::RemoteAndLocal->value instead.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL = 'remote_and_local';
 
 /**
  * The number of seconds the translations status entry should be considered.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0.
+ *   There is no replacement.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_TRANSLATION_STATUS_TTL = 600;
 
 /**
  * UI option for override of existing translations. Override any translation.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   Overwrite::All->value instead.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_TRANSLATION_OVERWRITE_ALL = 'all';
 
@@ -102,6 +149,11 @@ const LOCALE_TRANSLATION_OVERWRITE_ALL = 'all';
  * UI option for override of existing translations.
  *
  * Only override non-customized translations.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   Overwrite::NonCustomized->value instead.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED = 'non_customized';
 
@@ -109,21 +161,41 @@ const LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED = 'non_customized';
  * UI option for override of existing translations.
  *
  * Don't override existing translations.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   Overwrite::None->value instead.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_TRANSLATION_OVERWRITE_NONE = 'none';
 
 /**
  * Translation source is a remote file.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   SourceType::Remote->value instead.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_TRANSLATION_REMOTE = 'remote';
 
 /**
  * Translation source is a local file.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   SourceType::Local->value instead.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_TRANSLATION_LOCAL = 'local';
 
 /**
  * Translation source is the current translation.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   SourceType::Current->value instead.
+ *
+ * @see https://www.drupal.org/node/3568156
  */
 const LOCALE_TRANSLATION_CURRENT = 'current';
 
@@ -433,7 +505,7 @@ function locale_translation_get_file_history() {
     ->execute()
     ->fetchAll();
   foreach ($result as $file) {
-    $file->type = $file->timestamp ? LOCALE_TRANSLATION_CURRENT : '';
+    $file->type = $file->timestamp ? SourceType::Current->value : '';
     $history[$file->project][$file->langcode] = $file;
   }
   return $history;
@@ -576,7 +648,7 @@ function locale_translation_clear_status(): void {
  */
 function locale_translation_use_remote_source() {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3616293', E_USER_DEPRECATED);
-  return \Drupal::config('locale.settings')->get('translation.use_source') == LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL;
+  return \Drupal::config('locale.settings')->get('translation.use_source') == TranslationUpdateMode::RemoteAndLocal->value;
 }
 
 /**

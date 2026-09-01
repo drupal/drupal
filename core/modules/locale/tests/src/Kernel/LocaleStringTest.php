@@ -6,6 +6,7 @@ namespace Drupal\Tests\locale\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\StringInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -75,7 +76,7 @@ class LocaleStringTest extends KernelTestBase {
     // Create translation and find it by lid and source.
     $langcode = 'es';
     $translation = $this->createTranslation($source, $langcode);
-    $this->assertEquals(LOCALE_NOT_CUSTOMIZED, $translation->customized);
+    $this->assertEquals(LocaleDefaultOptions::NOT_CUSTOMIZED, $translation->customized);
     $string1 = $this->storage->findTranslation(['language' => $langcode, 'lid' => $source->lid]);
     $this->assertEquals($translation->translation, $string1->translation);
     $string2 = $this->storage->findTranslation([
@@ -88,7 +89,7 @@ class LocaleStringTest extends KernelTestBase {
       ->setCustomized()
       ->save();
     $translation = $this->storage->findTranslation(['language' => $langcode, 'lid' => $source->lid]);
-    $this->assertEquals(LOCALE_CUSTOMIZED, $translation->customized);
+    $this->assertEquals(LocaleDefaultOptions::CUSTOMIZED, $translation->customized);
 
     // Delete translation.
     $translation->delete();
@@ -151,7 +152,7 @@ class LocaleStringTest extends KernelTestBase {
     // Not customized translations.
     $translate1 = $this->createAllTranslations($source1);
     // Customized translations.
-    $this->createAllTranslations($source2, ['customized' => LOCALE_CUSTOMIZED]);
+    $this->createAllTranslations($source2, ['customized' => LocaleDefaultOptions::CUSTOMIZED]);
     // Try quick search function with different field combinations.
     $langcode = 'es';
     $found = $this->storage->findTranslation([
@@ -181,13 +182,16 @@ class LocaleStringTest extends KernelTestBase {
     $this->assertCount(2 * $language_count, $translations);
 
     // Load all customized translations.
-    $translations = $this->storage->getTranslations(['customized' => LOCALE_CUSTOMIZED, 'translated' => TRUE]);
+    $translations = $this->storage->getTranslations([
+      'customized' => LocaleDefaultOptions::CUSTOMIZED,
+      'translated' => TRUE,
+    ]);
     $this->assertCount($language_count, $translations);
 
     // Load all Spanish customized translations.
     $translations = $this->storage->getTranslations([
       'language' => 'es',
-      'customized' => LOCALE_CUSTOMIZED,
+      'customized' => LocaleDefaultOptions::CUSTOMIZED,
       'translated' => TRUE,
     ]);
     $this->assertCount(1, $translations);

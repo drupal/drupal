@@ -43,7 +43,7 @@ class LocaleRequirements {
             if (empty($project_info->type)) {
               $untranslated[$langcode] = $languages[$langcode]->getName();
             }
-            elseif ($project_info->type == LOCALE_TRANSLATION_LOCAL || $project_info->type == LOCALE_TRANSLATION_REMOTE) {
+            elseif ($project_info->isUpdateAvailable()) {
               $available_updates[$langcode] = $languages[$langcode]->getName();
             }
           }

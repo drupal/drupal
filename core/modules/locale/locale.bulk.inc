@@ -50,8 +50,9 @@ function locale_translate_get_interface_translation_files(array $projects = [], 
  *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
  *   - 'customized': Flag indicating whether the strings imported from $file
  *     are customized translations or come from a community source. Use
- *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
- *     LOCALE_NOT_CUSTOMIZED.
+ *     LocaleDefaultOptions::CUSTOMIZED or
+ *     LocaleDefaultOptions::NOT_CUSTOMIZED. Optional, defaults to
+ *     LocaleDefaultOptions::NOT_CUSTOMIZED.
  *   - 'finish_feedback': Whether or not to give feedback to the user when the
  *     batch is finished. Optional, defaults to TRUE.
  *
@@ -86,8 +87,9 @@ function locale_translate_batch_build(array $files, array $options) {
  *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
  *   - 'customized': Flag indicating whether the strings imported from $file
  *     are customized translations or come from a community source. Use
- *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
- *     LOCALE_NOT_CUSTOMIZED.
+ *     LocaleDefaultOptions::CUSTOMIZED or
+ *     LocaleDefaultOptions::NOT_CUSTOMIZED. Optional, defaults to
+ *     LocaleDefaultOptions::NOT_CUSTOMIZED.
  *   - 'message': Alternative message to display during import. Note, this must
  *     be sanitized text.
  * @param array|\ArrayAccess $context

@@ -7,6 +7,7 @@ namespace Drupal\Tests\config_translation\Functional;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\locale\Model\TranslationUpdateMode;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\block_content\Traits\BlockContentCreationTrait;
 use Drupal\Tests\BrowserTestBase;
@@ -86,7 +87,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // tests.
     $this->config('locale.settings')
       ->set('translation.import_enabled', TRUE)
-      ->set('translation.use_source', LOCALE_TRANSLATION_USE_SOURCE_LOCAL)
+      ->set('translation.use_source', TranslationUpdateMode::Local->value)
       ->save();
     $this->drupalPlaceBlock('local_tasks_block');
   }

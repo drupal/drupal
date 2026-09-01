@@ -58,8 +58,9 @@ class LocaleImportBatch {
    *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
    *   - 'customized': Flag indicating whether the strings imported from $file
    *     are customized translations or come from a community source. Use
-   *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
-   *     LOCALE_NOT_CUSTOMIZED.
+   *     LocaleDefaultOptions::CUSTOMIZED or
+   *     LocaleDefaultOptions::NOT_CUSTOMIZED. Optional, defaults to
+   *     LocaleDefaultOptions::NOT_CUSTOMIZED.
    *   - 'finish_feedback': Whether or not to give feedback to the user when the
    *     batch is finished. Optional, defaults to TRUE.
    *
@@ -69,7 +70,7 @@ class LocaleImportBatch {
   public function buildBatch(array $files, array $options): array|bool {
     $options += [
       'overwrite_options' => [],
-      'customized' => LOCALE_NOT_CUSTOMIZED,
+      'customized' => LocaleDefaultOptions::NOT_CUSTOMIZED,
       'finish_feedback' => TRUE,
     ];
     if (count($files)) {
@@ -111,8 +112,9 @@ class LocaleImportBatch {
    *     Drupal\locale\PoDatabaseWriter. Optional, defaults to an empty array.
    *   - 'customized': Flag indicating whether the strings imported from $file
    *     are customized translations or come from a community source. Use
-   *     LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED. Optional, defaults to
-   *     LOCALE_NOT_CUSTOMIZED.
+   *     LocaleDefaultOptions::CUSTOMIZED or
+   *     LocaleDefaultOptions::NOT_CUSTOMIZED. Optional, defaults to
+   *     LocaleDefaultOptions::NOT_CUSTOMIZED.
    *   - 'message': Alternative message to display during import. Note, this
    *     must be sanitized text.
    * @param array|\ArrayAccess $context
@@ -122,7 +124,7 @@ class LocaleImportBatch {
     // Merge the default values in the $options array.
     $options += [
       'overwrite_options' => [],
-      'customized' => LOCALE_NOT_CUSTOMIZED,
+      'customized' => LocaleDefaultOptions::NOT_CUSTOMIZED,
     ];
 
     if (isset($file->langcode) && $file->langcode != LanguageInterface::LANGCODE_NOT_SPECIFIED) {

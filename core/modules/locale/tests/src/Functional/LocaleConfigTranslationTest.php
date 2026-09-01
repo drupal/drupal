@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\locale\Model\TranslationUpdateMode;
 use Drupal\locale\StringStorageInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
@@ -52,7 +53,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     // tests.
     $this->config('locale.settings')
       ->set('translation.import_enabled', TRUE)
-      ->set('translation.use_source', LOCALE_TRANSLATION_USE_SOURCE_LOCAL)
+      ->set('translation.use_source', TranslationUpdateMode::Local->value)
       ->save();
 
     // Add custom language.

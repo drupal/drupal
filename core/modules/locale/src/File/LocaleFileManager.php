@@ -15,6 +15,7 @@ use Drupal\locale\CurrentImportStorage;
 use Drupal\locale\LocaleProjectRepository;
 use Drupal\locale\LocaleSource;
 use Drupal\locale\LocaleLanguages;
+use Drupal\locale\Model\SourceType;
 use Drupal\locale\StreamWrapper\TranslationsStream;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ConnectException;
@@ -204,7 +205,7 @@ class LocaleFileManager {
         $project = $source_file->project ?? NULL;
         $version = $source_file->version ?? NULL;
         $file = new LocaleFile($filename, $uri, $hash, filemtime($uri), $langcode, $project, $version);
-        $file->type = LOCALE_TRANSLATION_LOCAL;
+        $file->type = SourceType::Local->value;
         $file->directory = $directory;
         return $file;
       }

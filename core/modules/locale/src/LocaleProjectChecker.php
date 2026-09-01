@@ -14,6 +14,8 @@ use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
+use Drupal\locale\Model\SourceType;
+use Drupal\locale\Model\TranslationUpdateMode;
 
 /**
  * Provide Locale Project Checker helper methods.
@@ -45,7 +47,7 @@ class LocaleProjectChecker {
    *   Array of language codes. Defaults to all translatable languages.
    */
   public function checkProjects(array $projects, array $langcodes = []): void {
-    if ($this->configFactory->get('locale.settings')->get('translation.use_source') == LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL) {
+    if ($this->configFactory->get('locale.settings')->get('translation.use_source') == TranslationUpdateMode::RemoteAndLocal->value) {
       // Retrieve the status of both remote and local translation sources by
       // using a batch process.
       $this->triggerBatch($projects, $langcodes);
@@ -87,7 +89,7 @@ class LocaleProjectChecker {
         $source = $this->localeSource->loadSource($project, $langcode);
         $file = $this->localeSource->sourceCheckFile($source);
         if ($file) {
-          $this->localeSource->saveSource($project, $langcode, LOCALE_TRANSLATION_LOCAL, $file);
+          $this->localeSource->saveSource($project, $langcode, SourceType::Local->value, $file);
         }
       }
     }

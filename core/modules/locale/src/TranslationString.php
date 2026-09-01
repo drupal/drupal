@@ -62,7 +62,7 @@ class TranslationString extends StringBase {
    *   The called object.
    */
   public function setCustomized($customized = TRUE) {
-    $this->customized = $customized ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED;
+    $this->customized = $customized ? LocaleDefaultOptions::CUSTOMIZED : LocaleDefaultOptions::NOT_CUSTOMIZED;
     return $this;
   }
 

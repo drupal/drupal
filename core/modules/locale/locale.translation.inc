@@ -210,17 +210,18 @@ function locale_translation_source_check_file($source) {
  *   - "files": Array of file objects containing properties of local and remote
  *     translation files.
  *   Other processes can add the following properties:
- *   - "type": Most recent translation source found. LOCALE_TRANSLATION_REMOTE
- *      and LOCALE_TRANSLATION_LOCAL indicate available new translations,
- *      LOCALE_TRANSLATION_CURRENT indicate that the current translation is them
- *      most recent. "type" corresponds with a key of the "files" array.
+ *   - "type": Most recent translation source found.
+ *      SourceType::Remote->value and SourceType::Local->value
+ *      indicate available new translations, SourceType::Current->value
+ *      indicate that the current translation is them most recent. "type"
+ *      corresponds with a key of the "files" array.
  *   - "timestamp": The creation time of the "type" translation (file).
  *   - "last_checked": The time when the "type" translation was last checked.
  *   The "files" array can hold file objects of type:
- *   LOCALE_TRANSLATION_LOCAL, LOCALE_TRANSLATION_REMOTE and
- *   LOCALE_TRANSLATION_CURRENT. Each contains following properties:
- *   - "type": The object type (LOCALE_TRANSLATION_LOCAL,
- *     LOCALE_TRANSLATION_REMOTE, etc. see above).
+ *   SourceType::Local->value, SourceType::Remote->value and
+ *   SourceType::Current->value. Each contains following properties:
+ *   - "type": The object type (SourceType::Local->value,
+ *     SourceType::Remote->value, etc. see above).
  *   - "project": Project name.
  *   - "langcode": Language code.
  *   - "version": Project version.

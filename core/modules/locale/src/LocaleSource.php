@@ -8,6 +8,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\locale\File\LocaleFile;
+use Drupal\locale\Model\SourceType;
 
 /**
  * Provides the locale source services.
@@ -105,7 +106,7 @@ class LocaleSource {
     // Merge the new status data with the existing status.
     $request_time = $this->time->getRequestTime();
     switch ($type) {
-      case LOCALE_TRANSLATION_REMOTE:
+      case SourceType::Remote->value:
         // Add the source data to the status array.
         $project_sources[$langcode]->files[$type] = $data;
 
@@ -120,7 +121,7 @@ class LocaleSource {
         }
         break;
 
-      case LOCALE_TRANSLATION_LOCAL:
+      case SourceType::Local->value:
         // Add the source data to the status array.
         $project_sources[$langcode]->files[$type] = $data;
 
@@ -148,7 +149,7 @@ class LocaleSource {
         }
         break;
 
-      case LOCALE_TRANSLATION_CURRENT:
+      case SourceType::Current->value:
         $data->last_checked = $request_time;
         $project_sources[$langcode]->timestamp = $data->timestamp;
         $project_sources[$langcode]->hash = $data->hash;
@@ -267,8 +268,8 @@ class LocaleSource {
    * @see sourceBuild()
    */
   public function sourceCheckFile($source) {
-    if (isset($source->files[LOCALE_TRANSLATION_LOCAL])) {
-      $source_file = $source->files[LOCALE_TRANSLATION_LOCAL];
+    $source_file = $source->getFile(SourceType::Local);
+    if ($source_file) {
       if (isset($source_file->uri) && file_exists($source_file->uri)) {
         $source_file->timestamp = filemtime($source_file->uri);
         $source_file->hash = hash_file(self::LOCAL_FILE_HASH_ALGO, $source_file->uri);
@@ -307,24 +308,24 @@ class LocaleSource {
       $remote_filename = $this->buildServerPattern($source, basename($source->server_pattern));
       $remote_uri = $this->buildServerPattern($source, $source->server_pattern);
       $remote_file = new LocaleFile($remote_filename, $remote_uri, '', NULL, $langcode, $project->name, $project->version);
-      $remote_file->type = LOCALE_TRANSLATION_REMOTE;
-      $files[LOCALE_TRANSLATION_REMOTE] = $remote_file;
+      $remote_file->type = SourceType::Remote->value;
+      $files[SourceType::Remote->value] = $remote_file;
 
       $local_filename = $this->buildServerPattern($source, $filename);
       $local_uri = 'translations://' . $local_filename;
       $local_file = new LocaleFile($local_filename, $local_uri, '', NULL, $langcode, $project->name, $project->version);
-      $local_file->type = LOCALE_TRANSLATION_LOCAL;
+      $local_file->type = SourceType::Local->value;
       $local_file->directory = 'translations://';
-      $files[LOCALE_TRANSLATION_LOCAL] = $local_file;
+      $files[SourceType::Local->value] = $local_file;
     }
     else {
       $local_directory = $this->buildServerPattern($source, $this->fileSystem->dirname($source->server_pattern));
       $local_filename = $this->buildServerPattern($source, basename($source->server_pattern));
       $local_uri = $local_directory . '/' . $local_filename;
       $local_file = new LocaleFile($local_filename, $local_uri, '', NULL, $langcode, $project->name, $project->version);
-      $local_file->type = LOCALE_TRANSLATION_LOCAL;
+      $local_file->type = SourceType::Local->value;
       $local_file->directory = $local_directory;
-      $files[LOCALE_TRANSLATION_LOCAL] = $local_file;
+      $files[SourceType::Local->value] = $local_file;
     }
     $source->files = $files;
 
@@ -333,7 +334,7 @@ class LocaleSource {
     // project+language is not translated before, create a new record.
     $current_import_state = $this->currentImportStorage->get($project->name, $langcode);
     if ($current_import_state instanceof CurrentImport && $current_import_state->timestamp) {
-      $source->type = LOCALE_TRANSLATION_CURRENT;
+      $source->type = SourceType::Current->value;
       $source->timestamp = $current_import_state->timestamp;
       $source->hash = $current_import_state->hash;
       $source->last_checked = $current_import_state->last_checked ?? NULL;

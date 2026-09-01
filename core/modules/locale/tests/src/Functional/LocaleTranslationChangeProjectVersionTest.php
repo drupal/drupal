@@ -8,6 +8,7 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\locale\LocaleFetch;
 use Drupal\locale\LocaleSource;
+use Drupal\locale\Model\TranslationUpdateMode;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -39,7 +40,7 @@ class LocaleTranslationChangeProjectVersionTest extends LocaleUpdateBase {
     $this->setTranslationsDirectory($public_path . '/local');
     $config
       ->set('translation.default_filename', '%project-%version.%language._po')
-      ->set('translation.use_source', LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL)
+      ->set('translation.use_source', TranslationUpdateMode::RemoteAndLocal->value)
       ->save();
 
     // This test uses .po files for the old translation file instead of the
