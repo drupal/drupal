@@ -14,6 +14,7 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('text_with_summary')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class TextWithSummaryFileUsageTest extends EntityKernelTestBase {
 
   use ContentTypeCreationTrait;
@@ -33,6 +35,8 @@ class TextWithSummaryFileUsageTest extends EntityKernelTestBase {
     'editor_test',
     'node',
     'file',
+    'filter',
+    'text',
     'text_with_summary',
   ];
 

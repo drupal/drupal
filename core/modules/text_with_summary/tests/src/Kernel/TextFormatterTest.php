@@ -9,6 +9,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('text_with_summary')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class TextFormatterTest extends EntityKernelTestBase {
 
   /**
@@ -35,7 +37,7 @@ class TextFormatterTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['text'];
+  protected static $modules = ['filter', 'text', 'text_with_summary'];
 
   /**
    * {@inheritdoc}
