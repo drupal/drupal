@@ -29,15 +29,6 @@ class UserViewsData extends EntityViewsData {
     $data['users_field_data']['uid']['filter']['id'] = 'user_name';
     $data['users_field_data']['uid']['filter']['title'] = $this->t('Name (autocomplete)');
     $data['users_field_data']['uid']['filter']['help'] = $this->t('The user or author name. Uses an autocomplete widget to find a user name, the actual filter uses the resulting user ID.');
-    $data['users_field_data']['uid']['relationship'] = [
-      'title' => $this->t('Content authored'),
-      'help' => $this->t('Relate content to the user who created it. This relationship will create one record for each content item created by the user.'),
-      'id' => 'standard',
-      'base' => 'node_field_data',
-      'base field' => 'uid',
-      'field' => 'uid',
-      'label' => $this->t('nodes'),
-    ];
 
     $data['users_field_data']['uid_raw'] = [
       'help' => $this->t('The raw numeric user ID.'),
@@ -45,22 +36,6 @@ class UserViewsData extends EntityViewsData {
       'filter' => [
         'title' => $this->t('The user ID'),
         'id' => 'numeric',
-      ],
-    ];
-
-    $data['users_field_data']['uid_representative'] = [
-      'relationship' => [
-        'title' => $this->t('Representative node'),
-        'label'  => $this->t('Representative node'),
-        'help' => $this->t('Obtains a single representative node for each user, according to a chosen sort criterion.'),
-        'id' => 'groupwise_max',
-        'relationship field' => 'uid',
-        'outer field' => 'users_field_data.uid',
-        'argument table' => 'users_field_data',
-        'argument field' => 'uid',
-        'base' => 'node_field_data',
-        'field' => 'nid',
-        'relationship' => 'node_field_data:uid',
       ],
     ];
 

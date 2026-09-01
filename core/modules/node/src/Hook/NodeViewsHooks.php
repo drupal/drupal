@@ -8,6 +8,7 @@ use Drupal\user\RoleInterface;
 use Drupal\user\Entity\Role;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Hook\Order\Order;
 
 /**
  * Views hook implementations for node.
@@ -15,6 +16,38 @@ use Drupal\Core\Hook\Attribute\Hook;
 class NodeViewsHooks {
 
   use StringTranslationTrait;
+
+  /**
+   * Implements hook_views_data_alter().
+   */
+  #[Hook('views_data_alter', order: Order::First)]
+  public function viewsDataAlter(array &$data): void {
+    $data['users_field_data']['uid']['relationship'] = [
+      'title' => $this->t('Content authored'),
+      'help' => $this->t('Relate content to the user who created it. This relationship will create one record for each content item created by the user.'),
+      'id' => 'standard',
+      'base' => 'node_field_data',
+      'base field' => 'uid',
+      'field' => 'uid',
+      'label' => $this->t('nodes'),
+    ];
+
+    $data['users_field_data']['uid_representative'] = [
+      'relationship' => [
+        'title' => $this->t('Representative node'),
+        'label'  => $this->t('Representative node'),
+        'help' => $this->t('Obtains a single representative node for each user, according to a chosen sort criterion.'),
+        'id' => 'groupwise_max',
+        'relationship field' => 'uid',
+        'outer field' => 'users_field_data.uid',
+        'argument table' => 'users_field_data',
+        'argument field' => 'uid',
+        'base' => 'node_field_data',
+        'field' => 'nid',
+        'relationship' => 'node_field_data:uid',
+      ],
+    ];
+  }
 
   /**
    * Implements hook_views_analyze().
