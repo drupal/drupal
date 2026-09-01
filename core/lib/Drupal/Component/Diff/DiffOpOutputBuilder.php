@@ -46,6 +46,14 @@ final class DiffOpOutputBuilder implements DiffOutputBuilderInterface {
 
     for ($i = 0; $i < count($diff); $i++) {
 
+      // Differ prepends a warning pseudo-line when source and target use
+      // different end of line markings. Skip it: no DiffOp represents a
+      // warning, and keeping it would output a line absent from both inputs.
+      // The lines it warns about are still reported as changes below.
+      if ($diff[$i][1] === Differ::DIFF_LINE_END_WARNING) {
+        continue;
+      }
+
       // Handle a sequence of removals + additions as a sequence of changes, and
       // manages the tail if required.
       if ($diff[$i][1] === Differ::REMOVED) {
