@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\file\Upload\FormFileUploader;
 use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\Group;
@@ -16,7 +17,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
- * Tests file_save_upload().
+ * Tests FormFileUploader::saveFormUploadedFiles().
  */
 #[Group('file')]
 #[RunTestsInSeparateProcesses]
@@ -60,12 +61,12 @@ class FileSaveUploadTest extends KernelTestBase {
   }
 
   /**
-   * Tests file_save_upload() with empty extensions.
+   * Tests FormFileUploader::saveFormUploadedFiles() with empty extensions.
    */
   public function testFileSaveUploadEmptyExtensions(): void {
     // Allow all extensions.
     $validators = ['FileExtension' => []];
-    $files = file_save_upload('file', $validators);
+    $files = \Drupal::service(FormFileUploader::class)->saveFormUploadedFiles('file', $validators);
     $this->assertCount(1, $files);
     $file = $files[0];
     // @todo work out why move_uploaded_file() is failing.

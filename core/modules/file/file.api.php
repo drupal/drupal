@@ -40,7 +40,8 @@ use Drupal\file\FileInterface;
  *   ],
  * ];
  * @endcode
- * - Use file_save_upload() to trigger the FileUploadSanitizeNameEvent event and
+ * - Use FormFileUploader::saveFormUploadedFiles() to trigger the
+ *   FileUploadSanitizeNameEvent event and
  *   \Drupal\file\Validation\FileValidatorInterface::validate().
  *
  * Important considerations, regardless of the form element used:
@@ -51,7 +52,7 @@ use Drupal\file\FileInterface;
  *
  * @see https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html
  * @see \Drupal\file\Validation\FileValidatorInterface
- * @see file_save_upload()
+ * @see FormFileUploader::saveFormUploadedFiles()
  * @see \Drupal\Core\File\Event\FileUploadSanitizeNameEvent
  * @see \Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber
  * @see \Drupal\file\Element\ManagedFile

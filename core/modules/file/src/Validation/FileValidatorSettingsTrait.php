@@ -20,8 +20,9 @@ trait FileValidatorSettingsTrait {
    *     - file_extensions: A space-separated list of allowed file extensions.
    *
    * @return array
-   *   An array suitable for passing to file_save_upload() or the file field
-   *   element's '#upload_validators' property.
+   *   An array suitable for passing to
+   *   FormFileUploader::saveFormUploadedFiles() or the file field element's
+   *   '#upload_validators' property.
    */
   public function getFileUploadValidators(array $settings): array {
     $validators = [

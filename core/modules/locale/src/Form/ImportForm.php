@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Upload\ManagedFileElementHelper;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\locale\LocaleDefaultOptions;
@@ -137,7 +138,7 @@ class ImportForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $this->file = _file_save_upload_from_form($form['file'], $form_state, 0);
+    $this->file = \Drupal::service(ManagedFileElementHelper::class)->saveFileUploads($form['file'], $form_state, 0);
 
     // Ensure we have the file uploaded.
     if (!$this->file) {
