@@ -54,8 +54,7 @@ class FilterPermissions implements ContainerInjectionInterface {
     foreach ($formats as $format) {
       if ($permission = $format->getPermissionName()) {
         $permissions[$permission] = [
-          'title' => $this->t('Use the <a href=":url">@label</a> text format', [
-            ':url' => $format->toUrl()->toString(),
+          'title' => $this->t('Use the @label text format', [
             '@label' => $format->label(),
           ]),
           'description' => [

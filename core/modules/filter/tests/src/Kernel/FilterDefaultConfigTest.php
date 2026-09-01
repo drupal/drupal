@@ -28,11 +28,6 @@ class FilterDefaultConfigTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Drupal\filter\FilterPermissions::permissions() builds a URL to output
-    // a link in the description.
-
-    $this->installEntitySchema('user');
-
     // Install filter_test module, which ships with custom default format.
     $this->installConfig(['user', 'filter_test']);
   }
