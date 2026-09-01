@@ -14,6 +14,7 @@ use Drupal\Core\Render\Element\FormElementBase;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
+use Drupal\file\Upload\ManagedFileElementHelper;
 use Symfony\Component\HttpFoundation\Request;
 
 // cspell:ignore filefield
@@ -72,7 +73,7 @@ class ManagedFile extends FormElementBase {
       $return = $input;
 
       // Uploads take priority over all other values.
-      if ($files = file_managed_file_save_upload($element, $form_state)) {
+      if ($files = \Drupal::service(ManagedFileElementHelper::class)->managedFileSaveUpload($element, $form_state)) {
         if ($element['#multiple']) {
           $fids = array_merge($fids, array_keys($files));
           $denied_fids = [];

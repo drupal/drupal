@@ -6,19 +6,11 @@
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\Exception\FileExistsException;
-use Drupal\Core\File\Exception\FileWriteException;
-use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileExists;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Lock\LockAcquiringException;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\file\FileInterface;
-use Drupal\file\Upload\FileUploadHandlerInterface;
-use Drupal\file\Upload\FormUploadedFile;
-use Drupal\Core\File\UploadedFilesExtractor;
+use Drupal\file\Upload\ManagedFileElementHelper;
+use Drupal\file\Upload\FormFileUploader;
 
 /**
  * Saves form file uploads.
@@ -44,59 +36,21 @@ use Drupal\Core\File\UploadedFilesExtractor;
  *
  * @internal
  *   This function is internal, and may be removed in a minor version release.
- *   It wraps file_save_upload() to allow correct error handling in forms.
- *   Contrib and custom code should not call this function, they should use the
- *   managed file upload widgets in core.
+ *   It wraps FormFileUploader::saveFormUploadedFiles() to allow correct error
+ *   handling in forms. Contrib and custom code should not call this function,
+ *   they should use the managed file upload widgets in core.
  *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(ManagedFileElementHelper::class)->saveFileUploads()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3382414
  * @see https://www.drupal.org/project/drupal/issues/3069020
  * @see https://www.drupal.org/project/drupal/issues/2482783
  */
 function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, FileExists $fileExists = FileExists::Rename) {
-  // Get all errors set before calling this method. This will also clear them
-  // from the messenger service.
-  $errors_before = \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_ERROR);
-
-  $upload_location = $element['#upload_location'] ?? FALSE;
-  $upload_name = implode('_', $element['#parents']);
-  $upload_validators = $element['#upload_validators'] ?? [];
-
-  $result = file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $fileExists);
-
-  // Get new errors that are generated while trying to save the upload. This
-  // will also clear them from the messenger service.
-  $errors_new = \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_ERROR);
-  if (!empty($errors_new)) {
-
-    if (count($errors_new) > 1) {
-      // Render multiple errors into a single message.
-      // This is needed because only one error per element is supported.
-      $render_array = [
-        'error' => [
-          '#markup' => t('One or more files could not be uploaded.'),
-        ],
-        'item_list' => [
-          '#theme' => 'item_list',
-          '#items' => $errors_new,
-        ],
-      ];
-      $error_message = \Drupal::service('renderer')->renderInIsolation($render_array);
-    }
-    else {
-      $error_message = reset($errors_new);
-    }
-
-    $form_state->setError($element, $error_message);
-  }
-
-  // Ensure that errors set prior to calling this method are still shown to the
-  // user.
-  if (!empty($errors_before)) {
-    foreach ($errors_before as $error) {
-      \Drupal::messenger()->addError($error);
-    }
-  }
-
-  return $result;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(ManagedFileElementHelper::class)->saveFileUploads() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
+  return \Drupal::service(ManagedFileElementHelper::class)->saveFileUploads($element, $form_state, $delta, $fileExists);
 }
 
 /**
@@ -136,102 +90,18 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  *   array element contains the file entity if the upload succeeded or FALSE if
  *   there was an error. Function returns NULL if no file was uploaded.
  *
- * @see _file_save_upload_from_form()
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(FormFileUploader::class)->saveFormUploadedFiles() instead.
+ *
+ * @see https://www.drupal.org/node/3382414
+ * @see ManagedFileElementHelper::saveFileUploads()
  */
 function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, FileExists $fileExists = FileExists::Rename) {
-  static $upload_cache;
-
-  $uploaded_files = \Drupal::service(UploadedFilesExtractor::class)->extractUploadedFiles($form_field_name);
-  if (empty($uploaded_files)) {
-    return NULL;
-  }
-
-  // Return cached objects without processing since the file will have
-  // already been processed and the paths in $_FILES will be invalid.
-  if (isset($upload_cache[$form_field_name])) {
-    if (isset($delta)) {
-      return $upload_cache[$form_field_name][$delta];
-    }
-    return $upload_cache[$form_field_name];
-  }
-
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(FormFileUploader::class)->saveFormUploadedFiles() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
   if ($destination === FALSE || $destination === NULL) {
     $destination = 'temporary://';
   }
-
-  /** @var \Drupal\file\Upload\FileUploadHandlerInterface $file_upload_handler */
-  $file_upload_handler = \Drupal::service(FileUploadHandlerInterface::class);
-  /** @var \Drupal\Core\Render\RendererInterface $renderer */
-  $renderer = \Drupal::service('renderer');
-  $files = [];
-  /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $uploaded_file */
-  foreach ($uploaded_files as $i => $uploaded_file) {
-    try {
-      $form_uploaded_file = new FormUploadedFile($uploaded_file);
-      $result = $file_upload_handler->handleFileUpload($form_uploaded_file, $validators, $destination, $fileExists);
-      if ($result->hasViolations()) {
-        $errors = [];
-        foreach ($result->getViolations() as $violation) {
-          $errors[] = $violation->getMessage();
-        }
-        $message = [
-          'error' => [
-            '#markup' => t('The specified file %name could not be uploaded.', ['%name' => $uploaded_file->getClientOriginalName()]),
-          ],
-          'item_list' => [
-            '#theme' => 'item_list',
-            '#items' => $errors,
-          ],
-        ];
-        // @todo Add support for render arrays in
-        // \Drupal\Core\Messenger\MessengerInterface::addMessage()?
-        // @see https://www.drupal.org/node/2505497.
-        \Drupal::messenger()->addError($renderer->renderInIsolation($message));
-        $files[$i] = FALSE;
-        continue;
-      }
-      $file = $result->getFile();
-      // Log security renames to help detect potential malicious uploads.
-      if ($result->isSecurityRename()) {
-        \Drupal::logger('file')
-          ->notice('For security reasons, the uploaded file %original_filename has been renamed to %filename.', [
-            '%original_filename' => $result->getOriginalFilename(),
-            '%filename' => $file->getFilename(),
-          ]);
-      }
-      $files[$i] = $file;
-    }
-    catch (FileExistsException) {
-      \Drupal::messenger()->addError(t('Destination file "%file" exists', ['%file' => $destination . $uploaded_file->getFilename()]));
-      $files[$i] = FALSE;
-    }
-    catch (InvalidStreamWrapperException) {
-      \Drupal::messenger()->addError(t('The file could not be uploaded because the destination "%destination" is invalid.', ['%destination' => $destination]));
-      $files[$i] = FALSE;
-    }
-    catch (FileWriteException) {
-      \Drupal::messenger()->addError(t('File upload error. Could not move uploaded file.'));
-      \Drupal::logger('file')
-        ->notice('Upload error. Could not move uploaded file %file to destination %destination.', [
-          '%file' => $uploaded_file->getClientOriginalName(),
-          '%destination' => $destination . '/' . $uploaded_file->getClientOriginalName(),
-        ]);
-      $files[$i] = FALSE;
-    }
-    catch (FileException) {
-      \Drupal::messenger()->addError(t('The file %filename could not be uploaded because the name is invalid.', ['%filename' => $uploaded_file->getClientOriginalName()]));
-      $files[$i] = FALSE;
-    }
-    catch (LockAcquiringException) {
-      \Drupal::messenger()->addError(t('File already locked for writing.'));
-      $files[$i] = FALSE;
-    }
-  }
-
-  // Add files to the cache.
-  $upload_cache[$form_field_name] = $files;
-
-  return isset($delta) ? $files[$delta] : $files;
+  return \Drupal::service(FormFileUploader::class)->saveFormUploadedFiles($form_field_name, $validators, $destination, $delta, $fileExists);
 }
 
 /**
@@ -246,41 +116,16 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
  *   An array of file entities for each file that was saved, keyed by its file
  *   ID. Each array element contains a file entity. Function returns FALSE if
  *   upload directory could not be created or no files were uploaded.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(ManagedFileElementHelper::class)->managedFileSaveUpload()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3382414
  */
 function file_managed_file_save_upload($element, FormStateInterface $form_state) {
-  $upload_name = implode('_', $element['#parents']);
-  $file_upload = \Drupal::service(UploadedFilesExtractor::class)->extractUploadedFiles($upload_name);
-
-  $destination = $element['#upload_location'] ?? NULL;
-  if (isset($destination) && !\Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
-    \Drupal::logger('file')
-      ->notice('The upload directory %directory for the file field %name could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.', [
-        '%directory' => $destination,
-        '%name' => $element['#field_name'],
-      ]);
-    $form_state->setError($element, t('The file could not be uploaded.'));
-    return FALSE;
-  }
-
-  // Save attached files to the database.
-  $files_uploaded = $element['#multiple'] && count(array_filter($file_upload)) > 0;
-  $files_uploaded |= !$element['#multiple'] && !empty($file_upload);
-  if ($files_uploaded) {
-    if (!$files = _file_save_upload_from_form($element, $form_state)) {
-      \Drupal::logger('file')->notice('The file upload failed. %upload', ['%upload' => $upload_name]);
-      return [];
-    }
-
-    // Value callback expects FIDs to be keys.
-    $files = array_filter($files);
-    $fids = array_map(function ($file) {
-      return $file->id();
-    }, $files);
-
-    return empty($files) ? [] : array_combine($fids, $files);
-  }
-
-  return [];
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(ManagedFileElementHelper::class)->managedFileSaveUpload() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
+  return \Drupal::service(ManagedFileElementHelper::class)->managedFileSaveUpload($element, $form_state);
 }
 
 /**

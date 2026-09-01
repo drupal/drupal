@@ -59,7 +59,8 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
         // the file can access it even if it's not yet used.
         if ($account->isAnonymous()) {
           // For anonymous users, only the browser session that uploaded the
-          // file is positively allowed access to it. See file_save_upload().
+          // file is positively allowed access to it. See
+          // FormFileUploader::saveFormUploadedFiles().
           // @todo Implement \Drupal\Core\Entity\EntityHandlerInterface so that
           //   services can be more properly injected.
           $allowed_fids = \Drupal::service('session')->get('anonymous_allowed_file_ids', []);

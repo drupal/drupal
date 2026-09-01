@@ -55,7 +55,7 @@ interface FileRepositoryInterface {
    *   $destination is unique.
    * - Adds the new file to the files database. If the source file is a
    *   temporary file, the resulting file will also be a temporary file. See
-   *   file_save_upload() for details on temporary files.
+   *   FormFileUploader::saveFormUploadedFiles() for details on temporary files.
    *
    * @param \Drupal\file\FileInterface $source
    *   A file entity.

@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cSpell:ignore TÉXT Pácê
 /**
- * Tests the file_save_upload() function.
+ * Tests the FormFileUploader::saveFormUploadedFiles() function.
  */
 #[Group('file')]
 #[RunTestsInSeparateProcesses]
@@ -111,7 +111,7 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
-   * Tests the file_save_upload() function.
+   * Tests the FormFileUploader::saveFormUploadedFiles() function.
    */
   public function testNormal(): void {
     $max_fid_after = (int) \Drupal::entityQueryAggregate('file')
@@ -211,7 +211,7 @@ class SaveUploadTest extends FileManagedTestBase {
     // The file being tested is a .gif which is in the default safe list
     // of extensions to allow when the extension validator isn't used. This is
     // implicitly tested at the testNormal() test. Here we tell
-    // file_save_upload() to only allow ".foo".
+    // FormFileUploader::saveFormUploadedFiles() to only allow ".foo".
     $extensions = 'foo';
     $edit = [
       'file_test_replace' => FileExists::Replace->name,
@@ -232,7 +232,7 @@ class SaveUploadTest extends FileManagedTestBase {
     FileTestHelper::reset();
 
     $extensions = 'foo ' . $this->imageExtension;
-    // Now tell file_save_upload() to allow the extension of our test image.
+    // Now tell FormFileUploader::saveFormUploadedFiles() to allow the extension of our test image.
     $edit = [
       'file_test_replace' => FileExists::Replace->name,
       'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
@@ -251,7 +251,7 @@ class SaveUploadTest extends FileManagedTestBase {
     // Reset the hook counters.
     FileTestHelper::reset();
 
-    // Now tell file_save_upload() to allow any extension.
+    // Now tell FormFileUploader::saveFormUploadedFiles() to allow any extension.
     $edit = [
       'file_test_replace' => FileExists::Replace->name,
       'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
@@ -269,7 +269,7 @@ class SaveUploadTest extends FileManagedTestBase {
     // Reset the hook counters.
     FileTestHelper::reset();
 
-    // Now tell file_save_upload() to allow any extension and try and upload a
+    // Now tell FormFileUploader::saveFormUploadedFiles() to allow any extension and try and upload a
     // malicious file.
     $edit = [
       'file_test_replace' => FileExists::Replace->name,
@@ -765,7 +765,7 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
-   * Tests the file_save_upload() function when the field is required.
+   * Tests the FormFileUploader::saveFormUploadedFiles() function when the field is required.
    */
   public function testRequired(): void {
     // Reset the hook counters to get rid of the 'load' we just called.

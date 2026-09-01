@@ -346,8 +346,9 @@ class FileItem extends EntityReferenceItem {
    * Retrieves the upload validators for a file field.
    *
    * @return array
-   *   An array suitable for passing to file_save_upload() or the file field
-   *   element's '#upload_validators' property.
+   *   An array suitable for passing to
+   *   FormFileUploader::saveFormUploadedFiles() or the file field element's
+   *   '#upload_validators' property.
    */
   public function getUploadValidators() {
     return $this->getFileUploadValidators($this->getSettings());

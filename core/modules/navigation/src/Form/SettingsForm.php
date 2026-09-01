@@ -17,6 +17,7 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\file\Entity\File;
+use Drupal\file\Upload\ManagedFileElementHelper;
 use Drupal\navigation\NavigationRenderer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -191,7 +192,7 @@ final class SettingsForm extends ConfigFormBase {
       $form_state->setValue('logo_path', '');
     }
     else {
-      $file = _file_save_upload_from_form($form['logo']['custom']['logo_upload'], $form_state, 0);
+      $file = \Drupal::service(ManagedFileElementHelper::class)->saveFileUploads($form['logo']['custom']['logo_upload'], $form_state, 0);
       if ($file) {
         $logo_dimensions = $this->adjustLogoDimensions($file);
         if (!$logo_dimensions) {
