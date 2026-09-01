@@ -42,6 +42,24 @@ class DiffFormatterTest extends TestCase {
         ['line1', 'line2', 'line2a', 'line3'],
         ['line1', 'line2', 'line2b', 'line3'],
       ],
+      // Lines are compared including their end of line markings, so lines
+      // differing only by those are a change. Differ's mismatched line ending
+      // warning is not part of the output.
+      'change, line endings differ' => [
+        "1c1\n< foo\r\n\n---\n> foo\n\n",
+        ["foo\r\n"],
+        ["foo\n"],
+      ],
+      'change, line endings differ on multiple lines' => [
+        "1,2c1,2\n< line1\r\n\n< line2\r\n\n---\n> line1\n\n> line2\n\n",
+        ["line1\r\n", "line2\r\n"],
+        ["line1\n", "line2\n"],
+      ],
+      'copy, line endings match' => [
+        '',
+        ["foo\r\n"],
+        ["foo\r\n"],
+      ],
     ];
   }
 
