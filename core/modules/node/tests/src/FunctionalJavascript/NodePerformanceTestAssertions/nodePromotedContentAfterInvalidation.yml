@@ -1,32 +1,26 @@
-QueryCount: 3
-CacheGetCount: 66
+QueryCount: 2
+CacheGetCount: 57
 CacheGetCountByBin:
   page: 1
-  config: 11
+  config: 10
   data: 3
-  discovery: 21
+  discovery: 20
   bootstrap: 8
   dynamic_page_cache: 2
-  render: 12
+  render: 6
   default: 3
   routes: 3
   entity: 1
-  menu: 1
 CacheSetCount: 5
 CacheDeleteCount: 0
 CacheTagInvalidationCount: 0
 CacheTagLookupQueryCount: 3
 CacheTagGroupedLookups:
   -
-    - 'config:block_list'
-    - 'config:filter.format.restricted_html'
-    - 'config:system.menu.account'
-    - 'config:system.menu.main'
-    - 'config:system.site'
+    - 'config:filter.format.plain_text'
     - 'config:user.role.anonymous'
-    - 'config:views.view.frontpage'
+    - 'config:views.view.promoted_content'
     - http_response
-    - local_task
     - 'node:1'
     - node_list
     - node_view
@@ -41,6 +35,7 @@ CacheTagGroupedLookups:
     - entity_types
     - entity_field_info
     - entity_bundles
+    - local_task
     - library_info
   -
     - 'config:core.extension'

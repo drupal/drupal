@@ -16,7 +16,7 @@ module.exports = {
   },
   'On scroll, menu collapses to burger 🍔 menu': (browser) => {
     browser
-      .drupalRelativeURL('/node')
+      .drupalRelativeURL('/')
       .assert.not.visible(buttonSelector)
       .assert.attributeEquals(buttonSelector, 'aria-checked', 'false')
       .click('.block-system-powered-by-block .drupal-logo')
@@ -28,7 +28,7 @@ module.exports = {
       .assert.attributeEquals(buttonSelector, 'aria-checked', 'true')
 
       // Sticky header should remain open after page reload in open state.
-      .drupalRelativeURL('/node')
+      .drupalRelativeURL('/')
       .assert.visible(mainMenuSelector)
       .assert.attributeEquals(buttonSelector, 'aria-checked', 'true');
   },

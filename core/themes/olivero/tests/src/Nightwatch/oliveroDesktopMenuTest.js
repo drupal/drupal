@@ -28,7 +28,7 @@ module.exports = {
   },
   'Verify Olivero desktop menu click functionality': (browser) => {
     browser
-      .drupalRelativeURL('/node')
+      .drupalRelativeURL('/')
       .waitForElementVisible(headerNavSelector)
       .assert.not.visible(`#${linkSubMenuId}`)
       .assert.attributeEquals(
@@ -62,7 +62,7 @@ module.exports = {
   },
   'Verify Olivero desktop menu hover functionality': (browser) => {
     browser
-      .drupalRelativeURL('/node')
+      .drupalRelativeURL('/')
       .waitForElementVisible(headerNavSelector)
       .assert.visible(headerNavSelector)
       .assert.not.visible(`#${linkSubMenuId}`)
@@ -84,7 +84,7 @@ module.exports = {
   },
   'Verify desktop menu converts to mobile if it gets too long': (browser) => {
     browser
-      .drupalRelativeURL('/node')
+      .drupalRelativeURL('/')
       .waitForElementVisible('body')
       .assert.not.elementPresent('body.is-always-mobile-nav')
       .setWindowSize(1220, 800)

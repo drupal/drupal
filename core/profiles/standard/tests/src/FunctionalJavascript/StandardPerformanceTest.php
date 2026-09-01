@@ -6,7 +6,6 @@ namespace Drupal\Tests\standard\FunctionalJavascript;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
-use Drupal\node\NodeInterface;
 use Drupal\Tests\PerformanceData;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
@@ -45,13 +44,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    // Standard does not include any content types, create a test content type.
+    // Create a content type and node to test performance for.
     $this->drupalCreateContentType(['type' => 'test_content', 'name' => 'Test Content']);
-    // Create a node to be shown on the front page.
-    $this->drupalCreateNode([
-      'type' => 'test_content',
-      'promote' => NodeInterface::PROMOTED,
-    ]);
+    $this->drupalCreateNode(['type' => 'test_content']);
     // Grant the anonymous user the permission to look at user profiles.
     user_role_grant_permissions('anonymous', ['access user profiles']);
   }
@@ -61,7 +56,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
    */
   public function testStandardPerformance(): void {
     $this->testAnonymous();
-    $this->testCacheInvalidation();
     $this->testLogin();
     $this->testLoginBlock();
     $this->testAdmin();
@@ -83,7 +77,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $bin->deleteAll();
     }
     // Now visit a different page to warm some caches.
-    $this->drupalGet('user/login');
+    $this->drupalGet('user/password');
     // Ensure everything finishes before we collect performance data.
     sleep(2);
 
@@ -92,7 +86,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('');
     }, 'standardFrontPage');
     $this->assertNoJavaScript($performance_data);
-
     $this->assertQueriesByName('standardFrontPage', $performance_data->getQueries());
     $this->assertMetricsByName('standardFrontPage', $performance_data);
 
@@ -110,44 +103,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('user/' . $this->user->id());
     }, 'standardUserPage');
     $this->assertNoJavaScript($performance_data);
-
     $this->assertQueriesByName('standardUserPage', $performance_data->getQueries());
     $this->assertMetricsByName('standardUserPage', $performance_data);
-  }
-
-  /**
-   * Tests the impact of a cache tag based invalidation.
-   */
-  protected function testCacheInvalidation(): void {
-
-    // Crate a new page, this invalidates the node_list cache tag. Need to reset
-    // the cache tag checksum service as it did not register a need to
-    // invalidate that again. Repeat this twice as some routing caches are not
-    // yet properly populated due to directly emptying the caches before.
-    \Drupal::service('cache_tags.invalidator.checksum')->reset();
-    $this->drupalCreateNode(['type' => 'test_content', 'title' => 'new page']);
-
-    $this->drupalGet('');
-    // Ensure everything finishes before we collect performance data.
-    $this->drupalGet('');
-    sleep(2);
-
-    \Drupal::service('cache_tags.invalidator.checksum')->reset();
-    $this->drupalCreateNode(['type' => 'test_content', 'title' => 'new page']);
-
-    // Visit the frontpage again.
-    $performance_data = $this->collectPerformanceData(function () {
-      $this->drupalGet('');
-    }, 'standardFrontPageAfterInvalidation');
-
-    $this->assertQueriesByName('standardFrontPageAfterInvalidation', $performance_data->getQueries());
-    $this->assertMetricsByName('standardFrontPageAfterInvalidation', $performance_data);
-    $expected_default_cache_cids = [
-      'views_data:node_field_data:en',
-      'views_data:views:en',
-      'views_data:node:en',
-    ];
-    $this->assertSame($expected_default_cache_cids, $performance_data->getCacheOperations()['get']['default']);
   }
 
   /**
@@ -159,14 +116,12 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // this twice so that any caches which take two requests to warm are also
     // covered.
     for ($i = 0; $i < 2; $i++) {
-      $this->drupalGet('node');
-      $this->drupalGet('user/login');
+      $this->drupalGet('');
       $this->submitLoginForm($this->user);
       $this->drupalLogout();
     }
 
-    $this->drupalGet('node');
-    $this->drupalGet('user/login');
+    $this->drupalGet('');
     $performance_data = $this->collectPerformanceData(function () {
       $this->submitLoginForm($this->user);
     }, 'standardLogin');
@@ -186,13 +141,13 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // so that any caches which take two requests to warm are also covered.
 
     for ($i = 0; $i < 2; $i++) {
-      $this->drupalGet('node');
+      $this->drupalGet('node/1');
       $this->assertSession()->responseContains('Password');
       $this->submitLoginForm($this->user);
       $this->drupalLogout();
     }
 
-    $this->drupalGet('node');
+    $this->drupalGet('node/1');
     $this->assertSession()->responseContains('Password');
     $performance_data = $this->collectPerformanceData(function () {
       $this->submitLoginForm($this->user);
@@ -217,18 +172,18 @@ class StandardPerformanceTest extends PerformanceTestBase {
     \Drupal::cache('render')->deleteAll();
 
     $this->drupalLogin($admin_user);
-    // Request the front page twice to ensure all cache collectors are fully
+    // Request the node/1 page twice to ensure all cache collectors are fully
     // warmed. The exact contents of cache collectors depends on the order in
     // which requests complete so this ensures that the second request completes
     // after asset aggregates are served.
-    $this->drupalGet('');
+    $this->drupalGet('node/1');
     sleep(1);
-    $this->drupalGet('');
+    $this->drupalGet('node/1');
     // Flush the dynamic page cache to simulate visiting a page that is not
     // already fully cached.
     \Drupal::cache('dynamic_page_cache')->deleteAll();
     $performance_data = $this->collectPerformanceData(function () {
-      $this->drupalGet('');
+      $this->drupalGet('node/1');
     }, 'testAdmin');
 
     $this->assertQueriesByName('testAdmin', $performance_data->getQueries());

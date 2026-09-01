@@ -10,6 +10,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\comment\Functional\CommentTestBase;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -22,6 +23,8 @@ use Psr\Http\Message\ResponseInterface;
 #[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class CommentNewIndicatorTest extends CommentTestBase {
+
+  use PromotedContentViewTestTrait;
 
   /**
    * Use the main node listing to test rendering on teasers.
@@ -38,6 +41,14 @@ class CommentNewIndicatorTest extends CommentTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->enablePromotedContentView();
+  }
 
   /**
    * Get node "x new comments" metadata from the server for the current user.

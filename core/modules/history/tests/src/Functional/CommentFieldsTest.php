@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\history\Functional;
 
 use Drupal\Tests\comment\Functional\CommentTestBase;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -16,6 +17,8 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class CommentFieldsTest extends CommentTestBase {
+
+  use PromotedContentViewTestTrait;
 
   /**
    * {@inheritdoc}
@@ -59,6 +62,7 @@ class CommentFieldsTest extends CommentTestBase {
     // \Drupal\history\HistoryCommentLinkBuilder::buildCommentedEntityLinks.
     // Therefore we need a node listing, let's use views for that.
     $this->container->get('module_installer')->install(['views', 'history'], TRUE);
+    $this->enablePromotedContentView();
     $this->drupalGet('node');
 
     $link_info = $this->getDrupalSettings()['comment']['newCommentsLinks']['node']['comment2']['2'];

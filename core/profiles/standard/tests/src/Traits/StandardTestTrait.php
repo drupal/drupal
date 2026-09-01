@@ -39,7 +39,6 @@ trait StandardTestTrait {
   public function testStandard(): void {
     $this->drupalGet('');
     $this->assertSession()->pageTextContains('Powered by Drupal');
-    $this->assertSession()->pageTextContains('Congratulations and welcome to the Drupal community.');
 
     // Test anonymous user can access 'Main navigation' block.
     $this->adminUser = $this->drupalCreateUser([
@@ -180,12 +179,6 @@ trait StandardTestTrait {
       'title' => 'Test node for caching',
       'status' => 1,
     ]);
-
-    $url = Url::fromRoute('<front>');
-    $this->drupalGet($url);
-    $this->drupalGet($url);
-    // Verify that frontpage is cached by Dynamic Page Cache.
-    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
 
     $url = Url::fromRoute('entity.node.canonical', ['node' => $node->id()]);
     $this->drupalGet($url);

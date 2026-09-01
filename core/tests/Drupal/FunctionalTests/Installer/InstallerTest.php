@@ -34,10 +34,6 @@ class InstallerTest extends InstallerTestBase {
     // Confirm that we are logged-in after installation.
     $this->assertSession()->pageTextContains($this->rootUser->getAccountName());
 
-    // Verify that the confirmation message appears.
-    require_once $this->root . '/core/includes/install.inc';
-    $this->assertSession()->pageTextContains('Congratulations, you installed Drupal!');
-
     // Ensure that the timezone is correct for sites under test after installing
     // interactively.
     $this->assertEquals('Australia/Sydney', $this->config('system.date')->get('timezone.default'));

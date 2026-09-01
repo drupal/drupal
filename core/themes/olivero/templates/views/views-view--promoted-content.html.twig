@@ -1,7 +1,7 @@
 {#
 /**
  * @file
- * Theme override for the frontpage view template.
+ * Theme override for the promoted content view template.
  *
  * Available variables:
  * - attributes: Remaining HTML attributes for the element.
@@ -71,7 +71,9 @@
       {{ rows }}
     </div>
   {% elseif empty %}
-    {{ include('@olivero/includes/get-started.html.twig') }}
+    <div class="view-empty">
+      {{ empty }}
+    </div>
   {% endif %}
 
   {% if pager %}

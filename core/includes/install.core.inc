@@ -1837,11 +1837,6 @@ function install_finished(&$install_state): void {
     \Drupal::service(LoginFinalizer::class)->finalizeLogin($account);
   }
 
-  $success_message = t('Congratulations, you installed @drupal!', [
-    '@drupal' => drupal_install_profile_distribution_name(),
-  ]);
-  \Drupal::messenger()->addStatus($success_message);
-
   // Record when this install ran.
   \Drupal::state()->set('install_time', \Drupal::time()->getRequestTime());
 }

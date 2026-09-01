@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -15,6 +16,8 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('taxonomy')]
 #[RunTestsInSeparateProcesses]
 class RssTest extends TaxonomyTestBase {
+
+  use PromotedContentViewTestTrait;
 
   /**
    * {@inheritdoc}
@@ -40,6 +43,8 @@ class RssTest extends TaxonomyTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->enablePromotedContentView();
 
     $this->setCurrentUser($this->drupalCreateUser([
       'access content',

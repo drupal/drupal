@@ -6,6 +6,7 @@ namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 
 /**
  * Tests the Layout Builder UI.
@@ -13,6 +14,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 abstract class LayoutBuilderTestBase extends BrowserTestBase {
 
   use FieldUiTestTrait;
+  use PromotedContentViewTestTrait;
 
   /**
    * {@inheritdoc}
@@ -40,6 +42,8 @@ abstract class LayoutBuilderTestBase extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->enablePromotedContentView();
 
     $this->drupalPlaceBlock('local_tasks_block');
 

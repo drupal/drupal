@@ -90,7 +90,7 @@ class RowUITest extends UITestBase {
     $teaser = EntityViewMode::load('node.teaser');
     $teaser->set('label', 'Teaser <em>markup</em>');
     $teaser->save();
-    $this->drupalGet('admin/structure/views/view/frontpage/edit/default');
+    $this->drupalGet('admin/structure/views/view/promoted_content/edit/default');
     $this->assertSession()->assertEscaped('Teaser <em>markup</em>');
   }
 

@@ -23118,40 +23118,40 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/tests/src/Functional/Rest/NodeTypeResourceTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\FrontPageTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\PromotedContentPageTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/FrontPageTest.php',
+	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/PromotedContentPageTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\FrontPageTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\PromotedContentPageTest\\:\\:assertCacheMaxAge\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/FrontPageTest.php',
+	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/PromotedContentPageTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\FrontPageTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\PromotedContentPageTest\\:\\:assertCacheTags\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/FrontPageTest.php',
+	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/PromotedContentPageTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\FrontPageTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\PromotedContentPageTest\\:\\:assertNoCacheContext\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/FrontPageTest.php',
+	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/PromotedContentPageTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\FrontPageTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\PromotedContentPageTest\\:\\:assertPageCacheContextsAndTags\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/FrontPageTest.php',
+	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/PromotedContentPageTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\FrontPageTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\Views\\\\PromotedContentPageTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/FrontPageTest.php',
+	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/PromotedContentPageTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\FunctionalJavascript\\\\ContextualLinksTest\\:\\:clickContextualLink\\(\\) has no return type specified\\.$#',
@@ -38859,12 +38859,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/FunctionalJavascript/WorkspacesLayoutBuilderIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceIntegrationTest\\:\\:providerTestAllowedEntityCrudInNonDefaultWorkspace\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces_ui\\\\Form\\\\SwitchToLiveForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',

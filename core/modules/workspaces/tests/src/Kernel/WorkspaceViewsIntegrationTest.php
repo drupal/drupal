@@ -12,6 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
@@ -31,6 +32,7 @@ class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
   use ContentTypeCreationTrait;
   use EntityReferenceFieldCreationTrait;
   use NodeCreationTrait;
+  use PromotedContentViewTestTrait;
   use UserCreationTrait;
   use WorkspaceTestTrait;
 
@@ -125,11 +127,17 @@ class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
       'promote' => TRUE,
     ]);
 
+    // Enable the promoted_content view since it's disabled by default.
+    // This must be done before switching to a workspace since view entities
+    // can only be saved in the default workspace.
+    $this->enablePromotedContentView(FALSE);
+
     // Create a new workspace and activate it.
     Workspace::create(['id' => 'stage', 'label' => 'Stage'])->save();
     $this->switchToWorkspace('stage');
 
-    $view = Views::getView('frontpage');
+    // Load the view again in this workspace.
+    $view = Views::getView('promoted_content');
 
     // Add a filter on a field that is stored in a dedicated table in order to
     // test field joins with extra conditions (e.g. 'deleted' and 'langcode').

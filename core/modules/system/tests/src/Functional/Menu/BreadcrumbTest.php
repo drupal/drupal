@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -22,6 +23,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 class BreadcrumbTest extends BrowserTestBase {
 
   use AssertBreadcrumbTrait;
+  use PromotedContentViewTestTrait;
 
   /**
    * {@inheritdoc}
@@ -69,7 +71,9 @@ class BreadcrumbTest extends BrowserTestBase {
     $this->container->get('theme_installer')->install(['claro']);
     $this->config('system.theme')->set('admin', 'claro')->save();
 
+    $this->enablePromotedContentView();
     $this->config('system.site')->set('page.front', '/node')->save();
+
     $perms = array_keys(\Drupal::service('user.permissions')->getPermissions());
     $this->adminUser = $this->drupalCreateUser($perms);
     $this->drupalLogin($this->adminUser);

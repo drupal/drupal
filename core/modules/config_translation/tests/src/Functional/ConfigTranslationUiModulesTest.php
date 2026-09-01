@@ -10,6 +10,7 @@ use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -21,17 +22,21 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[RunTestsInSeparateProcesses]
 class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
 
+  use PromotedContentViewTestTrait;
+
   /**
    * Tests the views translation interface.
    */
   public function testViewsTranslationUI(): void {
     $this->drupalLogin($this->adminUser);
 
-    $description = 'All promoted content.';
-    $human_readable_name = 'Frontpage';
+    $this->enablePromotedContentView(FALSE);
+
+    $description = 'All content promoted to the front page.';
+    $human_readable_name = 'Promoted Content';
     $display_settings_default = 'Default';
     $display_options_default = '(Empty)';
-    $translation_base_url = 'admin/structure/views/view/frontpage/translate';
+    $translation_base_url = 'admin/structure/views/view/promoted_content/translate';
 
     $this->drupalGet($translation_base_url);
 
@@ -45,10 +50,10 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
 
     // Update Views Fields for French.
     $edit = [
-      'translation[config_names][views.view.frontpage][description]' => $description . " FR",
-      'translation[config_names][views.view.frontpage][label]' => $human_readable_name . " FR",
-      'translation[config_names][views.view.frontpage][display][default][display_title]' => $display_settings_default . " FR",
-      'translation[config_names][views.view.frontpage][display][default][display_options][title]' => $display_options_default . " FR",
+      'translation[config_names][views.view.promoted_content][description]' => $description . " FR",
+      'translation[config_names][views.view.promoted_content][label]' => $human_readable_name . " FR",
+      'translation[config_names][views.view.promoted_content][display][default][display_title]' => $display_settings_default . " FR",
+      'translation[config_names][views.view.promoted_content][display][default][display_options][title]' => $display_options_default . " FR",
     ];
     $this->drupalGet("{$translation_base_url}/fr/add");
     $this->submitForm($edit, 'Save translation');
@@ -61,10 +66,10 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
 
     // Check translation saved proper.
     $this->drupalGet("$translation_base_url/fr/edit");
-    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][description]', $description . " FR");
-    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][label]', $human_readable_name . " FR");
-    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][display][default][display_title]', $display_settings_default . " FR");
-    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][display][default][display_options][title]', $display_options_default . " FR");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.promoted_content][description]', $description . " FR");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.promoted_content][label]', $human_readable_name . " FR");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.promoted_content][display][default][display_title]', $display_settings_default . " FR");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.promoted_content][display][default][display_options][title]', $display_options_default . " FR");
   }
 
   /**

@@ -46,7 +46,6 @@ config:
       - views.view.archive
       - views.view.content
       - views.view.content_recent
-      - views.view.frontpage
       - views.view.glossary
     olivero:
       - block.block.olivero_help
@@ -61,7 +60,7 @@ config:
         use_admin_theme: true
     system.site:
       simpleConfigUpdate:
-        page.front: /node
+        page.front: /user/login
     user.role.anonymous:
       grantPermission: 'access content'
     user.role.authenticated:
