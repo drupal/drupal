@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Database;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -50,6 +51,35 @@ class ConnectionTest extends DatabaseTestBase {
     // object.
     $db3b = Database::getConnection($unknown_target, 'default');
     $this->assertSame($db3, $db3b, 'A second call to getConnection() returns the same object.');
+  }
+
+  /**
+   * Tests deprecation of integer values for connection $key and $target.
+   */
+  #[IgnoreDeprecations]
+  public function testConnectionWithIntegerKeyAndTarget(): void {
+    $this->expectUserDeprecationMessage('Passing an integer value to the $target parameter in Drupal\Core\Database\Database::addConnectionInfo() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925');
+    $this->expectUserDeprecationMessage('Passing an integer value to the $key parameter in Drupal\Core\Database\Database::addConnectionInfo() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925');
+    $this->expectUserDeprecationMessage('Passing an integer value to the $target parameter in Drupal\Core\Database\Database::getConnection() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925');
+    $this->expectUserDeprecationMessage('Passing an integer value to the $target parameter in Drupal\Core\Database\Database::openConnection() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925');
+    $this->expectUserDeprecationMessage('Passing an integer value to the $key parameter in Drupal\Core\Database\Database::getConnection() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925');
+    $this->expectUserDeprecationMessage('Passing an integer value to the $key parameter in Drupal\Core\Database\Database::openConnection() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925');
+    $this->expectUserDeprecationMessage('Passing an integer value to the $target parameter in Drupal\Core\Database\Database::closeConnection() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925');
+    $this->expectUserDeprecationMessage('Passing an integer value to the $key parameter in Drupal\Core\Database\Database::closeConnection() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925');
+
+    $connection_info = Database::getConnectionInfo('default');
+    Database::addConnectionInfo('default', 200, $connection_info['default']);
+    Database::addConnectionInfo(100, 300, $connection_info['default']);
+
+    $db1 = Database::getConnection('default', 'default');
+    $db2 = Database::getConnection(200, 'default');
+    $db3 = Database::getConnection(300, 100);
+
+    $this->assertNotNull($db1);
+    $this->assertNotNull($db2);
+    $this->assertNotNull($db3);
+
+    Database::closeConnection(300, 100);
   }
 
   /**
@@ -131,6 +161,7 @@ class ConnectionTest extends DatabaseTestBase {
       'default' => $connection_info['default']['prefix'],
       'test_table' => $connection_info['default']['prefix'] . '_bar',
     ];
+    // @phpstan-ignore argument.type
     Database::addConnectionInfo('default', 'foo', $new_connection_info);
     $this->expectException(\AssertionError::class);
     Database::getConnection('foo', 'default');
@@ -145,6 +176,7 @@ class ConnectionTest extends DatabaseTestBase {
     $new_connection_info['prefix'] = [
       'default' => $connection_info['default']['prefix'],
     ];
+    // @phpstan-ignore argument.type
     Database::addConnectionInfo('default', 'foo', $new_connection_info);
     $this->expectException(\AssertionError::class);
     Database::getConnection('foo', 'default');

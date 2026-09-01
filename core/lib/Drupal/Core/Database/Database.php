@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Database;
 
 use Composer\Autoload\ClassLoader;
@@ -14,52 +16,85 @@ use Drupal\Core\Cache\NullBackend;
  * shepherding of database connections into a single location without the use of
  * globals.
  *
+ * @phpstan-type UnprocessedConnectionInfoArray array{
+ *   'driver': string,
+ *   'autoload'?: string,
+ *   'namespace'?: string,
+ *   'database': string,
+ *   'username'?: string,
+ *   'password'?: string,
+ *   'host'?: string,
+ *   'port'?: string|int,
+ *   'prefix'?: string,
+ *   'collation'?: string,
+ *   'pdo'?: array<mixed>,
+ *   'isolation_level'?: int|string,
+ *   'init_commands'?: list<string>,
+ *   'dependencies'?: array<string,array{
+ *     'autoload': string,
+ *     'namespace': string,
+ *   }>,
+ * }
+ * @phpstan-type ConnectionInfoArray array{
+ *   'driver': string,
+ *   'autoload': string,
+ *   'namespace': string,
+ *   'database': string,
+ *   'username'?: string,
+ *   'password'?: string,
+ *   'host'?: string,
+ *   'port'?: string|int,
+ *   'prefix': string,
+ *   'collation'?: string,
+ *   'pdo'?: array<mixed>,
+ *   'isolation_level'?: int|string,
+ *   'init_commands'?: list<string>,
+ *   'dependencies'?: array<string,array{
+ *     'autoload': string,
+ *     'namespace': string,
+ *   }>,
+ * }
+ * @phpstan-import-type DatabaseLogEntry from \Drupal\Core\Database\Log
+ *
  * @final
  */
 abstract class Database {
 
   /**
-   * A nested array of active connections, keyed by database name and target.
+   * A nested array of active connections, keyed by database key and target.
    *
-   * @var array
+   * @var array<string|int,array<string|int,\Drupal\Core\Database\Connection>>
    */
-  protected static $connections = [];
+  protected static array $connections = [];
 
   /**
    * A processed copy of the database connection information from settings.php.
    *
-   * @var array
+   * @var array<string|int,array<string|int,ConnectionInfoArray>>
    */
-  protected static $databaseInfo = [];
+  protected static array $databaseInfo = [];
 
   /**
    * A list of key/target credentials to simply ignore.
    *
-   * @var array
+   * @var array<string|int,array<string|int,true>>
    */
-  protected static $ignoreTargets = [];
+  protected static array $ignoreTargets = [];
 
   /**
    * The key of the currently active database connection.
-   *
-   * @var string
    */
-  protected static $activeKey = 'default';
+  protected static string|int $activeKey = 'default';
 
   /**
    * An array of active query log objects.
    *
-   * @var array
    * Every connection has one and only one logger object for all targets and
    * logging keys.
    *
-   * @code
-   *   [
-   *     '$db_key' => DatabaseLog object.
-   *   ]
-   * @endcode
+   * @var array<string|int,\Drupal\Core\Database\Log>
    */
-  protected static $logs = [];
+  protected static array $logs = [];
 
   /**
    * Starts logging a given logging key on the specified connection.
@@ -67,7 +102,8 @@ abstract class Database {
    * @param string $logging_key
    *   The logging key to log.
    * @param string $key
-   *   The database connection key for which we want to log.
+   *   (optional) The database connection key for which we want to log. If not
+   *   specified, the 'default' connection key will be logged.
    *
    * @return \Drupal\Core\Database\Log
    *   The query log object. Note that the log object does support richer
@@ -76,9 +112,12 @@ abstract class Database {
    *
    * @see \Drupal\Core\Database\Log
    */
-  final public static function startLog($logging_key, $key = 'default') {
+  final public static function startLog(string $logging_key, string|int $key = 'default'): Log {
+    if (is_int($key)) {
+      @trigger_error('Passing an integer value to the $key parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
     if (empty(self::$logs[$key])) {
-      self::$logs[$key] = new Log($key);
+      self::$logs[$key] = new Log((string) $key);
 
       // Every target already active for this connection key needs to have the
       // logging object associated with it.
@@ -105,14 +144,18 @@ abstract class Database {
    * @param string $logging_key
    *   The logging key to log.
    * @param string $key
-   *   The database connection key for which we want to log.
+   *   (optional) The database connection key for which we want to log. If not
+   *   specified, the log for the 'default' connection key will be returned.
    *
-   * @return array
+   * @return list<DatabaseLogEntry>
    *   The query log for the specified logging key and connection.
    *
    * @see \Drupal\Core\Database\Log
    */
-  final public static function getLog($logging_key, $key = 'default') {
+  final public static function getLog(string $logging_key, string|int $key = 'default'): array {
+    if (is_int($key)) {
+      @trigger_error('Passing an integer value to the $key parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
     if (empty(self::$logs[$key])) {
       return [];
     }
@@ -125,14 +168,22 @@ abstract class Database {
    * Gets the connection object for the specified database key and target.
    *
    * @param string $target
-   *   The database target name.
-   * @param string $key
-   *   The database connection key. Defaults to NULL which means the active key.
+   *   (optional) The database target name. If not specified, the 'default'
+   *   target will be returned.
+   * @param ?string $key
+   *   (optional) The database connection key. Defaults to NULL which means the
+   *   active key.
    *
    * @return \Drupal\Core\Database\Connection
    *   The corresponding connection object.
    */
-  final public static function getConnection($target = 'default', $key = NULL) {
+  final public static function getConnection(string|int $target = 'default', string|int|null $key = NULL): Connection {
+    if (is_int($target)) {
+      @trigger_error('Passing an integer value to the $target parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
+    if ($key !== NULL && is_int($key)) {
+      @trigger_error('Passing an integer value to the $key parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
     if (!isset($key)) {
       // By default, we want the active connection, set in setActiveConnection.
       $key = self::$activeKey;
@@ -163,81 +214,99 @@ abstract class Database {
    *   TRUE if there is at least one database connection established, FALSE
    *   otherwise.
    */
-  final public static function isActiveConnection() {
+  final public static function isActiveConnection(): bool {
     return !empty(self::$activeKey) && !empty(self::$connections) && !empty(self::$connections[self::$activeKey]);
   }
 
   /**
    * Sets the active connection to the specified key.
    *
-   * @return string|null
-   *   The previous database connection key.
+   * @param string $key
+   *   (optional) The database connection key. If not specified, the 'default'
+   *   connection key will be activated.
+   *
+   * @return ?string
+   *   The previous database connection key, or NULL if no connection was
+   *   previously active.
    */
-  final public static function setActiveConnection($key = 'default') {
+  final public static function setActiveConnection(string|int $key = 'default'): string|int|null {
+    if (is_int($key)) {
+      @trigger_error('Passing an integer value to the $key parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
     if (!empty(self::$databaseInfo[$key])) {
       $old_key = self::$activeKey;
       self::$activeKey = $key;
       return $old_key;
     }
+    return NULL;
   }
 
   /**
    * Process the configuration file for database information.
    *
-   * @param array $info
+   * @param UnprocessedConnectionInfoArray|list<UnprocessedConnectionInfoArray> $info
    *   The database connection information, as defined in settings.php. The
    *   structure of this array depends on the database driver it is connecting
    *   to.
+   *
+   * @return ConnectionInfoArray
+   *   A validated connection info array.
    */
-  final public static function parseConnectionInfo(array $info) {
+  final public static function parseConnectionInfo(array $info): array {
     // If there is no "driver" property, then we assume it's an array of
     // possible connections for this target. Pick one at random. That allows
     // us to have, for example, multiple replica servers.
     if (empty($info['driver'])) {
-      $info = $info[mt_rand(0, count($info) - 1)];
+      $info_pick = $info[mt_rand(0, count($info) - 1)];
     }
 
+    /** @var UnprocessedConnectionInfoArray $connection_info */
+    $connection_info = $info_pick ?? $info;
+
     // Prefix information, default to an empty prefix.
-    $info['prefix'] = $info['prefix'] ?? '';
+    $connection_info['prefix'] = $connection_info['prefix'] ?? '';
 
     // Backwards compatibility layer for Drupal 8 style database connection
     // arrays. Those have the wrong 'namespace' key set, or not set at all
     // for core supported database drivers.
-    if (empty($info['namespace']) || str_starts_with($info['namespace'], 'Drupal\\Core\\Database\\Driver\\')) {
-      switch (strtolower($info['driver'])) {
+    if (empty($connection_info['namespace']) || str_starts_with($connection_info['namespace'], 'Drupal\\Core\\Database\\Driver\\')) {
+      switch (strtolower($connection_info['driver'])) {
         case 'mysql':
-          $info['namespace'] = 'Drupal\\mysql\\Driver\\Database\\mysql';
+          $connection_info['namespace'] = 'Drupal\\mysql\\Driver\\Database\\mysql';
           break;
 
         case 'pgsql':
-          $info['namespace'] = 'Drupal\\pgsql\\Driver\\Database\\pgsql';
+          $connection_info['namespace'] = 'Drupal\\pgsql\\Driver\\Database\\pgsql';
           break;
 
         case 'sqlite':
-          $info['namespace'] = 'Drupal\\sqlite\\Driver\\Database\\sqlite';
+          $connection_info['namespace'] = 'Drupal\\sqlite\\Driver\\Database\\sqlite';
           break;
       }
     }
     // Backwards compatibility layer for Drupal 8 style database connection
     // arrays. Those do not have the 'autoload' key set for core database
     // drivers.
-    if (empty($info['autoload'])) {
-      switch (trim($info['namespace'], '\\')) {
+    if (empty($connection_info['autoload']) && isset($connection_info['namespace'])) {
+      switch (trim($connection_info['namespace'], '\\')) {
         case "Drupal\\mysql\\Driver\\Database\\mysql":
-          $info['autoload'] = "core/modules/mysql/src/Driver/Database/mysql/";
+          $connection_info['autoload'] = "core/modules/mysql/src/Driver/Database/mysql/";
           break;
 
         case "Drupal\\pgsql\\Driver\\Database\\pgsql":
-          $info['autoload'] = "core/modules/pgsql/src/Driver/Database/pgsql/";
+          $connection_info['autoload'] = "core/modules/pgsql/src/Driver/Database/pgsql/";
           break;
 
         case "Drupal\\sqlite\\Driver\\Database\\sqlite":
-          $info['autoload'] = "core/modules/sqlite/src/Driver/Database/sqlite/";
+          $connection_info['autoload'] = "core/modules/sqlite/src/Driver/Database/sqlite/";
           break;
       }
     }
 
-    return $info;
+    assert(isset($connection_info['namespace']));
+    assert(isset($connection_info['autoload']));
+
+    return $connection_info;
   }
 
   /**
@@ -258,22 +327,28 @@ abstract class Database {
    *   The database key.
    * @param string $target
    *   The database target name.
-   * @param array $info
+   * @param UnprocessedConnectionInfoArray $info
    *   The database connection information, as defined in settings.php. The
    *   structure of this array depends on the database driver it is connecting
    *   to.
-   * @param \Composer\Autoload\ClassLoader $class_loader
-   *   The class loader. Used for adding the database driver to the autoloader
-   *   if $info['autoload'] is set.
+   * @param \Composer\Autoload\ClassLoader|null $class_loader
+   *   (optional) The class loader. Used for adding the database driver to the
+   *   autoloader if $info['autoload'] is set.
    * @param string $app_root
-   *   The app root.
+   *   (optional) The app root.
    *
    * @see \Drupal\Core\Database\Database::setActiveConnection
    */
-  final public static function addConnectionInfo($key, $target, array $info, $class_loader = NULL, $app_root = NULL) {
+  final public static function addConnectionInfo(string|int $key, string|int $target, array $info, ?ClassLoader $class_loader = NULL, ?string $app_root = NULL): void {
+    if (is_int($key)) {
+      @trigger_error('Passing an integer value to the $key parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
+    if (is_int($target)) {
+      @trigger_error('Passing an integer value to the $target parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
     if (empty(self::$databaseInfo[$key][$target])) {
-      $info = self::parseConnectionInfo($info);
-      self::$databaseInfo[$key][$target] = $info;
+      $connection_info = self::parseConnectionInfo($info);
+      self::$databaseInfo[$key][$target] = $connection_info;
 
       // If the database driver is provided by a module, then its code may need
       // to be instantiated prior to when the module's root namespace is added
@@ -281,18 +356,15 @@ abstract class Database {
       // initialization but the container definition is likely in the database.
       // Therefore, allow the connection info to specify an autoload directory
       // for the driver.
-      if (isset($info['autoload']) && $class_loader && $app_root) {
-        $class_loader->addPsr4($info['namespace'] . '\\', $app_root . '/' . $info['autoload']);
+      if ($class_loader && $app_root) {
+        $class_loader->addPsr4($connection_info['namespace'] . '\\', $app_root . '/' . $connection_info['autoload']);
 
         // When the database driver is extending from other database drivers,
         // then add autoload directory for the parent database driver modules
         // as well.
-        if (!empty($info['dependencies'])) {
-          assert(is_array($info['dependencies']));
-          foreach ($info['dependencies'] as $dependency) {
-            if (isset($dependency['namespace']) && isset($dependency['autoload'])) {
-              $class_loader->addPsr4($dependency['namespace'] . '\\', $app_root . '/' . $dependency['autoload']);
-            }
+        if (!empty($connection_info['dependencies'])) {
+          foreach ($connection_info['dependencies'] as $dependency) {
+            $class_loader->addPsr4($dependency['namespace'] . '\\', $app_root . '/' . $dependency['autoload']);
           }
         }
       }
@@ -303,41 +375,47 @@ abstract class Database {
    * Gets information on the specified database connection.
    *
    * @param string $key
-   *   (optional) The connection key for which to return information.
+   *   (optional) The connection key for which to return information. If not
+   *   specified, the 'default' connection key will be returned.
    *
-   * @return array|null
-   *   An associative array of database information. Defaults to an empty array.
+   * @return array<string|int,ConnectionInfoArray>
+   *   An associative array of database information, keyed by target. Defaults
+   *   to an empty array.
    */
-  final public static function getConnectionInfo($key = 'default') {
+  final public static function getConnectionInfo(string|int $key = 'default'): array {
+    if (is_int($key)) {
+      @trigger_error('Passing an integer value to the $key parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
     if (!empty(self::$databaseInfo[$key])) {
       return self::$databaseInfo[$key];
     }
+    return [];
   }
 
   /**
    * Gets connection information for all available databases.
    *
-   * @return array
+   * @return array<string|int,array<string|int,ConnectionInfoArray>>
    *   An associative array of database information for all available database,
-   *   keyed by the database name. Defaults to an empty array.
+   *   keyed by the database key and target. Defaults to an empty array.
    */
-  final public static function getAllConnectionInfo() {
+  final public static function getAllConnectionInfo(): array {
     return self::$databaseInfo;
   }
 
   /**
    * Sets connection information for multiple databases.
    *
-   * @param array $databases
+   * @param array<string|int,array<string|int,UnprocessedConnectionInfoArray>> $databases
    *   A multi-dimensional array specifying database connection parameters, as
    *   defined in settings.php.
-   * @param \Composer\Autoload\ClassLoader $class_loader
-   *   The class loader. Used for adding the database driver(s) to the
-   *   autoloader if $databases[$key][$target]['autoload'] is set.
-   * @param string $app_root
-   *   The app root.
+   * @param \Composer\Autoload\ClassLoader|null $class_loader
+   *   (optional) The class loader. Used for adding the database driver(s) to
+   *   the autoloader if $databases[$key][$target]['autoload'] is set.
+   * @param string|null $app_root
+   *   (optional) The app root.
    */
-  final public static function setMultipleConnectionInfo(array $databases, $class_loader = NULL, $app_root = NULL) {
+  final public static function setMultipleConnectionInfo(array $databases, ?ClassLoader $class_loader = NULL, ?string $app_root = NULL): void {
     foreach ($databases as $key => $targets) {
       foreach ($targets as $target => $info) {
         self::addConnectionInfo($key, $target, $info, $class_loader, $app_root);
@@ -356,7 +434,13 @@ abstract class Database {
    * @return bool
    *   TRUE in case of success, FALSE otherwise.
    */
-  final public static function renameConnection($old_key, $new_key) {
+  final public static function renameConnection(string|int $old_key, string|int $new_key): bool {
+    if (is_int($old_key)) {
+      @trigger_error('Passing an integer value to the $old_key parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
+    if (is_int($new_key)) {
+      @trigger_error('Passing an integer value to the $new_key parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
     if (!empty(self::$databaseInfo[$old_key]) && empty(self::$databaseInfo[$new_key])) {
       // Migrate the database connection information.
       self::$databaseInfo[$new_key] = self::$databaseInfo[$old_key];
@@ -370,9 +454,7 @@ abstract class Database {
 
       return TRUE;
     }
-    else {
-      return FALSE;
-    }
+    return FALSE;
   }
 
   /**
@@ -384,30 +466,39 @@ abstract class Database {
    * @return bool
    *   TRUE in case of success, FALSE otherwise.
    */
-  final public static function removeConnection($key) {
+  final public static function removeConnection(string|int $key): bool {
+    if (is_int($key)) {
+      @trigger_error('Passing an integer value to the $key parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
     if (isset(self::$databaseInfo[$key])) {
       self::closeConnection(NULL, $key);
       unset(self::$databaseInfo[$key]);
       return TRUE;
     }
-    else {
-      return FALSE;
-    }
+    return FALSE;
   }
 
   /**
    * Opens a connection to the server specified by the given key and target.
    *
    * @param string $key
-   *   The database connection key, as specified in settings.php. The default is
-   *   "default".
+   *   The database connection key, as specified in settings.php.
    * @param string $target
    *   The database target to open.
    *
    * @throws \Drupal\Core\Database\ConnectionNotDefinedException
    * @throws \Drupal\Core\Database\DriverNotSpecifiedException
+   *
+   * @return \Drupal\Core\Database\Connection
+   *   The opened database connection.
    */
-  final protected static function openConnection($key, $target) {
+  final protected static function openConnection(string|int $key, string|int $target): Connection {
+    if (is_int($key)) {
+      @trigger_error('Passing an integer value to the $key parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
+    if (is_int($target)) {
+      @trigger_error('Passing an integer value to the $target parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
     // If the requested database does not exist then it is an unrecoverable
     // error.
     if (!isset(self::$databaseInfo[$key])) {
@@ -419,11 +510,11 @@ abstract class Database {
     }
 
     $driver_class = self::$databaseInfo[$key][$target]['namespace'] . '\\Connection';
-
     $client_connection = $driver_class::open(self::$databaseInfo[$key][$target]);
     $new_connection = new $driver_class($client_connection, self::$databaseInfo[$key][$target]);
-    $new_connection->setTarget($target);
-    $new_connection->setKey($key);
+    assert($new_connection instanceof Connection);
+    $new_connection->setTarget((string) $target);
+    $new_connection->setKey((string) $key);
 
     // If we have any active logging objects for this connection key, we need
     // to associate them with the connection we just opened.
@@ -438,30 +529,33 @@ abstract class Database {
   /**
    * Closes a connection to the server specified by the given key and target.
    *
-   * @param string $target
-   *   The database target name.  Defaults to NULL meaning that all target
-   *   connections will be closed.
-   * @param string $key
-   *   The database connection key. Defaults to NULL which means the active key.
+   * @param ?string $target
+   *   (optional) The database target name. Defaults to NULL meaning that all
+   *   target connections will be closed.
+   * @param ?string $key
+   *   (optional) The database connection key. Defaults to NULL which means the
+   *   active key.
    */
-  public static function closeConnection($target = NULL, $key = NULL) {
+  public static function closeConnection(string|int|null $target = NULL, string|int|null $key = NULL): void {
+    if ($target !== NULL && is_int($target)) {
+      @trigger_error('Passing an integer value to the $target parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
+    if ($key !== NULL && is_int($key)) {
+      @trigger_error('Passing an integer value to the $key parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
     // Gets the active connection by default.
     if (!isset($key)) {
       $key = self::$activeKey;
     }
     if (isset($target) && isset(self::$connections[$key][$target])) {
-      if (self::$connections[$key][$target] instanceof Connection) {
-        // @phpstan-ignore method.deprecated
-        self::$connections[$key][$target]->commitAll();
-      }
+      // @phpstan-ignore method.deprecated
+      self::$connections[$key][$target]->commitAll();
       unset(self::$connections[$key][$target]);
     }
     elseif (isset(self::$connections[$key])) {
       foreach (self::$connections[$key] as $connection) {
-        if ($connection instanceof Connection) {
-          // @phpstan-ignore method.deprecated
-          $connection->commitAll();
-        }
+        // @phpstan-ignore method.deprecated
+        $connection->commitAll();
       }
       unset(self::$connections[$key]);
     }
@@ -490,7 +584,13 @@ abstract class Database {
    * @param string $target
    *   The target of the specified key to ignore.
    */
-  public static function ignoreTarget($key, $target) {
+  public static function ignoreTarget(string|int $key, string|int $target): void {
+    if (is_int($key)) {
+      @trigger_error('Passing an integer value to the $key parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
+    if (is_int($target)) {
+      @trigger_error('Passing an integer value to the $target parameter in ' . __METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Pass only string values instead. See https://www.drupal.org/node/3577925', E_USER_DEPRECATED);
+    }
     self::$ignoreTargets[$key][$target] = TRUE;
   }
 
@@ -504,7 +604,7 @@ abstract class Database {
    *   directories are excluded in the search. When NULL will be determined by
    *   the extension_discovery_scan_tests setting.
    *
-   * @return array
+   * @return ConnectionInfoArray
    *   The database connection info.
    *
    * @throws \InvalidArgumentException
@@ -531,6 +631,7 @@ abstract class Database {
     // Use the driver name as the module name when the module name is not
     // provided.
     $module = $query['module'] ?? $driverName;
+    assert(is_string($module));
 
     $driverNamespace = "Drupal\\{$module}\\Driver\\Database\\{$driverName}";
 
@@ -561,6 +662,7 @@ abstract class Database {
 
     $additional_class_loader->register(TRUE);
 
+    /** @var ConnectionInfoArray $options */
     $options = $connection_class::createConnectionOptionsFromUrl($url);
 
     // Add the necessary information to autoload code.
@@ -592,7 +694,8 @@ abstract class Database {
    * Gets database connection info as a URL.
    *
    * @param string $key
-   *   (Optional) The database connection key.
+   *   (Optional) The database connection key. If not specified, the 'default'
+   *   connection key will be returned.
    *
    * @return string
    *   The connection info as a URL.
@@ -600,7 +703,7 @@ abstract class Database {
    * @throws \RuntimeException
    *   When the database connection is not defined.
    */
-  public static function getConnectionInfoAsUrl($key = 'default') {
+  public static function getConnectionInfoAsUrl(string|int $key = 'default'): string {
     $db_info = static::getConnectionInfo($key);
     if (empty($db_info) || empty($db_info['default'])) {
       throw new \RuntimeException("Database connection $key not defined or missing the 'default' settings");
@@ -611,7 +714,9 @@ abstract class Database {
     // the URL.
     $db_info['default']['module'] = explode('\\', $namespace)[1];
     $connection_class = $namespace . '\\Connection';
-    return $connection_class::createUrlFromConnectionOptions($db_info['default']);
+    $url = $connection_class::createUrlFromConnectionOptions($db_info['default']);
+    assert(is_string($url));
+    return $url;
   }
 
   /**
@@ -642,9 +747,7 @@ abstract class Database {
     if ($shutdown) {
       foreach (self::$connections as $targets) {
         foreach ($targets as $connection) {
-          if ($connection instanceof Connection) {
-            $connection->commitAll();
-          }
+          $connection->commitAll();
         }
       }
       return;
