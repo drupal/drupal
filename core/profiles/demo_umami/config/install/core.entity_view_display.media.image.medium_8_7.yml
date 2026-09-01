@@ -8,11 +8,6 @@ dependencies:
     - media.type.image
   module:
     - image
-    - layout_builder
-third_party_settings:
-  layout_builder:
-    enabled: false
-    allow_custom: false
 id: media.image.medium_8_7
 targetEntityType: media
 bundle: image

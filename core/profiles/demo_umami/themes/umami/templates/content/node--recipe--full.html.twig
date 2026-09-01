@@ -1,0 +1,148 @@
+{#
+/**
+ * @file
+ * Theme override to display a recipe in the 'full' view mode.
+ *
+ * The recipe design places the fields into a one-plus-four grid (the image
+ * alongside the four badges) and a narrow/wide pair (ingredients alongside the
+ * instructions), and closes with the related recipes listing.
+ *
+ * Available variables:
+ * - node: The node entity with limited access to object properties and methods.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - node.getCreatedTime() will return the node creation timestamp.
+ *   - node.hasField('field_example') returns TRUE if the node bundle includes
+ *     field_example. (This does not indicate the presence of a value in this
+ *     field.)
+ *   - node.isPublished() will return whether the node is published or not.
+ *   Calling other methods, such as node.delete(), will result in an exception.
+ *   See \Drupal\node\Entity\Node for a full list of public properties and
+ *   methods for the node object.
+ * - label: (optional) The title of the node.
+ * - content: All node items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - author_picture: The node author user entity, rendered using the "compact"
+ *   view mode.
+ * - metadata: Metadata for this node.
+ * - date: (optional) Themed creation date field.
+ * - author_name: (optional) Themed author name field.
+ * - url: Direct URL of the current node.
+ * - display_submitted: Whether submission information should be displayed.
+ * - attributes: HTML attributes for the containing element.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - content_attributes: Same as attributes, except applied to the main
+ *   content tag that appears in the template.
+ * - author_attributes: Same as attributes, except applied to the author of
+ *   the node tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - related_recipes: Listing of recipes sharing this recipe's category. Only
+ *   set when there is something to list.
+ * - related_recipes_title: Heading for that listing.
+ * - view_mode: View mode; for example, "teaser" or "full".
+ * - page: Flag for the full page state. Will be true if view_mode is 'full'.
+ * - logged_in: Flag for authenticated user status. Will be true when the
+ *   current user is a logged-in member.
+ * - is_admin: Flag for admin user status. Will be true when the current user
+ *   is an administrator.
+ *
+ * @see template_preprocess_node()
+ */
+#}
+{%
+  set classes = [
+    'node',
+    'node--type-' ~ node.bundle|clean_class,
+    node.isPromoted() ? 'node--promoted',
+    node.isSticky() ? 'node--sticky',
+    not node.isPublished() ? 'node--unpublished',
+    view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+  ]
+%}
+{% set created_date = node.getCreatedTime|format_date('umami_dates') %}
+{{ attach_library('umami/classy.node') }}
+<article{{ attributes.addClass(classes) }}>
+
+  {{ title_prefix }}
+  {% if label %}
+    <header class="node__header">
+      <h1 class="page-title">
+        {{ label }}
+      </h1>
+    </header>
+  {% endif %}
+  {{ title_suffix }}
+
+  {% if display_submitted %}
+  <footer class="node__meta">
+    <div{{ author_attributes.addClass('node__submitted') }}>
+      {% trans %}<span class="by-author">by {{ author_name }}</span> {{ created_date }}{% endtrans %}
+      {{ metadata }}
+    </div>
+  </footer>
+  {% endif %}
+
+  <div{{ content_attributes.addClass('node__content') }}>
+    {{ content.field_recipe_category }}
+    {{ content.field_tags }}
+    {{ content.field_summary }}
+
+    <div class="recipe__overview">
+      <div class="recipe__overview-media">
+        {{ content.field_media_image }}
+      </div>
+      <div class="recipe__badges">
+        <div class="recipe__badge">
+          {{ content.field_preparation_time }}
+        </div>
+        <div class="recipe__badge">
+          {{ content.field_cooking_time }}
+        </div>
+        <div class="recipe__badge">
+          {{ content.field_number_of_servings }}
+        </div>
+        <div class="recipe__badge">
+          {{ content.field_difficulty }}
+        </div>
+      </div>
+    </div>
+
+    <div class="recipe__detail">
+      <div class="recipe__ingredients">
+        {{ content.field_ingredients }}
+      </div>
+      <div class="recipe__instructions">
+        {{ content.field_recipe_instruction }}
+      </div>
+    </div>
+
+    {# Anything the display shows that is not placed above, such as the content
+       moderation control. #}
+    {{ content|without(
+      'field_recipe_category',
+      'field_tags',
+      'field_summary',
+      'field_media_image',
+      'field_preparation_time',
+      'field_cooking_time',
+      'field_number_of_servings',
+      'field_difficulty',
+      'field_ingredients',
+      'field_recipe_instruction',
+    ) }}
+
+    {% if related_recipes %}
+      <div class="recipe__related">
+        <h2 class="recipe__related-title">{{ related_recipes_title }}</h2>
+        {{ related_recipes }}
+      </div>
+    {% endif %}
+  </div>
+
+</article>

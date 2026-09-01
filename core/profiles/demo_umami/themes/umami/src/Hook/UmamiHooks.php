@@ -2,8 +2,11 @@
 
 namespace Drupal\umami\Hook;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\views\Form\ViewsForm;
+use Drupal\views\Element\View;
+use Drupal\views\Views;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\search\SearchPageInterface;
 use Drupal\Core\Render\Element;
@@ -49,6 +52,51 @@ class UmamiHooks {
         }
       }
     }
+  }
+
+  /**
+   * Implements hook_theme_suggestions_HOOK_alter() for field templates.
+   *
+   * Adds a view mode based suggestion so that a field can be themed for one
+   * view mode only, as the recipe badges are.
+   */
+  #[Hook('theme_suggestions_field_alter')]
+  public function themeSuggestionsFieldAlter(array &$suggestions, array $variables): void {
+    $element = $variables['element'];
+    if (isset($element['#view_mode'])) {
+      $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'] . '__' . $element['#view_mode'];
+    }
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for node--recipe--full.
+   *
+   * The recipe design closes with a listing of recipes from the same category.
+   * It is rendered by the template rather than placed in a region so that it
+   * stays inside the recipe itself.
+   */
+  #[Hook('preprocess_node__recipe__full')]
+  public function preprocessNodeRecipeFull(&$variables): void {
+    $view = Views::getView('related_recipes');
+    if (!$view) {
+      return;
+    }
+    $build = $view->buildRenderable('related_recipes_block');
+    // Render the view now, so that a recipe with no related recipes shows
+    // neither the listing nor its heading. Keep the cacheability that explains
+    // why the listing is empty.
+    // @see \Drupal\views\Plugin\Block\ViewsBlock::build()
+    $build = View::preRenderViewElement($build);
+    if (empty($build['view_build'])) {
+      // Nothing to show. Keep the cacheability that says why, so that the
+      // recipe is rebuilt once a related recipe exists.
+      CacheableMetadata::createFromRenderArray($build)
+        ->merge(CacheableMetadata::createFromRenderArray($variables))
+        ->applyTo($variables);
+      return;
+    }
+    $variables['related_recipes'] = $build;
+    $variables['related_recipes_title'] = $view->getTitle();
   }
 
   /**

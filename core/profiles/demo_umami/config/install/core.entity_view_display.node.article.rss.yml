@@ -6,7 +6,6 @@ dependencies:
     - field.field.node.article.field_body
     - field.field.node.article.field_media_image
     - field.field.node.article.field_tags
-    - field.field.node.article.layout_builder__layout
     - node.type.article
   module:
     - user
@@ -24,4 +23,3 @@ hidden:
   field_media_image: true
   field_tags: true
   langcode: true
-  layout_builder__layout: true

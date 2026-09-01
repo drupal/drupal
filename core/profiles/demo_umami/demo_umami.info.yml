@@ -11,8 +11,6 @@ install:
   - ckeditor5
   - config
   - contextual
-  - layout_builder
-  - layout_discovery
   - menu_link_content
   - datetime
   - block_content

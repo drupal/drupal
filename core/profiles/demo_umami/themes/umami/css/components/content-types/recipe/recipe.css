@@ -3,6 +3,78 @@
 * This file is used to style the recipe using the 'full' view mode.
 */
 
-.node--type-recipe.node--view-mode-full .block-views-blockrelated-recipes-related-recipes-block {
+/* The image alongside the four badges. */
+.recipe__overview {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.recipe__overview > .recipe__overview-media {
+  flex: 0 1 100%;
+}
+
+.recipe__overview > .recipe__badges {
+  display: flex;
+  flex-direction: column;
+  gap: 0.96rem;
+}
+
+/* Large */
+@media screen and (min-width: 60rem) {
+  /* 960px */
+  .recipe__overview {
+    margin-right: -1.5%;
+    margin-left: -1.5%;
+  }
+  .recipe__overview > .recipe__overview-media {
+    flex: 0 1 47%;
+    margin-right: 1.5%;
+    margin-left: 1.5%;
+  }
+  .recipe__overview > .recipe__badges {
+    flex: 0 1 50%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .recipe__badges > .recipe__badge {
+    flex: 0 1 44%;
+    margin-right: 3%;
+    margin-left: 3%;
+  }
+}
+
+/* The ingredients alongside the instructions. */
+.recipe__detail {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.recipe__detail > .recipe__ingredients,
+.recipe__detail > .recipe__instructions {
+  flex: 0 1 100%;
+}
+
+/* Medium */
+@media screen and (min-width: 48em) {
+  /* 768px */
+  .recipe__detail {
+    margin-right: -1.5%;
+    margin-left: -1.5%;
+  }
+  .recipe__detail > .recipe__ingredients,
+  .recipe__detail > .recipe__instructions {
+    margin-right: 1.5%;
+    margin-left: 1.5%;
+  }
+  .recipe__detail > .recipe__ingredients {
+    flex: 0 1 30%;
+  }
+  .recipe__detail > .recipe__instructions {
+    flex: 0 1 64%;
+  }
+}
+
+.node--type-recipe.node--view-mode-full .recipe__related {
   margin-top: 2rem;
 }

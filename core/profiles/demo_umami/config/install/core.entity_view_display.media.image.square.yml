@@ -7,12 +7,7 @@ dependencies:
     - media.type.image
     - responsive_image.styles.square
   module:
-    - layout_builder
     - responsive_image
-third_party_settings:
-  layout_builder:
-    enabled: false
-    allow_custom: false
 id: media.image.square
 targetEntityType: media
 bundle: image

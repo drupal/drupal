@@ -1,22 +1,22 @@
-QueryCount: 195
-CacheGetCount: 217
+QueryCount: 194
+CacheGetCount: 221
 CacheGetCountByBin:
   page: 1
-  config: 50
+  config: 53
   bootstrap: 15
-  discovery: 83
+  discovery: 82
   data: 8
-  entity: 24
+  entity: 23
   dynamic_page_cache: 1
   default: 6
   routes: 11
-  render: 13
+  render: 16
   menu: 3
   file_parsing: 2
-CacheSetCount: 226
+CacheSetCount: 229
 CacheDeleteCount: 0
 CacheTagInvalidationCount: 0
-CacheTagLookupQueryCount: 24
+CacheTagLookupQueryCount: 25
 CacheTagGroupedLookups:
   -
     - entity_types
@@ -62,9 +62,9 @@ CacheTagGroupedLookups:
   -
     - 'media:3'
   -
-    - 'config:core.entity_view_display.node.recipe.full'
-    - 'config:filter.format.basic_html'
     - 'node:1'
+  -
+    - 'config:filter.format.basic_html'
     - 'taxonomy_term:13'
     - 'taxonomy_term:22'
     - 'taxonomy_term:31'
@@ -115,6 +115,6 @@ CacheTagGroupedLookups:
   -
     - 'config:user.role.anonymous'
 ScriptCount: 3
-ScriptBytes: 12006
+ScriptBytes: 12091
 StylesheetCount: 7
-StylesheetBytes: 40676
+StylesheetBytes: 39430

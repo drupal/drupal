@@ -3,7 +3,6 @@ status: true
 dependencies:
   config:
     - field.field.node.page.field_body
-    - field.field.node.page.layout_builder__layout
     - node.type.page
     - workflows.workflow.editorial
   module:
@@ -79,6 +78,5 @@ content:
       placeholder: ''
     third_party_settings: {  }
 hidden:
-  layout_builder__layout: true
   promote: true
   sticky: true

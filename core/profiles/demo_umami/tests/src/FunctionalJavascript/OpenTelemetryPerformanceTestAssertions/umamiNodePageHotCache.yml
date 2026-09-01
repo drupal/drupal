@@ -13,7 +13,6 @@ CacheTagGroupedLookups:
     - block_content_view
     - 'config:block_list'
     - 'config:configurable_language_list'
-    - 'config:core.entity_view_display.node.recipe.full'
     - 'config:filter.format.basic_html'
     - 'config:image.style.large_3_2_2x'
     - 'config:image.style.large_3_2_768x512'
@@ -68,6 +67,6 @@ CacheTagGroupedLookups:
     - taxonomy_term_list
     - 'user:6'
 ScriptCount: 3
-ScriptBytes: 12006
+ScriptBytes: 12091
 StylesheetCount: 7
-StylesheetBytes: 40676
+StylesheetBytes: 39430

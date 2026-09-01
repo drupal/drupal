@@ -37,7 +37,6 @@ global:
       css/components/regions/pre-header/pre-header.css: {}
       css/components/regions/tabs/tabs.css: {}
       css/components/toolbar/toolbar.css: {}
-      css/components/layout_builder/layout-builder.css: {}
   fonts:
     fonts/source-sans-pro-v21-latin-regular.woff2:
       preload: true
@@ -87,11 +86,6 @@ user:
   css:
     component:
       css/components/user/user.css: { weight: -10 }
-
-oneplusfourgrid_section:
-  css:
-    layout:
-      layouts/oneplusfourgrid_section/oneplusfourgrid_section.css: {}
 
 filter:
   version: VERSION

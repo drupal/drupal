@@ -7,12 +7,7 @@ dependencies:
     - media.type.image
     - responsive_image.styles.hero
   module:
-    - layout_builder
     - responsive_image
-third_party_settings:
-  layout_builder:
-    enabled: false
-    allow_custom: false
 id: media.image.scale_crop_7_3_large
 targetEntityType: media
 bundle: image

@@ -2,9 +2,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_display.node.article.full
-    - core.entity_view_display.node.page.full
-    - core.entity_view_display.node.recipe.full
     - node.type.article
     - node.type.page
     - node.type.recipe
@@ -15,7 +12,6 @@ dependencies:
     - content_moderation
     - contextual
     - file
-    - layout_builder
     - navigation
     - node
     - path
@@ -32,10 +28,6 @@ permissions:
   - 'access navigation'
   - 'cancel account'
   - 'change own username'
-  - 'configure editable article node layout overrides'
-  - 'configure editable page node layout overrides'
-  - 'configure editable recipe node layout overrides'
-  - 'create and edit custom blocks'
   - 'create article content'
   - 'create page content'
   - 'create recipe content'
