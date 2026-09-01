@@ -18,7 +18,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Tests creating new entity (e.g. taxonomy-term) from an autocomplete widget.
  */
 #[Group('entity_reference')]
-#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class EntityReferenceAutoCreateTest extends BrowserTestBase {
 

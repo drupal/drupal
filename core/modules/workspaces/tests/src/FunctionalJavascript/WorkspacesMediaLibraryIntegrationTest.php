@@ -14,6 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Tests the Media library entity reference widget in a workspace.
  */
 #[Group('workspaces')]
+#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class WorkspacesMediaLibraryIntegrationTest extends EntityReferenceWidgetTest {
 

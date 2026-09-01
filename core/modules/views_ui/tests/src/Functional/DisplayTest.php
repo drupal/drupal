@@ -14,7 +14,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Tests the display UI.
  */
 #[Group('views_ui')]
-#[Group('#slow')]
 #[RunTestsInSeparateProcesses]
 class DisplayTest extends UITestBase {
 

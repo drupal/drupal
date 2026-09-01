@@ -280,11 +280,45 @@ default:
 # Test Jobs
 ################
 
+'🖱️️️ PHPUnit Functional Javascript':
+  <<: [ *with-composer, *test-setup ]
+  parallel: 3
+  variables:
+    TESTSUITE: functional-javascript
+    CONCURRENCY: "12"
+    KUBERNETES_CPU_REQUEST: "14"
+  services:
+    - <<: *with-database
+    - <<: *with-selenium-chrome
+  after_script:
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+    - cp /builds/chromedriver.log ./
+
+'🌐️️ PHPUnit Functional':
+  <<: [ *with-composer, *test-setup ]
+  parallel: 8
+  variables:
+    TESTSUITE: functional
+    CONCURRENCY: "15"
+    KUBERNETES_CPU_REQUEST: "10"
+  services:
+    - <<: *with-database
+
+'⚙️️ PHPUnit Kernel':
+  <<: [ *with-composer, *test-setup ]
+  parallel: 4
+  variables:
+    TESTSUITE: kernel
+    KUBERNETES_CPU_REQUEST: "12"
+    CONCURRENCY: "24"
+  services:
+    - <<: *with-database
+
 '🦉️️️ Nightwatch':
   <<: [ *with-composer, *test-setup ]
   retry: 1
   variables:
-    KUBERNETES_CPU_REQUEST: "16"
+    KUBERNETES_CPU_REQUEST: "9"
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
@@ -328,39 +362,6 @@ default:
       - ./core/.yarn/cache
     policy: pull
 
-'🖱️️️ PHPUnit Functional Javascript':
-  <<: [ *with-composer, *test-setup ]
-  parallel: 3
-  variables:
-    TESTSUITE: functional-javascript
-    CONCURRENCY: "12"
-    KUBERNETES_CPU_REQUEST: "14"
-  services:
-    - <<: *with-database
-    - <<: *with-selenium-chrome
-  after_script:
-    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
-    - cp /builds/chromedriver.log ./
-
-'🌐️️ PHPUnit Functional':
-  <<: [ *with-composer, *test-setup ]
-  parallel: 8
-  variables:
-    TESTSUITE: functional
-    CONCURRENCY: "24"
-    KUBERNETES_CPU_REQUEST: "16"
-  services:
-    - <<: *with-database
-
-'⚙️️ PHPUnit Kernel':
-  <<: [ *with-composer, *test-setup ]
-  parallel: 4
-  variables:
-    TESTSUITE: kernel
-    KUBERNETES_CPU_REQUEST: "12"
-    CONCURRENCY: "24"
-  services:
-    - <<: *with-database
 
 '👷️️️ PHPUnit Build':
   <<: [ *with-composer, *test-setup ]
@@ -368,7 +369,7 @@ default:
   variables:
     TESTSUITE: build
     KUBERNETES_CPU_REQUEST: "8"
-    CONCURRENCY: "4"
+    CONCURRENCY: "6"
     # No parallel for this job, setup manually the env variables that need to
     # be passed to run-tests.sh command line options.
     CI_NODE_INDEX: 1
