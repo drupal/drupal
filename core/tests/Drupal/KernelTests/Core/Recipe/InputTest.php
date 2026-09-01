@@ -92,7 +92,7 @@ class InputTest extends KernelTestBase {
     $collector->expects($this->atLeastOnce())
       ->method('collectValue')
       ->willReturnCallback(function (string $name) {
-        return match($name) {
+        return match ($name) {
           'create_node_type.node_type' => 'test',
           'input_test.owner' => 'hack',
         };

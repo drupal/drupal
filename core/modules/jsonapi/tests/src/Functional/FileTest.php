@@ -219,7 +219,7 @@ class FileTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {
-    return match($method) {
+    return match ($method) {
       'GET' => "The 'access content' permission is required.",
       'PATCH' => "Only the file owner can update the file entity.",
       'DELETE' => "The 'delete any file' permission is required.",

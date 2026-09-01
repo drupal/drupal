@@ -222,8 +222,10 @@ class FieldStorageAddForm extends FormBase {
         '#attributes' => [
           'class' => ['field-option-radio'],
           'data-once' => 'field-click-to-select',
+          // phpcs:disable Drupal.Arrays.Array.ArrayIndentation
           'checked' => $this->getRequest()->request->get('field_options_wrapper') !== NULL
-          && $this->getRequest()->request->get('field_options_wrapper') === $option_key,
+            && $this->getRequest()->request->get('field_options_wrapper') === $option_key,
+          // phpcs:enable Drupal.Arrays.Array.ArrayIndentation
         ],
         '#wrapper_attributes' => [
           'class' => ['js-click-to-select', 'subfield-option'],

@@ -54,8 +54,8 @@ class CallableResolverTest extends UnitTestCase {
           return __METHOD__ . '+' . $suffix;
         },
         PHP_VERSION_ID >= 80400 ?
-        '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():53}' :
-        'Drupal\Tests\Core\Utility\{closure}',
+          '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():53}' :
+          'Drupal\Tests\Core\Utility\{closure}',
       ],
       'First-class callable function' => [
         $this->method(...),
@@ -68,8 +68,8 @@ class CallableResolverTest extends UnitTestCase {
       'Arrow function' => [
         fn($suffix): string => __METHOD__ . '+' . $suffix,
         PHP_VERSION_ID >= 80400 ?
-        '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():69}' :
-        'Drupal\Tests\Core\Utility\{closure}',
+          '{closure:Drupal\Tests\Core\Utility\CallableResolverTest::testCallbackResolver():69}' :
+          'Drupal\Tests\Core\Utility\{closure}',
       ],
       'Static function' => [
         '\Drupal\Tests\Core\Utility\NoInstantiationMockStaticCallable::staticMethod',

@@ -67,9 +67,9 @@ class ViewsTestDataViewsExecutionHooks {
       $view->element['#attached']['drupalSettings']['foo'] = 'bar';
       $view->element['#attached']['placeholders']['non-existing-placeholder-just-for-testing-purposes']['#lazy_builder'] = [
         'Drupal\views_test_data\Controller\ViewsTestDataController::placeholderLazyBuilder',
-            [
-              'bar',
-            ],
+        [
+          'bar',
+        ],
       ];
       $view->element['#cache']['tags'][] = 'views_test_data:1';
       $view->build_info['pre_render_called'] = TRUE;

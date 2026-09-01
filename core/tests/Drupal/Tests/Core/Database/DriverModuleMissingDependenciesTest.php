@@ -46,8 +46,8 @@ class DriverModuleMissingDependenciesTest extends UnitTestCase {
       ->method('getParameter')
       ->with()
       ->willReturnMap([
-          ['install_profile', ''],
-          ['site.path', ''],
+        ['install_profile', ''],
+        ['site.path', ''],
       ]);
     $container->expects($this->any())
       ->method('get')

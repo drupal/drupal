@@ -81,7 +81,7 @@ class ResourceResponseValidatorTest extends UnitTestCase {
       'route_name' => 'jsonapi.node--article.individual',
       'resource_type' => new ResourceType('node', 'article', Node::class),
     ];
-
+    // phpcs:disable Drupal.Arrays.Array.ArrayIndentation
     $test_data = [
       // Test validation success.
       [
@@ -150,6 +150,7 @@ EOD
         'description' => 'Response validation flags empty array as invalid.',
       ],
     ];
+    // phpcs:enable Drupal.Arrays.Array.ArrayIndentation
 
     $test_cases = array_map(function ($input) use ($defaults) {
       [$json, $expected, $description, $route_name, $resource_type] = array_values($input + $defaults);

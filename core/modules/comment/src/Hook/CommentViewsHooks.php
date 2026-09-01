@@ -73,14 +73,14 @@ class CommentViewsHooks {
               'relationship field' => $entity_type->getKey('id'),
               'id' => 'standard',
               'extra' => [
-                        [
-                          'field' => 'entity_type',
-                          'value' => $entity_type_id,
-                        ],
-                        [
-                          'field' => 'field_name',
-                          'value' => $field_name,
-                        ],
+                [
+                  'field' => 'entity_type',
+                  'value' => $entity_type_id,
+                ],
+                [
+                  'field' => 'field_name',
+                  'value' => $field_name,
+                ],
               ],
             ],
           ];

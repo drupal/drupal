@@ -755,7 +755,7 @@ abstract class Connection {
    *   The name of the class that should be used for this driver.
    */
   public function getDriverClass($class) {
-    match($class) {
+    match ($class) {
       'Install\\Tasks',
       'ExceptionHandler',
       'Select',

@@ -297,7 +297,7 @@ class MenuActiveTrailTest extends UnitTestCase {
     $this->cacheTagsInvalidator->expects($this->exactly(2))
       ->method('invalidateTags')
       ->willReturnCallback(fn($tags): NULL =>
-        match($tags) {
+        match ($tags) {
           ['config:system.menu.' . $menu_name] => NULL,
           [
             'config:system.menu.' . $menu_name,

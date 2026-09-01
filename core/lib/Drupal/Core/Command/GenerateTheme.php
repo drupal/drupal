@@ -134,7 +134,7 @@ class GenerateTheme extends Command {
     $filesystem->mkdir($tmpDir);
 
     $io->writeln("Copying starterkit to temporary directory for processing.", OutputInterface::VERBOSITY_DEBUG);
-    $mirror_iterator = (new Finder)
+    $mirror_iterator = (new Finder())
       ->in($starterkit->getPath())
       ->files()
       ->ignoreDotFiles(FALSE)
@@ -275,7 +275,7 @@ class GenerateTheme extends Command {
    * Returns a Symfony file finder.
    */
   private static function createFilesFinder(string $dir): Finder {
-    return (new Finder)->in($dir)->files();
+    return (new Finder())->in($dir)->files();
   }
 
   /**

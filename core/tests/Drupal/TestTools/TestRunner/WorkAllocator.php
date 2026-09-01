@@ -142,7 +142,7 @@ class WorkAllocator {
    */
   private function getTestTypeWeight(string $class): int {
     assert(class_exists($class), "$class does not exist");
-    return match(TRUE) {
+    return match (TRUE) {
       is_subclass_of($class, WebDriverTestBase::class) => 3,
       is_subclass_of($class, BrowserTestBase::class) => 2,
       is_subclass_of($class, BuildTestBase::class) => 2,

@@ -82,7 +82,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
         $plugins_to_check_against = $checking_enabled ? $other_enabled_plugins : $enableable_disabled_plugins;
         $plain_tags_to_check_against = $checking_enabled ? $enabled_plugin_plain_tags : $disabled_plugin_plain_tags;
         $tags_plugin_report = $this->pluginsSupplyingTagsMessage($overlap, $plugins_to_check_against, $enabled_plugin_elements);
-        $message = match($overlap) {
+        $message = match ($overlap) {
           $enabled_plugin_overlap => $constraint->enabledPluginsMessage,
           $enabled_plugin_optional_overlap => $constraint->enabledPluginsOptionalMessage,
           $disabled_plugin_overlap => $constraint->availablePluginsMessage,

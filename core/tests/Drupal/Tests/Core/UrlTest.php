@@ -132,7 +132,7 @@ class UrlTest extends UnitTestCase {
     $this->router->expects($this->exactly(3))
       ->method('matchRequest')
       ->willReturnCallback(function (Request $request) {
-        [$route_name, $vars] = match($request->getPathInfo()) {
+        [$route_name, $vars] = match ($request->getPathInfo()) {
           '/node' => ['view.promoted_content.page_1', []],
           '/node/1' => ['node_view', ['node' => '1']],
           '/node/2/edit' => ['node_edit', ['node' => '2']],

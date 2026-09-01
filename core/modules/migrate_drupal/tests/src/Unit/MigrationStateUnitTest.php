@@ -119,7 +119,7 @@ finished:
   7:
     node: node
 NODE
-        ,
+          ,
         'entity_test' => <<<ENTITY_TEST
 not_finished:
   6:
@@ -129,7 +129,7 @@ not_finished:
       - entity_test
       - entity_test_rev
 ENTITY_TEST
-        ,
+          ,
         'comment' => <<<COMMENT
 finished:
   6:
@@ -141,7 +141,7 @@ finished:
       - comment
       - node
 COMMENT
-        ,
+          ,
         'user' => <<<USER
 finished:
   6:
@@ -149,7 +149,7 @@ finished:
   7:
     user: user
 USER
-        ,
+          ,
         'profile' => <<<PROFILE
 not_finished:
   6:
@@ -157,7 +157,7 @@ not_finished:
   7:
     profile: user
 PROFILE
-        ,
+          ,
       ],
       'field_plugins' => [
         'datetime' => [
@@ -311,7 +311,7 @@ finished:
       - menu_link_content
       - menu_ui
 SYSTEM
-        ,
+          ,
         'menu_link_content' => <<<MENU_LINK_CONTENT
 finished:
   6:
@@ -319,7 +319,7 @@ finished:
   7:
     menu: menu_link_content
 MENU_LINK_CONTENT
-        ,
+          ,
         'menu' => <<<MENU_UI
 finished:
   6:
@@ -327,7 +327,7 @@ finished:
   7:
     menu: menu_ui
 MENU_UI
-        ,
+          ,
       ],
       'field_plugins' => [],
       'migrations' => [
@@ -436,7 +436,7 @@ finished:
       - block_content
       - content_translation
 SYSTEM
-        ,
+          ,
         'block' => <<<BLOCK
 finished:
   6:
@@ -444,7 +444,7 @@ finished:
   7:
     block: block
 BLOCK
-        ,
+          ,
         'block_content' => <<<BLOCK_CONTENT
 finished:
   6:
@@ -452,7 +452,7 @@ finished:
   7:
     block: block_content
 BLOCK_CONTENT
-        ,
+          ,
       ],
       'field_plugins' => [],
       'migrations' => [
@@ -548,7 +548,7 @@ finished:
     help: core
     i18ncontent: content_translation
 SYSTEM
-        ,
+          ,
       ],
       'field_plugins' => [],
       'migrations' => [],

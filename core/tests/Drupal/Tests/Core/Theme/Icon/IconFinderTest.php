@@ -546,51 +546,51 @@ class IconFinderTest extends UnitTestCase {
     ];
 
     yield 'test icon_id extracted prefix' => [
-        ['icons/prefix_suffix/prefix_{icon_id}.svg'],
-        [
-          ['quux', 'icons/prefix_suffix/prefix_quux.svg'],
-          ['corge_suffix', 'icons/prefix_suffix/prefix_corge_suffix.svg'],
-        ],
+      ['icons/prefix_suffix/prefix_{icon_id}.svg'],
+      [
+        ['quux', 'icons/prefix_suffix/prefix_quux.svg'],
+        ['corge_suffix', 'icons/prefix_suffix/prefix_corge_suffix.svg'],
+      ],
     ];
 
     yield 'test icon_id extracted suffix' => [
-        ['icons/prefix_suffix/{icon_id}_suffix.svg'],
-        [
-          ['garply', 'icons/prefix_suffix/garply_suffix.svg'],
-          ['prefix_corge', 'icons/prefix_suffix/prefix_corge_suffix.svg'],
-        ],
+      ['icons/prefix_suffix/{icon_id}_suffix.svg'],
+      [
+        ['garply', 'icons/prefix_suffix/garply_suffix.svg'],
+        ['prefix_corge', 'icons/prefix_suffix/prefix_corge_suffix.svg'],
+      ],
     ];
 
     yield 'test icon_id extracted both' => [
-        ['icons/prefix_suffix/prefix_{icon_id}_suffix.svg'],
-        [
-          ['corge', 'icons/prefix_suffix/prefix_corge_suffix.svg'],
-        ],
+      ['icons/prefix_suffix/prefix_{icon_id}_suffix.svg'],
+      [
+        ['corge', 'icons/prefix_suffix/prefix_corge_suffix.svg'],
+      ],
     ];
 
     yield 'test icon_id extracted with group' => [
-        ['icons/prefix_suffix/{group}/{icon_id}.svg'],
-        [
-          ['fred_group', 'icons/prefix_suffix/group/fred_group.svg', 'group'],
-          ['plugh_group_suffix', 'icons/prefix_suffix/group/plugh_group_suffix.svg', 'group'],
-          ['prefix_qux_group', 'icons/prefix_suffix/group/prefix_qux_group.svg', 'group'],
-          ['prefix_waldo_group_suffix', 'icons/prefix_suffix/group/prefix_waldo_group_suffix.svg', 'group'],
-        ],
+      ['icons/prefix_suffix/{group}/{icon_id}.svg'],
+      [
+        ['fred_group', 'icons/prefix_suffix/group/fred_group.svg', 'group'],
+        ['plugh_group_suffix', 'icons/prefix_suffix/group/plugh_group_suffix.svg', 'group'],
+        ['prefix_qux_group', 'icons/prefix_suffix/group/prefix_qux_group.svg', 'group'],
+        ['prefix_waldo_group_suffix', 'icons/prefix_suffix/group/prefix_waldo_group_suffix.svg', 'group'],
+      ],
     ];
 
     yield 'test icon_id extracted with group and wildcard' => [
-        ['icons/*/{group}/{icon_id}.svg'],
-        [
-          ['corge_group_1', 'icons/group/group_1/corge_group_1.svg', 'group_1'],
-          ['foo_group_1', 'icons/group/group_1/foo_group_1.svg', 'group_1'],
-          ['corge_group_2', 'icons/group/group_2/corge_group_2.svg', 'group_2'],
-          ['foo_group_2', 'icons/group/group_2/foo_group_2.svg', 'group_2'],
-          ['foo', 'icons/group_same_name/group_3/foo.svg', 'group_3'],
-          ['fred_group', 'icons/prefix_suffix/group/fred_group.svg', 'group'],
-          ['plugh_group_suffix', 'icons/prefix_suffix/group/plugh_group_suffix.svg', 'group'],
-          ['prefix_qux_group', 'icons/prefix_suffix/group/prefix_qux_group.svg', 'group'],
-          ['prefix_waldo_group_suffix', 'icons/prefix_suffix/group/prefix_waldo_group_suffix.svg', 'group'],
-        ],
+      ['icons/*/{group}/{icon_id}.svg'],
+      [
+        ['corge_group_1', 'icons/group/group_1/corge_group_1.svg', 'group_1'],
+        ['foo_group_1', 'icons/group/group_1/foo_group_1.svg', 'group_1'],
+        ['corge_group_2', 'icons/group/group_2/corge_group_2.svg', 'group_2'],
+        ['foo_group_2', 'icons/group/group_2/foo_group_2.svg', 'group_2'],
+        ['foo', 'icons/group_same_name/group_3/foo.svg', 'group_3'],
+        ['fred_group', 'icons/prefix_suffix/group/fred_group.svg', 'group'],
+        ['plugh_group_suffix', 'icons/prefix_suffix/group/plugh_group_suffix.svg', 'group'],
+        ['prefix_qux_group', 'icons/prefix_suffix/group/prefix_qux_group.svg', 'group'],
+        ['prefix_waldo_group_suffix', 'icons/prefix_suffix/group/prefix_waldo_group_suffix.svg', 'group'],
+      ],
     ];
 
     yield 'path {icon_id} partial extracted wildcard extension' => [

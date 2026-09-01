@@ -188,11 +188,11 @@ class StatementTest extends DatabaseTestBase {
 
     $count = 0;
 
-    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
+    // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis
     foreach ($statement as $row) {
       $count++;
     }
-    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
+    // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis
     foreach ($statement as $row) {
       $count++;
     }

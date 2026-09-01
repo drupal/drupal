@@ -94,7 +94,7 @@ class ShortcutHooks {
           'children' => [
             '#lazy_builder' => [
               'shortcut.lazy_builders:lazyLinks',
-                        [],
+              [],
             ],
             '#create_placeholder' => TRUE,
             '#cache' => [

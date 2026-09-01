@@ -146,10 +146,10 @@ class ToolbarHooks {
         '#attached' => $subtrees_attached,
         'toolbar_administration' => [
           '#pre_render' => [
-                      [
-                        ToolbarController::class,
-                        'preRenderAdministrationTray',
-                      ],
+            [
+              ToolbarController::class,
+              'preRenderAdministrationTray',
+            ],
           ],
           '#type' => 'container',
           '#attributes' => [

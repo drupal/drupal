@@ -1233,7 +1233,7 @@ function trim_with_ellipsis(string $input, int $length, int $side): string {
     return str_pad($input, $length, ' ', \STR_PAD_RIGHT);
   }
   elseif (strlen($input) > $length) {
-    return match($side) {
+    return match ($side) {
       \STR_PAD_RIGHT => substr($input, 0, $length - 1) . '…',
       default => '…' . substr($input, -$length + 1),
     };

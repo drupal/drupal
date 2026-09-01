@@ -259,7 +259,7 @@ abstract class StatementBase implements \Iterator, StatementInterface {
       @trigger_error("Passing the \$cursorOffset value to " . __METHOD__ . "() is deprecated in drupal:11.4.0 and will be removed in drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3551924", E_USER_DEPRECATED);
     }
 
-    $fetchOptions = match(func_num_args()) {
+    $fetchOptions = match (func_num_args()) {
       0 => $this->fetchOptions,
       1 => $this->fetchOptions,
       2 => $this->fetchOptions + [

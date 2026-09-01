@@ -1256,7 +1256,7 @@ class SystemRequirementsHooks {
       // Warn about HTML5 validation default change in Drupal 12.
       $enable_html5_validation = Settings::get('enable_html5_validation');
       if ($enable_html5_validation === TRUE || $enable_html5_validation === NULL) {
-        $description = match($enable_html5_validation) {
+        $description = match ($enable_html5_validation) {
           TRUE => $this->t('The enable_html5_validation setting will be removed in Drupal 13, and HTML5 validation will be disabled on all forms.  Make sure your forms will still work the way you expect before upgrading by setting the value to FALSE in a test environment. See <a href=":url">the change record</a> for more information.', [':url' => 'https://www.drupal.org/node/3537128']),
           NULL => $this->t('The enable_html5_validation setting is not configured in settings.php. In Drupal 12 this setting will default to FALSE, which means HTML5 validation will be disabled on all forms. Make sure your forms will still work the way you expect before upgrading by setting the value to FALSE in a test environment.  See <a href=":url">the change record</a> for more information.', [':url' => 'https://www.drupal.org/node/3537128']),
         };

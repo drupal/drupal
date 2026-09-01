@@ -30,7 +30,7 @@
         "revolt/event-loop": "~v1.0.9",
         "symfony/console": "~v7.4.13",
         "symfony/dependency-injection": "~v7.4.13",
-        "symfony/deprecation-contracts": "~v3.7.0",
+        "symfony/deprecation-contracts": "~v3.7.1",
         "symfony/error-handler": "~v7.4.8",
         "symfony/event-dispatcher": "~v7.4.9",
         "symfony/event-dispatcher-contracts": "~v3.7.0",
@@ -51,7 +51,7 @@
         "symfony/validator": "~v7.4.10",
         "symfony/var-dumper": "~v7.4.8",
         "symfony/var-exporter": "~v7.4.9",
-        "symfony/yaml": "~v7.4.13"
+        "symfony/yaml": "~v7.4.15"
     },
     "extra": {
         "branch-alias": {

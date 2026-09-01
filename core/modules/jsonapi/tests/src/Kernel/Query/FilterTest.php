@@ -254,8 +254,7 @@ class FilterTest extends JsonapiKernelTestBase {
             'condition' => [
               'path' => 'colors.value',
               'value' => 'yellow',
-              'operator' =>
-              'CONTAINS',
+              'operator' => 'CONTAINS',
               'memberOf' => 'nested-and-group',
             ],
           ],

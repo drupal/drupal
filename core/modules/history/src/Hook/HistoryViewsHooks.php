@@ -30,11 +30,11 @@ class HistoryViewsHooks {
         'left_field' => 'nid',
         'field' => 'nid',
         'extra' => [
-                  [
-                    'field' => 'uid',
-                    'value' => '***CURRENT_USER***',
-                    'numeric' => TRUE,
-                  ],
+          [
+            'field' => 'uid',
+            'value' => '***CURRENT_USER***',
+            'numeric' => TRUE,
+          ],
         ],
       ],
     ];

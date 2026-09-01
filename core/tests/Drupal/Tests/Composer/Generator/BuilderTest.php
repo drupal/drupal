@@ -31,21 +31,21 @@ class BuilderTest extends TestCase {
           'description' => 'Core and its dependencies with known-compatible minor versions. Require this project INSTEAD OF drupal/core.',
           'license' => 'GPL-2.0-or-later',
           'require' =>
-          [
-            'drupal/core' => Composer::drupalVersionBranch(),
-            'symfony/yaml' => '~v3.4.32',
-          ],
-          'conflict' =>
-          [
-            'webflo/drupal-core-strict' => '*',
-          ],
-          'extra' =>
-          [
-            'branch-alias' =>
             [
-              'dev-main' => '11.x-dev',
+              'drupal/core' => Composer::drupalVersionBranch(),
+              'symfony/yaml' => '~v3.4.32',
             ],
-          ],
+          'conflict' =>
+            [
+              'webflo/drupal-core-strict' => '*',
+            ],
+          'extra' =>
+            [
+              'branch-alias' =>
+                [
+                  'dev-main' => '11.x-dev',
+                ],
+            ],
         ],
       ],
 
@@ -57,20 +57,20 @@ class BuilderTest extends TestCase {
           'description' => 'require-dev dependencies from drupal/drupal; use in addition to drupal/core-recommended to run tests from drupal/core.',
           'license' => 'GPL-2.0-or-later',
           'require' =>
-          [
-            'behat/mink' => '^1.8',
-          ],
-          'conflict' =>
-          [
-            'webflo/drupal-core-require-dev' => '*',
-          ],
-          'extra' =>
-          [
-            'branch-alias' =>
             [
-              'dev-main' => '11.x-dev',
+              'behat/mink' => '^1.8',
             ],
-          ],
+          'conflict' =>
+            [
+              'webflo/drupal-core-require-dev' => '*',
+            ],
+          'extra' =>
+            [
+              'branch-alias' =>
+                [
+                  'dev-main' => '11.x-dev',
+                ],
+            ],
         ],
       ],
 
@@ -84,22 +84,22 @@ class BuilderTest extends TestCase {
           'license' => 'GPL-2.0-or-later',
           'abandoned' => 'drupal/core-dev',
           'require' =>
-          [
-            'drupal/core' => Composer::drupalVersionBranch(),
-            'behat/mink' => 'v1.8.0',
-            'symfony/css-selector' => 'v4.3.5',
-          ],
-          'conflict' =>
-          [
-            'webflo/drupal-core-require-dev' => '*',
-          ],
-          'extra' =>
-          [
-            'branch-alias' =>
             [
-              'dev-main' => '11.x-dev',
+              'drupal/core' => Composer::drupalVersionBranch(),
+              'behat/mink' => 'v1.8.0',
+              'symfony/css-selector' => 'v4.3.5',
             ],
-          ],
+          'conflict' =>
+            [
+              'webflo/drupal-core-require-dev' => '*',
+            ],
+          'extra' =>
+            [
+              'branch-alias' =>
+                [
+                  'dev-main' => '11.x-dev',
+                ],
+            ],
         ],
       ],
 
