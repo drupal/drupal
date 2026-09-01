@@ -43,13 +43,11 @@ class TextHooks {
         $output .= '<dt>' . $this->t('Creating short text fields') . '</dt>';
         $output .= '<dd>' . $this->t('If you choose <em>Text (plain)</em> or <em>Text (formatted)</em> as the field type on the <em>Manage fields</em> page, then a field with a single row is displayed. You can change the maximum text length in the <em>Field settings</em> when you set up the field.') . '</dd>';
         $output .= '<dt>' . $this->t('Creating long text fields') . '</dt>';
-        $output .= '<dd>' . $this->t('If you choose <em>Text (plain, long)</em>, <em>Text (formatted, long)</em>, or <em>Text (formatted, long, with summary)</em> on the <em>Manage fields</em> page, then users can insert text of unlimited length. On the <em>Manage form display</em> page, you can set the number of rows that are displayed to users.') . '</dd>';
+        $output .= '<dd>' . $this->t('If you choose <em>Text (plain, long)</em>, <em>Text (formatted, long)</em> on the <em>Manage fields</em> page, then users can insert text of unlimited length. On the <em>Manage form display</em> page, you can set the number of rows that are displayed to users.') . '</dd>';
         $output .= '<dt>' . $this->t('Trimming the text length') . '</dt>';
         $output .= '<dd>' . $this->t('On the <em>Manage display</em> page you can choose to display a trimmed version of the text, and if so, where to cut off the text.') . '</dd>';
-        $output .= '<dt>' . $this->t('Displaying summaries instead of trimmed text') . '</dt>';
-        $output .= '<dd>' . $this->t('As an alternative to using a trimmed version of the text, you can enter a separate summary by choosing the <em>Text (formatted, long, with summary)</em> field type on the <em>Manage fields</em> page. Even when <em>Summary input</em> is enabled, and summaries are provided, you can display <em>trimmed</em> text nonetheless by choosing the appropriate format on the <em>Manage display</em> page.') . '</dd>';
         $output .= '<dt>' . $this->t('Using text formats and editors') . '</dt>';
-        $output .= '<dd>' . $this->t('If you choose <em>Text (plain)</em> or <em>Text (plain, long)</em> you restrict the input to <em>Plain text</em> only. If you choose <em>Text (formatted)</em>, <em>Text (formatted, long)</em>, or <em>Text (formatted, long with summary)</em> you allow users to write formatted text. Which options are available to individual users depends on the settings on the <a href=":formats">Text formats and editors page</a>.', [':formats' => Url::fromRoute('filter.admin_overview')->toString()]) . '</dd>';
+        $output .= '<dd>' . $this->t('If you choose <em>Text (plain)</em> or <em>Text (plain, long)</em> you restrict the input to <em>Plain text</em> only. If you choose <em>Text (formatted)</em>, or <em>Text (formatted, long)</em> you allow users to write formatted text. Which options are available to individual users depends on the settings on the <a href=":formats">Text formats and editors page</a>.', [':formats' => Url::fromRoute('filter.admin_overview')->toString()]) . '</dd>';
         $output .= '</dl>';
         return $output;
     }

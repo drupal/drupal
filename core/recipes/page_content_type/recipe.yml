@@ -4,6 +4,7 @@ type: 'Content type'
 install:
   - node
   - path
+  - text_with_summary
 config:
   import:
     node:

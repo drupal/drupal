@@ -27,6 +27,7 @@ class MigrateLookupTest extends MigrateTestBase {
     'field',
     'user',
     'text',
+    'text_with_summary',
     'migrate_lookup_test',
   ];
 

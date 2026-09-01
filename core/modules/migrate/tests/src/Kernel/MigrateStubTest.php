@@ -26,6 +26,7 @@ class MigrateStubTest extends MigrateTestBase {
     'field',
     'user',
     'text',
+    'text_with_summary',
     'filter',
     'migrate_stub_test',
   ];

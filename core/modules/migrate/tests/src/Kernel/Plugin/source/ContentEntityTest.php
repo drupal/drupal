@@ -49,6 +49,7 @@ class ContentEntityTest extends KernelTestBase {
     'media',
     'media_test_source',
     'text',
+    'text_with_summary',
     'language',
   ];
 

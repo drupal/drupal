@@ -25,6 +25,8 @@ class MigrateLanguageContentTaxonomyVocabularySettingsTest extends MigrateDrupal
     'content_translation',
     'taxonomy',
     'text',
+    'text_with_summary',
+    'filter',
   ];
 
   /**

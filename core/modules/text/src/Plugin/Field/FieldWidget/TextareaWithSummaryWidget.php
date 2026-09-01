@@ -10,6 +10,12 @@ use Drupal\Core\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'text_textarea_with_summary' widget.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use
+ * \Drupal\text_with_summary\Plugin\Field\FieldWidget\TextareaWithSummaryWidget
+ * instead.
+ *
+ * @see https://www.drupal.org/node/3568381
  */
 #[FieldWidget(
   id: 'text_textarea_with_summary',

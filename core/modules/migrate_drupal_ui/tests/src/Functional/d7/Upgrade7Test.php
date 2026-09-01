@@ -36,6 +36,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     'migrate_drupal_ui',
     'telephone',
     'shortcut',
+    'text_with_summary',
   ];
 
   /**

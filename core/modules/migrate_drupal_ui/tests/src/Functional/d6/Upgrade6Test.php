@@ -36,6 +36,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     'telephone',
     'update',
     'shortcut',
+    'text_with_summary',
   ];
 
   /**

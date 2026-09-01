@@ -6,7 +6,7 @@ dependencies:
     - field.field.node.page.body
     - node.type.page
   module:
-    - text
+    - text_with_summary
     - user
 id: node.page.teaser
 targetEntityType: node

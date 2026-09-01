@@ -75,7 +75,6 @@ class TextFormatterTest extends EntityKernelTestBase {
     $formatters = [
       'text_default',
       'text_trimmed',
-      'text_summary_or_trimmed',
     ];
 
     // Create the entity to be referenced.

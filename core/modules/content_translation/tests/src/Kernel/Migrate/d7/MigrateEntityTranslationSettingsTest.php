@@ -27,6 +27,8 @@ class MigrateEntityTranslationSettingsTest extends MigrateDrupal7TestBase {
     'node',
     'taxonomy',
     'text',
+    'text_with_summary',
+    'filter',
   ];
 
   /**

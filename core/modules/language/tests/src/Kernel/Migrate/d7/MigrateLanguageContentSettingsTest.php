@@ -25,6 +25,8 @@ class MigrateLanguageContentSettingsTest extends MigrateDrupal7TestBase {
   protected static $modules = [
     'node',
     'text',
+    'text_with_summary',
+    'filter',
     'language',
     'content_translation',
     'menu_ui',

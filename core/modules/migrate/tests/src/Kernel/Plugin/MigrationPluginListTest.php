@@ -56,6 +56,7 @@ class MigrationPluginListTest extends KernelTestBase {
     'system',
     'taxonomy',
     'text',
+    'text_with_summary',
     'update',
     'user',
   ];

@@ -24,6 +24,8 @@ class MigrateLanguageContentCommentSettingsTest extends MigrateDrupal7TestBase {
     'content_translation',
     'language',
     'text',
+    'text_with_summary',
+    'filter',
   ];
 
   /**

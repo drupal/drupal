@@ -5,6 +5,7 @@ install:
   - image
   - node
   - path
+  - text_with_summary
 config:
   strict:
     # Treat field storages strictly, since they influence the database layout.

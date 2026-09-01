@@ -34,6 +34,8 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal7TestBase im
     'taxonomy',
     'telephone',
     'text',
+    'text_with_summary',
+    'filter',
   ];
 
   /**

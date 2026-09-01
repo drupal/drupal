@@ -22,7 +22,13 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'text', 'menu_ui'];
+  protected static $modules = [
+    'node',
+    'text',
+    'text_with_summary',
+    'filter',
+    'menu_ui',
+  ];
 
   /**
    * {@inheritdoc}

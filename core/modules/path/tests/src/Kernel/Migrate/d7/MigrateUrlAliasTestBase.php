@@ -24,6 +24,8 @@ abstract class MigrateUrlAliasTestBase extends MigrateDrupal7TestBase {
     'path',
     'path_alias',
     'text',
+    'text_with_summary',
+    'filter',
   ];
 
   /**

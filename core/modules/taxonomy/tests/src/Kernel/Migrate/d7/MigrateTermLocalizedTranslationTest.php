@@ -25,6 +25,8 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal7TestBase {
     'language',
     'taxonomy',
     'text',
+    'text_with_summary',
+    'filter',
   ];
 
   /**

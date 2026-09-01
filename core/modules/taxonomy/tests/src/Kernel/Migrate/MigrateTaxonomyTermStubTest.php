@@ -24,7 +24,13 @@ class MigrateTaxonomyTermStubTest extends MigrateDrupalTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['taxonomy', 'text', 'taxonomy_term_stub_test'];
+  protected static $modules = [
+    'taxonomy',
+    'text',
+    'text_with_summary',
+    'filter',
+    'taxonomy_term_stub_test',
+  ];
 
   /**
    * {@inheritdoc}

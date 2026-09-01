@@ -47,6 +47,8 @@ class SummaryLengthTest extends KernelTestBase {
     'filter',
     'field',
     'text',
+    'text_with_summary',
+    'filter',
   ];
 
   /**

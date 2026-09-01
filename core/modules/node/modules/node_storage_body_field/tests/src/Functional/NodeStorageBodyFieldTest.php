@@ -8,6 +8,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -15,12 +16,13 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('node_storage_body_field')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class NodeStorageBodyFieldTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'text'];
+  protected static $modules = ['field', 'text', 'text_with_summary'];
 
   /**
    * {@inheritdoc}

@@ -22,6 +22,7 @@ class TrackChangesTest extends MigrateTestBase {
     'taxonomy',
     'migrate_track_changes_test',
     'text',
+    'text_with_summary',
   ];
 
   /**

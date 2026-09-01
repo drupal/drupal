@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\editor\Kernel;
+namespace Drupal\Tests\text_with_summary\Kernel;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\editor\Entity\Editor;
@@ -14,13 +14,15 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests tracking of file usage by the Text Editor module.
  */
-#[Group('editor')]
+#[Group('text_with_summary')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class TextWithSummaryFileUsageTest extends EntityKernelTestBase {
 
   use ContentTypeCreationTrait;
@@ -28,7 +30,15 @@ class TextWithSummaryFileUsageTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['editor', 'editor_test', 'node', 'file'];
+  protected static $modules = [
+    'editor',
+    'editor_test',
+    'node',
+    'file',
+    'filter',
+    'text',
+    'text_with_summary',
+  ];
 
   /**
    * {@inheritdoc}

@@ -22,6 +22,7 @@ class MigrateRollbackEntityConfigTest extends MigrateTestBase {
   protected static $modules = [
     'taxonomy',
     'text',
+    'text_with_summary',
     'language',
     'user',
     'system',

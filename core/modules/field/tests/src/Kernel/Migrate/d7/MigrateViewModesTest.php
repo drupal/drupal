@@ -20,7 +20,14 @@ class MigrateViewModesTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['comment', 'node', 'taxonomy', 'text'];
+  protected static $modules = [
+    'comment',
+    'node',
+    'taxonomy',
+    'text',
+    'text_with_summary',
+    'filter',
+  ];
 
   /**
    * {@inheritdoc}

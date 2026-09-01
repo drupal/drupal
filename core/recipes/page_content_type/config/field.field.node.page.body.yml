@@ -5,7 +5,7 @@ dependencies:
     - field.storage.node.body
     - node.type.page
   module:
-    - text
+    - text_with_summary
 id: node.page.body
 field_name: body
 entity_type: node

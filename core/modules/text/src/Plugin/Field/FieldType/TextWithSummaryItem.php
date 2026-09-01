@@ -10,6 +10,11 @@ use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Plugin implementation of the 'text_with_summary' field type.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Use
+ * \Drupal\text_with_summary\Plugin\Field\FieldType\TextWithSummaryItem instead.
+ *
+ * @see https://www.drupal.org/node/3568381
  */
 #[FieldType(
   id: "text_with_summary",

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\node\Kernel;
+namespace Drupal\Tests\text_with_summary\Kernel;
 
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\field\Entity\FieldConfig;
@@ -11,12 +11,14 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests node token replacement for text_with_summary.
  */
-#[Group('node')]
+#[Group('text_with_summary')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class TextWithSummaryTokenReplaceTest extends TokenReplaceKernelTestBase {
 
@@ -25,7 +27,7 @@ class TextWithSummaryTokenReplaceTest extends TokenReplaceKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'filter'];
+  protected static $modules = ['node', 'filter', 'text_with_summary'];
 
   /**
    * {@inheritdoc}

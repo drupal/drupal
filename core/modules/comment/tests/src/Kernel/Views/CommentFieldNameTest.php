@@ -41,6 +41,7 @@ class CommentFieldNameTest extends KernelTestBase {
     'node',
     'system',
     'text',
+    'text_with_summary',
     'user',
     'views',
   ];

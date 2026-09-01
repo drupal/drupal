@@ -30,6 +30,7 @@ class EntityRevisionTest extends MigrateTestBase {
     'node',
     'system',
     'text',
+    'text_with_summary',
     'user',
   ];
 

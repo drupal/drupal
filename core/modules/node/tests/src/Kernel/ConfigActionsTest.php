@@ -24,7 +24,15 @@ class ConfigActionsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'node', 'system', 'text', 'user'];
+  protected static $modules = [
+    'field',
+    'node',
+    'system',
+    'text',
+    'text_with_summary',
+    'filter',
+    'user',
+  ];
 
   /**
    * The configuration action manager.

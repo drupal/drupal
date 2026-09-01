@@ -6,7 +6,7 @@ dependencies:
     - node.type.page
   module:
     - path
-    - text
+    - text_with_summary
 id: node.page.default
 targetEntityType: node
 bundle: page

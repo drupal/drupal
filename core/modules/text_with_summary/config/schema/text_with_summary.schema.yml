@@ -1,0 +1,56 @@
+# This field type has no field storage settings, so no specific config schema type.
+# @see `type: field.storage_settings.*`
+field.field_settings.text_with_summary:
+  type: mapping
+  label: 'Text (formatted, long, with summary) settings'
+  mapping:
+    display_summary:
+      type: boolean
+      label: 'Summary input'
+    required_summary:
+      type: boolean
+      label: 'Require summary'
+    allowed_formats:
+      type: sequence
+      label: 'Allowed text formats'
+      sequence:
+        type: string
+
+field.value.text_with_summary:
+  type: mapping
+  label: 'Default value'
+  mapping:
+    value:
+      type: text
+      label: 'Body'
+    summary:
+      type: string
+      label: 'Summary'
+    format:
+      type: string
+      label: 'Text format'
+
+field.formatter.settings.text_summary_or_trimmed:
+  type: mapping
+  label: 'Summary or trimmed formatted text display format settings'
+  mapping:
+    trim_length:
+      type: integer
+      label: 'Trim length'
+
+field.widget.settings.text_textarea_with_summary:
+  type: mapping
+  label: 'Text area with a summary display format settings'
+  mapping:
+    rows:
+      type: integer
+      label: 'Rows'
+    summary_rows:
+      type: integer
+      label: 'Number of summary rows'
+    placeholder:
+      type: text
+      label: 'Placeholder'
+    show_summary:
+      type: boolean
+      label: 'Always show summary'

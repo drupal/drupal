@@ -29,6 +29,7 @@ trait CreateTestContentEntitiesTrait {
       'system',
       'taxonomy',
       'text',
+      'text_with_summary',
       'user',
     ];
   }

@@ -19,7 +19,7 @@ class RollbackViewModesTest extends MigrateViewModesTest {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['text'];
+  protected static $modules = ['text', 'text_with_summary', 'filter'];
 
   /**
    * Tests migrating D7 view modes, then rolling back.

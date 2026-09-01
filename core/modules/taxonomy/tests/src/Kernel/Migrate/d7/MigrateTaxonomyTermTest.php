@@ -33,6 +33,8 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     'taxonomy',
     'telephone',
     'text',
+    'text_with_summary',
+    'filter',
   ];
 
   /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\text\Kernel;
+namespace Drupal\Tests\text_with_summary\Kernel;
 
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -11,19 +11,21 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests using entity fields of the text summary field type.
  */
-#[Group('text')]
+#[Group('text_with_summary')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class TextWithSummaryItemTest extends FieldKernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['filter'];
+  protected static $modules = ['filter', 'text_with_summary'];
 
   /**
    * Field storage entity.

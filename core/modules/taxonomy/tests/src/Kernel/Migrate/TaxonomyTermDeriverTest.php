@@ -19,7 +19,12 @@ class TaxonomyTermDeriverTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['taxonomy', 'text'];
+  protected static $modules = [
+    'taxonomy',
+    'text',
+    'text_with_summary',
+    'filter',
+  ];
 
   /**
    * Tests fields exist in  process pipeline for term migrations.

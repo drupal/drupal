@@ -27,7 +27,14 @@ class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'node', 'text', 'user'];
+  protected static $modules = [
+    'field',
+    'node',
+    'text',
+    'text_with_summary',
+    'filter',
+    'user',
+  ];
 
   /**
    * {@inheritdoc}

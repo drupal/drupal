@@ -38,6 +38,7 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
     'migrate',
     'system',
     'text',
+    'text_with_summary',
     'user',
   ];
 

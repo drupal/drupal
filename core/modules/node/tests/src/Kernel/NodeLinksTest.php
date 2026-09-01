@@ -33,6 +33,8 @@ class NodeLinksTest extends KernelTestBase {
     'datetime',
     'filter',
     'text',
+    'text_with_summary',
+    'filter',
     'node',
     'views',
   ];

@@ -29,6 +29,8 @@ class NodeTranslationRedirectTest extends MigrateDrupal7TestBase {
     'menu_ui',
     'node',
     'text',
+    'text_with_summary',
+    'filter',
   ];
 
   /**

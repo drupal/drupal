@@ -33,6 +33,8 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
     'menu_link_content',
     'node',
     'text',
+    'text_with_summary',
+    'filter',
   ];
 
   /**

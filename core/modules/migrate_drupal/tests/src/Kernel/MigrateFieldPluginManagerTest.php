@@ -35,6 +35,7 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
     'datetime',
     'image',
     'text',
+    'text_with_summary',
     'link',
     'migrate_field_plugin_manager_test',
   ];

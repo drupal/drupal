@@ -20,7 +20,14 @@ class MigrateCommentFieldInstanceTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'comment', 'text', 'menu_ui'];
+  protected static $modules = [
+    'node',
+    'comment',
+    'text',
+    'text_with_summary',
+    'filter',
+    'menu_ui',
+  ];
 
   /**
    * {@inheritdoc}

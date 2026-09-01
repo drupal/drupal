@@ -26,6 +26,7 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
     'options',
     'telephone',
     'text',
+    'text_with_summary',
   ];
 
   /**

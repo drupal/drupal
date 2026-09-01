@@ -102,7 +102,7 @@ class TextFieldTest extends StringFieldTest {
     $field_storage = FieldStorageConfig::create([
       'field_name' => $text_field_name,
       'entity_type' => 'entity_test',
-      'type' => 'text_with_summary',
+      'type' => 'text_long',
     ]);
     $field_storage->save();
     FieldConfig::create([
@@ -130,7 +130,7 @@ class TextFieldTest extends StringFieldTest {
     $display_repository = \Drupal::service('entity_display.repository');
     $display_repository->getFormDisplay('entity_test', 'entity_test')
       ->setComponent($text_field_name, [
-        'type' => 'text_textarea_with_summary',
+        'type' => 'text_textarea',
       ])
       ->setComponent($file_field_name, [
         'type' => 'file_generic',
