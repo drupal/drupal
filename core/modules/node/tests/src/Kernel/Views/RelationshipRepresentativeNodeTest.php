@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\user\Kernel\Views;
+namespace Drupal\Tests\node\Kernel\Views;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -16,7 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests the representative node relationship for users.
  */
-#[Group('user')]
+#[Group('node')]
 #[RunTestsInSeparateProcesses]
 class RelationshipRepresentativeNodeTest extends KernelTestBase {
 
@@ -30,9 +30,9 @@ class RelationshipRepresentativeNodeTest extends KernelTestBase {
   protected static $modules = [
     'filter',
     'node',
+    'node_test_views',
     'system',
     'user',
-    'user_test_views',
     'views',
   ];
 
@@ -50,7 +50,7 @@ class RelationshipRepresentativeNodeTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installConfig(['filter']);
-    ViewTestData::createTestViews(static::class, ['user_test_views']);
+    ViewTestData::createTestViews(static::class, ['node_test_views']);
 
     $users[] = $this->createUser([], NULL, FALSE, ['uid' => 2]);
     $users[] = $this->createUser([], NULL, FALSE, ['uid' => 1]);
