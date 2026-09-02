@@ -9,10 +9,10 @@
     "require": {
         "php": ">=8.5.0",
         "doctrine/lexer": "^3",
-        "drupal/core-class-finder": "12.0.0-alpha1",
-        "drupal/core-file-cache": "12.0.0-alpha1",
-        "drupal/core-plugin": "12.0.0-alpha1",
-        "drupal/core-utility": "12.0.0-alpha1"
+        "drupal/core-class-finder": "12.x-dev",
+        "drupal/core-file-cache": "12.x-dev",
+        "drupal/core-plugin": "12.x-dev",
+        "drupal/core-utility": "12.x-dev"
     },
     "autoload": {
         "psr-4": {
@@ -24,5 +24,5 @@
             "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
         ]
     },
-    "minimum-stability": "alpha"
+    "minimum-stability": "dev"
 }
