@@ -1600,7 +1600,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // Field values in default language are stored with
       // LanguageInterface::LANGCODE_DEFAULT as key.
       $langcode = LanguageInterface::LANGCODE_DEFAULT;
-      if ($this->langcodeKey && isset($default_langcodes[$value_key]) && $row[$base_langcode_alias] != $default_langcodes[$value_key]) {
+      if ($this->langcodeKey && empty($row[$this->defaultLangcodeKey]) && isset($default_langcodes[$value_key]) && $row[$base_langcode_alias] != $default_langcodes[$value_key]) {
         $langcode = $row[$base_langcode_alias];
       }
 
