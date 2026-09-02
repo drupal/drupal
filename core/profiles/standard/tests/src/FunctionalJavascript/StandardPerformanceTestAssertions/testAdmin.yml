@@ -48,6 +48,6 @@ CacheTagGroupedLookups:
     - 'config:user.role.authenticated'
     - 'user:3'
 ScriptCount: 8
-ScriptBytes: 141667
+ScriptBytes: 141752
 StylesheetCount: 3
 StylesheetBytes: 43668
