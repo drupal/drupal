@@ -1,0 +1,7 @@
+name: Hook test single module invokes
+type: module
+description: 'Test module used to test module handler invoke.'
+package: Testing
+version: VERSION
+core_version_requirement: '*'
+hidden: true

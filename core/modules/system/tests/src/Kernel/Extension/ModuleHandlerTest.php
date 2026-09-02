@@ -398,6 +398,49 @@ class ModuleHandlerTest extends KernelTestBase {
   }
 
   /**
+   * Tests invoke works for multiple implementations that can be merged.
+   */
+  public function testInvokeWithMergeable(): void {
+    $this->moduleInstaller()->install(['hook_single_invoke']);
+
+    $expected = [
+      'Drupal\hook_single_invoke\Hook\TestHookInvoke::hookInvokeSingleArrayOne',
+      'Drupal\hook_single_invoke\Hook\TestHookInvoke::hookInvokeSingleArrayTwo',
+    ];
+    $this->assertEquals($expected, $this->moduleHandler()->invoke('hook_single_invoke', 'custom_hook_invoke_array', args: [TRUE]));
+
+    $expected = [
+      'Drupal\hook_single_invoke\Hook\TestHookInvoke::hookInvokeSingleArrayObjectOne',
+      'Drupal\hook_single_invoke\Hook\TestHookInvoke::hookInvokeSingleArrayObjectTwo',
+    ];
+    $this->assertEquals($expected, $this->moduleHandler()->invoke('hook_single_invoke', 'custom_hook_invoke_array_object', args: [TRUE]));
+  }
+
+  /**
+   * Tests invoke fails for multiple implementations that cannot be merged.
+   */
+  public function testInvokeWithNotMergeableString(): void {
+    $this->moduleInstaller()->install(['hook_single_invoke']);
+
+    $expected_exception_message = 'Module hook_single_invoke should not implement custom_hook_invoke_string more than once.';
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage($expected_exception_message);
+    $this->moduleHandler()->invoke('hook_single_invoke', 'custom_hook_invoke_string', args: [TRUE]);
+  }
+
+  /**
+   * Tests invoke fails for multiple implementations that cannot be merged.
+   */
+  public function testInvokeWithNotMergeableClass(): void {
+    $this->moduleInstaller()->install(['hook_single_invoke']);
+
+    $expected_exception_message = 'Module hook_single_invoke should not implement custom_hook_invoke_class more than once.';
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage($expected_exception_message);
+    $this->moduleHandler()->invoke('hook_single_invoke', 'custom_hook_invoke_class', args: [TRUE]);
+  }
+
+  /**
    * Returns the ModuleHandler.
    *
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
