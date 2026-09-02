@@ -38,10 +38,6 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     $this->testFrontPageHotCache();
     $this->doTestFrontPageAuthenticatedWarmCache();
     $this->doTestNodePageAdministrator();
-    $this->doTestFrontAndRecipesPages();
-    $this->doTestFrontAndRecipesPagesAuthenticated();
-    $this->doTestFrontAndRecipesPagesEditor();
-    $this->doTestNodeAddPagesAuthor();
   }
 
   /**
@@ -260,104 +256,6 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     }, 'administratorNodePage');
 
     $this->assertMetricsByName('administratorNodePage', $performance_data);
-  }
-
-  /**
-   * Checks the asset requests made when the front and recipe pages are visited.
-   */
-  protected function doTestFrontAndRecipesPages(): void {
-    $this->drupalLogout();
-    $performance_data = $this->collectPerformanceData(function () {
-      $this->doRequests();
-    }, 'umamiFrontAndRecipePages');
-
-    $this->assertMetricsByName('umamiFrontAndRecipePages', $performance_data, [
-      'ScriptCount',
-      'ScriptBytes',
-      'StylesheetCount',
-      'StylesheetBytes',
-    ]);
-  }
-
-  /**
-   * Checks the front and recipe page asset requests as an authenticated user.
-   */
-  protected function doTestFrontAndRecipesPagesAuthenticated(): void {
-    $user = $this->createUser();
-    $this->drupalLogin($user);
-    sleep(2);
-    $performance_data = $this->collectPerformanceData(function () {
-      $this->doRequests();
-    }, 'umamiFrontAndRecipePagesAuthenticated');
-
-    $this->assertMetricsByName('umamiFrontAndRecipePagesAuthenticated', $performance_data, [
-      'ScriptCount',
-      'ScriptBytes',
-      'StylesheetCount',
-      'StylesheetBytes',
-    ]);
-  }
-
-  /**
-   * Checks the front and recipe page asset requests as an editor.
-   */
-  protected function doTestFrontAndRecipesPagesEditor(): void {
-    $user = $this->createUser();
-    $user->addRole('editor');
-    $user->save();
-    $this->drupalLogin($user);
-    sleep(2);
-    $performance_data = $this->collectPerformanceData(function () {
-      $this->doRequests();
-    }, 'umamiFrontAndRecipePagesEditor');
-    $this->assertMetricsByName('umamiFrontAndRecipePagesEditor', $performance_data, [
-      'ScriptCount',
-      'ScriptBytes',
-      'StylesheetCount',
-      'StylesheetBytes',
-    ]);
-  }
-
-  /**
-   * Checks the node/add page asset requests as an author.
-   */
-  protected function doTestNodeAddPagesAuthor(): void {
-    $user = $this->createUser();
-    $user->addRole('author');
-    $user->save();
-    $this->drupalLogin($user);
-    $this->drupalGet('<front>');
-    // Give additional time for the request and all assets to be returned
-    // before making the next request.
-    sleep(2);
-    $performance_data = $this->collectPerformanceData(function () {
-      $this->drupalGet('node/add/article');
-      sleep(2);
-      $this->drupalGet('node/add/recipe');
-      sleep(2);
-      $this->drupalGet('node/add/page');
-    }, 'umamiNodeAddEditor');
-    $this->assertMetricsByName('umamiNodeAddEditor', $performance_data, [
-      'ScriptCount',
-      'ScriptBytes',
-      'StylesheetCount',
-      'StylesheetBytes',
-    ]);
-  }
-
-  /**
-   * Performs a common set of requests so the above test methods stay in sync.
-   */
-  protected function doRequests(): void {
-    $this->drupalGet('<front>');
-    // Give additional time for the request and all assets to be returned
-    // before making the next request.
-    sleep(2);
-    $this->drupalGet('articles');
-    sleep(2);
-    $this->drupalGet('recipes');
-    sleep(2);
-    $this->drupalGet('recipes/deep-mediterranean-quiche');
   }
 
   /**

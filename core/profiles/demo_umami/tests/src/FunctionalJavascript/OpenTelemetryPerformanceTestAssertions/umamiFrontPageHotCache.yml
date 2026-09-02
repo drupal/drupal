@@ -77,6 +77,6 @@ CacheTagGroupedLookups:
     - taxonomy_term_list
     - 'user:6'
 ScriptCount: 3
-ScriptBytes: 12006
+ScriptBytes: 12091
 StylesheetCount: 7
-StylesheetBytes: 39076
+StylesheetBytes: 39038

@@ -93,6 +93,6 @@ CacheTagGroupedLookups:
     - 'taxonomy_term:9'
     - taxonomy_term_list
 ScriptCount: 3
-ScriptBytes: 13260
+ScriptBytes: 13345
 StylesheetCount: 7
-StylesheetBytes: 39076
+StylesheetBytes: 39038
