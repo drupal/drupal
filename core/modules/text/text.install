@@ -6,7 +6,7 @@
  */
 
 /**
- * Installs the text_with_summary module when text_with_summary fields exist.
+ * Implements hook_update_last_removed().
  */
 function text_update_12001(): void {
   if (\Drupal::moduleHandler()->moduleExists('text_with_summary')) {
