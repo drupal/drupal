@@ -692,16 +692,11 @@ trait PerformanceTestTrait {
     array $expected,
     PerformanceData $performance_data,
   ): void {
-    // Allow those metrics to have a range of +/- 500 bytes, so small changes
-    // are not significant enough to break tests.
-    $assertRange = [
-      'ScriptBytes',
-      'StylesheetBytes',
-    ];
     $values = [];
     foreach ($expected as $name => $metric) {
-      if (in_array($name, $assertRange)) {
-        $this->assertCountBetween($metric - 2000, $metric + 2000, $performance_data->{"get$name"}(), "Asserting $name");
+      if (str_ends_with($name, 'Bytes')) {
+        $tolerance = $this->calculateAllowedByteTolerance($metric);
+        $this->assertCountBetween($metric - $tolerance, $metric + $tolerance, $performance_data->{"get$name"}(), "Asserting $name");
         unset($expected[$name]);
       }
       else {
@@ -710,6 +705,22 @@ trait PerformanceTestTrait {
     }
     $this->assertSame($expected, $values);
 
+  }
+
+  /**
+   * Returns how much a bytes metric is allowed to vary without failing.
+   *
+   * A range of bytes is allowed so that minor changes to CSS/JS files are
+   * possible without requiring performance test updates.
+   *
+   * @param int $bytes
+   *   The number of bytes.
+   *
+   * @return int
+   *   2000 or 20% of the bytes, if that is lower.
+   */
+  public function calculateAllowedByteTolerance(int $bytes): int {
+    return (int) min($bytes * .2, 2000);
   }
 
   /**
@@ -820,7 +831,18 @@ trait PerformanceTestTrait {
 
     if (empty($content) || $this->shouldUpdate()) {
       foreach ($expected as $name => $metric) {
-        $expected[$name] = $performance_data->{"get$name"}();
+        $new_metrics = $performance_data->{"get$name"}();
+        if (str_ends_with($name, 'Bytes')) {
+          // Update byte metrics only if they differ from the current
+          // value by more than the allowed tolerance.
+          $tolerance = $this->calculateAllowedByteTolerance($metric);
+          if (abs($metric - $new_metrics) > $tolerance) {
+            $expected[$name] = $new_metrics;
+          }
+        }
+        else {
+          $expected[$name] = $new_metrics;
+        }
       }
       file_put_contents($filename, Yaml::encode($expected));
     }
