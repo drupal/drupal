@@ -49,7 +49,7 @@ class AjaxRenderer implements MainContentRendererInterface {
     $response = new AjaxResponse();
 
     $html = $this->renderer->renderRoot($main_content);
-    $response->setAttachments($main_content['#attached']);
+    $response->setAttachments($main_content['#attached'] ?? []);
 
     // The selector for the insert command is NULL as the new content will
     // replace the element making the Ajax call. The default 'replaceWith'
