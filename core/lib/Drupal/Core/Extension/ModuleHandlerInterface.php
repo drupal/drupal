@@ -242,6 +242,9 @@ interface ModuleHandlerInterface {
   /**
    * Invokes a hook in a particular module.
    *
+   * This will execute multiple implementations as long as all returned values
+   * are void or an array. Arrays will be merged with NestedArray::mergeDeep.
+   *
    * @param string $module
    *   The name of the module (without the .module extension).
    * @param string $hook

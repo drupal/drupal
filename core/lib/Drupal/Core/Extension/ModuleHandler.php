@@ -349,7 +349,20 @@ class ModuleHandler implements ModuleHandlerInterface {
     $listeners = $list->getForModule($module);
     if ($listeners) {
       if (count($listeners) > 1) {
-        throw new \LogicException("Module $module should not implement $hook more than once");
+        $results = [];
+        foreach ($listeners as $listener) {
+          $result = $listener(...$args);
+          if ($result === NULL) {
+            continue;
+          }
+          if (!is_array($result) && !($result instanceof \ArrayObject)) {
+            // If the result is not an array and there is more than one
+            // implementation for the module we cannot merge the results.
+            throw new \LogicException("Module $module should not implement $hook more than once.");
+          }
+          $results = NestedArray::mergeDeep($results, $result);
+        }
+        return $results;
       }
       return reset($listeners)(... $args);
     }
