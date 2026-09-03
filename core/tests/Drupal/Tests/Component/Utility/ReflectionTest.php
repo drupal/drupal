@@ -57,7 +57,7 @@ class ReflectionTest extends TestCase {
    * Note the capital P in Parent is intentional and for testing purposes.
    */
   // phpcs:disable Generic.PHP.LowerCaseKeyword.Found
-  protected function existsForTesting(string $string, array $array, ReflectionTest $test, Reflection $reflection, Parent $parent, self $self) {
+  protected function existsForTesting(string $string, array $array, ReflectionTest $test, Reflection $reflection, Parent $parent, self $self): void {
   }
 
   // phpcs:enable

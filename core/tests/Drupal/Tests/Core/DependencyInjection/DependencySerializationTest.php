@@ -88,7 +88,7 @@ class DependencySerializationTestDummy {
   /**
    * Gets the stored service IDs.
    */
-  public function getServiceIds() {
+  public function getServiceIds(): array {
     return $this->_serviceIds;
   }
 

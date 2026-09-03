@@ -64,6 +64,7 @@ class FileCacheFactoryTest extends TestCase {
    * Tests get no prefix.
    */
   public function testGetNoPrefix(): void {
+    // @phpstan-ignore argument.type
     FileCacheFactory::setPrefix(NULL);
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Required prefix configuration is missing');

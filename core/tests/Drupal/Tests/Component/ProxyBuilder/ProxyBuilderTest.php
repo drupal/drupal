@@ -425,6 +425,7 @@ class TestServiceNoMethod {
  */
 class TestServiceSimpleMethod {
 
+  // @phpstan-ignore missingType.return
   public function method() {
 
   }
@@ -436,6 +437,7 @@ class TestServiceSimpleMethod {
  */
 class TestServiceMethodWithParameter {
 
+  // @phpstan-ignore missingType.return
   public function methodWithParameter($parameter) {
 
   }
@@ -480,6 +482,7 @@ class TestServiceMethodReturnsVoid {
  */
 class TestServiceReturnReference {
 
+  // @phpstan-ignore missingType.return
   public function &returnReference() {
 
   }
@@ -491,6 +494,7 @@ class TestServiceReturnReference {
  */
 interface TestInterface {
 
+  // @phpstan-ignore missingType.return
   public function testMethod($parameter);
 
 }
@@ -500,6 +504,7 @@ interface TestInterface {
  */
 class TestServiceWithInterface implements TestInterface {
 
+  // @phpstan-ignore missingType.return
   public function testMethod($parameter) {
 
   }
@@ -511,14 +516,17 @@ class TestServiceWithInterface implements TestInterface {
  */
 class TestServiceWithProtectedMethods {
 
+  // @phpstan-ignore missingType.return
   public function testMethod($parameter) {
 
   }
 
+  // @phpstan-ignore missingType.return
   protected function protectedMethod($parameter) {
 
   }
 
+  // @phpstan-ignore missingType.return
   protected function privateMethod($parameter) {
 
   }
@@ -530,6 +538,7 @@ class TestServiceWithProtectedMethods {
  */
 class TestServiceWithPublicStaticMethod {
 
+  // @phpstan-ignore missingType.return
   public static function testMethod($parameter) {
   }
 

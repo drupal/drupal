@@ -92,20 +92,20 @@ class ConfigFactoryOverrideBaseTest extends UnitTestCase {
  */
 class TestConfigFactoryOverrideBase extends ConfigFactoryOverrideBase {
 
-  public function doFilterNestedArray(array $original_data, array &$override_data) {
+  public function doFilterNestedArray(array $original_data, array &$override_data): bool {
     return $this->filterNestedArray($original_data, $override_data);
   }
 
-  public function addCollections(ConfigCollectionInfo $collection_info) {
+  public function addCollections(ConfigCollectionInfo $collection_info): void {
   }
 
-  public function onConfigSave(ConfigCrudEvent $event) {
+  public function onConfigSave(ConfigCrudEvent $event): void {
   }
 
-  public function onConfigDelete(ConfigCrudEvent $event) {
+  public function onConfigDelete(ConfigCrudEvent $event): void {
   }
 
-  public function onConfigRename(ConfigRenameEvent $event) {
+  public function onConfigRename(ConfigRenameEvent $event): void {
   }
 
 }

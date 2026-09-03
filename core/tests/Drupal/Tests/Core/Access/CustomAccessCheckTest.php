@@ -6,6 +6,8 @@ namespace Drupal\Tests\Core\Access;
 
 use Drupal\Core\Access\AccessArgumentsResolverFactoryInterface;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Access\CustomAccessCheck;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -117,19 +119,19 @@ class CustomAccessCheckTest extends UnitTestCase {
  */
 class TestController {
 
-  public function accessAllow() {
+  public function accessAllow(): AccessResultAllowed {
     return AccessResult::allowed();
   }
 
-  public function accessDeny() {
+  public function accessDeny(): AccessResultNeutral {
     return AccessResult::neutral();
   }
 
-  public function accessParameter($parameter) {
+  public function accessParameter($parameter): AccessResult {
     return AccessResult::allowedIf($parameter == 'TRUE');
   }
 
-  public function accessRequest(Request $request) {
+  public function accessRequest(Request $request): AccessResult {
     return AccessResult::allowedIf($request->query->get('example') === 'muh');
   }
 

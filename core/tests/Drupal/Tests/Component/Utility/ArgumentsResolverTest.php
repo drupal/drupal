@@ -152,11 +152,12 @@ class ArgumentsResolverTest extends TestCase {
   }
 
   /**
-   * Tests handleUnresolvedArgument() for a scalar argument.
+   * Tests handleUnresolvedArgument() for a non-upcasted argument.
    */
   public function testHandleNotUpcastedArgument(): void {
     $objects = ['foo' => 'bar'];
     $scalars = ['foo' => 'baz'];
+    // @phpstan-ignore argument.type
     $resolver = new ArgumentsResolver($scalars, $objects, []);
 
     $callable = function (\stdClass $foo): void {};
@@ -194,7 +195,7 @@ class ArgumentsResolverTest extends TestCase {
  */
 class TestClass {
 
-  public function access($foo) {
+  public function access($foo): void {
   }
 
 }
@@ -204,7 +205,7 @@ class TestClass {
  */
 class TestStaticMethodClass {
 
-  public static function access($foo) {
+  public static function access($foo): void {
   }
 
 }

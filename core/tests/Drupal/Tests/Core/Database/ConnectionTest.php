@@ -546,23 +546,21 @@ class ConnectionTest extends UnitTestCase {
 
   /**
    * Tests identifier quotes assert count.
-   *
-   * @legacy-covers ::__construct
    */
   public function testIdentifierQuotesAssertCount(): void {
     $this->expectException(\AssertionError::class);
     $this->expectExceptionMessageIs('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
+    // @phpstan-ignore argument.type
     new StubConnection($this->createStub(\PDO::class), [], ['"']);
   }
 
   /**
    * Tests identifier quotes assert string.
-   *
-   * @legacy-covers ::__construct
    */
   public function testIdentifierQuotesAssertString(): void {
     $this->expectException(\AssertionError::class);
     $this->expectExceptionMessageIs('\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
+    // @phpstan-ignore argument.type
     new StubConnection($this->createStub(\PDO::class), [], [0, '1']);
   }
 

@@ -33,14 +33,9 @@ class AccessAwareRouterTest extends UnitTestCase {
   protected RouterInterface&MockObject $router;
 
   /**
-   * @var \Symfony\Component\Routing\Route
+   * The route.
    */
-  protected $route;
-
-  /**
-   * @var \Drupal\Core\Routing\Router|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $coreRouter;
+  protected Route $route;
 
   /**
    * The access manager.
@@ -53,9 +48,9 @@ class AccessAwareRouterTest extends UnitTestCase {
   protected AccountInterface&Stub $currentUser;
 
   /**
-   * @var \Drupal\Core\Routing\AccessAwareRouter
+   * The access aware router.
    */
-  protected $accessAwareRouter;
+  protected AccessAwareRouter $accessAwareRouter;
 
   /**
    * {@inheritdoc}
@@ -175,6 +170,6 @@ interface MockRouterInterface extends RouterInterface {
    * @param \Symfony\Component\Routing\RouterInterface $router
    *   The mocked router.
    */
-  public function add(RouterInterface $router);
+  public function add(RouterInterface $router): static;
 
 }

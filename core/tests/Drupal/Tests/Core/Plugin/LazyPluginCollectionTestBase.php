@@ -81,7 +81,7 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
    *   called. For example, $this->once(), $this->exactly(6). Defaults to
    *   $this->never().
    */
-  protected function setupPluginCollection(?InvocationOrder $create_count = NULL) {
+  protected function setupPluginCollection(?InvocationOrder $create_count = NULL): void {
     $this->setUpMockPluginManager();
 
     $this->pluginInstances = [];

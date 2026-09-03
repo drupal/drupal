@@ -25,7 +25,7 @@ class StubSchema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
-  public function renameTable($table, $new_name) {
+  public function renameTable($table, $new_name): void {
   }
 
   /**
@@ -38,7 +38,7 @@ class StubSchema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
-  public function addField($table, $field, $spec, $keys_new = []) {
+  public function addField($table, $field, $spec, $keys_new = []): void {
   }
 
   /**
@@ -58,7 +58,7 @@ class StubSchema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
-  public function addPrimaryKey($table, $fields) {
+  public function addPrimaryKey($table, $fields): void {
   }
 
   /**
@@ -71,7 +71,7 @@ class StubSchema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
-  public function addUniqueKey($table, $name, $fields) {
+  public function addUniqueKey($table, $name, $fields): void {
   }
 
   /**
@@ -84,7 +84,7 @@ class StubSchema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
-  public function addIndex($table, $name, $fields, array $spec) {
+  public function addIndex($table, $name, $fields, array $spec): void {
   }
 
   /**
@@ -97,7 +97,7 @@ class StubSchema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
-  public function changeField($table, $field, $field_new, $spec, $keys_new = []) {
+  public function changeField($table, $field, $field_new, $spec, $keys_new = []): void {
   }
 
 }

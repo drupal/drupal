@@ -55,6 +55,6 @@ class AnnotationBaseStub extends AnnotationBase {
   /**
    * {@inheritdoc}
    */
-  public function get() {}
+  public function get(): void {}
 
 }

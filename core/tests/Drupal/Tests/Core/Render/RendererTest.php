@@ -1197,6 +1197,7 @@ class RendererTest extends RendererTestBase {
       foreach ([0, 1] as $key) {
         $fibers[] = new \Fiber(static fn (): MarkupInterface|string => $fiber_callback());
       }
+      $fiber = NULL;
       while ($fibers) {
         foreach ($fibers as $key => $fiber) {
           if ($fiber->isTerminated()) {
@@ -1211,7 +1212,7 @@ class RendererTest extends RendererTestBase {
           }
         }
       }
-      return $fiber->getReturn();
+      return $fiber?->getReturn();
     });
     $this->assertEquals(Markup::create('foo'), $return);
   }
@@ -1242,11 +1243,11 @@ class TestAccessClass implements TrustedCallbackInterface {
     return FALSE;
   }
 
-  public static function accessResultAllowed() {
+  public static function accessResultAllowed(): AccessResultAllowed {
     return AccessResult::allowed();
   }
 
-  public static function accessResultForbidden() {
+  public static function accessResultForbidden(): AccessResultForbidden {
     return AccessResult::forbidden();
   }
 

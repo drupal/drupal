@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Icon;
 
-// cspell:ignore corge grault garply quux plugh
+// cspell:ignore corge grault garply quux plugh errfile errline
 
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Theme\Icon\IconFinder;
@@ -780,8 +780,9 @@ class IconFinderTest extends UnitTestCase {
     // PHPUnit cannot expect warnings, so we have to catch them ourselves.
     // Thanks to: Drupal\Tests\Component\PhpStorage\FileStorageTest.
     $messages = [];
-    set_error_handler(function (int $errno, string $errstr) use (&$messages): void {
+    set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline) use (&$messages): bool {
       $messages[] = [$errno, $errstr];
+      return TRUE;
     });
 
     $iconFinder = new IconFinder(

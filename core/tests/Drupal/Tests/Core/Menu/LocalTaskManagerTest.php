@@ -131,14 +131,14 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->willReturn($definitions);
 
-    $mock_plugin = $this->createStub(LocalTaskInterface::class);
+    $pluginStub = $this->createStub(LocalTaskInterface::class);
 
-    $this->setupFactory($mock_plugin);
+    $this->setupFactory($pluginStub);
     $this->setupLocalTaskManager();
 
     $local_tasks = $this->manager->getLocalTasksForRoute('menu_local_task_test_tasks_view');
 
-    $result = $this->getLocalTasksForRouteResult($mock_plugin);
+    $result = $this->getLocalTasksForRouteResult($pluginStub);
 
     $this->assertEquals($result, $local_tasks);
   }
@@ -155,14 +155,14 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->willReturn($definitions);
 
-    $mock_plugin = $this->createStub(LocalTaskInterface::class);
+    $pluginStub = $this->createStub(LocalTaskInterface::class);
 
-    $this->setupFactory($mock_plugin);
+    $this->setupFactory($pluginStub);
     $this->setupLocalTaskManager();
 
     $local_tasks = $this->manager->getLocalTasksForRoute('menu_local_task_test_tasks_child1_page');
 
-    $result = $this->getLocalTasksForRouteResult($mock_plugin);
+    $result = $this->getLocalTasksForRouteResult($pluginStub);
 
     $this->assertEquals($result, $local_tasks);
   }
@@ -177,12 +177,12 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->willReturn($definitions);
 
-    $mock_plugin = $this->createStub(LocalTaskInterface::class);
-    $this->setupFactory($mock_plugin);
+    $pluginStub = $this->createStub(LocalTaskInterface::class);
+    $this->setupFactory($pluginStub);
 
     $this->setupLocalTaskManager();
 
-    $result = $this->getLocalTasksForRouteResult($mock_plugin);
+    $result = $this->getLocalTasksForRouteResult($pluginStub);
 
     $this->cacheBackend->get('local_task_plugins:en:menu_local_task_test_tasks_view')
       ->shouldBeCalled();
@@ -205,8 +205,8 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->pluginDiscovery->expects($this->never())
       ->method('getDefinitions');
 
-    $mock_plugin = $this->createStub(LocalTaskInterface::class);
-    $this->setupFactory($mock_plugin);
+    $pluginStub = $this->createStub(LocalTaskInterface::class);
+    $this->setupFactory($pluginStub);
 
     $this->setupLocalTaskManager();
 
@@ -218,7 +218,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->cacheBackend->set()
       ->shouldNotBeCalled();
 
-    $result = $this->getLocalTasksForRouteResult($mock_plugin);
+    $result = $this->getLocalTasksForRouteResult($pluginStub);
     $local_tasks = $this->manager->getLocalTasksForRoute('menu_local_task_test_tasks_view');
     $this->assertEquals($result, $local_tasks);
   }
@@ -333,13 +333,13 @@ class LocalTaskManagerTest extends UnitTestCase {
   /**
    * Setups the plugin factory with some local task plugins.
    *
-   * @param \PHPUnit\Framework\MockObject\MockObject $mock_plugin
-   *   The mock plugin.
+   * @param \Drupal\Core\Menu\LocalTaskInterface|\PHPUnit\Framework\MockObject\Stub $pluginStub
+   *   The stubbed plugin.
    */
-  protected function setupFactory($mock_plugin): void {
+  protected function setupFactory(LocalTaskInterface&Stub $pluginStub): void {
     $map = [];
     foreach ($this->getLocalTaskFixtures() as $info) {
-      $map[] = [$info['id'], [], $mock_plugin];
+      $map[] = [$info['id'], [], $pluginStub];
     }
     $this->factory
       ->method('createInstance')
@@ -349,22 +349,22 @@ class LocalTaskManagerTest extends UnitTestCase {
   /**
    * Returns an expected result for getLocalTasksForRoute.
    *
-   * @param \PHPUnit\Framework\MockObject\MockObject $mock_plugin
-   *   The mock plugin.
+   * @param \Drupal\Core\Menu\LocalTaskInterface|\PHPUnit\Framework\MockObject\Stub $pluginStub
+   *   The stubbed plugin.
    *
    * @return array
    *   The expected result, keyed by local task level.
    */
-  protected function getLocalTasksForRouteResult($mock_plugin): array {
+  protected function getLocalTasksForRouteResult(LocalTaskInterface&Stub $pluginStub): array {
     return [
       0 => [
-        'menu_local_task_test_tasks_settings' => $mock_plugin,
-        'menu_local_task_test_tasks_view.tab' => $mock_plugin,
-        'menu_local_task_test_tasks_edit' => $mock_plugin,
+        'menu_local_task_test_tasks_settings' => $pluginStub,
+        'menu_local_task_test_tasks_view.tab' => $pluginStub,
+        'menu_local_task_test_tasks_edit' => $pluginStub,
       ],
       1 => [
-        'menu_local_task_test_tasks_view_child1' => $mock_plugin,
-        'menu_local_task_test_tasks_view_child2' => $mock_plugin,
+        'menu_local_task_test_tasks_view_child1' => $pluginStub,
+        'menu_local_task_test_tasks_view_child2' => $pluginStub,
       ],
     ];
   }

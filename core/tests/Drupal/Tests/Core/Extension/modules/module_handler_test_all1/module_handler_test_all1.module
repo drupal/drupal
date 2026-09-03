@@ -10,6 +10,6 @@ declare(strict_types=1);
 /**
  * Returns an array to test nested merge in invoke all.
  */
-function module_handler_test_all1_hook($arg) {
+function module_handler_test_all1_hook($arg): array {
   return [$arg];
 }

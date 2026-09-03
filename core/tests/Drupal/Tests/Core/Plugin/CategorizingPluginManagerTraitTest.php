@@ -128,6 +128,7 @@ class CategorizingPluginManager extends DefaultPluginManager implements Categori
    * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
    *   The module extension list.
    */
+  // @phpstan-ignore pluginManagerSetsCacheBackend.missingCacheBackend
   public function __construct(ModuleHandlerInterface $module_handler, ModuleExtensionList $module_extension_list) {
     $this->moduleHandler = $module_handler;
     $this->moduleExtensionList = $module_extension_list;

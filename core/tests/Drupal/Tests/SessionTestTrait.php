@@ -13,10 +13,8 @@ trait SessionTestTrait {
 
   /**
    * The name of the session cookie.
-   *
-   * @var string
    */
-  protected $sessionName;
+  protected string $sessionName;
 
   /**
    * Generates a session cookie name.
@@ -24,7 +22,7 @@ trait SessionTestTrait {
    * @param string $data
    *   The data to generate session name.
    */
-  protected function generateSessionName($data) {
+  protected function generateSessionName($data): void {
     $prefix = (Request::createFromGlobals()->isSecure() ? 'SSESS' : 'SESS');
     $this->sessionName = $prefix . substr(hash('sha256', $data), 0, 32);
   }
@@ -35,7 +33,7 @@ trait SessionTestTrait {
    * @return string
    *   The name of the session cookie.
    */
-  protected function getSessionName() {
+  protected function getSessionName(): string {
     return $this->sessionName;
   }
 

@@ -976,7 +976,7 @@ class ContainerTest extends TestCase {
   /**
    * Helper function to return a service definition.
    */
-  protected function getServiceCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+  protected function getServiceCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE): \stdClass|string {
     return (object) [
       'type' => 'service',
       'id' => $id,
@@ -987,7 +987,7 @@ class ContainerTest extends TestCase {
   /**
    * Helper function to return a service closure definition.
    */
-  protected function getServiceClosureCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+  protected function getServiceClosureCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE): \stdClass {
     return (object) [
       'type' => 'service_closure',
       'id' => $id,
@@ -998,7 +998,7 @@ class ContainerTest extends TestCase {
   /**
    * Helper function to return a service iterator.
    */
-  protected function getIterator($iterator) {
+  protected function getIterator($iterator): \stdClass {
     return (object) [
       'type' => 'iterator',
       'value' => $iterator,
@@ -1008,7 +1008,7 @@ class ContainerTest extends TestCase {
   /**
    * Helper function to return a parameter definition.
    */
-  protected function getParameterCall($name) {
+  protected function getParameterCall($name): \stdClass|string {
     return (object) [
       'type' => 'parameter',
       'name' => $name,
@@ -1018,7 +1018,7 @@ class ContainerTest extends TestCase {
   /**
    * Helper function to return a private service definition.
    */
-  protected function getPrivateServiceCall($id, $service_definition, $shared = FALSE) {
+  protected function getPrivateServiceCall($id, $service_definition, $shared = FALSE): \stdClass {
     if (!$id) {
       $hash = Crypt::hashBase64(serialize($service_definition));
       $id = 'private__' . $hash;
@@ -1034,7 +1034,7 @@ class ContainerTest extends TestCase {
   /**
    * Helper function to return a machine-optimized collection.
    */
-  protected function getCollection($collection, $resolve = TRUE) {
+  protected function getCollection($collection, $resolve = TRUE): \stdClass|array {
     return (object) [
       'type' => 'collection',
       'value' => $collection,
@@ -1045,7 +1045,7 @@ class ContainerTest extends TestCase {
   /**
    * Helper function to return a raw value definition.
    */
-  protected function getRaw($value) {
+  protected function getRaw($value): \stdClass {
     return (object) [
       'type' => 'raw',
       'value' => $value,
@@ -1065,7 +1065,7 @@ interface MockConfiguratorInterface {
    * @param object $service
    *   The service to configure.
    */
-  public function configureService($service);
+  public function configureService($service): null;
 
 }
 

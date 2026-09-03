@@ -1135,9 +1135,9 @@ class TestForm implements FormInterface {
     return FormBuilderTest::buildTestFormStructure();
   }
 
-  public function validateForm(array &$form, FormStateInterface $form_state) {}
+  public function validateForm(array &$form, FormStateInterface $form_state): void {}
 
-  public function submitForm(array &$form, FormStateInterface $form_state) {}
+  public function submitForm(array &$form, FormStateInterface $form_state): void {}
 
 }
 

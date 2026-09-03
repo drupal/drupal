@@ -39,6 +39,8 @@ class DrupalTestBrowser extends AbstractBrowser {
   public function setClient(ClientInterface $client): static {
     $this->client = $client;
 
+    // Getting the base_uri via ::getConfig is discouraged, see
+    // https://github.com/guzzle/guzzle/issues/3114.
     if ($this->getServerParameter('HTTP_HOST', NULL) !== NULL || $base_uri = $client->getConfig('base_uri') === NULL) {
       return $this;
     }
@@ -155,7 +157,7 @@ class DrupalTestBrowser extends AbstractBrowser {
    * @param string $array_name
    *   Internal parameter used by recursive calls.
    */
-  protected function addPostFiles(array $files, array &$multipart, ?string $array_name = '') {
+  protected function addPostFiles(array $files, array &$multipart, ?string $array_name = ''): void {
     if (empty($files)) {
       return;
     }

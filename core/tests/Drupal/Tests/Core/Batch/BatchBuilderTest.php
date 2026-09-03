@@ -285,7 +285,7 @@ class BatchBuilderTest extends UnitTestCase {
    *
    * @internal
    */
-  public static function finishedCallback() {
+  public static function finishedCallback(): void {
   }
 
   /**
@@ -293,7 +293,7 @@ class BatchBuilderTest extends UnitTestCase {
    *
    * @internal
    */
-  public static function operationCallback() {
+  public static function operationCallback(): void {
   }
 
 }

@@ -37,6 +37,7 @@ parameters:
     - ../*/node_modules/*
     - */fixtures/*.php
     - */fixtures/*.php.gz
+    - tests/Drupal/Tests/Component/Annotation/Doctrine/Fixtures
     # Skip the phpstan tmpDir
     - phpstan-tmp/*
     # Skip Drupal's own PHPStan rules test fixtures.

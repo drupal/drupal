@@ -49,7 +49,7 @@ class PhpArrayContainerTest extends ContainerTest {
   /**
    * Helper function to return a machine-optimized '@notation'.
    */
-  protected function getCollection($collection, $resolve = TRUE) {
+  protected function getCollection($collection, $resolve = TRUE): array {
     return $collection;
   }
 

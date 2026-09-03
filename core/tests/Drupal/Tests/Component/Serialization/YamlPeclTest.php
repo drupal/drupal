@@ -72,7 +72,7 @@ foo:
    */
   #[DataProvider('providerBoolTest')]
   public function testApplyBooleanCallbacks($string, $expected): void {
-    $this->assertEquals($expected, YamlPecl::applyBooleanCallbacks($string, 'bool', NULL));
+    $this->assertEquals($expected, YamlPecl::applyBooleanCallbacks($string, 'bool', 0));
   }
 
   /**

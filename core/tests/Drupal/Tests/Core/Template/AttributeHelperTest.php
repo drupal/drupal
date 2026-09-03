@@ -91,13 +91,22 @@ class AttributeHelperTest extends UnitTestCase {
   /**
    * Tests merge collections argument exception.
    */
-  public function testMergeCollectionsArgumentException(): void {
+  public function testMergeCollectionsAttributeWithStringArgumentException(): void {
     $attributes = new Attribute(['class' => ['example-class']]);
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessageIs('Invalid collection argument');
+    // @phpstan-ignore argument.type
     AttributeHelper::mergeCollections($attributes, 'not an array');
+  }
+
+  /**
+   * Tests merge collections argument exception.
+   */
+  public function testMergeCollectionsStringWithAttributeArgumentException(): void {
+    $attributes = new Attribute(['class' => ['example-class']]);
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessageIs('Invalid collection argument');
+    // @phpstan-ignore argument.type
     AttributeHelper::mergeCollections('not an array', $attributes);
   }
 

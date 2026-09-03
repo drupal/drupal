@@ -59,6 +59,8 @@ class ClientFactoryTest extends UnitTestCase {
     $client = $this->factory->fromOptions($parameter_config);
 
     foreach ($expected_config_keys as $key => $expected) {
+      // Getting the client configuration via ::getConfig is discouraged,
+      // see https://github.com/guzzle/guzzle/issues/3114.
       $this->assertSame($expected, $client->getConfig($key));
     }
   }

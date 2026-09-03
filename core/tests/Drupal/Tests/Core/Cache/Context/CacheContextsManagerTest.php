@@ -160,7 +160,7 @@ class CacheContextsManagerTest extends UnitTestCase {
     return ['foo', 'baz'];
   }
 
-  protected function getMockContainer(): Stub {
+  protected function getMockContainer(): DrupalContainer&Stub {
     $container = $this->createStub(DrupalContainer::class);
     $container
       ->method('get')

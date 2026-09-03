@@ -109,6 +109,7 @@ class TestFilteredPluginManager extends PluginManagerBase implements FilteredPlu
    */
   protected ContextHandlerInterface $contextHandler;
 
+  // @phpstan-ignore pluginManagerSetsCacheBackend.missingCacheBackend
   public function __construct(array $definitions, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, ContextHandlerInterface $context_handler) {
     $this->definitions = $definitions;
     $this->moduleHandler = $module_handler;

@@ -10,6 +10,6 @@ declare(strict_types=1);
 /**
  * Test function.
  */
-function module_handler_test_added_helper($arg) {
+function module_handler_test_added_helper($arg): mixed {
   return $arg;
 }

@@ -518,16 +518,16 @@ class EntityResolverManagerTest extends UnitTestCase {
  */
 class BasicControllerClass {
 
-  public function exampleControllerMethod() {
+  public function exampleControllerMethod(): void {
   }
 
-  public function exampleControllerMethodWithArgument($argument) {
+  public function exampleControllerMethodWithArgument($argument): void {
   }
 
-  public function exampleControllerWithEntityNoUpcasting($entity_test) {
+  public function exampleControllerWithEntityNoUpcasting($entity_test): void {
   }
 
-  public function exampleControllerWithEntityUpcasting(EntityInterface $entity_test) {
+  public function exampleControllerWithEntityUpcasting(EntityInterface $entity_test): void {
   }
 
   public function exampleControllerWithEntityUnionType(EntityTest|EntityTestRev $entity_test): void {
@@ -566,7 +566,7 @@ class BasicForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
   }
 
 }
@@ -593,7 +593,7 @@ class BasicFormNoUpcasting extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
   }
 
 }
@@ -620,13 +620,13 @@ class BasicFormNoContainerInjectionInterface implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
   }
 
 }

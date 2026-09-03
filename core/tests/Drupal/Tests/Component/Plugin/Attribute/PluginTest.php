@@ -21,12 +21,12 @@ class PluginTest extends TestCase {
    * @legacy-covers ::get
    */
   public function testGet(): void {
-    $plugin = new PluginStub(id: 'example', deriver: 'test');
+    $plugin = new PluginStub(id: 'example', deriver: DerivedPluginStub::class);
     $plugin->setClass('foo');
     $this->assertEquals([
       'id' => 'example',
       'class' => 'foo',
-      'deriver' => 'test',
+      'deriver' => DerivedPluginStub::class,
     ], $plugin->get());
   }
 
@@ -64,5 +64,12 @@ class PluginTest extends TestCase {
  * {@inheritdoc}
  */
 class PluginStub extends Plugin {
+
+}
+
+/**
+ * {@inheritdoc}
+ */
+class DerivedPluginStub extends Plugin {
 
 }

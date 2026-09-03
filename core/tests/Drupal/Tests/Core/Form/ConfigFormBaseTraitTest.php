@@ -85,6 +85,8 @@ class ConfiguredTrait {
    */
   public $configFactory;
 
-  protected function getEditableConfigNames() {}
+  protected function getEditableConfigNames(): array {
+    return [];
+  }
 
 }

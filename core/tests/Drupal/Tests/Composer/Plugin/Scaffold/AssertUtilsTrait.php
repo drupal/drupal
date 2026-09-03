@@ -19,7 +19,7 @@ trait AssertUtilsTrait {
    * @param string $contents_contains
    *   Regex to check the file contents.
    */
-  protected function assertScaffoldedFile($path, $is_link, $contents_contains) {
+  protected function assertScaffoldedFile($path, $is_link, $contents_contains): void {
     $this->assertFileExists($path);
     $contents = file_get_contents($path);
     $this->assertStringContainsString($contents_contains, basename($path) . ': ' . $contents);
@@ -34,7 +34,7 @@ trait AssertUtilsTrait {
    * @param string $contents_not_contains
    *   A string that is expected should NOT occur in the file contents.
    */
-  protected function assertScaffoldedFileDoesNotContain($path, $contents_not_contains) {
+  protected function assertScaffoldedFileDoesNotContain($path, $contents_not_contains): void {
     // If the file does not exist at all, we'll count that as a pass.
     if (!file_exists($path)) {
       return;

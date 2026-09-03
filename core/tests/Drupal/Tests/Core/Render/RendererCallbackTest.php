@@ -85,14 +85,14 @@ class RendererCallbackTest extends RendererTestBase {
   /**
    * A test render callback.
    */
-  public static function renderCallback($element = []) {
+  public static function renderCallback($element = []): array {
     return $element;
   }
 
   /**
    * Implements magic method as a render callback.
    */
-  public function __invoke($element = []) {
+  public function __invoke($element = []): array {
     return $element;
   }
 
@@ -101,6 +101,6 @@ class RendererCallbackTest extends RendererTestBase {
 /**
  * A test render callback.
  */
-function callback($element = []) {
+function callback($element = []): array {
   return $element;
 }

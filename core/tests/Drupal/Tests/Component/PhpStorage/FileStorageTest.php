@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+// cspell:ignore errfile errline
+
 namespace Drupal\Tests\Component\PhpStorage;
 
 use Drupal\Component\PhpStorage\FileStorage;
@@ -98,8 +100,9 @@ class FileStorageTest extends PhpStorageTestBase {
 
     // PHPUnit cannot expect warnings, so we have to catch them ourselves.
     $messages = [];
-    set_error_handler(function (int $errno, string $errstr) use (&$messages): void {
+    set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline) use (&$messages): bool {
       $messages[] = [$errno, $errstr];
+      return TRUE;
     });
 
     $storage->save('subdirectory/foo.php', $code);

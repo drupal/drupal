@@ -74,10 +74,8 @@ abstract class BrowserTestBase extends DrupalTestCase {
 
   /**
    * Time limit in seconds for the test.
-   *
-   * @var int
    */
-  protected $timeLimit = 500;
+  protected int $timeLimit = 500;
 
 
   /**
@@ -124,9 +122,9 @@ abstract class BrowserTestBase extends DrupalTestCase {
    *
    * Value can be overridden using the environment variable MINK_DRIVER_CLASS.
    *
-   * @var string
+   * @var class-string<\Behat\Mink\Driver\DriverInterface>
    */
-  protected $minkDefaultDriverClass = BrowserKitDriver::class;
+  protected string $minkDefaultDriverClass = BrowserKitDriver::class;
 
   /**
    * Mink default driver params.
@@ -146,10 +144,8 @@ abstract class BrowserTestBase extends DrupalTestCase {
    * Mink session manager.
    *
    * This will not be initialized if there was an error during the test setup.
-   *
-   * @var \Behat\Mink\Mink|null
    */
-  protected $mink;
+  protected ?Mink $mink;
 
   /**
    * The base URL.
@@ -183,6 +179,8 @@ abstract class BrowserTestBase extends DrupalTestCase {
 
       // Inject a Guzzle middleware to generate debug output for every request
       // performed in the test.
+      // Getting the handler via ::getConfig is discouraged, see
+      // https://github.com/guzzle/guzzle/issues/3114.
       $handler_stack = $client->getConfig('handler');
       $handler_stack->push($this->getResponseLogHandler());
 
@@ -390,7 +388,7 @@ abstract class BrowserTestBase extends DrupalTestCase {
   protected function tearDown(): void {
     // Close any mink sessions as early as possible to free a new browser
     // session up for the next test method or test.
-    if ($this->mink) {
+    if (isset($this->mink)) {
       $this->mink->stopSessions();
     }
     parent::tearDown();

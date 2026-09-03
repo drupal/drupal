@@ -44,7 +44,7 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * The callable resolver.
    */
-  protected CallableResolver | Stub $callableResolver;
+  protected CallableResolver&Stub $callableResolver;
 
   /**
    * {@inheritdoc}
@@ -563,16 +563,16 @@ interface FormValidatorTestMockInterface {
   /**
    * Function used in the mocking process of this test.
    */
-  public function validate_handler();
+  public function validate_handler(): void;
 
   /**
    * Function used in the mocking process of this test.
    */
-  public function hash_validate();
+  public function hash_validate(): void;
 
   /**
    * Function used in the mocking process of this test.
    */
-  public function element_validate();
+  public function element_validate(): void;
 
 }

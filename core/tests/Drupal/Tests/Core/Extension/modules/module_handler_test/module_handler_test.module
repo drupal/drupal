@@ -7,6 +7,6 @@
 
 declare(strict_types=1);
 
-function module_handler_test_hook($arg) {
+function module_handler_test_hook($arg): mixed {
   return $arg;
 }

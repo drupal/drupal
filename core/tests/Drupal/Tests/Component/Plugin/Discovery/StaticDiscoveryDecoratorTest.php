@@ -222,7 +222,7 @@ interface StaticDiscoveryDecoratorTestMockInterface {
   /**
    * Function used in the mocking process of this test.
    */
-  public function registerDefinitionsCallback();
+  public function registerDefinitionsCallback(): void;
 
 }
 

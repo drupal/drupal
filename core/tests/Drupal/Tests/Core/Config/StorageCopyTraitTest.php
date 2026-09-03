@@ -59,6 +59,7 @@ class StorageCopyTraitTest extends UnitTestCase {
     // After copying they are the same, this asserts that items not present
     // in the source get removed from the target.
     self::replaceStorageContents($source, $target);
+    $this->assertInstanceOf(MemoryStorage::class, $target);
     $this->assertEquals($source_data, self::toArray($target));
     // Assert that the copy method did indeed not change the source.
     $this->assertEquals($source_data, self::toArray($source));

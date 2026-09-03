@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Test function.
  */
-function module_handler_test_all2_hook($arg) {
+function module_handler_test_all2_hook($arg): mixed {
   return $arg;
 }
 
