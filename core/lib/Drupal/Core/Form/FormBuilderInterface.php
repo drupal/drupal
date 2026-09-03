@@ -24,6 +24,10 @@ interface FormBuilderInterface {
 
   /**
    * Header name for HTMX requests.
+   *
+   * @deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. Use
+   * HtmxRequestInfoTrait::isHtmxRequest() instead.
+   * @see https://www.drupal.org/node/3583674
    */
   const HTMX_REQUEST = 'HX-Request';
 

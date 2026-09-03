@@ -2,6 +2,5 @@ track_ajax_requests:
   version: VERSION
   js:
     js/js_testing_ajax_request_test.js: {}
-  after:
-    - core/htmx
+  dependencies:
     - core/jquery

@@ -7,147 +7,187 @@
  * page.
  */
 
-(function (Drupal, drupalSettings, htmx) {
+((Drupal, drupalSettings, htmx) => {
   /**
-   * Used to hold the loadjs promise.
+   * Processes the response text: merges Drupal settings, loads assets, and
+   * returns cleaned HTML with asset tags removed.
    *
-   * It's declared in htmx:beforeSwap and checked in htmx:afterSettle to trigger
-   * the custom htmx:drupal:load event.
+   * Called by wrapping ctx.response.raw.text so htmx awaits it before swap.
    *
-   * @type {WeakMap<XMLHttpRequest, Promise>}
+   * @param {string} text
+   *   Raw response HTML.
+   * @return {Promise<string>}
+   *   Cleaned HTML with assets and settings elements removed.
    */
-  const requestAssetsLoaded = new WeakMap();
+  async function processResponseText(text) {
+    const doc = Document.parseHTMLUnsafe(text);
 
-  /**
-   *
-   */
-  htmx.on('htmx:beforeRequest', ({ detail }) => {
-    requestAssetsLoaded.set(detail.xhr, Promise.resolve());
-  });
+    // Remove noscript elements.
+    doc.querySelectorAll('noscript').forEach((el) => el.remove());
 
-  /**
-   * Send the current ajax page state with each request.
-   *
-   * @param configRequestEvent
-   *   HTMX event for request configuration.
-   *
-   * @see system_js_settings_alter()
-   * @see \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::processAttachments
-   * @see https://htmx.org/api/#on
-   * @see https://htmx.org/events/#htmx:configRequest
-   */
-  htmx.on('htmx:configRequest', ({ detail }) => {
-    if (Drupal.url.isLocal(detail.path)) {
-      if (detail.elt.hasAttribute('data-hx-drupal-only-main-content')) {
-        // Add _wrapper_format query parameter for all non full page requests.
-        // Drupal expects this parameter to be in the query string, not the post
-        // values.
-        const url = new URL(detail.path, window.location);
-        url.searchParams.set('_wrapper_format', 'drupal_htmx');
-        detail.path = url.toString();
-      }
-      // Allow Drupal to return new JavaScript and CSS files to load without
-      // returning the ones already loaded.
-      // @see \Drupal\Core\StackMiddleWare\AjaxPageState
-      // @see \Drupal\Core\Theme\AjaxBasePageNegotiator
-      // @see \Drupal\Core\Asset\LibraryDependencyResolverInterface::getMinimalRepresentativeSubset()
-      // @see system_js_settings_alter()
-      const pageState = drupalSettings.ajaxPageState;
-      detail.parameters['ajax_page_state[theme]'] = pageState.theme;
-      detail.parameters['ajax_page_state[theme_token]'] = pageState.theme_token;
-      detail.parameters['ajax_page_state[libraries]'] = pageState.libraries;
-      if (detail.headers['HX-Trigger-Name']) {
-        detail.parameters._triggering_element_name =
-          detail.headers['HX-Trigger-Name'];
-      }
-    }
-  });
-
-  // When saving to the browser history always remove wrapper format and ajax
-  // page state from the query string.
-  htmx.on('htmx:beforeHistoryUpdate', ({ detail }) => {
-    const url = new URL(detail.history.path, window.location);
-    [
-      '_wrapper_format',
-      'ajax_page_state[theme]',
-      'ajax_page_state[theme_token]',
-      'ajax_page_state[libraries]',
-      '_triggering_element_name',
-      '_triggering_element_value',
-    ].forEach((key) => {
-      url.searchParams.delete(key);
-    });
-    detail.history.path = url.toString();
-  });
-
-  // @see https://htmx.org/events/#htmx:beforeSwap
-  htmx.on('htmx:beforeSwap', ({ detail }) => {
-    // Custom event to detach behaviors.
-    htmx.trigger(detail.elt, 'htmx:drupal:unload');
-
-    if (!detail.xhr) {
-      return;
-    }
-
-    // We need to parse the response to find all the assets to load.
-    // htmx cleans up too many things to be able to rely on their dom fragment.
-    let responseHTML = Document.parseHTMLUnsafe(detail.serverResponse);
-
-    // Update drupalSettings
-    // Use direct child elements to harden against XSS exploits when CSP is on.
-    const settingsElement = responseHTML.querySelector(
+    // 1. Extract and merge Drupal settings.
+    const settingsEl = doc.querySelector(
       ':is(head, body) > script[type="application/json"][data-drupal-selector="drupal-settings-json"]',
     );
-    // Remove so that HTML doesn't add this during swap.
-    settingsElement?.remove();
-
-    if (settingsElement !== null) {
+    if (settingsEl) {
       Drupal.htmx.mergeSettings(
         drupalSettings,
-        JSON.parse(settingsElement.textContent),
+        JSON.parse(settingsEl.textContent),
       );
+      settingsEl.remove();
     }
 
-    // Load all assets files. We sent ajax_page_state in the request so this is only the diff with the current page.
-    const assetsElements = responseHTML.querySelectorAll(
+    // 2. Extract assets from head and body.
+    const assets = doc.querySelectorAll(
       'link[rel="stylesheet"][href], script[src]',
     );
-    // Remove all assets from the serverResponse where we handle the loading.
-    assetsElements.forEach((element) => element.remove());
-
-    // Transform the data from the DOM into an ajax command like format.
-    const data = Array.from(assetsElements).map(({ attributes }) => {
-      const attrs = {};
-      Object.values(attributes).forEach(({ name, value }) => {
-        attrs[name] = value;
+    if (assets.length) {
+      const assetData = Array.from(assets).map(({ attributes }) => {
+        const attrs = {};
+        Object.values(attributes).forEach(({ name, value }) => {
+          attrs[name] = value;
+        });
+        return attrs;
       });
-      return attrs;
-    });
+      assets.forEach((el) => el.remove());
 
-    // The response is the whole page without the assets we handle with loadjs.
-    detail.serverResponse = responseHTML.documentElement.outerHTML;
+      await Drupal.htmx.addAssets(assetData);
+    }
 
-    // Helps with memory management.
-    responseHTML = null;
+    // 3. Return cleaned HTML.
+    return doc.documentElement.outerHTML;
+  }
 
-    requestAssetsLoaded.get(detail.xhr).then(() => Drupal.htmx.addAssets(data));
-  });
+  /**
+   * Determine a context for behavior processing.
+   *
+   * Drupal behavior processing operates on a context.  Drupal's once()
+   * function is often used within that context to filter elements which are
+   * within, that are children of the context.
+   *
+   * @param element
+   *   The target or inserted element from htmx.
+   * @return {*|HTMLElement}
+   *   The parent element or body element for behavior processing.
+   */
+  function behaviorTarget(element) {
+    let processTarget = element.parentElement;
+    if (element === document.body || processTarget === null) {
+      // The default context for behavior processing is the document.
+      processTarget = document;
+    }
+    return processTarget;
+  }
 
-  // Trigger the Drupal processing once all assets have been loaded.
-  // @see https://htmx.org/events/#htmx:afterSettle
-  htmx.on('htmx:afterSettle', ({ detail }) => {
-    (requestAssetsLoaded.get(detail.xhr) || Promise.resolve()).then(() => {
-      let processTarget = detail.elt.parentElement;
-      // Some HTMX swaps put the incoming element before or after detail.elt.
-      // We normally target the parent element so that we process the added
-      // elements. When there is no parent element or detail.elt is the body,
-      // we target the element itself.
-      if (detail.elt === document.body || processTarget === null) {
-        processTarget = detail.elt;
+  htmx.registerExtension('drupal-assets', {
+    htmx_config_request(elt, detail) {
+      const { ctx } = detail;
+      const url = new URL(ctx.request.action, document.location.href);
+      const drupalIdentifier = (element) => {
+        if (element?.name) {
+          return `${element.tagName.toLowerCase()}[name="${encodeURI(element.name)}"]`;
+        }
+        if (element?.dataset.drupalSelector !== undefined) {
+          return `${element.tagName.toLowerCase()}[data-drupal-selector="${encodeURI(element.dataset.drupalSelector)}"]`;
+        }
+        return `${element.tagName.toLowerCase()}${element.id ? `#${encodeURI(element.id)}` : ''}`;
+      };
+
+      if (!Drupal.url.isLocal(url.toString())) return;
+
+      // Send current page state for differential asset loading.
+      const pageState = drupalSettings.ajaxPageState;
+      ctx.request.body.set('ajax_page_state[theme]', pageState.theme);
+      ctx.request.body.set(
+        'ajax_page_state[theme_token]',
+        pageState.theme_token,
+      );
+      ctx.request.body.set('ajax_page_state[libraries]', pageState.libraries);
+
+      // Add _wrapper_format query parameter for all non-full-page requests.
+      if (ctx.sourceElement.hasAttribute('data-hx-drupal-only-main-content')) {
+        // Drupal expects this parameter to be in the query string, not the post
+        // values.
+        url.searchParams.set('_wrapper_format', 'drupal_htmx');
+        ctx.request.action = url.pathname + url.search;
       }
-      htmx.trigger(processTarget, 'htmx:drupal:load');
-      // This should be automatic but don't wait for the garbage collector.
-      requestAssetsLoaded.delete(detail.xhr);
-    });
+
+      // Add element metadata for Drupal forms.
+      // @see core/assets/vendor/htmx/htmx.js:Htmx.#createCoreHeaders
+      ctx.request.headers['HX-Source'] = drupalIdentifier(ctx.sourceElement);
+      ctx.request.headers['HX-Target'] = drupalIdentifier(ctx.target);
+      if (ctx.sourceElement?.name) {
+        ctx.request.body.set(
+          '_triggering_element_name',
+          ctx.sourceElement.name,
+        );
+      }
+    },
+
+    htmx_before_response(elt, { ctx }) {
+      // Wrap text() so htmx awaits asset loading before swap.
+      const realText = ctx.response.raw.text.bind(ctx.response.raw);
+      ctx.response.raw.text = async () => {
+        const text = await realText();
+        return processResponseText(text);
+      };
+    },
+
+    htmx_before_history_update(elt, { history }) {
+      const url = new URL(history.path, window.location);
+      [
+        '_wrapper_format',
+        'ajax_page_state[theme]',
+        'ajax_page_state[theme_token]',
+        'ajax_page_state[libraries]',
+        '_triggering_element_name',
+        '_triggering_element_value',
+      ].forEach((key) => {
+        url.searchParams.delete(key);
+      });
+      history.path = url.toString();
+    },
+
+    htmx_before_swap(elt, detail) {
+      // Get a set of unique targets for behavior processing.
+      const processTargets = new Set();
+      // eslint-disable-next-line no-restricted-syntax
+      for (const task of detail.tasks) {
+        // task data structure:
+        // • type: main, partial, or oob
+        // • fragment: the DocumentFragment to insert
+        // • target: the resolved target element
+        // • swapSpec: parsed swap settings including a `style` value.
+        // • sourceElement: the request-originating element
+        // • transition: (optional) applicable transition state
+        if (
+          task.swapSpec.style === 'none' ||
+          task.swapSpec.style.includes('after') ||
+          task.swapSpec.style.includes('before')
+        ) {
+          // Swap style does not remove elements
+          continue;
+        }
+        processTargets.add(behaviorTarget(task.target));
+      }
+      processTargets.forEach((target) => {
+        htmx.trigger(target, 'htmx:drupal:unload');
+      });
+    },
+
+    htmx_after_settle(elt, detail) {
+      // Attach Drupal behaviors to Element objects in newContent.
+      const elements = detail.newContent.filter(
+        (value) => value instanceof Element,
+      );
+      // Get a set of unique targets for behavior processing.
+      const processTargets = new Set();
+      elements.forEach((element) => {
+        processTargets.add(behaviorTarget(element));
+      });
+      processTargets.forEach((target) => {
+        htmx.trigger(target, 'htmx:drupal:load');
+      });
+    },
   });
 })(Drupal, drupalSettings, htmx);

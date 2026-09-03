@@ -84,4 +84,22 @@ class HtmxDynamicFormTest extends WebDriverTestBase {
     $this->assertNull($error);
   }
 
+  /**
+   * Verify that the _wrapper_format query parameter is set by htmx-assets.js.
+   */
+  public function testWrapperFormat(): void {
+    $this->drupalLogin($this->drupalCreateUser([
+      'access content',
+    ]));
+    $this->drupalGet('/htmx-test-attachments/wrapper');
+    $button = $this->assertSession()->elementExists('css', '[name="replace"]');
+    // Should be present in the HTMX markup on the button.
+    $this->assertSession()->elementExists('css', '[data-hx-drupal-only-main-content]');
+    // Class used in the test markup that will be inserted into the page.
+    $this->assertSession()->elementNotExists('css', '.htmx-test-flag');
+    $button->click();
+    $this->assertSession()->assertExpectedAjaxRequest(1);
+    $this->assertSession()->elementExists('css', '.htmx-test-flag');
+  }
+
 }

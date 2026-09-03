@@ -11,16 +11,15 @@
   // all JS and CSS assets have been loaded successfully.
   // @see https://htmx.org/api/#on
   // @see htmx-assets.js
-  htmx.on('htmx:drupal:load', ({ detail }) => {
+  htmx.on('htmx:drupal:load', ({ target }) => {
     attachFromHtmx = true;
-    Drupal.attachBehaviors(detail.elt, drupalSettings);
+    Drupal.attachBehaviors(target, drupalSettings);
     attachFromHtmx = false;
   });
 
   // When htmx removes elements from the DOM, make sure they're detached first.
-  // This event is currently an alias of htmx:beforeSwap
-  htmx.on('htmx:drupal:unload', ({ detail }) => {
-    Drupal.detachBehaviors(detail.elt, drupalSettings, 'unload');
+  htmx.on('htmx:drupal:unload', ({ target }) => {
+    Drupal.detachBehaviors(target, drupalSettings, 'unload');
   });
 
   /**

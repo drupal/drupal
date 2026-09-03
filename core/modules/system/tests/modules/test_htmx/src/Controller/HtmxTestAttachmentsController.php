@@ -19,32 +19,31 @@ final class HtmxTestAttachmentsController extends ControllerBase {
    * @return mixed[]
    *   A render array.
    */
-  public function page(): array {
+  public function empty(): array {
     return self::generateHtmxButton();
   }
 
   /**
-   * Builds a response with a `beforebegin` swap.
+   * Builds the response with a given swap.
    *
    * @return mixed[]
    *   A render array.
    */
-  public function before(): array {
-    return self::generateHtmxButton(swap: 'beforebegin');
+  public function swap(string $swap): array {
+    $swap = match ($swap) {
+      'inner-html' => 'innerHTML',
+      'outer-html' => 'outerHTML',
+      'text-content' => 'textContent',
+      'inner-morph' => 'innerMorph',
+      'outer-morph' => 'outerMorph',
+      'outer-sync' => 'outerSync',
+      default => $swap,
+    };
+    return self::generateHtmxButton(swap: $swap);
   }
 
   /**
-   * Builds a response with an `afterend` swap.
-   *
-   * @return mixed[]
-   *   A render array.
-   */
-  public function after(): array {
-    return self::generateHtmxButton(swap: 'afterend');
-  }
-
-  /**
-   * Builds a response with an the wrapper format parameter on the request.
+   * Builds a response with the wrapper format parameter on the request.
    *
    * @return mixed[]
    *   A render array.
@@ -60,7 +59,7 @@ final class HtmxTestAttachmentsController extends ControllerBase {
    *   A render array.
    */
   public function selectBody(): array {
-    return [
+    $build = [
       '#title' => $this->t('Boosted body'),
       '#type' => 'link',
       '#url' => Url::fromRoute('test_htmx.attachments.replace'),
@@ -68,6 +67,36 @@ final class HtmxTestAttachmentsController extends ControllerBase {
         'class' => ['htmx-test-link'],
       ],
     ];
+    (new Htmx())->boost(TRUE)->applyTo($build);
+    return $build;
+  }
+
+  /**
+   * Set up a delete swap test.
+   *
+   * @return mixed[]
+   *   A render array.
+   */
+  public function delete(): array {
+    $url = Url::fromRoute('test_htmx.attachments.replace');
+    // Start with the "replace" content.
+    $build = $this->replace();
+    // Add a delete button.
+    $build['delete'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'button',
+      '#attributes' => [
+        'type' => 'button',
+        'name' => 'delete',
+      ],
+      '#value' => 'Delete',
+    ];
+    (new Htmx())
+      ->get($url)
+      ->swap('delete')
+      ->target('div.ajax-content')
+      ->applyTo($build['delete']);
+    return $build;
   }
 
   /**
@@ -88,6 +117,12 @@ final class HtmxTestAttachmentsController extends ControllerBase {
       'example' => ['#markup' => 'Initial Content'],
     ];
 
+    $request = \Drupal::request();
+    $format = $request->query->get('_wrapper_format');
+    if ($format === 'drupal_htmx') {
+      // The query parameter was set.
+      $build['content']['#attributes']['class'][] = 'htmx-test-flag';
+    }
     return $build;
   }
 
@@ -135,7 +170,6 @@ final class HtmxTestAttachmentsController extends ControllerBase {
         'class' => ['htmx-test-container'],
       ],
     ];
-
     return $build;
   }
 

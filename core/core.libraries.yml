@@ -642,14 +642,16 @@ drupal.vertical-tabs:
     - core/drupal.collapse
 
 htmx:
+  aggregate_target:
+    js: 'htmx'
   remote: https://github.com/bigskysoftware/htmx
-  version: "2.0.4"
+  version: "4.0.0"
   license:
     name: Zero-Clause BSD
-    url:  https://raw.githubusercontent.com/bigskysoftware/htmx/refs/tags/v2.0.4/LICENSE
+    url:  https://raw.githubusercontent.com/bigskysoftware/htmx/refs/tags/v4.0.0/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/htmx/htmx.min.js: { minified: true, preprocess: false }
+    assets/vendor/htmx/htmx.min.js: { minified: true }
 
 internal.floating-ui:
   aggregate_target:

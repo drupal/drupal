@@ -34,6 +34,7 @@ module.exports = {
     // Now load the page with the htmx enhanced button and verify the absence
     // of the markup to be inserted. Click the button
     // and check for inserted javascript and markup.
+    // Also verifies a target without a swap strategy.
     browser
       .drupalRelativeURL('/htmx-test-attachments/page')
       .waitForElementVisible('body', 1000)
@@ -41,8 +42,8 @@ module.exports = {
       .assert.not.elementPresent(cssSelector)
       .waitForElementVisible('[name="replace"]', 1000)
       .click('[name="replace"]')
-      .waitForElementVisible(elementSelector, 1100)
-      .waitForElementVisible(elementInitSelector, 1100)
+      .waitForElementVisible(elementSelector, 1200)
+      .waitForElementVisible(elementInitSelector, 1200)
       .assert.elementPresent(scriptSelector)
       .assert.elementPresent(cssSelector);
   },
@@ -64,19 +65,13 @@ module.exports = {
       .assert.elementPresent(scriptSelector)
       .assert.elementPresent(cssSelector);
   },
-
-  'Swap Before': (browser) => {
-    // Load the route htmx will use for the request on click and confirm the
-    // markup we will be looking for is present in the source markup.
-    browser
-      .drupalRelativeURL('/htmx-test-attachments/replace')
-      .waitForElementVisible('body', 1000)
-      .assert.elementPresent(elementInitSelector);
-    // Now load the page with the htmx enhanced button and verify the absence
+  // Verify each swap method.
+  innerHTML: (browser) => {
+    // Load the page with the htmx enhanced button and verify the absence
     // of the markup to be inserted. Click the button
     // and check for inserted javascript and markup.
     browser
-      .drupalRelativeURL('/htmx-test-attachments/before')
+      .drupalRelativeURL('/htmx-test-attachments/inner-html/swap')
       .waitForElementVisible('body', 1000)
       .assert.not.elementPresent(scriptSelector)
       .assert.not.elementPresent(cssSelector)
@@ -87,19 +82,9 @@ module.exports = {
       .assert.elementPresent(scriptSelector)
       .assert.elementPresent(cssSelector);
   },
-
-  'Swap After': (browser) => {
-    // Load the route htmx will use for the request on click and confirm the
-    // markup we will be looking for is present in the source markup.
+  outerHTML: (browser) => {
     browser
-      .drupalRelativeURL('/htmx-test-attachments/replace')
-      .waitForElementVisible('body', 1000)
-      .assert.elementPresent(elementInitSelector);
-    // Now load the page with the htmx enhanced button and verify the absence
-    // of the markup to be inserted. Click the button
-    // and check for inserted javascript and markup.
-    browser
-      .drupalRelativeURL('/htmx-test-attachments/after')
+      .drupalRelativeURL('/htmx-test-attachments/outer-html/swap')
       .waitForElementVisible('body', 1000)
       .assert.not.elementPresent(scriptSelector)
       .assert.not.elementPresent(cssSelector)
@@ -110,7 +95,127 @@ module.exports = {
       .assert.elementPresent(scriptSelector)
       .assert.elementPresent(cssSelector);
   },
-
+  textContent: (browser) => {
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/text-content/swap')
+      .waitForElementVisible('body', 1000)
+      .assert.not.elementPresent(scriptSelector)
+      .assert.not.elementPresent(cssSelector)
+      .waitForElementVisible('[name="replace"]', 1000)
+      .click('[name="replace"]')
+      .waitUntil(() =>
+        browser.getText(
+          '.htmx-test-container',
+          (result) => result.value === 'Initial Content',
+        ),
+      )
+      .assert.not.elementPresent(elementSelector);
+  },
+  beforebegin: (browser) => {
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/beforebegin/swap')
+      .waitForElementVisible('body', 1000)
+      .assert.not.elementPresent(scriptSelector)
+      .assert.not.elementPresent(cssSelector)
+      .waitForElementVisible('[name="replace"]', 1000)
+      .click('[name="replace"]')
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
+      .assert.elementPresent(scriptSelector)
+      .assert.elementPresent(cssSelector);
+  },
+  afterbegin: (browser) => {
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/afterbegin/swap')
+      .waitForElementVisible('body', 1000)
+      .assert.not.elementPresent(scriptSelector)
+      .assert.not.elementPresent(cssSelector)
+      .waitForElementVisible('[name="replace"]', 1000)
+      .click('[name="replace"]')
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
+      .assert.elementPresent(scriptSelector)
+      .assert.elementPresent(cssSelector);
+  },
+  beforeend: (browser) => {
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/beforeend/swap')
+      .waitForElementVisible('body', 1000)
+      .assert.not.elementPresent(scriptSelector)
+      .assert.not.elementPresent(cssSelector)
+      .waitForElementVisible('[name="replace"]', 1000)
+      .click('[name="replace"]')
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
+      .assert.elementPresent(scriptSelector)
+      .assert.elementPresent(cssSelector);
+  },
+  afterend: (browser) => {
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/afterend/swap')
+      .waitForElementVisible('body', 1000)
+      .assert.not.elementPresent(scriptSelector)
+      .assert.not.elementPresent(cssSelector)
+      .waitForElementVisible('[name="replace"]', 1000)
+      .click('[name="replace"]')
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
+      .assert.elementPresent(scriptSelector)
+      .assert.elementPresent(cssSelector);
+  },
+  innerMorph: (browser) => {
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/inner-morph/swap')
+      .waitForElementVisible('body', 1000)
+      .assert.not.elementPresent(scriptSelector)
+      .assert.not.elementPresent(cssSelector)
+      .waitForElementVisible('[name="replace"]', 1000)
+      .click('[name="replace"]')
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
+      .assert.elementPresent(scriptSelector)
+      .assert.elementPresent(cssSelector);
+  },
+  outerMorph: (browser) => {
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/outer-morph/swap')
+      .waitForElementVisible('body', 1000)
+      .assert.not.elementPresent(scriptSelector)
+      .assert.not.elementPresent(cssSelector)
+      .waitForElementVisible('[name="replace"]', 1000)
+      .click('[name="replace"]')
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
+      .assert.elementPresent(scriptSelector)
+      .assert.elementPresent(cssSelector);
+  },
+  outerSync: (browser) => {
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/outer-sync/swap')
+      .waitForElementVisible('body', 1000)
+      .assert.not.elementPresent(scriptSelector)
+      .assert.not.elementPresent(cssSelector)
+      .waitForElementVisible('[name="replace"]', 1000)
+      .click('[name="replace"]')
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
+      .assert.elementPresent(scriptSelector)
+      .assert.elementPresent(cssSelector);
+  },
+  delete: (browser) => {
+    browser
+      .drupalRelativeURL('/htmx-test-attachments/delete')
+      .waitForElementVisible('body', 1000)
+      .waitForElementVisible(elementSelector, 1100)
+      .waitForElementVisible(elementInitSelector, 1100)
+      .waitForElementVisible('[name="delete"]', 1000)
+      .click('[name="delete"]')
+      .waitForElementNotPresent(elementSelector, 1100)
+      .waitForElementNotPresent(elementInitSelector, 1100)
+      .expect.element('body')
+      .to.have.attribute('data-htmx-behavior-test')
+      .equals('detached');
+  },
   'Ajax Load HTMX Element': (browser) => {
     // Load the route htmx will use for the request on click and confirm the
     // markup we will be looking for is present in the source markup.
@@ -139,7 +244,7 @@ module.exports = {
       .assert.elementPresent(cssSelector);
   },
 
-  'Boosted Body': (browser) => {
+  'Boosted a tag': (browser) => {
     // Load the route htmx will use for the request on click and confirm the
     // markup we will be looking for is present in the source markup.
     browser

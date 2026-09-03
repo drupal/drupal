@@ -2,23 +2,15 @@ test_htmx.attachments.page:
   path: '/htmx-test-attachments/page'
   defaults:
     _title: 'Page'
-    _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::page'
+    _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::empty'
   requirements:
     _permission: 'access content'
 
-test_htmx.attachments.before:
-  path: '/htmx-test-attachments/before'
+test_htmx.attachments.swap:
+  path: '/htmx-test-attachments/{swap}/swap'
   defaults:
     _title: 'Page'
-    _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::before'
-  requirements:
-    _permission: 'access content'
-
-test_htmx.attachments.after:
-  path: '/htmx-test-attachments/after'
-  defaults:
-    _title: 'Page'
-    _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::after'
+    _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::swap'
   requirements:
     _permission: 'access content'
 
@@ -43,6 +35,14 @@ test_htmx.attachments.replace:
   defaults:
     _title: 'Ajax Content'
     _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::replace'
+  requirements:
+    _permission: 'access content'
+
+test_htmx.attachments.delete:
+  path: '/htmx-test-attachments/delete'
+  defaults:
+    _title: 'Ajax Content'
+    _controller: '\Drupal\test_htmx\Controller\HtmxTestAttachmentsController::delete'
   requirements:
     _permission: 'access content'
 

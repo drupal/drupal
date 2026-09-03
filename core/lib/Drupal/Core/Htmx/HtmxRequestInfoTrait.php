@@ -60,43 +60,84 @@ trait HtmxRequestInfoTrait {
   }
 
   /**
-   * Retrieves the prompt from an HTMX request header.
-   *
-   * @return string
-   *   The value of the 'HX-Prompt' header, or an empty string if not set.
-   */
-  protected function getHtmxPrompt(): string {
-    return $this->getRequest()->headers->get('HX-Prompt', '');
-  }
-
-  /**
    * Retrieves the target identifier from an HTMX request header.
+   *
+   * HTMX 4 uses encodeURI to safely encode multilingual attribute identifiers
+   * for HX-Target.  We follow that convention but use the name attribute
+   * or the data-drupal-selector value when available rather than id.
+   *
+   * Values will be a CSS selector constructed from
+   * the first available property:
+   * - button[name="first_item"]
+   * - button[data-drupal-selector="first_item"]
+   * - button#id-value
+   * - button
+   *
+   * @see core/assets/vendor/htmx/htmx.js:Htmx.#createRequestContext
+   * @see core/misc/htmx/htmx-assets.js:htmx_config_request()
    *
    * @return string
    *   The value of the 'HX-Target' header, or an empty string if not set.
    */
   protected function getHtmxTarget(): string {
-    return $this->getRequest()->headers->get('HX-Target', '');
+    return rawurldecode($this->getRequest()->headers->get('HX-Target', ''));
   }
 
   /**
    * Retrieves the trigger identifier from an HTMX request header.
    *
+   * HTMX 4 uses encodeURI to safely encode multilingual attribute identifiers
+   * for HX-Source.  We follow that convention but use the name attribute
+   * or the data-drupal-selector value when available rather than id.
+   *
+   * Values will be a CSS selector constructed from
+   * the first available property:
+   * - button[name="first_item"]
+   * - button[data-drupal-selector="first_item"]
+   * - button#id-value
+   * - button
+   *
+   * @see core/assets/vendor/htmx/htmx.js:Htmx.#createCoreHeaders
+   * @see core/misc/htmx/htmx-assets.js:htmx_config_request()
+   *
    * @return string
-   *   The value of the 'HX-Trigger' header, or an empty string if not set.
+   *   The value of the 'HX-Source' header, or an empty string if not set.
    */
-  protected function getHtmxTrigger(): string {
-    return $this->getRequest()->headers->get('HX-Trigger', '');
+  protected function getHtmxSource(): string {
+    return rawurldecode($this->getRequest()->headers->get('HX-Source', ''));
   }
 
   /**
-   * Retrieves the trigger name from an HTMX request header.
+   * Extracts the trigger name from the HX-Source header.
+   *
+   * @see core/assets/vendor/htmx/htmx.js:Htmx.#buildIdentifier
    *
    * @return string
-   *   The value of the 'HX-Trigger-Name' header, or an empty string if not set.
+   *   The value of the name attribute from the triggering element if present.
    */
   protected function getHtmxTriggerName(): string {
-    return $this->getRequest()->headers->get('HX-Trigger-Name', '');
+    $value = $this->getHtmxSource();
+    // Match any characters passed as name value.
+    preg_match('#name="([\s\S]+)"#', $value, $matches);
+    // $matches[1] contains the name string or an empty string.
+    // encodeURI passes through the + character, so use rawurldecode().
+    return rawurldecode($matches[1] ?? '');
+  }
+
+  /**
+   * Retrieves the request type from an HTMX request header.
+   *
+   * Expected values are:
+   * - "full"
+   * - "partial"
+   *
+   * @see https://four.htmx.org/reference/headers/HX-Request-Type
+   *
+   * @return string
+   *   The value of the 'HX-Request-Type' header, or an empty string if not set.
+   */
+  protected function getHtmxRequestType(): string {
+    return $this->getRequest()->headers->get('HX-Request-Type', '');
   }
 
 }

@@ -14,6 +14,7 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Htmx\Htmx;
+use Drupal\Core\Htmx\HtmxRequestInfoTrait;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\FormElementBase;
 use Drupal\Core\Render\ElementInfoManagerInterface;
@@ -32,6 +33,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  * @ingroup form_api
  */
 class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface, FormCacheInterface, TrustedCallbackInterface {
+
+  use HtmxRequestInfoTrait;
 
   /**
    * The module handler.
@@ -247,7 +250,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // Ensure the form ID is prepared.
     $form_id = $this->getFormId($form_arg, $form_state);
 
-    $request = $this->requestStack->getCurrentRequest();
+    $request = $this->getRequest();
 
     // Inform $form_state about the request method that's building it, so that
     // it can prevent persisting state changes during HTTP methods for which
@@ -326,7 +329,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // If this form is an AJAX request or an HTMX request,
     // disable all form redirects.
     $ajax_form_request = $request->query->has(static::AJAX_FORM_REQUEST);
-    if ($ajax_form_request || $request->headers->has(static::HTMX_REQUEST)) {
+    if ($ajax_form_request || $this->isHtmxRequest()) {
       $form_state->disableRedirect();
     }
 
@@ -768,7 +771,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       '#attributes' => ['autocomplete' => 'off'],
     ];
 
-    $current_request_headers = $this->requestStack->getCurrentRequest()->headers;
     // Figure out if we need to update the form_build_id value, this is
     // specific to HTMX requests. The corresponding code path in the Ajax
     // framework is in `FormAjaxResponseBuilder::buildResponse`.
@@ -777,18 +779,17 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     $input = $form_state->getUserInput();
     $old_build_id = $input['form_build_id'] ?? NULL;
     $returned_form_id = $input['form_id'] ?? NULL;
-    if ($current_request_headers->has(self::HTMX_REQUEST) && $form_id === $returned_form_id && $old_build_id) {
+    if ($this->isHtmxRequest() && $form_id === $returned_form_id && $old_build_id) {
       // Update the build_id by using an oob swap only
       // in the following situation:
-      // - Headers `HX-Target` and `HX-Trigger` on the request show this is an
-      //   HTMX request.
-      // - The target to replace is not a whole form, the build_id will not be
-      //   part of the main swap.
+      // - This is an HTMX request.
+      // - The target to replace is not a whole form, so the build_id will not
+      //   be part of the main swap.
       // - The target is a different form from the one that triggered the
       //   call, update the build id of the calling form.
-      $hx_target = $current_request_headers->get('hx-target');
-      $hx_trigger = $current_request_headers->get('hx-trigger');
-      $target_is_form = str_ends_with($hx_target ?? '', '-form');
+      $hx_target = $this->getHtmxTarget();
+      $hx_trigger = $this->getHtmxSource();
+      $target_is_form = str_starts_with($hx_target, 'form');
       if (!$target_is_form || ($target_is_form && $hx_target !== $hx_trigger)) {
         (new Htmx())
           ->swapOob('outerHTML:input[name="form_build_id"][value="' . $old_build_id . '"]')
@@ -1022,7 +1023,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
             // Ignore all submitted values.
             $form_state->setUserInput([]);
 
-            $request = $this->requestStack->getCurrentRequest();
+            $request = $this->getRequest();
             // Do not trust any POST data.
             $request->request = new InputBag();
             // Make sure file uploads do not get processed.
@@ -1478,6 +1479,18 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $this->currentUser = \Drupal::currentUser();
     }
     return $this->currentUser;
+  }
+
+  /**
+   * Gets the current request.
+   *
+   * Required by HtmxRequestInfoTrait.
+   *
+   * @return \Symfony\Component\HttpFoundation\Request
+   *   The current request.
+   */
+  protected function getRequest() {
+    return $this->requestStack->getCurrentRequest();
   }
 
   /**

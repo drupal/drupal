@@ -3019,7 +3019,7 @@ __metadata:
     eslint-plugin-prettier: "npm:^5.5.4"
     eslint-plugin-yml: "npm:^1.19.0"
     glob: "npm:^11.1.0"
-    htmx.org: "npm:2.0.8"
+    htmx.org: "npm:4.0.0"
     jquery: "npm:^4.0.0"
     jquery-ui: "npm:^1.14.1"
     jsdom: "npm:^27.1.0"
@@ -6273,10 +6273,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"htmx.org@npm:2.0.8":
-  version: 2.0.8
-  resolution: "htmx.org@npm:2.0.8"
-  checksum: 10c0/7f866a705d2f1d8bf8a1e0743cb2d6f2d8bb7635d6de85165ef6cc4d87d7210ee6cdf9b411497d1fc58aadae99a69f11266013f68092764cfffde23a44e9681f
+"htmx.org@npm:4.0.0":
+  version: 4.0.0
+  resolution: "htmx.org@npm:4.0.0"
+  bin:
+    upgrade-check: dist/scripts/upgrade-check.js
+  checksum: 10c0/4c365b8731d00e233e507b2f5a8016b7dbe68a48fa147fbff540cc7b08f7f3d8c80362004bf0b38671c2f9d7c8e41578a780160c120d70a8768bfdde70de2ccf
   languageName: node
   linkType: hard
 

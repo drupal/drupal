@@ -79,7 +79,7 @@ class HtmxRendererTest extends KernelTestBase {
       ],
     ];
     $url = Url::fromRoute('test_htmx.attachments.replace', [], $options);
-    $this->assertHtmxResponseContent($url);
+    $this->assertHtmxResponseContent($url, TRUE);
   }
 
   /**
@@ -95,14 +95,18 @@ class HtmxRendererTest extends KernelTestBase {
    *
    * @param \Drupal\Core\Url $url
    *   The url to use for the request.
+   * @param bool $wrapper_format
+   *   Whether the new wrapper format was used in the request.
    */
-  protected function assertHtmxResponseContent(Url $url): void {
+  protected function assertHtmxResponseContent(Url $url, bool $wrapper_format = FALSE): void {
     $request = Request::create($url->toString());
     $response = $this->httpKernel->handle($request);
     $this->assertEquals(200, $response->getStatusCode());
     $this->assertEquals('text/html; charset=utf-8', $response->headers->get('Content-Type'));
     $oneLine = str_replace(["\r", "\n"], "", $response->getContent());
-    $this->assertStringContainsString('<body><div class="ajax-content">Initial Content</div></body>', $oneLine);
+    // Rendered classes vary to provide test features for other tests.
+    $div = $wrapper_format ? '<div class="ajax-content htmx-test-flag">Initial Content</div>' : '<div class="ajax-content">Initial Content</div>';
+    $this->assertStringContainsString("<body>$div</body>", $oneLine);
   }
 
 }
