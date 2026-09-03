@@ -8,7 +8,7 @@
 /**
  * Installs the text_with_summary module when text_with_summary fields exist.
  */
-function text_update_12001(): void {
+function text_update_11001(): void {
   if (\Drupal::moduleHandler()->moduleExists('text_with_summary')) {
     return;
   }
