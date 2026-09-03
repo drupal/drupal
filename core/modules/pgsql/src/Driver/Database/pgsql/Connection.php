@@ -493,6 +493,13 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
+  public function merge($table, array $options = []) {
+    return new Merge($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function upsert($table, array $options = []) {
     return new Upsert($this, $table, $options);
   }
