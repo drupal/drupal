@@ -1346,7 +1346,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $chunks = [$multiple_cardinality_fields];
       }
       foreach ($chunks as $fields) {
-        $this->loadMultipleCardinalityFields($values, $id_key, $load_from_revision, $fields, $definitions, $field_columns, $field_definition_columns, $default_langcodes, $ids);
+        $this->loadMultipleCardinalityFields($values, $base_table, $base_id_key, $id_key, $load_from_revision, $fields, $definitions, $field_columns, $field_definition_columns, $default_langcodes, $ids);
       }
     }
   }
@@ -1536,6 +1536,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *
    * @param array &$values
    *   The entity values populated so far.
+   * @param string $base_table
+   *   The base table used to identify default translations.
+   * @param string $base_id_key
+   *   The ID key in the base table.
    * @param string $id_key
    *   The ID key depending on whether regular entities or revisions are being
    *   loaded.
@@ -1556,6 +1560,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    */
   private function loadMultipleCardinalityFields(
     array &$values,
+    string $base_table,
+    string $base_id_key,
     string $id_key,
     bool $load_from_revision,
     array $multiple_cardinality_fields,
@@ -1635,6 +1641,19 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $delta_keys[$field_name] = $query->addField($table, 'delta', $field_name . '_delta');
     }
 
+    if ($this->langcodeKey && $this->defaultLangcodeKey) {
+      if (count($multiple_cardinality_fields) > 1) {
+        $join_id = '[delta_join].[id]';
+        $join_langcode = '[delta_join].[langcode]';
+      }
+      else {
+        $join_id = "[$table].[$id_key]";
+        $join_langcode = "[$table].[langcode]";
+      }
+      $query->innerJoin($base_table, 'base', "[base].[$base_id_key] = $join_id AND [base].[$this->langcodeKey] = $join_langcode");
+      $query->addField('base', $this->defaultLangcodeKey, 'base_default_langcode');
+    }
+
     $results = $query->execute();
 
     foreach ($results as $row) {
@@ -1643,7 +1662,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // Field values in default language are stored with
       // LanguageInterface::LANGCODE_DEFAULT as key.
       $langcode = LanguageInterface::LANGCODE_DEFAULT;
-      if ($this->langcodeKey && isset($default_langcodes[$value_key]) && $row['langcode'] != $default_langcodes[$value_key]) {
+      if ($this->langcodeKey && empty($row['base_default_langcode']) && isset($default_langcodes[$value_key]) && $row['langcode'] != $default_langcodes[$value_key]) {
         $langcode = $row['langcode'];
       }
 
