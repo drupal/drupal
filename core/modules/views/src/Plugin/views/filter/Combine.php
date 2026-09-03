@@ -155,6 +155,7 @@ class Combine extends StringFilter {
     // complex expressions, so override opEqual (and all operators below).
     $placeholder = $this->placeholder();
     $operator = $this->getConditionOperator($this->operator());
+    $expression .= $this->connection->getConditionFieldSuffix($this->operator());
     $this->query->addWhereExpression($this->options['group'], "$expression $operator $placeholder", [$placeholder => $this->value]);
   }
 
@@ -164,6 +165,7 @@ class Combine extends StringFilter {
   protected function opContains($expression) {
     $placeholder = $this->placeholder();
     $operator = $this->getConditionOperator('LIKE');
+    $expression .= $this->connection->getConditionFieldSuffix('LIKE');
     $this->query->addWhereExpression($this->options['group'], "$expression $operator $placeholder", [$placeholder => '%' . $this->connection->escapeLike($this->value) . '%']);
   }
 
@@ -192,6 +194,7 @@ class Combine extends StringFilter {
     $type = $this->operator == 'word' ? 'OR' : 'AND';
     $group = $this->query->setWhereGroup($type);
     $operator = $this->getConditionOperator('LIKE');
+    $expression .= $this->connection->getConditionFieldSuffix('LIKE');
 
     foreach ($matches as $match_key => $match) {
       $temp_placeholder = $placeholder . '_' . $match_key;
@@ -207,6 +210,7 @@ class Combine extends StringFilter {
   protected function opStartsWith($expression) {
     $placeholder = $this->placeholder();
     $operator = $this->getConditionOperator('LIKE');
+    $expression .= $this->connection->getConditionFieldSuffix('LIKE');
     $this->query->addWhereExpression($this->options['group'], "$expression $operator $placeholder", [$placeholder => $this->connection->escapeLike($this->value) . '%']);
   }
 
@@ -216,6 +220,7 @@ class Combine extends StringFilter {
   protected function opNotStartsWith($expression) {
     $placeholder = $this->placeholder();
     $operator = $this->getConditionOperator('NOT LIKE');
+    $expression .= $this->connection->getConditionFieldSuffix('NOT LIKE');
     $this->query->addWhereExpression($this->options['group'], "$expression $operator $placeholder", [$placeholder => $this->connection->escapeLike($this->value) . '%']);
   }
 
@@ -225,6 +230,7 @@ class Combine extends StringFilter {
   protected function opEndsWith($expression) {
     $placeholder = $this->placeholder();
     $operator = $this->getConditionOperator('LIKE');
+    $expression .= $this->connection->getConditionFieldSuffix('LIKE');
     $this->query->addWhereExpression($this->options['group'], "$expression $operator $placeholder", [$placeholder => '%' . $this->connection->escapeLike($this->value)]);
   }
 
@@ -234,6 +240,7 @@ class Combine extends StringFilter {
   protected function opNotEndsWith($expression) {
     $placeholder = $this->placeholder();
     $operator = $this->getConditionOperator('NOT LIKE');
+    $expression .= $this->connection->getConditionFieldSuffix('NOT LIKE');
     $this->query->addWhereExpression($this->options['group'], "$expression $operator $placeholder", [$placeholder => '%' . $this->connection->escapeLike($this->value)]);
   }
 
@@ -243,6 +250,7 @@ class Combine extends StringFilter {
   protected function opNotLike($expression) {
     $placeholder = $this->placeholder();
     $operator = $this->getConditionOperator('NOT LIKE');
+    $expression .= $this->connection->getConditionFieldSuffix('NOT LIKE');
     $this->query->addWhereExpression($this->options['group'], "$expression $operator $placeholder", [$placeholder => '%' . $this->connection->escapeLike($this->value) . '%']);
   }
 
@@ -252,6 +260,7 @@ class Combine extends StringFilter {
   protected function opRegex($expression) {
     $placeholder = $this->placeholder();
     $operator = $this->getConditionOperator('REGEXP');
+    $expression .= $this->connection->getConditionFieldSuffix('REGEXP');
     $this->query->addWhereExpression($this->options['group'], "$expression $operator $placeholder", [$placeholder => $this->value]);
   }
 

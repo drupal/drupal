@@ -272,6 +272,7 @@ class Condition implements ConditionInterface, \Countable {
         }
         // Add defaults.
         $operator += [
+          'field_suffix' => '',
           'prefix' => '',
           'postfix' => '',
           'delimiter' => '',
@@ -316,7 +317,11 @@ class Condition implements ConditionInterface, \Countable {
         }
 
         // Concatenate the left hand part, operator and right hand part.
-        $condition_fragments[] = trim(implode(' ', [$field_fragment, $operator_fragment, $value_fragment]));
+        $condition_fragments[] = trim(implode(' ', [
+          $field_fragment . $operator['field_suffix'],
+          $operator_fragment,
+          $value_fragment,
+        ]));
       }
 
       // Concatenate all conditions using the conjunction and brackets around

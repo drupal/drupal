@@ -27,7 +27,7 @@ class TemporaryQueryTest extends TemporaryQueryTestBase {
     $table_name_test = $connection->queryTemporary('SELECT [name] FROM {test}', []);
 
     // Assert that the table is indeed a temporary one.
-    $temporary_table_info = $connection->query("SELECT * FROM pg_class WHERE relname LIKE '%$table_name_test%'")->fetch();
+    $temporary_table_info = $connection->query("SELECT * FROM pg_class WHERE relname::text LIKE '%$table_name_test%'")->fetch();
     $this->assertEquals("t", $temporary_table_info->relpersistence);
 
     // Assert that both have the same field names.

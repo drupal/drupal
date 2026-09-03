@@ -13,7 +13,7 @@ use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 use Pdo\Pgsql;
 
-// cSpell:ignore ilike nextval
+// cSpell:ignore ilike nextval uncast
 
 /**
  * @addtogroup database
@@ -52,16 +52,25 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * A map of condition operators to PostgreSQL operators.
    *
    * In PostgreSQL, 'LIKE' is case-sensitive. ILIKE should be used for
-   * case-insensitive statements.
+   * case-insensitive statements. PostgreSQL doesn't automatically cast
+   * fields to the right type for these operators, so the fields are cast
+   * to text.
    *
    * @var string[][]
    */
   protected static $postgresqlConditionOperatorMap = [
-    'LIKE' => ['operator' => 'ILIKE'],
-    'LIKE BINARY' => ['operator' => 'LIKE'],
-    'NOT LIKE' => ['operator' => 'NOT ILIKE'],
-    'REGEXP' => ['operator' => '~*'],
-    'NOT REGEXP' => ['operator' => '!~*'],
+    'LIKE' => ['operator' => 'ILIKE', 'field_suffix' => '::text'],
+    'LIKE BINARY' => ['operator' => 'LIKE', 'field_suffix' => '::text'],
+    'NOT LIKE' => ['operator' => 'NOT ILIKE', 'field_suffix' => '::text'],
+    'REGEXP' => ['operator' => '~*', 'field_suffix' => '::text'],
+    'NOT REGEXP' => ['operator' => '!~*', 'field_suffix' => '::text'],
+    // Identity entries, so that conditions built with PostgreSQL operators
+    // directly also get the field cast. For example, Views' StringFilter
+    // maps 'LIKE' to 'ILIKE' itself before adding the condition.
+    'ILIKE' => ['operator' => 'ILIKE', 'field_suffix' => '::text'],
+    'NOT ILIKE' => ['operator' => 'NOT ILIKE', 'field_suffix' => '::text'],
+    '~*' => ['operator' => '~*', 'field_suffix' => '::text'],
+    '!~*' => ['operator' => '!~*', 'field_suffix' => '::text'],
   ];
 
   /**
@@ -253,11 +262,21 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    * {@inheritdoc}
    */
   public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
-    // mapConditionOperator converts some operations (LIKE, REGEXP, etc.) to
-    // PostgreSQL equivalents (ILIKE, ~*, etc.). However PostgreSQL doesn't
-    // automatically cast the fields to the right type for these operators,
-    // so we need to alter the query and add the type-cast.
-    $query = preg_replace('/ ([^ ]+) +(I*LIKE|NOT +I*LIKE|~\*|!~\*) /i', ' ${1}::text ${2} ', $query);
+    // PostgreSQL doesn't automatically cast fields to the right type for the
+    // (I)LIKE and regex operators. Query builder queries get a '::text'
+    // type-cast when their conditions are compiled (see
+    // static::$postgresqlConditionOperatorMap), but queries passed as raw SQL
+    // strings may still contain uncast fields, so add the type-cast here. The
+    // guard skips the rewrite for the many queries that use neither operator.
+    // The optional '::text' in the pattern makes the rewrite idempotent, so
+    // fields that are already cast are not cast again.
+    if (stripos($query, 'LIKE') !== FALSE || str_contains($query, '~*')) {
+      $rewritten = preg_replace('/ ([^ ]+?)(?:::text)? +(I*LIKE|NOT +I*LIKE|~\*|!~\*) /i', ' ${1}::text ${2} ', $query);
+      if ($rewritten !== $query) {
+        @trigger_error('Relying on the PostgreSQL database driver to add a ::text type-cast to fields used with LIKE and regular expression operators in SQL passed as a string is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Add the ::text cast to the field explicitly or use the query builder. See https://www.drupal.org/node/3615418', E_USER_DEPRECATED);
+        $query = $rewritten;
+      }
+    }
     return parent::prepareStatement($query, $options, $allow_row_count);
   }
 

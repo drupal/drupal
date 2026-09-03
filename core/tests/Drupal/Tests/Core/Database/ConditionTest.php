@@ -15,6 +15,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
+// cSpell:ignore ilike
+
 /**
  * Tests Drupal\Core\Database\Query\Condition.
  */
@@ -178,6 +180,36 @@ class ConditionTest extends UnitTestCase {
     // $data[] = ['name NOT EXISTS', 'name', NULL, 'NOT EXISTS'];
 
     return $data;
+  }
+
+  /**
+   * Tests compile with an operator that appends a suffix to the field.
+   *
+   * @legacy-covers ::compile
+   */
+  public function testCompileWithFieldSuffixOperator(): void {
+    $connection = $this->createStub(Connection::class);
+    $connection->method('escapeField')->willReturnCallback(function (string $field): string|array|null {
+      return preg_replace('/[^A-Za-z0-9_.]+/', '', $field);
+    });
+    $connection->method('mapConditionOperator')->willReturn(['operator' => 'ILIKE', 'field_suffix' => '::text']);
+    $connection->method('condition')->willReturn(new Condition('AND'));
+
+    $query_placeholder = $this->prophesize(PlaceholderInterface::class);
+
+    $counter = 0;
+    $query_placeholder->nextPlaceholder()->will(function () use (&$counter): int {
+      return $counter++;
+    });
+    $query_placeholder->uniqueIdentifier()->willReturn(4);
+    $query_placeholder = $query_placeholder->reveal();
+
+    $condition = $connection->condition('AND');
+    $condition->condition('name', '%value%', 'LIKE');
+    $condition->compile($connection, $query_placeholder);
+
+    $this->assertEquals('name::text ILIKE :db_condition_placeholder_0', $condition->__toString());
+    $this->assertEquals([':db_condition_placeholder_0' => '%value%'], $condition->arguments());
   }
 
   /**
