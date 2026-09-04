@@ -118,7 +118,7 @@
     border-color: var(--admin-color-error) !important;
   }
 
-  .gin--dark-mode & {
+  .dark-mode & {
     .views-exposed-form,
     .views-form {
       background: var(--admin-color-bg-surface-nested);
@@ -148,11 +148,11 @@
     width: 100%;
   }
 
-  .gin-layer-wrapper {
+  .layer-wrapper {
     margin-block: var(--admin-space-l);
   }
 
-  .gin-confirm-form {
+  .confirm-form {
     margin-block-start: var(--admin-space-m);
     margin-block-end: var(--admin-space-s);
   }
@@ -173,6 +173,6 @@
   border: 1px solid var(--admin-color-border);
 }
 
-#drupal-modal .gin-sticky-form-actions.form-actions {
+#drupal-modal .sticky-form-actions.form-actions {
   display: none;
 }

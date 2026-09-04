@@ -43,7 +43,7 @@
         background-color: var(--admin-color-primary);
       }
 
-      &[data-gin-accent="custom"] {
+      &[data-accent="custom"] {
         border-color: var(--admin-color-border);
         background-color: #fff;
         background-image: url(../../images/settings/custom-color.jpg);
@@ -59,7 +59,7 @@
     }
 
     input,
-    .gin--dark-mode & input {
+    .dark-mode & input {
       background-color: var(--admin-color-primary);
     }
 
@@ -118,7 +118,7 @@
   border: 1px solid var(--admin-color-border-input);
   border-radius: var(--admin-space-xl);
 
-  .gin--dark-mode & {
+  .dark-mode & {
     background: var(--admin-color-bg-surface-nested);
   }
 
@@ -192,7 +192,7 @@
       &[data-drupal-selector="edit-layout-density-default"] {
         background-image: url(../../images/settings/layout_density_default.png);
 
-        .gin--dark-mode & {
+        .dark-mode & {
           background-image: url(../../images/settings/layout_density_default_dark_mode.png);
         }
       }
@@ -200,7 +200,7 @@
       &[data-drupal-selector="edit-layout-density-medium"] {
         background-image: url(../../images/settings/layout_density_medium.png);
 
-        .gin--dark-mode & {
+        .dark-mode & {
           background-image: url(../../images/settings/layout_density_medium_dark_mode.png);
         }
       }
@@ -208,7 +208,7 @@
       &[data-drupal-selector="edit-layout-density-small"] {
         background-image: url(../../images/settings/layout_density_small.png);
 
-        .gin--dark-mode & {
+        .dark-mode & {
           background-image: url(../../images/settings/layout_density_small_dark_mode.png);
         }
       }

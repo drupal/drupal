@@ -1,12 +1,12 @@
 /**
  * @file
- * Font-face declaration for the Gin Inter font.
+ * Font-face declaration for the Default Admin Inter font.
  */
 
 /* Inter v3.19 */
-/* cspell:ignore Ginter, gvar */
+/* cspell:ignore gvar */
 @font-face {
-  font-family: Ginter;
+  font-family: Inter;
   src:
     url(../../font/inter.woff2) format("woff2 supports variations(gvar)"),
     url(../../font/inter.woff2) format("woff2-variations"),

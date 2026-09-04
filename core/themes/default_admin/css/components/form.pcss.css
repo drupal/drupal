@@ -20,7 +20,7 @@
   }
 
   /* Special case, form starts with a form item, remove margin-block-start. */
-  #block-gin-content > form > &:first-of-type {
+  #block-default-admin-content > form > &:first-of-type {
     margin-block-start: 0;
   }
 

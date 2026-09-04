@@ -62,7 +62,7 @@
     }
   }
 
-  .gin--dark-mode & {
+  .dark-mode & {
     border-color: var(--admin-color-border);
 
     .tabs-wrapper:not(.is-horizontal) & {
@@ -74,7 +74,7 @@
   @media (min-width: 48rem) {
     margin-block-end: 0;
 
-    .gin--high-contrast-mode .is-horizontal &::after {
+    .high-contrast-mode .is-horizontal &::after {
       border-block-end: 1px solid;
     }
   }
@@ -187,7 +187,7 @@
     }
   }
 
-  .gin--dark-mode & {
+  .dark-mode & {
     &,
     &.is-active {
       border-color: var(--admin-color-border);

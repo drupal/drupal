@@ -15,7 +15,7 @@
  */
 #}
 {% if content %}
-  <div{{ attributes.addClass('admin-list', 'gin-layer-wrapper') }}>
+  <div{{ attributes.addClass('admin-list', 'layer-wrapper') }}>
     {% for item in content %}
       {% set description_id = item.title|render|clean_id ~ '-desc' %}
       <div class="admin-item">

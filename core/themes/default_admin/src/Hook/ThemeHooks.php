@@ -49,15 +49,6 @@ class ThemeHooks implements TrustedCallbackInterface {
    */
   #[Hook('css_alter')]
   public function cssAlter(array &$css): void {
-    // Use anything greater than 100 to have it load after the theme as
-    // CSS_AGGREGATE_THEME is set to 100. Let's be on the safe side and assign a
-    // high number to it.
-    $base_css = $this->themeExtensionList->getPath('default_admin') . '/migration/css/base/gin.css';
-
-    if (isset($css[$base_css])) {
-      $css[$base_css]['group'] = 200;
-    }
-
     // The admin-custom.css file should be loaded just after admin.css file.
     $custom_css = 'public://admin-custom.css';
     if (isset($css[$custom_css])) {
@@ -176,32 +167,32 @@ class ThemeHooks implements TrustedCallbackInterface {
 
     $settings = Settings::getInstance();
     // Expose theme settings to JS.
-    $page['#attached']['drupalSettings']['gin']['dark_mode'] = $settings->get('enable_dark_mode');
-    $page['#attached']['drupalSettings']['gin']['dark_mode_class'] = 'gin--dark-mode';
-    $page['#attached']['drupalSettings']['gin']['accent_colors'] = Helper::accentColors();
-    $page['#attached']['drupalSettings']['gin']['preset_accent_color'] = $settings->get('preset_accent_color');
-    $page['#attached']['drupalSettings']['gin']['accent_color'] = $settings->get('accent_color');
-    $page['#attached']['drupalSettings']['gin']['preset_focus_color'] = $settings->get('preset_focus_color');
-    $page['#attached']['drupalSettings']['gin']['focus_color'] = $settings->get('focus_color');
-    $page['#attached']['drupalSettings']['gin']['high_contrast_mode'] = $settings->get('high_contrast_mode');
-    $page['#attached']['drupalSettings']['gin']['high_contrast_mode_class'] = 'gin--high-contrast-mode';
-    $page['#attached']['drupalSettings']['gin']['show_user_theme_settings'] = $settings->get('show_user_theme_settings');
-
-    // Expose stylesheets to JS.
-    $base_theme_url = '/' . $this->themeExtensionList->getPath('default_admin');
-    $page['#attached']['drupalSettings']['gin']['variables_css_path'] = $base_theme_url . '/migration/css/theme/variables.css';
-    $page['#attached']['drupalSettings']['gin']['accent_css_path'] = $base_theme_url . '/migration/css/theme/accent.css';
+    $default_admin_settings = [
+      'dark_mode' => $settings->get('enable_dark_mode'),
+      'dark_mode_class' => 'dark-mode',
+      'accent_colors' => Helper::accentColors(),
+      'preset_accent_color' => $settings->get('preset_accent_color'),
+      'accent_color' => $settings->get('accent_color'),
+      'preset_focus_color' => $settings->get('preset_focus_color'),
+      'focus_color' => $settings->get('focus_color'),
+      'high_contrast_mode' => $settings->get('high_contrast_mode'),
+      'high_contrast_mode_class' => 'high-contrast-mode',
+      'show_user_theme_settings' => $settings->get('show_user_theme_settings'),
+    ];
+    $page['#attached']['drupalSettings']['defaultAdmin'] = $default_admin_settings;
+    // Retain the previous key for integrations while the theme is experimental.
+    $page['#attached']['drupalSettings']['gin'] = $default_admin_settings;
 
     $page['#attached']['html_head'][] = [
       [
         '#tag' => 'script',
         '#attributes' => [
           'type' => 'application/json',
-          'id' => 'gin-setting-dark_mode',
+          'id' => 'default-admin-setting-dark_mode',
         ],
-        '#value' => new FormattableMarkup('{ "ginDarkMode": "@value" }', ['@value' => $settings->get('enable_dark_mode') ?? 'unknown']),
+        '#value' => new FormattableMarkup('{ "defaultAdminDarkMode": "@value" }', ['@value' => $settings->get('enable_dark_mode') ?? 'unknown']),
       ],
-      'gin_dark_mode',
+      'default_admin_dark_mode',
     ];
   }
 

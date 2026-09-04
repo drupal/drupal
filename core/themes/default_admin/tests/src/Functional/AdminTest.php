@@ -19,6 +19,7 @@ class AdminTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'block',
     'node',
   ];
 
@@ -49,14 +50,20 @@ class AdminTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that Default Admin always adds its message CSS and Classy's.
+   * Tests Default Admin settings and markup.
    */
   public function testDefaultAdminSettings(): void {
     $response = $this->drupalGet('/admin/content');
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertStringContainsString('"defaultAdmin":{', $response);
+    $this->assertStringContainsString('"gin":{', $response);
     $this->assertStringContainsString('"dark_mode":"auto"', $response);
     $this->assertStringContainsString('"preset_accent_color":"blue"', $response);
     $this->assertStringContainsString('"preset_focus_color":"gin"', $response);
+    $this->assertSession()->elementAttributeContains('css', 'html', 'data-admin-focus', 'gin');
+    $this->assertSession()->elementAttributeNotExists('css', 'html', 'data-gin-focus');
+    $this->assertSession()->elementExists('css', 'nav.breadcrumb[aria-labelledby="system-breadcrumb"]');
+    $this->assertSession()->elementExists('css', 'nav.breadcrumb #system-breadcrumb.visually-hidden');
   }
 
   /**
@@ -67,6 +74,16 @@ class AdminTest extends BrowserTestBase {
     $response = $this->drupalGet('/admin/content');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertStringContainsString('"dark_mode":"1"', $response);
+  }
+
+  /**
+   * Tests the high contrast setting.
+   */
+  public function testHighContrastSetting(): void {
+    \Drupal::configFactory()->getEditable('default_admin.settings')->set('high_contrast_mode', TRUE)->save();
+    $this->drupalGet('/admin/content');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->elementAttributeContains('css', 'html', 'class', 'high-contrast-mode');
   }
 
   /**

@@ -764,7 +764,7 @@ html:not(.no-touchevents) {
     margin-top: 36px;
   }
 
-  .gin-layer-wrapper {
+  .layer-wrapper {
     border-color: var(--admin-color-border);
   }
 }
@@ -1030,7 +1030,7 @@ html:not(.no-touchevents) {
 /* @group Forms */
 
 /**
- * Claro positions the summary absolutely, but does not have a way to ignore
+ * Default Admin positions the summary absolutely, but does not have a way to ignore
  * details without a summary so we make one up.
  *
  * @todo Neither a fieldset without legend nor a details without summary is
@@ -1043,7 +1043,7 @@ details.fieldset-no-legend {
 
 /* @group Dependent options */
 
-/* This is necessary to supercede the Claro .form-item
+/* This is necessary to supercede the Default Admin .form-item
  * reset declaration that sets the margin to zero.
  */
 .form-item-options-expose-required,
@@ -1093,7 +1093,7 @@ details.fieldset-no-legend {
  *
  * The tabs that switch between sections
  *
- * @todo this group contains lots of duplicates from core styles because Claro
+ * @todo this group contains lots of duplicates from core styles because Default Admin
  *   has its custom markup for views tabs. Some of these could be removed after
  *   https://www.drupal.org/node/3051605 has been solved.
  */
@@ -1389,7 +1389,7 @@ details.fieldset-no-legend {
 
 .filterable-option .form-item.form-type-checkbox {
   padding-top: 4px;
-  /* This selector is aggressive because Claro's reset for .form-items is aggressive. */
+  /* This selector is aggressive because Default Admin's reset for .form-items is aggressive. */
   padding-bottom: 4px;
   padding-inline-start: 4px;
 }
@@ -1487,7 +1487,7 @@ a.views-field-excluded {
   }
 }
 
-/* @todo. This was in Gin's Views file. Might could move it. */
+/* @todo. This was in Default Admin's Views file. Might could move it. */
 .system-modules,
 .locale-translation-status-form {
   tr.even,
