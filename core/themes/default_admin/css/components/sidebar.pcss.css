@@ -5,7 +5,7 @@
 
 @import "../base/media-queries.pcss.css";
 
-#gin-sidebar-draggable {
+#sidebar-draggable {
   position: absolute;
   z-index: 104;
   display: block;

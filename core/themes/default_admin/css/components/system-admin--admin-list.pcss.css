@@ -9,7 +9,7 @@
 .admin-list {
   margin-block: 1em 2em;
 
-  /* Override specificity of .gin-layer-wrapper in layers.css. */
+  /* Override specificity of .layer-wrapper in layers.css. */
   &[class] {
     padding: var(--admin-space-s) 0;
   }

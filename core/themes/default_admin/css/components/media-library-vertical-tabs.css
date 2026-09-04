@@ -130,7 +130,7 @@
     }
   }
 
-  /* Gin state overrides — must come after base states so source-order cascade wins. */
+  /* Default Admin state overrides — must come after base states so source-order cascade wins. */
   &:active,
   &:hover,
   &:focus,

@@ -19,7 +19,7 @@
   /*
    * Common.
    */
-  --transition: all var(--admin-duration-fast) var(--admin-easing); /* Claro 'all' composite, kept for the shortcut module's Claro backport. */
+  --transition: all var(--admin-duration-fast) var(--admin-easing); /* Default Admin 'all' composite. */
   --focus-border-size: calc(var(--admin-radius-2xs) - 1px);
   --focus-border-offset-size: 0px;
   --outline-size: 0.25rem;
@@ -45,10 +45,8 @@
   --admin-icon-size-sidebar-toggle: 1.3125rem;
 
   /*
-   * Corner radii. Canonical --admin-radius-* scale; the former Gin
-   * --gin-border-* scale and Claro --base-border-radius (2px) are folded in here
-   * — the Claro base radius became --admin-radius-2xs. Authored in px; the build's
-   * px-to-rem step converts them.
+   * Corner radii use the canonical --admin-radius-* scale. Authored in px; the
+   * build's px-to-rem step converts them.
    */
   --admin-radius-2xs: 2px;
   --admin-radius-xs: 0.25rem;
@@ -59,9 +57,8 @@
   --size-summary-border-radius: calc(var(--admin-radius-m) - 1px);
 
   /*
-   * Motion. Duration split from easing. The old Gin --gin-transition-fast
-   * (0.3s) was misnamed — 0.3s is the SLOW one, so it became --admin-transition-slow.
-   * The duplicate Claro --easing + Gin --gin-easing (identical) folded into --admin-easing.
+   * Motion durations are split from easing. The 0.3s duration is the slow
+   * transition, while duplicate easing declarations use --admin-easing.
    */
   --admin-duration-fast: 0.15s;
   --admin-duration-slow: 0.3s;

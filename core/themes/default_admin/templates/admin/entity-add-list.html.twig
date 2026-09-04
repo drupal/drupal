@@ -21,12 +21,12 @@
   ]
 %}
 {% if bundles is not empty %}
-  <div class="panel gin-layer-wrapper">
+  <div class="panel layer-wrapper">
     {% if title %}
       <h3 class="panel__title">{{ title }}</h3>
     {% endif %}
 
-    <div{{ attributes.addClass('admin-list', 'panel__content', 'gin-layer-wrapper') }}>
+    <div{{ attributes.addClass('admin-list', 'panel__content', 'layer-wrapper') }}>
       {% for bundle in bundles %}
         {#
           Add 'admin-item__link' class to the link attributes.

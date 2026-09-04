@@ -33,7 +33,7 @@
     background-color: var(--admin-color-text-disabled);
     clip-path: circle(var(--admin-space-l) at 50% 50%); /* Fix Safari bug */
 
-    .gin--dark-mode & {
+    .dark-mode & {
       background-color: var(--admin-color-bg-input);
     }
 
@@ -50,7 +50,7 @@
         transform: translateX(1rem);
       }
 
-      .gin--dark-mode & {
+      .dark-mode & {
         background-color: var(--admin-color-border-input);
       }
 
@@ -99,11 +99,11 @@
           transform: translateX(-1rem);
         }
 
-        .gin--dark-mode & {
+        .dark-mode & {
           background-color: var(--admin-color-primary-hover);
         }
 
-        .gin--high-contrast-mode & {
+        .high-contrast-mode & {
           background-color: var(--admin-color-border);
         }
 

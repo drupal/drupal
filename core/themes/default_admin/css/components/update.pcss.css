@@ -18,7 +18,7 @@
 }
 
 .project-update__status {
-  .gin-status-icon {
+  .admin-status-icon {
     display: inline-block;
     width: 1rem;
     height: 1rem;
@@ -66,7 +66,7 @@ tr.color-warning,
   &:focus {
     background-color: var(--admin-color-bg-warning);
 
-    .gin--dark-mode & {
+    .dark-mode & {
       color: var(--admin-color-warning);
     }
   }
@@ -83,7 +83,7 @@ tr.color-error,
   &:focus {
     background-color: var(--admin-color-bg-error);
 
-    .gin--dark-mode & {
+    .dark-mode & {
       color: var(--admin-color-error);
     }
   }

@@ -218,8 +218,8 @@ final class Settings implements ContainerInjectionInterface {
    *   The theme setting form elements.
    */
   public function getSettingsForm(?AccountInterface $account = NULL): array {
-    $experimental_label = ' <span class="gin-experimental-flag">Experimental</span>';
-    $beta_label = ' <span class="gin-beta-flag">Beta</span>';
+    $experimental_label = ' <span class="admin-experimental-flag">Experimental</span>';
+    $beta_label = ' <span class="admin-beta-flag">Beta</span>';
 
     $form['enable_dark_mode'] = [
       '#type' => 'radios',
@@ -292,7 +292,7 @@ final class Settings implements ContainerInjectionInterface {
       '#options' => [
         'gin' => $this->t('Default Admin Focus color (Default)'),
         'green' => $this->t('Green'),
-        'claro' => $this->t('Claro Green'),
+        'claro' => $this->t('Legacy green'),
         'orange' => $this->t('Orange'),
         'dark' => $this->t('Neutral'),
         'accent' => $this->t('Same as Accent color'),

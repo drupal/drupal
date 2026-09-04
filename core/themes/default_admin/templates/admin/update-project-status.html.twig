@@ -29,15 +29,15 @@
 #}
 {%
   set status_classes = [
-    project.status == constant('Drupal\\update\\UpdateManagerInterface::NOT_SECURE') ? 'project-update__status--security-error gin-status gin-status--danger',
-    project.status == constant('Drupal\\update\\UpdateManagerInterface::REVOKED') ? 'project-update__status--revoked gin-status gin-status--danger',
-    project.status == constant('Drupal\\update\\UpdateManagerInterface::NOT_SUPPORTED') ? 'project-update__status--not-supported gin-status gin-status--danger',
-    project.status == constant('Drupal\\update\\UpdateManagerInterface::NOT_CURRENT') ? 'project-update__status--not-current gin-status gin-status--warning',
-    project.status == constant('Drupal\\update\\UpdateManagerInterface::CURRENT') ? 'project-update__status--current gin-status gin-status--success',
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::NOT_SECURE') ? 'project-update__status--security-error admin-status admin-status--danger',
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::REVOKED') ? 'project-update__status--revoked admin-status admin-status--danger',
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::NOT_SUPPORTED') ? 'project-update__status--not-supported admin-status admin-status--danger',
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::NOT_CURRENT') ? 'project-update__status--not-current admin-status admin-status--warning',
+    project.status == constant('Drupal\\update\\UpdateManagerInterface::CURRENT') ? 'project-update__status--current admin-status admin-status--success',
   ]
 %}
 <div{{ status.attributes.addClass('project-update__status', status_classes) }}>
-  <span class="gin-status-icon">
+  <span class="admin-status-icon">
     {{ status.icon }}
   </span>
   {%- if status.label -%}

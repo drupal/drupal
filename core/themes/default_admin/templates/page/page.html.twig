@@ -43,7 +43,7 @@
 {% set local_actions_block = active_admin_theme ~ '_local_actions' %}
 
 {% if active_navigation %}
-  <header class="region gin--navigation-top-bar--offset {{ default_admin_form_actions_class }}">
+  <header class="region admin--navigation-top-bar--offset {{ default_admin_form_actions_class }}">
     <div class="layout-container region-sticky__items">
       <div class="region-sticky__items__inner">
         {{ page.header[page_title_block] }}
@@ -55,18 +55,18 @@
     </div>
   </header>
 {% else %}
-  <div class="gin-secondary-toolbar layout-container">
-    <div class="gin-breadcrumb-wrapper">
+  <div class="admin-secondary-toolbar layout-container">
+    <div class="breadcrumb-wrapper">
     {% if route_name == 'entity.node.canonical' %}
-      <div class="region region-breadcrumb gin-region-breadcrumb">
+      <div class="region region-breadcrumb">
         <nav class="breadcrumb" role="navigation" aria-labelledby="system-breadcrumb">
           <h2 id="system-breadcrumb" class="visually-hidden">{{ 'Breadcrumb'|t }}</h2>
           <ol class="breadcrumb__list">
             <li class="breadcrumb__item">
               {% if entity_edit_url and entity_title %}
-                <a class="breadcrumb__link gin-back-to-admin" href="{{ entity_edit_url }}">{{ 'Edit %title'|t({ '%title': entity_title }) }}</a>
+                <a class="breadcrumb__link back-to-admin" href="{{ entity_edit_url }}">{{ 'Edit %title'|t({'%title': entity_title}) }}</a>
               {% else %}
-                <a class="breadcrumb__link gin-back-to-admin" href="{{ path('system.admin_content') }}">{{ 'Back to Administration'|t }}</a>
+                <a class="breadcrumb__link back-to-admin" href="{{ path('system.admin_content') }}">{{ 'Back to Administration'|t }}</a>
               {% endif %}
             </li>
           </ol>

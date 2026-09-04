@@ -196,7 +196,7 @@
     border-color: var(--admin-color-text);
     box-shadow: 0 0 0 2px var(--admin-color-text);
 
-    .gin--dark-mode & {
+    .dark-mode & {
       border-color: var(--admin-color-border);
     }
   }

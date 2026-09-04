@@ -14,14 +14,14 @@
 
 /* Wrapper around the autocomplete element. */
 
-.gin-autocomplete {
+.admin-autocomplete {
   position: relative;
   width: fit-content;
 }
 
 /* The "Loading" message gets positioned to the top right. */
 
-.gin-autocomplete__message {
+.admin-autocomplete__message {
   position: absolute;
   max-width: 100%;
   margin-block-end: 0.15rem;
@@ -42,7 +42,7 @@
       width: 0.875rem;
       height: 0.875rem;
       content: "";
-      animation: gin-throbber 1s linear infinite;
+      animation: throbber 1s linear infinite;
       text-align: end;
       border: 2px solid var(--admin-color-bg-input);
       border-block-start: 2px solid var(--admin-color-primary);
@@ -95,7 +95,7 @@
   }
 }
 
-@keyframes gin-throbber {
+@keyframes throbber {
   0% {
     transform: rotateZ(0);
   }

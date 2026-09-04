@@ -7,16 +7,20 @@
    * Back to site link points to the last non-administrative page the user
    * visited within the same browser tab.
    */
-  Drupal.behaviors.ginEscapeAdmin = {
+  Drupal.behaviors.adminEscapeAdmin = {
     attach: (context) => {
-      once('ginEscapeAdmin', '[data-gin-toolbar-escape-admin]', context).forEach(el => {
-        const escapeAdminPath = sessionStorage.getItem('escapeAdminPath');
+      once('adminEscapeAdmin', '[data-toolbar-escape-admin]', context).forEach(
+        (el) => {
+          const escapeAdminPath = sessionStorage.getItem('escapeAdminPath');
 
-        if (drupalSettings.path.currentPathIsAdmin && escapeAdminPath !== null) {
-          el.setAttribute('href', escapeAdminPath);
-        }
-      });
+          if (
+            drupalSettings.path.currentPathIsAdmin &&
+            escapeAdminPath !== null
+          ) {
+            el.setAttribute('href', escapeAdminPath);
+          }
+        },
+      );
     },
   };
-
 })(Drupal, drupalSettings, once);

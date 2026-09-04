@@ -284,10 +284,9 @@
       }.bind(this),
     );
 
-    if ($table.parent('.gin-table-scroll-wrapper').length > 0) {
-      $table.parent('.gin-table-scroll-wrapper').before($toggleWeightWrapper);
-    }
-    else {
+    if ($table.parent('.table-scroll-wrapper').length > 0) {
+      $table.parent('.table-scroll-wrapper').before($toggleWeightWrapper);
+    } else {
       $table.before($toggleWeightWrapper);
     }
 
@@ -1428,11 +1427,14 @@
       let $moveTo = this.table;
 
       // Check where to insert
-      if ($changedWarning.parents('.gin-table-scroll-wrapper').has('.tabledrag-toggle-weight-wrapper')) {
+      if (
+        $changedWarning
+          .parents('.table-scroll-wrapper')
+          .has('.tabledrag-toggle-weight-wrapper')
+      ) {
         $moveTo = '.tabledrag-toggle-weight-wrapper';
-      }
-      else if ($changedWarning.parents('.gin-table-scroll-wrapper')) {
-        $moveTo = '.gin-table-scroll-wrapper';
+      } else if ($changedWarning.parents('.table-scroll-wrapper')) {
+        $moveTo = '.table-scroll-wrapper';
       }
 
       $changedWarning

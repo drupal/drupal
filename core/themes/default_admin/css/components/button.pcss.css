@@ -155,7 +155,7 @@ a.button:active {
 
 a.button--primary:hover,
 a.button--primary:active {
-  .gin--dark-mode & {
+  .dark-mode & {
     color: var(--admin-color-bg);
   }
 }

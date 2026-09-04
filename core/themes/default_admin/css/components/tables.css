@@ -7,7 +7,7 @@
 
 /**
  * @file
- * Claro styles for Tables.
+ * Default Admin styles for Tables.
  */
 
 table {
@@ -70,7 +70,7 @@ table {
   }
 
   tr.selected {
-    .gin--dark-mode & {
+    .dark-mode & {
       border-color: rgb(255, 255, 255, 0.2);
     }
 
@@ -96,7 +96,7 @@ table {
     }
   }
 
-  &.gin--sticky-table-header {
+  &.sticky-table-header {
     position: sticky;
     z-index: 97;
     visibility: hidden;
@@ -333,10 +333,10 @@ td {
 
   & > .form-item > .form-element,
   & > .ajax-new-content > .form-item > .form-element,
-  & > .form-item > .claro-autocomplete,
-  & > .form-item > .claro-autocomplete > .form-element,
-  & > .ajax-new-content > .form-item > .claro-autocomplete,
-  & > .ajax-new-content > .form-item > .claro-autocomplete > .form-element {
+  & > .form-item > .admin-autocomplete,
+  & > .form-item > .admin-autocomplete > .form-element,
+  & > .ajax-new-content > .form-item > .admin-autocomplete,
+  & > .ajax-new-content > .form-item > .admin-autocomplete > .form-element {
     width: 100%;
   }
 
@@ -409,7 +409,7 @@ td.priority-medium {
   }
 }
 
-.gin-table-scroll-wrapper {
+.table-scroll-wrapper {
   clear: both;
   overflow-x: auto;
   overflow-y: hidden;
@@ -417,7 +417,7 @@ td.priority-medium {
   margin-block-start: calc(var(--admin-space-xs) * -1);
 }
 
-.gin-horizontal-scroll-shadow {
+.horizontal-scroll-shadow {
   background-color: var(--admin-color-bg-surface);
   background-image: linear-gradient(to right, var(--admin-color-bg-surface), var(--admin-color-bg-surface)), linear-gradient(to right, var(--admin-color-bg-surface), var(--admin-color-bg-surface)), linear-gradient(to right, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0)), linear-gradient(to left, rgb(0, 0, 0, 0.125), rgb(255, 255, 255, 0));
   background-repeat: no-repeat;
@@ -535,7 +535,7 @@ td.priority-medium {
   }
 }
 
-.gin-layer-wrapper .views-table {
+.layer-wrapper .views-table {
   margin-block-start: 0;
 }
 
