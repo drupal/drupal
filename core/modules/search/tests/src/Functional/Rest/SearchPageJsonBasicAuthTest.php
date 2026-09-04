@@ -6,12 +6,14 @@ namespace Drupal\Tests\search\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests Search Page Json Basic Auth.
  */
 #[Group('rest')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class SearchPageJsonBasicAuthTest extends SearchPageResourceTestBase {
 

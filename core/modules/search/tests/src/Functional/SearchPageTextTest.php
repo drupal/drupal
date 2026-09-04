@@ -7,12 +7,14 @@ namespace Drupal\Tests\search\Functional;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the search help text and search page text.
  */
 #[Group('search')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class SearchPageTextTest extends BrowserTestBase {
 

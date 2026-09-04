@@ -7,12 +7,14 @@ namespace Drupal\Tests\search\Functional;
 use Drupal\Tests\content_translation\Functional\ContentTranslationTestBase;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests search index rebuild on translated content deletion.
  */
 #[Group('search')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class SearchNodeTranslationUITest extends ContentTranslationTestBase {
 

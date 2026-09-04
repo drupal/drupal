@@ -16,11 +16,13 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests Drupal\search\SearchPageRepository.
  */
 #[CoversClass(SearchPageRepository::class)]
+#[IgnoreDeprecations]
 #[Group('search')]
 class SearchPageRepositoryTest extends UnitTestCase {
 
