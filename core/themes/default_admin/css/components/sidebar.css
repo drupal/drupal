@@ -142,10 +142,22 @@ body[data-meta-sidebar="open"] {
     &::before {
       background-color: var(--admin-color-primary);
     }
+
+    @media (forced-colors: active) {
+      &::before {
+        background: buttonText;
+      }
+    }
   }
 
   &.is-active {
     background-color: var(--admin-color-bg-item-hover);
+  }
+
+  @media (forced-colors: active) {
+    &::before {
+      background: buttonText;
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
