@@ -103,10 +103,11 @@ class FormValidator implements FormValidatorInterface {
       return;
     }
 
-    // If the session token was set by self::prepareForm(), ensure that it
+    // If the session token was set by
+    // \Drupal\Core\Form\FormBuilderInterface::prepareForm(), ensure that it
     // matches the current user's session. This is duplicate to code in
-    // FormBuilder::doBuildForm() but left to protect any custom form handling
-    // code.
+    // \Drupal\Core\Form\FormBuilderInterface::doBuildForm() but left to protect
+    // any custom form handling code.
     if (isset($form['#token'])) {
       if (!$this->csrfToken->validate($form_state->getValue('form_token'), $form['#token']) || $form_state->hasInvalidToken()) {
         $this->setInvalidTokenError($form_state);
@@ -177,10 +178,10 @@ class FormValidator implements FormValidatorInterface {
           NestedArray::setValue($values, $parents, $button_value);
         }
 
-        // Additionally, self::doBuildForm() places the button value in
-        // $form_state->getValue(BUTTON_NAME). If it's still there, after
-        // validation handlers have run, copy it to $values, but do not override
-        // what may already be in $values.
+        // Additionally, \Drupal\Core\Form\FormBuilderInterface::doBuildForm()
+        // places the button value in $form_state->getValue(BUTTON_NAME).
+        // If it's still there, after validation handlers have run, copy it
+        // to $values, but do not override what may already be in $values.
         $name = $triggering_element['#name'];
         if (!isset($values[$name]) && $form_state->getValue($name) === $button_value) {
           $values[$name] = $button_value;
