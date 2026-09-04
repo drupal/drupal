@@ -36,8 +36,8 @@ function _update_no_data() {
  * modification timestamp than the last time we checked for available update
  * data. If any .info.yml file was modified, it almost certainly means a new
  * version of something was installed. Without fresh available update data, the
- * logic in update_calculate_project_data() will be wrong and produce confusing,
- * bogus results.
+ * logic in \Drupal\update\UpdateManagerInterface::calculateProjectData() will
+ * be wrong and produce confusing, bogus results.
  *
  * @param bool $refresh
  *   (optional) Boolean to indicate if this method should refresh automatically

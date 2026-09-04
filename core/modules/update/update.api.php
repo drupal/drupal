@@ -83,7 +83,7 @@ function hook_update_projects_alter(&$projects) {
  *   Reference to an array of information about available updates to each
  *   project installed on the system.
  *
- * @see update_calculate_project_data()
+ * @see \Drupal\update\UpdateManagerInterface::calculateProjectData()
  */
 function hook_update_status_alter(&$projects) {
   $settings = \Drupal::config('update_advanced.settings')->get('projects');

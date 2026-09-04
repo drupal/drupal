@@ -11,7 +11,7 @@ services:
       - { name: access_check, applies_to: _access_update_manager }
   update.manager:
     class: Drupal\update\UpdateManager
-    arguments: ['@config.factory', '@module_handler', '@update.processor', '@string_translation', '@keyvalue.expirable', '@theme_handler', '@extension.list.module', '@extension.list.theme']
+    autowire: true
   Drupal\update\UpdateManagerInterface: '@update.manager'
   update.processor:
     class: Drupal\update\UpdateProcessor
@@ -29,4 +29,6 @@ services:
     parent: logger.channel_base
     arguments: [ 'update' ]
   Drupal\update\MailHandler:
+    autowire: true
+  Drupal\update\UpdateCalculator:
     autowire: true

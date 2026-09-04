@@ -121,13 +121,14 @@ class DevReleaseTest extends KernelTestBase {
   }
 
   /**
-   * Gets project data from update_calculate_project_data().
+   * Gets project data from \Drupal\update\UpdateManagerInterface::calculateProjectData().
    *
    * @param array $system_info
    *   System test information as used by update_test_system_info_alter().
    *
    * @return array[]
-   *   The project data as returned by update_calculate_project_data().
+   *   The project data as returned by
+   *   \Drupal\update\UpdateManagerInterface::calculateProjectData().
    *
    * @see update_test_system_info_alter()
    */
@@ -135,9 +136,10 @@ class DevReleaseTest extends KernelTestBase {
     $this->config('update_test.settings')
       ->set('system_info', $system_info)
       ->save();
-    \Drupal::service('update.manager')->reset();
-    $available = \Drupal::service('update.manager')->getAvailable(TRUE);
-    return update_calculate_project_data($available);
+
+    \Drupal::service(UpdateManagerInterface::class)->reset();
+    $available = \Drupal::service(UpdateManagerInterface::class)->getAvailable(TRUE);
+    return \Drupal::service(UpdateManagerInterface::class)->calculateProjectData($available);
   }
 
 }
