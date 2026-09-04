@@ -179,6 +179,15 @@ abstract class AssetControllerBase extends FileDownloadController {
     $groups = $this->getGroups($attached_assets, $request);
 
     $group = $this->getGroup($groups, $request->query->get('delta'));
+
+    // External assets, and local assets with preprocessing disabled, never
+    // have an aggregate. Reject them before the hash comparison below, which
+    // redirects a mismatch to the same group with a valid hash, so the retry
+    // would reach the optimizer and throw.
+    if ($group['type'] !== 'file' || $group['preprocess'] === FALSE) {
+      throw new BadRequestHttpException('The requested asset group is not aggregated.');
+    }
+
     // Generate a hash based on the asset group, this uses the same method as
     // the collection optimizer does to create the filename, so it should match.
     $generated_hash = $this->generateHash($group);
