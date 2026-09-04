@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\pgsql\Kernel\pgsql;
 
+use Drupal\Core\Database\SchemaDefinition\GeneratedColumnStorage;
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 use Drupal\pgsql\Driver\Database\pgsql\Schema;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cSpell:ignore attname attnum attrelid objid refobjid refobjsubid regclass
+// cSpell:ignore attgenerated attname attnum attrelid objid refobjid refobjsubid
+// cSpell:ignore regclass
 // cspell:ignore relkind relname
 
 /**
@@ -26,6 +28,20 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
    */
   public function checkSchemaComment(string|false $description, string $table, ?string $column = NULL): void {
     $this->assertSame($description, $this->schema->getComment($table, $column), 'The comment matches the schema description.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function checkGeneratedColumnStorage(GeneratedColumnStorage $storage, string $table, string $column): void {
+    $generated = $this->connection->query("SELECT [attgenerated] FROM [pg_attribute] WHERE [attrelid] = '{" . $table . "}'::regclass AND [attname] = :column", [
+      ':column' => $column,
+    ])->fetchField();
+    $expected = match ($storage) {
+      GeneratedColumnStorage::Virtual => 'v',
+      GeneratedColumnStorage::Stored => 's',
+    };
+    $this->assertSame($expected, $generated);
   }
 
   /**

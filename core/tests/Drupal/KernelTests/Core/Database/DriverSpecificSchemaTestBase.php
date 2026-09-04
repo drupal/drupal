@@ -8,6 +8,18 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Schema;
+use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\ColumnSize;
+use Drupal\Core\Database\SchemaDefinition\ColumnType;
+use Drupal\Core\Database\SchemaDefinition\GeneratedColumnExpression;
+use Drupal\Core\Database\SchemaDefinition\GeneratedColumnStorage;
+use Drupal\Core\Database\SchemaDefinition\Index;
+use Drupal\Core\Database\SchemaDefinition\IntValue;
+use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
+use Drupal\Core\Database\SchemaDefinition\Schema as SchemaDefinition;
+use Drupal\Core\Database\SchemaDefinition\SchemaDefinitionType;
+use Drupal\Core\Database\SchemaDefinition\StringValue;
+use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Tests\Core\Database\SchemaIntrospectionTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -53,6 +65,18 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    *   Optional column to test.
    */
   abstract public function checkSchemaComment(string|false $description, string $table, ?string $column = NULL): void;
+
+  /**
+   * Checks that the database computes a column with the given storage.
+   *
+   * @param \Drupal\Core\Database\SchemaDefinition\GeneratedColumnStorage $storage
+   *   The asserted storage.
+   * @param string $table
+   *   The table to test.
+   * @param string $column
+   *   The generated column to test.
+   */
+  abstract public function checkGeneratedColumnStorage(GeneratedColumnStorage $storage, string $table, string $column): void;
 
   /**
    * Tests inserting data into an existing table.
@@ -1470,6 +1494,251 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     ])->execute();
 
     $this->assertEquals($id + 1, $id_two);
+  }
+
+  /**
+   * Tests creating a table with a generated column.
+   */
+  public function testCreateTableWithGeneratedColumn(): void {
+    $tableName = 'test_generated_column';
+    $schemaDefinition = new SchemaDefinition(
+      type: SchemaDefinitionType::Test,
+      name: 'test_schema',
+      tables: [
+        new Table(
+          name: $tableName,
+          description: 'Basic test table with a generated column.',
+          columns: [
+            Column::serial(
+              name: 'id',
+            ),
+            Column::varcharAscii(
+              name: 'name',
+              description: "A person's name",
+              length: 255,
+              notNull: TRUE,
+              default: new StringValue(''),
+              binary: TRUE,
+            ),
+            Column::int(
+              name: 'age',
+              description: "The person's age",
+              size: ColumnSize::Small,
+              unsigned: TRUE,
+              notNull: TRUE,
+              default: new IntValue(0),
+            ),
+            Column::generated(
+              name: 'double_age',
+              type: ColumnType::Int,
+              description: "The person's age X 2",
+              storage: GeneratedColumnStorage::Stored,
+              expression: new GeneratedColumnExpression('[age] * 2'),
+            ),
+            Column::generated(
+              name: 'shout',
+              type: ColumnType::Varchar,
+              description: "The person's name in capitals",
+              storage: GeneratedColumnStorage::Virtual,
+              length: 512,
+              expression: new GeneratedColumnExpression('UPPER([name])'),
+            ),
+            Column::generated(
+              name: 'big_age',
+              type: ColumnType::Int,
+              description: "The person's age in a wider unsigned column",
+              storage: GeneratedColumnStorage::Stored,
+              size: ColumnSize::Big,
+              unsigned: TRUE,
+              expression: new GeneratedColumnExpression('[age] * 100'),
+            ),
+            Column::generated(
+              name: 'half_age',
+              type: ColumnType::Numeric,
+              description: "Half of the person's age",
+              storage: GeneratedColumnStorage::Virtual,
+              precision: 10,
+              scale: 2,
+              expression: new GeneratedColumnExpression('[age] / 2'),
+            ),
+            // SQLite rebuilds a table by reading its CREATE TABLE text
+            // back and splitting it into column definitions on commas and
+            // parentheses. The literal and the comment here hold both, so
+            // they check that the split skips quoted text and comments.
+            Column::generated(
+              name: 'tricky',
+              type: ColumnType::Int,
+              description: 'A generated column whose expression is quoted',
+              storage: GeneratedColumnStorage::Virtual,
+              expression: new GeneratedColumnExpression("CASE WHEN [name] = 'a, b (c''d)' /* , ) */ THEN 1 ELSE 0 END"),
+            ),
+          ],
+          primaryKey: new PrimaryKey(['id']),
+          indexes: [
+            new Index(
+              name: 'double_age',
+              columns: ['double_age'],
+            ),
+          ],
+        ),
+      ],
+    );
+
+    $this->schema->createSchemaFromDefinition($schemaDefinition);
+    $this->assertTrue($this->schema->tableExists($tableName));
+    $this->checkGeneratedColumnStorage(GeneratedColumnStorage::Stored, $tableName, 'double_age');
+    $this->checkGeneratedColumnStorage(GeneratedColumnStorage::Virtual, $tableName, 'shout');
+    $this->connection->insert($tableName)->fields([
+      'name' => 'John',
+      'age' => 42,
+    ])->execute();
+    $doubleAge = $this->connection
+      ->select($tableName)
+      ->fields($tableName, ['double_age'])
+      ->condition('name', 'John')
+      ->execute()
+      ->fetchField();
+    $this->assertSame('84', $doubleAge);
+    $typed = $this->connection
+      ->select($tableName)
+      ->fields($tableName, ['shout', 'big_age', 'half_age'])
+      ->condition('name', 'John')
+      ->execute()
+      ->fetchAssoc();
+    $this->assertSame('JOHN', $typed['shout']);
+    $this->assertSame('4200', $typed['big_age']);
+    // The scale is applied by the database, so the text form of the value
+    // differs per driver.
+    $this->assertEquals(21, $typed['half_age']);
+
+    $trickyName = "a, b (c'd)";
+    $this->connection->insert($tableName)->fields([
+      'name' => $trickyName,
+      'age' => 7,
+    ])->execute();
+    $tricky = $this->connection
+      ->select($tableName)
+      ->fields($tableName, ['tricky'])
+      ->condition('name', $trickyName)
+      ->execute()
+      ->fetchField();
+    $this->assertSame('1', $tricky);
+
+    // A later schema change that rebuilds the table on SQLite must not disturb
+    // the generated columns.
+    $this->schema->addField($tableName, 'nickname', [
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'initial' => '',
+    ]);
+    $this->assertTrue($this->schema->fieldExists($tableName, 'double_age'));
+    $this->assertTrue($this->schema->fieldExists($tableName, 'tricky'));
+    $this->assertTrue($this->schema->indexExists($tableName, 'double_age'));
+    $this->checkGeneratedColumnStorage(GeneratedColumnStorage::Stored, $tableName, 'double_age');
+    $this->checkGeneratedColumnStorage(GeneratedColumnStorage::Virtual, $tableName, 'tricky');
+    $doubleAge = $this->connection
+      ->select($tableName)
+      ->fields($tableName, ['double_age'])
+      ->condition('name', 'John')
+      ->execute()
+      ->fetchField();
+    $this->assertSame('84', $doubleAge);
+    $tricky = $this->connection
+      ->select($tableName)
+      ->fields($tableName, ['tricky'])
+      ->condition('name', $trickyName)
+      ->execute()
+      ->fetchField();
+    $this->assertSame('1', $tricky);
+
+    // Generated columns can also be added to an existing table. SQLite adds a
+    // VIRTUAL column in place and needs a table rebuild for a STORED one, so
+    // cover both.
+    $this->schema->addField($tableName, 'triple_age', Column::generated(
+      name: 'triple_age',
+      type: ColumnType::Int,
+      storage: GeneratedColumnStorage::Virtual,
+      expression: new GeneratedColumnExpression('[age] * 3'),
+    )->toArray());
+    $this->schema->addField($tableName, 'quadruple_age', Column::generated(
+      name: 'quadruple_age',
+      type: ColumnType::Int,
+      storage: GeneratedColumnStorage::Stored,
+      expression: new GeneratedColumnExpression('[age] * 4'),
+    )->toArray());
+    $this->assertTrue($this->schema->indexExists($tableName, 'double_age'));
+    $this->checkGeneratedColumnStorage(GeneratedColumnStorage::Virtual, $tableName, 'triple_age');
+    $this->checkGeneratedColumnStorage(GeneratedColumnStorage::Stored, $tableName, 'quadruple_age');
+    $ages = $this->connection
+      ->select($tableName)
+      ->fields($tableName, ['double_age', 'triple_age', 'quadruple_age'])
+      ->condition('name', 'John')
+      ->execute()
+      ->fetchAssoc();
+    $this->assertSame([
+      'double_age' => '84',
+      'triple_age' => '126',
+      'quadruple_age' => '168',
+    ], $ages);
+    // Adding the stored column rebuilt the table a second time, so check that
+    // the quoted expression still matches the row it was written for.
+    $tricky = $this->connection
+      ->select($tableName)
+      ->fields($tableName, ['tricky'])
+      ->condition('name', $trickyName)
+      ->execute()
+      ->fetchField();
+    $this->assertSame('1', $tricky);
+
+    // On SQLite, altering this table rebuilds it from its CREATE TABLE text.
+    // The compound primary key is listed there as its own PRIMARY KEY (...)
+    // entry between the column definitions, and the rebuild must not mistake
+    // it for a column while recovering the generated column.
+    $pkTableName = 'test_generated_column_pk';
+    $this->schema->createTable($pkTableName, (new Table(
+      name: $pkTableName,
+      columns: [
+        Column::varcharAscii(
+          name: 'name',
+          length: 255,
+          notNull: TRUE,
+          default: new StringValue(''),
+        ),
+        Column::int(
+          name: 'age',
+          notNull: TRUE,
+          default: new IntValue(0),
+        ),
+        Column::generated(
+          name: 'double_age',
+          type: ColumnType::Int,
+          storage: GeneratedColumnStorage::Stored,
+          expression: new GeneratedColumnExpression('[age] * 2'),
+        ),
+      ],
+      primaryKey: new PrimaryKey(['name', 'age']),
+    ))->toArray());
+    $this->connection->insert($pkTableName)->fields([
+      'name' => 'Jane',
+      'age' => 30,
+    ])->execute();
+    $this->schema->changeField($pkTableName, 'name', 'name', [
+      'type' => 'varchar_ascii',
+      'length' => 320,
+      'not null' => TRUE,
+      'default' => '',
+    ]);
+    $this->checkGeneratedColumnStorage(GeneratedColumnStorage::Stored, $pkTableName, 'double_age');
+    $doubleAge = $this->connection
+      ->select($pkTableName)
+      ->fields($pkTableName, ['double_age'])
+      ->condition('age', 30)
+      ->execute()
+      ->fetchField();
+    $this->assertSame('60', $doubleAge);
+    $this->assertTrue($this->schema->dropField($pkTableName, 'double_age'));
+    $this->assertFalse($this->schema->fieldExists($pkTableName, 'double_age'));
   }
 
 }
