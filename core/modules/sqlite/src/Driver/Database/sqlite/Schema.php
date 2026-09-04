@@ -2,11 +2,13 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
-use Drupal\Core\Database\SchemaObjectExistsException;
-use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
+use Drupal\Core\Database\SchemaDefinition\GeneratedColumnStorage;
+use Drupal\Core\Database\SchemaException;
+use Drupal\Core\Database\SchemaObjectDoesNotExistException;
+use Drupal\Core\Database\SchemaObjectExistsException;
 
-// cspell:ignore autoincrement autoindex
+// cspell:ignore autoincrement autoindex xinfo
 
 /**
  * @ingroup schemaapi
@@ -125,6 +127,11 @@ class Schema extends DatabaseSchema {
    *   A field description array, as specified in the schema documentation.
    */
   protected function processField($field) {
+    // Definitions recovered by self::introspectSchema() are already complete.
+    if (isset($field['sqlite_definition'])) {
+      return $field;
+    }
+
     if (!isset($field['size'])) {
       $field['size'] = 'normal';
     }
@@ -163,6 +170,15 @@ class Schema extends DatabaseSchema {
    *   The field specification, as per the schema data structure format.
    */
   protected function createFieldSql($name, $spec) {
+    // A definition recovered by self::introspectSchema() is reused verbatim.
+    // SQLite keeps a generated column's expression only in the CREATE TABLE
+    // text, and re-deriving one from the schema array would mean parsing that
+    // expression and mapping the declared type back to a Drupal type. Copying
+    // the original definition avoids both.
+    if (isset($spec['sqlite_definition'])) {
+      return $spec['sqlite_definition'];
+    }
+
     $name = $this->connection->escapeField($name);
     if (!empty($spec['auto_increment'])) {
       $sql = $name . " INTEGER PRIMARY KEY AUTOINCREMENT";
@@ -181,6 +197,14 @@ class Schema extends DatabaseSchema {
         if (isset($spec['binary']) && $spec['binary'] === FALSE) {
           $sql .= ' COLLATE NOCASE_UTF8';
         }
+      }
+
+      if (isset($spec['generated'])) {
+        $sql .= ' GENERATED ALWAYS AS (' . $spec['generated']->generatedExpression->expression . ') ';
+        $sql .= match ($spec['generated']->generatedStorage) {
+          GeneratedColumnStorage::Virtual => 'VIRTUAL',
+          GeneratedColumnStorage::Stored => 'STORED',
+        };
       }
 
       if (isset($spec['not null'])) {
@@ -203,7 +227,7 @@ class Schema extends DatabaseSchema {
         $sql .= ' DEFAULT ' . $spec['default'];
       }
 
-      if (empty($spec['not null']) && !isset($spec['default'])) {
+      if (empty($spec['not null']) && !isset($spec['default']) && !isset($spec['generated'])) {
         $sql .= ' DEFAULT NULL';
       }
     }
@@ -329,8 +353,10 @@ class Schema extends DatabaseSchema {
 
     // SQLite doesn't have a full-featured ALTER TABLE statement. It only
     // supports adding new fields to a table, in some simple cases. In most
-    // cases, we have to create a new table and copy the data over.
-    if (empty($keys_new) && (empty($specification['not null']) || isset($specification['default']))) {
+    // cases, we have to create a new table and copy the data over. ALTER TABLE
+    // can add a VIRTUAL generated column, but not a STORED one.
+    $stored_generated = isset($specification['generated']) && $specification['generated']->generatedStorage === GeneratedColumnStorage::Stored;
+    if (!$stored_generated && empty($keys_new) && (empty($specification['not null']) || isset($specification['default']))) {
       // When we don't have to create new keys and we are not creating a NOT
       // NULL column without a default value, we can use the quicker version.
       $query = 'ALTER TABLE {' . $table . '} ADD ' . $this->createFieldSql($field, $this->processField($specification));
@@ -433,9 +459,15 @@ class Schema extends DatabaseSchema {
     // Build a SQL query to migrate the data from the old table to the new.
     $select = $this->connection->select($table);
 
-    // Complete the mapping.
-    $possible_keys = array_keys($new_schema['fields']);
+    // Complete the mapping. Generated columns are computed by the database and
+    // reject writes, so they take no part in the data copy.
+    $generated = array_filter(
+      $new_schema['fields'],
+      fn (array $spec): bool => isset($spec['sqlite_definition']) || isset($spec['generated']),
+    );
+    $possible_keys = array_keys(array_diff_key($new_schema['fields'], $generated));
     $mapping += array_combine($possible_keys, $possible_keys);
+    $mapping = array_diff_key($mapping, $generated);
 
     // Now add the fields.
     foreach ($mapping as $field_alias => $field_source) {
@@ -480,6 +512,8 @@ class Schema extends DatabaseSchema {
    *
    * @throws \Exception
    *   If a column of the table could not be parsed.
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the definition of a generated column could not be recovered.
    */
   protected function introspectSchema($table) {
     $mapped_fields = array_flip($this->getFieldTypeMap());
@@ -491,8 +525,27 @@ class Schema extends DatabaseSchema {
     ];
 
     $info = $this->getPrefixInfo($table);
-    $result = $this->connection->query('PRAGMA [' . $info['schema'] . '].table_info([' . $info['table'] . '])');
+    // table_xinfo is table_info plus the hidden columns, which is how generated
+    // columns are reported. Without them a table rebuilt from this schema would
+    // silently lose every generated column it had.
+    // @see https://www.sqlite.org/pragma.html#pragma_table_xinfo
+    $result = $this->connection->query('PRAGMA [' . $info['schema'] . '].table_xinfo([' . $info['table'] . '])');
+    $definitions = NULL;
     foreach ($result as $row) {
+      // The hidden flag is 0 for an ordinary column, 1 for a hidden virtual
+      // table column, 2 for a VIRTUAL generated column and 3 for a STORED one.
+      if ((int) $row->hidden === 1) {
+        continue;
+      }
+      if ((int) $row->hidden > 1) {
+        $definitions ??= $this->getColumnDefinitions($info['schema'], $info['table']);
+        if (!isset($definitions[$row->name])) {
+          throw new SchemaException("Unable to recover the definition of generated column {$row->name}");
+        }
+        $schema['fields'][$row->name] = ['sqlite_definition' => $definitions[$row->name]];
+        continue;
+      }
+
       if (preg_match('/^([^(]+)\((.*)\)$/', $row->type, $matches)) {
         $type = $matches[1];
         $length = $matches[2];
@@ -566,6 +619,184 @@ class Schema extends DatabaseSchema {
       }
     }
     return $schema;
+  }
+
+  /**
+   * Returns the column definitions of a table, as SQLite stored them.
+   *
+   * SQLite has no pragma that returns the expression or the storage kind of a
+   * generated column, so the CREATE TABLE statement kept in sqlite_master is
+   * the only place to read them from.
+   *
+   * @param string $schema
+   *   Name of the attached database holding the table.
+   * @param string $table
+   *   Prefixed name of the table.
+   *
+   * @return array<string, string>
+   *   The definition text of each column, keyed by column name. Columns whose
+   *   name cannot be read are omitted.
+   */
+  protected function getColumnDefinitions(string $schema, string $table): array {
+    $statement = $this->connection->query('SELECT [sql] FROM [' . $schema . '].[sqlite_master] WHERE [type] = :type AND [name] = :name', [
+      ':type' => 'table',
+      ':name' => $table,
+    ])->fetchField();
+    if (!is_string($statement)) {
+      return [];
+    }
+
+    $definitions = [];
+    foreach ($this->splitColumnDefinitions($statement) as $definition) {
+      // The column name is the first token, quoted or bare.
+      if (($past = $this->skipQuotedRun($definition, 0)) !== NULL) {
+        $quote = $definition[0] === '[' ? ']' : $definition[0];
+        $name = str_replace($quote . $quote, $quote, substr($definition, 1, $past - 2));
+      }
+      elseif (preg_match('/^\S+/', $definition, $matches) === 1) {
+        $name = $matches[0];
+        // Drupal quotes column names, so a bare constraint keyword here
+        // belongs to a table constraint rather than to a column.
+        if (in_array(strtoupper($name), [
+          'CHECK',
+          'CONSTRAINT',
+          'FOREIGN',
+          'PRIMARY',
+          'UNIQUE',
+        ], TRUE)) {
+          continue;
+        }
+      }
+      else {
+        continue;
+      }
+      $definitions[$name] = $definition;
+    }
+    return $definitions;
+  }
+
+  /**
+   * Splits the column definition list of a CREATE TABLE statement.
+   *
+   * @param string $statement
+   *   The CREATE TABLE statement.
+   *
+   * @return list<string>
+   *   The comma separated parts of the definition list. Table constraints are
+   *   included, since they are not distinguishable from columns here.
+   */
+  protected function splitColumnDefinitions(string $statement): array {
+    $open = strpos($statement, '(');
+    if ($open === FALSE) {
+      return [];
+    }
+
+    $parts = [];
+    $current = '';
+    $depth = 0;
+    $length = strlen($statement);
+    for ($i = $open; $i < $length; $i++) {
+      // Parentheses and commas inside a quoted run are just text.
+      if (($past = $this->skipQuotedRun($statement, $i)) !== NULL) {
+        $current .= substr($statement, $i, $past - $i);
+        $i = $past - 1;
+        continue;
+      }
+      // Commas and parentheses inside a comment are just text too.
+      if (($past = $this->skipComment($statement, $i)) !== NULL) {
+        $current .= substr($statement, $i, $past - $i);
+        $i = $past - 1;
+        continue;
+      }
+      $character = $statement[$i];
+      if ($character === '(') {
+        $depth++;
+        // Skip the parenthesis that opens the definition list.
+        if ($depth === 1) {
+          continue;
+        }
+      }
+      elseif ($character === ')') {
+        $depth--;
+        if ($depth === 0) {
+          break;
+        }
+      }
+      elseif ($character === ',' && $depth === 1) {
+        $parts[] = trim($current);
+        $current = '';
+        continue;
+      }
+      $current .= $character;
+    }
+    $parts[] = trim($current);
+
+    return array_values(array_filter($parts, fn (string $part): bool => $part !== ''));
+  }
+
+  /**
+   * Returns the offset past a quoted run of SQL.
+   *
+   * @param string $sql
+   *   The SQL to scan.
+   * @param int $offset
+   *   Offset to scan from.
+   *
+   * @return int|null
+   *   Offset of the first character after the closing quote, or NULL if
+   *   $offset does not open a quoted run or the run is unterminated.
+   */
+  protected function skipQuotedRun(string $sql, int $offset): ?int {
+    $close = match ($sql[$offset] ?? '') {
+      "'" => "'",
+      '"' => '"',
+      '`' => '`',
+      '[' => ']',
+      default => NULL,
+    };
+    if ($close === NULL) {
+      return NULL;
+    }
+
+    $length = strlen($sql);
+    for ($i = $offset + 1; $i < $length; $i++) {
+      if ($sql[$i] !== $close) {
+        continue;
+      }
+      // A doubled quote is an escaped one. Brackets have no escape form.
+      if ($close !== ']' && ($sql[$i + 1] ?? '') === $close) {
+        $i++;
+        continue;
+      }
+      return $i + 1;
+    }
+    return NULL;
+  }
+
+  /**
+   * Returns the offset past an SQL comment.
+   *
+   * @param string $sql
+   *   The SQL to scan.
+   * @param int $offset
+   *   Offset to scan from.
+   *
+   * @return int|null
+   *   Offset of the first character after the comment, or NULL if $offset does
+   *   not open a comment or the comment is unterminated.
+   */
+  protected function skipComment(string $sql, int $offset): ?int {
+    $opening = substr($sql, $offset, 2);
+    if ($opening === '--') {
+      $line_length = strcspn($sql, "\r\n", $offset + 2);
+      $line_end = $offset + 2 + $line_length;
+      return $line_end === strlen($sql) ? $line_end : $line_end + 1;
+    }
+    if ($opening === '/*') {
+      $close = strpos($sql, '*/', $offset + 2);
+      return $close === FALSE ? NULL : $close + 2;
+    }
+    return NULL;
   }
 
   /**

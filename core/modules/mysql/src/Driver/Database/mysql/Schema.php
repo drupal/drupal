@@ -2,12 +2,13 @@
 
 namespace Drupal\mysql\Driver\Database\mysql;
 
-use Drupal\Core\Database\Exception\SchemaPrimaryKeyMustBeDroppedException;
-use Drupal\Core\Database\SchemaException;
-use Drupal\Core\Database\SchemaObjectExistsException;
-use Drupal\Core\Database\SchemaObjectDoesNotExistException;
-use Drupal\Core\Database\Schema as DatabaseSchema;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Database\Exception\SchemaPrimaryKeyMustBeDroppedException;
+use Drupal\Core\Database\Schema as DatabaseSchema;
+use Drupal\Core\Database\SchemaDefinition\GeneratedColumnStorage;
+use Drupal\Core\Database\SchemaException;
+use Drupal\Core\Database\SchemaObjectDoesNotExistException;
+use Drupal\Core\Database\SchemaObjectExistsException;
 
 // cspell:ignore gipk
 
@@ -162,8 +163,18 @@ class Schema extends DatabaseSchema {
       $sql .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
     }
 
+    // MySQL treats 'unsigned' as part of the data type, so it has to come
+    // before the generated column clause.
     if (!empty($spec['unsigned'])) {
       $sql .= ' unsigned';
+    }
+
+    if (isset($spec['generated'])) {
+      $sql .= ' GENERATED ALWAYS AS (' . $spec['generated']->generatedExpression->expression . ') ';
+      $sql .= match ($spec['generated']->generatedStorage) {
+        GeneratedColumnStorage::Virtual => 'VIRTUAL',
+        GeneratedColumnStorage::Stored => 'STORED',
+      };
     }
 
     if (isset($spec['not null'])) {
@@ -184,7 +195,7 @@ class Schema extends DatabaseSchema {
       $sql .= ' DEFAULT ' . $this->escapeDefaultValue($spec['default']);
     }
 
-    if (empty($spec['not null']) && !isset($spec['default'])) {
+    if (empty($spec['not null']) && !isset($spec['default']) && !isset($spec['generated'])) {
       $sql .= ' DEFAULT NULL';
     }
 
