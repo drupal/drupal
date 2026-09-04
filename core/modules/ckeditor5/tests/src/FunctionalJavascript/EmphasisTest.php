@@ -138,6 +138,7 @@ class EmphasisTest extends WebDriverTestBase {
     $this->assertNotEmpty($emphasis_source);
     $this->assertEquals('test!', $emphasis_source[0]->textContent);
     $page->pressButton('Save');
+    $this->assertNotEmpty($assert_session->waitForText('blog Animals with strange names has been updated.'));
 
     $assert_session->responseContains('<p>This is a <em>test!</em></p>');
   }
