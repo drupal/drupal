@@ -1,0 +1,112 @@
+[
+  {
+    "path": "config/install/default_admin.settings.yml",
+    "pattern": "preset_focus_color: 'gin'",
+    "reason": "The stored setting value is retained for existing configuration."
+  },
+  {
+    "path": "src/Settings.php",
+    "pattern": "'gin' =>",
+    "reason": "The stored setting value is retained for existing configuration."
+  },
+  {
+    "path": "src/Settings.php",
+    "pattern": "'claro' =>",
+    "reason": "The stored setting value is retained for existing configuration."
+  },
+  {
+    "path": "css/theme/accent.pcss.css",
+    "pattern": "data-admin-focus=\"claro\"",
+    "reason": "The selector supports the retained focus-color setting value."
+  },
+  {
+    "path": "css/theme/accent.css",
+    "pattern": "data-admin-focus=\"claro\"",
+    "reason": "Compiled CSS supports the retained focus-color setting value."
+  },
+  {
+    "path": "migration/js/init.js",
+    "pattern": "GinDarkMode",
+    "reason": "The legacy local-storage key is removed during migration."
+  },
+  {
+    "path": "migration/js/init.js",
+    "pattern": "GinSidebarOpen",
+    "reason": "The legacy navigation state is migrated once."
+  },
+  {
+    "path": "migration/js/init.js",
+    "pattern": "Drupal.gin.",
+    "reason": "Legacy local-storage keys are migrated to Default Admin keys."
+  },
+  {
+    "path": "src/Hook/ThemeHooks.php",
+    "pattern": "['gin']",
+    "reason": "The drupalSettings alias supports integrations while the theme is experimental."
+  },
+  {
+    "path": "images/core/README.md",
+    "pattern": "Claro",
+    "reason": "The historical upstream project name and issue URL are retained."
+  },
+  {
+    "path": "images/core/README.md",
+    "pattern": "project/claro",
+    "reason": "The historical upstream issue URL is retained."
+  },
+  {
+    "path": "src/Hook/FormHooks.php",
+    "pattern": "project/gin",
+    "reason": "The upstream issue URL documents the source of the workaround."
+  },
+  {
+    "path": "tests/src/Functional/AdminTest.php",
+    "pattern": "\"gin\":{",
+    "reason": "The test covers the temporary drupalSettings compatibility alias."
+  },
+  {
+    "path": "tests/src/Functional/AdminTest.php",
+    "pattern": "data-gin-focus",
+    "reason": "The test verifies that the inherited HTML attribute is no longer rendered."
+  },
+  {
+    "path": "tests/src/Functional/AdminTest.php",
+    "pattern": "data-admin-focus', 'gin",
+    "reason": "The test covers the retained focus-color configuration value in HTML output."
+  },
+  {
+    "path": "tests/src/Functional/AdminTest.php",
+    "pattern": "preset_focus_color\":\"gin",
+    "reason": "The test covers the retained focus-color configuration value."
+  },
+  {
+    "path": "tests/src/FunctionalJavascript/LegacyStorageTest.php",
+    "pattern": "GinDarkMode",
+    "reason": "The test covers removal of the legacy dark-mode key."
+  },
+  {
+    "path": "tests/src/FunctionalJavascript/LegacyStorageTest.php",
+    "pattern": "GinSidebarOpen",
+    "reason": "The test covers migration of the legacy navigation key."
+  },
+  {
+    "path": "tests/src/FunctionalJavascript/LegacyStorageTest.php",
+    "pattern": "Drupal.gin.",
+    "reason": "The test covers migration and removal of legacy local-storage keys."
+  },
+  {
+    "path": "tests/src/Unit/ImplementationNameTest.php",
+    "pattern": "$name_pattern =",
+    "reason": "The scanner must name inherited identifiers to detect them in source content."
+  },
+  {
+    "path": "tests/src/Unit/ImplementationNameTest.php",
+    "pattern": "(?:gin|claro)",
+    "reason": "The scanner must name inherited lowercase identifiers and filenames to detect them."
+  },
+  {
+    "path": "tests/src/Unit/ImplementationNameTest.php",
+    "pattern": "(?:Gin|Claro)",
+    "reason": "The scanner must name inherited camel-case identifiers to detect them."
+  }
+]

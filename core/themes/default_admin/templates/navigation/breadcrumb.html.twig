@@ -8,16 +8,16 @@
  */
 #}
 {% if breadcrumb %}
-  <nav class="gin-breadcrumb" role="navigation" aria-labelledby="system-breadcrumb">
+  <nav class="breadcrumb" role="navigation" aria-labelledby="system-breadcrumb">
     <h2 id="system-breadcrumb" class="visually-hidden">{{ 'Breadcrumb'|t }}</h2>
-    <ol class="gin-breadcrumb__list">
+    <ol class="breadcrumb__list">
     {% for item in breadcrumb %}
       {% if item.text %}
-      <li class="gin-breadcrumb__item">
+      <li class="breadcrumb__item">
         {% if item.url %}
-          <a href="{{ item.url }}" class="gin-breadcrumb__link"{% if item.attributes.title %} title="{{ item.attributes.title }}"{% endif %}{% if item.attributes.data %} {{ item.attributes.data }}{% endif %}>{{ item.text }}</a>
+          <a href="{{ item.url }}" class="breadcrumb__link"{% if item.attributes.title %} title="{{ item.attributes.title }}"{% endif %}{% if item.attributes.data %} {{ item.attributes.data }}{% endif %}>{{ item.text }}</a>
         {% else %}
-          <span class="gin-breadcrumb__text">{{ item.text }}</span>
+          <span class="breadcrumb__text">{{ item.text }}</span>
         {% endif %}
       </li>
       {% endif %}

@@ -7,8 +7,8 @@
 
 /**
  * Available modifiers are:
- *  - .gin-details--accordion
- *  - .gin-details--accordion-item
+ *  - .details--accordion
+ *  - .details--accordion-item
  *
  * Despite the fact that 'accordion' isn't used anywhere right now, we
  * implemented it (since the design defines that).
@@ -35,7 +35,7 @@
   --summary-accordion-line-height: var(--admin-space-l);
 }
 
-.gin-details {
+.details {
   display: block;
   margin-block: var(--admin-space-m);
   color: var(--admin-color-text);
@@ -59,20 +59,20 @@
     border: 2px solid var(--admin-color-error);
   }
 
-  .gin--dark-mode & {
+  .dark-mode & {
     border-color: var(--admin-color-border);
     background-color: transparent;
   }
 }
 
-.gin-details--accordion-item,
-.gin-details--vertical-tabs-item {
+.details--accordion-item,
+.details--vertical-tabs-item {
   margin-block: 0;
   border-radius: 0;
   box-shadow: none;
 }
 
-.gin-details--accordion-item {
+.details--accordion-item {
   &:first-of-type {
     border-start-start-radius: var(--details-border-size-radius);
     border-start-end-radius: var(--details-border-size-radius);
@@ -87,7 +87,7 @@
 /**
  * Details summary styles.
  */
-.gin-details__summary {
+.details__summary {
   position: relative;
   box-sizing: border-box;
   list-style: none;
@@ -181,15 +181,15 @@
 }
 
 /* Modifiers */
-.gin-details__summary--accordion,
-.gin-details__summary--accordion-item,
-.gin-details__summary--vertical-tabs-item {
+.details__summary--accordion,
+.details__summary--accordion-item,
+.details__summary--vertical-tabs-item {
   padding-block: var(--summary-accordion-padding-vertical);
   padding-inline: 2.75rem var(--admin-space-l);
   background: var(--admin-color-bg-surface);
   line-height: var(--summary-accordion-line-height);
 
-  .gin--dark-mode & {
+  .dark-mode & {
     background-color: transparent;
   }
 }
@@ -198,7 +198,7 @@
  * Accordion list items must not have border radius except they are the first
  * or the last ones.
  */
-.gin-details__summary--accordion-item {
+.details__summary--accordion-item {
   border-radius: 0;
 
   [open] > &:not(:focus, :active)::after {
@@ -206,12 +206,12 @@
   }
 }
 
-.gin-details--accordion-item:first-child .gin-details__summary--accordion-item {
+.details--accordion-item:first-child .details__summary--accordion-item {
   border-start-start-radius: var(--details-border-size-radius);
   border-start-end-radius: var(--details-border-size-radius);
 }
 
-.gin-details--accordion-item:last-child .gin-details__summary--accordion-item {
+.details--accordion-item:last-child .details__summary--accordion-item {
   border-end-end-radius: var(--details-border-size-radius);
   border-end-start-radius: var(--details-border-size-radius);
 }
@@ -219,14 +219,14 @@
 /**
  * Details summary states.
  */
-[open] .gin-details__summary--accordion,
-[open] .gin-details__summary--accordion-item,
-[open] .gin-details__summary--vertical-tabs-item {
+[open] .details__summary--accordion,
+[open] .details__summary--accordion-item,
+[open] .details__summary--vertical-tabs-item {
   color: var(--admin-color-primary);
   text-decoration-style: var(--admin-link-decoration-style);
 }
 
-.gin-details[open] > .gin-details__summary {
+.details[open] > .details__summary {
   border-start-start-radius: var(--size-summary-border-radius);
   border-start-end-radius: var(--size-summary-border-radius);
   border-end-end-radius: 0;
@@ -238,13 +238,13 @@
 }
 
 @media (forced-colors: active) {
-  .gin-details__summary:hover::before,
-  .gin-details__summary:hover:focus::before,
-  .gin-details[open] > .gin-details__summary:focus::before {
+  .details__summary:hover::before,
+  .details__summary:hover:focus::before,
+  .details[open] > .details__summary:focus::before {
     background: none;
   }
 
-  .gin-details[open] > .gin-details__summary::before {
+  .details[open] > .details__summary::before {
     margin-block-start: -0.125rem;
     margin-inline-end: 0.125rem;
     transform: rotate(-45deg); /* for LTR and RTL */
@@ -252,9 +252,9 @@
   }
 }
 
-.gin-details[open] > .gin-details__summary--accordion,
-.gin-details[open] > .gin-details__summary--accordion-item,
-.gin-details[open] > .gin-details__summary--vertical-tabs-item {
+.details[open] > .details__summary--accordion,
+.details[open] > .details__summary--accordion-item,
+.details[open] > .details__summary--vertical-tabs-item {
   box-shadow: var(--details-box-shadow);
 }
 
@@ -262,7 +262,7 @@
  * Details wrapper and content.
  *
  * Accordion and accordion-item variants should have an extra background. In
- * that case, we render an additional wrapper 'gin-details__content' that
+ * that case, we render an additional wrapper 'details__content' that
  * creates the visual margins around the content, and use the original wrapper
  * for setting the background color.
  *
@@ -271,15 +271,15 @@
  * because the elements inside the details content won't cause too big
  * vertical spacing.
  */
-.gin-details__wrapper,
-.gin-details__content {
+.details__wrapper,
+.details__content {
   margin-block: var(--admin-space-m);
   margin-inline: calc(var(--admin-space-l) - var(--admin-space-2xs));
 }
 
-.gin-details__wrapper--accordion,
-.gin-details__wrapper--accordion-item,
-.gin-details__wrapper--vertical-tabs-item {
+.details__wrapper--accordion,
+.details__wrapper--accordion-item,
+.details__wrapper--vertical-tabs-item {
   margin: 0;
   border-block-start: 1px solid var(--admin-color-border);
   background: var(--admin-color-bg);
@@ -298,28 +298,28 @@
 }
 
 @media screen and (min-width: 641px) {
-  .js .gin-details__wrapper--vertical-tabs-item {
+  .js .details__wrapper--vertical-tabs-item {
     margin: 0;
     border-block-start: 0;
     background-color: transparent;
   }
 }
 
-.gin-details__content--accordion,
-.gin-details__content--accordion-item,
-.gin-details__content--vertical-tabs-item {
+.details__content--accordion,
+.details__content--accordion-item,
+.details__content--vertical-tabs-item {
   margin-block: var(--admin-space-m) var(--admin-space-l);
   margin-inline: var(--admin-space-m);
 }
 
 @media screen and (min-width: 85em) {
-  .vertical-tabs .gin-details__content--vertical-tabs-item {
+  .vertical-tabs .details__content--vertical-tabs-item {
     margin: var(--admin-space-l);
   }
 }
 
 /* Description. */
-.gin-details__description {
+.details__description {
   margin-block-end: var(--admin-space-m);
   color: var(--admin-color-text-soft);
   font-size: var(--admin-font-size-xs); /* ~13px */
@@ -331,7 +331,7 @@
   }
 }
 
-.gin-details__summary-summary {
+.details__summary-summary {
   display: block;
   opacity: 0.8;
   color: var(--admin-color-text-soft);
@@ -352,9 +352,9 @@
   background-size: 0.4375rem 0.4375rem;
 }
 
-.gin-details.gin-details--package-listing,
-.gin-details.module-list__module-details,
-.system-status-report .gin-details {
+.details.details--package-listing,
+.details.module-list__module-details,
+.system-status-report .details {
   border: 1px solid var(--admin-color-border);
   border-radius: var(--admin-radius-m);
 }

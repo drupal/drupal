@@ -27,30 +27,30 @@
 {% set show_description_toggle = description_toggle and description %}
 {%
   set classes = [
-    'gin-details',
-    accordion ? 'gin-details--accordion',
-    accordion_item ? 'gin-details--accordion-item',
+    'details',
+    accordion ? 'details--accordion',
+    accordion_item ? 'details--accordion-item',
     show_description_toggle ? 'help-icon__description-container',
   ]
 %}
 {%
   set content_wrapper_classes = [
-    'gin-details__wrapper',
+    'details__wrapper',
     'details-wrapper',
-    accordion ? 'gin-details__wrapper--accordion',
-    accordion_item ? 'gin-details__wrapper--accordion-item',
+    accordion ? 'details__wrapper--accordion',
+    accordion_item ? 'details__wrapper--accordion-item',
   ]
 %}
 {%
   set inner_wrapper_classes = [
-    'gin-details__content',
-    accordion ? 'gin-details__content--accordion',
-    accordion_item ? 'gin-details__content--accordion-item',
+    'details__content',
+    accordion ? 'details__content--accordion',
+    accordion_item ? 'details__content--accordion-item',
   ]
 %}
 {%
   set description_classes = [
-  'gin-details__description',
+  'details__description',
   disabled ? 'is-disabled',
   description_display == 'invisible' ? 'visually-hidden',
 ]
@@ -59,11 +59,11 @@
   {%- if title -%}
     {%
       set summary_classes = [
-        'gin-details__summary',
+        'details__summary',
         required ? 'js-form-required',
         required ? 'form-required',
-        accordion ? 'gin-details__summary--accordion',
-        accordion_item ? 'gin-details__summary--accordion-item',
+        accordion ? 'details__summary--accordion',
+        accordion_item ? 'details__summary--accordion-item',
       ]
     %}
     <summary{{ summary_attributes.addClass(summary_classes) }}>

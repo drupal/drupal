@@ -5,7 +5,7 @@
 
 @import "../base/media-queries.pcss.css";
 
-.gin--edit-form {
+.edit-form {
   .dialog-off-canvas-main-canvas {
     @media (--admin-large) and (prefers-reduced-motion: no-preference) {
       transition: padding-inline-start var(--admin-transition-slow);
@@ -28,7 +28,7 @@
     display: none;
   }
 
-  .gin-secondary-toolbar .toolbar-secondary .toolbar-bar .contextual-toolbar-tab {
+  .admin-secondary-toolbar .toolbar-secondary .toolbar-bar .contextual-toolbar-tab {
     display: none;
   }
 
@@ -52,7 +52,7 @@
       }
     }
 
-    .region-sticky #edit-gin-actions {
+    .region-sticky #edit-default-admin-actions {
       @media (--admin-to-large) {
         flex-grow: 1;
       }
@@ -99,11 +99,11 @@
       inset-block-start: var(--admin-theme-toolbar-y-offset);
       inset-inline-end: 0;
 
-      .gin--dark-mode & {
+      .dark-mode & {
         box-shadow: 0 0 4px rgb(0, 0, 0, 0.1);
       }
 
-      .gin-sidebar .form-actions {
+      .admin-sidebar .form-actions {
         margin: 0;
 
         .action-link {
@@ -195,17 +195,17 @@
 }
 
 /* Sidebar accordion items — broken out to limit nesting depth. */
-.gin--edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item {
+.edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item {
   margin: 0;
   border: 0 none;
   border-block-end: 1px solid var(--admin-color-border-soft);
   border-radius: 0;
 
-  .gin--dark-mode & {
+  .dark-mode & {
     border-color: var(--admin-color-border);
   }
 
-  > .gin-details__summary {
+  > .details__summary {
     display: block;
     padding-inline-start: 3rem;
     font-size: var(--admin-font-size-s);
@@ -225,10 +225,10 @@
     }
   }
 
-  .gin-details__content {
+  .details__content {
     margin-inline: 1.5rem;
 
-    .gin-details__wrapper {
+    .details__wrapper {
       margin: var(--admin-space-l);
     }
   }
@@ -237,7 +237,7 @@
     width: 47%;
   }
 
-  .form-type--entity-autocomplete .gin-autocomplete {
+  .form-type--entity-autocomplete .admin-autocomplete {
     width: 100%;
   }
 

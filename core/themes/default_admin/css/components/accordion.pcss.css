@@ -40,7 +40,7 @@
     border-bottom-left-radius: var(--accordion-item-border-radius);
   }
 
-  & .gin-details__summary .summary {
+  & .details__summary .summary {
     --accordion-summary-color: var(--admin-color-text-soft);
 
     display: block;

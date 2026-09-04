@@ -1,6 +1,6 @@
 /**
  * @file
- * Theme overrides for Claro.
+ * Theme overrides for Default Admin.
  */
 
 ((Drupal) => {

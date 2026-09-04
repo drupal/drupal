@@ -26,7 +26,7 @@
   }
 }
 
-.package-listing .gin-details__summary::after {
+.package-listing .details__summary::after {
   content: none;
 }
 
@@ -36,7 +36,7 @@
   box-shadow: none;
 }
 
-.gin-details.module-list__module-details {
+.details.module-list__module-details {
   margin-top: 2rem;
   margin-bottom: 0;
   border: none;
@@ -91,11 +91,11 @@ td.module-list__description {
   padding-inline-end: 0;
 }
 
-.gin-details.module-list__module-details {
+.details.module-list__module-details {
   margin: 0;
 }
 
-.gin-details__summary.module-list__module-summary {
+.details__summary.module-list__module-summary {
   padding-top: var(--module-table-cell-padding-vertical);
   padding-bottom: var(--module-table-cell-padding-vertical);
   font-weight: normal;
@@ -111,7 +111,7 @@ td.module-list__description {
   line-height: 0.9375rem;
 }
 
-.gin-details__wrapper.module-details__wrapper {
+.details__wrapper.module-details__wrapper {
   margin-block: 0;
 }
 
@@ -130,7 +130,7 @@ td.module-list__description {
   }
 }
 
-.gin-details .tableresponsive-toggle {
+.details .tableresponsive-toggle {
   padding: var(--admin-space-m) var(--admin-space-m) var(--admin-space-m) 0;
 
   &::before {
@@ -158,13 +158,13 @@ td.module-list__description {
   }
 }
 
-.gin-details .tableresponsive-toggle-columns button {
+.details .tableresponsive-toggle-columns button {
   margin-top: var(--admin-space-xs);
   text-decoration: none;
   color: var(--admin-color-text-soft);
   font-weight: bold;
 }
 
-.gin-details .admin-missing {
+.details .admin-missing {
   color: var(--admin-color-text-error);
 }

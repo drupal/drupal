@@ -92,7 +92,7 @@
  */
 
 @media screen and (max-width: 37.5em) {
-  .gin-details__wrapper .file-widget-multiple__table-wrapper {
+  .details__wrapper .file-widget-multiple__table-wrapper {
     margin-inline: calc(var(--admin-space-m) * -1);
     & > :not(table) {
       margin-inline: var(--admin-space-m);

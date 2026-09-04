@@ -1,14 +1,18 @@
 ((Drupal, once) => {
-  Drupal.behaviors.ginTableHeader = {
+  Drupal.behaviors.adminTableHeader = {
     attach: (context) => {
-      Drupal.ginTableHeader.init(context);
+      Drupal.adminTableHeader.init(context);
     },
   };
 
-  Drupal.ginTableHeader = {
+  Drupal.adminTableHeader = {
     init: function (context) {
       // Tables with new position-sticky enabled.
-      once('ginTableHeaderSticky', 'table.position-sticky, table.sticky-header', context).forEach(el => {
+      once(
+        'adminTableHeaderSticky',
+        'table.position-sticky, table.sticky-header',
+        context,
+      ).forEach((el) => {
         this.updateTableHeader(el);
         this.showTableHeaderOnInit();
 
@@ -18,18 +22,26 @@
         });
         resizeHandler.observe(el);
 
-        document.querySelectorAll('.gin--sticky-bulk-select > input[type="checkbox"]').forEach(checkbox => {
-          checkbox.addEventListener('click', (event) => {
-            event.stopImmediatePropagation();
-            event.checked = !event.checked;
-            document.querySelector('.gin-table-scroll-wrapper table.sticky-enabled thead .select-all > input, .gin-table-scroll-wrapper table.sticky-header thead .select-all > input').click();
+        document
+          .querySelectorAll('.sticky-bulk-select > input[type="checkbox"]')
+          .forEach((checkbox) => {
+            checkbox.addEventListener('click', (event) => {
+              event.stopImmediatePropagation();
+              event.checked = !event.checked;
+              document
+                .querySelector(
+                  '.table-scroll-wrapper table.sticky-enabled thead .select-all > input, .table-scroll-wrapper table.sticky-header thead .select-all > input',
+                )
+                .click();
+            });
           });
-        });
       });
     },
     showTableHeaderOnInit: function () {
-      const tableHeader = document.querySelector('.gin--sticky-table-header');
-      if (!tableHeader) { return; }
+      const tableHeader = document.querySelector('.sticky-table-header');
+      if (!tableHeader) {
+        return;
+      }
 
       tableHeader.hidden = false;
       tableHeader.style.display = 'block';
@@ -39,8 +51,10 @@
       document.body.style.overflowX = 'hidden';
     },
     updateTableHeader: function (el) {
-      const tableHeader = document.querySelector('.gin--sticky-table-header');
-      if (!tableHeader) { return; }
+      const tableHeader = document.querySelector('.sticky-table-header');
+      if (!tableHeader) {
+        return;
+      }
 
       const offset = el.classList.contains('sticky-enabled') ? -7 : 1;
       tableHeader.style.marginBottom = `-${el.querySelector('thead').getBoundingClientRect().height + offset}px`;
@@ -51,5 +65,4 @@
       });
     },
   };
-
 })(Drupal, once);

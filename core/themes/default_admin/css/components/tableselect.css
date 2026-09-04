@@ -152,8 +152,8 @@ tr.selected td {
   z-index: 2000;
 }
 
-.block-system > .views-form .gin-details,
-.view-content .views-form .gin-details {
+.block-system > .views-form .details,
+.view-content .views-form .details {
   box-shadow: none;
 }
 
