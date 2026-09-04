@@ -88,7 +88,7 @@ class ClaroTest extends BrowserTestBase {
 
     $this->drupalGet('admin/reports/dblog', ['query' => ['page' => 1]]);
     $this->assertSession()->statusCodeEquals(200);
-    $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
+    $elements = $this->getNodeElementsByXpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
     $this->assertNotEmpty($elements, 'Pager found.');
 
     // Check all links for pager-test attribute.

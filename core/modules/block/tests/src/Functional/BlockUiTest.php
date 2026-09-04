@@ -118,7 +118,7 @@ class BlockUiTest extends BrowserTestBase {
       $block->delete();
     }
     $this->drupalGet('admin/structure/block');
-    $blocks_table = $this->xpath("//tr[@class='block-enabled']");
+    $blocks_table = $this->getNodeElementsByXpath("//tr[@class='block-enabled']");
     $this->assertEmpty($blocks_table, 'The blocks table is now empty.');
     $this->submitForm([], 'Save blocks');
     $this->assertSession()->pageTextContains('No blocks settings to update');

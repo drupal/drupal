@@ -108,7 +108,7 @@ class TriggeringElementTest extends WebDriverTestBase {
 
     $input->setValue('name', 'button1');
     $input->setValue('value', 'button1');
-    $this->xpath('//form[@id="' . $form_html_id . '"]//input[@type="submit"]')[0]->click();
+    $this->getNodeElementsByXpath('//form[@id="' . $form_html_id . '"]//input[@type="submit"]')[0]->click();
 
     // Ensure that the triggering element was not set to the restricted button.
     // Do this with both a negative and positive assertion, because negative

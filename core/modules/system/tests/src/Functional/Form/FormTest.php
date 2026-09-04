@@ -232,7 +232,7 @@ class FormTest extends BrowserTestBase {
     }
 
     // Check the page for error messages.
-    $errors = $this->xpath('//div[contains(@class, "error")]//li');
+    $errors = $this->getNodeElementsByXpath('//div[contains(@class, "error")]//li');
     foreach ($errors as $error) {
       $expected_key = array_search($error->getText(), $expected);
       // If the error message is not one of the expected messages, fail.
@@ -799,7 +799,7 @@ class FormTest extends BrowserTestBase {
     // disabled elements, so we need to un-disable those elements first.
     $this->drupalGet('form-test/disabled-elements');
     $disabled_elements = [];
-    foreach ($this->xpath('//*[@disabled]') as $element) {
+    foreach ($this->getNodeElementsByXpath('//*[@disabled]') as $element) {
       $disabled_elements[] = (string) $element->getAttribute('name');
     }
 

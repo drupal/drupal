@@ -89,7 +89,7 @@ class ExternalFormUrlTest extends KernelTestBase implements FormInterface {
     $markup = \Drupal::service('renderer')->renderRoot($form);
 
     $this->setRawContent($markup);
-    $elements = $this->xpath('//form/@action');
+    $elements = $this->getSimpleXmlElementsByXpath('//form/@action');
     $action = (string) $elements[0];
     $this->assertEquals($original_request->getSchemeAndHttpHost() . '//example.org', $action);
 
@@ -105,7 +105,7 @@ class ExternalFormUrlTest extends KernelTestBase implements FormInterface {
     $markup = \Drupal::service('renderer')->renderRoot($form);
 
     $this->setRawContent($markup);
-    $elements = $this->xpath('//form/@action');
+    $elements = $this->getSimpleXmlElementsByXpath('//form/@action');
     $action = (string) $elements[0];
     $this->assertEquals('/example.org', $action);
   }

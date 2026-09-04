@@ -224,14 +224,14 @@ class UserPermissionsTest extends BrowserTestBase {
     // When Node is not installed the 'access content' permission is listed next
     // to 'access site reports'.
     $this->drupalGet('admin/people/permissions');
-    $next_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-access-content\']/following-sibling::tr[1]');
+    $next_row = $this->getNodeElementsByXpath('//tr[@data-drupal-selector=\'edit-permissions-access-content\']/following-sibling::tr[1]');
     $this->assertEquals('edit-permissions-access-site-reports', $next_row[0]->getAttribute('data-drupal-selector'));
 
     // When Node is installed the 'access content' permission is listed next to
     // to 'view own unpublished content'.
     \Drupal::service('module_installer')->install(['node']);
     $this->drupalGet('admin/people/permissions');
-    $next_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-access-content\']/following-sibling::tr[1]');
+    $next_row = $this->getNodeElementsByXpath('//tr[@data-drupal-selector=\'edit-permissions-access-content\']/following-sibling::tr[1]');
     $this->assertEquals('edit-permissions-view-own-unpublished-content', $next_row[0]->getAttribute('data-drupal-selector'));
   }
 
@@ -372,7 +372,7 @@ class UserPermissionsTest extends BrowserTestBase {
     // Verify that if a permission has the same name as a module, that its
     // table cells aren't combined into the module's header row. The header row
     // should have a single cell in that case.
-    $header_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-module-user-permissions-test\'][count(td)=1]');
+    $header_row = $this->getNodeElementsByXpath('//tr[@data-drupal-selector=\'edit-permissions-module-user-permissions-test\'][count(td)=1]');
     $this->assertNotEmpty($header_row);
   }
 

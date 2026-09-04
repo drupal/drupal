@@ -716,7 +716,7 @@ class TermTest extends TaxonomyTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Getting primary tab items.
-    $tab_links = $this->xpath('//h2[text()[contains(.,"Primary tabs")]]/following-sibling::ul[1]/li/a');
+    $tab_links = $this->getNodeElementsByXpath('//h2[text()[contains(.,"Primary tabs")]]/following-sibling::ul[1]/li/a');
     $labels = array_map(fn(NodeElement $link) => $link->getText(), $tab_links);
     $edit_index = array_search('Edit', $labels);
     $delete_index = array_search('Delete', $labels);

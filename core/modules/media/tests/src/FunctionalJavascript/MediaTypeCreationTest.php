@@ -112,7 +112,7 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
 
     // Check that the field map options are sorted alphabetically.
     // Source field should not be included.
-    $options = $this->xpath('//select[@name="field_map[attribute_1]"]/option');
+    $options = $this->getNodeElementsByXpath('//select[@name="field_map[attribute_1]"]/option');
     $this->assertGreaterThanOrEqual(2, count($options));
     $this->assertSame('- Skip field -', $options[0]->getText());
     $this->assertSame('Name', $options[1]->getText());

@@ -174,7 +174,7 @@ class NodeAdminTest extends NodeTestBase {
     $this->drupalGet('admin/content');
     $this->assertSession()->statusCodeEquals(200);
 
-    $node_type_labels = $this->xpath('//td[contains(@class, "views-field-type")]');
+    $node_type_labels = $this->getNodeElementsByXpath('//td[contains(@class, "views-field-type")]');
     $delta = 0;
     foreach ($nodes as $node) {
       $this->assertSession()->linkByHrefExists('node/' . $node->id());

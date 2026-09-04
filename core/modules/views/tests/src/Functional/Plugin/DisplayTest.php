@@ -151,7 +151,7 @@ class DisplayTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/view/test_view/edit/display_test_1');
     $this->assertSession()->pageTextContains('Display test settings');
     // Ensure that the order is as expected.
-    $result = $this->xpath('//ul[@id="views-display-menu-tabs"]/li/a/child::text()');
+    $result = $this->getNodeElementsByXpath('//ul[@id="views-display-menu-tabs"]/li/a/child::text()');
     $this->assertEquals('Display test 2', $result[0]->getText());
     $this->assertEquals('Display test', $result[1]->getText());
 

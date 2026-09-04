@@ -121,7 +121,7 @@ class FieldDisplayTest extends KernelTestBase {
     $this->setRawContent($content);
 
     $css_selector_converter = new CssSelectorConverter();
-    $elements = $this->xpath($css_selector_converter->toXPath('.visually-hidden'));
+    $elements = $this->getSimpleXmlElementsByXpath($css_selector_converter->toXPath('.visually-hidden'));
     $this->assertCount(1, $elements, $content);
   }
 

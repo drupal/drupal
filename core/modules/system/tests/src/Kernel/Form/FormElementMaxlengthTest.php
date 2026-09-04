@@ -75,9 +75,9 @@ class FormElementMaxlengthTest extends KernelTestBase implements FormInterface {
     $this->render($elements);
 
     $css_selector_converter = new CssSelectorConverter();
-    $elements = $this->xpath($css_selector_converter->toXPath('input[name=title][maxlength=255]'));
+    $elements = $this->getSimpleXmlElementsByXpath($css_selector_converter->toXPath('input[name=title][maxlength=255]'));
     $this->assertCount(1, $elements, 'Text field has correct maxlength in form.');
-    $elements = $this->xpath($css_selector_converter->toXPath('textarea[name=description][maxlength=255]'));
+    $elements = $this->getSimpleXmlElementsByXpath($css_selector_converter->toXPath('textarea[name=description][maxlength=255]'));
     $this->assertCount(1, $elements, 'Textarea field has correct maxlength in form.');
   }
 

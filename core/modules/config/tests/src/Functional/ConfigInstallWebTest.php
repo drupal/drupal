@@ -195,7 +195,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
     // the config_test.dynamic.dotted.default configuration and the translation
     // override created still exists.
     $this->drupalGet('admin/appearance');
-    $url = $this->xpath("//a[contains(@href,'config_clash_test_theme') and contains(@href,'/install?')]/@href")[0];
+    $url = $this->getNodeElementsByXpath("//a[contains(@href,'config_clash_test_theme') and contains(@href,'/install?')]/@href")[0];
     $this->drupalGet($this->getAbsoluteUrl($url->getText()));
     $this->assertSession()->responseContains('Unable to install config_clash_test_theme, <em class="placeholder">config_test.dynamic.dotted.default, language/fr/config_test.dynamic.dotted.default</em> already exist in active configuration.');
 

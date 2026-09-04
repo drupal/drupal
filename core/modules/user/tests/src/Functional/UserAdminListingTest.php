@@ -70,7 +70,7 @@ class UserAdminListingTest extends BrowserTestBase {
     $this->drupalGet('admin/people');
     $this->assertSession()->statusCodeEquals(200);
 
-    $result = $this->xpath('//table[contains(@class, "responsive-enabled")]/tbody/tr');
+    $result = $this->getNodeElementsByXpath('//table[contains(@class, "responsive-enabled")]/tbody/tr');
     $result_accounts = [];
     foreach ($result as $account) {
       $account_columns = $account->findAll('css', 'td');

@@ -196,14 +196,14 @@ SQL;
     $this->submitForm([], 'Update preview');
     $this->assertSession()->pageTextContains('Test preview title');
     // Ensure allowed HTML tags are still displayed.
-    $this->assertCount(2, $this->xpath('//div[@id="views-live-preview"]//strong[text()=:text]', [':text' => 'Test preview title']));
+    $this->assertCount(2, $this->getNodeElementsByXpath('//div[@id="views-live-preview"]//strong[text()=:text]', [':text' => 'Test preview title']));
 
     // Ensure other tags are filtered.
     \Drupal::configFactory()->getEditable('views.view.test_preview')
       ->set('display.default.display_options.title', '<b>Test preview title</b>')
       ->save();
     $this->submitForm([], 'Update preview');
-    $this->assertCount(0, $this->xpath('//div[@id="views-live-preview"]//b[text()=:text]', [':text' => 'Test preview title']));
+    $this->assertCount(0, $this->getNodeElementsByXpath('//div[@id="views-live-preview"]//b[text()=:text]', [':text' => 'Test preview title']));
   }
 
 }

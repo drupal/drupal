@@ -252,7 +252,7 @@ class ViewEditTest extends UITestBase {
           'und',
           'zxx',
         ];
-        $elements = $this->xpath('//div[@id="edit-options-value"]//input');
+        $elements = $this->getNodeElementsByXpath('//div[@id="edit-options-value"]//input');
         // Compare values inside the option elements with expected values.
         for ($i = 0; $i < count($elements); $i++) {
           $this->assertEquals($expected_elements[$i], $elements[$i]->getAttribute('value'));

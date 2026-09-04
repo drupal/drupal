@@ -82,7 +82,7 @@ class LocalActionTest extends BrowserTestBase {
    * @internal
    */
   protected function assertLocalAction(array $actions): void {
-    $elements = $this->xpath('//a[contains(@class, :class)]', [
+    $elements = $this->getNodeElementsByXpath('//a[contains(@class, :class)]', [
       ':class' => 'button-action',
     ]);
     $index = 0;

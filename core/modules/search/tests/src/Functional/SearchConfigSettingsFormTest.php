@@ -265,7 +265,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
    */
   public function testDefaultSearchPageOrdering(): void {
     $this->drupalGet('search');
-    $elements = $this->xpath('//div[@id="block-local-tasks"]//a');
+    $elements = $this->getNodeElementsByXpath('//div[@id="block-local-tasks"]//a');
     $this->assertSame(Url::fromRoute('search.view_node_search')->toString(), $elements[0]->getAttribute('href'));
     $this->assertSame(Url::fromRoute('search.view_dummy_search_type')->toString(), $elements[1]->getAttribute('href'));
     $this->assertSame(Url::fromRoute('search.view_user_search')->toString(), $elements[2]->getAttribute('href'));
@@ -320,7 +320,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
 
     // Ensure both search pages have their tabs displayed.
     $this->drupalGet('search');
-    $elements = $this->xpath('//div[@id="block-local-tasks"]//a');
+    $elements = $this->getNodeElementsByXpath('//div[@id="block-local-tasks"]//a');
     $this->assertSame(Url::fromRoute('search.view_' . $first_id)->toString(), $elements[0]->getAttribute('href'));
     $this->assertSame(Url::fromRoute('search.view_' . $second_id)->toString(), $elements[1]->getAttribute('href'));
 
@@ -332,7 +332,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $this->drupalGet('admin/config/search/pages');
     $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('search');
-    $elements = $this->xpath('//div[@id="block-local-tasks"]//a');
+    $elements = $this->getNodeElementsByXpath('//div[@id="block-local-tasks"]//a');
     $this->assertSame(Url::fromRoute('search.view_' . $second_id)->toString(), $elements[0]->getAttribute('href'));
     $this->assertSame(Url::fromRoute('search.view_' . $first_id)->toString(), $elements[1]->getAttribute('href'));
 

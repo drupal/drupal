@@ -539,8 +539,35 @@ abstract class BrowserTestBase extends DrupalTestCase {
    *
    * @return \Behat\Mink\Element\NodeElement[]
    *   The list of elements matching the xpath expression.
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+   *   BrowserTestBase::getNodeElementsByXpath instead.
+   *
+   * @see https://www.drupal.org/node/3589621
    */
   protected function xpath($xpath, array $arguments = []) {
+    @trigger_error(__CLASS__ . "::" . __FUNCTION__ . " is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use BrowserTestBase::getNodeElementsByXpath instead. See https://www.drupal.org/node/3589621", E_USER_DEPRECATED);
+    return $this->getNodeElementsByXpath($xpath, $arguments);
+  }
+
+  /**
+   * Performs an xpath search on the contents of the internal browser.
+   *
+   * The search is relative to the root element (HTML tag normally) of the page.
+   *
+   * @param string $xpath
+   *   The xpath string to use in the search.
+   * @param array $arguments
+   *   An array of arguments with keys in the form ':name' matching the
+   *   placeholders in the query. The values may be either strings or numeric
+   *   values.
+   *
+   * @return \Behat\Mink\Element\NodeElement[]
+   *   The list of elements matching the xpath expression.
+   *
+   * @todo should we use DrupalTestCaseTrait to avoid duplication?
+   */
+  protected function getNodeElementsByXpath($xpath, array $arguments = []): array {
     $xpath = $this->assertSession()->buildXPathQuery($xpath, $arguments);
     return $this->getSession()->getPage()->findAll('xpath', $xpath);
   }
@@ -565,7 +592,7 @@ abstract class BrowserTestBase extends DrupalTestCase {
    *   The JSON decoded drupalSettings value from the current page.
    */
   protected function getDrupalSettings() {
-    if ($elements = $this->xpath('//script[@type="application/json" and @data-drupal-selector="drupal-settings-json"]')) {
+    if ($elements = $this->getNodeElementsByXpath('//script[@type="application/json" and @data-drupal-selector="drupal-settings-json"]')) {
       $settings = Json::decode($elements[0]->getText());
       if (isset($settings['ajaxPageState']['libraries'])) {
         $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);

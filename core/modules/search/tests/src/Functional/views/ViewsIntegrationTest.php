@@ -128,7 +128,7 @@ class ViewsIntegrationTest extends ViewTestBase {
     $this->drupalGet('test-arg/rocks');
     $xpath = '//div[@class="views-row"]//a';
     /** @var \Behat\Mink\Element\NodeElement[] $results */
-    $results = $this->xpath($xpath);
+    $results = $this->getNodeElementsByXpath($xpath);
     $this->assertEquals("Drupal's search rocks <em>really</em> rocks!", $results[0]->getText());
     $this->assertEquals("Drupal's search rocks.", $results[1]->getText());
     $this->assertSession()->assertEscaped("Drupal's search rocks <em>really</em> rocks!");
@@ -145,7 +145,7 @@ class ViewsIntegrationTest extends ViewTestBase {
     $this->drupalGet('test-arg/one');
     $xpath = '//div[@class="views-row"]//a';
     /** @var \SimpleXMLElement[] $results */
-    $results = $this->xpath($xpath);
+    $results = $this->getNodeElementsByXpath($xpath);
     $this->assertEquals("Testing one one one", $results[0]->getText());
     $this->assertEquals("Testing one two two two", $results[1]->getText());
   }

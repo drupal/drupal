@@ -133,7 +133,7 @@ class FilterEntityReferenceWebTest extends UITestBase {
    */
   protected function getUiOptions(): array {
     /** @var \Behat\Mink\Element\TraversableElement[] $result */
-    $result = $this->xpath('//select[@name="options[value][]"]/option');
+    $result = $this->getNodeElementsByXpath('//select[@name="options[value][]"]/option');
     $this->assertNotEmpty($result, 'Options found');
 
     $options = [];

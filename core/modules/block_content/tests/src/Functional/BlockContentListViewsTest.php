@@ -183,7 +183,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->drupalGet('admin/content/block');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkNotExists('Add content block');
-    $matches = $this->xpath('//td[1]');
+    $matches = $this->getNodeElementsByXpath('//td[1]');
     $actual = $matches[0]->getText();
     $this->assertEquals($label, $actual, 'Label found for test block.');
     $this->assertSession()->linkNotExists('Edit');
@@ -197,7 +197,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->drupalGet('admin/content/block');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkExists('Add content block');
-    $matches = $this->xpath('//td/a');
+    $matches = $this->getNodeElementsByXpath('//td/a');
     $actual = $matches[0]->getText();
     $this->assertEquals($label, $actual, 'Label found for test block.');
     $this->assertSession()->linkByHrefExists('admin/content/block/' . $test_block->id());

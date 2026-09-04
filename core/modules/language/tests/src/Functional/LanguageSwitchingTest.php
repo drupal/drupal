@@ -117,7 +117,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($block_label);
     // Assert that each list item and anchor element has the appropriate data-
     // attributes.
-    $language_switchers = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
+    $language_switchers = $this->getNodeElementsByXpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
     $list_items = [];
     $anchors = [];
     $labels = [];
@@ -177,7 +177,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
 
     // Assert that each list item and anchor element has the appropriate data-
     // attributes.
-    $language_switchers = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
+    $language_switchers = $this->getNodeElementsByXpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
     $list_items = [];
     $anchors = [];
     $labels = [];
@@ -228,7 +228,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($block_label);
 
     // Assert that only the current language is marked as active.
-    $language_switchers = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
+    $language_switchers = $this->getNodeElementsByXpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
     $links = [
       'active' => [],
       'inactive' => [],
@@ -278,7 +278,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
 
     // Assert that each list item and anchor element has the appropriate data-
     // attributes.
-    $language_switchers = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
+    $language_switchers = $this->getNodeElementsByXpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
     $list_items = [];
     $anchors = [];
     $labels = [];

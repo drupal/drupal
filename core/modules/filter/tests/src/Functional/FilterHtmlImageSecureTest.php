@@ -144,7 +144,7 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     foreach ($images as $image => $converted) {
       $found = FALSE;
-      foreach ($this->xpath('//img[@test-attribute="' . hash('sha256', $image) . '"]') as $element) {
+      foreach ($this->getNodeElementsByXpath('//img[@test-attribute="' . hash('sha256', $image) . '"]') as $element) {
         $found = TRUE;
         if ($converted == $red_x_image) {
           $this->assertEquals($red_x_image, $element->getAttribute('src'));

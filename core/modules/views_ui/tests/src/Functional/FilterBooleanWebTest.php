@@ -62,11 +62,11 @@ class FilterBooleanWebTest extends UITestBase {
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/status');
 
-    $result = $this->xpath('//input[@name="options[group_info][group_items][1][value]"]');
+    $result = $this->getNodeElementsByXpath('//input[@name="options[group_info][group_items][1][value]"]');
     $this->assertEquals('checked', $result[1]->getAttribute('checked'));
-    $result = $this->xpath('//input[@name="options[group_info][group_items][2][value]"]');
+    $result = $this->getNodeElementsByXpath('//input[@name="options[group_info][group_items][2][value]"]');
     $this->assertEquals('checked', $result[2]->getAttribute('checked'));
-    $result = $this->xpath('//input[@name="options[group_info][group_items][3][value]"]');
+    $result = $this->getNodeElementsByXpath('//input[@name="options[group_info][group_items][3][value]"]');
     $this->assertEquals('checked', $result[1]->getAttribute('checked'));
 
     // Test that there is a remove link for each group.

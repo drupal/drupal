@@ -383,7 +383,7 @@ class ManageDisplayTest extends BrowserTestBase {
    */
   protected function assertFieldSelectOptions(string $name, array $expected_options): void {
     $xpath = $this->assertSession()->buildXPathQuery('//select[@name=:name]', [':name' => $name]);
-    $fields = $this->xpath($xpath);
+    $fields = $this->getNodeElementsByXpath($xpath);
     if ($fields) {
       $field = $fields[0];
       $options = $this->getAllOptionsList($field);

@@ -153,7 +153,7 @@ class OliveroTest extends BrowserTestBase {
 
     $this->drupalGet('pager-test/multiple-pagers', ['query' => ['page' => 1]]);
     $this->assertSession()->statusCodeEquals(200);
-    $elements = $this->xpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
+    $elements = $this->getNodeElementsByXpath('//ul[contains(@class, :class)]/li', [':class' => 'pager__items']);
     $this->assertNotEmpty($elements, 'Pager found.');
 
     // Check all links for pager-test attribute.

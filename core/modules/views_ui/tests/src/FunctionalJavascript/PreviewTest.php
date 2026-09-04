@@ -138,7 +138,7 @@ class PreviewTest extends WebDriverTestBase {
     $this->getPreviewAJAX('test_pager_full_ajax', 'default', 5);
 
     // Test that the pager is present and rendered.
-    $elements = $this->xpath('//ul[contains(@class, "pager__items")]/li');
+    $elements = $this->getNodeElementsByXpath('//ul[contains(@class, "pager__items")]/li');
     $this->assertNotEmpty($elements);
 
     // Verify elements and links to pages.
@@ -164,7 +164,7 @@ class PreviewTest extends WebDriverTestBase {
     $this->clickPreviewLinkAJAX($element, 5);
 
     // Test that the pager is present and rendered.
-    $elements = $this->xpath('//ul[contains(@class, "pager__items")]/li');
+    $elements = $this->getNodeElementsByXpath('//ul[contains(@class, "pager__items")]/li');
     $this->assertNotEmpty($elements);
 
     // Verify elements and links to pages.
@@ -196,7 +196,7 @@ class PreviewTest extends WebDriverTestBase {
     $this->getPreviewAJAX('test_mini_pager_ajax', 'default', 3);
 
     // Test that the pager is present and rendered.
-    $elements = $this->xpath('//ul[contains(@class, "pager__items")]/li');
+    $elements = $this->getNodeElementsByXpath('//ul[contains(@class, "pager__items")]/li');
     $this->assertNotEmpty($elements);
 
     // Verify elements and links to pages.
@@ -212,7 +212,7 @@ class PreviewTest extends WebDriverTestBase {
     $this->clickPreviewLinkAJAX($next_page_link, 3);
 
     // Test that the pager is present and rendered.
-    $elements = $this->xpath('//ul[contains(@class, "pager__items")]/li');
+    $elements = $this->getNodeElementsByXpath('//ul[contains(@class, "pager__items")]/li');
     $this->assertNotEmpty($elements);
 
     // Verify elements and links to pages.

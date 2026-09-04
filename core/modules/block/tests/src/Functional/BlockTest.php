@@ -635,11 +635,11 @@ class BlockTest extends BlockTestBase {
     $this->submitForm($edit, 'Save block');
 
     // Ensure that the title is displayed as plain text.
-    $elements = $this->xpath('//table/tbody/tr//td[contains(@class, "block")]');
+    $elements = $this->getNodeElementsByXpath('//table/tbody/tr//td[contains(@class, "block")]');
     $this->assertEquals($title, $elements[0]->getText());
 
     $this->clickLink('Disable');
-    $elements = $this->xpath('//table/tbody/tr//td[contains(@class, "block")]');
+    $elements = $this->getNodeElementsByXpath('//table/tbody/tr//td[contains(@class, "block")]');
     $this->assertEquals("$title (disabled)", $elements[0]->getText());
   }
 

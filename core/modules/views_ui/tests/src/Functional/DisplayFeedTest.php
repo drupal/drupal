@@ -63,7 +63,7 @@ class DisplayFeedTest extends UITestBase {
     $this->assertSession()->assertEscaped('<em>Page</em>');
 
     // Load all the options of the checkbox.
-    $result = $this->xpath('//div[@id="edit-displays"]/div');
+    $result = $this->getNodeElementsByXpath('//div[@id="edit-displays"]/div');
     $options = [];
     foreach ($result as $item) {
       $input_node = $item->find('css', 'input');

@@ -419,12 +419,12 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->drupalLogin($this->createUser(['administer workflows']));
     $this->drupalGet('admin/config/workflow/workflows/manage/test');
     $expected_states = ['one', 'two a', 'two b', 'three'];
-    $elements = $this->xpath('//details[@id="edit-states-container"]//table/tbody/tr');
+    $elements = $this->getNodeElementsByXpath('//details[@id="edit-states-container"]//table/tbody/tr');
     foreach ($elements as $key => $element) {
       $this->assertEquals($expected_states[$key], $element->find('xpath', 'td')->getText());
     }
     $expected_transitions = ['one', 'two a', 'two b', 'three'];
-    $elements = $this->xpath('//details[@id="edit-transitions-container"]//table/tbody/tr');
+    $elements = $this->getNodeElementsByXpath('//details[@id="edit-transitions-container"]//table/tbody/tr');
     foreach ($elements as $key => $element) {
       $this->assertEquals($expected_transitions[$key], $element->find('xpath', 'td')->getText());
     }

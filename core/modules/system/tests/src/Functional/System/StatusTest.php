@@ -74,7 +74,7 @@ class StatusTest extends BrowserTestBase {
 
     // Test that the experimental modules requirement is reported as info (in
     // the "Checked" group), rather than as a warning.
-    $elements = $this->xpath('//div[h3[@id="checked"]]//summary[contains(@class, "system-status-report__status-title") and contains(text(), :text)]', [
+    $elements = $this->getNodeElementsByXpath('//div[h3[@id="checked"]]//summary[contains(@class, "system-status-report__status-title") and contains(text(), :text)]', [
       ':text' => 'Experimental modules installed',
     ]);
     $this->assertCount(1, $elements);
@@ -135,13 +135,13 @@ class StatusTest extends BrowserTestBase {
     $connection = Database::getConnection();
     $options = $connection->getConnectionOptions();
     if ($connection->databaseType() === 'sqlite') {
-      $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
+      $elements = $this->getNodeElementsByXpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
         ':text' => 'Database: ',
       ]);
       $this->assertCount(1, $elements);
     }
     else {
-      $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
+      $elements = $this->getNodeElementsByXpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
         ':text' => 'Host: ',
       ]);
       $this->assertCount(1, $elements);
@@ -157,7 +157,7 @@ class StatusTest extends BrowserTestBase {
 
     // Check if JSON database support is enabled.
     $this->assertSession()->pageTextContains('Database support for JSON');
-    $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
+    $elements = $this->getNodeElementsByXpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
       ':text' => 'Drupal requires databases that support JSON storage.',
     ]);
     $this->assertCount(1, $elements);
@@ -230,7 +230,7 @@ class StatusTest extends BrowserTestBase {
     // Check if pg_trgm extension is enabled on postgres.
     if (\Drupal::database()->databaseType() == 'pgsql') {
       $this->assertSession()->pageTextContains('PostgreSQL pg_trgm extension');
-      $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
+      $elements = $this->getNodeElementsByXpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
         ':text' => 'The pg_trgm PostgreSQL extension is present.',
       ]);
       $this->assertCount(1, $elements);
@@ -238,7 +238,7 @@ class StatusTest extends BrowserTestBase {
     }
 
     // Test APCu status.
-    $elements = $this->xpath('//details[summary[contains(@class, "system-status-report__status-title") and normalize-space(text()) = "PHP APCu caching"]]/div[@class="system-status-report__entry__value"]/text()');
+    $elements = $this->getNodeElementsByXpath('//details[summary[contains(@class, "system-status-report__status-title") and normalize-space(text()) = "PHP APCu caching"]]/div[@class="system-status-report__entry__value"]/text()');
     // Ensure the status is not a warning if APCu size is greater than or equal
     // to the recommended size.
     if (preg_match('/^Enabled \((.*)\)$/', $elements[0]->getText(), $matches)) {

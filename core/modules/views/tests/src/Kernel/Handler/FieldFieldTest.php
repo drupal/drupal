@@ -363,7 +363,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
     $output = $executable->preview();
     $output = $renderer->renderRoot($output);
     $this->setRawContent($output);
-    $field_values = $this->xpath('//div[contains(@class, "views-field-id")]/span[contains(@class, :class)]/div', [':class' => 'field-content']);
+    $field_values = $this->getSimpleXmlElementsByXpath('//div[contains(@class, "views-field-id")]/span[contains(@class, :class)]/div', [':class' => 'field-content']);
     $this->assertNotEmpty($field_values);
   }
 

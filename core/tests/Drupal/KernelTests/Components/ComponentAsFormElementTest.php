@@ -234,7 +234,7 @@ class ComponentAsFormElementTest extends ComponentKernelTestBase implements Form
     ];
 
     foreach ($paths as $path) {
-      $this->assertNotEmpty($this->xpath($path), 'There should be a result with the path: ' . $path . '.');
+      $this->assertNotEmpty($this->getSimpleXmlElementsByXpath($path), 'There should be a result with the path: ' . $path . '.');
     }
 
     // Test form submission. Assertions are in submitForm().

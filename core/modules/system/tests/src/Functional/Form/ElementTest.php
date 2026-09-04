@@ -63,7 +63,7 @@ class ElementTest extends BrowserTestBase {
 
     // Verify that all options appear in their defined order.
     foreach (['checkbox', 'radio'] as $type) {
-      $elements = $this->xpath('//input[@type=:type]', [':type' => $type]);
+      $elements = $this->getNodeElementsByXpath('//input[@type=:type]', [':type' => $type]);
       $expected_values = ['0', 'foo', '1', 'bar', '>'];
       foreach ($elements as $element) {
         $expected = array_shift($expected_values);
@@ -83,7 +83,7 @@ class ElementTest extends BrowserTestBase {
     // Verify that all options appear in their defined order, taking a custom
     // #weight into account.
     foreach (['checkbox', 'radio'] as $type) {
-      $elements = $this->xpath('//input[@type=:type]', [':type' => $type]);
+      $elements = $this->getNodeElementsByXpath('//input[@type=:type]', [':type' => $type]);
       $expected_values = ['0', 'foo', 'bar', '>', '1'];
       foreach ($elements as $element) {
         $expected = array_shift($expected_values);

@@ -235,10 +235,11 @@ trait HttpKernelUiHelperTrait {
    *
    * The search is relative to the root element (HTML tag normally) of the page.
    *
-   * This method is identical to \Drupal\Tests\BrowserTestBase::xpath() and
-   * should be used when converting Browser tests to Kernel tests, as
-   * \Drupal\KernelTests\AssertContentTrait::xpath() which Kernel tests use does
-   * not have the same return type.
+   * This method is identical to
+   * \Drupal\Tests\BrowserTestBase::getNodeElementsByXpath() and should be used
+   * when converting Browser tests to Kernel tests, as
+   * \Drupal\KernelTests\AssertContentTrait::getSimpleXmlElementsByXpath() which
+   * Kernel tests use does not have the same return type.
    *
    * @param string $xpath
    *   The xpath string to use in the search.

@@ -93,12 +93,12 @@ class UserAdminTest extends BrowserTestBase {
 
     // Filter the users by name/email.
     $this->drupalGet('admin/people', ['query' => ['user' => $user_a->getAccountName()]]);
-    $result = $this->xpath('//table/tbody/tr');
+    $result = $this->getNodeElementsByXpath('//table/tbody/tr');
     $this->assertCount(1, $result, 'Filter by username returned the right amount.');
     $this->assertEquals($user_a->getAccountName(), $result[0]->find('xpath', '/td[2]/a')->getText(), 'Filter by username returned the right user.');
 
     $this->drupalGet('admin/people', ['query' => ['user' => $user_a->getEmail()]]);
-    $result = $this->xpath('//table/tbody/tr');
+    $result = $this->getNodeElementsByXpath('//table/tbody/tr');
     $this->assertCount(1, $result, 'Filter by username returned the right amount.');
     $this->assertEquals($user_a->getAccountName(), $result[0]->find('xpath', '/td[2]/a')->getText(), 'Filter by username returned the right user.');
 

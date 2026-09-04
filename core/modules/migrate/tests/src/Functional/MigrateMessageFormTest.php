@@ -90,7 +90,7 @@ class MigrateMessageFormTest extends MigrateMessageTestBase {
       'Info' => MigrationInterface::MESSAGE_INFORMATIONAL,
     ];
     $entries = [];
-    $table = $this->xpath('.//table[@id="admin-migrate-msg"]/tbody/tr');
+    $table = $this->getNodeElementsByXpath('.//table[@id="admin-migrate-msg"]/tbody/tr');
     foreach ($table as $row) {
       $cells = $row->findAll('css', 'td');
       if (count($cells) === 3) {

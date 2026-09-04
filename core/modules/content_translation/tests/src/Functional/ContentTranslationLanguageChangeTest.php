@@ -176,10 +176,10 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
 
     // Create a translation in French.
     $this->clickLink('Translate');
-    $language_switch_links = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
+    $language_switch_links = $this->getNodeElementsByXpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
     $this->assertCount(3, $language_switch_links);
     $this->clickLink('Add');
-    $language_switch_links = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
+    $language_switch_links = $this->getNodeElementsByXpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
     $this->assertCount(3, $language_switch_links);
   }
 

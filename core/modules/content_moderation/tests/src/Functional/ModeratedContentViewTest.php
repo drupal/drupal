@@ -142,7 +142,7 @@ class ModeratedContentViewTest extends BrowserTestBase {
     $assert_session->statusCodeEquals(200);
 
     // Check that nodes with pending revisions appear in the view.
-    $node_type_labels = $this->xpath('//td[contains(@class, "views-field-type")]');
+    $node_type_labels = $this->getNodeElementsByXpath('//td[contains(@class, "views-field-type")]');
     $delta = 0;
     foreach ($nodes as $node) {
       $assert_session->linkByHrefExists('node/' . $node->id());

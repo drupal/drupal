@@ -48,7 +48,7 @@ class ConfigDraggableListBuilderTest extends BrowserTestBase {
     $this->assertSession()->titleEquals('Roles | Drupal');
 
     // Count the number of rows in table.
-    $rows = $this->xpath('//form[@class="user-admin-roles-form"]/table/tbody/tr');
+    $rows = $this->getNodeElementsByXpath('//form[@class="user-admin-roles-form"]/table/tbody/tr');
     $this->assertGreaterThan(50, count($rows));
     for ($i = 0; $i < 51; $i++) {
       $this->assertSession()->pageTextContains("Role $i");

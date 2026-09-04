@@ -197,9 +197,37 @@ trait AssertContentTrait {
    *   the xpath string format and return values see the SimpleXML
    *   documentation.
    *
-   * @see http://php.net/manual/function.simplexml-element-xpath.php
+   * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+   *   \Drupal\KernelTests\AssertContentTrait::getSimpleXmlElementsByXpath()
+   *   instead.
+   *
+   * @see https://www.drupal.org/node/3589621
    */
   protected function xpath(string $xpath, array $arguments = []): array|false {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\KernelTests\AssertContentTrait::getSimpleXmlElementsByXpath() instead. See https://www.drupal.org/node/3589621', E_USER_DEPRECATED);
+    return $this->getSimpleXmlElementsByXpath($xpath, $arguments);
+  }
+
+  /**
+   * Performs an xpath search on the contents of the internal browser.
+   *
+   * The search is relative to the root element (HTML tag normally) of the page.
+   *
+   * @param string $xpath
+   *   The xpath string to use in the search.
+   * @param array $arguments
+   *   An array of arguments with keys in the form ':name' matching the
+   *   placeholders in the query. The values may be either strings or numeric
+   *   values.
+   *
+   * @return \SimpleXMLElement[]|false
+   *   The return value of the xpath search or FALSE on failure. For details on
+   *   the xpath string format and return values see the SimpleXML
+   *   documentation.
+   *
+   * @see http://php.net/manual/function.simplexml-element-xpath.php
+   */
+  protected function getSimpleXmlElementsByXpath(string $xpath, array $arguments = []): array|false {
     if ($this->parse()) {
       $xpath = $this->buildXPathQuery($xpath, $arguments);
       $result = $this->elements->xpath($xpath);
@@ -224,7 +252,7 @@ trait AssertContentTrait {
    *   selector to an XPath selector.
    */
   protected function cssSelect(string $selector): array {
-    return $this->xpath((new CssSelectorConverter())->toXPath($selector));
+    return $this->getSimpleXmlElementsByXpath((new CssSelectorConverter())->toXPath($selector));
   }
 
   /**
@@ -274,7 +302,7 @@ trait AssertContentTrait {
   protected function assertLink($label, $index = 0, $message = ''): bool {
     // Cast MarkupInterface objects to string.
     $label = (string) $label;
-    $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => $label]);
+    $links = $this->getSimpleXmlElementsByXpath('//a[normalize-space(text())=:label]', [':label' => $label]);
     $message = ($message ?: strtr('Link with label %label found.', ['%label' => $label]));
     $this->assertArrayHasKey($index, $links, $message);
     return TRUE;
@@ -298,7 +326,7 @@ trait AssertContentTrait {
   protected function assertNoLink($label, $message = ''): bool {
     // Cast MarkupInterface objects to string.
     $label = (string) $label;
-    $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => $label]);
+    $links = $this->getSimpleXmlElementsByXpath('//a[normalize-space(text())=:label]', [':label' => $label]);
     $message = $message ?: "Link with label $label not found.";
     $this->assertEmpty($links, $message);
     return TRUE;
@@ -322,7 +350,7 @@ trait AssertContentTrait {
    *   TRUE if the assertion succeeded.
    */
   protected function assertLinkByHref($href, $index = 0, $message = ''): bool {
-    $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $href]);
+    $links = $this->getSimpleXmlElementsByXpath('//a[contains(@href, :href)]', [':href' => $href]);
     $message = $message ?: "Link containing href $href found.";
     $this->assertArrayHasKey($index, $links, (string) $message);
     return TRUE;
@@ -645,7 +673,7 @@ trait AssertContentTrait {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertFieldByXPath($xpath, $value = NULL, $message = ''): bool {
-    $fields = $this->xpath($xpath);
+    $fields = $this->getSimpleXmlElementsByXpath($xpath);
 
     return $this->assertFieldsByValue($fields, $value, $message);
   }

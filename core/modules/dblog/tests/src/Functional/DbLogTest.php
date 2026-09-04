@@ -525,7 +525,7 @@ class DbLogTest extends BrowserTestBase {
     $message_text = Unicode::truncate($message, 56, TRUE, TRUE);
     // Verify that the full message displays on the details page.
     $link = FALSE;
-    if ($links = $this->xpath('//a[text()="' . $message_text . '"]')) {
+    if ($links = $this->getNodeElementsByXpath('//a[text()="' . $message_text . '"]')) {
       // Found link with the message text.
       $links = array_shift($links);
       $value = $links->getAttribute('href');
@@ -766,7 +766,7 @@ class DbLogTest extends BrowserTestBase {
    *   The return value of a xpath search.
    */
   protected function getLogsEntriesTable() {
-    return $this->xpath('.//table[@id="admin-dblog"]/tbody/tr');
+    return $this->getNodeElementsByXpath('.//table[@id="admin-dblog"]/tbody/tr');
   }
 
   /**

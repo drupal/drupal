@@ -373,7 +373,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
         $expected_href = $base_path . $langcode . '/' . $node_href;
       }
       $pattern = '|^' . $expected_href . '$|';
-      foreach ($this->xpath("//a[text()='Read more']") as $link) {
+      foreach ($this->getNodeElementsByXpath("//a[text()='Read more']") as $link) {
         if (preg_match($pattern, $link->getAttribute('href'), $matches) == TRUE) {
           $num_match_found++;
         }
@@ -395,7 +395,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
         $expected_href = $base_path . $langcode . '/' . $comment_form_href;
       }
       $pattern = '|^' . $expected_href . '$|';
-      foreach ($this->xpath("//a[text()='Add new comment']") as $link) {
+      foreach ($this->getNodeElementsByXpath("//a[text()='Add new comment']") as $link) {
         if (preg_match($pattern, $link->getAttribute('href'), $matches) == TRUE) {
           $num_match_found++;
         }

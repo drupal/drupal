@@ -33,7 +33,7 @@ class FormElementLabelTest extends KernelTestBase {
     ];
     $css_selector_converter = new CssSelectorConverter();
     $this->render($render_array);
-    $elements = $this->xpath($css_selector_converter->toXPath('.kitten'));
+    $elements = $this->getSimpleXmlElementsByXpath($css_selector_converter->toXPath('.kitten'));
     $this->assertCount(1, $elements);
 
     // Add label attributes to a form element.
@@ -43,7 +43,7 @@ class FormElementLabelTest extends KernelTestBase {
       '#title' => 'Kitten sounds',
     ];
     $this->render($render_array);
-    $elements = $this->xpath($css_selector_converter->toXPath('label.meow'));
+    $elements = $this->getSimpleXmlElementsByXpath($css_selector_converter->toXPath('label.meow'));
     $this->assertCount(1, $elements);
   }
 

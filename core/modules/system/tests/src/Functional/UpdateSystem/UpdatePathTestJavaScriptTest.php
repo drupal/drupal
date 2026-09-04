@@ -44,7 +44,7 @@ class UpdatePathTestJavaScriptTest extends BrowserTestBase {
    */
   protected function doSelectionTest(): void {
     // Ensure that at least one JS script has drupalSettings in there.
-    $scripts = $this->xpath('//script');
+    $scripts = $this->getNodeElementsByXpath('//script');
     $found = FALSE;
     foreach ($scripts as $script) {
       if (!$script->getAttribute('src')) {

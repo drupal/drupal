@@ -122,19 +122,19 @@ class ElementsFieldsetTest extends KernelTestBase implements FormInterface {
     // default, the #description should appear after any fieldset elements.
     $field_id = 'edit-fieldset-default';
     $description_id = $field_id . '--description';
-    $elements = $this->xpath('//fieldset[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]//div[@id="edit-meta-default"]/following-sibling::div[@id="' . $description_id . '"]');
+    $elements = $this->getSimpleXmlElementsByXpath('//fieldset[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]//div[@id="edit-meta-default"]/following-sibling::div[@id="' . $description_id . '"]');
     $this->assertCount(1, $elements);
 
     // Check #description placement with #description_display set to 'before'.
     $field_id = 'edit-fieldset-before';
     $description_id = $field_id . '--description';
-    $elements = $this->xpath('//fieldset[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]//div[@id="edit-meta-before"]/preceding-sibling::div[@id="' . $description_id . '"]');
+    $elements = $this->getSimpleXmlElementsByXpath('//fieldset[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]//div[@id="edit-meta-before"]/preceding-sibling::div[@id="' . $description_id . '"]');
     $this->assertCount(1, $elements);
 
     // Check #description placement with #description_display set to 'after'.
     $field_id = 'edit-fieldset-after';
     $description_id = $field_id . '--description';
-    $elements = $this->xpath('//fieldset[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]//div[@id="edit-meta-after"]/following-sibling::div[@id="' . $description_id . '"]');
+    $elements = $this->getSimpleXmlElementsByXpath('//fieldset[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]//div[@id="edit-meta-after"]/following-sibling::div[@id="' . $description_id . '"]');
     $this->assertCount(1, $elements);
 
     // Check if the 'visually-hidden' class is set on the fieldset description
@@ -142,7 +142,7 @@ class ElementsFieldsetTest extends KernelTestBase implements FormInterface {
     // description is placed after the form element.
     $field_id = 'edit-fieldset-invisible';
     $description_id = $field_id . '--description';
-    $elements = $this->xpath('//fieldset[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]//div[@id="edit-meta-invisible"]/following-sibling::div[contains(@class, "visually-hidden")]');
+    $elements = $this->getSimpleXmlElementsByXpath('//fieldset[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]//div[@id="edit-meta-invisible"]/following-sibling::div[contains(@class, "visually-hidden")]');
     $this->assertCount(1, $elements);
 
     \Drupal::formBuilder()->submitForm($this, $form_state);

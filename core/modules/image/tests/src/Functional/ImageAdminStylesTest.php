@@ -408,7 +408,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Add another scale effect and make sure both exist. Click through from
     // the overview to make sure that it is possible to add new effect then.
     $this->drupalGet('admin/config/media/image-styles');
-    $rows = $this->xpath('//table/tbody/tr');
+    $rows = $this->getNodeElementsByXpath('//table/tbody/tr');
     $i = 0;
     foreach ($rows as $row) {
       if ($row->find('css', 'td')->getText() === 'Test style scale edit scale') {

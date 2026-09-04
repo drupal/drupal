@@ -145,7 +145,7 @@ class ComponentInFormTest extends ComponentKernelTestBase implements FormInterfa
       '//form/div[2][@data-component-id="sdc_test:my-banner"]/div[2][@class="component--my-banner--body"]/div[1][@data-component-id="sdc_theme_test:my-card"]/div[1][@class="component--my-card__body"]/div[2]/select[@name="bar"]',
     ];
     foreach ($paths as $path) {
-      $this->assertNotEmpty($this->xpath($path), 'There should be a result with the path: ' . $path . '.');
+      $this->assertNotEmpty($this->getSimpleXmlElementsByXpath($path), 'There should be a result with the path: ' . $path . '.');
     }
 
     // Test form submission. Assertions are in submitForm().

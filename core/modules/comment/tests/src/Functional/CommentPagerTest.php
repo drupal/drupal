@@ -237,7 +237,7 @@ class CommentPagerTest extends CommentTestBase {
       $expected_cids[] = $comments[$key]->id();
     }
 
-    $comment_anchors = $this->xpath('//article[starts-with(@id,"comment-")]');
+    $comment_anchors = $this->getNodeElementsByXpath('//article[starts-with(@id,"comment-")]');
     $result_order = [];
     foreach ($comment_anchors as $anchor) {
       $result_order[] = substr($anchor->getAttribute('id'), 8);
@@ -443,7 +443,7 @@ class CommentPagerTest extends CommentTestBase {
    */
   protected function clickLinkWithXPath($xpath, array $arguments = [], $index = 0): string|false {
     $url_before = $this->getUrl();
-    $urls = $this->xpath($xpath, $arguments);
+    $urls = $this->getNodeElementsByXpath($xpath, $arguments);
     if (isset($urls[$index])) {
       $url_target = $this->getAbsoluteUrl($urls[$index]->getAttribute('href'));
       return $this->drupalGet($url_target);

@@ -153,7 +153,7 @@ class FieldWebTest extends ViewTestBase {
    *   A list of beatle ids.
    */
   protected function clickSortLoadIdsFromOutput(): array {
-    $fields = $this->xpath("//td[contains(@class, 'views-field-id')]");
+    $fields = $this->getNodeElementsByXpath("//td[contains(@class, 'views-field-id')]");
     $ids = [];
     foreach ($fields as $field) {
       $ids[] = (int) $field->getText();

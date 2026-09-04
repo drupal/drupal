@@ -255,7 +255,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     foreach ([$this->publicTid, $this->privateTid] as $tid_is_private => $tid) {
       $this->drupalGet("taxonomy/term/$tid");
       $this->nidsVisible = [];
-      foreach ($this->xpath("//a[text()='Read more']") as $link) {
+      foreach ($this->getNodeElementsByXpath("//a[text()='Read more']") as $link) {
         // See also testTranslationRendering() in NodeTranslationUITest.
         $this->assertEquals(1, preg_match('|node/(\d+)$|', $link->getAttribute('href'), $matches), 'Read more points to a node');
         $this->nidsVisible[$matches[1]] = TRUE;
