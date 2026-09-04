@@ -18,3 +18,4 @@ services:
     parent: logger.channel_base
     arguments: [ 'update' ]
   Drupal\update\MailHandler: ~
+  Drupal\update\UpdateCalculator: ~

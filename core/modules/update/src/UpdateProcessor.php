@@ -147,7 +147,8 @@ class UpdateProcessor implements UpdateProcessorInterface {
     $end = time() + $this->updateSettings->get('fetch.timeout');
     if ($this->fetchQueue->numberOfItems()) {
       // Delete any stored project data as that needs refreshing when
-      // update_calculate_project_data() is called.
+      // \Drupal\update\UpdateManagerInterface::calculateProjectData()
+      // is called.
       $this->tempStore->delete('update_project_data');
     }
     while (time() < $end && ($item = $this->fetchQueue->claimItem())) {

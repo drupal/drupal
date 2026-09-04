@@ -21,10 +21,7 @@ use Drupal\update\UpdateManagerInterface;
  */
 final class ProjectInfo {
 
-  public function __construct(
-    private readonly string $name,
-    private readonly UpdateManagerInterface $updateManager,
-  ) {}
+  public function __construct(private readonly string $name) {}
 
   /**
    * Determines if a release can be installed.
@@ -67,7 +64,7 @@ final class ProjectInfo {
    */
   public function getProjectInfo(): ?array {
     $available_updates = $this->getAvailableProjects();
-    $project_data = update_calculate_project_data($available_updates);
+    $project_data = \Drupal::service(UpdateManagerInterface::class)->calculateProjectData($available_updates);
     if (!isset($project_data[$this->name])) {
       return $available_updates[$this->name] ?? NULL;
     }
@@ -150,7 +147,7 @@ final class ProjectInfo {
       $existing_version = $project_data['existing_version'];
       // Treat an unknown version the same as a project whose project
       // information is not available, so return NULL.
-      // @see \update_process_project_info()
+      // @see \Drupal\update\UpdateCalculator::processProjectInfo()
       if ($existing_version instanceof TranslatableMarkup && $existing_version->getUntranslatedString() === 'Unknown') {
         return NULL;
       }
@@ -181,7 +178,7 @@ final class ProjectInfo {
    * @see \Drupal\update\UpdateManagerInterface::getAvailable()
    */
   private function getAvailableProjects(): array {
-    $available_projects = $this->updateManager->getAvailable(TRUE);
+    $available_projects = \Drupal::service(UpdateManagerInterface::class)->getAvailable(TRUE);
     // \Drupal\update\UpdateManagerInterface::getAvailable() will only return
     // projects that are in the active codebase. If the project specified by
     // ::name is not returned in $available_projects, it means it is not in the

@@ -54,7 +54,7 @@ class UpdateRequirements {
     $requirements = [];
     if ($available = $this->updateManager->getAvailable(FALSE)) {
       $this->moduleHandler->loadInclude('update', 'inc', 'update.compare');
-      $data = update_calculate_project_data($available);
+      $data = $this->updateManager->calculateProjectData($available);
       // First, populate the requirements for core:
       $requirements['update_core'] = $this->requirementCheck($data['drupal'], 'core');
       if (!empty($available['drupal']['releases'])) {
@@ -102,7 +102,7 @@ class UpdateRequirements {
    *
    * @param array $project
    *   Array of information about the project we're testing as returned by
-   *   update_calculate_project_data().
+   *   \Drupal\update\UpdateManagerInterface::calculateProjectData().
    * @param string $type
    *   What kind of project this is ('core' or 'contrib').
    *
@@ -111,7 +111,7 @@ class UpdateRequirements {
    *
    * @see hook_requirements()
    * @see Drupal\update\Hook\UpdateRequirements::runtime()
-   * @see update_calculate_project_data()
+   * @see \Drupal\update\UpdateManagerInterface::calculateProjectData()
    */
   protected function requirementCheck($project, $type): array {
     $requirement = [];

@@ -50,16 +50,16 @@ final class ProjectCoreCompatibility {
    * @param array $core_data
    *   The project data for Drupal core as returned by
    *   \Drupal\update\UpdateManagerInterface::getProjects() and then processed
-   *   by update_process_project_info() and
-   *   update_calculate_project_update_status().
+   *   by \Drupal\update\UpdateCalculator::processProjectInfo() and
+   *   \Drupal\update\UpdateCalculator::updateProjectStatus().
    * @param array $core_releases
    *   The Drupal core available releases.
    * @param array $supported_branches
    *   An array for supported branches as returned by drupal.org update XML.
    *
    * @see \Drupal\update\UpdateManagerInterface::getProjects()
-   * @see update_process_project_info()
-   * @see update_calculate_project_update_status()
+   * @see \Drupal\update\UpdateCalculator::processProjectInfo()
+   * @see \Drupal\update\UpdateCalculator::updateProjectStatus()
    */
   public function __construct(array $core_data, array $core_releases, array $supported_branches) {
     if (isset($core_data['existing_version'])) {
@@ -121,9 +121,9 @@ final class ProjectCoreCompatibility {
    * @param array &$project_data
    *   The project data as returned by
    *   \Drupal\update\UpdateManagerInterface::getProjects() and then processed
-   *   by update_process_project_info() and
-   *   update_calculate_project_update_status(). If set, the following keys are
-   *   used in this method:
+   *   by \Drupal\update\UpdateCalculator::processProjectInfo() and
+   *   \Drupal\update\UpdateCalculator::updateProjectStatus(). If set, the
+   *   following keys are used in this method:
    *   - recommended (string): A project version number.
    *   - latest_version (string): A project version number.
    *   - also (string[]): Project version numbers.
@@ -132,8 +132,8 @@ final class ProjectCoreCompatibility {
    *   - security updates (array[]): An array of project release information.
    *
    * @see \Drupal\update\UpdateManagerInterface::getProjects()
-   * @see update_process_project_info()
-   * @see update_calculate_project_update_status()
+   * @see \Drupal\update\UpdateCalculator::processProjectInfo()
+   * @see \Drupal\update\UpdateCalculator::updateProjectStatus()
    */
   public function setReleaseMessage(array &$project_data) {
     if (empty($this->possibleCoreUpdateVersions)) {

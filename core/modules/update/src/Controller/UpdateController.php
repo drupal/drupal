@@ -52,7 +52,7 @@ class UpdateController extends ControllerBase {
     ];
     if ($available = $this->updateManager->getAvailable(TRUE)) {
       $this->moduleHandler()->loadInclude('update', 'compare.inc');
-      $build['#data'] = update_calculate_project_data($available);
+      $build['#data'] = $this->updateManager->calculateProjectData($available);
 
       // @todo Consider using 'fetch_failures' from the 'update' collection
       // in the key_value_expire service for this?
