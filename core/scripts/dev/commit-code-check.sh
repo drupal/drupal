@@ -108,9 +108,8 @@ PHPSTAN_DIST_FILE_CHANGED=0
 
 # This variable will be set to one when one of the eslint config file is
 # changed:
-#  - core/.eslintrc.passing.json
-#  - core/.eslintrc.json
-#  - core/.eslintrc.jquery.json
+#  - core/eslint.passing.config.mjs
+#  - core/eslint.config.mjs
 ESLINT_CONFIG_PASSING_FILE_CHANGED=0
 
 # This variable will be set to one when the stylelint config file is changed.
@@ -157,7 +156,7 @@ for FILE in $FILES; do
     PHPSTAN_DIST_FILE_CHANGED=1;
   fi;
 
-  if [[ $FILE == "core/.eslintrc.json" || $FILE == "core/.eslintrc.passing.json" || $FILE == "core/.eslintrc.jquery.json" ]]; then
+  if [[ $FILE == "core/eslint.config.mjs" || $FILE == "core/eslint.passing.config.mjs" ]]; then
     ESLINT_CONFIG_PASSING_FILE_CHANGED=1;
   fi;
 
@@ -412,7 +411,7 @@ fi
 # Run ESLint on changed YAML and JavaScript files.
 if [[ "$JS_FILES" != "" ]] && [[ $ESLINT_CONFIG_PASSING_FILE_CHANGED == "0" ]]; then
   cd "$TOP_LEVEL/core"
-  node ./node_modules/eslint/bin/eslint.js --quiet --resolve-plugins-relative-to . --config=.eslintrc.passing.json $JS_FILES
+  node ./node_modules/eslint/bin/eslint.js --quiet --config=eslint.passing.config.mjs $JS_FILES
   if [ "$?" -ne "0" ]; then
     FINAL_STATUS=1
     printf "\nESLint: ${red}failed${reset}\n"
