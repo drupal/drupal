@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -145,10 +146,15 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->drupalLogout();
 
+    // Add Created field to the user profile display so that there is something
+    // to check page contents against.
+    EntityViewDisplay::collectRenderDisplay($new_user, 'default')
+      ->setComponent('created', ['type' => 'timestamp'])
+      ->save();
     // Log in after administrator approval.
     $this->drupalGet('user/login');
     $this->submitForm($auth, 'Log in');
-    $this->assertSession()->pageTextContains('Member for');
+    $this->assertSession()->pageTextContains('Created');
   }
 
   /**

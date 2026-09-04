@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Functional;
 
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
@@ -135,9 +136,14 @@ class UserLoginTest extends BrowserTestBase {
     $this->resetUserPassword($user1);
     $this->drupalLogout();
 
+    // Add Created field to the user profile display so that there is something
+    // to check page contents against.
+    EntityViewDisplay::collectRenderDisplay($user1, 'default')
+      ->setComponent('created', ['type' => 'timestamp'])
+      ->save();
     // Try to log in as user 1, it should be successful.
     $this->drupalLogin($user1);
-    $this->assertSession()->responseContains('Member for');
+    $this->assertSession()->responseContains('Created');
   }
 
   /**
@@ -192,6 +198,11 @@ class UserLoginTest extends BrowserTestBase {
     // Create a new user and authenticate.
     $account = $this->drupalCreateUser([]);
     $current_password = $account->passRaw;
+    // Add Created field to the user profile display so that there is something
+    // to check page contents against.
+    EntityViewDisplay::collectRenderDisplay($account, 'default')
+      ->setComponent('created', ['type' => 'timestamp'])
+      ->save();
     $this->drupalLogin($account);
 
     // Use the length specified in
@@ -200,11 +211,11 @@ class UserLoginTest extends BrowserTestBase {
 
     $current_password = $this->doPasswordLengthLogin($account, $current_password, $length);
     $this->assertSession()->pageTextNotContains('Password cannot be longer than');
-    $this->assertSession()->pageTextContains('Member for');
+    $this->assertSession()->pageTextContains('Created');
 
     $this->doPasswordLengthLogin($account, $current_password, $length + 1);
     $this->assertSession()->pageTextContains('Password cannot be longer than ' . $length . ' characters but is currently ' . ($length + 1) . ' characters long.');
-    $this->assertSession()->pageTextNotContains('Member for');
+    $this->assertSession()->pageTextNotContains('Created');
   }
 
   /**

@@ -6,6 +6,7 @@ namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
@@ -172,6 +173,15 @@ class LocalePluralFormatTest extends BrowserTestBase {
 
     // Set French as the site default language.
     $this->config('system.site')->set('default_langcode', 'fr')->save();
+    // Switch the user display to show the created time as time ago, so the
+    // translatable string "seconds" is used.
+    EntityViewDisplay::collectRenderDisplay($this->adminUser, 'default')
+      ->setComponent('created', [
+        'label' => 'above',
+        'type' => 'timestamp_ago',
+        'weight' => 5,
+      ])
+      ->save();
 
     // Visit User Info page before updating translation strings. Change the
     // created time to ensure that the we're dealing in seconds and it can't be

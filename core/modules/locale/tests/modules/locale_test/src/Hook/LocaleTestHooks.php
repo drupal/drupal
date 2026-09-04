@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\locale_test\Hook;
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\user\UserInterface;
 
 /**
  * Hook implementations for locale_test.
@@ -217,6 +219,31 @@ class LocaleTestHooks {
   #[Hook('countries_alter')]
   public function countriesAlter(&$countries): void {
     $countries['EB'] = 'Elbonia';
+  }
+
+  /**
+   * Implements hook_entity_extra_field_info().
+   */
+  #[Hook('entity_extra_field_info')]
+  public function entityExtraFieldInfo(): array {
+    $fields['user']['user']['display']['translatable_text'] = [
+      'label' => $this->t('Translatable text'),
+      'description' => $this->t('Test translatable text displayed on user profile.'),
+      'weight' => 5,
+    ];
+    return $fields;
+  }
+
+  /**
+   * Implements hook_ENTITY_TYPE_view() for user entities.
+   */
+  #[Hook('user_view')]
+  public function userView(array &$build, UserInterface $account, EntityViewDisplayInterface $display): void {
+    if ($account->isAuthenticated() && $display->getComponent('translatable_text')) {
+      $build['translatable_text'] = [
+        '#markup' => $this->t('This is translatable text'),
+      ];
+    }
   }
 
 }

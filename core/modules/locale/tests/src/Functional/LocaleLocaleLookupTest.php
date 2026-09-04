@@ -79,11 +79,17 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
 
   /**
    * Tests old plural style @count[number] fix.
+   *
+   * The translated text is in a user profile extra field provided by a
+   * test module.
+   *
+   * @see \Drupal\locale_test\Hook\LocaleTestHooks::entityExtraFieldInfo()
+   * @see \Drupal\locale_test\Hook\LocaleTestHooks::userView()
    */
   #[DataProvider('providerTestFixOldPluralStyle')]
   public function testFixOldPluralStyle(string $translation_value, string $expected): void {
     $string_storage = \Drupal::service('locale.storage');
-    $string = $string_storage->findString(['source' => 'Member for', 'context' => '']);
+    $string = $string_storage->findString(['source' => 'This is translatable text', 'context' => '']);
     $lid = $string->getId();
     $string_storage->createTranslation([
       'lid' => $lid,
