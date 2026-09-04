@@ -3,7 +3,7 @@
  * This file is used to style the pre-header.
  *
  * It styles the pre-header as a global component; it does not style individual
- * pre-header items, such as search, which are styled by their own CSS files.
+ * pre-header items which are styled by their own CSS files.
  */
 
 .region-pre-header {

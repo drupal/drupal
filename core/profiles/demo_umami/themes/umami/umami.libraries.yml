@@ -7,8 +7,6 @@ global:
       css/components/blocks/help/help.css: {}
       css/components/blocks/page-title/page-title.css: {}
       css/components/blocks/language-switcher/language-switcher.css: {}
-      css/components/blocks/search/search.css: {}
-      css/components/blocks/search/search-results.css: {}
       css/components/blocks/articles-aside/articles-aside.css: {}
       css/components/forms/content-moderation.css: {}
       css/components/content/node.css: {}
@@ -178,12 +176,6 @@ classy.progress:
   css:
     component:
       css/classy/components/progress.css: { weight: -10 }
-
-classy.search-results:
-  version: VERSION
-  css:
-    component:
-      css/classy/components/search-results.css: {}
 
 drupal.node.preview:
   version: VERSION
