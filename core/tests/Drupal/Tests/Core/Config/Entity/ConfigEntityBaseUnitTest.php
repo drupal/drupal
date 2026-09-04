@@ -7,9 +7,11 @@ namespace Drupal\Tests\Core\Config\Entity;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Language\Language;
@@ -251,6 +253,78 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $method->invoke($this->entity, 'entity', 'system.action.id');
     $dependencies = $this->entity->getDependencies();
     $this->assertEquals(['entity', 'module'], array_keys($dependencies));
+  }
+
+  /**
+   * Tests ConfigEntityBase::loadOverrideFree().
+   *
+   * When called statically on a subclass of ConfigEntityBase.
+   */
+  public function testLoadOverrideFree(): void {
+    $class_name = get_class($this->entity);
+
+    $entity_type_repository = $this->createMock(EntityTypeRepositoryInterface::class);
+    $entity_type_repository->expects($this->once())
+      ->method('getEntityTypeFromClass')
+      ->with($class_name)
+      ->willReturn($this->entityTypeId);
+
+    $storage = $this->createMock(ConfigEntityStorageInterface::class);
+    $storage->expects($this->once())
+      ->method('loadOverrideFree')
+      ->with($this->id)
+      ->willReturn($this->entity);
+
+    $this->entityTypeManager = $this->createStub(EntityTypeManagerInterface::class);
+    $this->entityTypeManager
+      ->method('getDefinition')
+      ->willReturn($this->entityType);
+    $this->entityTypeManager
+      ->method('getStorage')
+      ->willReturn($storage);
+    \Drupal::getContainer()->set('entity_type.manager', $this->entityTypeManager);
+
+    \Drupal::getContainer()->set('entity_type.repository', $entity_type_repository);
+
+    // Call ConfigEntityBase::loadOverrideFree() statically and check that it
+    // returns the mock entity.
+    $this->assertSame($this->entity, $class_name::loadOverrideFree($this->id));
+  }
+
+  /**
+   * Tests ConfigEntityBase::loadMultipleOverrideFree().
+   *
+   * When called statically on a subclass of ConfigEntityBase.
+   */
+  public function testLoadMultipleOverrideFree(): void {
+    $class_name = get_class($this->entity);
+
+    $entity_type_repository = $this->createMock(EntityTypeRepositoryInterface::class);
+    $entity_type_repository->expects($this->once())
+      ->method('getEntityTypeFromClass')
+      ->with($class_name)
+      ->willReturn($this->entityTypeId);
+
+    $storage = $this->createMock(ConfigEntityStorageInterface::class);
+    $storage->expects($this->once())
+      ->method('loadMultipleOverrideFree')
+      ->with([$this->id])
+      ->willReturn([$this->id => $this->entity]);
+
+    $this->entityTypeManager = $this->createStub(EntityTypeManagerInterface::class);
+    $this->entityTypeManager
+      ->method('getDefinition')
+      ->willReturn($this->entityType);
+    $this->entityTypeManager
+      ->method('getStorage')
+      ->willReturn($storage);
+    \Drupal::getContainer()->set('entity_type.manager', $this->entityTypeManager);
+
+    \Drupal::getContainer()->set('entity_type.repository', $entity_type_repository);
+
+    // Call ConfigEntityBase::loadMultipleOverrideFree() statically and check that it
+    // returns the mock entity.
+    $this->assertSame([$this->id => $this->entity], $class_name::loadMultipleOverrideFree([$this->id]));
   }
 
   /**
