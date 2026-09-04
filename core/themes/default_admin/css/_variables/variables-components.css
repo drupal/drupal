@@ -35,8 +35,8 @@
   --input--error-color: var(--admin-color-error);
   --input--error-border-color: var(--admin-color-error);
   --input--disabled-fg-color: light-dark(var(--admin-color-gray-800), var(--admin-color-gray-400));
-  --input--disabled-bg-color: #f2f2f3; /* Light gray with 0.3 opacity on white bg. */
-  --input--disabled-border-color: #bababf; /* Old silver with 0.5 opacity on white bg. */
+  --input--disabled-bg-color: var(--admin-color-bg-disabled);
+  --input--disabled-border-color: var(--admin-color-border-disabled);
   --input-border-radius-size: var(--admin-radius-2xs);
   --input-border-size: 1px; /* (1/16)em ~ 1px */
   --input--error-border-size: 2px;

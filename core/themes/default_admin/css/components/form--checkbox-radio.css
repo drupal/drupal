@@ -145,7 +145,7 @@
  */
 
 .form-boolean--type-checkbox {
-  &:not(:checked) {
+  &:not(:is(:checked, :disabled)) {
     .gin--dark-mode & {
       background: var(--admin-color-bg-input);
     }
