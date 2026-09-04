@@ -288,6 +288,12 @@
   height: 6.25rem;
 }
 
+/* Prevent media item from collapsing if thumbnail image is broken/missing. */
+
+.media-library-add-form__selected-media .media-library-item--small .media-library-item__preview {
+  min-height: 6.25rem;
+}
+
 /* Generic media library view styles. */
 
 .media-library-select-all {
@@ -579,6 +585,12 @@
   height: 11.25rem;
   object-fit: contain;
   object-position: center center;
+}
+
+/* Prevent media item from collapsing if thumbnail image is broken/missing. */
+
+.media-library-item--grid .media-library-item__preview {
+  min-height: 11.25rem;
 }
 
 .media-library-item--grid.is-hover::before,

@@ -261,6 +261,11 @@
   height: 100px;
 }
 
+/* Prevent media item from collapsing if thumbnail image is broken/missing. */
+.media-library-add-form__selected-media .media-library-item--small .media-library-item__preview {
+  min-height: 100px;
+}
+
 /* Generic media library view styles. */
 .media-library-select-all {
   flex-basis: 100%;
@@ -535,6 +540,11 @@
   height: 180px;
   object-fit: contain;
   object-position: center center;
+}
+
+/* Prevent media item from collapsing if thumbnail image is broken/missing. */
+.media-library-item--grid .media-library-item__preview {
+  min-height: 180px;
 }
 
 .media-library-item--grid.is-hover::before,
