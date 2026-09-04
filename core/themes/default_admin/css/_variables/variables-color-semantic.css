@@ -75,7 +75,7 @@
   --admin-color-border: light-dark(var(--admin-color-gray-200), #43454a);
   --admin-color-border-soft: light-dark(color-mix(in lch, black 8%, transparent), color-mix(in lch, black 5%, transparent));
   --admin-color-border-loud: light-dark(color-mix(in lch, black 30%, transparent), color-mix(in lch, white 40%, transparent));
-  --admin-color-border-input: light-dark(var(--admin-color-gray-500), #76777b);
+  --admin-color-border-input: light-dark(var(--admin-color-gray-500), #999);
   --admin-color-border-table: light-dark(color-mix(in srgb, black 10%, transparent), #43454a);
   --admin-color-text-on-primary: light-dark(var(--admin-color-white), #111);
   --admin-color-switch: light-dark(#26a769, var(--admin-color-accent-100));
@@ -120,8 +120,8 @@
   --admin-color-focus-border: light-dark(color-mix(in lch, black 20%, transparent), color-mix(in lch, black 80%, transparent));
   --admin-color-focus-neutral: light-dark(color-mix(in lch, black 40%, transparent), color-mix(in lch, white 80%, transparent));
   --admin-color-text-disabled: light-dark(var(--admin-color-gray-700), #919191);
-  --admin-color-bg-disabled: light-dark(#eaeaea, #47474c);
-  --admin-color-border-disabled: light-dark(var(--admin-color-gray-300), #646464);
+  --admin-color-bg-disabled: light-dark(#eaeaea, #313134);
+  --admin-color-border-disabled: light-dark(var(--admin-color-gray-300), #555);
 
   /*
    * Link / interactive blue. Used for links and blue focus/selected accents

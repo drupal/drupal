@@ -129,6 +129,10 @@
         opacity: 0.6;
         background-color: #fff;
       }
+
+      ~ label {
+        color: var(--input--disabled-fg-color);
+      }
     }
 
     @media (forced-colors: active) {
