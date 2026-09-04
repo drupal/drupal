@@ -157,8 +157,16 @@ class ViewsOperations {
 
     $base_entity_table = $entity_type->isTranslatable() ? $entity_type->getDataTable() : $entity_type->getBaseTable();
 
-    $base_fields = array_diff($table_mapping->getFieldNames($entity_type->getBaseTable()), [$entity_type->getKey('langcode')]);
-    $revisionable_fields = array_diff($table_mapping->getFieldNames($entity_type->getRevisionDataTable()), $base_fields);
+    // Only revisionable fields can change in a pending revision, so that's
+    // what we need to read from the revision tables below. Views identifies
+    // them by column name, so a multi-column field contributes one entry per
+    // column.
+    $revisionable_fields = [];
+    foreach ($table_mapping->getFieldNames($base_entity_table) as $field_name) {
+      if ($field_storage_definitions[$field_name]->isRevisionable()) {
+        $revisionable_fields = array_merge($revisionable_fields, array_values($table_mapping->getColumnNames($field_name)));
+      }
+    }
 
     // Go through and look to see if we have to modify fields and filters.
     foreach ($query->fields as &$field_info) {

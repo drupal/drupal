@@ -18,6 +18,7 @@ use Drupal\entity_test\EntityTestAccessControlHandler;
 use Drupal\entity_test\EntityTestDeleteForm;
 use Drupal\entity_test\EntityTestForm;
 use Drupal\entity_test\EntityTestViewBuilder as TestViewBuilder;
+use Drupal\views\EntityViewsData;
 
 /**
  * Defines the test entity class.
@@ -44,6 +45,7 @@ use Drupal\entity_test\EntityTestViewBuilder as TestViewBuilder;
       'revision-delete' => RevisionDeleteForm::class,
       'revision-revert' => RevisionRevertForm::class,
     ],
+    'views_data' => EntityViewsData::class,
     'route_provider' => [
       'html' => DefaultHtmlRouteProvider::class,
       'revision' => RevisionHtmlRouteProvider::class,
