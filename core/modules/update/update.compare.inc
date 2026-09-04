@@ -23,10 +23,10 @@ use Drupal\update\UpdateServerProjectInfo;
  * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
  *   \Drupal::service(UpdateCalculator::class)->processProjectInfo() instead.
  *
- * @see https://www.drupal.org/node/3566774
+ * @see https://www.drupal.org/node/3587768
  */
 function update_process_project_info(&$projects): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(UpdateCalculator::class)->processProjectInfo() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(UpdateCalculator::class)->processProjectInfo() instead. See https://www.drupal.org/node/3587768', E_USER_DEPRECATED);
   \Drupal::service(UpdateCalculator::class)->processProjectInfo($projects);
 }
 
@@ -58,10 +58,10 @@ function update_process_project_info(&$projects): void {
  *   \Drupal::service(UpdateManagerInterface::class)
  *   ->calculateProjectData($available) instead.
  *
- * @see https://www.drupal.org/node/3566774
+ * @see https://www.drupal.org/node/3587768
  */
 function update_calculate_project_data($available) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(UpdateManagerInterface::class)->calculateProjectData($available) instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(UpdateManagerInterface::class)->calculateProjectData($available) instead. See https://www.drupal.org/node/3587768', E_USER_DEPRECATED);
   return \Drupal::service(UpdateManagerInterface::class)->calculateProjectData($available);
 }
 
@@ -136,9 +136,9 @@ function update_calculate_project_data($available) {
  *   The parameters have changed to use Drupal\update\UpdateProject and
  *   Drupal\update\UpdateServerProjectInfo.
  *
- * @see https://www.drupal.org/node/3566774
+ * @see https://www.drupal.org/node/3587768
  */
 function update_calculate_project_update_status(&$project_data, $available): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(UpdateCalculator::class)->updateProjectStatus() instead. The parameters have changed to use Drupal\update\UpdateProject and Drupal\update\UpdateServerProjectInfo. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(UpdateCalculator::class)->updateProjectStatus() instead. The parameters have changed to use Drupal\update\UpdateProject and Drupal\update\UpdateServerProjectInfo. See https://www.drupal.org/node/3587768', E_USER_DEPRECATED);
   $project_data = \Drupal::service(UpdateCalculator::class)->updateProjectStatus(UpdateProject::createFromArray($project_data), UpdateServerProjectInfo::createFromArray($available))->toArray();
 }
