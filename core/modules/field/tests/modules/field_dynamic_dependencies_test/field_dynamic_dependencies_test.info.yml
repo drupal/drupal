@@ -1,0 +1,6 @@
+name: 'Field Dynamic Dependencies Test'
+type: module
+description: 'Support module for the field dependencies post update test.'
+package: Testing
+version: VERSION
+dependencies: {  }

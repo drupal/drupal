@@ -1,0 +1,23 @@
+field.value.test_field_dynamic_dependencies:
+  type: mapping
+  label: Default value
+  mapping:
+    value:
+      type: label
+      label: Value
+
+field.formatter.settings.test_field_dynamic_dependencies:
+  type: mapping
+  label: 'Field test dynamic dependencies'
+  mapping:
+    dependent_module:
+      type: string
+      label: 'Dependent module'
+
+field.widget.settings.test_field_dynamic_dependencies:
+  type: mapping
+  label: 'Test field dynamic dependencies'
+  mapping:
+    dependent_module:
+      type: string
+      label: 'Dependent module'
