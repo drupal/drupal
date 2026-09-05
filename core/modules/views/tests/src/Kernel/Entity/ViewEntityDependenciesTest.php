@@ -43,8 +43,6 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
     'comment',
     'field',
     'text',
-    'search',
-    'search_node',
   ];
 
   /**

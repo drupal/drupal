@@ -51,11 +51,11 @@ class AjaxFormCacheTest extends WebDriverTestBase {
    * Tests AJAX forms in blocks.
    */
   public function testBlockForms(): void {
-    $this->container->get('module_installer')->install(['block', 'search']);
+    $this->container->get('module_installer')->install(['block']);
     $this->rebuildContainer();
     $this->drupalLogin($this->rootUser);
 
-    $this->drupalPlaceBlock('search_form_block', ['weight' => -5]);
+    $this->drupalPlaceBlock('test_form_in_block', ['weight' => -5]);
     $this->drupalPlaceBlock('ajax_forms_test_block');
 
     $this->drupalGet('');

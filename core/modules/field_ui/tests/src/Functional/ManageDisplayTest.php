@@ -33,7 +33,6 @@ class ManageDisplayTest extends BrowserTestBase {
     'node',
     'field_ui',
     'taxonomy',
-    'search',
     'field_test',
     'field_third_party_test',
     'block',

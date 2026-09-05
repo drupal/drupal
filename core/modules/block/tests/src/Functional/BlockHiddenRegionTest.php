@@ -25,7 +25,7 @@ class BlockHiddenRegionTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'block_test', 'search'];
+  protected static $modules = ['block', 'block_test'];
 
   /**
    * {@inheritdoc}
@@ -42,11 +42,10 @@ class BlockHiddenRegionTest extends BrowserTestBase {
     $this->adminUser = $this->drupalCreateUser([
       'administer blocks',
       'administer themes',
-      'search content',
     ]);
 
     $this->drupalLogin($this->adminUser);
-    $this->drupalPlaceBlock('search_form_block');
+    $this->drupalPlaceBlock('test_form_in_block');
     $this->drupalPlaceBlock('local_tasks_block');
   }
 
@@ -55,9 +54,9 @@ class BlockHiddenRegionTest extends BrowserTestBase {
    */
   public function testBlockNotInHiddenRegion(): void {
 
-    // Ensure that the search form block is displayed.
+    // Ensure that the test_form_in_block form block is displayed.
     $this->drupalGet('');
-    $this->assertSession()->pageTextContains('Search');
+    $this->assertSession()->pageTextContains('Your .com email address.');
 
     // Install "block_test_theme" and set it as the default theme.
     $theme = 'block_test_theme';
@@ -75,9 +74,9 @@ class BlockHiddenRegionTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/block');
     $this->assertSession()->pageTextContains('Block test theme');
 
-    // Ensure that the search form block is displayed.
+    // Ensure that the test_form_in_block form block is displayed.
     $this->drupalGet('');
-    $this->assertSession()->pageTextContains('Search');
+    $this->assertSession()->pageTextContains('Your .com email address.');
   }
 
 }
