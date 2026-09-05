@@ -6,12 +6,14 @@ namespace Drupal\Tests\search\Kernel;
 
 use Drupal\Tests\system\Kernel\Entity\EntityOperationsCacheabilityTest;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests cacheability added by entity operations.
  */
 #[Group('search')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class SearchEntityOperationsCacheabilityTest extends EntityOperationsCacheabilityTest {
 

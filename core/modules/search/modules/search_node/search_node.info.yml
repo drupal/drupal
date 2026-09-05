@@ -3,6 +3,8 @@ type: module
 description: 'Provides a search plugin for searching content.'
 package: Core
 version: VERSION
+lifecycle: deprecated
+lifecycle_link: https://www.drupal.org/node/3223395#s-search
 dependencies:
   - drupal:node
   - drupal:search

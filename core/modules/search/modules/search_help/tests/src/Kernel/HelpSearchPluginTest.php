@@ -8,6 +8,7 @@ use Drupal\Core\Access\AccessibleInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('help')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class HelpSearchPluginTest extends KernelTestBase {
 
   /**

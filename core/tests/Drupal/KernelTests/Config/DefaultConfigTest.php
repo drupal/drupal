@@ -14,6 +14,7 @@ use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -61,7 +62,8 @@ class DefaultConfigTest extends KernelTestBase {
    * Tests if installed config is equal to the exported config.
    */
   #[DataProvider('themeListDataProvider')]
-  public function testThemeConfig($theme): void {
+  #[IgnoreDeprecations]
+  public function testThemeConfig(string $theme): void {
     $this->assertExtensionConfig($theme, 'theme');
   }
 

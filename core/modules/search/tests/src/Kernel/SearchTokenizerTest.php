@@ -7,6 +7,7 @@ namespace Drupal\Tests\search\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\SearchTextProcessorInterface;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 // cspell:ignore bopomofo jamo lisu
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Tests that CJK tokenizer works as intended.
  */
 #[Group('search')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class SearchTokenizerTest extends KernelTestBase {
 

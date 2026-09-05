@@ -7,12 +7,14 @@ namespace Drupal\Tests\search\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\node\NodeAccessRebuild;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests search functionality with diacritics.
  */
 #[Group('search')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class SearchNodeDiacriticsTest extends BrowserTestBase {
 
