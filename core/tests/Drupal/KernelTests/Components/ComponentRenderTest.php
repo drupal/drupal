@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Components;
 
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
+use Drupal\Core\Render\Component\Exception\InvalidComponentException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ComponentPluginManager;
@@ -155,6 +156,41 @@ class ComponentRenderTest extends ComponentKernelTestBase {
     }
     catch (\Throwable) {
       $this->addToAssertionCount(1);
+    }
+  }
+
+  /**
+   * Ensures nested invalid props report the calling parent template.
+   */
+  public function testRenderNestedPropValidationIncludesCallingTemplate(): void {
+    // Omit ctaText so my-banner still validates, but nested my-cta does not.
+    $build = [
+      '#type' => 'component',
+      '#component' => 'sdc_test:my-banner',
+      '#props' => [
+        'heading' => 'I am a banner',
+        'ctaHref' => 'https://www.example.org',
+        'ctaTarget' => '',
+      ],
+      '#slots' => [
+        'banner_body' => [
+          '#plain_text' => 'Banner body',
+        ],
+      ],
+    ];
+    try {
+      $this->renderComponentRenderArray($build);
+      $this->fail('Invalid nested prop did not cause an exception');
+    }
+    catch (\Throwable $e) {
+      // Find the "InvalidComponentException":
+      while ($e && !$e instanceof InvalidComponentException) {
+        $e = $e->getPrevious();
+      }
+      $this->assertInstanceOf(InvalidComponentException::class, $e);
+      // Check, that the error message contains the error calling template, as
+      // well as the component, whose props actually fail validation:
+      $this->assertStringContainsString('Component validation failed in Twig file [sdc_test:my-banner] for component [sdc_test:my-cta]:', $e->getMessage());
     }
   }
 
