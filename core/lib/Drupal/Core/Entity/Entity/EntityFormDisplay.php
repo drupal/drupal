@@ -355,7 +355,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     $configurations = [];
     foreach ($this->getComponents() as $field_name => $configuration) {
       if (!empty($configuration['type']) && ($field_definition = $this->getFieldDefinition($field_name))) {
-        $configurations[$field_name] = $configuration + [
+        $configurations[$configuration['type']] = $configuration + [
           'field_definition' => $field_definition,
           'form_mode' => $this->mode,
         ];
