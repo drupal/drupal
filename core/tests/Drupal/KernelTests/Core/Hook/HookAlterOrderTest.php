@@ -210,6 +210,13 @@ class HookAlterOrderTest extends KernelTestBase {
       DAlterHooks::class . '::testAlter',
       DAlterHooks::class . '::testSubtypeAlter',
     ], ['test', 'test_subtype']);
+
+    // Tests when a hook for a subtype is implemented but a hook is not
+    // implemented for the base alter.
+    $this->assertAlterCallOrder([
+      DAlterHooks::class . '::testNoBaseSubtypeAlter',
+      AAlterHooks::class . '::testNoBaseSubtypeAlter',
+    ], ['test_no_base', 'test_no_base_subtype']);
   }
 
   /**
