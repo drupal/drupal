@@ -9,15 +9,15 @@
  * @file
  * These are random styles that are applicable throughout the entire theme.
  *
- * @todo Refactor this file out. This file was imported from Default Admin.
+ * @todo Refactor this file out. This file was imported from Gin.
  */
 
 /* cspell:ignore imageapi */
 
-.layer-wrapper {
+.gin-layer-wrapper {
   padding: var(--admin-space-s);
 
-  & + .layer-wrapper {
+  & + .gin-layer-wrapper {
     margin-block-start: var(--admin-space-l);
   }
 
@@ -35,8 +35,8 @@
   }
 }
 
-.layer-wrapper,
-.layer-wrapper-shadow,
+.gin-layer-wrapper,
+.gin-layer-wrapper-shadow,
 .block-system > form,
 .views-edit-view,
 .views-preview-wrapper,
@@ -49,16 +49,16 @@
   border-radius: var(--admin-radius-l);
   box-shadow: var(--admin-shadow-1);
 
-  .dark-mode & {
+  .gin--dark-mode & {
     box-shadow: 0 6px 16px var(--admin-color-border-soft);
   }
 
-  .high-contrast-mode & {
+  .gin--high-contrast-mode & {
     box-shadow: none;
   }
 }
 
-.block-system > form .layer-wrapper {
+.block-system > form .gin-layer-wrapper {
   padding: 0;
   padding-block-end: 1px; /* fix overflow issue in FF */
   border: 0 none;
@@ -71,7 +71,7 @@
   box-shadow: none;
 }
 
-.layer-wrapper,
+.gin-layer-wrapper,
 .block-system-main-block > form,
 .views-edit-view,
 .views-preview-wrapper,
@@ -102,7 +102,7 @@
 }
 
 #system-clear-cache + #system-performance-settings,
-.layer-wrapper + .imageapi-optimize-default-pipeline {
+.gin-layer-wrapper + .imageapi-optimize-default-pipeline {
   margin-block-start: var(--admin-space-l);
 }
 

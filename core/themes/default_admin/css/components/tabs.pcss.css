@@ -60,7 +60,7 @@
     }
   }
 
-  .dark-mode & {
+  .gin--dark-mode & {
     border-color: var(--admin-color-border);
 
     .tabs-wrapper:not(.is-horizontal) & {
@@ -73,7 +73,7 @@
   @media (--tabs-horizontal) {
     margin-block-end: 0;
 
-    .high-contrast-mode .is-horizontal &::after {
+    .gin--high-contrast-mode .is-horizontal &::after {
       border-block-end: 1px solid;
     }
   }
@@ -188,7 +188,7 @@
     }
   }
 
-  .dark-mode & {
+  .gin--dark-mode & {
     &,
     &.is-active {
       border-color: var(--admin-color-border);

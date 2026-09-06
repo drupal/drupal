@@ -1,6 +1,6 @@
 /**
  * @file
- * Default Admin styles for the System Status Report.
+ * Claro styles for the System Status Report.
  */
 
 :root {
@@ -34,7 +34,7 @@
   padding-inline: 3em 1em;
 
   .color-checked &::before,
-  #checked + .details__wrapper--system-status-report &::before {
+  #checked + .gin-details__wrapper--system-status-report &::before {
     position: absolute;
     display: inline-block;
     width: 24px;
@@ -194,6 +194,6 @@
   }
 }
 
-.details__summary--system-status-report {
+.gin-details__summary--system-status-report {
   background: transparent;
 }

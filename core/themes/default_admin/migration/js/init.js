@@ -1,79 +1,55 @@
 /* To inject this as early as possible
  * we use native JS instead of Drupal's behaviors.
- */
+*/
 
-// Transform legacy local-storage items to Default Admin keys.
-function migrateLegacyStorage() {
-  const migrate = (legacyKey, key) => {
-    const value = localStorage.getItem(legacyKey);
-    if (value !== null && localStorage.getItem(key) === null) {
-      localStorage.setItem(key, value);
-    }
-    localStorage.removeItem(legacyKey);
-  };
-
-  localStorage.removeItem('GinDarkMode');
-  localStorage.removeItem('Drupal.gin.dark_mode');
-  migrate('GinSidebarOpen', 'Drupal.navigation.sidebarExpanded');
-  migrate('Drupal.gin.toolbarExpanded', 'Drupal.navigation.sidebarExpanded');
-  migrate(
-    'Drupal.gin.sidebarExpanded.mobile',
-    'Drupal.defaultAdmin.sidebarExpanded.mobile',
-  );
-  migrate(
-    'Drupal.gin.sidebarExpanded.desktop',
-    'Drupal.defaultAdmin.sidebarExpanded.desktop',
-  );
-  migrate('Drupal.gin.sidebarWidth', 'Drupal.defaultAdmin.sidebarWidth');
-}
-
-migrateLegacyStorage();
-
-// Dark mode Check.
-function defaultAdminInitDarkMode() {
-  const darkModeClass = 'dark-mode';
-
-  const darkModeSetting = document.getElementById(
-    'default-admin-setting-dark_mode',
-  )?.textContent;
-  // Set window variable.
-  window.defaultAdminDarkMode = darkModeSetting
-    ? JSON.parse(darkModeSetting)?.defaultAdminDarkMode
-    : 'auto';
-
-  if (
-    window.defaultAdminDarkMode == 1 ||
-    (window.defaultAdminDarkMode === 'auto' &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches)
-  ) {
-    document.documentElement.classList.add(darkModeClass);
-  } else {
-    document.documentElement.classList.contains(darkModeClass) === true &&
-      document.documentElement.classList.remove(darkModeClass);
+// Legacy Check: Transform old localStorage items to newer ones.
+function checkLegacy() {
+  if (localStorage.getItem('GinDarkMode')) {
+    localStorage.removeItem('GinDarkMode');
+  }
+  if (localStorage.getItem('Drupal.gin.dark_mode')) {
+    localStorage.removeItem('Drupal.gin.dark_mode');
+  }
+  if (localStorage.getItem('GinSidebarOpen')) {
+    localStorage.setItem('Drupal.gin.toolbarExpanded', localStorage.getItem('GinSidebarOpen'));
+    localStorage.removeItem('GinSidebarOpen');
   }
 }
 
-defaultAdminInitDarkMode();
+checkLegacy();
 
-// Sidebar checks.
-if (localStorage.getItem('Drupal.defaultAdmin.sidebarWidth')) {
-  const sidebarWidth = localStorage.getItem('Drupal.defaultAdmin.sidebarWidth');
-  document.documentElement.style.setProperty(
-    '--admin-theme-sidebar-width',
-    sidebarWidth,
-  );
-}
+// Dark mode Check.
+function ginInitDarkMode() {
+  const darkModeClass = 'gin--dark-mode';
 
-if (localStorage.getItem('Drupal.defaultAdmin.sidebarExpanded.desktop')) {
-  const style = document.createElement('style');
-  const className = 'sidebar-inline-styles';
-  style.className = className;
+  const darkModeSetting = document.getElementById('gin-setting-dark_mode')?.textContent;
+  // Set window variable.
+  window.ginDarkMode = darkModeSetting ? JSON.parse(darkModeSetting)?.ginDarkMode : 'auto';
 
   if (
-    window.innerWidth < 1024 ||
-    localStorage.getItem('Drupal.defaultAdmin.sidebarExpanded.desktop') ===
-      'false'
+    window.ginDarkMode == 1 ||
+    window.ginDarkMode === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches
   ) {
+    document.documentElement.classList.add(darkModeClass);
+  } else {
+    document.documentElement.classList.contains(darkModeClass) === true && document.documentElement.classList.remove(darkModeClass);
+  }
+}
+
+ginInitDarkMode();
+
+// Sidebar checks.
+if (localStorage.getItem('Drupal.gin.sidebarWidth')) {
+  const sidebarWidth = localStorage.getItem('Drupal.gin.sidebarWidth');
+  document.documentElement.style.setProperty('--admin-theme-sidebar-width', sidebarWidth);
+}
+
+if (localStorage.getItem('Drupal.gin.sidebarExpanded.desktop')) {
+  const style = document.createElement('style');
+  const className = 'gin-sidebar-inline-styles';
+  style.className = className;
+
+  if (window.innerWidth < 1024 || localStorage.getItem('Drupal.gin.sidebarExpanded.desktop') === 'false') {
     style.innerHTML = `
     body {
       --admin-theme-sidebar-offset: 0px;

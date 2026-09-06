@@ -52,7 +52,7 @@
     margin: 0;
   }
 
-  .dark-mode & {
+  .gin--dark-mode & {
     box-shadow: 0 6px 16px var(--admin-color-border-soft);
   }
 

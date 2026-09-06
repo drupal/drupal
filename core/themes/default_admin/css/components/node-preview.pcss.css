@@ -15,7 +15,7 @@
   font-size: var(--admin-font-size-xs);
   inset-block-start: 0;
 
-  .dark-mode & {
+  .gin--dark-mode & {
     background: rgb(27, 27, 29, 0.98);
 
     @supports (backdrop-filter: blur()) {
@@ -23,14 +23,18 @@
     }
   }
 
-  .high-contrast-mode & {
+  .gin--high-contrast-mode & {
     background: var(--admin-color-bg);
     backdrop-filter: none;
   }
 
-  .admin--navigation & {
+  .gin--navigation & {
     width: calc(100% - var(--admin-theme-toolbar-x-offset));
     margin-inline-start: var(--admin-theme-toolbar-x-offset);
+  }
+
+  .gin-layout-container {
+    box-sizing: border-box;
   }
 
   .node-preview-backlink,

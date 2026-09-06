@@ -47,11 +47,11 @@ body {
   :is(th, td) {
     height: 3.75rem;
 
-    html[data-layout-density="medium"] & {
+    html[data-gin-layout-density="medium"] & {
       height: 3.125rem;
     }
 
-    html[data-layout-density="small"] & {
+    html[data-gin-layout-density="small"] & {
       height: 2.5rem;
     }
 
@@ -162,7 +162,7 @@ body {
   &.drag:focus {
     background-color: var(--admin-color-bg-surface-nested);
 
-    .dark-mode & {
+    .gin--dark-mode & {
       background-color: var(--admin-color-primary-soft-hover);
     }
   }
@@ -313,7 +313,7 @@ body {
   .field--widget-entity-reference-paragraphs,
   .field--type-link,
   .field--type-smartdate {
-    .layer-wrapper > & {
+    .gin-layer-wrapper > & {
       .action-link {
         pointer-events: all;
         background-color: var(--admin-color-bg-surface);
@@ -470,7 +470,7 @@ body {
   }
 }
 
-/* @todo do these styles belong here? They were migrated from Default Admin. */
+/* @todo do these styles belong here? They were migrated from Gin. */
 
 .field-plugin-settings-edit-wrapper,
 .field-plugin-settings-edit-wrapper + a {

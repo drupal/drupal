@@ -1,6 +1,6 @@
 /**
  * @file
- * Overrides vertical tabs theming to enable Default Admin designs.
+ * Overrides vertical tabs theming to enable Claro designs.
  */
 
 (($, Drupal) => {

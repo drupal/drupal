@@ -1,24 +1,13 @@
 ((Drupal, once) => {
-  Drupal.behaviors.adminDropbutton = {
+  Drupal.behaviors.ginDropbutton = {
     attach: function (context) {
-      once(
-        'adminDropbutton',
-        '.dropbutton-multiple:has(.dropbutton--admin)',
-        context,
-      ).forEach((el) => {
-        el.querySelector('.dropbutton__toggle').addEventListener(
-          'click',
-          () => {
-            this.updatePosition(el);
+      once('ginDropbutton', '.dropbutton-multiple:has(.dropbutton--gin)', context).forEach(el => {
+        el.querySelector('.dropbutton__toggle').addEventListener('click', () => {
+          this.updatePosition(el);
 
-            window.addEventListener('scroll', () =>
-              Drupal.debounce(this.updatePositionIfOpen(el), 100),
-            );
-            window.addEventListener('resize', () =>
-              Drupal.debounce(this.updatePositionIfOpen(el), 100),
-            );
-          },
-        );
+          window.addEventListener('scroll', () => Drupal.debounce(this.updatePositionIfOpen(el), 100));
+        window.addEventListener('resize', () => Drupal.debounce(this.updatePositionIfOpen(el), 100));
+        });
       });
     },
 
@@ -40,11 +29,11 @@
       // reading direction.
       const leftAlignStyles = {
         left: `${boundingRect.left}px`,
-        right: 'auto',
+        right: 'auto'
       };
       const rightAlignStyles = {
         left: 'auto',
-        right: `${window.innerWidth - boundingRect.right}px`,
+        right: `${window.innerWidth - boundingRect.right}px`
       };
 
       if ('ltr' === preferredDir) {
@@ -64,14 +53,17 @@
       if (spaceBelow >= dropMenuHeight) {
         dropMenu.style.top = `${boundingRect.bottom}px`;
       } else {
-        dropMenu.style.top = `${boundingRect.top - toggleHeight - dropMenuHeight}px`;
+        dropMenu.style.top = `${boundingRect.top - toggleHeight - dropMenuHeight}px`
       }
+
     },
 
     updatePositionIfOpen: function (el) {
-      if (el.classList.contains('open')) {
+      if(el.classList.contains('open')) {
         this.updatePosition(el);
       }
     },
+
   };
+
 })(Drupal, once);

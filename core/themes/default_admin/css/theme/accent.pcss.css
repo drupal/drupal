@@ -3,7 +3,7 @@
  * Accent color and focus ring theme styles.
  */
 @media (forced-colors: none) {
-  .high-contrast-mode {
+  .gin--high-contrast-mode {
     --admin-color-bg: #d9dbde;
     --admin-color-text: rgb(0, 0, 0, 0.8);
     --admin-color-text-soft: rgb(0, 0, 0, 0.8);
@@ -15,7 +15,7 @@
     --admin-color-border-input: rgb(0, 0, 0, 0.8);
     --admin-color-border-table: rgb(0, 0, 0, 0.8);
 
-    .dark-mode & {
+    .gin--dark-mode & {
       --admin-color-bg: #000;
       --admin-color-text: rgb(255, 255, 255, 0.8);
       --admin-color-text-soft: rgb(255, 255, 255, 0.8);
@@ -30,23 +30,23 @@
   }
 }
 
-[data-admin-focus="green"] {
+[data-gin-focus="green"] {
   --admin-color-focus: rgb(8, 163, 144, 0.6);
 }
 
-[data-admin-focus="claro"] {
+[data-gin-focus="claro"] {
   --admin-color-focus: rgb(38, 167, 105, 0.6);
 }
 
-[data-admin-focus="orange"] {
+[data-gin-focus="orange"] {
   --admin-color-focus: rgb(236, 124, 87, 0.6);
 }
 
-[data-admin-focus="dark"] {
+[data-gin-focus="dark"] {
   --admin-color-focus: var(--admin-color-focus-neutral);
 }
 
-[data-admin-focus="accent"] {
+[data-gin-focus="accent"] {
   /* stylelint-disable-next-line color-function-notation */
   --admin-color-focus: rgb(from var(--admin-color-primary) r g b / 0.6);
 }

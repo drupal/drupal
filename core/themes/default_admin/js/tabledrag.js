@@ -9,7 +9,7 @@
    *
    * @type {Drupal~behavior}
    */
-  Drupal.behaviors.adminTableDrag = {
+  Drupal.behaviors.claroTableDrag = {
     attach(context, settings) {
       /**
        * Refactors the table row markup to improve item label text wrapping.
@@ -42,7 +42,7 @@
        *     <!-- etc. -->
        *   </tr>
        * @example
-       * <!-- Default Admin tabledrag structure, this fixes the wrapping problem. -->
+       * <!-- Claro tabledrag structure, this fixes the wrapping problem. -->
        *   <tr class="draggable">
        *     <td class="tabledrag-cell">
        *       <div class="tabledrag-cell-content">
@@ -100,7 +100,7 @@
       // createItemWrapBoundaries().
       Object.keys(settings.tableDrag || {}).forEach((base) => {
         once(
-          'adminTabledrag',
+          'claroTabledrag',
           $(context)
             .find(`#${base}`)
             .find('> tr.draggable, > tbody > tr.draggable'),
@@ -126,7 +126,7 @@
     },
 
     /**
-     * Moves added indents into Default Admin's wrapper element.
+     * Moves added indents into Claro's wrapper element.
      *
      * For indents to work properly, they must be inside the wrapper
      * created by createItemWrapBoundaries(). When an indent is added via

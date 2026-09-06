@@ -110,7 +110,7 @@ class ThemeSuggestionHooks {
    */
   #[Hook('theme_suggestions_top_bar_alter')]
   public function themeSuggestionsTopBarAlter(array &$suggestions): void {
-    $suggestions[] = 'top_bar__default_admin';
+    $suggestions[] = 'top_bar__gin';
   }
 
   /**

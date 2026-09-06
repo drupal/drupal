@@ -1,6 +1,6 @@
 /**
  * @file
- * Ajax theme overrides for Default Admin.
+ * Ajax theme overrides for Claro.
  */
 
 ((Drupal) => {

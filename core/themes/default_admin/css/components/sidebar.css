@@ -10,7 +10,7 @@
  * Sidebar panel and controls.
  */
 
-#sidebar-draggable {
+#gin-sidebar-draggable {
   position: absolute;
   z-index: 104;
   display: block;

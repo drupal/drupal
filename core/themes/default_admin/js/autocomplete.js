@@ -1,12 +1,12 @@
 /**
  * @file
- * Default Admin's enhancement for autocomplete form element.
+ * Claro's enhancement for autocomplete form element.
  */
 
 (($, Drupal, once) => {
-  Drupal.behaviors.adminAutoComplete = {
+  Drupal.behaviors.claroAutoCompete = {
     attach(context) {
-      once('adminAutoComplete', 'input.form-autocomplete', context).forEach(
+      once('claroAutoComplete', 'input.form-autocomplete', context).forEach(
         (value) => {
           const $input = $(value);
           const classRemove = ($autoCompleteElem) => {

@@ -1,6 +1,6 @@
 /**
  * @file
- * Default Admin's polyfill enhancements for HTML5 details.
+ * Claro's polyfill enhancements for HTML5 details.
  */
 
 (($, Drupal) => {
@@ -13,11 +13,11 @@
    *
    * @type {Drupal~behavior}
    */
-  Drupal.behaviors.adminDetails = {
+  Drupal.behaviors.claroDetails = {
     attach(context) {
       // The second argument of once() needs to be an instance of Element, but
       // document is an instance of Document, replace it with the html Element.
-      $(once('adminDetails', context === document ? 'html' : context)).on(
+      $(once('claroDetails', context === document ? 'html' : context)).on(
         'click',
         (event) => {
           if (event.target.nodeName === 'SUMMARY') {
@@ -35,7 +35,7 @@
    *   The markup for the element that will contain the summarized content.
    */
   Drupal.theme.detailsSummarizedContentWrapper = () =>
-    `<span class="details__summary-summary"></span>`;
+    `<span class="gin-details__summary-summary"></span>`;
 
   /**
    * Theme override of summarized details content text.

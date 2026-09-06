@@ -32,7 +32,7 @@
     border-color: var(--input-fg-color);
     box-shadow: inset 0 0 0 1px var(--input-fg-color);
 
-    .dark-mode & {
+    .gin--dark-mode & {
       border-color: var(--admin-color-text);
       box-shadow: none;
     }
@@ -91,7 +91,7 @@
     box-shadow: inset 0 0 0 1px var(--admin-color-border);
 
     &,
-    .dark-mode & {
+    .gin--dark-mode & {
       border-color: var(--admin-color-text);
     }
   }
@@ -137,7 +137,7 @@
  */
 .form-boolean--type-checkbox {
   &:not(:checked) {
-    .dark-mode & {
+    .gin--dark-mode & {
       background: var(--admin-color-bg-input);
     }
   }
@@ -148,7 +148,7 @@
     background-image: url(../../images/icons/ffffff/checkmark-sm.svg);
 
     &:not(:disabled) {
-      .dark-mode & {
+      .gin--dark-mode & {
         background-image: var(--admin-icon-checked);
       }
     }

@@ -85,7 +85,7 @@
   border-radius: 0 0 var(--admin-radius-xs) var(--admin-radius-xs);
   background-color: var(--admin-color-bg-surface);
 
-  .dark-mode & {
+  .gin--dark-mode & {
     background-color: var(--admin-color-bg-surface-nested);
   }
 

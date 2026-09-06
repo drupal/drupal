@@ -276,17 +276,20 @@ img {
 
 /* Set a dark color scheme to style native browser elements. */
 
-.dark-mode {
+.gin--dark-mode {
   color-scheme: dark;
 }
 
-/* Enforcing colors on visually hidden text prevents accessibility scanners from
-   reporting contrast errors for text that is not visually rendered. */
+/* Enforcing colors on visually hidden text does not change anything for the
+   user, but it prevents accessibility scanners like Wave from reporting contrast
+   errors on visually hidden elements. While this is certainly an issue with the
+   scanners and not Gin, this ensures that scans provide an accurate account of
+   Gin's contrast support. */
 
 .visually-hidden {
   color: #000;
 
-  .dark-mode & {
+  .gin--dark-mode & {
     color: #fff;
   }
 

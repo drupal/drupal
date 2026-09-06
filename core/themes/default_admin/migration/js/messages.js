@@ -27,10 +27,7 @@
     const messagesTypes = Drupal.Message.getMessageTypeLabels();
     const messageWrapper = document.createElement('div');
 
-    messageWrapper.setAttribute(
-      'class',
-      `messages-list__item messages messages--${type}`,
-    );
+    messageWrapper.setAttribute('class', `messages-list__item messages messages--${type}`);
     messageWrapper.setAttribute(
       'role',
       type === 'error' || type === 'warning' ? 'alert' : 'status',
@@ -56,32 +53,31 @@
   `;
 
     // Attach event listener
-    Drupal.adminMessages.dismissMessages(messageWrapper);
+    Drupal.ginMessages.dismissMessages(messageWrapper);
 
     return messageWrapper;
   };
 
-  Drupal.behaviors.adminMessages = {
+  Drupal.behaviors.ginMessages = {
     attach: (context) => {
-      Drupal.adminMessages.dismissMessages(context);
-    },
+      Drupal.ginMessages.dismissMessages(context);
+    }
   };
 
-  Drupal.adminMessages = {
+  Drupal.ginMessages = {
     dismissMessages: (context = document) => {
-      once('messages-dismiss', '.js-message-button-hide', context).forEach(
-        (dismissButton) => {
-          dismissButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            const message = dismissButton.parentNode;
+      once('gin-messages-dismiss', '.js-message-button-hide', context).forEach(dismissButton => {
+        dismissButton.addEventListener('click', e => {
+          e.preventDefault();
+          const message = dismissButton.parentNode;
 
-            if (message.classList.contains('messages-list__item')) {
-              message.style.opacity = 0;
-              message.classList.add('visually-hidden');
-            }
-          });
-        },
-      );
+          if (message.classList.contains('messages-list__item')) {
+            message.style.opacity = 0;
+            message.classList.add('visually-hidden');
+          }
+        });
+      });
     },
+
   };
 })(Drupal, once);
