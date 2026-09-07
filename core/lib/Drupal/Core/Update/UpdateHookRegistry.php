@@ -189,25 +189,37 @@ class UpdateHookRegistry {
   /**
    * Marks a future update as equivalent to the current update running.
    *
-   * Updates can be marked as equivalent when they are backported to a
-   * previous, but still supported, major version. For example:
-   * - A 2.x hook_update_N() would be added as normal, for example:
-   *   MODULE_update_2005().
-   * - When that same update is backported to 1.x, it is given its own update
-   *   number, for example: MODULE_update_1040(). In this update, a call to
-   *   @code
-   *   \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(2005, '2.10')
-   *   @endcode
-   *   is added to ensure that a site that has run this update does not run
-   *   MODULE_update_2005().
+   * To register equivalent updates use the attribute
+   * \Drupal\Core\Update\Attribute\MarkFutureUpdateEquivalent.
    *
    * @param int $future_update_number
    *   The future update number.
    * @param string $future_version_string
    *   The version that contains the future update.
+   * phpcs:ignore Drupal.Commenting.FunctionComment.ParamNameNoMatch
+   * @param string $module
+   *   The module containing the update. Will be determined from stack trace if
+   *   not set.
+   * phpcs:ignore Drupal.Commenting.FunctionComment.ExtraParamComment
+   * @param int $ran_update_number
+   *   The current update number. Will be determined from stack trace if not
+   *   set.
+   *
+   * @todo Uncomment the new $module and $ran_update_number method parameters
+   *   before drupal:13.0.0. https://www.drupal.org/node/3617733
+   *
+   * @internal
+   *
+   * @see \Drupal\Core\Update\Attribute\MarkFutureUpdateEquivalent
    */
-  public function markFutureUpdateEquivalent(int $future_update_number, string $future_version_string): void {
-    [$module, $ran_update_number] = $this->determineModuleAndVersion();
+  public function markFutureUpdateEquivalent(int $future_update_number, string $future_version_string /* , string $module, int $ran_update_number */): void {
+    $arguments = func_get_args();
+    $module = $arguments[2] ?? NULL;
+    $ran_update_number = $arguments[3] ?? NULL;
+    if (!$module || !$ran_update_number) {
+      @trigger_error('Calling ' . __METHOD__ . '() without both the $module and $ran_update_number arguments is deprecated in drupal:11.5.0 and they will be required in drupal:13.0.0. See https://www.drupal.org/node/3572245', E_USER_DEPRECATED);
+      [$module, $ran_update_number] = $this->determineModuleAndVersion();
+    }
 
     if ($ran_update_number > $future_update_number) {
       throw new \LogicException(sprintf(

@@ -8,6 +8,7 @@
 declare(strict_types=1);
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Update\Attribute\MarkFutureUpdateEquivalent;
 use Drupal\Core\Update\EquivalentUpdate;
 
 if (\Drupal::state()->get('equivalent_update_test_last_removed', FALSE)) {
@@ -49,8 +50,8 @@ if (\Drupal::state()->get('equivalent_update_test_update_100002', FALSE)) {
    *
    * Tests that the future update 100101 can be marked as an equivalent.
    */
+  #[MarkFutureUpdateEquivalent(100101, '11.1.0')]
   function equivalent_update_test_update_100002(): void {
-    \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100101, '11.1.0');
   }
 
 }
@@ -75,8 +76,8 @@ if (\Drupal::state()->get('equivalent_update_test_update_100201', FALSE)) {
    *
    * This update tests that updates can be skipped using inline code.
    */
+  #[MarkFutureUpdateEquivalent(100201, '11.1.0')]
   function equivalent_update_test_update_100201(): TranslatableMarkup|null {
-    \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100201, '11.1.0');
     // Test calling the getEquivalentUpdate() method in an update function to
     // ensure it correctly determines the update number.
     $equivalent_update = \Drupal::service('update.update_hook_registry')->getEquivalentUpdate();
@@ -96,8 +97,8 @@ if (\Drupal::state()->get('equivalent_update_test_update_100301', FALSE)) {
    * This update tests that inline code can determine the update number
    * correctly and return a NULL when it does not match.
    */
+  #[MarkFutureUpdateEquivalent(100302, '11.1.0')]
   function equivalent_update_test_update_100301(): void {
-    \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100302, '11.1.0');
     // Test calling the getEquivalentUpdate() method in an update function to
     // ensure it correctly determines the update number.
     $equivalent_update = \Drupal::service('update.update_hook_registry')->getEquivalentUpdate();
@@ -124,8 +125,8 @@ if (\Drupal::state()->get('equivalent_update_test_update_100400', FALSE)) {
    *
    * Tests that the future update 100402 can be marked as an equivalent.
    */
+  #[MarkFutureUpdateEquivalent(100402, '11.2.0')]
   function equivalent_update_test_update_100400(): void {
-    \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100402, '11.2.0');
   }
 
 }
@@ -137,8 +138,8 @@ if (\Drupal::state()->get('equivalent_update_test_update_100401', FALSE)) {
    *
    * Tests that the future update 100402 can be marked as an equivalent again.
    */
+  #[MarkFutureUpdateEquivalent(100402, '11.2.0')]
   function equivalent_update_test_update_100401(): void {
-    \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100402, '11.2.0');
   }
 
 }
@@ -163,8 +164,8 @@ if (\Drupal::state()->get('equivalent_update_test_update_100501', FALSE)) {
    *
    * This update will trigger an exception because 100501 is bigger than 100302.
    */
+  #[MarkFutureUpdateEquivalent(100302, '11.1.0')]
   function equivalent_update_test_update_100501(): void {
-    \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100302, '11.1.0');
   }
 
 }

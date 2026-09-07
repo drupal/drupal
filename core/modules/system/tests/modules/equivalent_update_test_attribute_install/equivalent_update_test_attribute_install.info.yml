@@ -1,0 +1,5 @@
+name: 'Equivalent Update test attribute install'
+type: module
+description: 'Support module for update testing.'
+package: Testing
+version: VERSION
