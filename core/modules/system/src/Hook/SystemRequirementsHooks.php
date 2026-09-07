@@ -1500,7 +1500,7 @@ class SystemRequirementsHooks {
             // and both the previous update and the equivalent update are not
             // found in the current code base, prevent updating. This indicates
             // a site attempting to go 'backwards' in terms of database schema.
-            // @see \Drupal\Core\Update\UpdateHookRegistry::markFutureUpdateEquivalent()
+            // @see \Drupal\Core\Update\Attribute\MarkFutureUpdateEquivalent
             if (!function_exists($ran_update_function_name) && !function_exists($future_update_function_name)) {
               // If the module is provided by core prepend helpful text as the
               // module does not exist in composer or Drupal.org.

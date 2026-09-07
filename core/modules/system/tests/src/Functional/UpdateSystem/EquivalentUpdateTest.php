@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
+use Drupal\Core\Extension\ModuleInstallerInterface;
+use Drupal\Core\Update\UpdateHookRegistry;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
@@ -232,6 +234,21 @@ class EquivalentUpdateTest extends BrowserTestBase {
 
     $this->assertNull($update_registry->getEquivalentUpdate('equivalent_update_test', 100101));
     $this->assertEmpty($update_registry->getAllEquivalentUpdates());
+  }
+
+  /**
+   * Tests MarkFutureUpdateEquivalent attribute functionality on module install.
+   */
+  public function testAttributeOnInstall(): void {
+    // Test an update function with the MarkFutureUpdateEquivalent attribute
+    // registers on module install.
+    \Drupal::service(ModuleInstallerInterface::class)->install(['equivalent_update_test_attribute_install']);
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service(UpdateHookRegistry::class);
+    $this->assertEquals(100001, $update_registry->getInstalledVersion('equivalent_update_test_attribute_install'));
+    $equivalent_update = $update_registry->getEquivalentUpdate('equivalent_update_test_attribute_install', 110001);
+    $this->assertSame(100001, $equivalent_update->ran_update);
+    $this->assertSame('11.0.0', $equivalent_update->future_version);
   }
 
 }

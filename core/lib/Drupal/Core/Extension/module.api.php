@@ -742,10 +742,11 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * Future updates can be marked as equivalent by adding the following code to an
  * update.
  * @code
- * function my_module_update_10400() {
- *   \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(11101, '11.1.1');
+ * use Drupal\Core\Update\Attribute\MarkFutureUpdateEquivalent;
  *
- *   // The rest of the update function.
+ * #[MarkFutureUpdateEquivalent(11101, '11.1.1')]
+ * function my_module_update_10400(): void {
+ *   // The function can be no-op.
  * }
  * @endcode
  *

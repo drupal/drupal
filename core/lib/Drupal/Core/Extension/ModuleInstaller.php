@@ -14,6 +14,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\Exception\ObsoleteExtensionException;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Serialization\Yaml;
+use Drupal\Core\Update\Attribute\MarkFutureUpdateEquivalent;
 use Drupal\Core\Update\UpdateHookRegistry;
 use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
@@ -396,6 +397,23 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $version = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
       $versions = $this->updateRegistry->getAvailableUpdates($module);
       if ($versions) {
+        foreach ($versions as $schema_version) {
+          // While update hooks do not run during module installation, check
+          // for the MarkFutureUpdateEquivalent attribute on every update
+          // function to make sure the equivalent update is registered.
+          try {
+            $attributes = (new \ReflectionFunction("{$module}_update_$schema_version"))
+              ->getAttributes(MarkFutureUpdateEquivalent::class);
+            foreach ($attributes as $attribute) {
+              /** @var \Drupal\Core\Update\Attribute\MarkFutureUpdateEquivalent $instance */
+              $instance = $attribute->newInstance();
+              $this->updateRegistry->markFutureUpdateEquivalent($instance->futureUpdateNumber, $instance->futureVersionString, $module, $schema_version);
+            }
+          }
+          catch (\Throwable $t) {
+            Error::logException($this->logger, $t);
+          }
+        }
         $version = max(max($versions), $version);
       }
 

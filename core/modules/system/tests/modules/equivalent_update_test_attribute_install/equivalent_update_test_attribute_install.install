@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Update hooks for the equivalent_update_test_attribute module.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Update\Attribute\MarkFutureUpdateEquivalent;
+
+/**
+ * Schema version 100001.
+ */
+#[MarkFutureUpdateEquivalent(110001, '11.0.0')]
+function equivalent_update_test_attribute_install_update_100001(): void {}

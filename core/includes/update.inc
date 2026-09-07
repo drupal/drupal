@@ -11,6 +11,7 @@
 use Drupal\Component\Graph\Graph;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
+use Drupal\Core\Update\Attribute\MarkFutureUpdateEquivalent;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\Update\EquivalentUpdate;
 
@@ -173,7 +174,9 @@ function update_do_one($module, $number, $dependency_map, &$context): void {
   }
 
   $ret = [];
-  $equivalent_update = \Drupal::service('update.update_hook_registry')->getEquivalentUpdate($module, $number);
+  /** @var \Drupal\Core\Update\UpdateHookRegistry $update_hook_registry */
+  $update_hook_registry = \Drupal::service('update.update_hook_registry');
+  $equivalent_update = $update_hook_registry->getEquivalentUpdate($module, $number);
   if ($equivalent_update instanceof EquivalentUpdate) {
     $ret['results']['query'] = $equivalent_update->toSkipMessage();
     $ret['results']['success'] = TRUE;
@@ -181,6 +184,15 @@ function update_do_one($module, $number, $dependency_map, &$context): void {
   }
   elseif (function_exists($function)) {
     try {
+      // Check for the MarkFutureUpdateEquivalent attribute on the update
+      // function to register a future equivalent update.
+      $attributes = (new \ReflectionFunction($function))->getAttributes(MarkFutureUpdateEquivalent::class);
+      foreach ($attributes as $attribute) {
+        /** @var \Drupal\Core\Update\Attribute\MarkFutureUpdateEquivalent $instance */
+        $instance = $attribute->newInstance();
+        $update_hook_registry->markFutureUpdateEquivalent($instance->futureUpdateNumber, $instance->futureVersionString, $module, $number);
+      }
+
       $ret['results']['query'] = $function($context['sandbox']);
       $ret['results']['success'] = TRUE;
     }
