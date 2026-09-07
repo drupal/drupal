@@ -6,6 +6,7 @@ namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -28,10 +29,10 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
   protected function setUp(): void {
     parent::setUp();
     // Set up permissions for anonymous attacker user.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
+    Role::loadOverrideFree(RoleInterface::ANONYMOUS_ID)->changePermissions([
       'create article content' => TRUE,
       'access content' => TRUE,
-    ]);
+    ])->save();
   }
 
   /**

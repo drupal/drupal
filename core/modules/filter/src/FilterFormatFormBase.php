@@ -233,7 +233,7 @@ abstract class FilterFormatFormBase extends EntityForm {
     // Save user permissions.
     if ($permission = $format->getPermissionName()) {
       foreach ($form_state->getValue('roles') as $rid => $enabled) {
-        user_role_change_permissions($rid, [$permission => $enabled]);
+        Role::loadOverrideFree($rid)->changePermissions([$permission => $enabled])->save();
       }
     }
 

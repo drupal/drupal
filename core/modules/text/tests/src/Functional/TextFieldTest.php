@@ -13,6 +13,7 @@ use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\filter\Render\FilteredMarkup;
 use Drupal\Tests\field\Functional\FunctionalString\StringFieldTest;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -208,11 +209,11 @@ class TextFieldTest extends StringFieldTest {
     // Grant access to both formats to the user.
     $roles = $this->webUser->getRoles();
     $rid = $roles[0];
-    user_role_grant_permissions($rid, [
+    Role::loadOverrideFree($rid)->grantPermissions([
       $format1->getPermissionName(),
       $format2->getPermissionName(),
       $format3->getPermissionName(),
-    ]);
+    ])->save();
 
     // Create a field with multiple formats allowed.
     $field_name = $this->randomMachineName();
@@ -383,7 +384,7 @@ class TextFieldTest extends StringFieldTest {
     $permission = $format->getPermissionName();
     $roles = $this->webUser->getRoles();
     $rid = $roles[0];
-    user_role_grant_permissions($rid, [$permission]);
+    Role::loadOverrideFree($rid)->grantPermissions([$permission])->save();
     $this->drupalLogin($this->webUser);
 
     // Display edition form.

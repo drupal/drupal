@@ -11,6 +11,7 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\FormLocation;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -103,7 +104,7 @@ class CommentLinksTest extends CommentTestBase {
       'skip comment approval' => 1,
       'edit own comments' => 1,
     ];
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, $perms);
+    Role::loadOverrideFree(RoleInterface::ANONYMOUS_ID)->changePermissions($perms)->save();
 
     $nid = $this->node->id();
 

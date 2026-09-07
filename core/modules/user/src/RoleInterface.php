@@ -42,7 +42,7 @@ interface RoleInterface extends ConfigEntityInterface {
   public function hasPermission($permission);
 
   /**
-   * Grant permissions to the role.
+   * Grant a permission to the role.
    *
    * @param string $permission
    *   The permission to grant.
@@ -52,7 +52,49 @@ interface RoleInterface extends ConfigEntityInterface {
   public function grantPermission($permission);
 
   /**
-   * Revokes a permissions from the user role.
+   * Grants permissions to the role.
+   *
+   * @param array $permissions
+   *   The permissions to grant.
+   *
+   * @return $this
+   */
+  public function grantPermissions(array $permissions): static;
+
+  /**
+   * Changes permissions for a user role.
+   *
+   * This method may be used to grant and revoke multiple permissions at once.
+   * For example, when a form exposes checkboxes to configure permissions for a
+   * role, the form submit handler may directly pass the submitted values for
+   * the checkboxes form element to this function.
+   *
+   * @param array $permissions
+   *   (optional) An associative array, where the key holds the permission name
+   *   and the value determines whether to grant or revoke that permission. Any
+   *   value that evaluates to TRUE will cause the permission to be granted.
+   *   Any value that evaluates to FALSE will cause the permission to be
+   *   revoked.
+   *   @code
+   *     [
+   *       'administer nodes' => 0,                // Revoke 'administer nodes'
+   *       'administer blocks' => FALSE,           // Revoke 'administer blocks'
+   *       'access user profiles' => 1,            // Grant 'access user profiles'
+   *       'access content' => TRUE,               // Grant 'access content'
+   *       'access comments' => 'access comments', // Grant 'access comments'
+   *     ]
+   *   @endcode
+   *   Existing permissions are not changed, unless specified in $permissions.
+   *
+   * @return $this
+   *
+   * @see RoleInterface::grantPermissions()
+   * @see RoleInterface::revokePermissions()
+   */
+  public function changePermissions(array $permissions): static;
+
+  /**
+   * Revokes a permission from the user role.
    *
    * @param string $permission
    *   The permission to revoke.
@@ -60,6 +102,16 @@ interface RoleInterface extends ConfigEntityInterface {
    * @return $this
    */
   public function revokePermission($permission);
+
+  /**
+   * Revokes permissions from the user role.
+   *
+   * @param array $permissions
+   *   The permissions to revoke.
+   *
+   * @return $this
+   */
+  public function revokePermissions(array $permissions): static;
 
   /**
    * Indicates that a role has all available permissions.

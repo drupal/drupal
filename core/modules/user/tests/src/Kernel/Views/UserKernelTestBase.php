@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Kernel\Views;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\user\Entity\Role;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -65,17 +66,17 @@ abstract class UserKernelTestBase extends ViewsKernelTestBase {
     // Setup a role with just one permission.
     $this->roleStorage->create(['id' => 'one_permission', 'label' => '1 permission'])
       ->save();
-    user_role_grant_permissions('one_permission', ['administer permissions']);
+    Role::loadOverrideFree('one_permission')->grantPermissions([
+      'administer permissions',
+    ])->save();
     // Setup a role with multiple permissions.
     $this->roleStorage->create(['id' => 'multiple_permissions', 'label' => 'Multiple permissions'])
       ->save();
-    user_role_grant_permissions(
-      'multiple_permissions',
-      [
-        'administer permissions',
-        'administer users',
-        'access user profiles',
-      ]);
+    Role::loadOverrideFree('multiple_permissions')->grantPermissions([
+      'administer permissions',
+      'administer users',
+      'access user profiles',
+    ])->save();
 
     // Setup a user without an extra role.
     $this->users[] = $account = $this->userStorage->create(['name' => $this->randomString()]);
