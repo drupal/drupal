@@ -12,6 +12,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
@@ -311,7 +312,7 @@ class SearchCommentTest extends BrowserTestBase {
       'access comments' => $access_comments,
       'search content' => $search_content,
     ];
-    user_role_change_permissions($rid, $permissions);
+    Role::loadOverrideFree($rid)->changePermissions($permissions)->save();
   }
 
   /**

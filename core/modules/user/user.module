@@ -429,20 +429,19 @@ function user_mail_tokens(&$replacements, $data, $options): void {
  *   @endcode
  *   Existing permissions are not changed, unless specified in $permissions.
  *
- * @see user_role_grant_permissions()
- * @see user_role_revoke_permissions()
+ * @see RoleInterface::grantPermissions()
+ * @see RoleInterface::revokePermissions()
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\user\RoleInterface::changePermissions() instead.
+ * @see https://www.drupal.org/node/3348027
  */
 function user_role_change_permissions($rid, array $permissions = []): void {
-  // Grant new permissions for the role.
-  $grant = array_filter($permissions);
-  if (!empty($grant)) {
-    user_role_grant_permissions($rid, array_keys($grant));
-  }
-  // Revoke permissions for the role.
-  $revoke = array_diff_assoc($permissions, $grant);
-  if (!empty($revoke)) {
-    user_role_revoke_permissions($rid, array_keys($revoke));
-  }
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\user\RoleInterface::changePermissions() instead. See https://www.drupal.org/node/3348027', E_USER_DEPRECATED);
+  $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
+  $role = $role_storage->loadOverrideFree($rid);
+  $role?->changePermissions($permissions);
+  $role?->save();
 }
 
 /**
@@ -453,16 +452,18 @@ function user_role_change_permissions($rid, array $permissions = []): void {
  * @param array $permissions
  *   (optional) A list of permission names to grant.
  *
- * @see user_role_change_permissions()
- * @see user_role_revoke_permissions()
+ * @see RoleInterface::changePermissions()
+ * @see RoleInterface::revokePermissions()
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\user\RoleInterface::grantPermissions() instead.
+ * @see https://www.drupal.org/node/3348027
  */
 function user_role_grant_permissions($rid, array $permissions = []): void {
-  // Grant new permissions for the role.
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\user\RoleInterface::grantPermissions() instead. See https://www.drupal.org/node/3348027', E_USER_DEPRECATED);
   $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
   if ($role = $role_storage->loadOverrideFree($rid)) {
-    foreach ($permissions as $permission) {
-      $role->grantPermission($permission);
-    }
+    $role->grantPermissions($permissions);
     $role->save();
   }
 }
@@ -475,16 +476,18 @@ function user_role_grant_permissions($rid, array $permissions = []): void {
  * @param array $permissions
  *   (optional) A list of permission names to revoke.
  *
- * @see user_role_change_permissions()
- * @see user_role_grant_permissions()
+ * @see RoleInterface::changePermissions()
+ * @see RoleInterface::grantPermissions()
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\user\RoleInterface::revokePermissions() instead.
+ * @see https://www.drupal.org/node/3348027
  */
 function user_role_revoke_permissions($rid, array $permissions = []): void {
-  // Revoke permissions for the role.
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\user\RoleInterface::revokePermissions() instead. See https://www.drupal.org/node/3348027', E_USER_DEPRECATED);
   $role_storage = \Drupal::entityTypeManager()->getStorage('user_role');
   $role = $role_storage->loadOverrideFree($rid);
-  foreach ($permissions as $permission) {
-    $role->revokePermission($permission);
-  }
+  $role->revokePermissions($permissions);
   $role->save();
 }
 

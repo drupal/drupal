@@ -184,7 +184,7 @@ class UserPermissionsTest extends BrowserTestBase {
   }
 
   /**
-   * Verify proper permission changes by user_role_change_permissions().
+   * Verify proper permission changes by RoleInterface::changePermissions().
    */
   public function testUserRoleChangePermissions(): void {
     $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
@@ -203,7 +203,7 @@ class UserPermissionsTest extends BrowserTestBase {
       'administer users' => 1,
       'access user profiles' => 0,
     ];
-    user_role_change_permissions($rid, $permissions);
+    Role::loadOverrideFree($rid)->changePermissions($permissions)->save();
 
     // Verify proper permission changes.
     $this->assertTrue($account->hasPermission('administer users'), 'User now has "administer users" permission.');

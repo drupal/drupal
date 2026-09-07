@@ -135,11 +135,35 @@ class Role extends ConfigEntityBase implements RoleInterface {
    */
   #[ActionMethod(adminLabel: new TranslatableMarkup('Add permission to role'))]
   public function grantPermission($permission) {
+    return $this->grantPermissions((array) $permission);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function grantPermissions(array $permissions): static {
     if ($this->isAdmin()) {
       return $this;
     }
-    if (!$this->hasPermission($permission)) {
-      $this->permissions[] = $permission;
+    // Remove existing permissions.
+    $permissions = array_diff($permissions, $this->permissions);
+    $this->permissions = array_merge($this->permissions, $permissions);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function changePermissions(array $permissions): static {
+    // Grant new permissions for the role.
+    $grant = array_filter($permissions);
+    if (!empty($grant)) {
+      $this->grantPermissions(array_keys($grant));
+    }
+    // Revoke permissions for the role.
+    $revoke = array_diff_assoc($permissions, $grant);
+    if (!empty($revoke)) {
+      $this->revokePermissions(array_keys($revoke));
     }
     return $this;
   }
@@ -148,10 +172,17 @@ class Role extends ConfigEntityBase implements RoleInterface {
    * {@inheritdoc}
    */
   public function revokePermission($permission) {
+    return $this->revokePermissions((array) $permission);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function revokePermissions(array $permissions): static {
     if ($this->isAdmin()) {
       return $this;
     }
-    $this->permissions = array_diff($this->permissions, [$permission]);
+    $this->permissions = array_diff($this->permissions, $permissions);
     return $this;
   }
 

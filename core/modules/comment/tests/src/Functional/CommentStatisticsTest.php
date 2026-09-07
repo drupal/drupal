@@ -85,8 +85,8 @@ class CommentStatisticsTest extends CommentTestBase {
     $this->drupalLogout();
 
     // Prepare for anonymous comment submission (comment approval enabled).
-    // Note we don't use user_role_change_permissions(), because that caused
-    // random test failures.
+    // Note we don't use RoleInterface::changePermissions(), because that
+    // caused random test failures.
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/people/permissions');
@@ -114,8 +114,8 @@ class CommentStatisticsTest extends CommentTestBase {
     $this->assertEquals(1, $node->get('comment')->comment_count, 'The value of node comment_count is still 1.');
 
     // Prepare for anonymous comment submission (no approval required).
-    // Note we don't use user_role_change_permissions(), because that caused
-    // random test failures.
+    // Note we don't use RoleInterface::changePermissions(), because that
+    // caused random test failures.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/people/permissions');
     $edit = [

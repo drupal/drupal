@@ -9,6 +9,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\NodeAccessTrait;
 use Drupal\user\RoleInterface;
 use Drupal\node\NodeAccessRebuild;
+use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -139,13 +140,10 @@ class FilePrivateTest extends FileFieldTestBase {
     // As an anonymous user, create a temporary file with no references and
     // confirm that only the session that uploaded it may view it.
     $this->drupalLogout();
-    user_role_change_permissions(
-      RoleInterface::ANONYMOUS_ID,
-      [
-        "create $type_name content" => TRUE,
-        'access content' => TRUE,
-      ]
-    );
+    Role::loadOverrideFree(RoleInterface::ANONYMOUS_ID)->changePermissions([
+      "create $type_name content" => TRUE,
+      'access content' => TRUE,
+    ])->save();
     $test_file = $this->getTestFile('text');
     $this->drupalGet('node/add/' . $type_name);
     $edit = ['files[' . $field_name . '_0]' => $file_system->realpath($test_file->getFileUri())];

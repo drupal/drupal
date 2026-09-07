@@ -239,8 +239,9 @@ class UserPermissionsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    foreach ($form_state->getValue('role_names') as $role_name => $name) {
-      user_role_change_permissions($role_name, (array) $form_state->getValue($role_name));
+
+    foreach ($this->getRoles() as $role_name => $role) {
+      $role->changePermissions((array) $form_state->getValue($role_name))->save();
     }
 
     $this->messenger()->addStatus($this->t('The changes have been saved.'));

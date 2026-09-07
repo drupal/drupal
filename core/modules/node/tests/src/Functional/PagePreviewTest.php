@@ -16,6 +16,7 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -537,7 +538,10 @@ class PagePreviewTest extends NodeTestBase {
     \Drupal::service('module_installer')->uninstall(['node_test']);
     $this->drupalLogout();
     $title_key = 'title[0][value]';
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['create page content', 'access content']);
+    Role::loadOverrideFree(RoleInterface::ANONYMOUS_ID)->grantPermissions([
+      'create page content',
+      'access content',
+    ])->save();
     $edit = [
       $title_key => $this->randomMachineName(8),
     ];

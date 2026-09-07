@@ -241,9 +241,9 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
       // apply the defined user role permissions when a new format is inserted
       // and has a non-empty $roles property.
       if (($roles = $this->get('roles')) && $permission = $this->getPermissionName()) {
-        foreach (Role::loadMultiple() as $rid => $role) {
+        foreach (Role::loadMultipleOverrideFree() as $rid => $role) {
           $enabled = in_array($rid, $roles, TRUE);
-          user_role_change_permissions($rid, [$permission => $enabled]);
+          $role->changePermissions([$permission => $enabled])->save();
         }
       }
     }

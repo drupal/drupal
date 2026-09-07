@@ -7,6 +7,8 @@ namespace Drupal\Tests\standard\FunctionalJavascript;
 use Drupal\Core\Cache\Cache;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 use Drupal\Tests\PerformanceData;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
@@ -48,7 +50,9 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->drupalCreateContentType(['type' => 'test_content', 'name' => 'Test Content']);
     $this->drupalCreateNode(['type' => 'test_content']);
     // Grant the anonymous user the permission to look at user profiles.
-    user_role_grant_permissions('anonymous', ['access user profiles']);
+    Role::loadOverrideFree(RoleInterface::ANONYMOUS_ID)->grantPermissions([
+      'access user profiles',
+    ])->save();
   }
 
   /**
