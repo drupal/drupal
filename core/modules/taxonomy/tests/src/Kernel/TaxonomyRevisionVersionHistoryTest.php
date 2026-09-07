@@ -31,6 +31,7 @@ class TaxonomyRevisionVersionHistoryTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'filter',
     'system',
     'taxonomy',
     'user',

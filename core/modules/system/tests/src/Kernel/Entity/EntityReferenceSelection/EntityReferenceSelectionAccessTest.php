@@ -41,6 +41,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
     'comment',
     'field',
     'file',
+    'filter',
     'image',
     'node',
     'media',
