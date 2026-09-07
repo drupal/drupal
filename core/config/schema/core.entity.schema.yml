@@ -89,6 +89,39 @@ core.entity_view_display.*.*.*:
         type: boolean
         label: 'Value'
 
+core.design_token.*:
+  type: config_entity
+  label: 'Design token'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    id:
+      type: machine_name
+      label: 'ID'
+    path:
+      type: string
+      label: 'The CSS variable path'
+      constraints:
+        Regex:
+          pattern: '/^[a-z0-9_\s\-\.]+$/'
+          message: "The %value path is not valid."
+    type:
+      type: string
+      label: 'The design token value type'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.design_token_value
+          interface: 'Drupal\Core\Theme\DesignToken\DesignTokenValueInterface'
+    scopes:
+      type: sequence
+      label: 'The scopes of the value overrides.'
+      sequence:
+        type: design_token_value.[%parent.%parent.type]
+      constraints:
+        ValidSequenceKeys:
+          constraints:
+            CssSelector: []
+
 field_formatter:
   type: mapping
   label: 'Field formatter'

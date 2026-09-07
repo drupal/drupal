@@ -1,0 +1,5 @@
+name: 'Design tokens test'
+type: module
+description: 'Plugins definitions to test design tokens API.'
+package: Testing
+version: VERSION

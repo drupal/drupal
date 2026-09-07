@@ -6,6 +6,8 @@
  */
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Config\Entity\ConfigEntityType;
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Update\EquivalentUpdate;
 
@@ -70,4 +72,39 @@ function system_update_12001(): TranslatableMarkup|null {
     return $equivalent_update->toSkipMessage();
   }
   return NULL;
+}
+
+/**
+ * Install new design token entity type.
+ */
+function system_update_12002(): void {
+  $entityDefinitionUpdateManager = \Drupal::entityDefinitionUpdateManager();
+  $changeList = $entityDefinitionUpdateManager->getChangeList();
+  if (isset($changeList['design_token']['entity_type']) && $changeList['design_token']['entity_type'] == EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED) {
+    $designTokenEntityType = new ConfigEntityType([
+      'id' => 'design_token',
+      'label' => new TranslatableMarkup('Design token'),
+      'entity_keys' => [
+        'id' => 'id',
+        'label' => 'id',
+      ],
+      'admin_permission' => 'administer design tokens',
+      'constraints' => [
+        'ImmutableProperties' => [
+          'properties' => [
+            'id',
+            'path',
+            'type',
+          ],
+        ],
+      ],
+      'config_export' => [
+        'id',
+        'path',
+        'type',
+        'scopes',
+      ],
+    ]);
+    $entityDefinitionUpdateManager->installEntityType($designTokenEntityType);
+  }
 }

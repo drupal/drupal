@@ -2085,6 +2085,18 @@ services:
       ]
     tags:
       - { name: needs_destruction }
+  plugin.manager.design_token:
+    class: Drupal\Core\Theme\DesignToken\DesignTokenPluginManager
+    arguments:
+      - '@module_handler'
+      - '@theme_handler'
+      - '@cache.discovery'
+      - '@plugin.manager.design_token_value'
+  Drupal\Core\Theme\DesignToken\DesignTokenPluginManagerInterface: '@plugin.manager.design_token'
+  plugin.manager.design_token_value:
+    class: Drupal\Core\Theme\DesignToken\DesignTokenValuePluginManager
+    parent: default_plugin_manager
+  Drupal\Core\Theme\DesignToken\DesignTokenValuePluginManagerInterface: '@plugin.manager.design_token_value'
   Drupal\Core\Extension\ThemeSettingsProvider:
     autowire: true
   Drupal\Core\Extension\ModuleWeight:
