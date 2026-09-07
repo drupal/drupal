@@ -166,7 +166,30 @@ INFO;
     $edit['modules[navigation][enable]'] = 'navigation';
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
-    $this->assertSession()->pageTextContains('You must install the following modules to install Navigation:BlockFileFieldLayout BuilderLayout DiscoveryContextual Links');
+    $this->assertSession()->pageTextContains('You must install the following modules to install Navigation:BlockContextual LinksFieldFileLayout BuilderLayout Discovery');
+
+    // Check the module install text with more than 2 module dependencies and
+    // when the modules to be installed share a dependency.
+    $edit = [];
+    $edit['modules[block_content][enable]'] = 'block_content';
+    $edit['modules[navigation][enable]'] = 'navigation';
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
+    $this->assertSession()->pageTextContains('You must install the following modules to install Block Content:BlockFieldFilterText');
+    $this->assertSession()->pageTextContains('You must install the following modules to install Navigation:BlockContextual LinksFieldFileLayout BuilderLayout Discovery');
+
+    // Same as above with a common dependent module, Block, also selected to be
+    // installed. In this case, 'Block' should not be in the list of what must
+    // be installed.
+    $edit = [];
+    $edit['modules[block][enable]'] = 'block';
+    $edit['modules[block_content][enable]'] = 'block_content';
+    $edit['modules[navigation][enable]'] = 'navigation';
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
+    $this->assertSession()->pageTextContains('You must install the following modules to install Block Content:FieldFilterText');
+    $this->assertSession()->pageTextContains('You must install the following modules to install Navigation:Contextual LinksFieldFileLayout BuilderLayout Discovery');
+
   }
 
 }

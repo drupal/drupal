@@ -438,10 +438,14 @@ class ModulesListForm extends FormBase {
       }
     }
 
-    // Add all dependencies to a list.
+    // Add dependencies that need to be installed to the modules array. Only
+    // modules that have not been requested will be added. That is, if a
+    // dependent module has been selected on the form, it will not be listed
+    // as needing to be installed.
+    $original_install = $modules['install'];
     foreach ($modules['install'] as $module => $value) {
       foreach (array_keys($data[$module]->requires) as $dependency) {
-        if (!isset($modules['install'][$dependency]) && !$this->moduleHandler->moduleExists($dependency)) {
+        if (!isset($original_install[$dependency]) && !$this->moduleHandler->moduleExists($dependency)) {
           $dependency_info = $data[$dependency]->info;
           $modules['dependencies'][$module][$dependency] = $dependency_info['name'];
           $modules['install'][$dependency] = $dependency_info['name'];

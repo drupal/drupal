@@ -146,6 +146,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
       // Display a list of required modules that have to be installed as well
       // but were not manually selected.
       foreach ($this->modules['dependencies'] as $module => $dependencies) {
+        asort($dependencies);
         $items[] = [
           [
             '#markup' => $this->formatPlural(
