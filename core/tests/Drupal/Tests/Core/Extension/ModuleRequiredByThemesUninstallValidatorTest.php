@@ -156,4 +156,40 @@ class ModuleRequiredByThemesUninstallValidatorTest extends UnitTestCase {
     $this->assertEquals($expected, $reasons);
   }
 
+  /**
+   * Tests theme dependencies with a project prefix.
+   *
+   * Theme dependencies may be declared with a project prefix, for example
+   * 'drupal:node', and must still be matched to the module.
+   */
+  public function testValidateOneThemeDependencyWithProjectPrefix(): void {
+    $module = 'single_module';
+    $theme_name = 'One Theme';
+    $this->themeExtensionList->getAllInstalledInfo()->willReturn([
+      'stark' => [
+        'name' => 'Stark',
+        'dependencies' => [],
+      ],
+      'claro' => [
+        'name' => 'Claro',
+        'dependencies' => [],
+      ],
+      'one_theme' => [
+        'name' => $theme_name,
+        'dependencies' => [
+          'drupal:' . $module,
+        ],
+      ],
+    ]);
+
+    $this->moduleExtensionList->get($module)->willReturn((object) [
+      'info' => [
+        'name' => 'Single Module',
+      ],
+    ]);
+
+    $reasons = $this->moduleRequiredByThemeUninstallValidator->validate($module);
+    $this->assertEquals(["Required by the theme: $theme_name"], $reasons);
+  }
+
 }
