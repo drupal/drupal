@@ -47,82 +47,111 @@ class ThemeInstaller implements ThemeInstallerInterface {
   /**
    * {@inheritdoc}
    */
+  public function getThemesToInstall(array $theme_list, bool $install_dependencies = TRUE): array {
+    if (!$install_dependencies) {
+      // Without dependency resolution the caller is responsible for providing a
+      // complete list; the install loop still skips already-installed themes.
+      return array_values($theme_list);
+    }
+
+    $extension_config = $this->configFactory->get('core.extension');
+    $theme_data = $this->themeExtensionList->reset()->getList();
+    $installed_themes = $extension_config->get('theme') ?: [];
+    $installed_modules = $extension_config->get('module') ?: [];
+
+    $theme_list = array_combine(array_values($theme_list), array_values($theme_list));
+
+    if ($missing = array_diff_key($theme_list, $theme_data)) {
+      // One or more of the given themes doesn't exist.
+      throw new UnknownExtensionException('Unknown themes: ' . implode(', ', $missing) . '.');
+    }
+
+    // Only process themes that are not installed currently.
+    if (!$theme_list = array_diff_key($theme_list, $installed_themes)) {
+      // Nothing to do. All themes already installed.
+      return [];
+    }
+
+    $module_list = $this->moduleExtensionList->getList();
+    foreach ($theme_list as $theme => $value) {
+      $module_dependencies = $theme_data[$theme]->module_dependencies;
+      // $theme_data[$theme]->requires contains both theme and module
+      // dependencies keyed by the extension machine names.
+      // $theme_data[$theme]->module_dependencies contains only the module
+      // dependencies keyed by the module extension machine name. Therefore,
+      // we can find the theme dependencies by finding array keys for
+      // 'requires' that are not in $module_dependencies.
+      $theme_dependencies = array_diff_key($theme_data[$theme]->requires, $module_dependencies);
+      // We can find the unmet module dependencies by finding the module
+      // machine names keys that are not in $installed_modules keys.
+      $unmet_module_dependencies = array_diff_key($module_dependencies, $installed_modules);
+
+      // Prevent themes with unmet module dependencies from being installed.
+      if (!empty($unmet_module_dependencies)) {
+        $unmet_module_dependencies_list = implode(', ', array_keys($unmet_module_dependencies));
+        throw new MissingDependencyException("Unable to install theme: '$theme' due to unmet module dependencies: '$unmet_module_dependencies_list'.");
+      }
+
+      foreach ($module_dependencies as $dependency => $dependency_object) {
+        if ($incompatible = $this->checkDependencyMessage($module_list, $dependency, $dependency_object)) {
+          $sanitized_message = Html::decodeEntities(strip_tags($incompatible));
+          throw new MissingDependencyException("Unable to install theme: $sanitized_message");
+        }
+      }
+
+      // Add dependencies to the list of themes to install. The new themes
+      // will be processed as the parent foreach loop continues.
+      foreach (array_keys($theme_dependencies) as $dependency) {
+        if (!isset($theme_data[$dependency])) {
+          // The dependency does not exist.
+          throw new UnknownExtensionException("Unable to install theme: '$theme' is missing its theme dependency '$dependency'.");
+        }
+
+        // Skip already installed themes.
+        if (!isset($theme_list[$dependency]) && !isset($installed_themes[$dependency])) {
+          $theme_list[$dependency] = $dependency;
+        }
+      }
+    }
+
+    // Set the actual theme weights.
+    $theme_list = array_map(function ($theme) use ($theme_data) {
+      return $theme_data[$theme]->sort;
+    }, $theme_list);
+
+    // Sort the theme list by their weights (reverse).
+    arsort($theme_list);
+    return array_keys($theme_list);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function install(array $theme_list, $install_dependencies = TRUE) {
     $extension_config = $this->configFactory->getEditable('core.extension');
 
     $theme_data = $this->themeExtensionList->reset()->getList();
     $installed_themes = $extension_config->get('theme') ?: [];
-    $installed_modules = $extension_config->get('module') ?: [];
 
     if ($install_dependencies) {
-      $theme_list = array_combine($theme_list, $theme_list);
+      // Themes explicitly requested that are not yet installed. Deprecation
+      // notices are emitted only for these, not for resolved dependencies.
+      $requested_themes = array_diff(array_values($theme_list), array_keys($installed_themes));
 
-      if ($missing = array_diff_key($theme_list, $theme_data)) {
-        // One or more of the given themes doesn't exist.
-        throw new UnknownExtensionException('Unknown themes: ' . implode(', ', $missing) . '.');
-      }
-
-      // Only process themes that are not installed currently.
-      if (!$theme_list = array_diff_key($theme_list, $installed_themes)) {
+      // Resolve the full, dependency-sorted list of themes to install. This
+      // also validates that the themes and their dependencies are installable.
+      $theme_list = $this->getThemesToInstall($theme_list);
+      if (empty($theme_list)) {
         // Nothing to do. All themes already installed.
         return TRUE;
       }
 
-      $module_list = $this->moduleExtensionList->getList();
-      foreach ($theme_list as $theme => $value) {
-        $module_dependencies = $theme_data[$theme]->module_dependencies;
-        // $theme_data[$theme]->requires contains both theme and module
-        // dependencies keyed by the extension machine names.
-        // $theme_data[$theme]->module_dependencies contains only the module
-        // dependencies keyed by the module extension machine name. Therefore,
-        // we can find the theme dependencies by finding array keys for
-        // 'requires' that are not in $module_dependencies.
-        $theme_dependencies = array_diff_key($theme_data[$theme]->requires, $module_dependencies);
-        // We can find the unmet module dependencies by finding the module
-        // machine names keys that are not in $installed_modules keys.
-        $unmet_module_dependencies = array_diff_key($module_dependencies, $installed_modules);
-
-        if ($theme_data[$theme]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+      foreach ($requested_themes as $theme) {
+        if (isset($theme_data[$theme]) && $theme_data[$theme]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
           // phpcs:ignore Drupal.Semantics.FunctionTriggerError
           @trigger_error("The theme '$theme' is deprecated. See " . $theme_data[$theme]->info['lifecycle_link'], E_USER_DEPRECATED);
         }
-
-        // Prevent themes with unmet module dependencies from being installed.
-        if (!empty($unmet_module_dependencies)) {
-          $unmet_module_dependencies_list = implode(', ', array_keys($unmet_module_dependencies));
-          throw new MissingDependencyException("Unable to install theme: '$theme' due to unmet module dependencies: '$unmet_module_dependencies_list'.");
-        }
-
-        foreach ($module_dependencies as $dependency => $dependency_object) {
-          if ($incompatible = $this->checkDependencyMessage($module_list, $dependency, $dependency_object)) {
-            $sanitized_message = Html::decodeEntities(strip_tags($incompatible));
-            throw new MissingDependencyException("Unable to install theme: $sanitized_message");
-          }
-        }
-
-        // Add dependencies to the list of themes to install. The new themes
-        // will be processed as the parent foreach loop continues.
-        foreach (array_keys($theme_dependencies) as $dependency) {
-          if (!isset($theme_data[$dependency])) {
-            // The dependency does not exist.
-            return FALSE;
-          }
-
-          // Skip already installed themes.
-          if (!isset($theme_list[$dependency]) && !isset($installed_themes[$dependency])) {
-            $theme_list[$dependency] = $dependency;
-          }
-        }
       }
-
-      // Set the actual theme weights.
-      $theme_list = array_map(function ($theme) use ($theme_data) {
-        return $theme_data[$theme]->sort;
-      }, $theme_list);
-
-      // Sort the theme list by their weights (reverse).
-      arsort($theme_list);
-      $theme_list = array_keys($theme_list);
     }
 
     $themes_installed = [];

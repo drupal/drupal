@@ -19,6 +19,7 @@ drupalmedia
 drupalorg
 druplicon
 drush
+exin
 fapi
 fieldable
 fulldate
