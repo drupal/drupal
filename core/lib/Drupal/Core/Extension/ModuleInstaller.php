@@ -107,24 +107,25 @@ class ModuleInstaller implements ModuleInstallerInterface {
   /**
    * {@inheritdoc}
    */
-  public function install(array $module_list, $enable_dependencies = TRUE) {
-    $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+  public function getModulesToInstall(array $module_list, bool $enable_dependencies = TRUE): array {
+    $installed_modules = \Drupal::configFactory()->get('core.extension')->get('module') ?: [];
 
-    // Remove any modules that are already installed.
-    $installed_modules = $extension_config->get('module') ?: [];
     // Only process currently uninstalled modules.
-    $module_list = array_diff($module_list, array_keys($installed_modules));
-
+    $module_list = array_values(array_diff($module_list, array_keys($installed_modules)));
     if (empty($module_list)) {
-      // Nothing to do. All modules already installed.
-      return TRUE;
+      return [];
     }
 
-    // Get all module data so we can find dependencies and sort and find the
-    // core requirements. The module list needs to be reset so that it can
-    // re-scan and include any new modules that may have been added directly
-    // into the filesystem.
+    // Get all module data so we can find dependencies and sort. The module
+    // list needs to be reset so that it can re-scan and include any new
+    // modules that may have been added directly into the filesystem.
     $module_data = \Drupal::service('extension.list.module')->reset()->getList();
+
+    // Ensure all of the requested modules actually exist.
+    if ($missing_modules = array_diff_key(array_flip($module_list), $module_data)) {
+      throw new MissingDependencyException(sprintf('Unable to install modules %s due to missing modules %s.', implode(', ', $module_list), implode(', ', array_keys($missing_modules))));
+    }
+
     foreach ($module_list as $module) {
       if (!empty($module_data[$module]->info['core_incompatible'])) {
         throw new MissingDependencyException("Unable to install modules: module '$module' is incompatible with this version of Drupal core.");
@@ -132,17 +133,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if ($module_data[$module]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE) {
         throw new ObsoleteExtensionException("Unable to install modules: module '$module' is obsolete.");
       }
-      if ($module_data[$module]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
-        // phpcs:ignore Drupal.Semantics.FunctionTriggerError
-        @trigger_error("The module '$module' is deprecated. See " . $module_data[$module]->info['lifecycle_link'], E_USER_DEPRECATED);
-      }
     }
+
     if ($enable_dependencies) {
       $module_list = array_combine($module_list, $module_list);
-      if ($missing_modules = array_diff_key($module_list, $module_data)) {
-        // One or more of the given modules doesn't exist.
-        throw new MissingDependencyException(sprintf('Unable to install modules %s due to missing modules %s.', implode(', ', $module_list), implode(', ', $missing_modules)));
-      }
 
       // Add dependencies to the list. The new modules will be processed as
       // the foreach loop continues.
@@ -171,6 +165,41 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Sort the module list by their weights (reverse).
       arsort($module_list);
       $module_list = array_keys($module_list);
+    }
+
+    return array_values($module_list);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function install(array $module_list, $enable_dependencies = TRUE) {
+    $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+    $installed_modules = $extension_config->get('module') ?: [];
+
+    // The modules the caller explicitly asked for that are not yet installed.
+    // Dependency resolution happens in ::getModulesToInstall() below; the
+    // deprecation notice is intentionally only emitted for these requested
+    // modules and not for dependencies pulled in automatically.
+    $requested_modules = array_diff($module_list, array_keys($installed_modules));
+
+    // Resolve the full, dependency-sorted list of modules to install. This
+    // also validates that the modules exist and are compatible.
+    $module_list = $this->getModulesToInstall($module_list, $enable_dependencies);
+
+    if (empty($module_list)) {
+      // Nothing to do. All modules already installed.
+      return TRUE;
+    }
+
+    // ::getModulesToInstall() reset the extension list, so reuse it here
+    // without paying the cost of another scan.
+    $module_data = \Drupal::service('extension.list.module')->getList();
+    foreach ($requested_modules as $module) {
+      if (isset($module_data[$module]) && $module_data[$module]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+        // phpcs:ignore Drupal.Semantics.FunctionTriggerError
+        @trigger_error("The module '$module' is deprecated. See " . $module_data[$module]->info['lifecycle_link'], E_USER_DEPRECATED);
+      }
     }
 
     // Required for module installation checks.

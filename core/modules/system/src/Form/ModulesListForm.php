@@ -417,6 +417,10 @@ class ModulesListForm extends FormBase {
     ];
 
     $data = $this->moduleExtensionList->getList();
+
+    // Determine the modules the user explicitly requested: required modules
+    // that are not yet installed, plus any that were selected on the form.
+    $selected = [];
     foreach ($data as $name => $module) {
       // If the module is installed there is nothing to do.
       if ($this->moduleHandler->moduleExists($name)) {
@@ -424,40 +428,29 @@ class ModulesListForm extends FormBase {
       }
       // Required modules have to be installed.
       if (!empty($module->required)) {
-        $modules['install'][$name] = $module->info['name'];
+        $selected[$name] = $module->info['name'];
       }
       // Selected modules should be installed.
       elseif (($checkbox = $form_state->getValue(['modules', $name], FALSE)) && $checkbox['enable']) {
-        $info = $data[$name]->info;
-        $modules['install'][$name] = $info['name'];
-        // Identify non-stable modules.
-        $lifecycle = $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER];
-        if ($lifecycle !== ExtensionLifecycle::STABLE) {
-          $modules['non_stable'][$name] = $info['name'];
-        }
+        $selected[$name] = $data[$name]->info['name'];
       }
     }
 
-    // Add dependencies that need to be installed to the modules array. Only
-    // modules that have not been requested will be added. That is, if a
-    // dependent module has been selected on the form, it will not be listed
-    // as needing to be installed.
-    $original_install = $modules['install'];
-    foreach ($modules['install'] as $module => $value) {
-      foreach (array_keys($data[$module]->requires) as $dependency) {
-        if (!isset($original_install[$dependency]) && !$this->moduleHandler->moduleExists($dependency)) {
-          $dependency_info = $data[$dependency]->info;
-          $modules['dependencies'][$module][$dependency] = $dependency_info['name'];
-          $modules['install'][$dependency] = $dependency_info['name'];
+    $selected = array_keys($selected);
 
-          // Identify non-stable modules.
-          $lifecycle = $dependency_info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER];
-          if ($lifecycle !== ExtensionLifecycle::STABLE) {
-            $modules['non_stable'][$dependency] = $dependency_info['name'];
-          }
-        }
-      }
-    }
+    // Resolve the full set of modules that will be installed, including any
+    // dependencies pulled in automatically. This uses the same resolution as
+    // the module installer, so the confirmation form reflects exactly what
+    // will be installed. The explicitly selected modules are listed first,
+    // followed by the dependencies pulled in automatically, which is the order
+    // users expect to see on the confirmation form.
+    $resolved = $this->moduleInstaller->getModulesToInstall($selected);
+    $ordered = array_merge(
+      array_intersect($selected, $resolved),
+      array_diff($resolved, $selected),
+    );
+    $modules = $this->classifyByStability($ordered, $modules, $data);
+    $modules = $this->groupDependenciesByParent($selected, $modules, $data);
 
     // Make sure the install API is available.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
@@ -519,6 +512,56 @@ class ModulesListForm extends FormBase {
         return;
       }
     }
+  }
+
+  /**
+   * Classifies modules into stable and non-stable.
+   *
+   * @param array $ordered
+   *   The list of ordered module names.
+   * @param array $modules
+   *   The modules data structure.
+   * @param array $data
+   *   The module extension list data.
+   *
+   * @return array
+   *   The existing modules array containing 'install' and 'non_stable' keys.
+   */
+  protected function classifyByStability(array $ordered, array $modules, array $data): array {
+    foreach ($ordered as $name) {
+      $info = $data[$name]->info;
+      $modules['install'][$name] = $info['name'];
+      // Identify non-stable modules.
+      if ($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::STABLE) {
+        $modules['non_stable'][$name] = $info['name'];
+      }
+    }
+    return $modules;
+  }
+
+  /**
+   * Group added dependencies under the modules that require them.
+   *
+   * @param array $selected
+   *   The selected modules.
+   * @param mixed $modules
+   *   The modules array.
+   * @param array $data
+   *   The module extension list data.
+   *
+   * @return array
+   *   The modules array.
+   */
+  protected function groupDependenciesByParent($selected, $modules, $data): array {
+    $added_dependencies = array_diff_key($modules['install'], array_flip($selected));
+    foreach (array_keys($modules['install']) as $module) {
+      foreach (array_keys($data[$module]->requires) as $dependency) {
+        if (isset($added_dependencies[$dependency])) {
+          $modules['dependencies'][$module][$dependency] = $modules['install'][$dependency];
+        }
+      }
+    }
+    return $modules;
   }
 
 }
