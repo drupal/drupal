@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use Drupal\user\AccountCancellation;
 use Drupal\workspaces\Entity\Workspace;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -331,7 +332,7 @@ class WorkspaceTest extends BrowserTestBase {
 
     // Delete any of the workspace owners and visit workspaces listing.
     $this->drupalLogin($this->editor2);
-    user_cancel([], $this->editor1->id(), 'user_cancel_reassign');
+    \Drupal::service(AccountCancellation::class)->cancel([], (int) $this->editor1->id(), 'user_cancel_reassign');
     $user = \Drupal::service('entity_type.manager')->getStorage('user')->load($this->editor1->id());
     $user->delete();
     $this->drupalGet('/admin/config/workflow/workspaces');

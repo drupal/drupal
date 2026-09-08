@@ -17,11 +17,12 @@ use Drupal\user\UserInterface;
 /**
  * Act on user account cancellations.
  *
- * This hook is invoked from user_cancel() before a user account is canceled.
- * Depending on the account cancellation method, the module should either do
- * nothing, unpublish content, or anonymize content. See user_cancel_methods()
- * for the list of default account cancellation methods provided by User module.
- * Modules may add further methods via hook_user_cancel_methods_alter().
+ * This hook is invoked from AccountCancellation::cancel() before a user
+ * account is canceled. Depending on the account cancellation method, the
+ * module should either do nothing, unpublish content, or anonymize content.
+ * See AccountCancellation::cancelMethods() for the list of default account
+ * cancellation methods provided by User module. Modules may add further
+ * methods via hook_user_cancel_methods_alter().
  *
  * This hook is NOT invoked for the 'user_cancel_delete' account cancellation
  * method. To react to that method, implement hook_ENTITY_TYPE_predelete() or
@@ -37,7 +38,7 @@ use Drupal\user\UserInterface;
  * @param string $method
  *   The account cancellation method.
  *
- * @see user_cancel_methods()
+ * @see AccountCancellation::cancelMethods()
  * @see hook_user_cancel_methods_alter()
  */
 function hook_user_cancel($edit, UserInterface $account, $method): void {
@@ -72,7 +73,8 @@ function hook_user_cancel($edit, UserInterface $account, $method): void {
  *
  * By implementing this hook, modules are able to add, customize, or remove
  * account cancellation methods. All defined methods are turned into radio
- * button form elements by user_cancel_methods() after this hook is invoked.
+ * button form elements by AccountCancellation::cancelMethods() after this hook
+ * is invoked.
  * The following properties can be defined for each method:
  * - title: The radio button's title.
  * - description: (optional) A description to display on the confirmation form
@@ -86,7 +88,7 @@ function hook_user_cancel($edit, UserInterface $account, $method): void {
  * @param array $methods
  *   An array containing user account cancellation methods, keyed by method id.
  *
- * @see user_cancel_methods()
+ * @see AccountCancellation::cancelMethods()
  * @see \Drupal\user\Form\UserCancelForm
  */
 function hook_user_cancel_methods_alter(&$methods) {

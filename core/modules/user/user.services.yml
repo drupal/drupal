@@ -71,3 +71,4 @@ services:
   Drupal\user\LoginFinalizer: ~
   Drupal\user\LogoutFinalizer: ~
   Drupal\user\NotificationHandler: ~
+  Drupal\user\AccountCancellation: ~
