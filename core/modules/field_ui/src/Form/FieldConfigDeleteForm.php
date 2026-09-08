@@ -18,24 +18,12 @@ use Drupal\field_ui\FieldUI;
  */
 class FieldConfigDeleteForm extends EntityDeleteForm {
 
-  /**
-   * The field purger service.
-   */
-  protected FieldPurger $fieldPurger;
-
   public function __construct(
     protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
     EntityTypeManagerInterface $entityTypeManager,
-    ?FieldPurger $fieldPurger = NULL,
+    protected FieldPurger $fieldPurger,
   ) {
     $this->entityTypeManager = $entityTypeManager;
-    if (!$fieldPurger instanceof FieldPurger) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $fieldPurger argument is deprecated in drupal:11.4.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3494023', E_USER_DEPRECATED);
-      $this->fieldPurger = \Drupal::service(FieldPurger::class);
-    }
-    else {
-      $this->fieldPurger = $fieldPurger;
-    }
   }
 
   /**

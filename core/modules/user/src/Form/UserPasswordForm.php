@@ -68,11 +68,6 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
    */
   protected $emailValidator;
 
-  /**
-   * The user notification handler.
-   */
-  protected NotificationHandler $notificationHandler;
-
   public function __construct(
     UserStorageInterface $user_storage,
     LanguageManagerInterface $language_manager,
@@ -80,17 +75,13 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
     FloodInterface $flood,
     protected UserNameValidator $userNameValidator,
     EmailValidatorInterface $email_validator,
-    ?NotificationHandler $notification_handler = NULL,
+    protected NotificationHandler $notificationHandler,
   ) {
     $this->userStorage = $user_storage;
     $this->languageManager = $language_manager;
     $this->configFactory = $config_factory;
     $this->flood = $flood;
     $this->emailValidator = $email_validator;
-    if ($notification_handler === NULL) {
-      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $notificationHandler argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3539363', E_USER_DEPRECATED);
-    }
-    $this->notificationHandler = $notification_handler ?? \Drupal::service(NotificationHandler::class);
   }
 
   /**

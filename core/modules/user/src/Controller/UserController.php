@@ -65,26 +65,6 @@ class UserController extends ControllerBase {
    */
   protected $flood;
 
-  /**
-   * One time authentication service.
-   */
-  protected OneTimeAuthentication $oneTimeAuthentication;
-
-  /**
-   * The login finalizer service.
-   */
-  protected LoginFinalizer $loginFinalizer;
-
-  /**
-   * The logout finalizer service.
-   */
-  protected LogoutFinalizer $logoutFinalizer;
-
-  /**
-   * The account cancellation service.
-   */
-  protected AccountCancellation $accountCancellation;
-
   public function __construct(
     DateFormatterInterface $date_formatter,
     UserStorageInterface $user_storage,
@@ -92,35 +72,16 @@ class UserController extends ControllerBase {
     LoggerInterface $logger,
     FloodInterface $flood,
     protected TimeInterface $time,
-    ?OneTimeAuthentication $one_time_authentication = NULL,
-    ?LoginFinalizer $loginFinalizer = NULL,
-    ?LogoutFinalizer $logoutFinalizer = NULL,
-    ?AccountCancellation $accountCancellation = NULL,
+    protected OneTimeAuthentication $oneTimeAuthentication,
+    protected LoginFinalizer $loginFinalizer,
+    protected LogoutFinalizer $logoutFinalizer,
+    protected AccountCancellation $accountCancellation,
   ) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
     $this->userData = $user_data;
     $this->logger = $logger;
     $this->flood = $flood;
-    if ($one_time_authentication === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $one_time_authentication argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
-    }
-    $this->oneTimeAuthentication = $one_time_authentication ?? \Drupal::service(OneTimeAuthentication::class);
-    if ($loginFinalizer === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $loginFinalizer argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $loginFinalizer = \Drupal::service(LoginFinalizer::class);
-    }
-    $this->loginFinalizer = $loginFinalizer;
-    if ($logoutFinalizer === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $logoutFinalizer argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $logoutFinalizer = \Drupal::service(LogoutFinalizer::class);
-    }
-    $this->logoutFinalizer = $logoutFinalizer;
-    if ($accountCancellation === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $accountCancellation argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3620934', E_USER_DEPRECATED);
-      $accountCancellation = \Drupal::service(AccountCancellation::class);
-    }
-    $this->accountCancellation = $accountCancellation;
   }
 
   /**

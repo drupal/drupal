@@ -14,19 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class BlockDeleteForm extends EntityDeleteForm {
 
-  /**
-   * Theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected ThemeHandlerInterface $themeHandler;
-
-  public function __construct(?ThemeHandlerInterface $theme_handler = NULL) {
-    if (!$theme_handler instanceof ThemeHandlerInterface) {
-      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $theme_handler argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3015925', E_USER_DEPRECATED);
-      $theme_handler = \Drupal::service(ThemeHandlerInterface::class);
-    }
-    $this->themeHandler = $theme_handler;
+  public function __construct(protected ThemeHandlerInterface $themeHandler) {
   }
 
   /**

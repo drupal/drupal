@@ -36,12 +36,8 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     protected readonly LanguageManagerInterface $languageManager,
     #[Autowire(service: 'node.view_all_nodes_memory_cache')]
     protected readonly MemoryCacheInterface $memoryCache,
-    ?NodeGrantsHelper $nodeGrantsHelper,
+    NodeGrantsHelper $nodeGrantsHelper,
   ) {
-    if (!$nodeGrantsHelper) {
-      @trigger_error('Calling NodeGrantDatabaseStorage::__construct() without the $nodeGrantsHelper argument is deprecated in drupal:11.4.0 and the $nodeGrantsHelper argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3578055', E_USER_DEPRECATED);
-      $nodeGrantsHelper = \Drupal::service(NodeGrantsHelper::class);
-    }
     $this->nodeGrantsHelper = $nodeGrantsHelper;
     $this->hasNodeGrantsImplementations = $this->moduleHandler->hasImplementations('node_grants');
   }

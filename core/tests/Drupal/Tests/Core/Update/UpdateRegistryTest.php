@@ -16,10 +16,8 @@ use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests UpdateRegistry.
@@ -49,21 +47,6 @@ class UpdateRegistryTest extends UnitTestCase {
     $settings = [];
     $settings['extension_discovery_scan_tests'] = TRUE;
     new Settings($settings);
-  }
-
-  /**
-   * Tests the deprecated constructor signature.
-   */
-  #[IgnoreDeprecations]
-  public function testDeprecatedConstructorSignature(): void {
-    $container = new ContainerBuilder();
-    $container->set('cache.memory', $this->memoryCache);
-    \Drupal::setContainer($container);
-
-    $theme_handler = $this->createStub(ThemeHandlerInterface::class);
-    $theme_handler->method('listInfo')->willReturn([]);
-    $this->expectUserDeprecationMessage('Calling Drupal\\Core\\Update\\UpdateRegistry::__construct() without the $memoryCache argument is deprecated in drupal:11.5.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3618917');
-    new UpdateRegistry('vfs://drupal', 'sites/default', [], $this->createStub(KeyValueStoreInterface::class), $theme_handler, 'post_update');
   }
 
   /**

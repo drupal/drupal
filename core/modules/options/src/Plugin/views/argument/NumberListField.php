@@ -30,24 +30,14 @@ class NumberListField extends NumericArgument {
    */
   protected $allowedValues = NULL;
 
-  /**
-   * The options allowed values service.
-   */
-  protected OptionsAllowedValuesInterface $optionsAllowedValues;
-
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    ?OptionsAllowedValuesInterface $options_allowed_values = NULL,
+    protected OptionsAllowedValuesInterface $optionsAllowedValues,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    if (!$options_allowed_values) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $options_allowed_values argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3572185', E_USER_DEPRECATED);
-      $options_allowed_values = \Drupal::service(OptionsAllowedValuesInterface::class);
-    }
-    $this->optionsAllowedValues = $options_allowed_values;
   }
 
   /**

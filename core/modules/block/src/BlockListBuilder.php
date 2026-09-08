@@ -61,24 +61,12 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    */
   protected $messenger;
 
-  /**
-   * The theme handler interface.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected ThemeHandlerInterface $themeHandler;
-
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, MessengerInterface $messenger, ?ThemeHandlerInterface $theme_handler = NULL) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, MessengerInterface $messenger, protected ThemeHandlerInterface $themeHandler) {
     parent::__construct($entity_type, $storage);
 
     $this->themeManager = $theme_manager;
     $this->formBuilder = $form_builder;
     $this->messenger = $messenger;
-    if (!$theme_handler instanceof ThemeHandlerInterface) {
-      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $theme_handler argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3015925', E_USER_DEPRECATED);
-      $theme_handler = \Drupal::service(ThemeHandlerInterface::class);
-    }
-    $this->themeHandler = $theme_handler;
     $this->limit = FALSE;
   }
 

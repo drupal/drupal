@@ -34,22 +34,12 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    */
   protected $factory;
 
-  /**
-   * The YAML cache collector.
-   */
-  protected CacheCollectorInterface $yamlCacheCollector;
-
   public function __construct(
     protected MenuTreeStorageInterface $treeStorage,
     protected StaticMenuLinkOverridesInterface $overrides,
     protected ModuleHandlerInterface $moduleHandler,
-    ?CacheCollectorInterface $yaml_cache_collector = NULL,
+    protected CacheCollectorInterface $yamlCacheCollector,
   ) {
-    if (!isset($yaml_cache_collector)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $yamlCacheCollector argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3593485', E_USER_DEPRECATED);
-      $yaml_cache_collector = \Drupal::service('local_task.yaml_cache_collector');
-    }
-    $this->yamlCacheCollector = $yaml_cache_collector;
   }
 
   /**

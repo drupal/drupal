@@ -60,24 +60,14 @@ class FieldConfigEditForm extends EntityForm {
    */
   protected string $bundle;
 
-  /**
-   * The field-type plugin manager service.
-   */
-  protected PluginManagerInterface $fieldTypePluginManager;
-
   public function __construct(
     protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
     protected TypedDataManagerInterface $typedDataManager,
     protected EntityDisplayRepositoryInterface $entityDisplayRepository,
     protected PrivateTempStore $tempStore,
     protected ElementInfoManagerInterface $elementInfo,
-    ?PluginManagerInterface $field_type_plugin_manager = NULL,
+    protected PluginManagerInterface $fieldTypePluginManager,
   ) {
-    if (!$field_type_plugin_manager) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $field_type_plugin_manager argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
-      $field_type_plugin_manager = \Drupal::service('plugin.manager.field.field_type');
-    }
-    $this->fieldTypePluginManager = $field_type_plugin_manager;
   }
 
   /**

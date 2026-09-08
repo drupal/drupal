@@ -36,11 +36,6 @@ class UserRegistrationResource extends ResourceBase {
   use EntityResourceValidationTrait;
   use EntityResourceAccessTrait;
 
-  /**
-   * The user notification handler.
-   */
-  protected NotificationHandler $notificationHandler;
-
   public function __construct(
     array $configuration,
     $plugin_id,
@@ -50,13 +45,9 @@ class UserRegistrationResource extends ResourceBase {
     protected ImmutableConfig $userSettings,
     protected AccountInterface $currentUser,
     protected PasswordGeneratorInterface $passwordGenerator,
-    ?NotificationHandler $notification_handler = NULL,
+    protected NotificationHandler $notificationHandler,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
-    if ($notification_handler === NULL) {
-      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $notificationHandler argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3539363', E_USER_DEPRECATED);
-    }
-    $this->notificationHandler = $notification_handler ?? \Drupal::service(NotificationHandler::class);
   }
 
   /**

@@ -16,34 +16,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class RegisterForm extends AccountForm {
 
-  /**
-   * The login finalizer.
-   */
-  protected LoginFinalizer $loginFinalizer;
-
-  /**
-   * The user notification handler.
-   */
-  protected NotificationHandler $notificationHandler;
-
   public function __construct(
     EntityRepositoryInterface $entity_repository,
     LanguageManagerInterface $language_manager,
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     TimeInterface $time,
-    ?LoginFinalizer $loginFinalizer = NULL,
-    ?NotificationHandler $notification_handler = NULL,
+    protected LoginFinalizer $loginFinalizer,
+    protected NotificationHandler $notificationHandler,
   ) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
-    if ($loginFinalizer === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $loginFinalizer argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $loginFinalizer = \Drupal::service(LoginFinalizer::class);
-    }
-    $this->loginFinalizer = $loginFinalizer;
-    if ($notification_handler === NULL) {
-      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $notificationHandler argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3539363', E_USER_DEPRECATED);
-    }
-    $this->notificationHandler = $notification_handler ?? \Drupal::service(NotificationHandler::class);
   }
 
   /**

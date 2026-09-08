@@ -49,11 +49,6 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
   ];
 
   /**
-   * The YAML cache collector.
-   */
-  protected CacheCollectorInterface $yamlCacheCollector;
-
-  /**
    * The plugin instances.
    *
    * @var \Drupal\Core\Menu\LocalActionInterface[]
@@ -70,13 +65,8 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     protected LanguageManagerInterface $languageManager,
     protected AccessManagerInterface $accessManager,
     protected AccountInterface $account,
-    ?CacheCollectorInterface $yaml_cache_collector = NULL,
+    protected CacheCollectorInterface $yamlCacheCollector,
   ) {
-    if (!isset($yaml_cache_collector)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $yamlCacheCollector argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3593485', E_USER_DEPRECATED);
-      $yaml_cache_collector = \Drupal::service('local_action.yaml_cache_collector');
-    }
-    $this->yamlCacheCollector = $yaml_cache_collector;
     // Skip calling the parent constructor, since that assumes annotation-based
     // discovery.
     $this->moduleHandler = $module_handler;

@@ -35,14 +35,10 @@ class Image extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
     $plugin_id,
     $plugin_definition,
     #[Autowire(service: EditorImageUploadSettings::class)]
-    ?EditorImageUploadSettings $editor_image_upload_settings = NULL,
+    EditorImageUploadSettings $editor_image_upload_settings,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    if (!$editor_image_upload_settings) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $editor_image_upload_settings argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3570919', E_USER_DEPRECATED);
-      $editor_image_upload_settings = \Drupal::service(EditorImageUploadSettings::class);
-    }
     $this->editorImageUploadSettings = $editor_image_upload_settings;
   }
 

@@ -46,30 +46,16 @@ class UpdateRegistry implements EventSubscriberInterface {
    */
   protected static array $loadedFiles = [];
 
-  /**
-   * The memory cache.
-   */
-  protected MemoryCacheInterface $memoryCache;
-
   public function __construct(
     protected $root,
     protected $sitePath,
     array $module_list,
     protected KeyValueStoreInterface $keyValue,
     ThemeHandlerInterface $theme_handler,
-    MemoryCacheInterface|string|null $memoryCache = NULL,
+    protected MemoryCacheInterface $memoryCache,
     protected string $updateType = 'post_update',
   ) {
-    if (is_string($memoryCache)) {
-      $updateType = $memoryCache;
-      $memoryCache = NULL;
-    }
-    if (!isset($memoryCache)) {
-      $memoryCache = \Drupal::service('cache.memory');
-      @trigger_error('Calling ' . __METHOD__ . '() without the $memoryCache argument is deprecated in drupal:11.5.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3618917', E_USER_DEPRECATED);
-    }
     $this->updateType = $updateType;
-    $this->memoryCache = $memoryCache;
     $this->enabledExtensions = array_merge(array_keys($module_list), array_keys($theme_handler->listInfo()));
   }
 

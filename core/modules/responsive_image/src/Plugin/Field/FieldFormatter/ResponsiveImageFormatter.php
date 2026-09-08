@@ -30,11 +30,6 @@ use Drupal\Core\Utility\LinkGeneratorInterface;
 )]
 class ResponsiveImageFormatter extends ImageFormatterBase {
 
-  /**
-   * The file url generator.
-   */
-  protected FileUrlGeneratorInterface $fileUrlGenerator;
-
   public function __construct(
     $plugin_id,
     $plugin_definition,
@@ -47,15 +42,10 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
     protected EntityStorageInterface $imageStyleStorage,
     protected LinkGeneratorInterface $linkGenerator,
     protected AccountInterface $currentUser,
-    ?FileUrlGeneratorInterface $fileUrlGenerator = NULL,
+    protected FileUrlGeneratorInterface $fileUrlGenerator,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
 
-    if (!$fileUrlGenerator) {
-      @trigger_error('Calling ResponsiveImageFormatter::__construct() without the $fileUrlGenerator argument is deprecated in drupal:11.4.0 and the $fileUrlGenerator argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3291487', E_USER_DEPRECATED);
-      $fileUrlGenerator = \Drupal::service('file_url_generator');
-    }
-    $this->fileUrlGenerator = $fileUrlGenerator;
   }
 
   /**

@@ -72,29 +72,19 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
    */
   protected $bareHtmlPageRenderer;
 
-  /**
-   * The login finalizer.
-   */
-  protected LoginFinalizer $loginFinalizer;
-
   public function __construct(
     UserFloodControlInterface $user_flood_control,
     UserStorageInterface $user_storage,
     UserAuthenticationInterface $user_auth,
     RendererInterface $renderer,
     BareHtmlPageRendererInterface $bare_html_renderer,
-    ?LoginFinalizer $loginFinalizer = NULL,
+    protected LoginFinalizer $loginFinalizer,
   ) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
     $this->userAuth = $user_auth;
     $this->renderer = $renderer;
     $this->bareHtmlPageRenderer = $bare_html_renderer;
-    if ($loginFinalizer === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $loginFinalizer argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $loginFinalizer = \Drupal::service(LoginFinalizer::class);
-    }
-    $this->loginFinalizer = $loginFinalizer;
   }
 
   /**

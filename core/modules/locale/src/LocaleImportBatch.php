@@ -37,12 +37,8 @@ class LocaleImportBatch {
      */
     #[AutowireServiceClosure('logger.channel.locale')]
     protected readonly \Closure $logger,
-    protected ?LocaleJs $localeJs,
+    protected LocaleJs $localeJs,
   ) {
-    if ($this->localeJs === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $localeJs argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3619103', E_USER_DEPRECATED);
-      $this->localeJs = \Drupal::service(LocaleJs::class);
-    }
   }
 
   /**

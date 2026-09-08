@@ -41,14 +41,10 @@ class FilterUrl extends FilterBase implements ContainerFactoryPluginInterface {
     $plugin_id,
     $plugin_definition,
     #[Autowire(param: 'filter_protocols')]
-    ?array $filter_protocols = NULL,
+    array $filter_protocols,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    if ($filter_protocols === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $filter_protocols argument is deprecated in drupal:11.4.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
-      $filter_protocols = \Drupal::getContainer()->getParameter('filter_protocols');
-    }
     $this->filterProtocols = $filter_protocols;
   }
 

@@ -39,28 +39,14 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
    */
   protected $entity;
 
-  /**
-   * The user notification handler.
-   */
-  protected NotificationHandler $notificationHandler;
-
   public function __construct(
     EntityRepositoryInterface $entity_repository,
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     TimeInterface $time,
-    ?NotificationHandler $notification_handler = NULL,
-    protected ?AccountCancellation $accountCancellation = NULL,
+    protected NotificationHandler $notificationHandler,
+    protected AccountCancellation $accountCancellation,
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
-    if ($notification_handler === NULL) {
-      @trigger_error('Calling ' . __CLASS__ . ' constructor without the $notificationHandler argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3539363', E_USER_DEPRECATED);
-    }
-    $this->notificationHandler = $notification_handler ?? \Drupal::service(NotificationHandler::class);
-    if ($accountCancellation === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $accountCancellation argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3620934', E_USER_DEPRECATED);
-      $accountCancellation = \Drupal::service(AccountCancellation::class);
-    }
-    $this->accountCancellation = $accountCancellation;
   }
 
   /**

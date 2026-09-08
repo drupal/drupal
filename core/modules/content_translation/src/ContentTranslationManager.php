@@ -19,17 +19,9 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
-    protected ?AccountProxyInterface $currentUser = NULL,
-    protected ?LanguageManagerInterface $languageManager = NULL,
+    protected AccountProxyInterface $currentUser,
+    protected LanguageManagerInterface $languageManager,
   ) {
-    if (!$this->currentUser) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $currentUser argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3567484', E_USER_DEPRECATED);
-      $this->currentUser = \Drupal::currentUser();
-    }
-    if (!$this->languageManager) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $languageManager argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3567484', E_USER_DEPRECATED);
-      $this->languageManager = \Drupal::languageManager();
-    }
   }
 
   /**

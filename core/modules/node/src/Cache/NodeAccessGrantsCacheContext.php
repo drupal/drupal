@@ -23,22 +23,12 @@ use Drupal\node\NodeGrantsHelper;
  */
 class NodeAccessGrantsCacheContext extends UserCacheContextBase implements CalculatedCacheContextInterface {
 
-  /**
-   * The node grants helper service.
-   */
-  protected NodeGrantsHelper $nodeGrantsHelper;
-
   public function __construct(
     AccountInterface $user,
     protected EntityTypeManagerInterface $entityTypeManager,
-    ?NodeGrantsHelper $nodeGrantsHelper = NULL,
+    protected NodeGrantsHelper $nodeGrantsHelper,
   ) {
     parent::__construct($user);
-    if (!$nodeGrantsHelper) {
-      @trigger_error('Calling NodeAccessGrantsCacheContext::__construct() without the $nodeGrantsHelper argument is deprecated in drupal:11.4.0 and the $nodeGrantsHelper argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3578055', E_USER_DEPRECATED);
-      $nodeGrantsHelper = \Drupal::service(NodeGrantsHelper::class);
-    }
-    $this->nodeGrantsHelper = $nodeGrantsHelper;
   }
 
   /**
