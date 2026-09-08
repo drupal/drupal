@@ -166,44 +166,6 @@ class ViewsData {
   }
 
   /**
-   * Gets data from the cache backend.
-   *
-   * @param string $cid
-   *   The cache ID to return.
-   *
-   * @return mixed
-   *   The cached data.
-   *
-   * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no
-   * replacement.
-   * @see https://www.drupal.org/project/drupal/issues/3587797
-   */
-  protected function cacheGet($cid) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3587797', E_USER_DEPRECATED);
-    return $this->cacheBackend->get($this->prepareCid($cid));
-  }
-
-  /**
-   * Sets data to the cache backend.
-   *
-   * @param string $cid
-   *   The cache ID to set.
-   * @param mixed $data
-   *   The data that will be cached.
-   *
-   * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no
-   * replacement.
-   * @see https://www.drupal.org/project/drupal/issues/3587797
-   */
-  protected function cacheSet($cid, $data) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/3587797', E_USER_DEPRECATED);
-    return $this->cacheBackend->set($this->prepareCid($cid), $data, Cache::PERMANENT, [
-      'views_data',
-      'config:core.extension',
-    ]);
-  }
-
-  /**
    * Prepares the cache ID by appending a language code.
    *
    * @param string $cid

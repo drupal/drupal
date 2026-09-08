@@ -7,7 +7,6 @@ namespace Drupal\Tests\system\Functional\System;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -150,41 +149,6 @@ class AdminTest extends BrowserTestBase {
       ['callable' => 'menu.default_tree_manipulators:flatten'],
     ];
     return $menu_tree->transform($tree, $manipulators);
-  }
-
-  /**
-   * Tests compact mode.
-   */
-  #[IgnoreDeprecations]
-  public function testCompactMode(): void {
-    $session = $this->getSession();
-
-    // The front page defaults to 'user/login', which redirects to 'user/{user}'
-    // for authenticated users. We cannot use '<front>', since this does not
-    // match the redirected URL.
-    $frontpage_url = 'user/' . $this->adminUser->id();
-
-    $this->drupalGet('admin/compact/on');
-    $this->assertSession()->statusCodeEquals(200);
-    // Verify that the user is redirected to the front page after turning on
-    // compact mode.
-    $this->assertSession()->addressEquals($frontpage_url);
-    $this->assertEquals('1', $session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode turns on.');
-    $this->drupalGet('admin/compact/on');
-    $this->assertEquals('1', $session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode remains on after a repeat call.');
-    $this->drupalGet('');
-    $this->assertEquals('1', $session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode persists on new requests.');
-
-    $this->drupalGet('admin/compact/off');
-    $this->assertSession()->statusCodeEquals(200);
-    // Verify that the user is redirected to the front page after turning off
-    // compact mode.
-    $this->assertSession()->addressEquals($frontpage_url);
-    $this->assertNull($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode turns off.');
-    $this->drupalGet('admin/compact/off');
-    $this->assertNull($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode remains off after a repeat call.');
-    $this->drupalGet('');
-    $this->assertNull($session->getCookie('Drupal.visitor.admin_compact_mode'), 'Compact mode persists off new requests.');
   }
 
   /**

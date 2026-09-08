@@ -180,23 +180,6 @@ class ServerCommand extends Command {
   }
 
   /**
-   * Gets a one time login URL for user 1.
-   *
-   * @return string
-   *   The one time login URL for user 1.
-   *
-   * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
-   *   replacement.
-   * @see https://www.drupal.org/node/3581062
-   */
-  protected function getOneTimeLoginUrl() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
-    $user = User::load(1);
-    \Drupal::moduleHandler()->load('user');
-    return user_pass_reset_url($user);
-  }
-
-  /**
    * Starts up a webserver with a running Drupal.
    *
    * @param string $host

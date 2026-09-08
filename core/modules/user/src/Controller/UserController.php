@@ -356,30 +356,6 @@ class UserController extends ControllerBase {
   }
 
   /**
-   * Validates hash and timestamp.
-   *
-   * @param \Drupal\user\UserInterface $user
-   *   User requesting reset.
-   * @param int $timestamp
-   *   The timestamp.
-   * @param string $hash
-   *   Login link hash.
-   * @param int $timeout
-   *   Link expiration timeout.
-   *
-   * @return bool
-   *   Whether the provided data are valid.
-   *
-   * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
-   *   \Drupal\user\OneTimeAuthentication::verifyHmac() instead.
-   * @see https://www.drupal.org/node/3581062
-   */
-  protected function validatePathParameters(UserInterface $user, int $timestamp, string $hash, int $timeout = 0): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\user\OneTimeAuthentication::verifyHmac() instead. See https://www.drupal.org/node/3581062', E_USER_DEPRECATED);
-    return $this->oneTimeAuthentication->verifyHmac($user, $timestamp, $hash, $timeout);
-  }
-
-  /**
    * Redirects users to their profile page.
    *
    * This controller assumes that it is only invoked for authenticated users.

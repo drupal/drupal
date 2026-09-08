@@ -5432,12 +5432,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorage\\:\\:loadFromSharedTables\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorage\\:\\:onBundleCreate\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -30784,12 +30778,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/Views.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views\\\\ViewsData\\:\\:cacheSet\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/ViewsData.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views\\\\ViewsData\\:\\:clear\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -33374,6 +33362,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/themes/olivero/src/OliveroPreRender.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Core\\\\Installer\\\\InstallerRouteBuilder\\:\\:getRouteDefinitions\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Installer/InstallerRouteBuilder.php',
 ];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];
