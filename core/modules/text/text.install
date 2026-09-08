@@ -12,11 +12,10 @@ function text_update_11001(): void {
   if (\Drupal::moduleHandler()->moduleExists('text_with_summary')) {
     return;
   }
-  $storage_ids = \Drupal::entityQuery('field_storage_config')
-    ->accessCheck(FALSE)
-    ->condition('type', 'text_with_summary')
-    ->execute();
-  if ($storage_ids !== []) {
+  $storages = \Drupal::entityTypeManager()
+    ->getStorage('field_storage_config')
+    ->loadByProperties(['type' => 'text_with_summary']);
+  if ($storages !== []) {
     \Drupal::service('module_installer')->install(['text_with_summary']);
   }
 }
