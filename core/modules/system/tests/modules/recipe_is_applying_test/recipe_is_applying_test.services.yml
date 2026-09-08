@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+  recipe_is_applying_test.event_subscriber:
+    class: Drupal\recipe_is_applying_test\EventSubscriber\RecipeIsApplyingTestSubscriber

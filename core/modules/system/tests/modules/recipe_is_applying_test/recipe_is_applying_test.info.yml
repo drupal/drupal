@@ -1,0 +1,5 @@
+name: 'Recipe isApplying test'
+type: module
+description: 'Records the value of RecipeRunner::isApplying() during recipe application.'
+package: Testing
+version: VERSION
