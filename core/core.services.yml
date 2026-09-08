@@ -1102,7 +1102,7 @@ services:
       - { name: string_translator, priority: 30 }
   string_translation:
     class: Drupal\Core\StringTranslation\TranslationManager
-    arguments: ['@language.default']
+    autowire: true
     tags:
       - { name: service_collector, tag: string_translator, call: addTranslator }
   Drupal\Core\StringTranslation\TranslationInterface: '@string_translation'

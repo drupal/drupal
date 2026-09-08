@@ -3,7 +3,16 @@
 namespace Drupal\locale;
 
 /**
- * An interface for a service providing plural formulae.
+ * An interface for a service providing plural formulas.
+ *
+ * The formula comes from the gettext GNU specification.
+ * At the top of each translation po file the number of plurals and the formula
+ * is defined.
+ * For Polish nplurals=3;
+ * phpcs:ignore Drupal.Files.LineLength
+ * plural=((n==1)?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n
+ *
+ * @see https://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html
  */
 interface PluralFormulaInterface {
 

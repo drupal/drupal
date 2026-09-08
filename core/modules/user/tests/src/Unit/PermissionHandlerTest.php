@@ -7,9 +7,6 @@ namespace Drupal\Tests\user\Unit;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\PermissionHandler;
@@ -42,13 +39,6 @@ class PermissionHandlerTest extends UnitTestCase {
   protected ModuleHandlerInterface&MockObject $moduleHandler;
 
   /**
-   * The mocked string translation.
-   *
-   * @var \Drupal\Tests\user\Unit\TestTranslationManager
-   */
-  protected $stringTranslation;
-
-  /**
    * The mocked callable resolver.
    */
   protected CallableResolver&MockObject $callableResolver;
@@ -59,7 +49,6 @@ class PermissionHandlerTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->stringTranslation = new TestTranslationManager();
     $this->callableResolver = $this->createMock('Drupal\Core\Utility\CallableResolver');
   }
 
@@ -134,7 +123,7 @@ EOF
 
     $module_extension_list = $this->createStub(ModuleExtensionList::class);
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
+    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->getStringTranslationStub(), $this->callableResolver, $module_extension_list);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -199,7 +188,7 @@ EOF
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
-    $permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
+    $permissionHandler = new PermissionHandler($this->moduleHandler, $this->getStringTranslationStub(), $this->callableResolver, $module_extension_list);
     $actual_permissions = $permissionHandler->getPermissions();
     $this->assertEquals(['access_module_a4', 'access_module_a1', 'access_module_a2', 'access_module_a3'],
       array_keys($actual_permissions));
@@ -276,7 +265,7 @@ EOF
 
     $module_extension_list = $this->createStub(ModuleExtensionList::class);
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
+    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->getStringTranslationStub(), $this->callableResolver, $module_extension_list);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -321,7 +310,7 @@ EOF
 
     $module_extension_list = $this->createStub(ModuleExtensionList::class);
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
+    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->getStringTranslationStub(), $this->callableResolver, $module_extension_list);
 
     $actual_permissions = $this->permissionHandler->getPermissions();
 
@@ -405,35 +394,6 @@ class TestPermissionCallbacks {
         'provider' => 'module_a',
       ],
     ];
-  }
-
-}
-
-/**
- * Implements a translation manager in tests.
- */
-class TestTranslationManager implements TranslationInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function translate($string, array $args = [], array $options = []): TranslatableMarkup {
-    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
-    return new TranslatableMarkup($string, $args, $options, $this);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function translateString(TranslatableMarkup $translated_string) {
-    return $translated_string->getUntranslatedString();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function formatPlural($count, $singular, $plural, array $args = [], array $options = []): PluralTranslatableMarkup {
-    return new PluralTranslatableMarkup($count, $singular, $plural, $args, $options, $this);
   }
 
 }
