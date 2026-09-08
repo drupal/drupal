@@ -1,0 +1,16 @@
+_meta:
+  version: '1.0'
+  entity_type: entity_test
+  uuid: 290a8baa-837f-4a81-8a37-1c54ae407080
+  bundle: entity_test
+  default_langcode: en
+default:
+  name:
+    -
+      value: 'Created by the Recipe isApplying test recipe'
+  user_id:
+    -
+      target_id: 1
+  langcode:
+    -
+      value: en

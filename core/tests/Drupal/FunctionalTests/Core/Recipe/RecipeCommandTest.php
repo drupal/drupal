@@ -85,6 +85,34 @@ class RecipeCommandTest extends BrowserTestBase {
   }
 
   /**
+   * Tests the isApplying flag when a recipe is applied via a batch.
+   */
+  public function testIsApplyingDuringBatch(): void {
+    // The default content importer needs an administrative account to import
+    // the content as.
+    $this->drupalCreateUser(admin: TRUE);
+
+    $this->applyRecipe('core/tests/fixtures/recipes/recipe_is_applying_test');
+
+    // Prove that the recipe did what it is expected to do.
+    $this->assertTrue(\Drupal::moduleHandler()->moduleExists('recipe_is_applying_test'));
+    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('test_base_theme'));
+    $this->assertSame('Only in the recipe', $this->config('recipe_is_applying_test.settings')->get('recipe'));
+    $entity = \Drupal::service('entity.repository')->loadEntityByUuid('entity_test', '290a8baa-837f-4a81-8a37-1c54ae407080');
+    $this->assertNotNull($entity);
+
+    // The recipe_is_applying_test module records the value of
+    // RecipeRunner::isApplying() in a key value collection as each batch
+    // operation runs.
+    $key_value = \Drupal::keyValue('recipe_is_applying_test');
+    $this->assertTrue($key_value->get('modules_installed'), 'RecipeRunner::isApplying() returned TRUE during hook_modules_installed()');
+    $this->assertTrue($key_value->get('themes_installed'), 'RecipeRunner::isApplying() returned TRUE during hook_themes_installed()');
+    $this->assertTrue($key_value->get('config_save'), 'RecipeRunner::isApplying() returned TRUE while saving recipe-provided configuration');
+    $this->assertTrue($key_value->get('entity_test_insert'), 'RecipeRunner::isApplying() returned TRUE while creating recipe-provided content');
+    $this->assertFalse($key_value->get('recipe_applied_event'), 'RecipeRunner::isApplying() returned FALSE while triggering the recipe-applied event');
+  }
+
+  /**
    * Tests that errors during config rollback won't steamroll validation errors.
    */
   public function testExceptionOnRollback(): void {
