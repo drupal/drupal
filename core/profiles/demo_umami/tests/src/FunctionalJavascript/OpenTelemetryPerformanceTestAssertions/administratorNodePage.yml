@@ -1,18 +1,18 @@
-QueryCount: 266
-CacheGetCount: 262
+QueryCount: 264
+CacheGetCount: 259
 CacheGetCountByBin:
   config: 55
   bootstrap: 15
   discovery: 86
-  data: 14
+  data: 13
   entity: 24
   dynamic_page_cache: 1
   default: 8
-  routes: 18
+  routes: 16
   render: 17
   file_parsing: 2
   menu: 22
-CacheSetCount: 270
+CacheSetCount: 267
 CacheDeleteCount: 0
 CacheTagInvalidationCount: 0
 CacheTagLookupQueryCount: 30
@@ -87,6 +87,16 @@ CacheTagGroupedLookups:
   -
     - 'config:system.menu.'
   -
+    - 'config:navigation.block_layout'
+    - 'config:navigation.settings'
+    - 'config:node_type_list'
+  -
+    - 'config:system.menu.navigation-user-links'
+  -
+    - 'config:user.role.authenticated'
+    - 'config:user.role.test_admin'
+    - 'user:11'
+  -
     - 'config:system.menu.account'
   -
     - 'config:system.site'
@@ -113,16 +123,6 @@ CacheTagGroupedLookups:
     - 'taxonomy_term:9'
     - taxonomy_term_list
   -
-    - 'config:navigation.block_layout'
-    - 'config:navigation.settings'
-    - 'config:node_type_list'
-  -
-    - 'config:system.menu.navigation-user-links'
-  -
-    - 'config:user.role.authenticated'
-    - 'config:user.role.test_admin'
-    - 'user:11'
-  -
     - 'config:image.style.medium_8_7'
     - 'file:37'
     - 'media:19'
@@ -130,5 +130,5 @@ CacheTagGroupedLookups:
     - block_content_view
 ScriptCount: 12
 ScriptBytes: 187160
-StylesheetCount: 12
+StylesheetCount: 11
 StylesheetBytes: 73614
