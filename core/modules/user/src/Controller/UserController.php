@@ -10,6 +10,7 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\user\AccountCancellation;
 use Drupal\user\Form\UserPasswordResetForm;
 use Drupal\user\OneTimeAuthentication;
 use Drupal\user\UserDataInterface;
@@ -79,6 +80,11 @@ class UserController extends ControllerBase {
    */
   protected LogoutFinalizer $logoutFinalizer;
 
+  /**
+   * The account cancellation service.
+   */
+  protected AccountCancellation $accountCancellation;
+
   public function __construct(
     DateFormatterInterface $date_formatter,
     UserStorageInterface $user_storage,
@@ -89,6 +95,7 @@ class UserController extends ControllerBase {
     ?OneTimeAuthentication $one_time_authentication = NULL,
     ?LoginFinalizer $loginFinalizer = NULL,
     ?LogoutFinalizer $logoutFinalizer = NULL,
+    ?AccountCancellation $accountCancellation = NULL,
   ) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
@@ -109,6 +116,11 @@ class UserController extends ControllerBase {
       $logoutFinalizer = \Drupal::service(LogoutFinalizer::class);
     }
     $this->logoutFinalizer = $logoutFinalizer;
+    if ($accountCancellation === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $accountCancellation argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3620934', E_USER_DEPRECATED);
+      $accountCancellation = \Drupal::service(AccountCancellation::class);
+    }
+    $this->accountCancellation = $accountCancellation;
   }
 
   /**
@@ -125,6 +137,7 @@ class UserController extends ControllerBase {
       $container->get(OneTimeAuthentication::class),
       $container->get(LoginFinalizer::class),
       $container->get(LogoutFinalizer::class),
+      $container->get(AccountCancellation::class),
     );
   }
 
@@ -524,7 +537,7 @@ class UserController extends ControllerBase {
         $edit = [
           'user_cancel_notify' => $account_data['cancel_notify'] ?? $this->config('user.settings')->get('notify.status_canceled'),
         ];
-        user_cancel($edit, $user->id(), $account_data['cancel_method']);
+        $this->accountCancellation->cancel($edit, $user->id(), $account_data['cancel_method']);
         // Since user_cancel() is not invoked via Form API, batch processing
         // needs to be invoked manually and should redirect to the front page
         // after completion.

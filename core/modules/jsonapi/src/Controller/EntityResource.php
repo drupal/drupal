@@ -57,6 +57,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
+use Drupal\user\AccountCancellation;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
@@ -187,8 +188,24 @@ class EntityResource {
    *   The current user account.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
+   * @param \Drupal\user\AccountCancellation $accountCancellation
+   *   The account cancellation service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user, ?EventDispatcherInterface $event_dispatcher = NULL) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    EntityFieldManagerInterface $field_manager,
+    ResourceTypeRepositoryInterface $resource_type_repository,
+    RendererInterface $renderer,
+    EntityRepositoryInterface $entity_repository,
+    IncludeResolver $include_resolver,
+    EntityAccessChecker $entity_access_checker,
+    FieldResolver $field_resolver,
+    SerializerInterface $serializer,
+    TimeInterface $time,
+    AccountInterface $user,
+    ?EventDispatcherInterface $event_dispatcher = NULL,
+    protected ?AccountCancellation $accountCancellation = NULL,
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldManager = $field_manager;
     $this->resourceTypeRepository = $resource_type_repository;
@@ -206,6 +223,11 @@ class EntityResource {
       $event_dispatcher = \Drupal::service('event_dispatcher');
     }
     $this->eventDispatcher = $event_dispatcher;
+    if ($accountCancellation === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $accountCancellation argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3620934', E_USER_DEPRECATED);
+      $accountCancellation = \Drupal::service(AccountCancellation::class);
+    }
+    $this->accountCancellation = $accountCancellation;
   }
 
   /**
@@ -392,9 +414,9 @@ class EntityResource {
 
       // Allow other modules to act.
 
-      user_cancel([], $entity->id(), $cancel_method);
-      // Since user_cancel() is not invoked via Form API, batch processing
-      // needs to be invoked manually.
+      $this->accountCancellation->cancel([], $entity->id(), $cancel_method);
+      // Since AccountCancellation::cancel() is not invoked via Form API, batch
+      // processing needs to be invoked manually.
       $batch =& batch_get();
       // Mark this batch as non-progressive to bypass the progress bar and
       // redirect.

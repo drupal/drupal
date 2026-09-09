@@ -203,6 +203,7 @@ services:
       - '@datetime.time'
       - '@current_user'
       - '@event_dispatcher'
+      - '@Drupal\user\AccountCancellation'
   Drupal\jsonapi\Controller\EntityResource: '@jsonapi.entity_resource'
   jsonapi.file_upload:
     class: Drupal\jsonapi\Controller\FileUpload

@@ -89,3 +89,5 @@ services:
     autowire: true
   Drupal\user\LogoutFinalizer:
     autowire: true
+  Drupal\user\AccountCancellation:
+    autowire: true
