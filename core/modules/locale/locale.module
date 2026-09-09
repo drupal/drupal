@@ -244,8 +244,14 @@ function locale_translatable_language_list() {
  *   The numeric index of the plural variant to use for this $langcode and
  *   $count combination or -1 if the language was not found or does not have a
  *   plural formula.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3590542
  */
 function locale_get_plural($count, $langcode = NULL) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3590542', E_USER_DEPRECATED);
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   // Used to store precomputed plural indexes corresponding to numbers

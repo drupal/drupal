@@ -99,9 +99,6 @@ class HistoryCommentLinkBuilderTest extends UnitTestCase {
     $this->commentManager->expects($this->any())
       ->method('forbiddenMessage')
       ->willReturn("Can't let you do that Dave.");
-    $this->stringTranslation->expects($this->any())
-      ->method('formatPlural')
-      ->willReturnArgument(1);
   }
 
   /**

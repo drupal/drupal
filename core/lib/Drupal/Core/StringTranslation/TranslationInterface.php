@@ -109,4 +109,22 @@ interface TranslationInterface {
    */
   public function formatPlural($count, $singular, $plural, array $args = [], array $options = []);
 
+  /**
+   * Selects the plural form for a given count.
+   *
+   * @param int|float $count
+   *   The item count to display.
+   * @param string $string
+   *   The translated string with plural forms delimited by PoItem::DELIMITER.
+   * @param string|null $langcode
+   *   The language code to translate to. If it is NULL then the current
+   *   language will be used.
+   *
+   * @return string
+   *   The plural form to use.
+   *
+   * @see \Drupal\Core\StringTranslation\TranslationManager::doTranslate()
+   */
+  public function selectPluralForm(int|float $count, string $string, ?string $langcode = NULL): string;
+
 }
