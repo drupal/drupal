@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\Menu;
+namespace Drupal\Tests\olivero\Functional;
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\Url;
@@ -10,6 +10,7 @@ use Drupal\filter\FilterFormatRepositoryInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
+use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
@@ -40,7 +41,7 @@ class BreadcrumbTest extends BrowserTestBase {
     'field_ui',
     'filter_test',
     'menu_test',
-    'stark_test',
+    'olivero_test',
   ];
 
   /**
@@ -58,14 +59,9 @@ class BreadcrumbTest extends BrowserTestBase {
   protected $webUser;
 
   /**
-   * Breadcrumb block ID.
-   */
-  protected string $breadcrumbBlockId;
-
-  /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected $defaultTheme = 'olivero';
 
   /**
    * {@inheritdoc}
@@ -84,22 +80,16 @@ class BreadcrumbTest extends BrowserTestBase {
     $this->adminUser = $this->drupalCreateUser($perms);
     $this->drupalLogin($this->adminUser);
 
-    $block = $this->drupalPlaceBlock('system_breadcrumb_block', [
-      'region' => 'content',
-      'theme' => 'stark',
-    ]);
-    $this->breadcrumbBlockId = $block->id();
-
     // This test puts menu links in the Tools menu and then tests for their
     // presence on the page, so we need to ensure that the Tools block will be
-    // displayed in the Admin theme and Stark.
+    // displayed in the admin theme and olivero.
     $this->drupalPlaceBlock('system_menu_block:tools', [
       'region' => 'content',
       'theme' => $this->config('system.theme')->get('admin'),
     ]);
     $this->drupalPlaceBlock('system_menu_block:tools', [
       'region' => 'content',
-      'theme' => 'stark',
+      'theme' => 'olivero',
     ]);
   }
 
@@ -329,7 +319,7 @@ class BreadcrumbTest extends BrowserTestBase {
       // untranslated menu links automatically generated from menu router items
       // ('taxonomy/term/%') should never be translated and appear in any menu
       // other than the breadcrumb trail.
-      $this->assertSession()->elementsCount('xpath', '//nav[contains(@id, "block-stark-tools")]/descendant::a[@href="' . Url::fromUri('base:' . $link_path)->toString() . '"]', 1);
+      $this->assertSession()->elementsCount('xpath', '//nav[contains(@class, "menu--tools")]/descendant::a[@href="' . Url::fromUri('base:' . $link_path)->toString() . '"]', 1);
 
       // Next iteration should expect this tag as parent link.
       // Note: Term name, not link name, due to taxonomy_term_page().
@@ -458,7 +448,7 @@ class BreadcrumbTest extends BrowserTestBase {
 
     // Remove the breadcrumb block to test the trait when breadcrumbs are not
     // shown.
-    Block::load($this->breadcrumbBlockId)->delete();
+    Block::load('olivero_breadcrumbs')->delete();
 
     // If there is no trail, this should pass as there is no breadcrumb.
     $this->assertBreadcrumb('menu-test/breadcrumb1', []);

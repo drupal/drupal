@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_multiple_value_form_field
+    - node.type.article
+id: node.article.field_multiple_value_form_field
+field_name: field_multiple_value_form_field
+entity_type: node
+bundle: article
+label: 'Multiple Value Form Field'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
