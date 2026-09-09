@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\workspaces_ui;
+namespace Drupal\toolbar;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Render\ElementInfoManagerInterface;
@@ -12,16 +12,20 @@ use Drupal\Core\Url;
 use Drupal\workspaces\WorkspaceManagerInterface;
 
 /**
- * Defines a service for workspaces #lazy_builder callbacks.
+ * Fills out the placeholder generated in ToolbarHooks::workspacesUiToolbar().
+ *
+ * The service is always registered, but the workspace manager it depends on
+ * only exists when the Workspaces module is installed, which is also the only
+ * situation in which the toolbar adds the workspaces tab.
  *
  * @internal
  */
-final class WorkspacesUiLazyBuilders implements TrustedCallbackInterface {
+final class WorkspacesUiToolbarLinkBuilder implements TrustedCallbackInterface {
 
   use StringTranslationTrait;
 
   public function __construct(
-    protected readonly WorkspaceManagerInterface $workspaceManager,
+    protected readonly ?WorkspaceManagerInterface $workspaceManager,
     protected readonly ElementInfoManagerInterface $elementInfo,
   ) {}
 
@@ -56,7 +60,7 @@ final class WorkspacesUiLazyBuilders implements TrustedCallbackInterface {
         ]),
       ],
       '#attached' => [
-        'library' => ['workspaces_ui/drupal.workspaces_ui.toolbar'],
+        'library' => ['toolbar/toolbar.workspaces_ui'],
       ],
       '#cache' => [
         'max-age' => 0,

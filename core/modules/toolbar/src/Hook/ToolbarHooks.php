@@ -389,7 +389,7 @@ class ToolbarHooks {
     $items['workspace'] += [
       '#type' => 'toolbar_item',
       'tab' => [
-        '#lazy_builder' => ['workspaces_ui.lazy_builders:renderToolbarTab', []],
+        '#lazy_builder' => ['toolbar.workspaces_ui_link_builder:renderToolbarTab', []],
         '#create_placeholder' => TRUE,
         '#lazy_builder_preview' => [
           '#type' => 'link',
@@ -418,7 +418,7 @@ class ToolbarHooks {
     // render callback to remove the #attributes property. We start by adding
     // the defaults, and then we append our own pre render callback.
     $items['workspace'] += \Drupal::service('plugin.manager.element_info')->getInfo('toolbar_item');
-    $items['workspace']['#pre_render'][] = 'workspaces_ui.lazy_builders:removeTabAttributes';
+    $items['workspace']['#pre_render'][] = 'toolbar.workspaces_ui_link_builder:removeTabAttributes';
 
     return $items;
   }

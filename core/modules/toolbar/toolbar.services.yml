@@ -17,3 +17,8 @@ services:
       - { name: page_cache_request_policy }
   toolbar.menu_tree:
     class: Drupal\toolbar\Menu\ToolbarMenuLinkTree
+  toolbar.workspaces_ui_link_builder:
+    class: Drupal\toolbar\WorkspacesUiToolbarLinkBuilder
+    # Only used when Workspaces UI is installed, which provides the manager.
+    arguments: ['@?workspaces.manager', '@plugin.manager.element_info']
+  Drupal\toolbar\WorkspacesUiToolbarLinkBuilder: '@toolbar.workspaces_ui_link_builder'
