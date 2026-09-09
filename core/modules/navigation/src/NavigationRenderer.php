@@ -86,6 +86,11 @@ final class NavigationRenderer {
       ],
       '#lazy_builder' => ['navigation.renderer:doBuildNavigation', []],
       '#create_placeholder' => TRUE,
+      // Prevent this placeholder being handled by Big Pipe.
+      // @todo remove in https://www.drupal.org/project/drupal/issues/3505610
+      '#placeholder_strategy_denylist' => [
+        BigPipeStrategy::class => TRUE,
+      ],
     ];
   }
 
