@@ -13,4 +13,4 @@ install:
   - nightwatch_theme_install_utility
 themes:
   - claro
-  - olivero
+  - stark

@@ -5,7 +5,7 @@ const a11yThemeTest = {
 
   before(browser) {
     browser.drupalInstall({ installProfile: 'nightwatch_a11y_testing' });
-    // If the default theme is set to something other than Olivero, install it.
+    // If the default theme isn't the configured default, then install it.
     if (
       argv.defaultTheme &&
       argv.defaultTheme !== browser.globals.defaultTheme
