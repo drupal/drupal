@@ -57,3 +57,11 @@ toolbar.anti-flicker:
   header: true
   js:
     js/toolbar.anti-flicker.js: {}
+
+toolbar.workspaces_ui:
+  version: VERSION
+  css:
+    theme:
+      css/toolbar.workspaces_ui.css: {}
+  dependencies:
+    - workspaces_ui/drupal.workspaces_ui.off-canvas

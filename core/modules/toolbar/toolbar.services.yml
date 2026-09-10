@@ -17,3 +17,8 @@ services:
   toolbar.menu_tree:
     class: Drupal\toolbar\Menu\ToolbarMenuLinkTree
     arguments: ['@menu.tree_storage', '@plugin.manager.menu.link', '@router.route_provider', '@menu.active_trail', '@callable_resolver']
+  toolbar.workspaces_ui_link_builder:
+    class: Drupal\toolbar\WorkspacesUiToolbarLinkBuilder
+    # Only used when Workspaces UI is installed, which provides the manager.
+    arguments: ['@?workspaces.manager', '@plugin.manager.element_info']
+  Drupal\toolbar\WorkspacesUiToolbarLinkBuilder: '@toolbar.workspaces_ui_link_builder'

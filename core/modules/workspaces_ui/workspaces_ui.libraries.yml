@@ -3,13 +3,6 @@ drupal.workspaces_ui.off-canvas:
   css:
     theme:
       css/workspaces.off-canvas.css: {}
-drupal.workspaces_ui.toolbar:
-  version: VERSION
-  css:
-    theme:
-      css/workspaces.toolbar.css: {}
-  dependencies:
-    - workspaces_ui/drupal.workspaces_ui.off-canvas
 drupal.workspaces_ui.overview:
   version: VERSION
   css:
