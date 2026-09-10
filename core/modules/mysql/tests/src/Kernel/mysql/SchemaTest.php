@@ -9,6 +9,7 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Exception\SchemaTableColumnSizeTooLargeException;
 use Drupal\Core\Database\Exception\SchemaTableKeyTooLargeException;
 use Drupal\Core\Database\SchemaException;
+use Drupal\Core\Database\SchemaDefinition\GeneratedColumnStorage;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
@@ -33,6 +34,24 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     $max_length = $column ? 255 : 60;
     $description = Unicode::truncate($description, $max_length, TRUE, TRUE);
     $this->assertSame($description, $comment, 'The comment matches the schema description.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function checkGeneratedColumnStorage(GeneratedColumnStorage $storage, string $table, string $column): void {
+    $getPrefixInfo = new \ReflectionMethod(get_class($this->schema), 'getPrefixInfo');
+    $info = $getPrefixInfo->invoke($this->schema, $table);
+    $extra = $this->connection->query('SELECT [extra] FROM [information_schema].[columns] WHERE [table_schema] = :schema AND [table_name] = :table AND [column_name] = :column', [
+      ':schema' => $info['database'],
+      ':table' => $info['table'],
+      ':column' => $column,
+    ])->fetchField();
+    $expected = match ($storage) {
+      GeneratedColumnStorage::Virtual => 'VIRTUAL GENERATED',
+      GeneratedColumnStorage::Stored => 'STORED GENERATED',
+    };
+    $this->assertSame($expected, $extra);
   }
 
   /**

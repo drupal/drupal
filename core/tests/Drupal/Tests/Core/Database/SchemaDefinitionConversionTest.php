@@ -6,7 +6,9 @@ namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\SchemaDefinition\Column;
 use Drupal\Core\Database\SchemaDefinition\ColumnSize;
-
+use Drupal\Core\Database\SchemaDefinition\ColumnType;
+use Drupal\Core\Database\SchemaDefinition\GeneratedColumnExpression;
+use Drupal\Core\Database\SchemaDefinition\GeneratedColumnStorage;
 use Drupal\Core\Database\SchemaDefinition\ForeignKey;
 use Drupal\Core\Database\SchemaDefinition\Index;
 use Drupal\Core\Database\SchemaDefinition\IntValue;
@@ -57,6 +59,19 @@ class SchemaDefinitionConversionTest extends UnitTestCase {
           'unsigned' => TRUE,
           'not null' => TRUE,
           'default' => 0,
+        ],
+        'double_age' => [
+          'description' => "The person's age X 2",
+          'type' => 'int',
+          'generated' => Column::generated(
+            name: 'double_age',
+            type: ColumnType::Int,
+            description: "The person's age X 2",
+            storage: GeneratedColumnStorage::Virtual,
+            expression: new GeneratedColumnExpression('[age] * 2'),
+            dbSpecificExtra: ['pgsql' => ['pgsql_type' => 'bigint']],
+          ),
+          'pgsql_type' => 'bigint',
         ],
         'job' => [
           'description' => "The person's job",
@@ -116,6 +131,14 @@ class SchemaDefinitionConversionTest extends UnitTestCase {
           unsigned: TRUE,
           notNull: TRUE,
           default: new IntValue(0),
+        ),
+        Column::generated(
+          name: 'double_age',
+          type: ColumnType::Int,
+          description: "The person's age X 2",
+          storage: GeneratedColumnStorage::Virtual,
+          expression: new GeneratedColumnExpression('[age] * 2'),
+          dbSpecificExtra: ['pgsql' => ['pgsql_type' => 'bigint']],
         ),
         Column::varchar(
           name: 'job',

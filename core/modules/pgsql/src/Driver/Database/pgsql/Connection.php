@@ -478,6 +478,13 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
+  public function supportsVirtualGeneratedColumns(): bool {
+    return version_compare($this->version(), '18', '>=');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function exceptionHandler() {
     return new ExceptionHandler();
   }

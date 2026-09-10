@@ -1235,6 +1235,21 @@ abstract class Connection {
   }
 
   /**
+   * Determines if this connection supports virtual generated columns.
+   *
+   * @internal
+   *   Only meant to be used by database drivers and their tests.
+   *
+   * @return bool
+   *   TRUE if generated columns can use
+   *   \Drupal\Core\Database\SchemaDefinition\GeneratedColumnStorage::Virtual,
+   *   FALSE if only GeneratedColumnStorage::Stored is available.
+   */
+  public function supportsVirtualGeneratedColumns(): bool {
+    return TRUE;
+  }
+
+  /**
    * Returns the name of the database engine accessed by this driver.
    *
    * @return string

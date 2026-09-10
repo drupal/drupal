@@ -59,6 +59,10 @@ final class Column implements SchemaDefinitionInterface {
    *   has no effect on other database types for which case sensitivity is
    *   already the default behavior. If NULL, it is not specified. Defaults to
    *   NULL.
+   * @param ?GeneratedColumnStorage $generatedStorage
+   *   The storage strategy for a generated column (VIRTUAL or STORED).
+   * @param ?GeneratedColumnExpression $generatedExpression
+   *   The expression for a generated column.
    * @param array<string,array<string,mixed>>|null $dbSpecificExtra
    *   (Optional) If you need to use a column type not included in the
    *   officially supported list of types above, you can specify a type for
@@ -69,6 +73,8 @@ final class Column implements SchemaDefinitionInterface {
    *
    * @see \Drupal\Core\Database\SchemaDefinition\ColumnType
    * @see \Drupal\Core\Database\SchemaDefinition\ColumnSize
+   * @see \Drupal\Core\Database\SchemaDefinition\GeneratedColumnExpression
+   * @see \Drupal\Core\Database\SchemaDefinition\GeneratedColumnStorage
    */
   private function __construct(
     public readonly string $name,
@@ -83,6 +89,8 @@ final class Column implements SchemaDefinitionInterface {
     public readonly ?int $precision = NULL,
     public readonly ?int $scale = NULL,
     public readonly ?bool $binary = NULL,
+    public readonly ?GeneratedColumnStorage $generatedStorage = NULL,
+    public readonly ?GeneratedColumnExpression $generatedExpression = NULL,
     public readonly ?array $dbSpecificExtra = NULL,
   ) {
   }
@@ -139,6 +147,12 @@ final class Column implements SchemaDefinitionInterface {
     // Cannot set notNull for serial columns.
     if ($this->notNull !== NULL && $this->type === ColumnType::Serial) {
       throw new SchemaDefinitionException("Cannot set 'notNull' for {$this->type->value} column '{$this->name}'");
+    }
+
+    // A serial column takes its value from a sequence, so it cannot also be
+    // computed from an expression.
+    if ($this->generatedExpression !== NULL && $this->type === ColumnType::Serial) {
+      throw new SchemaDefinitionException("Cannot set 'generatedExpression' for {$this->type->value} column '{$this->name}'");
     }
 
     // Can only set unsigned for some column types.
@@ -214,6 +228,9 @@ final class Column implements SchemaDefinitionInterface {
     }
     if ($this->description !== NULL) {
       $spec['description'] = $this->description;
+    }
+    if ($this->generatedStorage) {
+      $spec['generated'] = $this;
     }
     if ($this->serialize !== NULL) {
       $spec['serialize'] = $this->serialize;
@@ -456,6 +473,46 @@ final class Column implements SchemaDefinitionInterface {
       notNull: $notNull,
       default: $default,
     );
+  }
+
+  /**
+   * Returns a Column object for a generated column.
+   *
+   * @see https://dev.mysql.com/doc/refman/9.7/en/create-table-generated-columns.html
+   * @see https://mariadb.com/docs/server/reference/sql-statements/data-definition/create/generated-columns
+   * @see https://www.postgresql.org/docs/current/ddl-generated-columns.html
+   * @see https://sqlite.org/gencol.html
+   */
+  public static function generated(
+    string $name,
+    ColumnType $type,
+    GeneratedColumnExpression $expression,
+    GeneratedColumnStorage $storage,
+    ?string $description = NULL,
+    ?ColumnSize $size = NULL,
+    ?int $length = NULL,
+    ?bool $unsigned = NULL,
+    ?int $precision = NULL,
+    ?int $scale = NULL,
+    ?bool $binary = NULL,
+    ?array $dbSpecificExtra = NULL,
+  ): self {
+    $column = new self(
+      type: $type,
+      name: $name,
+      description: $description,
+      size: $size,
+      length: $length,
+      unsigned: $unsigned,
+      precision: $precision,
+      scale: $scale,
+      binary: $binary,
+      generatedStorage: $storage,
+      generatedExpression: $expression,
+      dbSpecificExtra: $dbSpecificExtra,
+    );
+    $column->validate();
+    return $column;
   }
 
 }
