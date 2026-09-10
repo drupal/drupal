@@ -354,9 +354,8 @@ class DisplayTest extends ViewTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('The "invalid" plugin does not exist.');
 
-    // Rebuild the router, and ensure that the path is not accessible anymore.
-    views_invalidate_cache();
-    \Drupal::service('router.builder')->rebuildIfNeeded();
+    // Rebuild the router and ensure that the path is not accessible anymore.
+    \Drupal::service('router.builder')->rebuild();
 
     $this->drupalGet('test_display_invalid');
     $this->assertSession()->statusCodeEquals(404);

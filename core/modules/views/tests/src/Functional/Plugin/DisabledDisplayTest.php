@@ -79,10 +79,10 @@ class DisabledDisplayTest extends ViewTestBase {
     // Enable each disabled display and save the view.
     foreach ($display_ids as $display_id) {
       $view->getExecutable()->displayHandlers->get($display_id)->setOption('enabled', TRUE);
-      $view->save();
       $enabled = $view->getExecutable()->displayHandlers->get($display_id)->isEnabled();
       $this->assertTrue($enabled, 'Display ' . $display_id . ' is now enabled');
     }
+    $view->save();
 
     \Drupal::service('router.builder')->rebuildIfNeeded();
 

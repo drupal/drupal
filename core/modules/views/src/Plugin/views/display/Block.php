@@ -11,6 +11,8 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Attribute\ViewsDisplay;
 use Drupal\views\Plugin\Block\ViewsBlock;
+use Drupal\views\PostSaveProcess;
+use Drupal\views\PostSaveViewInterface;
 
 /**
  * The plugin that handles a block.
@@ -30,7 +32,7 @@ use Drupal\views\Plugin\Block\ViewsBlock;
   uses_hook_block: TRUE,
   contextual_links_locations: ["block"]
 )]
-class Block extends DisplayPluginBase {
+class Block extends DisplayPluginBase implements PostSaveViewInterface {
 
   /**
    * Whether the display allows attachments.
@@ -382,6 +384,15 @@ class Block extends DisplayPluginBase {
     }
     if ($this->blockManager instanceof CachedDiscoveryInterface) {
       $this->blockManager->clearCachedDefinitions();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSaveView(PostSaveProcess $postSaveProcess, ?DisplayPluginInterface $original_display = NULL): void {
+    if ($this->blockManager instanceof CachedDiscoveryInterface) {
+      $postSaveProcess->addDiscoveryToClear($this->blockManager);
     }
   }
 

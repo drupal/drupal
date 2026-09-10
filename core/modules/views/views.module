@@ -87,8 +87,16 @@ function views_add_contextual_links(&$render_element, $location, $display_id, ?a
 
 /**
  * Invalidate the views cache, forcing a rebuild on the next grab of table data.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Instead, use
+ *   \Drupal\views\Views::invalidateCache() for cache invalidation, and call
+ *   the router.builder and views.route_subscriber services directly to
+ *   require route rebuilding.
+ *
+ * @see https://www.drupal.org/node/3584050
  */
 function views_invalidate_cache(): void {
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Instead, use  \Drupal\views\Views::invalidateCache() for cache invalidation, and call the router.builder and views.route_subscriber services directly to require route rebuilding. See https://www.drupal.org/node/3584050', E_USER_DEPRECATED);
   // Set the menu as needed to be rebuilt.
   \Drupal::service('router.builder')->setRebuildNeeded();
 
