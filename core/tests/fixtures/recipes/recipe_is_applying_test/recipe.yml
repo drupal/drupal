@@ -1,0 +1,7 @@
+name: 'Recipe isApplying test'
+description: 'Records the value of RecipeRunner::isApplying() at various points during recipe application.'
+type: Testing
+install:
+  - entity_test
+  - recipe_is_applying_test
+  - test_base_theme

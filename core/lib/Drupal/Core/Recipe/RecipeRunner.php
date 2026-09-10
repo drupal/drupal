@@ -32,14 +32,33 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 final class RecipeRunner {
 
   /**
+   * Whether a recipe is currently being applied.
+   */
+  protected static bool $isApplying = FALSE;
+
+  /**
+   * Determines whether a recipe is currently being applied.
+   *
+   * @return bool
+   *   TRUE if a recipe is currently being applied, FALSE if not.
+   */
+  public static function isApplying(): bool {
+    return static::$isApplying;
+  }
+
+  /**
    * @param \Drupal\Core\Recipe\Recipe $recipe
    *   The recipe to apply.
    */
   public static function processRecipe(Recipe $recipe): void {
+    $set_is_applying = static::tryToSetIsApplying();
     static::processRecipes($recipe->recipes);
     static::processInstall($recipe->install, $recipe->config->getConfigStorage());
     static::processConfiguration($recipe);
     static::processContent($recipe->content);
+    if ($set_is_applying) {
+      static::$isApplying = FALSE;
+    }
     static::triggerEvent($recipe);
   }
 
@@ -295,6 +314,7 @@ final class RecipeRunner {
     if (empty($modules)) {
       throw new \InvalidArgumentException('No modules provided.');
     }
+    $set_is_applying = static::tryToSetIsApplying();
     if ($recipeConfigStorage instanceof Recipe) {
       $recipeConfigStorage = $recipeConfigStorage->config->getConfigStorage();
     }
@@ -333,6 +353,9 @@ final class RecipeRunner {
     else {
       $context['results']['module'] = $modules;
     }
+    if ($set_is_applying) {
+      static::$isApplying = FALSE;
+    }
   }
 
   /**
@@ -346,6 +369,7 @@ final class RecipeRunner {
    *   The batch context if called by a batch.
    */
   public static function installTheme(string $theme, StorageInterface|Recipe $recipeConfigStorage, ?array &$context = NULL): void {
+    $set_is_applying = static::tryToSetIsApplying();
     if ($recipeConfigStorage instanceof Recipe) {
       $recipeConfigStorage = $recipeConfigStorage->config->getConfigStorage();
     }
@@ -363,6 +387,9 @@ final class RecipeRunner {
     \Drupal::service('config.installer')->setSyncing(FALSE);
     $context['message'] = t('Installed %theme theme.', ['%theme' => \Drupal::service('extension.list.theme')->getName($theme)]);
     $context['results']['theme'][] = $theme;
+    if ($set_is_applying) {
+      static::$isApplying = FALSE;
+    }
   }
 
   /**
@@ -374,9 +401,13 @@ final class RecipeRunner {
    *   The batch context if called by a batch.
    */
   public static function installConfig(Recipe $recipe, ?array &$context = NULL): void {
+    $set_is_applying = static::tryToSetIsApplying();
     static::processConfiguration($recipe);
     $context['message'] = t('Installed configuration for %recipe recipe.', ['%recipe' => $recipe->name]);
     $context['results']['config'][] = $recipe->name;
+    if ($set_is_applying) {
+      static::$isApplying = FALSE;
+    }
   }
 
   /**
@@ -388,9 +419,27 @@ final class RecipeRunner {
    *   The batch context if called by a batch.
    */
   public static function installContent(Recipe $recipe, ?array &$context = NULL): void {
+    $set_is_applying = static::tryToSetIsApplying();
     static::processContent($recipe->content);
     $context['message'] = t('Created content for %recipe recipe.', ['%recipe' => $recipe->name]);
     $context['results']['content'][] = $recipe->name;
+    if ($set_is_applying) {
+      static::$isApplying = FALSE;
+    }
+  }
+
+  /**
+   * Tries to set the isApplying flag to TRUE.
+   *
+   * @return bool
+   *   TRUE if this call set the flag, FALSE if it was already set.
+   */
+  private static function tryToSetIsApplying(): bool {
+    if (!static::$isApplying) {
+      static::$isApplying = TRUE;
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**
