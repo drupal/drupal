@@ -7,7 +7,6 @@ namespace Drupal\Tests\config\Functional;
 use Drupal\config_enum_test\EnumValue;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Extension\ModuleWeight;
-use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -96,18 +95,16 @@ class ConfigImportUITest extends BrowserTestBase {
     $core_extension['module']['automated_cron'] = 0;
     $core_extension['module']['config_install_schema_test'] = 0;
     $core_extension['module'] = \Drupal::service(ModuleWeight::class)->sort($core_extension['module']);
-    $core_extension['theme']['olivero'] = 0;
+    $core_extension['theme']['test_theme'] = 0;
     $sync->write('core.extension', $core_extension);
-    // Olivero ships with configuration.
-    $sync->write('olivero.settings', Yaml::decode(file_get_contents('core/themes/olivero/config/install/olivero.settings.yml')));
 
     // Use the install storage so that we can read configuration from modules
     // and themes that are not installed.
     $install_storage = new InstallStorage();
 
-    // Set the Olivero theme as default.
+    // Set the test theme as default.
     $system_theme = $this->config('system.theme')->get();
-    $system_theme['default'] = 'olivero';
+    $system_theme['default'] = 'test_theme';
     $sync->write('system.theme', $system_theme);
 
     // Read the automated_cron config from module default config folder.
@@ -163,7 +160,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('automated_cron'), 'Automated Cron module installed during import.');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('options'), 'Options module installed during import.');
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('text'), 'Text module installed during import.');
-    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('olivero'), 'Olivero theme installed during import.');
+    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('test_theme'), 'Test theme installed during import.');
 
     // Ensure installations and uninstallation occur as expected.
     $uninstalled = \Drupal::state()->get('ConfigImportUITest.core.extension.modules_uninstalled', []);
@@ -185,11 +182,10 @@ class ConfigImportUITest extends BrowserTestBase {
     unset($core_extension['module']['config_install_schema_test']);
     unset($core_extension['module']['options']);
     unset($core_extension['module']['text']);
-    unset($core_extension['theme']['olivero']);
+    unset($core_extension['theme']['test_theme']);
     $sync->write('core.extension', $core_extension);
     $sync->delete('automated_cron.settings');
     $sync->delete('text.settings');
-    $sync->delete('olivero.settings');
 
     $system_theme = $this->config('system.theme')->get();
     $system_theme = [
@@ -230,7 +226,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertEmpty($installed, 'No modules installed during import');
 
     $theme_info = \Drupal::service('theme_handler')->listInfo();
-    $this->assertFalse(isset($theme_info['olivero']), 'Olivero theme uninstalled during import.');
+    $this->assertFalse(isset($theme_info['test_theme']), 'Test theme uninstalled during import.');
 
     // Verify that the automated_cron.settings configuration object was only
     // deleted once during the import process.

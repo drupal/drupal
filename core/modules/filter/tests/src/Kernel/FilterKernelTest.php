@@ -445,7 +445,7 @@ class FilterKernelTest extends KernelTestBase {
         "<!--\nThree.\n-->" => TRUE,
       ],
       // Do not add paragraph tags around Twig theme debugging.
-      "<p>Text here<!--\n\nTHEME DEBUG --><!--\nTHEME HOOK: 'html' --><!--\nFILE NAME SUGGESTIONS:\n* html--node.html.twig\nx html.html.twig\n--><!--\nBEGIN OUTPUT from 'core/themes/olivero/templates/layout/html.html.twig'\n--><span>Test</span></p>" => [
+      "<p>Text here<!--\n\nTHEME DEBUG --><!--\nTHEME HOOK: 'html' --><!--\nFILE NAME SUGGESTIONS:\n* html--node.html.twig\nx html.html.twig\n--><!--\nBEGIN OUTPUT from 'core/themes/stark/templates/layout/html.html.twig'\n--><span>Test</span></p>" => [
         "<p>Text here" => TRUE,
         "<p>Text here</p>" => FALSE,
         "<span>Test</span></p>" => TRUE,

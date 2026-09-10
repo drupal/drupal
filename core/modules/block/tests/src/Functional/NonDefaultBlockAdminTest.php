@@ -43,11 +43,11 @@ class NonDefaultBlockAdminTest extends BrowserTestBase {
       'administer themes',
     ]);
     $this->drupalLogin($admin_user);
-    $new_theme = 'olivero';
+    $new_theme = 'test_theme';
     \Drupal::service('theme_installer')->install([$new_theme]);
-    // Ensure that the Olivero tab is shown.
+    // Ensure that the Test theme tab is shown.
     $this->drupalGet('admin/structure/block/list/' . $new_theme);
-    $this->assertSession()->pageTextContains('Olivero');
+    $this->assertSession()->pageTextContains('Test theme');
   }
 
 }

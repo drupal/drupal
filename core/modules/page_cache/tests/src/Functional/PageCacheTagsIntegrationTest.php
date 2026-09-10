@@ -34,7 +34,7 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'olivero';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -121,7 +121,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
 
     $cache_contexts = [
       'languages:' . LanguageInterface::TYPE_INTERFACE,
-      'route',
       'theme',
       'timezone',
       // The placed block is only visible on certain URLs through a visibility
@@ -141,15 +140,12 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
     $this->assertPageCacheContextsAndTags($node_1->toUrl(), $cache_contexts, [
       'http_response',
       'rendered',
-      'local_task',
       'config:block_list',
       'node_view',
       'node:' . $node_1->id(),
       'user:' . $author_1->id(),
+      'user_view',
       'config:filter.format.basic_html',
-      'config:system.menu.account',
-      'config:system.menu.main',
-      'config:system.site',
       // FinishResponseSubscriber adds this cache tag to responses that have the
       // 'user.permissions' cache context for anonymous users.
       'config:user.role.anonymous',
@@ -162,15 +158,12 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
     $this->assertPageCacheContextsAndTags($node_2->toUrl(), $cache_contexts, [
       'http_response',
       'rendered',
-      'local_task',
       'config:block_list',
       'node_view',
       'node:' . $node_2->id(),
       'user:' . $author_2->id(),
+      'user_view',
       'config:filter.format.full_html',
-      'config:system.menu.account',
-      'config:system.menu.main',
-      'config:system.site',
       'comment_list',
       'node_list',
       'config:views.view.comments_recent',

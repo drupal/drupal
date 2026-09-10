@@ -25,7 +25,7 @@ class ProcessingTest extends WebDriverTestBase {
    *
    * @todo Use the stark theme in https://drupal.org/i/3407067.
    */
-  protected $defaultTheme = 'olivero';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests that a link to the error page is shown.
