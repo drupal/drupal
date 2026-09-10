@@ -22,8 +22,6 @@ class ProcessingTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Use the stark theme in https://drupal.org/i/3407067.
    */
   protected $defaultTheme = 'olivero';
 
