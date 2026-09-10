@@ -20,12 +20,12 @@ class TestSiteClaroInstallTestScript implements TestSetupInterface {
    * {@inheritdoc}
    */
   public function setup(): void {
-    // Install required module for the Olivero front page.
+    // Install required module for the Stark front page.
     $module_installer = \Drupal::service('module_installer');
     assert($module_installer instanceof ModuleInstallerInterface);
-    $module_installer->install(['olivero_test']);
+    $module_installer->install(['stark_test']);
 
-    // Install Claro instead of Olivero and set it as the default theme.
+    // Install Claro instead of stark and set it as the default theme.
     $theme_installer = \Drupal::service('theme_installer');
     assert($theme_installer instanceof ThemeInstallerInterface);
     $theme_installer->install(['claro'], TRUE);

@@ -2,9 +2,9 @@ langcode: en
 status: true
 dependencies:
   theme:
-    - olivero
-id: olivero_secondary_local_tasks
-theme: olivero
+    - stark
+id: stark_test_secondary_local_tasks
+theme: stark
 region: highlighted
 weight: -2
 provider: null

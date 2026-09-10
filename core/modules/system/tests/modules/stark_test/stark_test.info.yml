@@ -1,11 +1,10 @@
-name: 'Olivero tests'
+name: 'Stark tests'
 type: module
-description: 'Support module for testing the Olivero theme.'
+description: 'Support module for testing the Stark theme.'
 package: Testing
 version: VERSION
 dependencies:
   - drupal:comment
-  - drupal:contact
   - drupal:form_test
   - drupal:image
   - drupal:path

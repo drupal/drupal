@@ -2,10 +2,10 @@ langcode: en
 status: true
 dependencies:
   module:
-    - contact
-id: contact_message.field_multiple_value_form_field
+    - node
+id: node.field_multiple_value_form_field
 field_name: field_multiple_value_form_field
-entity_type: contact_message
+entity_type: node
 type: string
 settings:
   max_length: 255

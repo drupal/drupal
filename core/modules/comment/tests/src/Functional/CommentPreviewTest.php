@@ -32,12 +32,12 @@ class CommentPreviewTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['olivero_test', 'test_user_config'];
+  protected static $modules = ['stark_test', 'test_user_config'];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'olivero';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests comment preview.
@@ -88,9 +88,6 @@ class CommentPreviewTest extends CommentTestBase {
     $this->assertSession()->fieldValueEquals('subject[0][value]', $edit['subject[0][value]']);
     $this->assertSession()->fieldValueEquals('comment_body[0][value]', $edit['comment_body[0][value]']);
 
-    // Check that the user picture is displayed.
-    $this->assertSession()->elementExists('xpath', "//article[contains(@class, 'preview')]//div[contains(@class, 'user-picture')]//img");
-
     // Ensure that preview node is displayed after the submit buttons of the
     // form.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@id=:id]/following-sibling::article', [':id' => 'edit-actions']);
@@ -129,14 +126,14 @@ class CommentPreviewTest extends CommentTestBase {
     // Store the content of this page.
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('Your comment has been posted.');
-    $this->assertSession()->elementsCount('xpath', '//section[contains(@class, "comments")]/article', 1);
+    $this->assertSession()->elementsCount('xpath', '//section/article', 1);
 
     // Go back and re-submit the form.
     $this->getSession()->getDriver()->back();
     $submit_button = $this->assertSession()->buttonExists('Save');
     $submit_button->click();
     $this->assertSession()->pageTextContains('Your comment has been posted.');
-    $this->assertSession()->elementsCount('xpath', '//section[contains(@class, "comments")]/article', 2);
+    $this->assertSession()->elementsCount('xpath', '//section/article', 2);
   }
 
   /**
@@ -163,7 +160,9 @@ class CommentPreviewTest extends CommentTestBase {
     $edit['date[date]'] = $date->format('Y-m-d');
     $edit['date[time]'] = $date->format('H:i:s');
     $raw_date = $date->getTimestamp();
-    $expected_text_date = $this->container->get('date.formatter')->formatInterval(\Drupal::time()->getRequestTime() - $raw_date);
+    // Olivero had a preprocessComment() hook that stark doesn't have. So let's
+    // check for the date at least.
+    $expected_text_date = $this->container->get('date.formatter')->format($raw_date);
     $expected_form_date = $date->format('Y-m-d');
     $expected_form_time = $date->format('H:i:s');
     $comment = $this->postComment($this->node, $edit['subject[0][value]'], $edit['comment_body[0][value]'], TRUE);

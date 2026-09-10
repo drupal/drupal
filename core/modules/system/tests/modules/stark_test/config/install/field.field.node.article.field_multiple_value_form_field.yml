@@ -2,12 +2,12 @@ langcode: en
 status: true
 dependencies:
   config:
-    - contact.form.olivero_test_contact_form
-    - field.storage.contact_message.field_multiple_value_form_field
-id: contact_message.olivero_test_contact_form.field_multiple_value_form_field
+    - field.storage.node.field_multiple_value_form_field
+    - node.type.article
+id: node.article.field_multiple_value_form_field
 field_name: field_multiple_value_form_field
-entity_type: contact_message
-bundle: olivero_test_contact_form
+entity_type: node
+bundle: article
 label: 'Multiple Value Form Field'
 description: ''
 required: true

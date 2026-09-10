@@ -1,0 +1,44 @@
+# Create items in the Main menu.
+stark_test.front_page:
+  title: Home
+  route_name: <front>
+  menu_name: main
+  weight: 100
+stark_test.child:
+  title: Child link
+  route_name: <front>
+  parent: stark_test.front_page
+  menu_name: main
+  weight: 100
+stark_test.child_child:
+  title: Child link
+  route_name: <front>
+  parent: stark_test.child
+  menu_name: main
+  weight: 100
+stark_test.button:
+  title: Button
+  route_name: <button>
+  menu_name: main
+  weight: 200
+stark_test.child_button:
+  title: Child button link
+  route_name: <front>
+  parent: stark_test.button
+  menu_name: main
+  weight: 100
+stark_test.anchor_link:
+  title: "⚓️ Anchor link"
+  url: "internal:#footer"
+  menu_name: main
+  weight: 200
+stark_test.long_item_1:
+  title: Long long long long
+  route_name: <front>
+  menu_name: main
+  weight: 200
+stark_test.long_item_2:
+  title: Long long long long
+  route_name: <front>
+  menu_name: main
+  weight: 200
