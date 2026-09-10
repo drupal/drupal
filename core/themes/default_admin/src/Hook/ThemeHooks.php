@@ -43,20 +43,6 @@ class ThemeHooks implements TrustedCallbackInterface {
   }
 
   /**
-   * Implements hook_css_alter().
-   *
-   * Set admin CSS on top of all other CSS files.
-   */
-  #[Hook('css_alter')]
-  public function cssAlter(array &$css): void {
-    // The admin-custom.css file should be loaded just after admin.css file.
-    $custom_css = 'public://admin-custom.css';
-    if (isset($css[$custom_css])) {
-      $css[$custom_css]['group'] = 201;
-    }
-  }
-
-  /**
    * Implements hook_element_info_alter().
    */
   #[Hook('element_info_alter')]
@@ -159,11 +145,6 @@ class ThemeHooks implements TrustedCallbackInterface {
 
     // Attach sticky library.
     $page['#attached']['library'][] = 'default_admin/sticky';
-
-    // Custom CSS file.
-    if (file_exists('public://admin-custom.css')) {
-      $page['#attached']['library'][] = 'default_admin/admin_custom_css';
-    }
 
     $settings = Settings::getInstance();
     // Expose theme settings to JS.

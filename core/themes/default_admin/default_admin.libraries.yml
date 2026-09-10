@@ -405,13 +405,6 @@ escape_admin:
   dependencies:
     - core/once
 
-# Custom CSS
-
-admin_custom_css:
-  css:
-    theme:
-      public://admin-custom.css: { preprocess: false, minified: false, weight: 50 }
-
 # Libs
 
 scroll_sync:
