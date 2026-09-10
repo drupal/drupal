@@ -268,7 +268,7 @@ class ThemeInstallerTest extends KernelTestBase {
    */
   public function testUninstallDefault(): void {
     $name = 'stark';
-    $other_name = 'olivero';
+    $other_name = 'test_theme';
     $this->themeInstaller()->install([$name, $other_name]);
     $this->config('system.theme')->set('default', $name)->save();
 
@@ -295,7 +295,7 @@ class ThemeInstallerTest extends KernelTestBase {
    */
   public function testUninstallAdmin(): void {
     $name = 'stark';
-    $other_name = 'olivero';
+    $other_name = 'test_theme';
     $this->themeInstaller()->install([$name, $other_name]);
     $this->config('system.theme')->set('admin', $name)->save();
 

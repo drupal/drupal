@@ -17,8 +17,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 // cSpell:ignore mlid
 /**
  * Tests the performance of basic functionality in the standard profile.
- *
- * Stark is used as the default theme so that this test is not Olivero specific.
  */
 #[Group('Common')]
 #[Group('#slow')]

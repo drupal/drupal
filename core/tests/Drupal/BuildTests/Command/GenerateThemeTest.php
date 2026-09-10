@@ -534,12 +534,12 @@ SH;
       '--name="Test custom starterkit theme"',
       '--description="Custom theme generated from a starterkit theme"',
       '--starterkit',
-      'olivero',
+      'stark',
     ];
     $process = new Process($install_command, NULL);
     $process->setTimeout(60);
     $result = $process->run();
-    $this->assertStringContainsString('Theme source theme olivero is not a valid starter kit.', trim($process->getErrorOutput()));
+    $this->assertStringContainsString('Theme source theme stark is not a valid starter kit.', trim($process->getErrorOutput()));
     $this->assertSame(1, $result);
   }
 
