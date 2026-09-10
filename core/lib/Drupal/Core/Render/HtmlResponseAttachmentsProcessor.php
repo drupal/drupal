@@ -129,7 +129,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
           $extension = pathinfo($font['data'], PATHINFO_EXTENSION);
           $attached['html_head_link'][] = [
             [
-              'href' => $this->fileUrlGenerator->generate($font['data'])->toString(),
+              'href' => $this->fileUrlGenerator->generateString($font['data']),
               'rel' => 'preload',
               'as' => 'font',
               'type' => 'font/' . $extension,

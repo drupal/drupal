@@ -14,6 +14,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class InstallerKernel extends DrupalKernel {
 
   /**
+   * The theme used for install, update and early maintenance pages.
+   *
+   * A distribution profile can request a different theme with the
+   * distribution.install.theme key in its info file.
+   */
+  public const INSTALL_THEME = 'default_admin';
+
+  /**
    * The extensions from the last container compilation.
    */
   protected array $compiledExtensions = [];
@@ -131,26 +139,69 @@ class InstallerKernel extends DrupalKernel {
 
     // Ensure that the System module is always available to the installer.
     $extensions['module']['system'] ??= 0;
-    if ($profile = $this->installGetProfile()) {
+    $profile = $this->installGetProfile();
+    if ($profile) {
       $extensions['profile'] = $profile->getName();
       if (!isset($extensions['module'][$profile->getName()])) {
         $extensions['module'][$profile->getName()] = 1000;
       }
-      $theme = $profile->info['distribution']['install']['theme'] ?? 'claro';
+    }
+    // Ensure that the install theme is always available to the installer.
+    foreach ($this->getInstallThemes($profile) as $theme) {
       $extensions['theme'][$theme] ??= 0;
+    }
+    return $extensions;
+  }
 
-      if ($theme !== 'claro') {
-        // Need to check for base themes.
-        foreach ($this->getBaseThemes($profile, $theme) as $base_theme) {
-          $extensions['theme'][$base_theme] ??= 0;
+  /**
+   * {@inheritdoc}
+   */
+  public function updateThemes(array $register_themes = []): void {
+    if (static::installationAttempted()) {
+      // Installing a profile or a recipe replaces the theme list with the
+      // themes that were just installed, which do not include the install
+      // theme. Theme hook implementations are collected from the
+      // container.themes parameter, so dropping the install theme from the
+      // list removes its hooks while it is still rendering the remaining
+      // installer pages. Keep it registered until the installation is done.
+      // @see \Drupal\Core\Hook\ThemeHookCollectorPass
+      // @see _drupal_maintenance_theme()
+      foreach ($this->getInstallThemes($this->installGetProfile()) as $theme) {
+        if (isset($register_themes[$theme])) {
+          continue;
+        }
+        $extension = $this->themeExtensions($theme);
+        if ($extension) {
+          $register_themes[$theme] = $extension;
         }
       }
     }
-    // Ensure that the default theme is always available to the installer.
-    else {
-      $extensions['theme']['claro'] ??= 0;
+    parent::updateThemes($register_themes);
+  }
+
+  /**
+   * Gets the theme that renders installer pages, with its base themes.
+   *
+   * @param \Drupal\Core\Extension\Extension|false|null $profile
+   *   The profile being installed, or NULL if none has been selected yet, or
+   *   FALSE if the installation uses no profile.
+   *
+   * @return string[]
+   *   The name of the install theme, followed by the names of its base themes.
+   */
+  private function getInstallThemes(null|false|Extension $profile): array {
+    if (!$profile) {
+      // Without a profile there is no distribution that could request another
+      // theme.
+      return [static::INSTALL_THEME];
     }
-    return $extensions;
+    $theme = $profile->info['distribution']['install']['theme'] ?? static::INSTALL_THEME;
+    if ($theme === static::INSTALL_THEME) {
+      // The default install theme declares "base theme: false", so scanning
+      // the file system for base themes is not needed.
+      return [$theme];
+    }
+    return array_merge([$theme], $this->getBaseThemes($profile, $theme));
   }
 
   /**

@@ -37,7 +37,7 @@ class StandardRecipeInstallTest extends InstallerTestBase {
       'value' => TRUE,
       'required' => TRUE,
     ];
-    // Do not compress css so we can detect claro correctly. See
+    // Do not compress css so we can detect the admin theme correctly. See
     // \Drupal\Tests\RequirementsPageTrait::assertRequirementSummaries().
     $this->settings['config']['system.performance']['css']['preprocess'] = (object) [
       'value' => FALSE,
@@ -56,6 +56,17 @@ class StandardRecipeInstallTest extends InstallerTestBase {
       'profile' => '',
       'recipe' => 'core/recipes/standard',
     ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpLanguage(): void {
+    // There is no profile and therefore no distribution to request another
+    // theme, so the installer uses the default install theme.
+    $this->assertSession()->responseContains('default_admin/css/theme/install-page.css');
+
+    parent::setUpLanguage();
   }
 
   /**

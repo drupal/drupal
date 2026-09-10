@@ -74,6 +74,19 @@ class DistributionProfileTest extends InstallerTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUpSite(): void {
+    // This is the last installer step. The profile has installed its own themes
+    // by now, and the install theme still renders this page, so the install
+    // theme and its base theme must both keep their hook implementations.
+    $this->assertSession()->pageTextContains('Added by custom installer theme on the last step.');
+    $this->assertSession()->responseContains("claro/css/theme/install-page.css");
+
+    parent::setUpSite();
+  }
+
+  /**
    * Confirms that the installation succeeded.
    */
   public function testInstalled(): void {

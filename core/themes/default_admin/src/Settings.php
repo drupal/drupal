@@ -197,15 +197,18 @@ final class Settings implements ContainerInjectionInterface {
   /**
    * Return the active administration theme.
    *
-   * @return string
-   *   The active administration theme name.
+   * @return string|null
+   *   The active administration theme name, or NULL if it cannot be
+   *   determined. This is the case while Drupal is being installed, because
+   *   the system theme configuration does not exist yet. The theme settings
+   *   provider then falls back to the active theme.
    */
-  private function getAdminTheme(): string {
+  private function getAdminTheme(): ?string {
     $admin_theme = $this->configFactory->get('system.theme')->get('admin');
     if (empty($admin_theme)) {
       $admin_theme = $this->configFactory->get('system.theme')->get('default');
     }
-    return $admin_theme;
+    return $admin_theme ?: NULL;
   }
 
   /**

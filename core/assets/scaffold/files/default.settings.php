@@ -642,7 +642,7 @@ $settings['update_free_access'] = FALSE;
  *
  * Note: This setting does not apply to installation and update pages.
  */
-# $settings['maintenance_theme'] = 'claro';
+# $settings['maintenance_theme'] = 'default_admin';
 
 /**
  * PHP settings:

@@ -18,6 +18,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
@@ -616,7 +617,10 @@ final class PreprocessHooks implements TrustedCallbackInterface {
 
     // New way to set accent color.
     $accent_colors = Helper::accentColors();
-    $preset = $settings->get('preset_accent_color');
+    // The theme settings are not available while Drupal is being installed,
+    // because they are stored in configuration. Fall back to an empty string so
+    // that the preset can be used as an array offset.
+    $preset = $settings->get('preset_accent_color') ?? '';
     $accent_color = '';
 
     if ($preset === 'custom' && $settings->get('accent_color')) {
@@ -644,6 +648,13 @@ final class PreprocessHooks implements TrustedCallbackInterface {
     // Edit form? Use the new admin Edit form layout.
     if (Helper::isContentForm()) {
       $variables['attributes']['class'][] = 'edit-form';
+    }
+
+    // Checking permissions requires a database connection, which does not
+    // exist yet while Drupal is being installed. Installer pages have neither
+    // a toolbar nor a navigation, so there is nothing to add.
+    if (InstallerKernel::installationAttempted()) {
+      return;
     }
 
     // Only add toolbar/navigation class if user has permission.
