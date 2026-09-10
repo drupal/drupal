@@ -7,7 +7,10 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Attribute\ViewsStyle;
+use Drupal\views\Plugin\views\display\DisplayPluginInterface;
 use Drupal\views\Plugin\views\style\StylePluginBase;
+use Drupal\views\PostSaveProcess;
+use Drupal\views\PostSaveViewInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -22,7 +25,7 @@ use Symfony\Component\Serializer\SerializerInterface;
   help: new TranslatableMarkup("Serializes views row data using the Serializer component."),
   display_types: ["data"],
 )]
-class Serializer extends StylePluginBase implements CacheableDependencyInterface {
+class Serializer extends StylePluginBase implements CacheableDependencyInterface, PostSaveViewInterface {
 
   /**
    * {@inheritdoc}
@@ -141,6 +144,23 @@ class Serializer extends StylePluginBase implements CacheableDependencyInterface
       $content_type = !empty($this->options['formats']) ? reset($this->options['formats']) : 'json';
     }
     return $this->serializer->serialize($rows, $content_type, ['views_style_plugin' => $this]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSaveView(PostSaveProcess $postSaveProcess, ?DisplayPluginInterface $original_display = NULL): void {
+    if ($postSaveProcess->needsRouterRebuild()) {
+      return;
+    }
+    // We need a router rebuild if the available formats have changed because
+    // the formats are stored on the route.
+    $original_style = $original_display?->getOption('style') ?? [];
+    $original_formats = $original_style['options']['formats'] ?? [];
+
+    if ($original_formats != $this->getFormats()) {
+      $postSaveProcess->setRouterRebuild();
+    }
   }
 
   /**

@@ -105,6 +105,8 @@ class AccessTest extends ViewTestBase {
     $access_plugin = $view->display_handler->getPlugin('access');
 
     $this->assertFalse($access_plugin->access($this->normalUser));
+    $view->destroy();
+
     $this->drupalGet('test_access_static');
     $this->assertSession()->statusCodeEquals(403);
 

@@ -106,7 +106,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
    * Submission handler to clear the Views cache.
    */
   public function cacheSubmit() {
-    views_invalidate_cache();
+    Views::invalidateCache();
     $this->messenger()->addStatus($this->t('The cache has been cleared.'));
   }
 

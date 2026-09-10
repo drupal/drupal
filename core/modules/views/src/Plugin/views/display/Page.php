@@ -608,4 +608,11 @@ class Page extends PathPluginBase {
     return $dependencies;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getRouteAffectingOptions(): array {
+    return [...parent::getRouteAffectingOptions(), 'menu', 'tab_options'];
+  }
+
 }
