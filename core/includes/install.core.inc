@@ -253,7 +253,7 @@ function install_state_defaults(): array {
     // An array of available installation profiles.
     'profiles' => [],
     // The name of the theme to use during installation.
-    'theme' => 'claro',
+    'theme' => InstallerKernel::INSTALL_THEME,
     // The server URL where the interface translation files can be downloaded.
     // Tokens in the pattern will be replaced by appropriate values for the
     // required translation file.

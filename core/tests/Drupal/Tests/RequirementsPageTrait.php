@@ -85,16 +85,29 @@ trait RequirementsPageTrait {
    *   The type of requirement, either 'warning' or 'error'.
    */
   protected function assertRequirementSummaries(array $summaries, string $type): void {
-    // The selectors are different for Claro.
-    $is_claro = stripos($this->getSession()->getPage()->getContent(), 'claro/css/theme/maintenance-page.css') !== FALSE;
+    // The selectors are different for the admin themes, because they override
+    // the status report template. Each of them uses its own details wrapper
+    // class.
+    $content = $this->getSession()->getPage()->getContent();
+    $details_wrappers = [
+      'default_admin/css/theme/maintenance-page.css' => 'default-admin-details__wrapper',
+      'claro/css/theme/maintenance-page.css' => 'claro-details__wrapper',
+    ];
+    $details_wrapper = NULL;
+    foreach ($details_wrappers as $stylesheet => $class) {
+      if (stripos($content, $stylesheet) !== FALSE) {
+        $details_wrapper = $class;
+        break;
+      }
+    }
 
     $selectors = [];
-    if ($is_claro) {
-      // In Claro each requirement heading is present in a div with the class
-      // system-status-report__status-title. There is one summary element per
-      // requirement type and it is adjacent to a div with the class
-      // claro-details__wrapper.
-      $selectors[] = 'summary#' . $type . '+.claro-details__wrapper .system-status-report__status-title';
+    if ($details_wrapper) {
+      // In the admin themes each requirement heading is present in a div with
+      // the class system-status-report__status-title. There is one summary
+      // element per requirement type and it is adjacent to a div with the
+      // theme's details wrapper class.
+      $selectors[] = 'summary#' . $type . '+.' . $details_wrapper . ' .system-status-report__status-title';
     }
     else {
       // Allow only details elements that are directly after the warning/error

@@ -59,7 +59,15 @@ class InstallerTest extends InstallerTestBase {
     $this->assertSession()->responseContains('<meta charset="utf-8" />');
 
     // Test that the default installer theme is being used.
-    $this->assertSession()->responseContains("claro/css/theme/install-page.css");
+    $this->assertSession()->responseContains("default_admin/css/theme/install-page.css");
+
+    // Preloaded fonts must be linked relative to the site root, not relative to
+    // the installer's front controller, otherwise the browser requests them
+    // from index.php.
+    // @see \Drupal\Core\Render\HtmlResponseAttachmentsProcessor::processAttachments()
+    $preloaded_font = $this->assertSession()->elementExists('xpath', '//link[@rel="preload"][@as="font"]');
+    $this->assertStringNotContainsString('install.php', $preloaded_font->getAttribute('href'));
+    $this->assertStringEndsWith('/core/themes/default_admin/font/inter.woff2', $preloaded_font->getAttribute('href'));
 
     // Assert that the expected title is present.
     $this->assertEquals('Choose language', $this->cssSelect('main h2')[0]->getText());
