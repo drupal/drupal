@@ -68,7 +68,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     return [
       'action' => 24,
       'base_field_override' => 6,
-      'block' => 28,
+      'block' => 17,
       'block_content' => 1,
       'block_content_type' => 1,
       'comment' => 1,
@@ -76,7 +76,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'configurable_language' => 5,
       'contact_form' => 4,
       'contact_message' => 0,
-      'date_format' => 12,
+      'date_format' => 11,
       'editor' => 2,
       'entity_form_display' => 6,
       'entity_form_mode' => 1,

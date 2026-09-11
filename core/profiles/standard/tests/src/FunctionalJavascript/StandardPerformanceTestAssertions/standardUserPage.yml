@@ -1,20 +1,19 @@
-QueryCount: 10
-CacheGetCount: 58
+QueryCount: 8
+CacheGetCount: 55
 CacheGetCountByBin:
   page: 1
   config: 13
   data: 2
-  discovery: 20
+  discovery: 21
   bootstrap: 8
   entity: 1
   dynamic_page_cache: 1
   routes: 3
-  render: 7
-  menu: 2
-CacheSetCount: 17
+  render: 5
+CacheSetCount: 16
 CacheDeleteCount: 0
 CacheTagInvalidationCount: 0
-CacheTagLookupQueryCount: 6
+CacheTagLookupQueryCount: 4
 CacheTagGroupedLookups:
   -
     - route_match
@@ -33,11 +32,6 @@ CacheTagGroupedLookups:
     - user_view
   -
     - 'config:block_list'
-    - 'config:system.site'
-  -
-    - 'config:system.menu.main'
-  -
-    - 'config:system.menu.account'
   -
     - 'config:user.role.anonymous'
 ScriptCount: 0

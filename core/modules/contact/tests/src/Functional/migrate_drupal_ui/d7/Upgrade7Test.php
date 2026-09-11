@@ -48,7 +48,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
 
     $this->loadFixture($this->getModulePath('contact') . '/tests/fixtures/drupal7.php');
 
-    $this->expectedLoggedErrors = 16;
+    $this->expectedLoggedErrors = 18;
     // If saving the logs, then set the admin user.
     if ($this->outputLogs) {
       $this->migratedAdminUserName = 'admin';
@@ -69,7 +69,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     return [
       'action' => 24,
       'base_field_override' => 1,
-      'block' => 23,
+      'block' => 11,
       'block_content' => 1,
       'block_content_type' => 1,
       'comment' => 1,
@@ -77,7 +77,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'configurable_language' => 5,
       'contact_form' => 2,
       'contact_message' => 0,
-      'date_format' => 12,
+      'date_format' => 11,
       'editor' => 2,
       'entity_form_display' => 12,
       'entity_form_mode' => 1,

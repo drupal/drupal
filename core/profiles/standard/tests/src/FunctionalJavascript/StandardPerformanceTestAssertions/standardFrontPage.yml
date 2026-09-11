@@ -1,19 +1,20 @@
-QueryCount: 10
-CacheGetCount: 45
+QueryCount: 19
+CacheGetCount: 50
 CacheGetCountByBin:
   page: 1
   config: 10
-  data: 3
-  bootstrap: 8
+  data: 4
+  bootstrap: 11
+  discovery: 11
+  routes: 4
   dynamic_page_cache: 1
-  discovery: 10
-  routes: 3
-  render: 6
-  menu: 3
-CacheSetCount: 13
+  render: 5
+  default: 2
+  file_parsing: 1
+CacheSetCount: 22
 CacheDeleteCount: 0
 CacheTagInvalidationCount: 0
-CacheTagLookupQueryCount: 7
+CacheTagLookupQueryCount: 4
 CacheTagGroupedLookups:
   -
     - route_match
@@ -28,19 +29,14 @@ CacheTagGroupedLookups:
     - http_response
   -
     - 'config:block_list'
-    - 'config:system.site'
     - rendered
   -
     - 'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form'
+    - config:system.site
   -
-    - 'config:system.menu.account'
-  -
-    - 'config:user.settings'
-  -
-    - 'config:system.menu.main'
-  -
+    - '4xx-response'
     - 'config:user.role.anonymous'
 ScriptCount: 0
 ScriptBytes: 0
-StylesheetCount: 1
-StylesheetBytes: 1041
+StylesheetCount: 2
+StylesheetBytes: 1322

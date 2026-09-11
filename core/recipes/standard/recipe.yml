@@ -8,7 +8,6 @@ recipes:
   - core_recommended_performance
   - core_recommended_maintenance
   - core_recommended_admin_theme
-  - core_recommended_front_end_theme
   - user_picture
   # Provides a fallback text format which is available to all users.
   - restricted_html_format
@@ -34,6 +33,7 @@ config:
   import:
     claro:
       - block.block.claro_help
+      - block.block.claro_login
     image:
       - image.style.large
       - image.style.thumbnail
@@ -47,8 +47,6 @@ config:
       - views.view.content
       - views.view.content_recent
       - views.view.glossary
-    olivero:
-      - block.block.olivero_help
     user:
       - core.entity_view_mode.user.compact
       - views.view.user_admin_people
@@ -58,9 +56,9 @@ config:
     node.settings:
       simpleConfigUpdate:
         use_admin_theme: true
-    system.site:
+    system.theme:
       simpleConfigUpdate:
-        page.front: /user/login
+        default: claro
     user.role.anonymous:
       grantPermission: 'access content'
     user.role.authenticated:

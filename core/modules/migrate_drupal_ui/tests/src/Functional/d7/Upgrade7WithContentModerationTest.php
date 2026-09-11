@@ -55,7 +55,7 @@ class Upgrade7WithContentModerationTest extends Upgrade7Test {
     $type_plugin->setConfiguration($type_settings);
     $editorial->trustData()->save();
 
-    $this->expectedLoggedErrors = 29;
+    $this->expectedLoggedErrors = 31;
   }
 
   /**
