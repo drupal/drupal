@@ -41,7 +41,7 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
         'distribution' => [
           'name' => $name,
           'install' => [
-            'theme' => 'claro',
+            'theme' => 'default_admin',
           ],
         ],
       ];
@@ -61,7 +61,7 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
     // Verify that the distribution name appears.
     $this->assertSession()->pageTextContains('distribution_one');
     // Verify that the requested theme is used.
-    $this->assertSession()->responseContains('claro');
+    $this->assertSession()->responseContains('default_admin');
     // Verify that the "Choose profile" step does not appear.
     $this->assertSession()->pageTextNotContains('profile');
 

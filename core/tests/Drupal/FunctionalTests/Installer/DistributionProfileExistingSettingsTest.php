@@ -47,7 +47,7 @@ class DistributionProfileExistingSettingsTest extends InstallerTestBase {
       'distribution' => [
         'name' => 'My Distribution',
         'install' => [
-          'theme' => 'claro',
+          'theme' => 'default_admin',
         ],
       ],
     ];
