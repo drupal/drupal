@@ -368,7 +368,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "7e7646a2a1c3f8588f58a88f3481ed3be167c402"
+                "reference": "d56e1ed4a90ad063c4b99a43c51204c6a4473777"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -530,7 +530,8 @@
                     "lib/Drupal/Component/Datetime/Time.php"
                 ],
                 "files": [
-                    "includes/bootstrap.inc"
+                    "includes/bootstrap.inc",
+                    "includes/guzzle_file_cookie_jar_shim.php"
                 ]
             },
             "scripts": {
