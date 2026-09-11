@@ -1519,6 +1519,21 @@ class SystemRequirementsHooks {
           }
         }
       }
+
+      if (!\Drupal::moduleHandler()->moduleExists('text_with_summary')) {
+        $config_storage = \Drupal::service('config.storage');
+        foreach ($config_storage->listAll('field.storage.') as $config_name) {
+          $config = $config_storage->read($config_name);
+          if (($config['type'] ?? NULL) === 'text_with_summary') {
+            $requirements['text_with_summary'] = [
+              'title' => $this->t('Missing text_with_summary field type'),
+              'description' => $this->t("The text_with_summary field type has been moved to a contributed module. Install it before updating by running 'composer require drupal/text_with_summary' and then enable the text_with_summary module."),
+              'severity' => RequirementSeverity::Error,
+            ];
+            break;
+          }
+        }
+      }
     }
 
     // Add warning when twig debug option is enabled.
