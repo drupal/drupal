@@ -22,7 +22,19 @@ class Date extends NumericFilter {
     // Value is already set up properly, we're just adding our new field to it.
     $options['value']['contains']['type']['default'] = 'date';
 
+    $options['expose']['contains']['min_label'] = ['default' => $this->t('Start date')];
+    $options['expose']['contains']['max_label'] = ['default' => $this->t('End date')];
+
     return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultExposeOptions(): void {
+    parent::defaultExposeOptions();
+    $this->options['expose']['min_label'] = $this->t('Start date');
+    $this->options['expose']['max_label'] = $this->t('End date');
   }
 
   /**

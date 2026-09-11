@@ -472,4 +472,47 @@ class ViewsConfigUpdater {
     return $changed;
   }
 
+  /**
+   * Checks if a filter's expose section is missing min_label or max_label.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
+   *
+   * @return bool
+   *   TRUE if any filter needs the update.
+   */
+  public function needsMinMaxLabelUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, FALSE, function (&$handler, $handler_type) {
+      return $this->processMinMaxLabelUpdate($handler, $handler_type);
+    });
+  }
+
+  /**
+   * Adds default min_label and max_label to exposed numeric-type filters.
+   *
+   * Only filters that already have min_placeholder (indicating they derive from
+   * NumericFilter) but lack min_label are updated. The legacy hardcoded labels
+   * "Min" and "Max" are used so existing sites are visually unchanged.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  public function processMinMaxLabelUpdate(array &$handler, string $handler_type): bool {
+    if (
+      $handler_type === 'filter' &&
+      array_key_exists('min_placeholder', $handler['expose'] ?? []) &&
+      !array_key_exists('min_label', $handler['expose'] ?? [])
+    ) {
+      $handler['expose']['min_label'] = 'Min';
+      $handler['expose']['max_label'] = 'Max';
+      return TRUE;
+    }
+    return FALSE;
+  }
+
 }

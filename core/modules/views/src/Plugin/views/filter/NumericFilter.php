@@ -37,6 +37,8 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
     $options['expose']['contains']['placeholder'] = ['default' => ''];
     $options['expose']['contains']['min_placeholder'] = ['default' => ''];
     $options['expose']['contains']['max_placeholder'] = ['default' => ''];
+    $options['expose']['contains']['min_label'] = ['default' => $this->t('Minimum')];
+    $options['expose']['contains']['max_label'] = ['default' => $this->t('Maximum')];
 
     return $options;
   }
@@ -49,6 +51,8 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
     $this->options['expose']['min_placeholder'] = NULL;
     $this->options['expose']['max_placeholder'] = NULL;
     $this->options['expose']['placeholder'] = NULL;
+    $this->options['expose']['min_label'] = $this->t('Minimum');
+    $this->options['expose']['max_label'] = $this->t('Maximum');
   }
 
   /**
@@ -71,6 +75,18 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
       '#size' => 40,
       '#description' => $this->t('Hint text that appears inside the Max field when empty.'),
     ];
+    $form['expose']['min_label'] = [
+      '#type' => 'textfield',
+      '#default_value' => $this->options['expose']['min_label'],
+      '#title' => $this->t('Minimum value label'),
+      '#size' => 40,
+    ];
+    $form['expose']['max_label'] = [
+      '#type' => 'textfield',
+      '#default_value' => $this->options['expose']['max_label'],
+      '#title' => $this->t('Maximum value label'),
+      '#size' => 40,
+    ];
     // Setup #states for all operators with two value.
     $states = [[':input[name="options[expose][use_operator]"]' => ['checked' => TRUE]]];
     foreach ($this->operatorValues(2) as $operator) {
@@ -78,8 +94,9 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
         ':input[name="options[operator]"]' => ['value' => $operator],
       ];
     }
-    $form['expose']['min_placeholder']['#states']['visible'] = $states;
-    $form['expose']['max_placeholder']['#states']['visible'] = $states;
+    foreach (['min_placeholder', 'max_placeholder', 'min_label', 'max_label'] as $key) {
+      $form['expose'][$key]['#states']['visible'] = $states;
+    }
 
     $form['expose']['placeholder'] = [
       '#type' => 'textfield',
@@ -297,7 +314,7 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
     if ($two_value_operators_available) {
       $form['value']['min'] = [
         '#type' => 'textfield',
-        '#title' => $this->t('Min'),
+        '#title' => $this->options['expose']['min_label'],
         '#size' => 30,
         '#default_value' => $this->value['min'],
       ];
@@ -306,7 +323,7 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
       }
       $form['value']['max'] = [
         '#type' => 'textfield',
-        '#title' => $this->t('Max'),
+        '#title' => $this->options['expose']['max_label'],
         '#size' => 30,
         '#default_value' => $this->value['max'],
       ];

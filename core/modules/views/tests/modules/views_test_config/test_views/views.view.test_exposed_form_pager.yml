@@ -93,6 +93,8 @@ display:
             placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            min_label: ''
+            max_label: ''
           is_grouped: false
           group_info:
             label: ''
