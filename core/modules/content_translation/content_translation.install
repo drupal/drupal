@@ -11,14 +11,15 @@ use Drupal\Core\Url;
 /**
  * Implements hook_install().
  */
-function content_translation_install(): void {
+function content_translation_install(bool $is_syncing): void {
   // Assign a fairly low weight to ensure our implementation of
   // hook_module_implements_alter() is run among the last ones.
   module_set_weight('content_translation', 10);
 
   // Skip the guidance messages about enabling translation features if the
-  // module was installed in the Drupal installation process.
-  if (InstallerKernel::installationAttempted()) {
+  // module was installed in the Drupal installation process or a config
+  // sync.
+  if (InstallerKernel::installationAttempted() || $is_syncing) {
     return;
   }
 
