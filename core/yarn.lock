@@ -3104,7 +3104,7 @@ __metadata:
     globals: "npm:^16.5.0"
     htmx.org: "npm:4.0.0"
     jquery: "npm:^4.0.0"
-    jquery-ui: "npm:^1.14.1"
+    jquery-ui: "npm:^1.14.2"
     jsdom: "npm:^27.1.0"
     loadjs: "npm:^4.3.0"
     minimist: "npm:^1.2.8"
@@ -6956,12 +6956,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery-ui@npm:^1.14.1":
-  version: 1.14.1
-  resolution: "jquery-ui@npm:1.14.1"
+"jquery-ui@npm:^1.14.2":
+  version: 1.14.2
+  resolution: "jquery-ui@npm:1.14.2"
   dependencies:
     jquery: "npm:>=1.12.0 <5.0.0"
-  checksum: 10c0/cf7a3c0aac369e513d78bc5864bbafb6ddf85a43513ca5d00b11d65e2890a6618ff2ef5b8cb2925db9a6b7d0c2482d717fb10cc813e419024ae8bc457e18f51d
+  checksum: 10c0/83b65744c4f4f2e9fa12833feb76c964f9565ef8301ef4e224e93e6c867e10a45d7da3e93bc7bcaec5227a61e09a2a6d1ce0198d9c38de08e4ada3d53a628615
   languageName: node
   linkType: hard
 
