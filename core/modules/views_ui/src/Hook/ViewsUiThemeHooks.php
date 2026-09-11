@@ -11,6 +11,7 @@ use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\Checkboxes;
 use Drupal\Core\Render\Element\Radios;
+use Drupal\Core\Render\Element\Table;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
@@ -317,7 +318,7 @@ class ViewsUiThemeHooks {
           'group' => 'views-group-select',
           'subgroup' => 'views-group-select-' . $group_id,
         ];
-        drupal_attach_tabledrag($form['override'], $options);
+        Table::attachTabledrag($form['override'], $options);
 
         // Title row, spanning all columns.
         $row = [];

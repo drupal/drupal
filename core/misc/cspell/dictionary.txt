@@ -197,6 +197,7 @@ fodt
 fouc
 fourcol
 francais
+franken
 français
 fraîche
 frontpage
