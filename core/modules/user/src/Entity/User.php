@@ -561,7 +561,11 @@ class User extends ContentEntityBase implements UserInterface {
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
-      ->setDescription(t('The time that the user was created.'));
+      ->setDescription(t('The time that the user was created.'))
+      ->setDisplayOptions('view', [
+        'region' => 'hidden',
+      ])
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))

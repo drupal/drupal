@@ -4,6 +4,7 @@ namespace Drupal\user\Hook;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\ConfigTarget;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -128,8 +129,9 @@ class UserHooks {
       ];
     }
     $fields['user']['user']['display']['member_for'] = [
-      'label' => $this->t('Member for'),
-      'description' => $this->t("User module 'member for' view element."),
+      'label' => $this->t('Member for (deprecated)'),
+      'description' => $this->t("User module 'member for' view element. This extra field is deprecated and will be removed in Drupal 13. Use the created field instead."),
+      'visible' => FALSE,
       'weight' => 5,
     ];
     return $fields;
@@ -144,8 +146,18 @@ class UserHooks {
       $build['member_for'] = [
         '#type' => 'item',
         '#markup' => '<h4 class="label">' . $this->t('Member for') . '</h4> ' . \Drupal::service('date.formatter')->formatTimeDiffSince($account->getCreatedTime()),
+        '#post_render' => [[self::class, 'triggerMemberForDeprecation']],
       ];
     }
+  }
+
+  /**
+   * Entity render array #post_render callback.
+   */
+  #[TrustedCallback]
+  public static function triggerMemberForDeprecation(string $renderedMemberFor, array $build): string {
+    @trigger_error('The user entity "member_for" display extra field is deprecated in drupal:11.5.0 and removed in drupal:13.0.0. Use the "created" field in displays instead. See https://www.drupal.org/node/3611943', E_USER_DEPRECATED);
+    return $renderedMemberFor;
   }
 
   /**
