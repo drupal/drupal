@@ -13,6 +13,8 @@ use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Update\DatabaseUpdate;
+use Drupal\Core\Update\UpdateHookRegistry;
 use Drupal\Core\Update\UpdateRegistry;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -101,6 +103,10 @@ class DbUpdateController extends ControllerBase {
    *   The post update registry.
    * @param \Drupal\Core\Asset\AssetQueryStringInterface $assetQueryString
    *   The asset query string.
+   * @param \Drupal\Core\Update\DatabaseUpdate|null $databaseUpdate
+   *   The database update service.
+   * @param \Drupal\Core\Update\UpdateHookRegistry|null $updateHookRegistry
+   *   The update hook registry.
    */
   public function __construct(
     $root,
@@ -112,6 +118,8 @@ class DbUpdateController extends ControllerBase {
     BareHtmlPageRendererInterface $bare_html_page_renderer,
     UpdateRegistry $post_update_registry,
     protected AssetQueryStringInterface $assetQueryString,
+    protected ?DatabaseUpdate $databaseUpdate = NULL,
+    protected ?UpdateHookRegistry $updateHookRegistry = NULL,
   ) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
@@ -121,6 +129,16 @@ class DbUpdateController extends ControllerBase {
     $this->account = $account;
     $this->bareHtmlPageRenderer = $bare_html_page_renderer;
     $this->postUpdateRegistry = $post_update_registry;
+
+    if ($this->databaseUpdate === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $databaseUpdate argument is deprecated in drupal:11.5.0 and it will be required in drupal:13.0.0. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
+      $this->databaseUpdate = \Drupal::service(DatabaseUpdate::class);
+    }
+
+    if ($this->updateHookRegistry === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $updateHookRegistry argument is deprecated in drupal:11.5.0 and it will be required in drupal:13.0.0. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
+      $this->updateHookRegistry = \Drupal::service('update.update_hook_registry');
+    }
   }
 
   /**
@@ -136,7 +154,9 @@ class DbUpdateController extends ControllerBase {
       $container->get('current_user'),
       $container->get('bare_html_page_renderer'),
       $container->get('update.post_update_registry'),
-      $container->get('asset.query_string')
+      $container->get('asset.query_string'),
+      $container->get(DatabaseUpdate::class),
+      $container->get('update.update_hook_registry'),
     );
   }
 
@@ -166,7 +186,7 @@ class DbUpdateController extends ControllerBase {
     }
 
     $regions = [];
-    $requirements = update_check_requirements();
+    $requirements = $this->databaseUpdate->getRequirements();
     $severity = RequirementSeverity::maxSeverityFromRequirements($requirements);
     if ($severity === RequirementSeverity::Error || ($severity === RequirementSeverity::Warning && !$request->getSession()->has('update_ignore_warnings'))) {
       $regions['sidebar_first'] = $this->updateTasksList('requirements');
@@ -633,10 +653,13 @@ class DbUpdateController extends ControllerBase {
         // correct place. (The updates are already sorted, so we can simply base
         // this on the first one we come across in the above foreach loop.)
         if (isset($start[$update['module']])) {
-          \Drupal::service('update.update_hook_registry')->setInstalledVersion($update['module'], $update['number'] - 1);
+          $this->updateHookRegistry->setInstalledVersion($update['module'], $update['number'] - 1);
           unset($start[$update['module']]);
         }
-        $batch_builder->addOperation('update_do_one', [$update['module'], $update['number'], $dependency_map[$function]]);
+        $batch_builder->addOperation(
+          DatabaseUpdate::class . ':doOne',
+          [$update['module'], $update['number'], $dependency_map[$function]],
+        );
       }
     }
 
@@ -668,7 +691,8 @@ class DbUpdateController extends ControllerBase {
    * @param bool $success
    *   Indicate that the batch API tasks were all completed successfully.
    * @param array $results
-   *   An array of all the results that were updated in update_do_one().
+   *   An array of all the results that were updated in
+   *   \Drupal\Core\Update\DatabaseUpdate::doOne().
    * @param array $operations
    *   A list of all the operations that had not been completed by the batch
    *   API.

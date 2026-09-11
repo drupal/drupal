@@ -2006,6 +2006,8 @@ services:
   email.validator:
     class: Drupal\Component\Utility\EmailValidator
   Drupal\Component\Utility\EmailValidatorInterface: '@email.validator'
+  Drupal\Core\Update\DatabaseUpdate:
+    autowire: true
   update.update_hook_registry:
     class: Drupal\Core\Update\UpdateHookRegistry
     arguments: ['%container.modules%', '@keyvalue']
@@ -2013,6 +2015,7 @@ services:
   update.post_update_registry:
     class: Drupal\Core\Update\UpdateRegistry
     arguments: ['%app.root%', '%site.path%', '%container.modules%', '@update.key_value.post_update', '@theme_handler', '@cache.memory', 'post_update']
+  Drupal\Core\Update\UpdateRegistry: '@update.post_update_registry'
   update.key_value.post_update:
     class: Drupal\Core\KeyValueStore\KeyValueStoreInterface
     factory: ['@keyvalue', 'get']

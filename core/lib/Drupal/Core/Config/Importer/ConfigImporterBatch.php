@@ -46,7 +46,7 @@ class ConfigImporterBatch {
    * @param bool $success
    *   Indicate that the batch API tasks were all completed successfully.
    * @param array $results
-   *   An array of all the results that were updated in update_do_one().
+   *   An array of all the results that were updated.
    * @param array $operations
    *   A list of the operations that had not been completed by the batch API.
    */
