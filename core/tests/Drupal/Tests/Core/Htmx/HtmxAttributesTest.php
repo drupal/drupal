@@ -359,6 +359,8 @@ class HtmxAttributesTest extends UnitTestCase {
       ['method', 'PUT', 'data-hx-method', 'PUT'],
       ['method', 'patch', 'data-hx-method', 'patch'],
       ['method', 'delete', 'data-hx-method', 'delete'],
+      ['morphSkip', NULL, 'data-hx-morph-skip', TRUE],
+      ['morphSkipChildren', NULL, 'data-hx-morph-skip-children', TRUE],
     ];
   }
 

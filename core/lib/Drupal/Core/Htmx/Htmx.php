@@ -1230,6 +1230,50 @@ class Htmx {
   }
 
   /**
+   * Creates a `data-hx-morph-skip` attribute.
+   *
+   * The hx-morph-skip attribute leaves an element untouched during
+   * a morph swap. htmx copies no attributes and morphs no children.
+   *
+   * As this attribute always marks a single element, modifiers are not
+   * applicable.
+   *
+   * @param bool $toggle
+   *   Whether to toggle the attribute on or off. Defaults to TRUE.
+   *
+   * @return static
+   *   Returns this object to allow chaining methods.
+   *
+   * @see https://four.htmx.org/reference/attributes/hx-morph-skip/
+   */
+  public function morphSkip(bool $toggle = TRUE): static {
+    $this->createBooleanAttribute('hx-morph-skip', $toggle, self::NO_MODIFIER);
+    return $this;
+  }
+
+  /**
+   * Creates a `data-hx-morph-skip-children` attribute.
+   *
+   * The hx-morph-skip-children attribute updates an element’s attributes
+   * during a morph swap but leaves its children alone.
+   *
+   * As this attribute always marks a single element, modifiers are not
+   * applicable.
+   *
+   * @param bool $toggle
+   *   Whether to toggle the attribute on or off. Defaults to TRUE.
+   *
+   * @return static
+   *   Returns this object to allow chaining methods.
+   *
+   * @see https://four.htmx.org/reference/attributes/hx-morph-skip-children/
+   */
+  public function morphSkipChildren(bool $toggle = TRUE): static {
+    $this->createBooleanAttribute('hx-morph-skip-children', $toggle, self::NO_MODIFIER);
+    return $this;
+  }
+
+  /**
    * Creates a `data-hx-preserve` attribute.
    *
    * This attribute instructs HTMX that matching elements should be kept
