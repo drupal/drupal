@@ -22,7 +22,7 @@ class YamlRouteDiscovery extends StaticRouteDiscoveryBase {
   ) {
     if (!isset($yamlCacheCollector)) {
       $this->yamlCacheCollector = \Drupal::service('routing.yaml_cache_collector');
-      @trigger_error('Calling ' . __METHOD__ . '() without the $yamlCacheCollector argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3486503', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $yamlCacheCollector argument is deprecated in drupal:11.4.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3593451', E_USER_DEPRECATED);
     }
   }
 

@@ -34,7 +34,7 @@ class BigPipeResponseAttachmentsProcessor extends HtmlResponseAttachmentsProcess
   public function __construct(AttachmentsResponseProcessorInterface $html_response_attachments_processor, AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, ?FileUrlGeneratorInterface $file_url_generator = NULL) {
     if (!isset($file_url_generator)) {
       $file_url_generator = \Drupal::service('file_url_generator');
-      @trigger_error('Constructing BigPipeResponseAttachmentsProcessor without a file url generator is deprecated in drupal:11.4.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3366561', E_USER_DEPRECATED);
+      @trigger_error('Constructing BigPipeResponseAttachmentsProcessor without a file url generator is deprecated in drupal:11.4.0 and the argument will be required in drupal:12.0.0. See https://www.drupal.org/node/3585574', E_USER_DEPRECATED);
     }
 
     $this->htmlResponseAttachmentsProcessor = $html_response_attachments_processor;

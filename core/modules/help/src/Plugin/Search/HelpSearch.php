@@ -32,7 +32,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Instead, use
  *   \Drupal\search_help\Plugin\Search\HelpSearch.
- * @see https://www.drupal.org/node/3581109
+ * @see https://www.drupal.org/node/3617771
  */
 #[Search(
   id: 'help_search',
@@ -143,7 +143,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
    *   The search index.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, Config $search_settings, LanguageManagerInterface $language_manager, MessengerInterface $messenger, AccountInterface $account, StateInterface $state, HelpSectionManager $help_section_manager, SearchIndexInterface $search_index) {
-    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Instead, use \Drupal\search_help\Plugin\Search\HelpSearch. See https://www.drupal.org/node/3581109', E_USER_DEPRECATED);
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Instead, use \Drupal\search_help\Plugin\Search\HelpSearch. See https://www.drupal.org/node/3617771', E_USER_DEPRECATED);
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->database = $database;
     $this->searchSettings = $search_settings;
