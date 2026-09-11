@@ -10,58 +10,37 @@
 
 use Drupal\Component\Graph\Graph;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
-use Drupal\Core\Extension\Requirement\RequirementSeverity;
-use Drupal\Core\Update\Attribute\MarkFutureUpdateEquivalent;
+use Drupal\Core\Update\DatabaseUpdate;
 use Drupal\Core\Utility\Error;
-use Drupal\Core\Update\EquivalentUpdate;
 
 /**
  * Returns whether the minimum schema requirement has been satisfied.
  *
  * @return array
  *   A requirements info array.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(DatabaseUpdate::class)->systemSchemaRequirements()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3013060
  */
 function update_system_schema_requirements(): array {
-  $requirements = [];
-
-  $system_schema = \Drupal::service('update.update_hook_registry')->getInstalledVersion('system');
-
-  $requirements['minimum schema']['title'] = 'Minimum schema version';
-  if ($system_schema >= \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
-    $requirements['minimum schema'] += [
-      'value' => 'The installed schema version meets the minimum.',
-      'description' => 'Schema version: ' . $system_schema,
-    ];
-  }
-  else {
-    $requirements['minimum schema'] += [
-      'value' => 'The installed schema version does not meet the minimum.',
-      'severity' => RequirementSeverity::Error,
-      'description' => 'Your system schema version is ' . $system_schema . '. Updating directly from a schema version prior to 8000 is not supported. You must upgrade your site to Drupal 8 (or later), see https://www.drupal.org/docs/upgrading-drupal.',
-    ];
-  }
-
-  return $requirements;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(DatabaseUpdate::class)->systemSchemaRequirements() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
+  return \Drupal::service(DatabaseUpdate::class)->systemSchemaRequirements();
 }
 
 /**
  * Checks update requirements and reports errors and (optionally) warnings.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(DatabaseUpdate::class)->getRequirements() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
  */
 function update_check_requirements() {
-  // Because this is one of the earliest points in the update process,
-  // detect and fix missing schema versions for modules here to ensure
-  // it runs on all update code paths.
-  _update_fix_missing_schema();
-
-  // Check requirements of all loaded modules.
-  $requirements = array_merge(
-    \Drupal::moduleHandler()->invokeAll('requirements', ['update']),
-    \Drupal::moduleHandler()->invokeAll('update_requirements')
-  );
-  \Drupal::moduleHandler()->alter('requirements', $requirements);
-  \Drupal::moduleHandler()->alter('update_requirements', $requirements);
-  $requirements += update_system_schema_requirements();
-  return $requirements;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(DatabaseUpdate::class)->getRequirements() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
+  return \Drupal::service(DatabaseUpdate::class)->getRequirements();
 }
 
 /**
@@ -72,51 +51,14 @@ function update_check_requirements() {
  * system would detect and attempt to run all historical updates for a
  * module.
  *
- * @todo remove in a major version after
- * https://www.drupal.org/project/drupal/issues/3130037 has been fixed.
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. This
+ *   function was for internal use only and has no replacement.
+ *
+ * @see https://www.drupal.org/node/3013060
  */
 function _update_fix_missing_schema(): void {
-  /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-  $update_registry = \Drupal::service('update.update_hook_registry');
-  $versions = $update_registry->getAllInstalledVersions();
-  $module_handler = \Drupal::moduleHandler();
-  $enabled_modules = $module_handler->getModuleList();
-
-  foreach (array_keys($enabled_modules) as $module) {
-    // All modules should have a recorded schema version, but when they
-    // don't, detect and fix the problem.
-    if (!isset($versions[$module])) {
-      // Ensure the .install file is loaded.
-      $module_handler->loadInclude($module, 'install');
-      $all_updates = $update_registry->getAvailableUpdates($module);
-      // If the schema version of a module hasn't been recorded, we cannot
-      // know the actual schema version a module is at, because
-      // no updates will ever have been run on the site and it was not set
-      // correctly when the module was installed, so instead set it to
-      // the same as the last update. This means that updates will proceed
-      // again the next time the module is updated and a new update is
-      // added. Updates added in between the module being installed and the
-      // schema version being fixed here (if any have been added) will never
-      // be run, but we have no way to identify which updates these are.
-      if ($all_updates) {
-        $last_update = max($all_updates);
-      }
-      else {
-        $last_update = \Drupal::CORE_MINIMUM_SCHEMA_VERSION;
-      }
-      // If the module implements hook_update_last_removed() use the
-      // value of that if it's higher than the schema versions found so
-      // far.
-      $function = $module . '_update_last_removed';
-      if (function_exists($function) && ($last_removed = $function())) {
-        $last_update = max($last_update, $last_removed);
-      }
-      $update_registry->setInstalledVersion($module, $last_update);
-      $args = ['%module' => $module, '%last_update_hook' => $module . '_update_' . $last_update . '()'];
-      \Drupal::messenger()->addWarning(t('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args));
-      \Drupal::logger('update')->warning('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args);
-    }
-  }
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. This function was for internal use only and has no replacement. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
+  \Drupal::service(DatabaseUpdate::class)->fixMissingSchema();
 }
 
 /**
@@ -126,6 +68,7 @@ function _update_fix_missing_schema(): void {
  *
  * If an update function completes successfully, it should return a message
  * as a string indicating success, for example:
+ *
  * @code
  * return t('New index added successfully.');
  * @endcode
@@ -162,78 +105,16 @@ function _update_fix_missing_schema(): void {
  * @param array $context
  *   The batch context array.
  *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::service(DatabaseUpdate::class)->doOne() instead.
+ *
+ * @see https://www.drupal.org/node/3013060
+ * @see \Drupal\Core\Update\DatabaseUpdate::doOne()
  * @see update_resolve_dependencies()
  */
 function update_do_one($module, $number, $dependency_map, &$context): void {
-  $function = $module . '_update_' . $number;
-
-  // If this update was aborted in a previous step, or has a dependency that
-  // was aborted in a previous step, go no further.
-  if (!empty($context['results']['#abort']) && array_intersect($context['results']['#abort'], array_merge($dependency_map, [$function]))) {
-    return;
-  }
-
-  $ret = [];
-  /** @var \Drupal\Core\Update\UpdateHookRegistry $update_hook_registry */
-  $update_hook_registry = \Drupal::service('update.update_hook_registry');
-  $equivalent_update = $update_hook_registry->getEquivalentUpdate($module, $number);
-  if ($equivalent_update instanceof EquivalentUpdate) {
-    $ret['results']['query'] = $equivalent_update->toSkipMessage();
-    $ret['results']['success'] = TRUE;
-    $context['sandbox']['#finished'] = TRUE;
-  }
-  elseif (function_exists($function)) {
-    try {
-      // Check for the MarkFutureUpdateEquivalent attribute on the update
-      // function to register a future equivalent update.
-      $attributes = (new \ReflectionFunction($function))->getAttributes(MarkFutureUpdateEquivalent::class);
-      foreach ($attributes as $attribute) {
-        /** @var \Drupal\Core\Update\Attribute\MarkFutureUpdateEquivalent $instance */
-        $instance = $attribute->newInstance();
-        $update_hook_registry->markFutureUpdateEquivalent($instance->futureUpdateNumber, $instance->futureVersionString, $module, $number);
-      }
-
-      $ret['results']['query'] = $function($context['sandbox']);
-      $ret['results']['success'] = TRUE;
-    }
-    // @todo We may want to do different error handling for different
-    // exception types, but for now we'll just log the exception and
-    // return the message for printing.
-    // @see https://www.drupal.org/node/2564311
-    catch (Exception $e) {
-      $variables = Error::decodeException($e);
-      \Drupal::logger('update')->error(Error::DEFAULT_ERROR_MESSAGE, $variables);
-
-      unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
-      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
-      $ret['#abort'] = ['success' => FALSE, 'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables)];
-    }
-  }
-
-  if (isset($context['sandbox']['#finished'])) {
-    $context['finished'] = $context['sandbox']['#finished'];
-    unset($context['sandbox']['#finished']);
-  }
-
-  if (!isset($context['results'][$module])) {
-    $context['results'][$module] = [];
-  }
-  if (!isset($context['results'][$module][$number])) {
-    $context['results'][$module][$number] = [];
-  }
-  $context['results'][$module][$number] = array_merge($context['results'][$module][$number], $ret);
-
-  if (!empty($ret['#abort'])) {
-    // Record this function in the list of updates that were aborted.
-    $context['results']['#abort'][] = $function;
-  }
-
-  // Record the schema update if it was completed successfully.
-  if ($context['finished'] == 1 && empty($ret['#abort'])) {
-    \Drupal::service('update.update_hook_registry')->setInstalledVersion($module, $number);
-  }
-
-  $context['message'] = t('Updating @module', ['@module' => $module]);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(DatabaseUpdate::class)->doOne() instead. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);
+  \Drupal::service(DatabaseUpdate::class)->doOne($module, (int) $number, $dependency_map, $context);
 }
 
 /**
