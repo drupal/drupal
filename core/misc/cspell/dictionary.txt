@@ -123,6 +123,7 @@ defgroup
 delayable
 deletedline
 delsp
+demi
 denormalizable
 denormalizer
 denormalizers
@@ -146,6 +147,7 @@ dragtable
 drillable
 dropbutton
 dropbuttons
+dtcg
 editables
 egulias
 elbonia

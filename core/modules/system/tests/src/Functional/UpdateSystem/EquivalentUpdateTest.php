@@ -233,7 +233,7 @@ class EquivalentUpdateTest extends BrowserTestBase {
     \Drupal::service('module_installer')->uninstall(['equivalent_update_test']);
 
     $this->assertNull($update_registry->getEquivalentUpdate('equivalent_update_test', 100101));
-    $this->assertEmpty($update_registry->getAllEquivalentUpdates());
+    $this->assertArrayNotHasKey('equivalent_update_test', $update_registry->getAllEquivalentUpdates());
   }
 
   /**

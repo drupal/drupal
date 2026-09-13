@@ -120,6 +120,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'entity_view_display' => 53,
       'entity_view_mode' => 12,
       'base_field_override' => 39,
+      'design_token' => 0,
     ];
   }
 

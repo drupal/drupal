@@ -78,6 +78,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'contact_form' => 2,
       'contact_message' => 0,
       'date_format' => 11,
+      'design_token' => 0,
       'editor' => 2,
       'entity_form_display' => 12,
       'entity_form_mode' => 1,

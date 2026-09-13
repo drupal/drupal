@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\FunctionalTests\Rest;
+
+use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+
+/**
+ * Tests Design Token Xml Cookie.
+ */
+#[Group('rest')]
+#[RunTestsInSeparateProcesses]
+class DesignTokenXmlCookieTest extends DesignTokenResourceTestBase {
+
+  use CookieResourceTestTrait;
+  use XmlEntityNormalizationQuirksTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $format = 'xml';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $mimeType = 'text/xml; charset=utf-8';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $auth = 'cookie';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+}

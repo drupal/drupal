@@ -32,3 +32,7 @@ administer menu:
 administer actions:
   title: 'Administer actions'
   restrict access: true
+administer design tokens:
+  title: 'Administer design token entities'
+  description: 'Allows to administer the design tokens.'
+  restrict access: true

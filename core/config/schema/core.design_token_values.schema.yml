@@ -1,0 +1,48 @@
+design_token_value.dimension:
+  type: mapping
+  label: 'Dimension'
+  mapping:
+    value:
+      type: float
+      label: 'Value'
+    unit:
+      type: string
+      label: 'Unit'
+
+design_token_value.fontFamily:
+  type: sequence
+  label: 'Font families'
+  sequence:
+    type: string
+
+design_token_value.fontWeight:
+  type: integer
+  label: 'Font weight'
+  constraints:
+    Range:
+      min: 1
+      max: 1000
+
+design_token_value.number:
+  type: float
+  label: 'Number'
+
+design_token_value.typography:
+  type: mapping
+  label: 'Typography'
+  mapping:
+    fontFamily:
+      type: design_token_value.fontFamily
+      label: 'Font families'
+    fontSize:
+      type: design_token_value.dimension
+      label: 'Font size'
+    fontWeight:
+      type: design_token_value.fontWeight
+      label: 'Font weight'
+    letterSpacing:
+      type: design_token_value.dimension
+      label: 'Letter spacing'
+    lineHeight:
+      type: design_token_value.number
+      label: 'Line height'

@@ -1,0 +1,113 @@
+# @see \Drupal\KernelTests\Core\Theme\DesignToken\DesignTokenConfigEntityKernelTest
+{
+  "color": {
+    "palette": {
+      "violet": {
+        "$type": "color",
+        "$value": "#7c3aed"
+      },
+      "rose": {
+        "$type": "color",
+        "$value": "#e11d48"
+      }
+    },
+    "semantic": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.violet}"
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{color.palette.rose}"
+      }
+    }
+  },
+  "fontSize": {
+    "small": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "medium": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "large": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      }
+    }
+  },
+  "font_family": {
+    "Primary font": {
+      "$value": "Comic Sans MS",
+      "$type": "fontFamily"
+    },
+    "Body font": {
+      "$value": ["Helvetica", "Arial", "sans-serif"],
+      "$type": "fontFamily"
+    }
+  },
+  "fontWeight": {
+    "light": {
+      "$type": "fontWeight",
+      "$value": 300
+    },
+    "normal": {
+      "$type": "fontWeight",
+      "$value": "regular"
+    },
+    "bold": {
+      "$type": "fontWeight",
+      "$value": 600
+    }
+  },
+  "spacing": {
+    "small": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      }
+    },
+    "medium": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      }
+    },
+    "large": {
+      "$type": "dimension",
+      "$value": {
+        "value": 20,
+        "unit": "px"
+      }
+    }
+  },
+  "type styles": {
+    "heading-level-1": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Roboto",
+        "fontSize": {
+          "value": 42,
+          "unit": "px"
+        },
+        "fontWeight": 700,
+        "letterSpacing": {
+          "value": 0.1,
+          "unit": "px"
+        },
+        "lineHeight": 1.2
+      }
+    }
+  }
+}
