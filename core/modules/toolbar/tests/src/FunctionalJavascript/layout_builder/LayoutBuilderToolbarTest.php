@@ -6,6 +6,7 @@ namespace Drupal\Tests\toolbar\FunctionalJavascript\layout_builder;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('layout_builder')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class LayoutBuilderToolbarTest extends WebDriverTestBase {
 
   /**

@@ -6,6 +6,7 @@ namespace Drupal\Tests\toolbar\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('toolbar')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class ToolbarHookToolbarTest extends BrowserTestBase {
 
   /**

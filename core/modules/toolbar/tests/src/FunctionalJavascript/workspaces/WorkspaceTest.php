@@ -8,6 +8,7 @@ use Drupal\dynamic_page_cache\EventSubscriber\DynamicPageCacheSubscriber;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\workspaces\Functional\WorkspaceTestUtilities;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('toolbar')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class WorkspaceTest extends BrowserTestBase {
 
   use WorkspaceTestUtilities;

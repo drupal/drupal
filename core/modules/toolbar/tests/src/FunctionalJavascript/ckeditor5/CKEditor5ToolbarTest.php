@@ -10,6 +10,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\user\Entity\User;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
@@ -20,6 +21,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  */
 #[Group('toolbar')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class CKEditor5ToolbarTest extends WebDriverTestBase {
 
   /**

@@ -6,6 +6,7 @@ namespace Drupal\Tests\toolbar\FunctionalJavascript\contextual;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('toolbar')]
 #[Group('#slow')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class EditModeTest extends WebDriverTestBase {
 
   /**
