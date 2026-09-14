@@ -59,10 +59,6 @@ services:
     arguments: ['@current_user', '@entity_type.manager']
     tags:
       - { name: 'context_provider' }
-  user.toolbar_link_builder:
-    class: Drupal\user\ToolbarLinkBuilder
-    arguments: ['@current_user']
-  Drupal\user\ToolbarLinkBuilder: '@user.toolbar_link_builder'
   user.flood_control:
     class: Drupal\user\UserFloodControl
     arguments: ['@flood', '@event_dispatcher', '@request_stack']

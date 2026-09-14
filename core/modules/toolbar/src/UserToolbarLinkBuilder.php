@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\user;
+namespace Drupal\toolbar;
 
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -8,9 +8,9 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
 /**
- * ToolbarLinkBuilder fills out the placeholders generated in user_toolbar().
+ * Fills out the placeholders generated in ToolbarHooks::userToolbar().
  */
-class ToolbarLinkBuilder implements TrustedCallbackInterface {
+class UserToolbarLinkBuilder implements TrustedCallbackInterface {
 
   use StringTranslationTrait;
 
@@ -22,7 +22,7 @@ class ToolbarLinkBuilder implements TrustedCallbackInterface {
   protected $account;
 
   /**
-   * ToolbarHandler constructor.
+   * Constructs a UserToolbarLinkBuilder object.
    *
    * @param \Drupal\Core\Session\AccountProxyInterface $account
    *   The current user.

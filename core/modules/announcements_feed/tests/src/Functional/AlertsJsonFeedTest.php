@@ -32,7 +32,7 @@ class AlertsJsonFeedTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * A user with permission to access toolbar and access announcements.
+   * A user with permission to access announcements.
    *
    * @var \Drupal\user\UserInterface
    */

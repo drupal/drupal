@@ -2,7 +2,6 @@
 
 namespace Drupal\toolbar\Hook;
 
-use Drupal\announcements_feed\RenderCallbacks;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Hook\Attribute\HookDependsOnModule;
 use Drupal\Core\Render\ElementInfoManagerInterface;
@@ -10,6 +9,7 @@ use Drupal\Core\Routing\AdminContext;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\toolbar\Controller\ToolbarController;
+use Drupal\toolbar\RenderCallbacks;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
@@ -190,7 +190,7 @@ class ToolbarHooks {
       '#type' => 'toolbar_item',
       'tab' => [
         '#lazy_builder' => [
-          'announcements_feed.lazy_builders:renderAnnouncements',
+          'toolbar.announcements_feed_link_builder:renderAnnouncements',
           [],
         ],
         '#create_placeholder' => TRUE,
@@ -225,7 +225,7 @@ class ToolbarHooks {
   protected function contextualToolbar(): array {
     $items = [];
     $items['contextual'] = ['#cache' => ['contexts' => ['user.permissions']]];
-    if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
+    if (!$this->currentUser->hasPermission('access contextual links')) {
       return $items;
     }
     $items['contextual'] += [
@@ -251,7 +251,7 @@ class ToolbarHooks {
       ],
       '#attached' => [
         'library' => [
-          'contextual/drupal.contextual-toolbar',
+          'toolbar/toolbar.contextual',
         ],
       ],
     ];
@@ -292,7 +292,7 @@ class ToolbarHooks {
   }
 
   protected function userToolbar(): array {
-    $user = \Drupal::currentUser();
+    $user = $this->currentUser;
     $items['user'] = [
       '#type' => 'toolbar_item',
       'tab' => [
@@ -317,11 +317,6 @@ class ToolbarHooks {
         '#heading' => $this->t('User account actions'),
       ],
       '#weight' => 100,
-      '#attached' => [
-        'library' => [
-          'user/drupal.user.icons',
-        ],
-      ],
     ];
     if ($user->isAnonymous()) {
       $links = [
@@ -343,7 +338,7 @@ class ToolbarHooks {
     else {
       $items['user']['tab']['#title'] = [
         '#lazy_builder' => [
-          'user.toolbar_link_builder:renderDisplayName',
+          'toolbar.user_link_builder:renderDisplayName',
           [],
         ],
         '#create_placeholder' => TRUE,
@@ -356,7 +351,7 @@ class ToolbarHooks {
       ];
       $items['user']['tray']['user_links'] = [
         '#lazy_builder' => [
-          'user.toolbar_link_builder:renderToolbarLinks',
+          'toolbar.user_link_builder:renderToolbarLinks',
           [],
         ],
         '#create_placeholder' => TRUE,

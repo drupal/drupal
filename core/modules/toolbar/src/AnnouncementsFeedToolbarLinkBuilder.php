@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\announcements_feed;
+namespace Drupal\toolbar;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
@@ -12,36 +12,32 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
 /**
- * Defines a class for lazy building render arrays.
+ * Lazy builder for the announcements toolbar tab.
+ *
+ * Fills out the placeholder generated in
+ * ToolbarHooks::announcementsFeedToolbar().
  *
  * @internal
  */
-final class LazyBuilders implements TrustedCallbackInterface {
+final class AnnouncementsFeedToolbarLinkBuilder implements TrustedCallbackInterface {
 
   use StringTranslationTrait;
 
-  /**
-   * Constructs LazyBuilders object.
-   *
-   * @param \Drupal\Core\Render\ElementInfoManagerInterface $elementInfo
-   *   Element info.
-   */
   public function __construct(
-    protected ElementInfoManagerInterface $elementInfo,
-  ) {
-  }
+    protected readonly ElementInfoManagerInterface $elementInfo,
+  ) {}
 
   /**
-   * Render announcements.
+   * Lazy builder callback for rendering the announcements toolbar tab.
    *
    * @return array
-   *   Render array.
+   *   A renderable array as expected by the renderer service.
    */
   public function renderAnnouncements(): array {
     $build = [
       '#type' => 'link',
       '#cache' => [
-        'context' => ['user.permissions'],
+        'contexts' => ['user.permissions'],
       ],
       '#title' => $this->t('Announcements'),
       '#url' => Url::fromRoute('announcements_feed.announcement'),
@@ -74,7 +70,7 @@ final class LazyBuilders implements TrustedCallbackInterface {
       ],
       '#attached' => [
         'library' => [
-          'announcements_feed/drupal.announcements_feed.toolbar',
+          'toolbar/toolbar.announcements_feed',
         ],
       ],
     ];

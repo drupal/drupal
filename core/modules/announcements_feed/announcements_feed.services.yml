@@ -14,10 +14,6 @@ services:
     parent: logger.channel_base
     arguments: ['announcements_feed']
     public: false
-  announcements_feed.lazy_builders:
-    class: Drupal\announcements_feed\LazyBuilders
-    arguments: [ '@plugin.manager.element_info']
-  Drupal\announcements_feed\LazyBuilders: '@announcements_feed.lazy_builders'
   announcements_feed.renderer:
     class: Drupal\announcements_feed\AnnounceRenderer
     arguments: ['@announcements_feed.fetcher', '%announcements_feed.feed_link%']

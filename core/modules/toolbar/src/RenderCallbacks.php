@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\announcements_feed;
+namespace Drupal\toolbar;
 
 use Drupal\Core\Security\TrustedCallbackInterface;
 

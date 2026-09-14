@@ -50,9 +50,3 @@ drupal.user.permissions:
       deprecation_link: https://www.drupal.org/node/3471539
       js:
         user.permissions.js: 'js/user.permissions.js'
-
-drupal.user.icons:
-  version: VERSION
-  css:
-    theme:
-      css/user.icons.admin.css: {}
