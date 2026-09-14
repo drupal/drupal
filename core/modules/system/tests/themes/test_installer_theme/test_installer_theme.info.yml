@@ -1,5 +1,5 @@
 name: 'Custom installer theme'
 type: theme
 description: 'A custom installer theme to test that the installer can be themed.'
-base theme: claro
+base theme: default_admin
 version: VERSION

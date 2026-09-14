@@ -49,7 +49,7 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
         'name' => 'My Distribution',
         'langcode' => $this->langcode,
         'install' => [
-          'theme' => 'claro',
+          'theme' => 'default_admin',
         ],
       ],
     ];
