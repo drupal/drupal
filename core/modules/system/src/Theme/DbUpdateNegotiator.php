@@ -50,8 +50,8 @@ class DbUpdateNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    // The update page always uses Claro to ensure stability.
-    return 'claro';
+    // The update page always uses Default Admin to ensure stability.
+    return 'default_admin';
   }
 
 }
