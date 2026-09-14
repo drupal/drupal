@@ -7,6 +7,7 @@ namespace Drupal\Tests\toolbar\FunctionalJavascript\announcements_feed;
 use Drupal\announce_feed_test\AnnounceTestHttpClientMiddleware;
 use Drupal\Tests\system\FunctionalJavascript\OffCanvasTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -14,6 +15,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('toolbar')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class AccessAnnouncementTest extends OffCanvasTestBase {
 
   /**

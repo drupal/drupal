@@ -10,6 +10,7 @@ use Drupal\toolbar\PageCache\AllowToolbarPath;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 #[CoversClass(AllowToolbarPath::class)]
 #[Group('toolbar')]
+#[IgnoreDeprecations]
 class AllowToolbarPathTest extends UnitTestCase {
 
   /**

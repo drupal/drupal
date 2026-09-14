@@ -8,6 +8,7 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\WaitTerminateTestTrait;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('Theme')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class ToolbarClaroOverridesTest extends BrowserTestBase {
 
   use WaitTerminateTestTrait;
