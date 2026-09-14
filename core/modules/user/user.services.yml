@@ -50,9 +50,6 @@ services:
     class: Drupal\user\ContextProvider\CurrentUserContext
     tags:
       - { name: 'context_provider' }
-  user.toolbar_link_builder:
-    class: Drupal\user\ToolbarLinkBuilder
-  Drupal\user\ToolbarLinkBuilder: '@user.toolbar_link_builder'
   user.flood_control:
     class: Drupal\user\UserFloodControl
   Drupal\user\UserFloodControlInterface: '@user.flood_control'

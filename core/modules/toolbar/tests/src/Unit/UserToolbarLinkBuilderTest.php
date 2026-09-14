@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\toolbar\Unit\user;
+namespace Drupal\Tests\toolbar\Unit;
 
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\user\ToolbarLinkBuilder;
+use Drupal\toolbar\UserToolbarLinkBuilder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
- * Tests user's ToolbarLinkBuilder.
+ * Tests toolbar's UserToolbarLinkBuilder.
  */
-#[CoversClass(ToolbarLinkBuilder::class)]
+#[CoversClass(UserToolbarLinkBuilder::class)]
 #[Group('toolbar')]
-class ToolbarLinkBuilderTest extends UnitTestCase {
+class UserToolbarLinkBuilderTest extends UnitTestCase {
 
   /**
    * Tests structure of display name render array.
@@ -24,7 +24,7 @@ class ToolbarLinkBuilderTest extends UnitTestCase {
     $account = $this->prophesize(AccountProxyInterface::class);
     $display_name = 'Something suspicious that should be #plain_text, not #markup';
     $account->getDisplayName()->willReturn($display_name);
-    $toolbar_link_builder = new ToolbarLinkBuilder($account->reveal());
+    $toolbar_link_builder = new UserToolbarLinkBuilder($account->reveal());
     $expected = ['#plain_text' => $display_name];
     $this->assertSame($expected, $toolbar_link_builder->renderDisplayName());
   }

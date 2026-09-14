@@ -16,6 +16,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class BigPipeTestController implements TrustedCallbackInterface {
 
   /**
+   * The fixed name returned by ::displayName().
+   *
+   * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipePreviewTest
+   */
+  const DISPLAY_NAME = 'James Bond';
+
+  /**
    * Returns all BigPipe placeholder test case render arrays.
    *
    * @return array
@@ -109,7 +116,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
         '#type' => 'container',
         '#attributes' => ['id' => 'placeholder-preview-twig-container'],
         'user' => [
-          '#lazy_builder' => ['user.toolbar_link_builder:renderDisplayName', []],
+          '#lazy_builder' => [static::class . '::displayName', []],
           '#create_placeholder' => TRUE,
         ],
       ],
@@ -127,6 +134,18 @@ class BigPipeTestController implements TrustedCallbackInterface {
         ],
       ],
     ];
+  }
+
+  /**
+   * Render API callback: Builds a fixed display name.
+   *
+   * This function is assigned as a #lazy_builder callback.
+   *
+   * @return array
+   *   A render array with a fixed name as plain text.
+   */
+  public static function displayName(): array {
+    return ['#plain_text' => self::DISPLAY_NAME];
   }
 
   /**
@@ -293,6 +312,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
    */
   public static function trustedCallbacks() {
     return [
+      'displayName',
       'currentTime',
       'piggy',
       'helloOrHi',

@@ -78,7 +78,7 @@ class ContextualLinksTest extends WebDriverTestBase {
    */
   public function testContextualLinksClick(): void {
     $this->container->get('module_installer')->install(['contextual_test']);
-    // Test clicking contextual link without toolbar.
+    // Test clicking contextual link.
     $this->drupalGet('user');
     $this->clickContextualLink('#block-branding', 'Test Link');
     $this->assertSession()->pageTextContains('Everything is contextual!');

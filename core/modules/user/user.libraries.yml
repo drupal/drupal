@@ -30,9 +30,3 @@ drupal.user.permissions:
     - core/drupal.checkbox
     - core/drupal.debounce
     - core/drupal.announce
-
-drupal.user.icons:
-  version: VERSION
-  css:
-    theme:
-      css/user.icons.admin.css: {}

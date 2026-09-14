@@ -88,6 +88,20 @@
 .toolbar-bar .toolbar-icon-help.is-active::before {
   background-image: url(../../../misc/icons/ffffff/questionmark-disc.svg);
 }
+.toolbar-bar .toolbar-icon-user::before {
+  background-image: url(../icons/bebebe/person.svg);
+}
+.toolbar-bar .toolbar-icon-user:active::before,
+.toolbar-bar .toolbar-icon-user.is-active::before {
+  background-image: url(../icons/ffffff/person.svg);
+}
+.toolbar-bar .toolbar-icon-edit::before {
+  background-image: url(../icons/bebebe/pencil.svg);
+}
+.toolbar-bar .toolbar-icon-edit:active::before,
+.toolbar-bar .toolbar-icon-edit.is-active::before {
+  background-image: url(../icons/ffffff/pencil.svg);
+}
 
 /**
  * Main menu icons.
