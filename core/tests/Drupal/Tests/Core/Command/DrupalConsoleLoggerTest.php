@@ -22,7 +22,7 @@ class DrupalConsoleLoggerTest extends UnitTestCase {
    */
   public function testToPsr3Exception(): void {
     $this->expectException(InvalidArgumentException::class);
-    $this->expectExceptionMessageIs('Invalid log level: -1000');
+    $this->expectExceptionMessage('Invalid log level: -1000');
     DrupalConsoleLogger::toPsr3(-1000);
   }
 
