@@ -38,14 +38,10 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
     MaintenanceModeInterface $maintenance_mode,
     AccountInterface $account,
     #[AutowireServiceClosure(LogoutFinalizer::class)]
-    ?\Closure $logoutFinalizer = NULL,
+    \Closure $logoutFinalizer,
   ) {
     $this->maintenanceMode = $maintenance_mode;
     $this->account = $account;
-    if ($logoutFinalizer === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $logoutFinalizer argument is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $logoutFinalizer = fn () => \Drupal::service(LogoutFinalizer::class);
-    }
     $this->logoutFinalizer = $logoutFinalizer;
   }
 

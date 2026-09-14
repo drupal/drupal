@@ -59,17 +59,13 @@ class UpdateManager implements UpdateManagerInterface {
     protected ThemeHandlerInterface $themeHandler,
     protected ModuleExtensionList $moduleExtensionList,
     protected ThemeExtensionList $themeExtensionList,
-    protected ?UpdateCalculator $updateCalculator = NULL,
+    protected UpdateCalculator $updateCalculator,
   ) {
     $this->updateSettings = $config_factory->get('update.settings');
     $this->stringTranslation = $translation;
     $this->keyValueStore = $key_value_expirable_factory->get('update');
     $this->availableReleasesTempStore = $key_value_expirable_factory->get('update_available_releases');
     $this->projects = [];
-    if (!$updateCalculator) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $updateCalculator argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3587768', E_USER_DEPRECATED);
-      $this->updateCalculator = \Drupal::service(UpdateCalculator::class);
-    }
   }
 
   /**

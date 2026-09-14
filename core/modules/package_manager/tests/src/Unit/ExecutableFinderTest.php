@@ -11,11 +11,9 @@ use Drupal\Core\Site\Settings;
 use Drupal\package_manager\ExecutableFinder;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
-use PhpTuf\ComposerStager\API\Exception\LogicException;
 use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\TestWith;
 
 /**
@@ -90,40 +88,6 @@ class ExecutableFinderTest extends UnitTestCase {
     // If all else fails, the decorated executable finder should be called.
     new Settings([]);
     $this->assertSame('the real Composer', $finder->find('composer'));
-  }
-
-  /**
-   * Tests that the executable finder falls back to looking in config for paths.
-   */
-  #[IgnoreDeprecations]
-  public function testLegacyExecutablePaths(): void {
-    $exception = $this->prophesize(LogicException::class);
-
-    $decorated = $this->prophesize(ExecutableFinderInterface::class);
-    $decorated->find('composer')->willThrow($exception->reveal());
-    $decorated->find('rsync')->willThrow($exception->reveal());
-
-    $finder = new ExecutableFinder(
-      $decorated->reveal(),
-      $this->prophesize(FileSystemInterface::class)->reveal(),
-      $this->getConfigFactoryStub([
-        'package_manager.settings' => [
-          'executables' => [
-            'composer' => 'legacy-composer',
-            'rsync' => 'legacy-rsync',
-          ],
-        ],
-      ]),
-    );
-    // Simulate Composer not being locally installed, with no fallback setting.
-    $reflector = new \ReflectionProperty($finder, 'composerPackagePath');
-    $reflector->setValue($finder, FALSE);
-
-    $this->expectUserDeprecationMessage("Storing the path to Composer in configuration is deprecated in drupal:11.2.4 and not supported in drupal:12.0.0. Add composer/composer directly to your project's dependencies instead. See https://www.drupal.org/node/3540264");
-    $finder->find('composer');
-
-    $this->expectUserDeprecationMessage("Storing the path to rsync in configuration is deprecated in drupal:11.2.4 and not supported in drupal:12.0.0. Move it to the <code>package_manager_rsync_path</code> setting instead. See https://www.drupal.org/node/3540264");
-    $finder->find('rsync');
   }
 
 }

@@ -24,11 +24,6 @@ class DrupalRuntime extends SymfonyRuntime {
     // Drupal to read this file.
     $options['disable_dotenv'] ??= TRUE;
 
-    // Although accessing the autoloader through globals is discouraged. It is
-    // possible at the time of introducing symfony/runtime, so we must keep this
-    // available for backwards compatibility.
-    $GLOBALS['autoloader'] = new DeprecatedAutoloadAccess();
-
     // Symfony's default runtime is `dev`, but Drupal expects this to be `prod`
     // if nothing is set so we must overwrite it.
     $envKey = $options['env_var_name'] ??= 'APP_ENV';

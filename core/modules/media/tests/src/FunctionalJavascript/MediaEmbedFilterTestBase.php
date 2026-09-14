@@ -26,15 +26,6 @@ abstract class MediaEmbedFilterTestBase extends MediaJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function setUpBeforeClass(): void {
-    parent::setUpBeforeClass();
-    // Necessary for code coverage to work.
-    require_once __DIR__ . '/../../../media.module';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
 

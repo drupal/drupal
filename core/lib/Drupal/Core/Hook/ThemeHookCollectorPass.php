@@ -226,22 +226,16 @@ class ThemeHookCollectorPass extends HookCollectorBase implements CompilerPassIn
     $hookFileCache = FileCacheFactory::get('theme_hook_implementations');
     $proceduralHookFileCache = FileCacheFactory::get('theme_procedural_hook_implementations:' . $allThemesPreg);
 
-    foreach ($this->getHookFileIterator($dir, ["$theme.theme", 'theme-settings.php']) as $fileinfo) {
+    foreach ($this->getHookFileIterator($dir, ["$theme.theme"]) as $fileinfo) {
       assert($fileinfo instanceof \SplFileInfo);
       $fileExtension = $fileinfo->getExtension();
       $filename = $fileinfo->getPathname();
-
-      $isThemeSettings = str_ends_with($filename, 'theme-settings.php');
 
       if ($fileExtension === 'theme') {
         $this->deprecatedThemeFiles[pathinfo($filename, PATHINFO_FILENAME)] = TRUE;
       }
 
-      if ($isThemeSettings) {
-        @trigger_error('Using a theme-settings.php file in the ' . $theme . ' theme is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. Convert the hooks to use attributes or move to the .theme file. See https://www.drupal.org/node/3587273', E_USER_DEPRECATED);
-      }
-
-      if ($fileExtension === 'php' && !$isThemeSettings) {
+      if ($fileExtension === 'php') {
         $cached = $hookFileCache->get($filename);
         if ($cached) {
           $class = $cached['class'];

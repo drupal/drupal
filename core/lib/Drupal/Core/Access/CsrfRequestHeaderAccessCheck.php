@@ -74,12 +74,7 @@ class CsrfRequestHeaderAccessCheck implements AccessInterface {
       }
       $csrf_token = $request->headers->get('X-CSRF-Token');
       if (!$this->csrfToken->validate($csrf_token, self::TOKEN_KEY)) {
-        if ($this->csrfToken->validate($csrf_token, 'rest')) {
-          @trigger_error("Validating CSRF tokens with the 'rest' key is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Sessions created before the upgrade to Drupal 9 are no longer supported. See https://www.drupal.org/node/3591939", E_USER_DEPRECATED);
-        }
-        else {
-          return AccessResult::forbidden()->setReason('X-CSRF-Token request header is invalid')->setCacheMaxAge(0);
-        }
+        return AccessResult::forbidden()->setReason('X-CSRF-Token request header is invalid')->setCacheMaxAge(0);
       }
     }
     // Let other access checkers decide if the request is legit.

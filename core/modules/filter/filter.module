@@ -226,52 +226,6 @@ function check_markup($text, $format_id = NULL, $langcode = '', $filter_types_to
 }
 
 /**
- * Retrieves the filter tips.
- *
- * @param string $format_id
- *   The ID of the text format for which to retrieve tips, or -1 to return tips
- *   for all formats accessible to the current user.
- *
- * @return array
- *   An associative array of filtering tips, keyed by filter name. Each
- *   filtering tip is an associative array with elements:
- *   - tip: Tip text.
- *   - id: Filter ID.
- *
- * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no
- *   replacement.
- *
- * @see https://www.drupal.org/node/3566774
- */
-function _filter_tips($format_id): array {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
-  $formats = \Drupal::service(FilterFormatRepositoryInterface::class)->getFormatsForAccount(\Drupal::currentUser());
-
-  $tips = [];
-
-  // If only listing one format, extract it from the $formats array.
-  if ($format_id != -1) {
-    $formats = [$formats[$format_id]];
-  }
-
-  foreach ($formats as $format) {
-    foreach ($format->filters() as $name => $filter) {
-      if ($filter->status) {
-        $tip = $filter->tips();
-        if (isset($tip)) {
-          $tips[$format->label()][$name] = [
-            'tip' => ['#markup' => $tip],
-            'id' => $name,
-          ];
-        }
-      }
-    }
-  }
-
-  return $tips;
-}
-
-/**
  * @defgroup standard_filters Standard filters
  * @{
  * Filters implemented by the Filter module.

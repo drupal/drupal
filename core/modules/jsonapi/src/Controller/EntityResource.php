@@ -92,13 +92,8 @@ class EntityResource {
     protected TimeInterface $time,
     protected AccountInterface $user,
     protected EventDispatcherInterface $eventDispatcher,
-    protected ?AccountCancellation $accountCancellation = NULL,
+    protected AccountCancellation $accountCancellation,
   ) {
-    if ($accountCancellation === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $accountCancellation argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3620934', E_USER_DEPRECATED);
-      $accountCancellation = \Drupal::service(AccountCancellation::class);
-    }
-    $this->accountCancellation = $accountCancellation;
   }
 
   /**

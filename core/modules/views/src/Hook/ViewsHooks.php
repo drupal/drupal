@@ -252,7 +252,7 @@ class ViewsHooks {
     if (str_starts_with($block->getPluginId(), 'views_block:')) {
       $settings = $block->get('settings');
       if (isset($settings['items_per_page']) && $settings['items_per_page'] === 'none') {
-        @trigger_error('Saving a views block with "none" items per page is deprecated in drupal:11.2.0 and removed in drupal:12.0.0. To use the items per page defined by the view, use NULL. See https://www.drupal.org/node/3522240', E_USER_DEPRECATED);
+        @trigger_error('Saving a views block with "none" items per page is deprecated in drupal:11.2.0 and removed in drupal:13.0.0. To use the items per page defined by the view, use NULL. See https://www.drupal.org/node/3522240', E_USER_DEPRECATED);
         $settings['items_per_page'] = NULL;
         $block->set('settings', $settings);
       }

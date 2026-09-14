@@ -4,7 +4,6 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Core\Access\CheckProviderInterface;
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\DestructableInterface;
 use Drupal\Component\EventDispatcher\Event;
@@ -13,11 +12,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Managing class for rebuilding the router table.
- *
- * Deprecated service properties:
- *
- * @property \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
- * @property \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
  */
 class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
   use DeprecatedServicePropertyTrait;
@@ -84,17 +78,10 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
   /**
    * Constructs the RouteBuilder using the passed MatcherDumperInterface.
    */
-  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, CheckProviderInterface|ModuleHandlerInterface $check_provider) {
+  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, CheckProviderInterface $check_provider) {
     $this->dumper = $dumper;
     $this->lock = $lock;
     $this->dispatcher = $dispatcher;
-    if ($check_provider instanceof ModuleHandlerInterface && count(func_get_args()) === 6) {
-      $check_provider = func_get_arg(5);
-      @trigger_error('Calling ' . __METHOD__ . '() with the module handler and controller resolver services is deprecated in drupal:11.4.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3324751', E_USER_DEPRECATED);
-    }
-    if (!$check_provider instanceof CheckProviderInterface) {
-      throw new \InvalidArgumentException();
-    }
     $this->checkProvider = $check_provider;
   }
 

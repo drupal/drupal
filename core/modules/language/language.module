@@ -8,31 +8,11 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Element\LanguageConfiguration;
 use Drupal\language\Entity\ContentLanguageSettings;
-use Drupal\language\Hook\LanguageHooks;
-
-/**
- * Processes a language select list form element.
- *
- * @param array $element
- *   The form element to process.
- *
- * @return array
- *   The processed form element.
- *
- * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
- *   \Drupal\language\Hook\LanguageHooks::processLanguageSelect() instead.
- *
- * @see https://www.drupal.org/node/3566774
- */
-function language_process_language_select($element) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use \Drupal\language\Hook\LanguageHooks::processLanguageSelect() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
-  return \Drupal::service(LanguageHooks::class)->processLanguageSelect($element);
-}
 
 /**
  * Submit handler for the forms that have a language_configuration element.
  *
- * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
+ * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use
  *   \Drupal\language\Element\LanguageConfiguration::submit() instead.
  *
  * @see https://www.drupal.org/node/3566774

@@ -20,12 +20,10 @@ use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\Routing\YamlRouteDiscovery;
 use Drupal\Core\Utility\YamlCacheCollector;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Route;
@@ -370,13 +368,6 @@ class RouteBuilderTest extends UnitTestCase implements EventSubscriberInterface 
     $this->assertTrue($this->routeBuilder->rebuild());
     $this->assertTrue($this->dynamicFired);
     $this->assertTrue($this->alterFired);
-  }
-
-  #[IgnoreDeprecations]
-  #[AllowMockObjectsWithoutExpectations]
-  public function testDeprecatedConstructorArgs(): void {
-    $this->expectUserDeprecationMessage('Calling Drupal\Core\Routing\RouteBuilder::__construct() with the module handler and controller resolver services is deprecated in drupal:11.4.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3324751');
-    new RouteBuilder($this->dumper, $this->lock, $this->dispatcher, $this->moduleHandler, $this->controllerResolver, $this->checkProvider);
   }
 
   public function onRouteDynamic(RouteBuildEvent $event): void {

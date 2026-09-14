@@ -56,16 +56,11 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
     PrivateTempStoreFactory $temp_store_factory,
     UserStorageInterface $user_storage,
     EntityTypeManagerInterface $entity_type_manager,
-    protected ?AccountCancellation $accountCancellation = NULL,
+    protected AccountCancellation $accountCancellation,
   ) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->userStorage = $user_storage;
     $this->entityTypeManager = $entity_type_manager;
-    if ($accountCancellation === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $accountCancellation argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3620934', E_USER_DEPRECATED);
-      $accountCancellation = \Drupal::service(AccountCancellation::class);
-    }
-    $this->accountCancellation = $accountCancellation;
   }
 
   /**

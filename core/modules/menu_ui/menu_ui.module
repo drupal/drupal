@@ -7,26 +7,7 @@
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\menu_ui\Hook\MenuUiHooks;
 use Drupal\menu_ui\MenuUiUtility;
-use Drupal\node\NodeTypeInterface;
 use Drupal\node\NodeInterface;
-
-/**
- * Helper function to create or update a menu link for a node.
- *
- * @param \Drupal\node\NodeInterface $node
- *   Node entity.
- * @param array $values
- *   Values for the menu link.
- *
- * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
- *   \Drupal\menu_ui\MenuUiUtility::menuUiNodeSave() instead.
- *
- * @see https://www.drupal.org/node/3566774
- */
-function _menu_ui_node_save(NodeInterface $node, array $values): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use MenuUiUtility::menuUiNodeSave() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
-  \Drupal::service(MenuUiUtility::class)->menuUiNodeSave($node, $values);
-}
 
 /**
  * Returns the definition for a menu link for the given node.
@@ -58,43 +39,4 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
 function menu_ui_node_builder($entity_type, NodeInterface $entity, &$form, FormStateInterface $form_state): void {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use MenuUiHooks::nodeBuilder() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   \Drupal::service(MenuUiHooks::class)->nodeBuilder($entity_type, $entity, $form, $form_state);
-}
-
-/**
- * Form submission handler for menu item field on the node form.
- *
- * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
- *   \Drupal\menu_ui\Hooks\MenuUiHooks::formNodeFormSubmit() instead.
- *
- * @see https://www.drupal.org/node/3566774
- */
-function menu_ui_form_node_form_submit($form, FormStateInterface $form_state): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use MenuUiHooks::formNodeFormSubmit() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
-  \Drupal::service(MenuUiHooks::class)->formNodeFormSubmit($form, $form_state);
-}
-
-/**
- * Validate handler for forms with menu options.
- *
- * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
- *   \Drupal\menu_ui\Hooks\MenuUiHooks::formNodeTypeFormValidate() instead.
- *
- * @see https://www.drupal.org/node/3566774
- */
-function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_state): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use MenuUiHooks::formNodeTypeFormValidate() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
-  \Drupal::service(MenuUiHooks::class)->formNodeTypeFormValidate($form, $form_state);
-}
-
-/**
- * Entity builder for the node type form with menu options.
- *
- * @deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use
- *   \Drupal\menu_ui\Hooks\MenuUiHooks::formNodeTypeFormBuilder() instead.
- *
- * @see https://www.drupal.org/node/3566774
- */
-function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state): void {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. Use MenuUiHooks::formNodeTypeFormBuilder() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
-  \Drupal::service(MenuUiHooks::class)->formNodeTypeFormBuilder($entity_type, $type, $form, $form_state);
 }

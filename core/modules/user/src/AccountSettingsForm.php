@@ -5,7 +5,6 @@ namespace Drupal\user;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
@@ -18,39 +17,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class AccountSettingsForm extends ConfigFormBase {
 
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The role storage used when changing the admin role.
-   *
-   * @var \Drupal\user\RoleStorageInterface
-   */
-  protected $roleStorage;
-
   public function __construct(
     ConfigFactoryInterface $config_factory,
     TypedConfigManagerInterface $typedConfigManager,
-    RoleStorageInterface|ModuleHandlerInterface $role_storage,
-    protected ?AccountCancellation $accountCancellation = NULL,
+    protected RoleStorageInterface $roleStorage,
+    protected AccountCancellation $accountCancellation,
   ) {
     parent::__construct($config_factory, $typedConfigManager);
-
-    $this->roleStorage = $role_storage;
-    if ($role_storage instanceof ModuleHandlerInterface) {
-      $this->moduleHandler = $role_storage;
-      $this->roleStorage = func_get_arg(3);
-      @trigger_error('Calling ' . __METHOD__ . '() with the $module_handler argument is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. See https://www.drupal.org/node/3566911', E_USER_DEPRECATED);
-    }
-    if ($accountCancellation === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $accountCancellation argument is deprecated in drupal:11.5.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3620934', E_USER_DEPRECATED);
-      $accountCancellation = \Drupal::service(AccountCancellation::class);
-    }
-    $this->accountCancellation = $accountCancellation;
   }
 
   /**

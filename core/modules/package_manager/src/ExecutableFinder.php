@@ -9,7 +9,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Site\Settings;
-use PhpTuf\ComposerStager\API\Exception\LogicException;
 use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -50,20 +49,9 @@ final class ExecutableFinder implements ExecutableFinderInterface, LoggerAwareIn
    * {@inheritdoc}
    */
   public function find(string $name): string {
-    $legacy_executables = $this->configFactory->get('package_manager.settings')
-      ->get('executables');
 
     if ($name === 'rsync') {
-      try {
-        return Settings::get('package_manager_rsync_path', $this->decorated->find($name));
-      }
-      catch (LogicException $e) {
-        if (isset($legacy_executables[$name])) {
-          @trigger_error("Storing the path to rsync in configuration is deprecated in drupal:11.2.4 and not supported in drupal:12.0.0. Move it to the <code>package_manager_rsync_path</code> setting instead. See https://www.drupal.org/node/3540264", E_USER_DEPRECATED);
-          return $legacy_executables[$name];
-        }
-        throw $e;
-      }
+      return Settings::get('package_manager_rsync_path', $this->decorated->find($name));
     }
     // If we're looking for Composer, use the project's local copy if available.
     elseif ($name === 'composer') {
@@ -73,19 +61,8 @@ final class ExecutableFinder implements ExecutableFinderInterface, LoggerAwareIn
         return $path;
       }
 
-      // If the regular executable finder can't find Composer, and it's not
-      // overridden by a setting, fall back to the configured path to Composer
-      // (if available), which is no longer supported.
-      try {
-        return Settings::get('package_manager_composer_path', $this->decorated->find($name));
-      }
-      catch (LogicException $e) {
-        if (isset($legacy_executables[$name])) {
-          @trigger_error("Storing the path to Composer in configuration is deprecated in drupal:11.2.4 and not supported in drupal:12.0.0. Add composer/composer directly to your project's dependencies instead. See https://www.drupal.org/node/3540264", E_USER_DEPRECATED);
-          return $legacy_executables[$name];
-        }
-        throw $e;
-      }
+      // Find the regular Composer executable overridden by a setting.
+      return Settings::get('package_manager_composer_path', $this->decorated->find($name));
     }
     return $this->decorated->find($name);
   }

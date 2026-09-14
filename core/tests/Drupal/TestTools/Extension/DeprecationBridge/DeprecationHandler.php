@@ -56,9 +56,6 @@ final class DeprecationHandler implements Extension {
       $config->load($overrideConfig);
     }
 
-    // Get the legacy configuration provided via Symfony env variable.
-    $config->load(self::legacySymfonyConfiguration());
-
     // Determine if project ignores are enabled. If so, loads the deprecation
     // patterns to be ignored from the ignore file and sets the error handler
     // to Drupal\TestTools\ErrorHandler\BootstrapErrorHandler. This allows to
@@ -111,37 +108,6 @@ final class DeprecationHandler implements Extension {
   public static function handle(int $errorNumber, string $errorString, string $errorFile, int $errorLine): bool {
     assert(Configuration::instance()->projectIgnoresEnabled, __METHOD__ . '() must not be called if the deprecation handler is not enabled.');
     return self::isIgnoredByProject($errorString);
-  }
-
-  /**
-   * Returns the legacy configuration provided via Symfony env variable.
-   *
-   * For historical reasons, the configuration can be stored in the
-   * SYMFONY_DEPRECATIONS_HELPER environment variable.
-   *
-   * @return array
-   *   An array of configuration variables.
-   */
-  private static function legacySymfonyConfiguration(): array {
-    $environmentVariable = getenv('SYMFONY_DEPRECATIONS_HELPER');
-    if ($environmentVariable === FALSE) {
-      return [];
-    }
-    if ($environmentVariable === 'disabled') {
-      return [
-        'enableProjectIgnores' => FALSE,
-        'enableDebugClassLoader' => FALSE,
-      ];
-    }
-    parse_str($environmentVariable, $configuration);
-    $ret = [
-      'enableProjectIgnores' => TRUE,
-      'enableDebugClassLoader' => TRUE,
-    ];
-    if (isset($configuration['ignoreFile'])) {
-      $ret['projectIgnoreFile'] = $configuration['ignoreFile'];
-    }
-    return $ret;
   }
 
   /**

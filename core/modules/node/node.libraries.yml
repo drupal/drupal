@@ -29,13 +29,6 @@ drupal.content_types:
     - core/drupal
     - core/drupal.form
 
-form:
-  version: VERSION
-  deprecated: The "%library_id%" asset library is deprecated in drupal:11.4.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3566511
-  css:
-    layout:
-      css/node.module.css: {}
-
 drupal.node.admin:
   version: VERSION
   css:

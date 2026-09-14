@@ -180,10 +180,7 @@ abstract class RowPluginBase extends PluginBase {
    * @return array
    *   The render array for a single row, used by the style plugin.
    */
-  public function render($row) {
-    if (!$row instanceof ResultRow) {
-      @trigger_error('Passing an object other than a ResultRow to RowPluginBase::render() is deprecated in drupal:11.4.0 and will throw a type error in drupal:12.0.0. Pass a \Drupal\views\ResultRow object instead. See https://www.drupal.org/node/2939099', E_USER_DEPRECATED);
-    }
+  public function render(ResultRow $row) {
     return [
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,
