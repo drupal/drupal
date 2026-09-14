@@ -51,9 +51,9 @@ class BlockAdminThemeTest extends BrowserTestBase {
   }
 
   /**
-   * Ensure contextual links are disabled in Claro theme.
+   * Ensure contextual links are disabled in Admin theme.
    */
-  public function testClaroAdminTheme(): void {
+  public function testAdminAdminTheme(): void {
     // Create administrative user.
     $admin_user = $this->drupalCreateUser([
       'access administration pages',
@@ -64,14 +64,14 @@ class BlockAdminThemeTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     // Install admin theme and confirm that tab is accessible.
-    \Drupal::service('theme_installer')->install(['claro']);
-    $edit['admin_theme'] = 'claro';
+    \Drupal::service('theme_installer')->install(['default_admin']);
+    $edit['admin_theme'] = 'default_admin';
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
 
     // Define our block settings.
     $settings = [
-      'theme' => 'claro',
+      'theme' => 'default_admin',
       'region' => 'header',
     ];
 

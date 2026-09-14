@@ -44,7 +44,7 @@ class EditModeTest extends WebDriverTestBase {
    *
    * @var string
    */
-  protected $adminTheme = 'claro';
+  protected $adminTheme = 'default_admin';
 
   /**
    * {@inheritdoc}

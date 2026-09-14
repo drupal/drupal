@@ -423,7 +423,7 @@ class PagerTest extends ViewTestBase {
     $view->display_handler->setOption('pager', $pager);
     $view->save();
 
-    $themes = ['stark', 'claro', 'starterkit_theme'];
+    $themes = ['stark', 'default_admin', 'starterkit_theme'];
     $this->container->get('theme_installer')->install($themes);
 
     foreach ($themes as $theme) {

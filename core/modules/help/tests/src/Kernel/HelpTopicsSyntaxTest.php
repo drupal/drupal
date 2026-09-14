@@ -114,7 +114,7 @@ class HelpTopicsSyntaxTest extends KernelTestBase implements NodeVisitorInterfac
     // test can continue.
     $this->assertArrayHasKey('system', $directories, 'System module is being scanned');
     $this->assertArrayHasKey('help', $directories, 'Help module is being scanned');
-    $this->assertArrayHasKey('claro', $directories, 'Claro theme is being scanned');
+    $this->assertArrayHasKey('default_admin', $directories, 'Admin theme is being scanned');
     $this->assertArrayHasKey('standard', $directories, 'Standard profile is being scanned');
 
     $definitions = (new HelpTopicDiscovery($directories))->getDefinitions();

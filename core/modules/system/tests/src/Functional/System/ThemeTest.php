@@ -323,11 +323,11 @@ INFO;
    * Tests the administration theme functionality.
    */
   public function testAdministrationTheme(): void {
-    $this->container->get('theme_installer')->install(['claro']);
+    $this->container->get('theme_installer')->install(['default_admin']);
 
     // Install an administration theme and show it on the node admin pages.
     $edit = [
-      'admin_theme' => 'claro',
+      'admin_theme' => 'default_admin',
       'use_admin_theme' => TRUE,
     ];
     $this->drupalGet('admin/appearance');
@@ -344,7 +344,7 @@ INFO;
 
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertSession()->responseContains('core/themes/claro');
+    $this->assertSession()->responseContains('core/themes/default_admin');
 
     // Check that the site default theme used on node page.
     $this->drupalGet('node/' . $this->node->id());
@@ -352,11 +352,11 @@ INFO;
 
     // Check that the administration theme is used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertSession()->responseContains('core/themes/claro');
+    $this->assertSession()->responseContains('core/themes/default_admin');
 
     // Check that the administration theme is used on the edit content page.
     $this->drupalGet('node/' . $this->node->id() . '/edit');
-    $this->assertSession()->responseContains('core/themes/claro');
+    $this->assertSession()->responseContains('core/themes/default_admin');
 
     // Disable the admin theme on the node admin pages.
     $edit = [
@@ -371,7 +371,7 @@ INFO;
 
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertSession()->responseContains('core/themes/claro');
+    $this->assertSession()->responseContains('core/themes/default_admin');
 
     // Ensure that the admin theme is also visible on the 403 page.
     $normal_user = $this->drupalCreateUser(['view the administration theme']);
@@ -379,7 +379,7 @@ INFO;
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertSession()->responseContains('core/themes/claro');
+    $this->assertSession()->responseContains('core/themes/default_admin');
     $this->drupalLogin($this->adminUser);
 
     // Check that the site default theme used on the add content page.
@@ -461,10 +461,10 @@ INFO;
   public function testUninstallingThemes(): void {
     // Install 'Test theme'.
     \Drupal::service('theme_installer')->install(['test_theme']);
-    // Set up Claro as the admin theme.
-    \Drupal::service('theme_installer')->install(['claro']);
+    // Set up Admin as the admin theme.
+    \Drupal::service('theme_installer')->install(['default_admin']);
     $edit = [
-      'admin_theme' => 'claro',
+      'admin_theme' => 'default_admin',
       'use_admin_theme' => TRUE,
     ];
     $this->drupalGet('admin/appearance');
@@ -472,9 +472,9 @@ INFO;
 
     // Set 'Test theme' as the default theme.
     $this->cssSelect('a[title="Set <strong>Test theme</strong> as default theme"]')[0]->click();
-    // Check that claro cannot be uninstalled as it is the admin theme.
-    $this->assertSession()->responseNotContains('Uninstall claro theme');
-    // Check that 'Test theme'  cannot be uninstalled as it is the default theme.
+    // Check that Admin cannot be uninstalled as it is the admin theme.
+    $this->assertSession()->responseNotContains('Uninstall Default Admin theme');
+    // Check that 'Test theme' cannot be uninstalled as it is the default theme.
     $this->assertSession()->responseNotContains('Uninstall <strong>Test theme</strong> theme');
 
     // Install Stark and set it as the default theme.
@@ -487,8 +487,8 @@ INFO;
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
 
-    // Check that claro can be uninstalled now.
-    $this->assertSession()->responseContains('Uninstall claro theme');
+    // Check that default_admin can be uninstalled now.
+    $this->assertSession()->responseContains('Uninstall Default Admin theme');
 
     // Change the default theme to stark, stark is second in the list.
     $this->clickLink('Set as default', 1);
@@ -500,9 +500,9 @@ INFO;
     $this->cssSelect('a[title="Uninstall <strong>Test theme</strong> theme"]')[0]->click();
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->responseContains('The <em class="placeholder">&lt;strong&gt;Test theme&lt;/strong&gt;</em> theme has been uninstalled.');
-    $this->cssSelect('a[title="Uninstall Claro theme"]')[0]->click();
+    $this->cssSelect('a[title="Uninstall Default Admin theme"]')[0]->click();
     $this->submitForm([], 'Uninstall');
-    $this->assertSession()->responseContains('The <em class="placeholder">Claro</em> theme has been uninstalled');
+    $this->assertSession()->responseContains('The <em class="placeholder">Default Admin</em> theme has been uninstalled');
   }
 
   /**

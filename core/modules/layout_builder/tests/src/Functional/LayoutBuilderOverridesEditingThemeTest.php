@@ -82,8 +82,8 @@ class LayoutBuilderOverridesEditingThemeTest extends LayoutBuilderTestBase {
     ]);
     // Set a different theme for the admin pages. So we can assert the theme
     // in Layout Builder is not the same as the admin theme.
-    \Drupal::service('theme_installer')->install(['claro']);
-    $this->config('system.theme')->set('admin', 'claro')->save();
+    \Drupal::service('theme_installer')->install(['default_admin']);
+    $this->config('system.theme')->set('admin', 'default_admin')->save();
 
     // Enable layout builder for the block content display.
     $display = LayoutBuilderEntityViewDisplay::create([
@@ -112,13 +112,13 @@ class LayoutBuilderOverridesEditingThemeTest extends LayoutBuilderTestBase {
     $this->assertSession()->statusCodeEquals(200);
     // Assert the test_theme is being used.
     $this->assertSession()->responseContains('test_theme/kitten.css');
-    // Assert the claro theme is not being used.
-    $this->assertSession()->elementNotExists('css', '#block-claro-content');
+    // Assert the default_admin theme is not being used.
+    $this->assertSession()->elementNotExists('css', '#block-default_admin-content');
     // Assert the default still uses the test_theme.
     $this->drupalGet('admin/structure/block-content/manage/basic/display/default/layout');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains('test_theme/kitten.css');
-    $this->assertSession()->elementNotExists('css', '#block-claro-content');
+    $this->assertSession()->elementNotExists('css', '#block-default_admin-content');
   }
 
 }

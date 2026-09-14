@@ -9,23 +9,23 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests the widget visibility settings for the Claro theme.
+ * Tests the widget visibility settings for the Admin theme.
  *
- * The widget is intentionally tested with Claro as the default theme to test
+ * The widget is intentionally tested with Admin as the default theme to test
  * the changes added in
- * \Drupal\claro\Hook\ClaroHooks->fileAndImageWidgetHelper().
+ * \Drupal\default_admin\Hook\AdminHooks->fileAndImageWidgetHelper().
  *
- * @see \Drupal\claro\Hook\ClaroHooks->fileAndImageWidgetHelper()
+ * @see \Drupal\default_admin\Hook\AdminHooks->fileAndImageWidgetHelper()
  */
 #[Group('file')]
 #[Group('#slow')]
 #[RunTestsInSeparateProcesses]
-class FileFieldWidgetClaroThemeTest extends FileFieldWidgetTest {
+class FileFieldWidgetAdminThemeTest extends FileFieldWidgetTest {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'default_admin';
 
   /**
    * Tests that the field widget visibility settings are respected on the form.

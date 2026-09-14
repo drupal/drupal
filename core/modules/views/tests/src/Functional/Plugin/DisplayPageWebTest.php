@@ -165,16 +165,16 @@ class DisplayPageWebTest extends ViewTestBase {
     $theme_handler = $this->container->get('theme_handler');
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
-    $theme_installer->install(['claro']);
+    $theme_installer->install(['default_admin']);
     $this->container->get('config.factory')
       ->getEditable('system.theme')
-      ->set('admin', 'claro')
+      ->set('admin', 'default_admin')
       ->set('default', 'stable')
       ->save();
     $theme_handler->refreshInfo();
     // Check that the page has been served with the default theme.
     $this->drupalGet('test_page_display_200');
-    $this->assertSession()->responseNotContains('core/themes/claro/css/base/elements.css');
+    $this->assertSession()->responseNotContains('core/themes/default_admin/css/base/elements.css');
 
     $view = $this->config('views.view.test_page_display');
     $view->set('display.page_3.display_options.use_admin_theme', TRUE)->save();
@@ -182,7 +182,7 @@ class DisplayPageWebTest extends ViewTestBase {
 
     // Check that the page was served with the administrative theme.
     $this->drupalGet('test_page_display_200');
-    $this->assertSession()->responseContains('core/themes/claro/css/base/elements.css');
+    $this->assertSession()->responseContains('core/themes/default_admin/css/base/elements.css');
   }
 
   /**

@@ -250,7 +250,7 @@ class MenuRouterTest extends BrowserTestBase {
    */
   public function testThemeIntegration(): void {
     $this->defaultTheme = 'olivero';
-    $this->adminTheme = 'claro';
+    $this->adminTheme = 'default_admin';
 
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
@@ -276,8 +276,8 @@ class MenuRouterTest extends BrowserTestBase {
    */
   protected function doTestThemeCallbackAdministrative(): void {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertSession()->pageTextContains('Active theme: claro. Actual theme: claro.');
-    $this->assertSession()->responseContains('claro/css/base/elements.css');
+    $this->assertSession()->pageTextContains('Active theme: default_admin. Actual theme: default_admin.');
+    $this->assertSession()->responseContains('default_admin/css/base/elements.css');
   }
 
   /**
@@ -296,9 +296,9 @@ class MenuRouterTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser(['access site in maintenance mode']);
     $this->drupalLogin($admin_user);
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertSession()->pageTextContains('Active theme: claro. Actual theme: claro.');
+    $this->assertSession()->pageTextContains('Active theme: default_admin. Actual theme: default_admin.');
     // Check that the administrative theme's CSS appears on the page.
-    $this->assertSession()->responseContains('claro/css/base/elements.css');
+    $this->assertSession()->responseContains('default_admin/css/base/elements.css');
 
     $this->container->get('state')->set('system.maintenance_mode', FALSE);
   }

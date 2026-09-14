@@ -27,10 +27,10 @@ class ThemeTest extends TaxonomyTestBase {
 
     // Make sure we are using distinct default and administrative themes for
     // the duration of these tests.
-    \Drupal::service('theme_installer')->install(['test_theme', 'claro']);
+    \Drupal::service('theme_installer')->install(['test_theme', 'default_admin']);
     $this->config('system.theme')
       ->set('default', 'test_theme')
-      ->set('admin', 'claro')
+      ->set('admin', 'default_admin')
       ->save();
 
     // Create and log in as a user who has permission to add and edit taxonomy
@@ -52,7 +52,7 @@ class ThemeTest extends TaxonomyTestBase {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add');
     // Check that the administrative theme's CSS appears on the page for adding
     // a taxonomy term.
-    $this->assertSession()->responseContains('claro/css/base/elements.css');
+    $this->assertSession()->responseContains('default_admin/css/base/elements.css');
 
     // Viewing a taxonomy term should use the default theme.
     $term = $this->createTerm($vocabulary);
@@ -66,7 +66,7 @@ class ThemeTest extends TaxonomyTestBase {
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
     // Check that the administrative theme's CSS appears on the page for editing
     // a taxonomy term.
-    $this->assertSession()->responseContains('claro/css/base/elements.css');
+    $this->assertSession()->responseContains('default_admin/css/base/elements.css');
   }
 
 }
