@@ -11,11 +11,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests Claro's Views Bulk Operations form.
+ * Tests Admin's Views Bulk Operations form.
  */
-#[Group('claro')]
+#[Group('default_admin')]
 #[RunTestsInSeparateProcesses]
-class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
+class AdminViewsBulkOperationsTest extends WebDriverTestBase {
   use ContentTypeCreationTrait;
   use NodeCreationTrait;
 
@@ -27,7 +27,7 @@ class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'default_admin';
 
   /**
    * {@inheritdoc}

@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests asset aggregation with the Umami install profile.
  *
- * Umami includes several core modules as well as the Claro theme, this
+ * Umami includes several core modules as well as the Admin theme, this
  * results in a more complex asset dependency tree to test than the testing
  * profile.
  */

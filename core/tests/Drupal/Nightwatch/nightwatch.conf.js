@@ -60,7 +60,7 @@ module.exports = {
     default: {
       globals: {
         defaultTheme: 'stark',
-        adminTheme: 'claro',
+        adminTheme: 'default_admin',
       },
       selenium_port: process.env.DRUPAL_TEST_WEBDRIVER_PORT,
       selenium_host: process.env.DRUPAL_TEST_WEBDRIVER_HOSTNAME,

@@ -9,21 +9,21 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Runs BlockFilterTest in Claro.
+ * Runs BlockFilterTest in Admin.
  *
  * @see \Drupal\Tests\block\FunctionalJavascript\BlockFilterTest.
  */
 #[Group('block')]
 #[RunTestsInSeparateProcesses]
-class ClaroBlockFilterTest extends BlockFilterTest {
+class AdminBlockFilterTest extends BlockFilterTest {
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->container->get('theme_installer')->install(['claro']);
-    $this->config('system.theme')->set('default', 'claro')->save();
+    $this->container->get('theme_installer')->install(['default_admin']);
+    $this->config('system.theme')->set('default', 'default_admin')->save();
   }
 
 }

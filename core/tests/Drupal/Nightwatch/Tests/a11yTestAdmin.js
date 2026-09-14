@@ -5,7 +5,7 @@ const adminTest = {
 
   before(browser) {
     browser.drupalInstall({ installProfile: 'nightwatch_a11y_testing' });
-    // If an admin theme other than Claro is being used for testing, install it.
+    // If an admin theme other than Admin is being used for testing, install it.
     if (argv.adminTheme && argv.adminTheme !== browser.globals.adminTheme) {
       browser.drupalEnableTheme(argv.adminTheme, true);
     }

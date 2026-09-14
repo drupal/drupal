@@ -15,17 +15,17 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests that buttons in modals are not in their button pane.
  */
-#[Group('claro')]
+#[Group('default_admin')]
 #[Group('#slow')]
 #[RunTestsInSeparateProcesses]
-class ClaroModalDisplayTest extends MediaLibraryTestBase {
+class AdminModalDisplayTest extends MediaLibraryTestBase {
 
   use TestFileCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'default_admin';
 
   /**
    * Tests the position f "add another" button in dialogs.

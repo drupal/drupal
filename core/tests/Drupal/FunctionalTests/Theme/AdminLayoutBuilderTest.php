@@ -9,16 +9,16 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests the layout builder with the Claro theme.
+ * Tests the layout builder with the Admin theme.
  */
-#[Group('claro')]
+#[Group('default_admin')]
 #[RunTestsInSeparateProcesses]
-class ClaroLayoutBuilderTest extends BrowserTestBase {
+class AdminLayoutBuilderTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'default_admin';
 
   /**
    * {@inheritdoc}
@@ -69,9 +69,9 @@ class ClaroLayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the layout builder has expected contextual links with Claro.
+   * Tests the layout builder has expected contextual links with Admin.
    *
-   * @see claro.theme
+   * @see default_admin.theme
    */
   public function testContextualLinks(): void {
     $assert_session = $this->assertSession();
