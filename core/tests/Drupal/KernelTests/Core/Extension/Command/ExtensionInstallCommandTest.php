@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Kernel\Command;
+namespace Drupal\KernelTests\Core\Extension\Command;
 
 use Drupal\Core\Command\Exception\UserAbortException;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\system\Command\ExtensionInstallCommand;
+use Drupal\Core\Extension\Command\ExtensionInstallCommand;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\system\Command;
+namespace Drupal\Core\Extension\Command;
 
 use Drupal\Core\Command\Exception\UserAbortException;
 use Drupal\Core\Extension\Exception\ObsoleteExtensionException;
