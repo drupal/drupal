@@ -44,11 +44,12 @@ trait UpdateMessageTrait {
    *   If FALSE, links will be relative and will only be included if the
    *   current user can access them. Defaults to FALSE.
    *
-   * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup
-   *   The properly translated error message for the given key.
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
+   *   The properly translated error message for the given key, or NULL if
+   *   there is no message for the given key.
    */
-  protected function getText(string $msg_type, int $msg_reason, ?string $langcode = NULL, bool $is_email = FALSE): string|TranslatableMarkup {
-    $text = '';
+  protected function getText(string $msg_type, int $msg_reason, ?string $langcode = NULL, bool $is_email = FALSE): ?TranslatableMarkup {
+    $text = NULL;
     switch ($msg_reason) {
       case UpdateManagerInterface::NOT_SECURE:
         if ($msg_type == 'core') {
