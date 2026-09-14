@@ -1619,13 +1619,23 @@ function install_profile_modules(&$install_state) {
   arsort($required);
   arsort($non_required);
 
+  $module_order = $required + $non_required;
+  // The database driver module must be installed before any other module, so
+  // that it can override the hook_schema() implementations and the
+  // "backend_overridable" services of those modules. Sorting by weight above
+  // does not keep it in front, so move it back to the first position.
+  // @see _install_get_database_module_name()
+  if ($database_module !== NULL && isset($module_order[$database_module])) {
+    $module_order = [$database_module => $module_order[$database_module]] + $module_order;
+  }
+
   $batch_builder = new BatchBuilder();
 
   // Put modules into groups of up to the maximum batch size, or until a module
   // states that it needs a container rebuild before and after install.
   $index = 0;
   $module_groups = [];
-  foreach (array_keys($required + $non_required) as $module) {
+  foreach (array_keys($module_order) as $module) {
     // If the container needs to be rebuilt, ensure this happens both before and
     // after the module is installed.
     $container_rebuild_required = !empty($files[$module]->info['container_rebuild_required']);
@@ -2562,6 +2572,14 @@ function install_recipe_required_modules(array $install_state) {
     }
   }
   arsort($required);
+  // The database driver module must be installed before any other module, so
+  // that it can override the hook_schema() implementations and the
+  // "backend_overridable" services of those modules. Sorting by weight above
+  // does not keep it in front, so move it back to the first position.
+  // @see _install_get_database_module_name()
+  if ($database_module !== NULL && isset($required[$database_module])) {
+    $required = [$database_module => $required[$database_module]] + $required;
+  }
 
   $modules = [];
   $names = [];
