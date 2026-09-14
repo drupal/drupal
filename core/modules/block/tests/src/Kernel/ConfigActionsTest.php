@@ -48,12 +48,12 @@ class ConfigActionsTest extends KernelTestBase {
     $this->installConfig('system');
     $this->container->get(ThemeInstallerInterface::class)->install([
       'stark',
-      'claro',
+      'default_admin',
       'block_test_theme',
     ]);
     $this->config('system.theme')
       ->set('default', 'stark')
-      ->set('admin', 'claro')
+      ->set('admin', 'default_admin')
       ->save();
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
@@ -98,32 +98,32 @@ class ConfigActionsTest extends KernelTestBase {
    */
   public function testPlaceBlockActionDoesNotChangeExistingBlock(): void {
     $this->config('system.theme')
-      ->set('default', 'claro')
+      ->set('default', 'default_admin')
       ->save();
-    $extant_region = Block::load('claro_breadcrumbs')->getRegion();
+    $extant_region = Block::load('default_admin_breadcrumbs')->getRegion();
     $this->assertNotSame('content', $extant_region);
 
-    $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.claro_powered', [
+    $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.default_admin_powered', [
       'plugin' => 'system_powered_by_block',
       'region' => [
-        'claro' => 'content',
+        'default_admin' => 'content',
       ],
     ]);
     // The extant block should be unchanged.
-    $this->assertSame($extant_region, Block::load('claro_breadcrumbs')->getRegion());
+    $this->assertSame($extant_region, Block::load('default_admin_breadcrumbs')->getRegion());
   }
 
   /**
  * Tests place block in dynamic region.
  */
   #[TestWith(["placeBlockInDefaultTheme", "stark", "header"])]
-  #[TestWith(["placeBlockInAdminTheme", "claro", "page_bottom"])]
+  #[TestWith(["placeBlockInAdminTheme", "default_admin", "page_bottom"])]
   public function testPlaceBlockInDynamicRegion(string $action, string $expected_theme, string $expected_region): void {
     $this->configActionManager->applyAction($action, 'block.block.test_block', [
       'plugin' => 'system_powered_by_block',
       'region' => [
         'stark' => 'header',
-        'claro' => 'page_bottom',
+        'default_admin' => 'page_bottom',
       ],
       'default_region' => 'content',
     ]);
@@ -146,7 +146,7 @@ class ConfigActionsTest extends KernelTestBase {
  * Tests place block in static region.
  */
   #[TestWith(["placeBlockInDefaultTheme", "stark"])]
-  #[TestWith(["placeBlockInAdminTheme", "claro"])]
+  #[TestWith(["placeBlockInAdminTheme", "default_admin"])]
   public function testPlaceBlockInStaticRegion(string $action, string $expected_theme): void {
     $this->configActionManager->applyAction($action, 'block.block.test_block', [
       'plugin' => 'system_powered_by_block',

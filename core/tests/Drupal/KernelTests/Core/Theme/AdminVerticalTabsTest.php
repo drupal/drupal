@@ -10,24 +10,24 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Confirms that Claro can render vertical tabs correctly.
+ * Confirms that Admin can render vertical tabs correctly.
  */
 #[Group('Theme')]
 #[RunTestsInSeparateProcesses]
-class ClaroVerticalTabsTest extends KernelTestBase {
+class AdminVerticalTabsTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system'];
+  protected static $modules = ['system', 'user'];
 
   /**
-   * Confirms that Claro can render vertical tabs correctly.
+   * Confirms that Admin can render vertical tabs correctly.
    */
   public function testVerticalTabs(): void {
-    // Enable the Claro theme.
-    \Drupal::service('theme_installer')->install(['claro']);
-    $this->config('system.theme')->set('default', 'claro')->save();
+    // Enable the Admin theme.
+    \Drupal::service('theme_installer')->install(['default_admin']);
+    $this->config('system.theme')->set('default', 'default_admin')->save();
 
     $form = [
       '#parents' => ['parent'],

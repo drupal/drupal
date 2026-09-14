@@ -205,8 +205,8 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
    */
   public function testSetNestedProperty(): void {
     $this->container->get(ThemeInstallerInterface::class)
-      ->install(['claro']);
-    $block = $this->placeBlock('local_tasks_block', ['theme' => 'claro']);
+      ->install(['default_admin']);
+    $block = $this->placeBlock('local_tasks_block', ['theme' => 'default_admin']);
 
     $this->configActionManager->applyAction(
       'setProperties',
