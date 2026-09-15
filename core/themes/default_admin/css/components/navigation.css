@@ -65,11 +65,6 @@ body.admin--navigation {
   &.admin-toolbar-control-bar {
     background: var(--admin-color-bg-surface-nested);
   }
-
-  /* Fix Control Bar hamburger button in dark mode. */
-  .admin-toolbar-control-bar__burger path {
-    stroke: currentColor;
-  }
 }
 
 /* Workspaces. */
