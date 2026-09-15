@@ -438,10 +438,7 @@ Sample composer.json for composer-scaffold files in drupal/assets:
   "extra": {
     "drupal-scaffold": {
       "file-mapping": {
-        "[web-root]/.csslintrc": "assets/.csslintrc",
         "[web-root]/.editorconfig": "assets/.editorconfig",
-        "[web-root]/.eslintignore": "assets/.eslintignore",
-        "[web-root]/.eslintrc.json": "assets/.eslintrc.json",
         "[web-root]/.gitattributes": "assets/.gitattributes",
         "[web-root]/.ht.router.php": "assets/.ht.router.php",
         "[web-root]/.htaccess": "assets/.htaccess",

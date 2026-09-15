@@ -16,10 +16,7 @@ $ cd drupal-drupal
 $ composer drupal:scaffold
 
 Scaffolding files for fixtures/drupal-assets-fixture:
-  - Link [web-root]/.csslintrc from assets/.csslintrc
   - Link [web-root]/.editorconfig from assets/.editorconfig
-  - Link [web-root]/.eslintignore from assets/.eslintignore
-  - Link [web-root]/.eslintrc.json from assets/.eslintrc.json
   - Link [web-root]/.gitattributes from assets/.gitattributes
   - Link [web-root]/.ht.router.php from assets/.ht.router.php
   - Skip [web-root]/.htaccess: overridden in my/project

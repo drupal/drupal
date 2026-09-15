@@ -291,9 +291,6 @@ class ComposerIntegrationTest extends UnitTestCase {
     return [
       ['.editorconfig', 'assets/scaffold/files/editorconfig', '[project-root]'],
       ['.gitattributes', 'assets/scaffold/files/gitattributes', '[project-root]'],
-      ['.csslintrc', 'assets/scaffold/files/csslintrc'],
-      ['.eslintignore', 'assets/scaffold/files/eslintignore'],
-      ['.eslintrc.json', 'assets/scaffold/files/eslintrc.json'],
       ['.ht.router.php', 'assets/scaffold/files/ht.router.php'],
       ['.htaccess', 'assets/scaffold/files/htaccess'],
       ['example.gitignore', 'assets/scaffold/files/example.gitignore'],

@@ -112,7 +112,6 @@ createuser
 crossout
 crème
 csrftoken
-csslintrc
 csstools
 cweagans
 datelist
