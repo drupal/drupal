@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Functional;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Database;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\Url;
@@ -709,7 +708,7 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
-   * Tests that filenames containing invalid UTF-8 are rejected.
+   * Tests that invalid UTF-8 in a filename is replaced rather than rejected.
    */
   public function testInvalidUtf8FilenameUpload(): void {
     $this->drupalGet('file-test/upload');
@@ -758,9 +757,12 @@ class SaveUploadTest extends FileManagedTestBase {
 
     $content = (string) $response->getBody();
     $this->htmlOutput($content);
-    $error_text = 'The file <em class="placeholder">' . Html::escape($filename) . '</em> could not be uploaded because the name is invalid.';
-    $this->assertStringContainsString($error_text, $content);
-    $this->assertStringContainsString('Epic upload FAIL!', $content);
+    // The invalid byte is replaced with the configured replacement character,
+    // so the upload succeeds rather than failing with a confusing message.
+    $this->assertStringContainsString('You WIN!', $content);
+    $this->assertStringContainsString('File name is x-xx.gif.', $content);
+    $this->assertStringNotContainsString('Epic upload FAIL!', $content);
+    $this->assertFileExists('temporary://x-xx.gif');
     $this->assertFileDoesNotExist('temporary://' . $filename);
   }
 
