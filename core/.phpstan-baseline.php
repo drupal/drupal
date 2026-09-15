@@ -23376,54 +23376,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/text/src/TextProcessed.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\toolbar\\\\Ajax\\\\SetSubtreesCommand\\:\\:render\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/src/Ajax/SetSubtreesCommand.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\toolbar\\\\Controller\\\\ToolbarController\\:\\:preRenderGetRenderedSubtrees\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/src/Controller/ToolbarController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\FunctionalJavascript\\\\contextual\\\\ContextualLinksTest\\:\\:clickContextualLink\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/contextual/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\FunctionalJavascript\\\\contextual\\\\ContextualLinksTest\\:\\:toggleContextualTriggerVisibility\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/contextual/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\FunctionalJavascript\\\\workspaces\\\\WorkspaceTest\\:\\:isLabelInContentOverview\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/workspaces/WorkspaceTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\FunctionalJavascript\\\\workspaces\\\\WorkspaceTest\\:\\:setupWorkspaceSwitcherBlock\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/workspaces/WorkspaceTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\FunctionalJavascript\\\\workspaces\\\\WorkspaceTest\\:\\:switchToLive\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/workspaces/WorkspaceTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\toolbar\\\\FunctionalJavascript\\\\workspaces\\\\WorkspaceTest\\:\\:switchToWorkspace\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/workspaces/WorkspaceTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\update\\\\Controller\\\\UpdateController\\:\\:updateStatusManually\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

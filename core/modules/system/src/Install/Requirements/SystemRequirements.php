@@ -52,6 +52,7 @@ class SystemRequirements implements InstallRequirementsInterface {
     'shortcut' => 'Shortcut',
     'statistics' => 'Statistics',
     'telephone' => 'Telephone',
+    'toolbar' => 'Toolbar',
     'tour' => 'Tour',
     'tracker' => 'Tracker',
   ];

@@ -403,9 +403,6 @@ Theme API
 Token
 - Max Pogonowski 'darvanen' (Darvanen) https://www.drupal.org/u/darvanen
 
-Toolbar
-- Théodore Biadala 'nod_' (nod_) https://www.drupal.org/u/nod_
-
 Transliteration
 - Andrei Mateescu 'amateescu' (amateescu) https://www.drupal.org/u/amateescu
 
