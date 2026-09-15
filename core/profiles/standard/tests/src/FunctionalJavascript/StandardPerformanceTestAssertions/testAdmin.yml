@@ -38,7 +38,7 @@ CacheTagGroupedLookups:
     - 'config:user.role.administrator'
     - 'config:user.role.authenticated'
     - 'user:2'
-ScriptCount: 8
-ScriptBytes: 146293
-StylesheetCount: 9
-StylesheetBytes: 159108
+ScriptCount: 10
+ScriptBytes: 155112
+StylesheetCount: 3
+StylesheetBytes: 233044

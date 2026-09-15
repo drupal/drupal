@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * Theme override for the user login block.
+ *
+ * Renders the login form and password reset link without a list wrapper.
+ */
+#}
+{%
+  set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+    'block-' ~ plugin_id|clean_class,
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if label %}
+    <h2{{ title_attributes }}>{{ label }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+  {% block content %}
+    {{ content.user_login_form }}
+    {% if content.user_links['#items'] %}
+      {% for item in content.user_links['#items'] %}
+        {{ item }}
+      {% endfor %}
+    {% endif %}
+  {% endblock %}
+</div>

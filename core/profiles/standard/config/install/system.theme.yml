@@ -1,2 +1,2 @@
-admin: claro
-default: claro
+admin: default_admin
+default: default_admin

@@ -1,0 +1,10 @@
+/**
+ * @file
+ * Styles for the user login block.
+ */
+
+.block-user-login-block input[type="text"],
+.block-user-login-block input[type="password"] {
+  width: 100%;
+  max-width: 60ch;
+}

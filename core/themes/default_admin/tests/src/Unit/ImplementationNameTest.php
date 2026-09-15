@@ -163,7 +163,7 @@ class ImplementationNameTest extends TestCase {
       if (in_array($relative_path, $excluded, TRUE)) {
         continue;
       }
-      if (preg_match('/(?:gin|claro)/i', $file->getFilename())) {
+      if (preg_match($name_pattern, $file->getFilename())) {
         $unexpected[] = $relative_path . ': inherited name in filename';
       }
       if (!in_array($file->getExtension(), $extensions, TRUE)) {

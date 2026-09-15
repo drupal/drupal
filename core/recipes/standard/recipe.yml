@@ -31,9 +31,9 @@ config:
   # all of the config strictly.
   strict: true
   import:
-    claro:
-      - block.block.claro_help
-      - block.block.claro_login
+    default_admin:
+      - block.block.default_admin_help
+      - block.block.default_admin_login
     image:
       - image.style.large
       - image.style.thumbnail
@@ -55,7 +55,7 @@ config:
         use_admin_theme: true
     system.theme:
       simpleConfigUpdate:
-        default: claro
+        default: default_admin
     user.role.anonymous:
       grantPermission: 'access content'
     user.role.authenticated:

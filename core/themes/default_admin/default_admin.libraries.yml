@@ -28,6 +28,7 @@ global-styling:
       css/components/button.css: {}
       # Ensure action-link.css is loaded after button.css.
       css/components/action-link.css: {}
+      css/components/user-login-block.css: {}
       css/components/dropbutton.css: {}
       css/components/details.css: {}
       css/components/divider.css: {}

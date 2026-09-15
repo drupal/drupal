@@ -73,7 +73,7 @@ trait StandardTestTrait {
     ]);
     $this->drupalLogin($this->adminUser);
     // Configure the block.
-    $this->drupalGet('admin/structure/block/add/system_menu_block:main/claro');
+    $this->drupalGet('admin/structure/block/add/system_menu_block:main/default_admin');
     $this->submitForm([
       'region' => 'header',
       'id' => 'main_navigation',
@@ -84,7 +84,7 @@ trait StandardTestTrait {
 
     // Verify we have role = complementary on help_block blocks.
     $this->drupalGet('admin/structure/block');
-    $this->assertSession()->elementAttributeContains('xpath', "//div[@id='block-claro-help']", 'role', 'complementary');
+    $this->assertSession()->elementAttributeContains('xpath', "//div[@id='block-default-admin-help']", 'role', 'complementary');
 
     // Verify anonymous visibility on front page in each install mode.
     $this->drupalLogout();
@@ -255,15 +255,12 @@ trait StandardTestTrait {
 
       // The name field should be hidden.
       $assert_session->fieldNotExists('Name', $form);
-      // The source field should be shown before the vertical tabs.
+      // The source field should be shown at the bottom with verticals tabs
+      // on the side.
       $source_field_label = $media_type->getSource()->getSourceFieldDefinition($media_type)->getLabel();
       $test_source_field = $assert_session->elementExists('xpath', "//*[contains(text(), '$source_field_label')]", $form)->getOuterHtml();
-      $vertical_tabs = $assert_session->elementExists('css', '.js-form-type-vertical-tabs', $form)->getOuterHtml();
-      $this->assertGreaterThan(strpos($form_html, $test_source_field), strpos($form_html, $vertical_tabs));
-      // The "Published" checkbox should be the last element.
-      $date_field = $assert_session->fieldExists('Date', $form)->getOuterHtml();
-      $published_checkbox = $assert_session->fieldExists('Published', $form)->getOuterHtml();
-      $this->assertGreaterThan(strpos($form_html, $date_field), strpos($form_html, $published_checkbox));
+      $side_tabs = $assert_session->elementExists('css', '.entity-meta', $form)->getOuterHtml();
+      $this->assertGreaterThan(strpos($form_html, $test_source_field), strpos($form_html, $side_tabs));
       if (is_a($media_type->getSource(), Image::class, TRUE)) {
         // Assert the default entity view display is configured with an image
         // style.
