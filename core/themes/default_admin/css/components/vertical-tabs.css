@@ -77,7 +77,7 @@
        dark (see the .is-selected dark override below), so mirror it here. */
     border-color: var(--admin-color-bg-surface);
 
-    .gin--dark-mode & {
+    .dark-mode & {
       border-color: var(--admin-color-bg);
     }
   }
@@ -152,7 +152,7 @@
     background-clip: padding-box;
   }
 
-  .gin--dark-mode & {
+  .dark-mode & {
     color: var(--admin-color-text);
   }
 
@@ -201,7 +201,7 @@
       background: none;
     }
 
-    .gin--dark-mode & {
+    .dark-mode & {
       border-color: var(--admin-color-border);
       background: var(--admin-color-bg);
     }
@@ -230,7 +230,7 @@
   font-size: var(--admin-font-size-s);
   font-weight: normal;
 
-  .gin--dark-mode & {
+  .dark-mode & {
     color: var(--admin-color-text-soft);
   }
 }
@@ -248,7 +248,7 @@
   background-color: var(--admin-color-bg-surface);
   box-shadow: var(--vertical-tabs-shadow);
 
-  .gin--dark-mode & {
+  .dark-mode & {
     border-color: var(--admin-color-border);
     background: var(--admin-color-bg);
   }
@@ -285,7 +285,7 @@
 /**
  * The actual vertical tabs pane.
  *
- * This is a gin-details element which in this case is also vertical-tabs__item.
+ * This is a details element which in this case is also vertical-tabs__item.
  */
 
 .vertical-tabs__item {
@@ -322,7 +322,7 @@
     }
   }
 
-  .gin--dark-mode & {
+  .dark-mode & {
     background: none;
   }
 
@@ -337,7 +337,7 @@
   }
 
   @media (min-width: 64em) {
-    .gin-details__summary {
+    .details__summary {
       padding-inline-start: var(--admin-space-2xl);
 
       &::before {
@@ -351,6 +351,6 @@
   font-weight: var(--admin-font-weight-bold);
 }
 
-[open] > .gin-details__summary--vertical-tabs-item:not(:focus, :active)::after {
+[open] > .details__summary--vertical-tabs-item:not(:focus, :active)::after {
   border-inline-start-width: 0.3125rem;
 }

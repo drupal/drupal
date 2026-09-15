@@ -19,8 +19,9 @@ class AdminTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'toolbar',
+    'block',
     'node',
+    'toolbar',
   ];
 
   /**
@@ -51,14 +52,20 @@ class AdminTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that Default Admin always adds its message CSS and Classy's.
+   * Tests Default Admin settings and markup.
    */
   public function testDefaultAdminSettings(): void {
     $response = $this->drupalGet('/admin/content');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertStringContainsString('"dark_mode":"0"', $response);
+    $this->assertStringContainsString('"defaultAdmin":{', $response);
+    $this->assertStringContainsString('"gin":{', $response);
+    $this->assertStringContainsString('"dark_mode":"auto"', $response);
     $this->assertStringContainsString('"preset_accent_color":"blue"', $response);
     $this->assertStringContainsString('"preset_focus_color":"gin"', $response);
+    $this->assertSession()->elementAttributeContains('css', 'html', 'data-admin-focus', 'gin');
+    $this->assertSession()->elementAttributeNotExists('css', 'html', 'data-gin-focus');
+    $this->assertSession()->elementExists('css', 'nav.breadcrumb[aria-labelledby="system-breadcrumb"]');
+    $this->assertSession()->elementExists('css', 'nav.breadcrumb #system-breadcrumb.visually-hidden');
   }
 
   /**
@@ -69,6 +76,16 @@ class AdminTest extends BrowserTestBase {
     $response = $this->drupalGet('/admin/content');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertStringContainsString('"dark_mode":"1"', $response);
+  }
+
+  /**
+   * Tests the high contrast setting.
+   */
+  public function testHighContrastSetting(): void {
+    \Drupal::configFactory()->getEditable('default_admin.settings')->set('high_contrast_mode', TRUE)->save();
+    $this->drupalGet('/admin/content');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->elementAttributeContains('css', 'html', 'class', 'high-contrast-mode');
   }
 
   /**
@@ -101,7 +118,7 @@ class AdminTest extends BrowserTestBase {
     $this->drupalLogin($user1);
 
     // Change something on the logged in user form.
-    $this->assertStringContainsString('"dark_mode":"0"', $this->drupalGet($user1->toUrl('edit-form')));
+    $this->assertStringContainsString('"dark_mode":"auto"', $this->drupalGet($user1->toUrl('edit-form')));
 
     $this->submitForm([
       'enable_user_settings' => TRUE,
@@ -111,7 +128,7 @@ class AdminTest extends BrowserTestBase {
 
     // Login as admin.
     $this->drupalLogin($this->rootUser);
-    $this->assertStringContainsString('"dark_mode":"0"', $this->drupalGet('edit-form'));
+    $this->assertStringContainsString('"dark_mode":"auto"', $this->drupalGet('edit-form'));
   }
 
   /**
@@ -131,7 +148,7 @@ class AdminTest extends BrowserTestBase {
     // Check logged-in's user is not affected.
     $loggedInUserResponse = $this->drupalGet('edit-form');
     $this->assertStringContainsString('"high_contrast_mode":false', $loggedInUserResponse);
-    $this->assertStringContainsString('"dark_mode":"0"', $loggedInUserResponse);
+    $this->assertStringContainsString('"dark_mode":"auto"', $loggedInUserResponse);
 
     // Check settings of user1.
     $this->drupalLogin($user1);

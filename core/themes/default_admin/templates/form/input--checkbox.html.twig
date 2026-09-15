@@ -12,9 +12,9 @@
  */
 #}
 {% if autocomplete_message %}
-  <div class="gin-autocomplete">
+  <div class="admin-autocomplete">
     <input{{ attributes }}/>
-    <div hidden class="gin-autocomplete__message">{{autocomplete_message}}</div>
+    <div hidden class="admin-autocomplete__message">{{ autocomplete_message }}</div>
   </div>
   {{ children }}
 {% else %}

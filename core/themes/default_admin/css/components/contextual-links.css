@@ -120,7 +120,7 @@
       width: 1.125rem;
       height: 1.125rem;
       content: "";
-      animation: gin-throbber 0.75s linear infinite;
+      animation: throbber 0.75s linear infinite;
       border: 2px solid var(--admin-color-primary);
       border-inline-end: 2px dotted transparent;
       border-radius: 50%;
@@ -130,7 +130,7 @@
   }
 }
 
-@keyframes gin-throbber {
+@keyframes throbber {
   0% {
     transform: rotateZ(0);
   }

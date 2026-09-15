@@ -12,7 +12,7 @@
 
 :where(*),
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
-  .gin-sticky-form-actions {
+  .sticky-form-actions {
     display: flex;
     gap: var(--admin-space-xs);
 
@@ -25,7 +25,7 @@
     }
   }
 
-  .gin-sticky-form-actions--preprocessed ~ .layout-container form.gin--has-sticky-form-actions .gin-sticky-form-actions {
+  .sticky-form-actions--preprocessed ~ .layout-container form.has-sticky-form-actions .sticky-form-actions {
     position: absolute !important;
     position: fixed !important;
     overflow: hidden;
@@ -36,12 +36,12 @@
     inset-block-start: 0;
   }
 
-  .edit-post-header .gin-sticky-form-actions {
+  .edit-post-header .sticky-form-actions {
     margin-block-start: 0;
   }
 }
 
-@keyframes gin-pseudo-throbber {
+@keyframes pseudo-throbber {
   0% {
     background-position: 16px 18px;
     background-size: 0.5rem 0.5rem;
@@ -58,18 +58,18 @@
   }
 }
 
-[data-drupal-selector="gin-sticky-edit-save"],
-[data-drupal-selector="gin-sticky-edit-preview"],
-[data-drupal-selector="gin-sticky-edit-delete"] {
+[data-drupal-selector="sticky-edit-save"],
+[data-drupal-selector="sticky-edit-preview"],
+[data-drupal-selector="sticky-edit-delete"] {
   background-repeat: no-repeat;
   background-position: var(--admin-space-xs) center;
 }
 
-body:has([data-drupal-selector="edit-save"] + .ajax-progress) :where([data-drupal-selector="gin-sticky-edit-save"]),
-body:has([data-drupal-selector="edit-preview"] + .ajax-progress) :where([data-drupal-selector="gin-sticky-edit-preview"]),
-body:has([data-drupal-selector="edit-delete"] + .ajax-progress) :where([data-drupal-selector="gin-sticky-edit-delete"]) {
+body:has([data-drupal-selector="edit-save"] + .ajax-progress) :where([data-drupal-selector="sticky-edit-save"]),
+body:has([data-drupal-selector="edit-preview"] + .ajax-progress) :where([data-drupal-selector="sticky-edit-preview"]),
+body:has([data-drupal-selector="edit-delete"] + .ajax-progress) :where([data-drupal-selector="sticky-edit-delete"]) {
   padding-inline-start: var(--admin-space-xl);
-  animation: gin-pseudo-throbber 1s linear infinite;
+  animation: pseudo-throbber 1s linear infinite;
   background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3e  %3cg fill='none' stroke='currentColor' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3e    %3cpath d='M12 4C12.5523 4 13 3.55228 13 3C13 2.44772 12.5523 2 12 2C11.4477 2 11 2.44772 11 3C11 3.55228 11.4477 4 12 4Z' /%3e  %3c/g%3e%3c/svg%3e");
 
   &:dir(rtl) {

@@ -51,7 +51,7 @@
     }
   }
 
-  .gin--dark-mode & {
+  .dark-mode & {
     color-scheme: dark;
   }
 

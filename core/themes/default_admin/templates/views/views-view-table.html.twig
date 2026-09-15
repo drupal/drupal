@@ -44,7 +44,7 @@
 
 {% import _self as macros %}
 
-{% macro table_header(header, fields, gin_is_sticky) %}
+{% macro table_header(header, fields, default_admin_is_sticky) %}
   <thead>
     <tr>
       {% for key, column in header %}
@@ -53,12 +53,12 @@
             set column_classes = [
               'views-field',
               'views-field-' ~ fields[key],
-              'bulk-form' in fields[key] ? 'gin--sticky-bulk-select',
+              'bulk-form' in fields[key] ? 'sticky-bulk-select',
             ]
           %}
         {% endif %}
         <th{{ column.attributes.addClass(column_classes).setAttribute('scope', 'col') }}>
-          {% if gin_is_sticky and fields[key] is defined and 'bulk-form' in fields[key] %}
+          {% if default_admin_is_sticky and fields[key] is defined and 'bulk-form' in fields[key] %}
             <input
               type="checkbox"
               class="form-checkbox form-boolean form-boolean--type-checkbox"
@@ -87,11 +87,11 @@
 {% endmacro %}
 
 {% if header and sticky %}
-  <table class="gin--sticky-table-header syncscroll" name="gin-sticky-header" hidden>
+  <table class="sticky-table-header syncscroll" name="sticky-header" hidden>
     {{ macros.table_header(header, fields, sticky) }}
   </table>
 {% endif %}
-<div class="gin-table-scroll-wrapper gin-horizontal-scroll-shadow syncscroll" name="gin-sticky-header">
+<div class="table-scroll-wrapper horizontal-scroll-shadow syncscroll" name="sticky-header">
   <table{{ attributes.addClass(classes) }}>
     {% if caption_needed %}
       <caption>

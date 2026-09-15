@@ -5,7 +5,7 @@
 
 :where(*),
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
-  .gin-sticky-form-actions {
+  .sticky-form-actions {
     display: flex;
     gap: var(--admin-space-xs);
 
@@ -18,7 +18,7 @@
     }
   }
 
-  .gin-sticky-form-actions--preprocessed ~ .layout-container form.gin--has-sticky-form-actions .gin-sticky-form-actions {
+  .sticky-form-actions--preprocessed ~ .layout-container form.has-sticky-form-actions .sticky-form-actions {
     position: absolute !important;
     position: fixed !important;
     overflow: hidden;
@@ -29,12 +29,12 @@
     inset-block-start: 0;
   }
 
-  .edit-post-header .gin-sticky-form-actions {
+  .edit-post-header .sticky-form-actions {
     margin-block-start: 0;
   }
 }
 
-@keyframes gin-pseudo-throbber {
+@keyframes pseudo-throbber {
   0% {
     background-position: 16px 18px;
     background-size: 8px 8px;
@@ -51,18 +51,18 @@
   }
 }
 
-[data-drupal-selector="gin-sticky-edit-save"],
-[data-drupal-selector="gin-sticky-edit-preview"],
-[data-drupal-selector="gin-sticky-edit-delete"] {
+[data-drupal-selector="sticky-edit-save"],
+[data-drupal-selector="sticky-edit-preview"],
+[data-drupal-selector="sticky-edit-delete"] {
   background-repeat: no-repeat;
   background-position: var(--admin-space-xs) center;
 }
 
-body:has([data-drupal-selector="edit-save"] + .ajax-progress) :where([data-drupal-selector="gin-sticky-edit-save"]),
-body:has([data-drupal-selector="edit-preview"] + .ajax-progress) :where([data-drupal-selector="gin-sticky-edit-preview"]),
-body:has([data-drupal-selector="edit-delete"] + .ajax-progress) :where([data-drupal-selector="gin-sticky-edit-delete"]) {
+body:has([data-drupal-selector="edit-save"] + .ajax-progress) :where([data-drupal-selector="sticky-edit-save"]),
+body:has([data-drupal-selector="edit-preview"] + .ajax-progress) :where([data-drupal-selector="sticky-edit-preview"]),
+body:has([data-drupal-selector="edit-delete"] + .ajax-progress) :where([data-drupal-selector="sticky-edit-delete"]) {
   padding-inline-start: var(--admin-space-xl);
-  animation: gin-pseudo-throbber 1s linear infinite;
+  animation: pseudo-throbber 1s linear infinite;
   background-image: url("../../migration/media/icons/general/loader.svg");
 
   &:dir(rtl) {

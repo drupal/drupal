@@ -36,11 +36,11 @@ html.admin-toolbar-expanded {
   }
 }
 
-body.gin--navigation {
+body.admin--navigation {
   --admin-toolbar-sidebar-width: 4rem;
 }
 
-[data-admin-toolbar="expanded"] body.gin--navigation {
+[data-admin-toolbar="expanded"] body.admin--navigation {
   --admin-toolbar-sidebar-width: 16.5rem;
 
   @media (--admin-toolbar-tablet) {
@@ -75,7 +75,7 @@ body.gin--navigation {
 /* Workspaces. */
 
 .toolbar-button--workspaces {
-  .gin--dark-mode & {
+  .dark-mode & {
     --toolbar-button-color: #222330;
     --toolbar-button-hover-color: var(--toolbar-button-color);
     --toolbar-button-focus-color: var(--toolbar-button-color);
@@ -83,7 +83,7 @@ body.gin--navigation {
 }
 
 .toolbar-button--workspaces--live {
-  .gin--dark-mode & {
+  .dark-mode & {
     --toolbar-button-bg: #32cea4;
     --toolbar-button-color: #222330;
     --toolbar-button-hover-color: var(--toolbar-button-color);

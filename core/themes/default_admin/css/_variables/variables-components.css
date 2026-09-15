@@ -18,9 +18,8 @@
  * out of the former css/base/variables.pcss.css as part of
  * https://www.drupal.org/i/3582351.
  *
- * The Gin-layer duplicate re-declarations of --input-padding-* / --input-line-height
- * / --jui-dialog-z-index (which used to trail this block and win by source order)
- * have been folded into the single declarations above, keeping the Gin values.
+ * Duplicate declarations for input padding, input line height, and dialog
+ * z-index are folded into the canonical declarations below.
  */
 
 :root {

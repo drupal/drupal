@@ -10,12 +10,12 @@
  * Status badge and flag styles.
  */
 
-.gin-status,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge,
+.admin-status,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge,
 .views-field .marker,
-.gin-beta-flag,
-.gin-experimental-flag,
-.gin-new-flag {
+.admin-beta-flag,
+.admin-experimental-flag,
+.admin-new-flag {
   display: inline-block;
   padding: 0.125em 0.75em;
   vertical-align: 0.125em;
@@ -26,61 +26,61 @@
   font-variation-settings: initial;
 }
 
-.gin-status,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge,
+.admin-status,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge,
 .views-field .marker,
-.gin-beta-flag,
-.gin-experimental-flag,
+.admin-beta-flag,
+.admin-experimental-flag,
 .pb-project-categories__item,
 .pb-module-page__categories-list-item {
   color: light-dark(#626262, #c3cbd0);
   background: light-dark(#eee, rgb(255, 255, 255, 0.12));
 }
 
-.gin-status--success,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--success,
-.gin-new-flag,
+.admin-status--success,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--success,
+.admin-new-flag,
 .views-field .marker--published,
 .pb-actions .project_status-indicator {
   color: var(--admin-color-text-success);
   background-color: var(--admin-color-bg-success);
 }
 
-.gin-status--success .gin-status-icon {
+.admin-status--success .admin-status-icon {
   background-color: currentColor;
   mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3e  %3cg fill='none' stroke='currentColor' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3e    %3cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'%3e%3c/path%3e    %3cpolyline points='22 4 12 14.01 9 11.01'%3e%3c/polyline%3e  %3c/g%3e%3c/svg%3e");
 }
 
-.gin-status--warning,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--warning {
+.admin-status--warning,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--warning {
   color: var(--admin-color-text-warning);
   background: var(--admin-color-bg-warning);
 }
 
-.gin-status--warning .gin-status-icon,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--warning .gin-status-icon {
+.admin-status--warning .admin-status-icon,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--warning .admin-status-icon {
   background-color: currentColor;
   mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3e  %3cg fill='none' stroke='currentColor' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3e    %3cpolygon points='7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2'%3e%3c/polygon%3e    %3cline x1='12' y1='8' x2='12' y2='12'%3e%3c/line%3e    %3cline x1='12' y1='16' x2='12.01' y2='16'%3e%3c/line%3e  %3c/g%3e%3c/svg%3e");
 }
 
-.gin-status--danger,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--danger {
+.admin-status--danger,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--danger {
   color: var(--admin-color-text-error);
   background: var(--admin-color-bg-error);
 }
 
-.gin-status--danger .gin-status-icon,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--danger .gin-status-icon {
+.admin-status--danger .admin-status-icon,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--danger .admin-status-icon {
   background-color: currentColor;
   mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3e  %3cg fill='none' stroke='currentColor' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3e    %3ccircle cx='12' cy='12' r='10'%3e%3c/circle%3e    %3cline x1='4.93' y1='4.93' x2='19.07' y2='19.07'%3e%3c/line%3e  %3c/g%3e%3c/svg%3e");
 }
 
-.gin-status {
+.admin-status {
   display: inline-flex;
   align-items: center;
   gap: var(--admin-space-2xs);
 }
 
-.gin-status-icon {
+.admin-status-icon {
   margin-inline-start: -0.5em;
 }

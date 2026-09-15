@@ -27,11 +27,11 @@
     margin-block-start: 0;
   }
 
-  .gin--dark-mode & {
+  .dark-mode & {
     box-shadow: 0 6px 16px var(--admin-color-border-soft);
   }
 
-  .gin--high-contrast-mode & {
+  .high-contrast-mode & {
     box-shadow: none;
   }
 

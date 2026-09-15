@@ -19,7 +19,7 @@
   font-size: var(--admin-font-size-xs);
   inset-block-start: 0;
 
-  .gin--dark-mode & {
+  .dark-mode & {
     background: rgb(27, 27, 29, 0.98);
 
     @supports (backdrop-filter: blur()) {
@@ -27,18 +27,14 @@
     }
   }
 
-  .gin--high-contrast-mode & {
+  .high-contrast-mode & {
     background: var(--admin-color-bg);
     backdrop-filter: none;
   }
 
-  .gin--navigation & {
+  .admin--navigation & {
     width: calc(100% - var(--admin-theme-toolbar-x-offset));
     margin-inline-start: var(--admin-theme-toolbar-x-offset);
-  }
-
-  .gin-layout-container {
-    box-sizing: border-box;
   }
 
   .node-preview-backlink,

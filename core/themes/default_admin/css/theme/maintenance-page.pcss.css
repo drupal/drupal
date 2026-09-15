@@ -120,7 +120,7 @@ h3 {
     color: var(--admin-color-link);
     border: 1px solid transparent; /* Required for forced-colors mode. */
     /* Fixed blue tint, not the accent-derived --admin-color-bg-item: the
-       maintenance/install page has no [data-gin-accent] context, so accent
+       maintenance/install page has no [data-accent] context, so accent
        tokens are undefined here. */
     background: var(--admin-color-blue-050);
     font-weight: 500;

@@ -86,7 +86,7 @@ final class Helper {
 
     foreach ($options as $values) {
       // Old way.
-      $element[$values]['#attributes']['data-gin-accent'] = $element[$values]['#return_value'];
+      $element[$values]['#attributes']['data-accent'] = $element[$values]['#return_value'];
 
       // New way.
       $accent_colors = self::accentColors();

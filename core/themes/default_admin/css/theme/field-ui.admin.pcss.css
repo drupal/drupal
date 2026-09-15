@@ -47,7 +47,7 @@
   .field-option__icon {
     filter: brightness(0);
 
-    .gin--dark-mode & {
+    .dark-mode & {
       filter: brightness(0) invert(1);
     }
   }
@@ -94,7 +94,7 @@
     .field-option__icon {
       filter: brightness(0) invert(1);
 
-      .gin--dark-mode & {
+      .dark-mode & {
         filter: brightness(0);
       }
     }

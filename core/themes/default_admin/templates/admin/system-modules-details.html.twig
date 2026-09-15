@@ -42,9 +42,9 @@
           <label id="{{ module.id }}" for="{{ module.enable_id }}" class="module-list__module-name table-filter-text-source">{{ module.name }}</label>
         </td>
         <td class="expand priority-low module-list__description">
-          <details class="js-form-wrapper form-wrapper module-list__module-details gin-details" id="{{ module.enable_id }}-description">
-            <summary aria-controls="{{ module.enable_id }}-description" role="button" aria-expanded="false" class="gin-details__summary module-list__module-summary"><span class="text module-description">{{ module.description }}</span></summary>
-            <div class="gin-details__wrapper module-details__wrapper">
+          <details class="js-form-wrapper form-wrapper module-list__module-details details" id="{{ module.enable_id }}-description">
+            <summary aria-controls="{{ module.enable_id }}-description" role="button" aria-expanded="false" class="details__summary module-list__module-summary"><span class="text module-description">{{ module.description }}</span></summary>
+            <div class="details__wrapper module-details__wrapper">
               <div class="module-details__description">
                 <div class="module-details__requirements">
                   <div class="module-details__requirement">{{ 'Machine name: <span dir="ltr" class="table-filter-text-source">@machine-name</span>'|t({'@machine-name': module.machine_name}) }}</div>

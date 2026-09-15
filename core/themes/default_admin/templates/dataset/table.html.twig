@@ -50,7 +50,7 @@
             set cell_classes = [
               'th__item',
               cell.active_table_sort ? 'is-active',
-              'select-all' in cell.attributes ? 'gin--sticky-bulk-select',
+              'select-all' in cell.attributes ? 'sticky-bulk-select',
             ]
           %}
         {% else %}
@@ -58,13 +58,13 @@
             set cell_classes = [
               cell.content|render|clean_class ? 'th__' ~ cell.content|render|clean_class,
               cell.active_table_sort ? 'is-active',
-              'select-all' in cell.attributes ? 'gin--sticky-bulk-select',
+              'select-all' in cell.attributes ? 'sticky-bulk-select',
             ]
           %}
         {% endif %}
         <{{ cell.tag }}{{ cell.attributes.addClass(cell_classes) }}>
           {{- cell.content -}}
-          {% if 'gin--sticky-bulk-select' in cell_classes %}
+          {% if 'sticky-bulk-select' in cell_classes %}
             <input
               type="checkbox"
               class="form-checkbox form-boolean form-boolean--type-checkbox"
@@ -77,14 +77,14 @@
   </thead>
 {% endmacro %}
 
-<div class="layer-wrapper gin-layer-wrapper">
+<div class="layer-wrapper">
   {% if header %}
     {% if sticky %}
-      <table class="gin--sticky-table-header syncscroll" name="gin-sticky-header" hidden>
+      <table class="sticky-table-header syncscroll" name="sticky-header" hidden>
         {{ macros.table_header(header) }}
       </table>
     {% endif %}
-  <div class="gin-table-scroll-wrapper gin-horizontal-scroll-shadow syncscroll" name="gin-sticky-header">
+  <div class="table-scroll-wrapper horizontal-scroll-shadow syncscroll" name="sticky-header">
   {% endif %}
     <table{{ attributes }}>
       {% if caption %}

@@ -1,10 +1,10 @@
 /**
  * @file
- * Extends table select functionality for Claro.
+ * Extends table select functionality for Default Admin.
  */
 
 (($, Drupal, { tabbable }) => {
-  Drupal.ClaroBulkActions = class {
+  Drupal.DefaultAdminBulkActions = class {
     constructor(bulkActions) {
       this.bulkActions = bulkActions;
       this.form = this.bulkActions.closest('form');
@@ -359,17 +359,17 @@
     }
   };
 
-  Drupal.behaviors.claroTableSelect = {
+  Drupal.behaviors.adminTableSelect = {
     attach(context) {
       const bulkActions = once(
-        'ClaroBulkActions',
+        'DefaultAdminBulkActions',
         '[data-drupal-views-bulk-actions]',
         context,
       );
       bulkActions.map(
         (bulkActionForm) =>
           /* eslint-disable-next-line no-new */
-          new Drupal.ClaroBulkActions(bulkActionForm),
+          new Drupal.DefaultAdminBulkActions(bulkActionForm),
       );
     },
   };

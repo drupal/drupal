@@ -1,6 +1,6 @@
 /**
  * @file
- * Media Library overrides for Claro
+ * Media Library overrides for Default Admin
  */
 (($, Drupal, window) => {
   /**
@@ -11,13 +11,13 @@
    * @prop {Drupal~behaviorAttach} attach
    *   Attaches behavior to select media items.
    */
-  Drupal.behaviors.MediaLibraryItemSelectionClaro = {
+  Drupal.behaviors.mediaLibraryItemSelectionDefaultAdmin = {
     attach() {
       // Move the selection count to the beginning of the button pane after it
       // has been added to the Media Library dialog.
       // @todo replace with theme function override in
       //   https://drupal.org/node/3134526
-      if (!once('media-library-selection-info-claro-event', 'html').length) {
+      if (!once('media-library-selection-info-admin-event', 'html').length) {
         return;
       }
       window.addEventListener('dialog:aftercreate', (e) => {

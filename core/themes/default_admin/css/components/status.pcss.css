@@ -3,12 +3,12 @@
  * Status badge and flag styles.
  */
 
-.gin-status,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge,
+.admin-status,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge,
 .views-field .marker,
-.gin-beta-flag,
-.gin-experimental-flag,
-.gin-new-flag {
+.admin-beta-flag,
+.admin-experimental-flag,
+.admin-new-flag {
   display: inline-block;
   padding: 0.125em 0.75em;
   vertical-align: 0.125em;
@@ -19,61 +19,61 @@
   font-variation-settings: initial;
 }
 
-.gin-status,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge,
+.admin-status,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge,
 .views-field .marker,
-.gin-beta-flag,
-.gin-experimental-flag,
+.admin-beta-flag,
+.admin-experimental-flag,
 .pb-project-categories__item,
 .pb-module-page__categories-list-item {
   color: light-dark(#626262, #c3cbd0);
   background: light-dark(#eee, rgb(255, 255, 255, 0.12));
 }
 
-.gin-status--success,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--success,
-.gin-new-flag,
+.admin-status--success,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--success,
+.admin-new-flag,
 .views-field .marker--published,
 .pb-actions .project_status-indicator {
   color: var(--admin-color-text-success);
   background-color: var(--admin-color-bg-success);
 }
 
-.gin-status--success .gin-status-icon {
+.admin-status--success .admin-status-icon {
   background-color: currentColor;
   mask-image: url("../../migration/media/icons/messages/status.svg");
 }
 
-.gin-status--warning,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--warning {
+.admin-status--warning,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--warning {
   color: var(--admin-color-text-warning);
   background: var(--admin-color-bg-warning);
 }
 
-.gin-status--warning .gin-status-icon,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--warning .gin-status-icon {
+.admin-status--warning .admin-status-icon,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--warning .admin-status-icon {
   background-color: currentColor;
   mask-image: url("../../migration/media/icons/messages/warning.svg");
 }
 
-.gin-status--danger,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--danger {
+.admin-status--danger,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--danger {
   color: var(--admin-color-text-error);
   background: var(--admin-color-bg-error);
 }
 
-.gin-status--danger .gin-status-icon,
-:is(#extra-specificity-hack, .gin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--danger .gin-status-icon {
+.admin-status--danger .admin-status-icon,
+:is(#extra-specificity-hack, .admin--core-navigation [data-drupal-admin-styles]) .toolbar-badge--danger .admin-status-icon {
   background-color: currentColor;
   mask-image: url("../../migration/media/icons/messages/error.svg");
 }
 
-.gin-status {
+.admin-status {
   display: inline-flex;
   align-items: center;
   gap: var(--admin-space-2xs);
 }
 
-.gin-status-icon {
+.admin-status-icon {
   margin-inline-start: -0.5em;
 }

@@ -1,21 +1,14 @@
-/* cspell:ignore blinkmacsystemfont, ginter */
+/* cspell:ignore blinkmacsystemfont */
 
 /**
  * @file
  * Typography custom properties — the canonical `--admin-font-*` token API.
  *
- * Consolidated from the former Claro `--font-*` and Gin `--gin-font-*` systems
- * The two scales agreed on the body sizes (2xs/xs/s/m) and the
- * weights, so those merged 1:1. Where they rendered different sizes under the same
- * name on different elements, the canonical value is what those elements render:
- *   - heading scale h1–h6 = the generic <h1>–<h6> sizes (a Claro/Gin mix), rounded
- *     to whole px. The old values were a rounded 1.125-ratio modular scale, so this
- *     drops sub-pixel fractions (e.g. h1 was 2.027rem ≈ 32.43px → 32px);
- *   - --admin-font-size-2xl (36px) = the old Claro --font-size-xl display size;
- *   - --admin-font-size-page-title = Gin's responsive H1 (distinct from the generic
- *     h1), used by the page title only.
- * (The Claro modular-scale h3 at 1.602rem is install/maintenance-only and off the
- * admin scale, so it stays an inline literal in those two files.)
+ * The canonical values preserve the rendered type scale from the theme's source
+ * styles. Body sizes and weights were equivalent and merged directly. Heading
+ * sizes use whole pixels, while the responsive page-title size remains distinct
+ * from the generic h1 size. The install and maintenance page h3 size remains an
+ * inline literal because it is outside the administration scale.
  *
  * Sizes are authored in px; the build's px-to-rem step converts them.
  */
@@ -24,7 +17,7 @@
 
 :root {
   /* Font families. */
-  --admin-font-family: ginter, inter, "Helvetica Neue", blinkmacsystemfont, -apple-system, "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, sans-serif;
+  --admin-font-family: inter, "Helvetica Neue", blinkmacsystemfont, -apple-system, "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, sans-serif;
   --admin-font-family-serif: "Times New Roman", times, serif;
 
   /* Line heights. (Unitless ratios are not lengths; -label is a fixed 18px.) */

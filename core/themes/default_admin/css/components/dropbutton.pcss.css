@@ -71,7 +71,7 @@
   border-radius: var(--admin-radius-m);
   box-shadow: 0 1px 2px var(--admin-color-primary-soft);
 
-  .gin--dark-mode & {
+  .dark-mode & {
     box-shadow: 0 4px 18px var(--admin-shadow-color-button);
   }
 
@@ -113,12 +113,12 @@
   }
 
   /* Drupal 10.2.x fix */
-  &.dropbutton--gin .dropbutton-action > .button {
+  &.dropbutton--admin .dropbutton-action > .button {
     border: var(--dropbutton-border-size) solid transparent !important;
   }
 
   /* The ugly part: make it work for all different dropbutton versions out there */
-  &:not(.dropbutton--gin) > .dropbutton__item ~ .dropbutton__item,
+  &:not(.dropbutton--admin) > .dropbutton__item ~ .dropbutton__item,
   .dropbutton__items > .dropbutton__item,
   .dropbutton__items > .dropbutton__item ~ .dropbutton__item {
     border: 0 none;
@@ -185,11 +185,11 @@
   }
 
   /* Shadow for pseudo dropdown on views page */
-  &:not(.dropbutton--gin) > .dropbutton__item.secondary-action {
+  &:not(.dropbutton--admin) > .dropbutton__item.secondary-action {
     box-shadow: var(--admin-shadow-2);
   }
 
-  &:not(.dropbutton--gin) > .dropbutton__item:not(:first-of-type),
+  &:not(.dropbutton--admin) > .dropbutton__item:not(:first-of-type),
   .dropbutton__items > .dropbutton__item,
   > .dropbutton__items > .dropbutton__item ~ .dropbutton__item {
     > a,

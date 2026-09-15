@@ -11,7 +11,7 @@
  */
 
 :root,
-[data-gin-accent] {
+[data-accent] {
   /*
   * Accent colors.
   */
@@ -112,7 +112,7 @@
    * Focus & disabled.
    *   --admin-color-focus          focus-ring color.
    *   --admin-color-focus-border   inner focus-ring border.
-   *   --admin-color-focus-neutral  neutral focus-ring variant ([data-gin-focus]).
+   *   --admin-color-focus-neutral  neutral focus-ring variant ([data-admin-focus]).
    *   --admin-color-text-disabled / -bg-disabled / -border-disabled  disabled controls.
    */
   --admin-color-focus: light-dark(color-mix(in srgb, #007dfa 60%, transparent), #51a8ff);

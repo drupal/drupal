@@ -53,16 +53,16 @@
 
 :where(*),
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
-  .gin-breadcrumb {
+  .breadcrumb {
     padding: 0;
     color: var(--admin-color-text);
   }
 
-  .gin-breadcrumb-wrapper {
+  .breadcrumb-wrapper {
     min-width: 1px;
   }
 
-  .gin-breadcrumb__list {
+  .breadcrumb__list {
     overflow: hidden;
     width: auto;
     margin: 0;
@@ -74,9 +74,9 @@
     text-overflow: ellipsis;
   }
 
-  .gin-breadcrumb__item,
-  .gin-breadcrumb__link,
-  .gin-breadcrumb__text {
+  .breadcrumb__item,
+  .breadcrumb__link,
+  .breadcrumb__text {
     display: inline;
     vertical-align: middle;
     text-decoration: none;
@@ -84,10 +84,10 @@
     font-weight: var(--admin-font-weight-normal);
   }
 
-  .gin-breadcrumb__item {
+  .breadcrumb__item {
     font-size: 0;
 
-    & + .gin-breadcrumb__item::before {
+    & + .breadcrumb__item::before {
       display: inline-block;
       padding: 0 0.5em;
       content: "/";
@@ -101,7 +101,7 @@
       }
     }
 
-    &:first-of-type .gin-breadcrumb__link {
+    &:first-of-type .breadcrumb__link {
       position: relative;
       padding-inline-start: 1.75em;
 
@@ -134,7 +134,7 @@
       }
     }
 
-    &:first-of-type + .gin-breadcrumb__item::before {
+    &:first-of-type + .breadcrumb__item::before {
       width: 1px;
       height: 20px;
       margin-inline-end: 0.75em;
@@ -150,36 +150,36 @@
     }
   }
 
-  .gin-breadcrumb__link,
-  .gin-breadcrumb__text {
+  .breadcrumb__link,
+  .breadcrumb__text {
     border-radius: var(--admin-radius-2xs);
     font-size: var(--admin-font-size-xs);
     line-height: 2;
   }
 
-  .gin-breadcrumb__link,
-  .gin-breadcrumb__link:link,
-  .gin-breadcrumb__link:visited,
-  .gin-breadcrumb__link em,
-  .gin-breadcrumb__link em:link,
-  .gin-breadcrumb__link em:visited,
-  .gin-breadcrumb__text,
-  .gin-breadcrumb__text:link,
-  .gin-breadcrumb__text:visited,
-  .gin-breadcrumb__text em,
-  .gin-breadcrumb__text em:link,
-  .gin-breadcrumb__text em:visited {
+  .breadcrumb__link,
+  .breadcrumb__link:link,
+  .breadcrumb__link:visited,
+  .breadcrumb__link em,
+  .breadcrumb__link em:link,
+  .breadcrumb__link em:visited,
+  .breadcrumb__text,
+  .breadcrumb__text:link,
+  .breadcrumb__text:visited,
+  .breadcrumb__text em,
+  .breadcrumb__text em:link,
+  .breadcrumb__text em:visited {
     color: var(--admin-color-text-soft);
     font-weight: var(--admin-font-weight-normal);
   }
 
-  .gin-breadcrumb__link em,
-  .gin-breadcrumb__text em {
+  .breadcrumb__link em,
+  .breadcrumb__text em {
     font-style: italic;
   }
 
-  .gin-breadcrumb__link:hover,
-  .gin-breadcrumb__link:hover em {
+  .breadcrumb__link:hover,
+  .breadcrumb__link:hover em {
     color: var(--admin-color-primary-hover);
   }
 }
