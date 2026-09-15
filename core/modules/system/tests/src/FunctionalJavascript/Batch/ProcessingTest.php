@@ -23,7 +23,7 @@ class ProcessingTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'olivero';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests that a link to the error page is shown.

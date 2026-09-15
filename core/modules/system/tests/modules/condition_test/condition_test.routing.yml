@@ -4,3 +4,5 @@ condition_test.1:
     _form: '\Drupal\condition_test\FormController'
   requirements:
     _access: 'TRUE'
+  options:
+    no_cache: TRUE
