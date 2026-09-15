@@ -377,15 +377,15 @@
     }
   },
   "block": {
-    "Drupal\\FunctionalJavascriptTests\\Theme\\ClaroBlockFilterTest": {
-      "name": "Drupal\\FunctionalJavascriptTests\\Theme\\ClaroBlockFilterTest",
+    "Drupal\\FunctionalJavascriptTests\\Theme\\AdminBlockFilterTest": {
+      "name": "Drupal\\FunctionalJavascriptTests\\Theme\\AdminBlockFilterTest",
       "group": "block",
       "groups": [
         "block"
       ],
       "type": "functional-javascript",
-      "description": "Runs BlockFilterTest in Claro.",
-      "file": "/Users/foo/Dev/drupal/core/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroBlockFilterTest.php",
+      "description": "Runs BlockFilterTest in Admin.",
+      "file": "/Users/foo/Dev/drupal/core/tests/Drupal/FunctionalJavascriptTests/Theme/AdminBlockFilterTest.php",
       "tests_count": 1
     },
     "Drupal\\KernelTests\\Core\\Block\\BlockBaseTest": {
