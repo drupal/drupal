@@ -21,7 +21,7 @@
    */
   Drupal.theme.verticalTab = (settings) => {
     const tab = {};
-    tab.title = $('<strong class="vertical-tabs__menu-item-title"></strong>');
+    tab.title = $('<span class="vertical-tabs__menu-item-title"></span>');
     tab.title[0].textContent = settings.title;
     tab.item = $(
       '<li class="vertical-tabs__menu-item" tabindex="-1"></li>',
