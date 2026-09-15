@@ -28,8 +28,6 @@ class AlterTest extends KernelTestBase {
    * Tests if the theme has been altered.
    */
   public function testDrupalAlter(): void {
-    // This test depends on Olivero, so make sure that it is always the current
-    // active theme.
     \Drupal::service('theme_installer')->install(['test_theme_alter']);
     \Drupal::theme()->setActiveTheme(\Drupal::service('theme.initialization')->initTheme('test_theme_alter'));
 

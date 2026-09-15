@@ -49,8 +49,8 @@
   }
 
   /*
-   * Some themes (Olivero) insert SVG icon. We use a background icon, so we
-   * need to remove this.
+   * Some themes insert an SVG icon. We use a background icon, so we need to
+   * remove this.
    */
   & .messages__icon,
   & .messages__close {

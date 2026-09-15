@@ -92,8 +92,8 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
 
     foreach ($default_block_names as $default_block_name) {
       // Remove the matching block from the list of blocks in the new theme.
-      // For example, if the old theme has block.block.stark_admin,
-      // unset block.block.olivero_admin.
+      // For example, if the old theme has block.block.foo_admin,
+      // unset block.block.bar_admin.
       unset($new_blocks[str_replace($default_theme . '_', $new_theme . '_', $default_block_name)]);
     }
     $this->assertEmpty($new_blocks);
@@ -155,8 +155,8 @@ class NewDefaultThemeBlocksTest extends KernelTestBase {
 
     foreach ($default_block_names as $default_block_name) {
       // Remove the matching block from the list of blocks in the new theme.
-      // For example, if the old theme has block.block.stark_admin,
-      // unset block.block.olivero_admin.
+      // For example, if the old theme has block.block.foo_admin,
+      // unset block.block.bar_admin.
       unset($new_blocks[str_replace($default_theme . '_', $new_theme . '_', $default_block_name)]);
     }
     // The test_theme_user_login_block machine name is already in use, so
