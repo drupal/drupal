@@ -9,11 +9,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Runs tests on Views UI using Claro.
+ * Runs tests on Views UI using Admin.
  */
-#[Group('claro')]
+#[Group('default_admin')]
 #[RunTestsInSeparateProcesses]
-class ClaroViewsUiTest extends WebDriverTestBase {
+class AdminViewsUiTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
@@ -23,7 +23,7 @@ class ClaroViewsUiTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'default_admin';
 
   /**
    * {@inheritdoc}

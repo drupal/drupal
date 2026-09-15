@@ -1,4 +1,3 @@
-// This test is a duplicate of oliveroPrimaryTabsTest.js tagged for claro
 const primaryTabsWrapper = '[data-drupal-nav-tabs]';
 const activeTab = '.tabs__tab.is-active';
 const inactiveTab = '.tabs__tab:not(.is-active)';
@@ -7,12 +6,12 @@ const hamburgerIcon = `${mobileToggle} .hamburger-icon`;
 const closeIcon = `${mobileToggle} .close-icon`;
 
 module.exports = {
-  '@tags': ['core', 'claro'],
+  '@tags': ['core', 'default_admin'],
   before(browser) {
     browser
       .drupalInstall({
         setupFile:
-          'core/tests/Drupal/TestSite/TestSiteClaroInstallTestScript.php',
+          'core/tests/Drupal/TestSite/TestSiteDefaultAdminInstallTestScript.php',
         installProfile: 'minimal',
       })
       .drupalCreateUser({

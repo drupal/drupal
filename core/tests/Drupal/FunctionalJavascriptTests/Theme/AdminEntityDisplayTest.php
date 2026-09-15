@@ -10,21 +10,21 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Runs EntityDisplayTest in Claro.
+ * Runs EntityDisplayTest in Admin.
  *
  * @see \Drupal\Tests\field_ui\FunctionalJavascript\EntityDisplayTest.
  */
-#[Group('claro')]
+#[Group('default_admin')]
 #[RunTestsInSeparateProcesses]
-class ClaroEntityDisplayTest extends EntityDisplayTest {
+class AdminEntityDisplayTest extends EntityDisplayTest {
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->container->get('theme_installer')->install(['claro']);
-    $this->config('system.theme')->set('default', 'claro')->save();
+    $this->container->get('theme_installer')->install(['default_admin']);
+    $this->config('system.theme')->set('default', 'default_admin')->save();
   }
 
   /**
@@ -78,14 +78,14 @@ class ClaroEntityDisplayTest extends EntityDisplayTest {
     $this->assertTrue($this->assertSession()->optionExists('fields[field_test_text][region]', 'content')->isSelected());
 
     $this->drupalGet('entity_test/1');
-    $this->assertSession()->elementExists('css', '.field--name-field-test-text');
+    $this->assertSession()->pageTextContains('The field test text value');
   }
 
   /**
    * Copied from parent.
    *
    * This is Drupal\Tests\field_ui\FunctionalJavascript\EntityDisplayTest::testExtraFields()
-   * with a line changed to reflect Claro's tabledrag selector.
+   * with a line changed to reflect Admin's tabledrag selector.
    */
   public function testExtraFields(): void {
     EntityTestHelper::createBundle('bundle_with_extra_fields');

@@ -9,18 +9,18 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests draggable tables with Claro theme.
+ * Tests draggable tables with Admin theme.
  *
  * @see \Drupal\FunctionalJavascriptTests\TableDrag\TableDragTest
  */
-#[Group('claro')]
+#[Group('default_admin')]
 #[RunTestsInSeparateProcesses]
-class ClaroTableDragTest extends TableDragTest {
+class AdminTableDragTest extends TableDragTest {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'default_admin';
 
   /**
    * {@inheritdoc}

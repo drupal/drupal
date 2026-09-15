@@ -9,16 +9,16 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests the password confirm widget with Claro theme.
+ * Tests the password confirm widget with Admin theme.
  */
-#[Group('claro')]
+#[Group('default_admin')]
 #[RunTestsInSeparateProcesses]
-class ClaroPasswordConfirmWidgetTest extends PasswordConfirmWidgetTest {
+class AdminPasswordConfirmWidgetTest extends PasswordConfirmWidgetTest {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'default_admin';
 
   /**
    * Tests that password match message is invisible when widget is initialized.
@@ -39,7 +39,7 @@ class ClaroPasswordConfirmWidgetTest extends PasswordConfirmWidgetTest {
    * {@inheritdoc}
    */
   public function testFillConfirmOnly(): void {
-    // This test is not applicable to Claro because confirm field is hidden
+    // This test is not applicable to Admin because confirm field is hidden
     // until the password has been filled in the main field.
   }
 

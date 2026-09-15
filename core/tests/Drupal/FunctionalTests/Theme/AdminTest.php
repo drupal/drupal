@@ -9,11 +9,11 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
- * Tests the Claro theme.
+ * Tests the Admin theme.
  */
-#[Group('claro')]
+#[Group('default_admin')]
 #[RunTestsInSeparateProcesses]
-class ClaroTest extends BrowserTestBase {
+class AdminTest extends BrowserTestBase {
 
   /**
    * Modules to install.
@@ -27,22 +27,22 @@ class ClaroTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'default_admin';
 
   /**
-   * Testing that Claro theme's global library is always attached.
+   * Testing that Admin theme's global library is always attached.
    *
-   * @see claro.info.yml
+   * @see default_admin.info.yml
    */
   public function testRegressionMissingElementsCss(): void {
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
     // This can be any CSS file from the global library.
-    $this->assertSession()->responseContains('claro/css/base/elements.css');
+    $this->assertSession()->responseContains('default_admin/css/base/elements.css');
   }
 
   /**
-   * Tests Claro's configuration schema.
+   * Tests Admin's configuration schema.
    */
   public function testConfigSchema(): void {
     $permissions = [
@@ -50,28 +50,30 @@ class ClaroTest extends BrowserTestBase {
     ];
     $this->drupalLogin($this->drupalCreateUser($permissions));
     $this->drupalGet('admin/modules');
-    $this->assertSession()->elementNotExists('css', '#block-claro-help');
+    $this->assertSession()->elementNotExists('css', '#block-default-admin-help');
 
-    // Install the block module to ensure Claro's configuration is valid
+    // Install the block module to ensure Admin's configuration is valid
     // according to schema.
     \Drupal::service('module_installer')->install(['block', 'help']);
     $this->rebuildAll();
 
     $this->drupalGet('admin/modules');
-    $this->assertSession()->elementExists('css', '#block-claro-help');
+    $this->assertSession()->elementExists('css', '#block-default-admin-help');
   }
 
   /**
-   * Tests that the Claro theme can be uninstalled.
+   * Tests that the Admin theme can be uninstalled.
    */
   public function testIsUninstallable(): void {
     $this->drupalLogin($this->drupalCreateUser(['access administration pages', 'administer themes']));
 
     $this->drupalGet('admin/appearance');
     $this->cssSelect('a[title="Install <strong>Test theme</strong> as default theme"]')[0]->click();
-    $this->cssSelect('a[title="Uninstall Claro theme"]')[0]->click();
+
+    $this->cssSelect('a[title="Uninstall Default Admin theme"]')[0]->click();
     $this->submitForm([], 'Uninstall');
-    $this->assertSession()->pageTextContains('The Claro theme has been uninstalled.');
+    $this->assertSession()->pageTextContains('The Default Admin theme has been uninstalled.');
+
   }
 
   /**
