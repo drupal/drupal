@@ -50,7 +50,7 @@ class BrokenCacheUpdateTest extends BrowserTestBase {
       'checksum' => 0,
     ];
     $insert->fields($fields);
-    $fields['cid'] = 'element_info_build:claro';
+    $fields['cid'] = 'element_info_build:default_admin';
     $insert->values(array_values($fields));
     $fields['cid'] = 'element_info_build:stark';
     $insert->values(array_values($fields));
@@ -59,7 +59,7 @@ class BrokenCacheUpdateTest extends BrowserTestBase {
     $this->runUpdates();
     // Caches should have been cleared at this point.
     $count = (int) $connection->select('cache_discovery')
-      ->condition('cid', ['element_info', 'element_info_build:claro', 'element_info_build:stark'], 'IN')
+      ->condition('cid', ['element_info', 'element_info_build:default_admin', 'element_info_build:stark'], 'IN')
       ->countQuery()
       ->execute()
       ->fetchField();

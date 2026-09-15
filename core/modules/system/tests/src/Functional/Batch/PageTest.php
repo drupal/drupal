@@ -32,10 +32,10 @@ class PageTest extends BrowserTestBase {
   public function testBatchProgressPageTheme(): void {
     // Make sure that the page which starts the batch (an administrative page)
     // is using a different theme than would normally be used by the batch API.
-    $this->container->get('theme_installer')->install(['claro', 'stark']);
+    $this->container->get('theme_installer')->install(['default_admin', 'stark']);
     $this->config('system.theme')
       ->set('default', 'stark')
-      ->set('admin', 'claro')
+      ->set('admin', 'default_admin')
       ->save();
 
     // Log in as an administrator who can see the administrative theme.
@@ -49,7 +49,7 @@ class PageTest extends BrowserTestBase {
     // The stack should contain the name of the theme used on the progress
     // page.
     $batch_test_helper = new BatchTestHelper();
-    $this->assertEquals(['claro'], $batch_test_helper->stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
+    $this->assertEquals(['default_admin'], $batch_test_helper->stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
   }
 
   /**

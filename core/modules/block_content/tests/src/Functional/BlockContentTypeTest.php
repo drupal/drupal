@@ -234,7 +234,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
       ->getStorage('block_content');
 
     // Install all themes.
-    $themes = ['stark', 'claro'];
+    $themes = ['stark', 'default_admin'];
     \Drupal::service('theme_installer')->install($themes);
     $theme_settings = $this->config('system.theme');
     foreach ($themes as $default_theme) {
@@ -262,7 +262,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
             'theme' => $theme,
           ]));
           $this->submitForm(['region' => 'content'], 'Save block');
-          $this->assertSession()->addressEquals(Url::fromRoute('block.admin_display_theme', ['theme' => $theme], ['query' => ['block-placement' => $theme . '-' . Html::getClass($edit['info[0][value]'])]]));
+          $this->assertSession()->addressEquals(Url::fromRoute('block.admin_display_theme', ['theme' => $theme], ['query' => ['block-placement' => Html::getClass($theme . '-' . $edit['info[0][value]'])]]));
         }
         else {
           $this->fail('Could not load created block.');

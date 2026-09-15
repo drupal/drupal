@@ -36,7 +36,7 @@ class UserBatchActionTest extends BrowserTestBase {
    * Tests user admin batch.
    */
   public function testUserAction(): void {
-    $themes = ['stark', 'claro'];
+    $themes = ['stark', 'default_admin'];
     $this->container->get('theme_installer')->install($themes);
 
     $this->drupalLogin($this->createUser(['administer users']));

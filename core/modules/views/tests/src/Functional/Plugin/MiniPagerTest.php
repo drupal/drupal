@@ -167,7 +167,7 @@ class MiniPagerTest extends ViewTestBase {
     $view->save();
 
     // Stark and test_base_theme are handled below.
-    $themes = ['claro', 'starterkit_theme'];
+    $themes = ['default_admin', 'starterkit_theme'];
     $this->container->get('theme_installer')->install($themes);
 
     foreach ($themes as $theme) {

@@ -125,7 +125,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
     $assert = $this->assertSession();
 
     $html_element = $is_inline ? 'span' : 'div';
-    $title_selector = 'h1 span' . ($title_classes ? '.field--name-title' : '');
+    $title_selector = 'h1' . ($title_classes ? '.field--name-title' : '');
     $assert->elementTextContains('css', $title_selector, $node->getTitle());
 
     // With field classes, the selector can be very specific.
@@ -176,7 +176,9 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    */
   public static function provideThemes() {
     return [
-      ['claro', 'footer', TRUE],
+      // Default Admin overrides the title to a plain string for the canonical
+      // route, so field--name-title is not present.
+      ['default_admin', 'footer', FALSE],
       // @todo Add coverage for olivero after fixing
       // https://www.drupal.org/project/drupal/issues/3215220.
       // ['olivero', 'footer', TRUE],
