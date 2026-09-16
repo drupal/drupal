@@ -12,7 +12,7 @@ const navigationTest = {
     browser.drupalUninstall();
   },
 };
-const testCases = [{ name: 'Claro page', path: '/user/1/edit' }];
+const testCases = [{ name: 'Default Admin page', path: '/user/1/edit' }];
 
 testCases.forEach((testCase) => {
   navigationTest[`Accessibility - Navigation Module - ${testCase.name}`] = (

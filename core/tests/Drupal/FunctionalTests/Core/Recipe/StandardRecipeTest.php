@@ -34,7 +34,7 @@ class StandardRecipeTest extends StandardTest {
     $theme_installer = \Drupal::service('theme_installer');
     $theme_installer->install(['stark']);
     $this->config('system.theme')->set('admin', '')->set('default', 'stark')->save();
-    $theme_installer->uninstall(['claro']);
+    $theme_installer->uninstall(['default_admin']);
 
     // Determine which modules to uninstall.
     // If the database module has dependencies, they are expected too.
@@ -143,7 +143,7 @@ class StandardRecipeTest extends StandardTest {
       'system.action.taxonomy_term_publish_action',
       'core.entity_view_mode.taxonomy_term.full',
       'taxonomy.settings',
-      'block.block.claro_login',
+      'block.block.default_admin_login',
       'views.view.promoted_content',
       'views.view.taxonomy_term',
     ];

@@ -1,8 +1,8 @@
 name: 'Admin theme'
-description: 'Sets up Claro as the administrative (backend) theme.'
+description: 'Sets up Default Admin as the administrative (backend) theme.'
 type: 'Themes'
 install:
-  - claro
+  - default_admin
   - block
 config:
   # Leave existing blocks and menus as-is.
@@ -11,19 +11,19 @@ config:
     system:
       - system.menu.account
       - system.menu.main
-    claro:
-      - block.block.claro_breadcrumbs
-      - block.block.claro_content
-      - block.block.claro_local_actions
-      - block.block.claro_messages
-      - block.block.claro_primary_local_tasks
-      - block.block.claro_secondary_local_tasks
+    default_admin:
+      - block.block.default_admin_breadcrumbs
+      - block.block.default_admin_content
+      - block.block.default_admin_local_actions
+      - block.block.default_admin_messages
+      - block.block.default_admin_primary_local_tasks
+      - block.block.default_admin_secondary_local_tasks
   actions:
     # Create this block dynamically so as not to conflict with the block created
-    # by block_theme_initialize() when Claro is installed.
-    block.block.claro_page_title:
+    # by block_theme_initialize() when Default Admin is installed.
+    block.block.default_admin_page_title:
       createIfNotExists:
-        theme: claro
+        theme: default_admin
         plugin: page_title_block
         settings:
           id: page_title_block
@@ -35,4 +35,4 @@ config:
       setWeight: -30
     system.theme:
       simpleConfigUpdate:
-        admin: claro
+        admin: default_admin

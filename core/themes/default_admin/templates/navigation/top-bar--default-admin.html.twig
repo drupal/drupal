@@ -13,7 +13,7 @@
 {% if local_tasks %}
   {% set attributes = attributes.setAttribute('data-offset-top', '') %}
 {% endif %}
-<div {{ attributes.addClass('top-bar admin--navigation-top-bar').setAttribute('data-drupal-admin-styles', '') }}>
+<div {{ attributes.addClass('top-bar admin--navigation-top-bar').setAttribute('data-drupal-admin-styles', '').setAttribute('role', 'region').setAttribute('aria-label', 'Administrative top bar'|t) }}>
   <div class="top-bar__content">
     {{ include('@navigation/toolbar-button.html.twig', {
       attributes: create_attribute({'aria-expanded': 'false', 'aria-controls': 'admin-toolbar'}),

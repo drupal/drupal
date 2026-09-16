@@ -42,6 +42,6 @@ install:
   - content_translation
   - announcements_feed
 themes:
-  - claro
+  - default_admin
   - umami
 keep_english: true
