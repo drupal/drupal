@@ -273,7 +273,6 @@ JS;
    */
   public function testUiAjaxException(): void {
     $themes = [
-      'olivero',
       'default_admin',
       'stark',
     ];

@@ -23,7 +23,7 @@ class CommentDisplayConfigurableTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'olivero';
+  protected $defaultTheme = 'claro';
 
   /**
    * {@inheritdoc}
@@ -60,7 +60,8 @@ class CommentDisplayConfigurableTest extends CommentTestBase {
 
     // Check the comment author with Drupal default non-configurable display.
     $this->drupalGet('node/' . $nid);
-    $assert->elementExists('css', 'p.comment__author span');
+    $display_name = $this->webUser->getDisplayName();
+    $assert->responseContains("Submitted by <span>$display_name</span>");
 
     // Enable module to make base fields' displays configurable.
     \Drupal::service('module_installer')->install(['comment_display_configurable_test']);

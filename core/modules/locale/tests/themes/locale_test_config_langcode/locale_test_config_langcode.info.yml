@@ -1,0 +1,4 @@
+name: locale_test_config_langcode
+type: theme
+base theme: false
+description: 'Theme that provides a date format for translation testing'

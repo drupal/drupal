@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    theme:
+      - locale_test_config_langcode
+id: locale_test_config_langcode_medium
+label: 'locale_test_config_langcode Medium'
+locked: false
+pattern: 'j F Y'
