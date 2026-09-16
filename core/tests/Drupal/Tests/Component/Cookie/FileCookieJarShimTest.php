@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Cookie;
 
-use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Cookie\FileCookieJar;
 use GuzzleHttp\Cookie\SetCookie;
 use PHPUnit\Framework\Attributes\Group;
@@ -38,9 +37,6 @@ class FileCookieJarShimTest extends TestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    if (ClientInterface::MAJOR_VERSION >= 8) {
-      $this->markTestSkipped('Skipped because Guzzle 8 does not need the shim.');
-    }
     parent::setUp();
     $this->file = tempnam(sys_get_temp_dir(), 'drupal_file_cookie_jar_');
     // Start from a non-existent file so the constructor does not load.
@@ -51,7 +47,7 @@ class FileCookieJarShimTest extends TestCase {
    * {@inheritdoc}
    */
   protected function tearDown(): void {
-    if (isset($this->file) && file_exists($this->file)) {
+    if (file_exists($this->file)) {
       unlink($this->file);
     }
     parent::tearDown();

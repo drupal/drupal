@@ -14,13 +14,10 @@
 
 namespace GuzzleHttp\Cookie;
 
-use GuzzleHttp\ClientInterface;
-
 // phpcs:ignoreFile
 
 // Only define the class if the real one has not already been loaded.
-if ((ClientInterface::MAJOR_VERSION < 8) &&
-    !class_exists(FileCookieJar::class, false)) {
+if (!class_exists(FileCookieJar::class, false)) {
 
     /**
      * Persists non-session cookies using a JSON formatted file

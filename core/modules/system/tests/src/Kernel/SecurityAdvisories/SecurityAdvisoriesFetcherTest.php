@@ -668,10 +668,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
     $this->assertCount(1, $advisories);
     $this->assertSame('http://example.com', $advisories[0]->getUrl());
     $this->assertSame('SA title', $advisories[0]->getTitle());
-    $this->assertContains($this->errorMessages[0], [
-      "Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n",
-      "Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response: HTTPS failed",
-    ]);
+    $this->assertSame(["Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n"], $this->errorMessages);
   }
 
   /**
@@ -690,10 +687,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
       $this->getAdvisories();
     }
     catch (ClientExceptionInterface $exception) {
-      $this->assertContains($exception->getMessage(), [
-        "Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n",
-        "Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response: HTTPS failed",
-      ]);
+      $this->assertSame("Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n", $exception->getMessage());
       $exception_thrown = TRUE;
     }
     $this->assertTrue($exception_thrown);

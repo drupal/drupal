@@ -470,14 +470,10 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function getSessionCookies() {
     $domain = parse_url($this->getUrl(), PHP_URL_HOST);
-    $session_name = $this->getSessionName();
-    $session_id = $this->getSession()->getCookie($session_name);
+    $session_id = $this->getSession()->getCookie($this->getSessionName());
+    $cookies = CookieJar::fromArray([$this->getSessionName() => $session_id], $domain);
 
-    $cookies = [];
-    if ($session_id !== NULL) {
-      $cookies[$session_name] = $session_id;
-    }
-    return CookieJar::fromArray($cookies, $domain);
+    return $cookies;
   }
 
   /**

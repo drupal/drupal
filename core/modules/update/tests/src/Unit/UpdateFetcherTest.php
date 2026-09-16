@@ -200,10 +200,7 @@ class UpdateFetcherTest extends UnitTestCase {
     $this->assertEmpty($data);
 
     $this->assertTrue($this->logger->hasErrorThatPasses(function (array $record) {
-      return in_array($record['context']['@message'], [
-        "Server error: `GET https://www.example.com/update_test/current` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n",
-        "Server error: `GET https://www.example.com/update_test/current` resulted in a `500 Internal Server Error` response: HTTPS failed",
-      ], TRUE);
+      return $record['context']['@message'] === "Server error: `GET https://www.example.com/update_test/current` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n";
     }));
   }
 
@@ -242,10 +239,7 @@ class UpdateFetcherTest extends UnitTestCase {
     // should return in this case.
     $this->assertEquals('HTTP worked', $data);
     $this->assertTrue($this->logger->hasErrorThatPasses(function (array $record) {
-      return in_array($record['context']['@message'], [
-        "Server error: `GET https://www.example.com/update_test/current` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n",
-        "Server error: `GET https://www.example.com/update_test/current` resulted in a `500 Internal Server Error` response: HTTPS failed",
-      ], TRUE);
+      return $record['context']['@message'] === "Server error: `GET https://www.example.com/update_test/current` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n";
     }));
   }
 

@@ -7910,6 +7910,36 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Installer/InstallerModuleExtensionList.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\olivero\\\\Functional\\\\BreadcrumbTest\\:\\:assertBreadcrumb\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/themes/olivero/tests/src/Functional/BreadcrumbTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\olivero\\\\Functional\\\\BreadcrumbTest\\:\\:assertBreadcrumbParts\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/themes/olivero/tests/src/Functional/BreadcrumbTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\olivero\\\\Functional\\\\BreadcrumbTest\\:\\:assertMenuActiveTrail\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/themes/olivero/tests/src/Functional/BreadcrumbTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
+	'count' => 1,
+	'path' => __DIR__ . '/themes/olivero/tests/src/Functional/BreadcrumbTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$trail in empty\\(\\) always exists and is always falsy\\.$#',
+	'identifier' => 'empty.variable',
+	'count' => 1,
+	'path' => __DIR__ . '/themes/olivero/tests/src/Functional/BreadcrumbTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Installer\\\\InstallerServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -40172,6 +40202,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/TestSite/TestSetupInterface.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\Client\\:
+ClientInterface\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
+	'identifier' => 'method.deprecated',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/BrowserTestBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:__construct\\(\\) overrides @final method PHPUnit\\\\Framework\\\\TestCase\\:\\:__construct\\(\\)\\.$#',
 	'identifier' => 'method.parentMethodFinalByPhpDoc',
 	'count' => 1,
@@ -41221,6 +41258,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Form/FormValidatorTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\Client\\:
+ClientInterface\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
+	'identifier' => 'method.deprecated',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Http/ClientFactoryTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Plugin\\\\CategorizingPluginManager\\:\\:processDefinitionCategory\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -41587,6 +41631,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/UrlTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to deprecated method getConfig\\(\\) of interface GuzzleHttp\\\\ClientInterface\\:
+ClientInterface\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
+	'identifier' => 'method.deprecated',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/DrupalTestBrowser.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\DrupalTestBrowser\\:\\:addPostFiles\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -41648,36 +41699,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/themes/olivero/src/OliveroPreRender.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\olivero\\\\Functional\\\\BreadcrumbTest\\:\\:assertBreadcrumb\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/olivero/tests/src/Functional/BreadcrumbTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\olivero\\\\Functional\\\\BreadcrumbTest\\:\\:assertBreadcrumbParts\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/olivero/tests/src/Functional/BreadcrumbTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\olivero\\\\Functional\\\\BreadcrumbTest\\:\\:assertMenuActiveTrail\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/olivero/tests/src/Functional/BreadcrumbTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$parts in empty\\(\\) always exists and is always falsy\\.$#',
-	'identifier' => 'empty.variable',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/olivero/tests/src/Functional/BreadcrumbTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$trail in empty\\(\\) always exists and is always falsy\\.$#',
-	'identifier' => 'empty.variable',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/olivero/tests/src/Functional/BreadcrumbTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#',
