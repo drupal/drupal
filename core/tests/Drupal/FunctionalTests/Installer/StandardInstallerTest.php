@@ -32,10 +32,9 @@ class StandardInstallerTest extends ConfigAfterInstallerTestBase {
    */
   protected function setUpSite(): void {
     // Test that the correct theme is being used. This is the last installer
-    // step. The profile has installed claro and olivero by now, and a hook
-    // implementation of the install theme attaches the stylesheet, so this also
-    // covers that the install theme keeps its hook implementations.
-    $this->assertSession()->responseNotContains('olivero');
+    // step. The profile has installed claro by now, and a hook implementation
+    // of the install theme attaches the stylesheet, so this also covers that
+    // the install theme keeps its hook implementations.
     $this->assertSession()->responseContains('default_admin/css/theme/install-page.css');
     parent::setUpSite();
   }

@@ -30,7 +30,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  * @endcode
  * For example:
  * @code
- * olivero.lg:
+ * my_theme.lg:
  *   label: Large
  *   mediaQuery: 'all and (min-width: 1000px)'
  *   weight: 2

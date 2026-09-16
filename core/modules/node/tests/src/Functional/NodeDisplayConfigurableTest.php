@@ -179,9 +179,6 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
       // Default Admin overrides the title to a plain string for the canonical
       // route, so field--name-title is not present.
       ['default_admin', 'footer', FALSE],
-      // @todo Add coverage for olivero after fixing
-      // https://www.drupal.org/project/drupal/issues/3215220.
-      // ['olivero', 'footer', TRUE],
     ];
   }
 

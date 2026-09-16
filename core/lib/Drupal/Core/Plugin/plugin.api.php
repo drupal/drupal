@@ -32,9 +32,9 @@ function hook_plugin_filter_TYPE_alter(array &$definitions, array $extra, $consu
     unset($definitions['help_block']);
   }
 
-  // If the theme is specified, remove the branding block from Olivero.
-  if (isset($extra['theme']) && $extra['theme'] === 'olivero') {
-    unset($definitions['system_branding_block']);
+  // If a given theme is specified, remove a particular block.
+  if (isset($extra['theme']) && $extra['theme'] === 'my_theme') {
+    unset($definitions['foo_block']);
   }
 
   // Remove the "Main page content" block from everywhere.

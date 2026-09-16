@@ -54,7 +54,7 @@ interface ConfigInstallerInterface {
    *   (optional) If set, ensures that the configuration being installed has
    *   this dependency. The format is dependency type as the key ('module',
    *   'theme', or 'config') and the dependency name as the value
-   *   ('node', 'olivero', 'views.view.promoted_content').
+   *   ('node', 'my_theme', 'views.view.promoted_content').
    */
   public function installOptionalConfig(?StorageInterface $storage = NULL, $dependency = []);
 

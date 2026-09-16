@@ -27,11 +27,11 @@ class Theme extends Extension {
    *   The app root.
    * @param string $pathname
    *   The relative path and filename of the extension's info file; e.g.,
-   *   'core/themes/olivero/olivero.info.yml'.
+   *   'core/themes/my_theme/my_theme.info.yml'.
    * @param array $info
    *   The info array parsed from the theme's .info.yml file.
    * @param string|null $filename
-   *   (optional) The filename of the main extension file; e.g., olivero.theme.
+   *   (optional) The filename of the main extension file; e.g., my_theme.theme.
    *   This is deprecated and will be removed in Drupal 13.0.0.
    */
   public function __construct(string $root, string $pathname, array $info, ?string $filename = NULL) {
