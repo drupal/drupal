@@ -906,7 +906,7 @@ default:
 
 '📦 Yarn install on minimum Node.js version':
   stage: 🪄 Lint
-  image: node:20
+  image: node:24
   variables:
     KUBERNETES_CPU_REQUEST: "1"
   # Run on release-branch pushes, or on MRs if package.json or yarn.lock have changed, or manually.
