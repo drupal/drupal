@@ -246,7 +246,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
       'html_list' => '//div[@class="item-list"]//li',
     ];
 
-    $themes = ['stark', 'claro'];
+    $themes = ['stark', 'default_admin'];
 
     foreach ($themes as $theme) {
       \Drupal::service('theme_installer')->install([$theme]);

@@ -50,7 +50,7 @@ class ExtensionStreamTest extends KernelTestBase {
       $this->streamWrappers[$scheme] = $this->container->get("stream_wrapper.$scheme");
     }
 
-    $this->container->get('theme_installer')->install(['claro']);
+    $this->container->get('theme_installer')->install(['default_admin']);
   }
 
   /**
@@ -119,9 +119,9 @@ class ExtensionStreamTest extends KernelTestBase {
     'core/modules/image/sample.png',
   ])]
   #[TestWith([
-    'theme://claro/style.css',
-    'theme://claro',
-    'core/themes/claro/style.css',
+    'theme://default_admin/style.css',
+    'theme://default_admin',
+    'core/themes/default_admin/style.css',
   ])]
   public function testStreamWrapperMethods(string $uri, string $expected_dirname, string $expected_path): void {
     $base_url = $this->container->get('router.request_context')->getCompleteBaseUrl();
@@ -221,8 +221,8 @@ class ExtensionStreamTest extends KernelTestBase {
         'The theme system does not exist.',
       ],
       'Module stream wrapper cannot access installed theme' => [
-        'module://claro/claro.info.yml',
-        'The module claro does not exist.',
+        'module://default_admin/default_admin.info.yml',
+        'The module default_admin does not exist.',
       ],
     ];
   }
@@ -242,11 +242,11 @@ class ExtensionStreamTest extends KernelTestBase {
    * Tests stream wrappers after theme uninstall.
    */
   public function testWrappersAfterThemeUninstall(): void {
-    $this->assertSame('theme://claro', $this->streamWrappers['theme']->dirname('theme://claro/claro.info.yml'));
-    $this->container->get('theme_installer')->uninstall(['claro']);
+    $this->assertSame('theme://default_admin', $this->streamWrappers['theme']->dirname('theme://default_admin/default_admin.info.yml'));
+    $this->container->get('theme_installer')->uninstall(['default_admin']);
     $this->expectException(UnknownExtensionException::class);
-    $this->expectExceptionMessageIs('The theme claro does not exist.');
-    $this->streamWrappers['theme']->dirname('theme://claro/claro.info.yml');
+    $this->expectExceptionMessage('The theme default_admin does not exist.');
+    $this->streamWrappers['theme']->dirname('theme://default_admin/default_admin.info.yml');
   }
 
   /**
@@ -271,8 +271,8 @@ class ExtensionStreamTest extends KernelTestBase {
    */
   #[TestWith(['module://system'])]
   #[TestWith(['module://system/system.module'])]
-  #[TestWith(['theme://claro'])]
-  #[TestWith(['theme://claro/claro.theme'])]
+  #[TestWith(['theme://default_admin'])]
+  #[TestWith(['theme://default_admin/default_admin.theme'])]
   public function testDisallowedFileExtensions(string $uri): void {
     [$scheme] = explode('://', $uri);
     $extension = pathinfo($uri, PATHINFO_EXTENSION);
