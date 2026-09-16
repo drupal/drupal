@@ -7,6 +7,7 @@ namespace Drupal\Tests\olivero\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\Core\JsMessageTest;
 use Drupal\js_message_test\Controller\JSMessageTestController;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -15,6 +16,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * @see \Drupal\FunctionalJavascriptTests\Core\JsMessageTest.
  */
 #[Group('olivero')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class OliveroMessagesTest extends JsMessageTest {
 

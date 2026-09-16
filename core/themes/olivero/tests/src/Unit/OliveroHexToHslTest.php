@@ -7,11 +7,13 @@ namespace Drupal\Tests\olivero\Unit;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the _olivero_hex_to_hsl() function.
  */
 #[Group('olivero')]
+#[IgnoreDeprecations]
 final class OliveroHexToHslTest extends UnitTestCase {
 
   /**
