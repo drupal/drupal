@@ -14,6 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Tests the Olivero theme.
  */
 #[Group('olivero')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class OliveroTest extends BrowserTestBase {
 

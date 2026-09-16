@@ -6,6 +6,7 @@ namespace Drupal\Tests\olivero\Functional;
 
 use Drupal\Tests\system\Functional\Theme\NodeTitleTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('node')]
 #[RunTestsInSeparateProcesses]
+#[IgnoreDeprecations]
 class NodeTitleTest extends NodeTitleTestBase {
 
 }

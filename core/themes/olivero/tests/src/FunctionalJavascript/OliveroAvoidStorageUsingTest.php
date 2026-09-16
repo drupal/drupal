@@ -6,12 +6,14 @@ namespace Drupal\Tests\olivero\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests usage of localStorage.
  */
 #[Group('olivero')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 final class OliveroAvoidStorageUsingTest extends WebDriverTestBase {
 

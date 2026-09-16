@@ -8,11 +8,13 @@ use Drupal\olivero\HexToHslTrait;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the \Drupal\olivero\HexToHslTrait:convertHexToHsl() function.
  */
 #[Group('olivero')]
+#[IgnoreDeprecations]
 final class OliveroHexToHslTest extends UnitTestCase {
   use HexToHslTrait;
 
