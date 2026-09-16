@@ -7,7 +7,7 @@ namespace Drupal\Tests;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Cookie\CookieJar;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\BadResponseException;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\BrowserKit\Response;
@@ -138,13 +138,7 @@ class DrupalTestBrowser extends AbstractBrowser {
     try {
       $response = $this->getClient()->request($method, $uri, $request_options);
     }
-    // Catch RequestException rather than ClientExceptionInterface because we
-    // want to re-throw the exception whenever the response is NULL, and
-    // ConnectException always has a NULL response.
-    catch (RequestException $e) {
-      if (!$e->hasResponse()) {
-        throw $e;
-      }
+    catch (BadResponseException $e) {
       $response = $e->getResponse();
     }
 

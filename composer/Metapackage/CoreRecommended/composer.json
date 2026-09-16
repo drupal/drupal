@@ -26,7 +26,6 @@
         "psr/http-client": "~1.0.3",
         "psr/http-factory": "~1.1.0",
         "psr/log": "~3.0.2",
-        "ralouphie/getallheaders": "~3.0.3",
         "revolt/event-loop": "~v1.0.9",
         "symfony/console": "~v7.4.13",
         "symfony/dependency-injection": "~v7.4.13",
