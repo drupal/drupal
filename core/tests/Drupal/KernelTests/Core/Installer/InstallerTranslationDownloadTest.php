@@ -11,6 +11,8 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\KernelTests\KernelTestBase;
 use GuzzleHttp\Client;
+use GuzzleHttp\Promise\Create;
+use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -86,11 +88,13 @@ class InstallerTranslationDownloadTest extends KernelTestBase {
    * {@inheritdoc}
    */
   public function register(ContainerBuilder $container): void {
-    $handler = function (RequestInterface $request): Response {
+    $handler = function (RequestInterface $request, array $options): PromiseInterface {
       $this->requests[] = $request->getMethod() . ' ' . basename($request->getUri()->getPath());
       // We don't care about the response; we're just ensuring that certain
       // requests are made.
-      return new Response(body: "msgid: \"\"\nmsgstr \"\"");
+      /** @var \Psr\Http\Message\ResponseInterface $response */
+      $response = new Response(body: "msgid: \"\"\nmsgstr \"\"");
+      return Create::promiseFor($response);
     };
     $client = new Client(['handler' => $handler]);
     $container->set('http_client', $client);

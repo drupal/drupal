@@ -4,8 +4,8 @@
  * Provides a hardened replacement for \GuzzleHttp\Cookie\FileCookieJar.
  *
  * Upstream hardening landed for Guzzle 8.0 but is not included in Guzzle 7.
- * The body of the class below is a verbatim backport of the hardened Guzzle
- * 8.0 implementation.
+ * The body of the class below is mostly a verbatim backport of the hardened
+ * Guzzle 8.0 implementation.
  *
  * @see https://github.com/guzzle/guzzle/pull/3334
  *
@@ -14,10 +14,13 @@
 
 namespace GuzzleHttp\Cookie;
 
+use GuzzleHttp\ClientInterface;
+
 // phpcs:ignoreFile
 
 // Only define the class if the real one has not already been loaded.
-if (!class_exists(FileCookieJar::class, false)) {
+if ((ClientInterface::MAJOR_VERSION < 8) &&
+    !class_exists(FileCookieJar::class, false)) {
 
     /**
      * Persists non-session cookies using a JSON formatted file
