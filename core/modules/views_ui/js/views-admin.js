@@ -260,12 +260,10 @@
       const $context = $(context);
       let $form = $context;
       // The add handler form may have an id of views-ui-add-handler-form--n.
-      if (
-        !(
-          context instanceof HTMLElement &&
-          context.matches('form[id^="views-ui-add-handler-form"]')
-        )
-      ) {
+      if (!(
+        context instanceof HTMLElement &&
+        context.matches('form[id^="views-ui-add-handler-form"]')
+      )) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
       if (once('views-ui-add-handler-form', $form).length) {
@@ -456,12 +454,10 @@
       const $context = $(context);
       let $form = $context;
       // The add handler form may have an id of views-ui-add-handler-form--n.
-      if (
-        !(
-          context instanceof HTMLElement &&
-          context.matches('form[id^="views-ui-add-handler-form"]')
-        )
-      ) {
+      if (!(
+        context instanceof HTMLElement &&
+        context.matches('form[id^="views-ui-add-handler-form"]')
+      )) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
       // Make sure we don't add more than one event handler to the same form.

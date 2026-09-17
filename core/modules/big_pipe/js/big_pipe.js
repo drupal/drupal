@@ -75,11 +75,11 @@
   function checkMutation(node) {
     return Boolean(
       node.nodeType === Node.ELEMENT_NODE &&
-        node.nodeName === 'SCRIPT' &&
-        node.dataset?.bigPipeReplacementForPlaceholderWithId &&
-        typeof drupalSettings.bigPipePlaceholderIds[
-          node.dataset.bigPipeReplacementForPlaceholderWithId
-        ] !== 'undefined',
+      node.nodeName === 'SCRIPT' &&
+      node.dataset?.bigPipeReplacementForPlaceholderWithId &&
+      typeof drupalSettings.bigPipePlaceholderIds[
+        node.dataset.bigPipeReplacementForPlaceholderWithId
+      ] !== 'undefined',
     );
   }
 
