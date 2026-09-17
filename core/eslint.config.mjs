@@ -55,7 +55,6 @@ export default defineConfig(
         jQuery: 'readonly',
         _: 'readonly',
         Cookies: 'readonly',
-        Backbone: 'readonly',
         htmx: 'readonly',
         loadjs: 'readonly',
         Shepherd: 'readonly',

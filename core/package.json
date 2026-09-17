@@ -36,7 +36,6 @@
     "@eslint/compat": "^2.0.0",
     "@floating-ui/dom": "^1.7.4",
     "@gitlab-formatters/stylelint-formatter-gitlab": "^1.0.2",
-    "backbone": "^1.6.1",
     "chokidar": "^4.0.3",
     "ckeditor5": "^48.0.1",
     "cspell": "^9.2.2",
@@ -79,7 +78,6 @@
     "terser-webpack-plugin": "^5.3.14",
     "transliteration": "^2.3.5",
     "tua-body-scroll-lock": "^1.6.0",
-    "underscore": "^1.13.8",
     "webpack": "^5.102.1",
     "webpack-cli": "^6.0.1"
   },

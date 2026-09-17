@@ -22,8 +22,6 @@ license, including:
 
 JavaScript
 
-  Backbone - Copyright (c) 2010 Jeremy Ashkenas and DocumentCloud
-
   CKEditor5 - Copyright (c) 2003 CKSource Holding sp. z o.o.
 
   Floating UI - Copyright (c) 2021 Floating UI contributors
@@ -43,9 +41,6 @@ JavaScript
   transliteration Copyright (c) 2019 Daniel W. Hieber
 
   tua-body-scroll-lock Copyright (c) 2018 Evinma, StEve Young
-
-  Underscore.js - Copyright (c) 2009 Jeremy Ashkenas, Julian Gonggrijp, and
-   DocumentCloud and Investigative Reporters & Editors
 
 CSS
 
