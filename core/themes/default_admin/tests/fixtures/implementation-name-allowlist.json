@@ -1,28 +1,13 @@
 [
   {
-    "path": "config/install/default_admin.settings.yml",
-    "pattern": "preset_focus_color: 'gin'",
-    "reason": "The stored setting value is retained for existing configuration."
+    "path": "default_admin.post_update.php",
+    "pattern": "'gin' => 'default'",
+    "reason": "The update renames the legacy stored focus-color value."
   },
   {
-    "path": "src/Settings.php",
-    "pattern": "'gin' =>",
-    "reason": "The stored setting value is retained for existing configuration."
-  },
-  {
-    "path": "src/Settings.php",
-    "pattern": "'claro' =>",
-    "reason": "The stored setting value is retained for existing configuration."
-  },
-  {
-    "path": "css/theme/accent.pcss.css",
-    "pattern": "data-admin-focus=\"claro\"",
-    "reason": "The selector supports the retained focus-color setting value."
-  },
-  {
-    "path": "css/theme/accent.css",
-    "pattern": "data-admin-focus=\"claro\"",
-    "reason": "Compiled CSS supports the retained focus-color setting value."
+    "path": "default_admin.post_update.php",
+    "pattern": "'claro' => 'legacy_green'",
+    "reason": "The update renames the legacy stored focus-color value."
   },
   {
     "path": "migration/js/init.js",
@@ -45,16 +30,6 @@
     "reason": "The drupalSettings alias supports integrations while the theme is experimental."
   },
   {
-    "path": "images/core/README.md",
-    "pattern": "Claro",
-    "reason": "The historical upstream project name and issue URL are retained."
-  },
-  {
-    "path": "images/core/README.md",
-    "pattern": "project/claro",
-    "reason": "The historical upstream issue URL is retained."
-  },
-  {
     "path": "src/Hook/FormHooks.php",
     "pattern": "project/gin",
     "reason": "The upstream issue URL documents the source of the workaround."
@@ -70,16 +45,6 @@
     "reason": "The test verifies that the inherited HTML attribute is no longer rendered."
   },
   {
-    "path": "tests/src/Functional/AdminTest.php",
-    "pattern": "data-admin-focus', 'gin",
-    "reason": "The test covers the retained focus-color configuration value in HTML output."
-  },
-  {
-    "path": "tests/src/Functional/AdminTest.php",
-    "pattern": "preset_focus_color\":\"gin",
-    "reason": "The test covers the retained focus-color configuration value."
-  },
-  {
     "path": "tests/src/FunctionalJavascript/LegacyStorageTest.php",
     "pattern": "GinDarkMode",
     "reason": "The test covers removal of the legacy dark-mode key."
@@ -93,6 +58,16 @@
     "path": "tests/src/FunctionalJavascript/LegacyStorageTest.php",
     "pattern": "Drupal.gin.",
     "reason": "The test covers migration and removal of legacy local-storage keys."
+  },
+  {
+    "path": "tests/src/Kernel/FocusColorPresetUpdateTest.php",
+    "pattern": "'gin'",
+    "reason": "The test covers the update of the legacy stored focus-color value."
+  },
+  {
+    "path": "tests/src/Kernel/FocusColorPresetUpdateTest.php",
+    "pattern": "'claro'",
+    "reason": "The test covers the update of the legacy stored focus-color value."
   },
   {
     "path": "tests/src/Unit/ImplementationNameTest.php",
