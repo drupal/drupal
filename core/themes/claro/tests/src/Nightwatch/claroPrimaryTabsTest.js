@@ -1,4 +1,3 @@
-// This test is a duplicate of oliveroPrimaryTabsTest.js tagged for claro
 const primaryTabsWrapper = '[data-drupal-nav-tabs]';
 const activeTab = '.tabs__tab.is-active';
 const inactiveTab = '.tabs__tab:not(.is-active)';
