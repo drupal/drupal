@@ -59,8 +59,8 @@ class AdminTest extends BrowserTestBase {
     $this->assertStringContainsString('"gin":{', $response);
     $this->assertStringContainsString('"dark_mode":"auto"', $response);
     $this->assertStringContainsString('"preset_accent_color":"blue"', $response);
-    $this->assertStringContainsString('"preset_focus_color":"default"', $response);
-    $this->assertSession()->elementAttributeContains('css', 'html', 'data-admin-focus', 'default');
+    $this->assertStringContainsString('"preset_focus_color":"gin"', $response);
+    $this->assertSession()->elementAttributeContains('css', 'html', 'data-admin-focus', 'gin');
     $this->assertSession()->elementAttributeNotExists('css', 'html', 'data-gin-focus');
     $this->assertSession()->elementExists('css', 'nav.breadcrumb[aria-labelledby="system-breadcrumb"]');
     $this->assertSession()->elementExists('css', 'nav.breadcrumb #system-breadcrumb.visually-hidden');
