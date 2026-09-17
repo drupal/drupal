@@ -32,7 +32,13 @@ class GenericTestExistsTest extends UnitTestCase {
     if (in_array($module_name, $this->modulesNoTest, TRUE)) {
       $this->markTestSkipped();
     }
-    $this->assertFileExists("{$this->root}/core/modules/{$module_name}/tests/src/Functional/GenericTest.php");
+
+    // @todo Revert to the previous version of this assertion when all core
+    // modules have their GenericTest converted to a Kernel test.
+    $this->assertTrue(
+      file_exists("{$this->root}/core/modules/{$module_name}/tests/src/Functional/GenericTest.php") ||
+      file_exists("{$this->root}/core/modules/{$module_name}/tests/src/Kernel/GenericTest.php")
+    );
   }
 
 }
