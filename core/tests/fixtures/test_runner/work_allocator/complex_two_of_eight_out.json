@@ -103,7 +103,7 @@
          "block_content"
       ],
       "type":"PHPUnit-Kernel",
-      "description":"Tests the block theme suggestion functions.",
+      "description":"Tests the block_content_theme_suggestions_block() function.",
       "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block_content\/tests\/src\/Kernel\/BlockTemplateSuggestionsTest.php",
       "tests_count":1,
       "worker_sequence":9
