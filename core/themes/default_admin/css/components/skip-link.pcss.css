@@ -5,41 +5,20 @@
  * Allows keyboard users to quickly skip to the main content of the page.
  */
 
-:root {
-  /* Dark chrome pill with light text — kept on the gray ramp directly: no
-     semantic surface token matches these mid/near-black bg values, and the skip
-     link is a self-contained always-dark component (not mode-aware). */
-  --skip-link-bg-color: var(--admin-color-gray-800);
-  --skip-link-color: var(--admin-color-white); /* Fixed: light text on the always-dark pill. */
-  --skip-link-active-bg-color: var(--admin-color-gray-950);
-}
-
+/* Intentionally flip the background and foreground colors to provide visual
+   differentiation while maintaining contrast. */
 .skip-link {
   z-index: 503;
   top: 0;
-  left: 0; /* LTR */
+  inset-inline-start: 0;
   padding: 1px 10px 2px;
-  color: var(--skip-link-color);
-  border-radius: 0 0 10px 0; /* LTR */
-  background: var(--skip-link-bg-color);
-  box-shadow:
-    0 0 0 2px var(--admin-color-bg-surface),
-    0 0 0 5px var(--admin-color-focus);
+  color: var(--admin-color-bg-raised);
+  border-end-end-radius: 10px;
+  background: var(--admin-color-text-loud);
+  box-shadow: var(--admin-shadow-color-1);
   font-size: 0.94em;
-  &:hover,
-  &:active {
-    color: var(--skip-link-color);
-    background-color: var(--skip-link-active-bg-color);
-  }
-  &:focus {
-    text-decoration: none;
-  }
+
   &.visually-hidden.focusable:focus {
     position: absolute !important;
   }
-}
-[dir="rtl"] .skip-link {
-  right: 0;
-  left: auto;
-  border-radius: 0 0 0 10px;
 }
