@@ -284,13 +284,5 @@ img {
    reporting contrast errors for text that is not visually rendered. */
 
 .visually-hidden {
-  color: #000;
-
-  .dark-mode & {
-    color: #fff;
-  }
-
-  &.skip-link {
-    color: var(--admin-color-text-on-primary);
-  }
+  color: var(--admin-color-text-loud);
 }
