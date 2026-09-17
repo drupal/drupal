@@ -34,7 +34,7 @@
   --admin-color-focus: rgb(8, 163, 144, 0.6);
 }
 
-[data-admin-focus="claro"] {
+[data-admin-focus="legacy_green"] {
   --admin-color-focus: rgb(38, 167, 105, 0.6);
 }
 
