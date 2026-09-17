@@ -38,7 +38,7 @@
     "@gitlab-formatters/stylelint-formatter-gitlab": "^1.0.2",
     "chokidar": "^4.0.3",
     "ckeditor5": "^48.0.1",
-    "cspell": "^9.2.2",
+    "cspell": "^10.3.2",
     "dotenv": "^17.2.3",
     "dotenv-safe": "^9.1.0",
     "eslint": "^9.39.4",
