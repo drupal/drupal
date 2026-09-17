@@ -60,51 +60,51 @@
       "tests_count":1,
       "worker_sequence":5
    },
-   "Drupal\\Tests\\block_content\\Functional\\Views\\BlockContentWizardTest":{
-      "name":"Drupal\\Tests\\block_content\\Functional\\Views\\BlockContentWizardTest",
-      "group":"block_content",
+   "Drupal\\Tests\\block\\Functional\\BlockDemoTest":{
+      "name":"Drupal\\Tests\\block\\Functional\\BlockDemoTest",
+      "group":"block",
       "groups":[
-         "block_content"
+         "block"
       ],
       "type":"PHPUnit-Functional",
-      "description":"Tests block_content wizard and generic entity integration.",
-      "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block_content\/tests\/src\/Functional\/Views\/BlockContentWizardTest.php",
+      "description":"Tests the block demo page with admin themes.",
+      "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block\/tests\/src\/Functional\/BlockDemoTest.php",
       "tests_count":1,
       "worker_sequence":6
    },
-   "Drupal\\Tests\\block\\Functional\\BlockRenderOrderTest":{
-      "name":"Drupal\\Tests\\block\\Functional\\BlockRenderOrderTest",
+   "Drupal\\Tests\\block\\Functional\\BlockSystemBrandingTest":{
+      "name":"Drupal\\Tests\\block\\Functional\\BlockSystemBrandingTest",
       "group":"block",
       "groups":[
          "block"
       ],
       "type":"PHPUnit-Functional",
-      "description":"Tests blocks are being rendered in order by weight.",
-      "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block\/tests\/src\/Functional\/BlockRenderOrderTest.php",
+      "description":"Tests branding block display.",
+      "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block\/tests\/src\/Functional\/BlockSystemBrandingTest.php",
       "tests_count":1,
       "worker_sequence":7
    },
-   "Drupal\\Tests\\block\\Kernel\\BlockRebuildTest":{
-      "name":"Drupal\\Tests\\block\\Kernel\\BlockRebuildTest",
-      "group":"block",
-      "groups":[
-         "block"
-      ],
-      "type":"PHPUnit-Kernel",
-      "description":"Tests block_rebuild().",
-      "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block\/tests\/src\/Kernel\/BlockRebuildTest.php",
-      "tests_count":3,
-      "worker_sequence":8
-   },
-   "Drupal\\Tests\\block_content\\Kernel\\BlockContentRevisionsTest":{
-      "name":"Drupal\\Tests\\block_content\\Kernel\\BlockContentRevisionsTest",
+   "Drupal\\Tests\\block_content\\Kernel\\BlockContentTest":{
+      "name":"Drupal\\Tests\\block_content\\Kernel\\BlockContentTest",
       "group":"block_content",
       "groups":[
          "block_content"
       ],
       "type":"PHPUnit-Kernel",
-      "description":"Tests revision based functions for Block Content.",
-      "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block_content\/tests\/src\/Kernel\/BlockContentRevisionsTest.php",
+      "description":"Tests the block content.",
+      "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block_content\/tests\/src\/Kernel\/BlockContentTest.php",
+      "tests_count":2,
+      "worker_sequence":8
+   },
+   "Drupal\\Tests\\block_content\\Kernel\\BlockTemplateSuggestionsTest":{
+      "name":"Drupal\\Tests\\block_content\\Kernel\\BlockTemplateSuggestionsTest",
+      "group":"block_content",
+      "groups":[
+         "block_content"
+      ],
+      "type":"PHPUnit-Kernel",
+      "description":"Tests the block theme suggestion functions.",
+      "file":"\/Users\/foo\/Dev\/drupal\/core\/modules\/block_content\/tests\/src\/Kernel\/BlockTemplateSuggestionsTest.php",
       "tests_count":1,
       "worker_sequence":9
    },

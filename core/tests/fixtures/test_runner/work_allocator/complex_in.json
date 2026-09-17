@@ -143,15 +143,15 @@
       "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/BlockContentTypeTest.php",
       "tests_count": 5
     },
-    "Drupal\\Tests\\block_content\\Functional\\GenericTest": {
-      "name": "Drupal\\Tests\\block_content\\Functional\\GenericTest",
+    "Drupal\\Tests\\block_content\\Kernel\\GenericTest": {
+      "name": "Drupal\\Tests\\block_content\\Kernel\\GenericTest",
       "group": "block_content",
       "groups": [
         "block_content"
       ],
       "type": "PHPUnit-Functional",
       "description": "Generic module test for block_content.",
-      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Functional/GenericTest.php",
+      "file": "/Users/foo/Dev/drupal/core/modules/block_content/tests/src/Kernel/GenericTest.php",
       "tests_count": 1
     },
     "Drupal\\Tests\\block_content\\Functional\\LocalActionTest": {
@@ -630,15 +630,15 @@
       "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/BlockXssTest.php",
       "tests_count": 3
     },
-    "Drupal\\Tests\\block\\Functional\\GenericTest": {
-      "name": "Drupal\\Tests\\block\\Functional\\GenericTest",
+    "Drupal\\Tests\\block\\Kernel\\GenericTest": {
+      "name": "Drupal\\Tests\\block\\Kernel\\GenericTest",
       "group": "block",
       "groups": [
         "block"
       ],
       "type": "PHPUnit-Functional",
       "description": "Generic module test for block.",
-      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Functional/GenericTest.php",
+      "file": "/Users/foo/Dev/drupal/core/modules/block/tests/src/Kernel/GenericTest.php",
       "tests_count": 1
     },
     "Drupal\\Tests\\block\\Functional\\NonDefaultBlockAdminTest": {
