@@ -41,15 +41,11 @@
   }
 }
 
-.system-status-general-info__item {
+.system-status-general-info__item.card {
   display: block;
-  overflow-x: auto;
   box-sizing: border-box;
   margin-block-end: var(--admin-space-l);
   padding: var(--admin-space-m);
-  border: 0 none;
-  background: transparent;
-  box-shadow: none;
 
   @media screen and (min-width: 48em) {
     width: 32%;
