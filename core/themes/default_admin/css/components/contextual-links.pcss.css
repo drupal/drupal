@@ -16,7 +16,7 @@
   .trigger {
     overflow: clip;
     text-indent: -999px;
-    border: 1px solid var(--admin-color-border);
+    border: 1px solid var(--admin-color-border-input);
     border-radius: 50%;
     background: var(--admin-color-bg-raised);
     box-shadow: 0 2px 4px rgb(0, 0, 0, 0.15);
@@ -36,19 +36,38 @@
       content: "";
       background: var(--admin-color-primary);
       inset: 0;
-      mask-image: url("../../migration/media/icons/media-library/media-edit.svg");
+      mask-image: url("../../images/icons/currentColor/media-edit.svg");
       mask-size: var(--admin-space-s);
       mask-position: 100% 100%;
-
-      @media (forced-colors: active) {
-        background: buttonText;
-      }
     }
 
     &:hover {
       box-shadow:
         0 0 0 1px var(--admin-color-focus-border),
         0 0 0 4px var(--admin-color-focus);
+    }
+
+    @media (forced-colors: active) {
+      border-color: buttonText;
+      background: buttonFace;
+      box-shadow: none;
+
+      &::before {
+        background: buttonText;
+      }
+
+      &:hover,
+      &:focus,
+      &:focus-visible {
+        border-color: highlight;
+        outline: 2px solid highlight;
+        outline-offset: 2px;
+        background: highlight;
+
+        &::before {
+          background: highlightText;
+        }
+      }
     }
   }
 
