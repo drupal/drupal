@@ -6,12 +6,14 @@ namespace Drupal\Tests\claro\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests the MenuLinkDefaultForm customizations.
  */
 #[Group('claro')]
+#[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
 class MenuLinkDefaultFormTest extends BrowserTestBase {
 
