@@ -253,3 +253,12 @@ optgroup {
 ::-webkit-file-upload-button {
   -webkit-appearance: push-button;
 }
+
+/*
+ * Claro injects a "Loading" autocomplete message that affects the positioning
+ * of the ui-autocomplete dropdown. We remove this to normalize the markup.
+ */
+
+#drupal-off-canvas-wrapper .claro-autocomplete__message {
+  display: none;
+}

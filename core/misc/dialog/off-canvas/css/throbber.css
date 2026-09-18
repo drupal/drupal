@@ -13,7 +13,7 @@
  */
 
 #drupal-off-canvas-wrapper {
-  & .ajax-progress, /* This is the CSS class used in Claro. */
+  & .ajax-progress, /* This is the CSS class used in Default Admin. */
   & .ajax-progress-throbber {
     display: inline-block;
     overflow: hidden;

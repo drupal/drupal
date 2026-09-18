@@ -91,7 +91,6 @@ trait RequirementsPageTrait {
     $content = $this->getSession()->getPage()->getContent();
     $details_wrappers = [
       'default_admin/css/theme/maintenance-page.css' => 'default-admin-details__wrapper',
-      'claro/css/theme/maintenance-page.css' => 'claro-details__wrapper',
     ];
     $details_wrapper = NULL;
     foreach ($details_wrappers as $stylesheet => $class) {

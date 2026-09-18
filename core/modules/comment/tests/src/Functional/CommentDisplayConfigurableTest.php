@@ -23,7 +23,7 @@ class CommentDisplayConfigurableTest extends CommentTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * {@inheritdoc}

@@ -294,7 +294,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
    * @internal
    */
   protected function assertSearchResultsCount(int $count): void {
-    $this->assertSession()->elementsCount('css', '.help_search-results > li', $count);
+    $this->assertSession()->elementsCount('css', '#block-default-admin-content ol > li', $count);
   }
 
 }

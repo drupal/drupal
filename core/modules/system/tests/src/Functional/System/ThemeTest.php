@@ -91,7 +91,7 @@ INFO;
    */
   public function testThemeSettings(): void {
     // Ensure a disabled theme settings form URL returns 404.
-    $this->drupalGet('admin/appearance/settings/claro');
+    $this->drupalGet('admin/appearance/settings/default_admin');
     $this->assertSession()->statusCodeEquals(404);
     // Ensure a non existent theme settings form URL returns 404.
     $this->drupalGet('admin/appearance/settings/' . $this->randomMachineName());
@@ -212,7 +212,7 @@ INFO;
 
     // Upload a file to use for the logo. Try both the test image we've been
     // using so far and an SVG file.
-    $upload_uris = [$file->uri, 'core/themes/claro/logo.svg'];
+    $upload_uris = [$file->uri, 'core/misc/logo/drupal-logo.svg'];
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
     foreach ($upload_uris as $upload_uri) {
       $edit = [
@@ -238,14 +238,14 @@ INFO;
       $this->submitForm($edit, 'Save configuration');
     }
 
-    $this->container->get('theme_installer')->install(['claro']);
+    $this->container->get('theme_installer')->install(['default_admin']);
 
     // Ensure only valid themes are listed in the local tasks.
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header']);
     $this->drupalGet('admin/appearance/settings');
     $theme_handler = \Drupal::service('theme_handler');
     $this->assertSession()->linkExists($theme_handler->getName('starterkit_theme'));
-    $this->assertSession()->linkExists($theme_handler->getName('claro'));
+    $this->assertSession()->linkExists($theme_handler->getName('default_admin'));
     $this->assertSession()->linkNotExists($theme_handler->getName('test_base_theme'));
 
     // If a hidden theme is an admin theme it should be viewable.
@@ -275,14 +275,14 @@ INFO;
    * Tests the theme settings logo form.
    */
   public function testThemeSettingsLogo(): void {
-    // Visit claro's theme settings page to replace the logo.
-    $this->container->get('theme_installer')->install(['claro']);
-    $this->drupalGet('admin/appearance/settings/claro');
+    // Visit default_admin's theme settings page to replace the logo.
+    $this->container->get('theme_installer')->install(['default_admin']);
+    $this->drupalGet('admin/appearance/settings/default_admin');
     $edit = [
       'default_logo' => FALSE,
       'logo_path' => 'core/misc/druplicon.png',
     ];
-    $this->drupalGet('admin/appearance/settings/claro');
+    $this->drupalGet('admin/appearance/settings/default_admin');
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->fieldValueEquals('default_logo', FALSE);
     $this->assertSession()->fieldValueEquals('logo_path', 'core/misc/druplicon.png');
@@ -300,7 +300,7 @@ INFO;
    */
   public function testThemeSettingsRenderCacheClear(): void {
     \Drupal::service('module_installer')->install(['page_cache']);
-    $this->container->get('theme_installer')->install(['claro']);
+    $this->container->get('theme_installer')->install(['default_admin']);
     // Ensure the frontpage is cached for anonymous users. The render cache will
     // cleared by installing a theme.
     $this->drupalLogout();
@@ -310,9 +310,9 @@ INFO;
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
 
     $this->drupalLogin($this->adminUser);
-    // Save claro's theme settings which should invalidate the 'rendered'
+    // Save default_admin's theme settings which should invalidate the 'rendered'
     // cache tag in \Drupal\system\EventSubscriber\ConfigCacheTag.
-    $this->drupalGet('admin/appearance/settings/claro');
+    $this->drupalGet('admin/appearance/settings/default_admin');
     $this->submitForm([], 'Save configuration');
     $this->drupalLogout();
     $this->drupalGet('');
@@ -414,22 +414,22 @@ INFO;
     $this->config('system.theme')->set('default', 'stark')->save();
     $this->drupalPlaceBlock('local_tasks_block');
 
-    // Install Claro and set it as the default theme.
-    $theme_installer->install(['claro']);
+    // Install default_admin and set it as the default theme.
+    $theme_installer->install(['default_admin']);
     $this->drupalGet('admin/appearance');
     $this->clickLink('Set as default');
-    $this->assertEquals('claro', $this->config('system.theme')->get('default'));
+    $this->assertEquals('default_admin', $this->config('system.theme')->get('default'));
 
     // Test the default theme on the secondary links (blocks admin page).
     $this->drupalGet('admin/structure/block');
-    $this->assertSession()->pageTextContains('claro');
-    // Switch back to Claro and test again to test that the menu cache is
+    $this->assertSession()->pageTextContains('Default Admin');
+    // Switch back to default_admin and test again to test that the menu cache is
     // cleared.
     $this->drupalGet('admin/appearance');
-    // Claro is the first 'Set as default' link.
+    // default_admin is the first 'Set as default' link.
     $this->clickLink('Set as default');
     $this->drupalGet('admin/structure/block');
-    $this->assertSession()->pageTextContains('claro');
+    $this->assertSession()->pageTextContains('Default Admin');
   }
 
   /**

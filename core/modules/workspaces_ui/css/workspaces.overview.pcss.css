@@ -3,7 +3,7 @@
  * Styling for the Workspaces overview table.
  */
 
-/** @todo Move to Claro theme before Workspaces is marked stable. */
+/** @todo Move to the admin theme before Workspaces is marked stable. */
 tr.active-workspace {
   background-color: #ebeae4;
 }
