@@ -1237,7 +1237,7 @@
    * @param {object} response
    *   The response from the Ajax request.
    *
-   * @deprecated in drupal:8.6.0 and is removed from drupal:12.0.0.
+   * @deprecated in drupal:8.6.0 and is removed from drupal:13.0.0.
    *   Use data with desired wrapper.
    *
    * @see https://www.drupal.org/node/2940704
@@ -1266,7 +1266,7 @@
    * @param {jQuery} $elements
    *   Response elements after parsing.
    *
-   * @deprecated in drupal:8.6.0 and is removed from drupal:12.0.0.
+   * @deprecated in drupal:8.6.0 and is removed from drupal:13.0.0.
    *   Use data with desired wrapper.
    *
    * @see https://www.drupal.org/node/2940704
