@@ -31,7 +31,7 @@
  *   The language code for the language the text is in, if known. When this hook
  *   is invoked during search indexing, the language will most likely be known
  *   and passed in. This is left up to the search plugin;
- *   \Drupal\node\Plugin\Search\NodeSearch does pass in the node
+ *   \Drupal\search_node\Plugin\Search\SearchNode does pass in the node
  *   language. However, when this hook is invoked during searching, in order to
  *   let a module apply the same preprocessing to the search keywords and
  *   indexed text so they will match, $langcode will be NULL. A hook
