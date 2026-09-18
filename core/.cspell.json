@@ -31,7 +31,6 @@
       "tests/fixtures/phpunit_*.xml",
       "tests/Drupal/Tests/Component/Annotation/Doctrine/**",
       "tests/PHPStan/vendor/**",
-      "themes/olivero/fonts/**",
       "COPYRIGHT.txt",
       "MAINTAINERS.txt",
       "package.json",

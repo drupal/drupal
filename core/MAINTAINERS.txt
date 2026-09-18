@@ -320,12 +320,6 @@ Node Access
 - Moshe Weitzman 'moshe weitzman' (weitzman) https://www.drupal.org/u/moshe-weitzman
 - Jess Myrbo 'xjm' (xjm) https://www.drupal.org/u/xjm
 
-Olivero
-- Mike Herchel 'mherchel' (mherchel) https://www.drupal.org/u/mherchel
-- Jen Witkowski 'jwitkowski79' (jwitkowski79) https://www.drupal.org/u/jwitkowski79
-- Konstantin Shupenko 'kostyashupenko' (kostyashupenko) https://www.drupal.org/u/kostyashupenko
-- Andy Blum 'andy-blum' (ablum) https://www.drupal.org/u/andy-blum
-
 Options
 - Stephen Mustgrave 'smustgrave' (smustgrave) https://www.drupal.org/u/smustgrave
 

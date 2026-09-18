@@ -1,5 +1,0 @@
-log-errors:
-  js:
-    js/log-errors.js: { }
-  dependencies:
-    - core/drupal
