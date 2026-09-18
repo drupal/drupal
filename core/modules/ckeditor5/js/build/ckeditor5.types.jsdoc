@@ -470,6 +470,14 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-cloud-services/dist/token/token.d.ts
+ *
+ * @typedef {module:cloud-services/token/token} module:cloud-services/token/token~Token
+ * @typedef {module:cloud-services/token/token} module:cloud-services/token/token~InitializedToken
+ * @typedef {module:cloud-services/token/token} module:cloud-services/token/token~CloudServicesTokenOptions
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-cloud-services/dist/uploadgateway/fileuploader.d.ts
  *
  * @typedef {module:cloud-services/uploadgateway/fileuploader} module:cloud-services/uploadgateway/fileuploader~FileUploader
@@ -572,6 +580,7 @@
  *
  * @typedef {module:core/editor/editorconfig} module:core/editor/editorconfig~EditorConfig
  * @typedef {module:core/editor/editorconfig} module:core/editor/editorconfig~RootConfig
+ * @typedef {module:core/editor/editorconfig} module:core/editor/editorconfig~ViewRootElementDefinition
  * @typedef {module:core/editor/editorconfig} module:core/editor/editorconfig~LanguageConfig
  * @typedef {module:core/editor/editorconfig} module:core/editor/editorconfig~ToolbarConfig
  * @typedef {module:core/editor/editorconfig} module:core/editor/editorconfig~ToolbarConfigItem
@@ -583,6 +592,7 @@
 /**
  * Declared in file @ckeditor/ckeditor5-core/dist/editor/utils/elementapimixin.d.ts
  *
+ * @typedef {module:core/editor/utils/elementapimixin} module:core/editor/utils/elementapimixin~ElementApiMixinConstructor
  * @typedef {module:core/editor/utils/elementapimixin} module:core/editor/utils/elementapimixin~ElementApiMixin
  * @typedef {module:core/editor/utils/elementapimixin} module:core/editor/utils/elementapimixin~ElementApi
  */
@@ -593,6 +603,19 @@
  * @typedef {module:core/editor/utils/normalizerootsconfig} module:core/editor/utils/normalizerootsconfig~normalizeRootsConfig
  * @typedef {module:core/editor/utils/normalizerootsconfig} module:core/editor/utils/normalizerootsconfig~normalizeSingleRootEditorConstructorParams
  * @typedef {module:core/editor/utils/normalizerootsconfig} module:core/editor/utils/normalizerootsconfig~normalizeMultiRootEditorConstructorParams
+ * @typedef {module:core/editor/utils/normalizerootsconfig} module:core/editor/utils/normalizerootsconfig~normalizeViewRootElementDefinition
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-core/dist/editor/utils/registerandinitializerootconfigattributes.d.ts
+ *
+ * @typedef {module:core/editor/utils/registerandinitializerootconfigattributes} module:core/editor/utils/registerandinitializerootconfigattributes~registerAndInitializeRootConfigAttributes
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-core/dist/editor/utils/rootacceptsblocks.d.ts
+ *
+ * @typedef {module:core/editor/utils/rootacceptsblocks} module:core/editor/utils/rootacceptsblocks~rootAcceptsBlocks
  */
 
 /**
@@ -608,6 +631,30 @@
  * @typedef {module:core/pendingactions} module:core/pendingactions~PendingAction
  * @typedef {module:core/pendingactions} module:core/pendingactions~PendingActionsAddEvent
  * @typedef {module:core/pendingactions} module:core/pendingactions~PendingActionsRemoveEvent
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-core/dist/plugin.d.ts
+ *
+ * @typedef {module:core/plugin} module:core/plugin~Plugin
+ * @typedef {module:core/plugin} module:core/plugin~PluginInterface
+ * @typedef {module:core/plugin} module:core/plugin~PluginConstructor
+ * @typedef {module:core/plugin} module:core/plugin~PluginClassConstructor
+ * @typedef {module:core/plugin} module:core/plugin~PluginFunctionConstructor
+ * @typedef {module:core/plugin} module:core/plugin~PluginStaticMembers
+ * @typedef {module:core/plugin} module:core/plugin~ImageCaption
+ * @typedef {module:core/plugin} module:core/plugin~ImageCaption
+ * @typedef {module:core/plugin} module:core/plugin~PluginDependencies
+ * @typedef {module:core/plugin} module:core/plugin~PluginDependenciesOf
+ * @typedef {module:core/plugin} module:core/plugin~LoadedPlugins
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-core/dist/plugincollection.d.ts
+ *
+ * @typedef {module:core/plugincollection} module:core/plugincollection~PluginCollection
+ * @typedef {module:core/plugincollection} module:core/plugincollection~PluginEntry
+ * @typedef {module:core/plugincollection} module:core/plugincollection~PluginsMap
  */
 
 /**
@@ -646,12 +693,6 @@
  * Declared in file @ckeditor/ckeditor5-editor-balloon/dist/ballooneditoruiview.d.ts
  *
  * @typedef {module:editor-balloon/ballooneditoruiview} module:editor-balloon/ballooneditoruiview~BalloonEditorUIView
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-editor-classic/dist/classiceditor.d.ts
- *
- * @typedef {module:editor-classic/classiceditor} module:editor-classic/classiceditor~ClassicEditor
  */
 
 /**
@@ -712,7 +753,6 @@
  * @typedef {module:editor-multi-root/multirooteditor} module:editor-multi-root/multirooteditor~AddRootOptions
  * @typedef {module:editor-multi-root/multirooteditor} module:editor-multi-root/multirooteditor~AddRootRootConfig
  * @typedef {module:editor-multi-root/multirooteditor} module:editor-multi-root/multirooteditor~LoadRootOptions
- * @typedef {module:editor-multi-root/multirooteditor} module:editor-multi-root/multirooteditor~RootAttributes
  * @typedef {module:editor-multi-root/multirooteditor} module:editor-multi-root/multirooteditor~RootEditableOptions
  */
 
@@ -755,6 +795,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-emoji/dist/emojiutils.d.ts
+ *
+ * @typedef {module:emoji/emojiutils} module:emoji/emojiutils~EmojiUtils
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-emoji/dist/ui/emojicategoriesview.d.ts
  *
  * @typedef {module:emoji/ui/emojicategoriesview} module:emoji/ui/emojicategoriesview~EmojiCategoriesView
@@ -790,9 +836,39 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-emoji/dist/utils/emojirepositorycache.d.ts
+ *
+ * @typedef {module:emoji/utils/emojirepositorycache} module:emoji/utils/emojirepositorycache~EmojiRepositoryCache
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-emoji/dist/utils/isemojisupported.d.ts
  *
  * @typedef {module:emoji/utils/isemojisupported} module:emoji/utils/isemojisupported~isEmojiSupported
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-engine/dist/controller/datacontroller.d.ts
+ *
+ * @typedef {module:engine/controller/datacontroller} module:engine/controller/datacontroller~DataController
+ * @typedef {module:engine/controller/datacontroller} module:engine/controller/datacontroller~DataControllerReadyEvent
+ * @typedef {module:engine/controller/datacontroller} module:engine/controller/datacontroller~DataControllerInitEvent
+ * @typedef {module:engine/controller/datacontroller} module:engine/controller/datacontroller~DataControllerSetEvent
+ * @typedef {module:engine/controller/datacontroller} module:engine/controller/datacontroller~DataControllerGetEvent
+ * @typedef {module:engine/controller/datacontroller} module:engine/controller/datacontroller~DataControllerToViewEvent
+ * @typedef {module:engine/controller/datacontroller} module:engine/controller/datacontroller~DataControllerToModelEvent
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-engine/dist/controller/editingcontroller.d.ts
+ *
+ * @typedef {module:engine/controller/editingcontroller} module:engine/controller/editingcontroller~EditingController
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-engine/dist/conversion/comparemarkers.d.ts
+ *
+ * @typedef {module:engine/conversion/comparemarkers} module:engine/conversion/comparemarkers~compareMarkersForDowncast
  */
 
 /**
@@ -1011,6 +1087,7 @@
  *
  * @typedef {module:engine/model/liverange} module:engine/model/liverange~ModelLiveRange
  * @typedef {module:engine/model/liverange} module:engine/model/liverange~ModelLiveRangeChangeRangeEvent
+ * @typedef {module:engine/model/liverange} module:engine/model/liverange~ModelLiveRangeChangeDropEvent
  * @typedef {module:engine/model/liverange} module:engine/model/liverange~ModelLiveRangeChangeContentEvent
  * @typedef {module:engine/model/liverange} module:engine/model/liverange~ModelLiveRangeChangeEvent
  */
@@ -1166,6 +1243,7 @@
  * @typedef {module:engine/model/schema} module:engine/model/schema~ModelSchemaContextDefinition
  * @typedef {module:engine/model/schema} module:engine/model/schema~ModelSchemaContextItem
  * @typedef {module:engine/model/schema} module:engine/model/schema~ModelAttributeProperties
+ * @typedef {module:engine/model/schema} module:engine/model/schema~ModelBlockAlignmentAttributesMapping
  * @typedef {module:engine/model/schema} module:engine/model/schema~ModelSchemaAttributeCheckCallback
  * @typedef {module:engine/model/schema} module:engine/model/schema~ModelSchemaChildCheckCallback
  */
@@ -1316,20 +1394,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-engine/dist/view/filler.d.ts
- *
- * @typedef {module:engine/view/filler} module:engine/view/filler~NBSP_FILLER
- * @typedef {module:engine/view/filler} module:engine/view/filler~MARKED_NBSP_FILLER
- * @typedef {module:engine/view/filler} module:engine/view/filler~BR_FILLER
- * @typedef {module:engine/view/filler} module:engine/view/filler~INLINE_FILLER_LENGTH
- * @typedef {module:engine/view/filler} module:engine/view/filler~INLINE_FILLER
- * @typedef {module:engine/view/filler} module:engine/view/filler~startsWithFiller
- * @typedef {module:engine/view/filler} module:engine/view/filler~isInlineFiller
- * @typedef {module:engine/view/filler} module:engine/view/filler~getDataWithoutFiller
- * @typedef {module:engine/view/filler} module:engine/view/filler~injectQuirksHandling
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-engine/dist/view/item.d.ts
  *
  * @typedef {module:engine/view/item} module:engine/view/item~ViewItem
@@ -1368,6 +1432,7 @@
 /**
  * Declared in file @ckeditor/ckeditor5-engine/dist/view/observer/bubblingemittermixin.d.ts
  *
+ * @typedef {module:engine/view/observer/bubblingemittermixin} module:engine/view/observer/bubblingemittermixin~BubblingEmitterMixinConstructor
  * @typedef {module:engine/view/observer/bubblingemittermixin} module:engine/view/observer/bubblingemittermixin~BubblingEmitterMixin
  * @typedef {module:engine/view/observer/bubblingemittermixin} module:engine/view/observer/bubblingemittermixin~BubblingEmitter
  * @typedef {module:engine/view/observer/bubblingemittermixin} module:engine/view/observer/bubblingemittermixin~BubblingEventContextFunction
@@ -1450,6 +1515,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-engine/dist/view/observer/observer.d.ts
+ *
+ * @typedef {module:engine/view/observer/observer} module:engine/view/observer/observer~ObserverConstructor
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-engine/dist/view/observer/pointerobserver.d.ts
  *
  * @typedef {module:engine/view/observer/pointerobserver} module:engine/view/observer/pointerobserver~PointerObserver
@@ -1481,17 +1552,6 @@
  * @typedef {module:engine/view/observer/touchobserver} module:engine/view/observer/touchobserver~ViewDocumentTouchStartEvent
  * @typedef {module:engine/view/observer/touchobserver} module:engine/view/observer/touchobserver~ViewDocumentTouchEndEvent
  * @typedef {module:engine/view/observer/touchobserver} module:engine/view/observer/touchobserver~ViewDocumentTouchMoveEvent
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-engine/dist/view/placeholder.d.ts
- *
- * @typedef {module:engine/view/placeholder} module:engine/view/placeholder~enableViewPlaceholder
- * @typedef {module:engine/view/placeholder} module:engine/view/placeholder~disableViewPlaceholder
- * @typedef {module:engine/view/placeholder} module:engine/view/placeholder~showViewPlaceholder
- * @typedef {module:engine/view/placeholder} module:engine/view/placeholder~hideViewPlaceholder
- * @typedef {module:engine/view/placeholder} module:engine/view/placeholder~needsViewPlaceholder
- * @typedef {module:engine/view/placeholder} module:engine/view/placeholder~PlaceholderableViewElement
  */
 
 /**
@@ -2167,6 +2227,7 @@
  * @typedef {module:icons/index} module:icons/index~IconAI
  * @typedef {module:icons/index} module:icons/index~IconAIAdjustLength
  * @typedef {module:icons/index} module:icons/index~IconAIAskAI
+ * @typedef {module:icons/index} module:icons/index~IconAIAuthor
  * @typedef {module:icons/index} module:icons/index~IconAIChangeTone
  * @typedef {module:icons/index} module:icons/index~IconAIChatCommands
  * @typedef {module:icons/index} module:icons/index~IconAIContinueWriting
@@ -2338,6 +2399,7 @@
  * @typedef {module:icons/index} module:icons/index~IconShowChangesOff
  * @typedef {module:icons/index} module:icons/index~IconShowChangesOn
  * @typedef {module:icons/index} module:icons/index~IconSource
+ * @typedef {module:icons/index} module:icons/index~IconSparkle
  * @typedef {module:icons/index} module:icons/index~IconSpecialCharacters
  * @typedef {module:icons/index} module:icons/index~IconStop
  * @typedef {module:icons/index} module:icons/index~IconStrikethrough
@@ -2393,6 +2455,7 @@
  * Declared in file @ckeditor/ckeditor5-image/dist/image/converters.d.ts
  *
  * @typedef {module:image/image/converters} module:image/image/converters~upcastImageFigure
+ * @typedef {module:image/image/converters} module:image/image/converters~upcastImg
  * @typedef {module:image/image/converters} module:image/image/converters~upcastPicture
  * @typedef {module:image/image/converters} module:image/image/converters~downcastSrcsetAttribute
  * @typedef {module:image/image/converters} module:image/image/converters~downcastSourcesAttribute
@@ -2461,6 +2524,8 @@
  * @typedef {module:image/image/utils} module:image/image/utils~createInlineImageViewElement
  * @typedef {module:image/image/utils} module:image/image/utils~createBlockImageViewElement
  * @typedef {module:image/image/utils} module:image/image/utils~getImgViewElementMatcher
+ * @typedef {module:image/image/utils} module:image/image/utils~getViewImageType
+ * @typedef {module:image/image/utils} module:image/image/utils~isImageTypePlaceable
  * @typedef {module:image/image/utils} module:image/image/utils~determineImageTypeForInsertionAtSelection
  * @typedef {module:image/image/utils} module:image/image/utils~getSizeValueIfInPx
  * @typedef {module:image/image/utils} module:image/image/utils~widthAndHeightStylesAreBothSet
@@ -2597,11 +2662,9 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-image/dist/imageresize/utils/tryparsedimensionwithunit.d.ts
+ * Declared in file @ckeditor/ckeditor5-image/dist/imageresize/utils/getselectedimagewidthinunits.d.ts
  *
- * @typedef {module:image/imageresize/utils/tryparsedimensionwithunit} module:image/imageresize/utils/tryparsedimensionwithunit~tryParseDimensionWithUnit
- * @typedef {module:image/imageresize/utils/tryparsedimensionwithunit} module:image/imageresize/utils/tryparsedimensionwithunit~tryCastDimensionsToUnit
- * @typedef {module:image/imageresize/utils/tryparsedimensionwithunit} module:image/imageresize/utils/tryparsedimensionwithunit~DimensionWithUnit
+ * @typedef {module:image/imageresize/utils/getselectedimagewidthinunits} module:image/imageresize/utils/getselectedimagewidthinunits~getSelectedImageWidthInUnits
  */
 
 /**
@@ -2614,13 +2677,6 @@
  * Declared in file @ckeditor/ckeditor5-image/dist/imagestyle.d.ts
  *
  * @typedef {module:image/imagestyle} module:image/imagestyle~ImageStyle
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-image/dist/imagestyle/converters.d.ts
- *
- * @typedef {module:image/imagestyle/converters} module:image/imagestyle/converters~modelToViewStyleAttribute
- * @typedef {module:image/imagestyle/converters} module:image/imagestyle/converters~viewToModelStyleAttribute
  */
 
 /**
@@ -2704,12 +2760,6 @@
  * Declared in file @ckeditor/ckeditor5-image/dist/imageupload/imageuploadui.d.ts
  *
  * @typedef {module:image/imageupload/imageuploadui} module:image/imageupload/imageuploadui~ImageUploadUI
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-image/dist/imageupload/uploadimagecommand.d.ts
- *
- * @typedef {module:image/imageupload/uploadimagecommand} module:image/imageupload/uploadimagecommand~UploadImageCommand
  */
 
 /**
@@ -2896,6 +2946,7 @@
  * @typedef {module:link/ui/linkformview} module:link/ui/linkformview~LinkFormValidatorCallback
  * @typedef {module:link/ui/linkformview} module:link/ui/linkformview~LinkFormSubmitEvent
  * @typedef {module:link/ui/linkformview} module:link/ui/linkformview~LinkFormCancelEvent
+ * @typedef {module:link/ui/linkformview} module:link/ui/linkformview~LinkFormShowDecoratorsEvent
  */
 
 /**
@@ -3073,6 +3124,7 @@
 /**
  * Declared in file @ckeditor/ckeditor5-list/dist/list/converters.d.ts
  *
+ * @typedef {module:list/list/converters} module:list/list/converters~listItemSkipLevelConsumer
  * @typedef {module:list/list/converters} module:list/list/converters~listItemUpcastConverter
  * @typedef {module:list/list/converters} module:list/list/converters~reconvertItemsOnDataChange
  * @typedef {module:list/list/converters} module:list/list/converters~listItemDowncastConverter
@@ -3360,6 +3412,11 @@
  * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedconfig.d.ts
  *
  * @typedef {module:media-embed/mediaembedconfig} module:media-embed/mediaembedconfig~MediaEmbedConfig
+ * @typedef {module:media-embed/mediaembedconfig} module:media-embed/mediaembedconfig~MediaEmbedResizeOption
+ * @typedef {module:media-embed/mediaembedconfig} module:media-embed/mediaembedconfig~MediaStyleConfig
+ * @typedef {module:media-embed/mediaembedconfig} module:media-embed/mediaembedconfig~MediaStyleOptionDefinition
+ * @typedef {module:media-embed/mediaembedconfig} module:media-embed/mediaembedconfig~NormalizedMediaStyleOption
+ * @typedef {module:media-embed/mediaembedconfig} module:media-embed/mediaembedconfig~MediaStyleDropdownDefinition
  * @typedef {module:media-embed/mediaembedconfig} module:media-embed/mediaembedconfig~MediaEmbedProvider
  */
 
@@ -3367,6 +3424,82 @@
  * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedediting.d.ts
  *
  * @typedef {module:media-embed/mediaembedediting} module:media-embed/mediaembedediting~MediaEmbedEditing
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedresize.d.ts
+ *
+ * @typedef {module:media-embed/mediaembedresize} module:media-embed/mediaembedresize~MediaEmbedResize
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedresize/constants.d.ts
+ *
+ * @typedef {module:media-embed/mediaembedresize/constants} module:media-embed/mediaembedresize/constants~RESIZED_MEDIA_CLASS
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedresize/mediaembedcustomresizeui.d.ts
+ *
+ * @typedef {module:media-embed/mediaembedresize/mediaembedcustomresizeui} module:media-embed/mediaembedresize/mediaembedcustomresizeui~MediaEmbedCustomResizeUI
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedresize/mediaembedresizebuttons.d.ts
+ *
+ * @typedef {module:media-embed/mediaembedresize/mediaembedresizebuttons} module:media-embed/mediaembedresize/mediaembedresizebuttons~MediaEmbedResizeButtons
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedresize/resizemediaembedcommand.d.ts
+ *
+ * @typedef {module:media-embed/mediaembedresize/resizemediaembedcommand} module:media-embed/mediaembedresize/resizemediaembedcommand~ResizeMediaEmbedCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedresize/ui/mediaembedcustomresizeformview.d.ts
+ *
+ * @typedef {module:media-embed/mediaembedresize/ui/mediaembedcustomresizeformview} module:media-embed/mediaembedresize/ui/mediaembedcustomresizeformview~MediaEmbedCustomResizeFormView
+ * @typedef {module:media-embed/mediaembedresize/ui/mediaembedcustomresizeformview} module:media-embed/mediaembedresize/ui/mediaembedcustomresizeformview~MediaEmbedCustomResizeFormValidatorCallback
+ * @typedef {module:media-embed/mediaembedresize/ui/mediaembedcustomresizeformview} module:media-embed/mediaembedresize/ui/mediaembedcustomresizeformview~MediaEmbedCustomResizeFormViewSubmitEvent
+ * @typedef {module:media-embed/mediaembedresize/ui/mediaembedcustomresizeformview} module:media-embed/mediaembedresize/ui/mediaembedcustomresizeformview~MediaEmbedCustomResizeFormViewCancelEvent
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedresize/utils/getselectedmediaembededitornodes.d.ts
+ *
+ * @typedef {module:media-embed/mediaembedresize/utils/getselectedmediaembededitornodes} module:media-embed/mediaembedresize/utils/getselectedmediaembededitornodes~getSelectedMediaEmbedEditorNodes
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedresize/utils/getselectedmediaembedpossibleresizerange.d.ts
+ *
+ * @typedef {module:media-embed/mediaembedresize/utils/getselectedmediaembedpossibleresizerange} module:media-embed/mediaembedresize/utils/getselectedmediaembedpossibleresizerange~getSelectedMediaEmbedPossibleResizeRange
+ * @typedef {module:media-embed/mediaembedresize/utils/getselectedmediaembedpossibleresizerange} module:media-embed/mediaembedresize/utils/getselectedmediaembedpossibleresizerange~PossibleResizeMediaEmbedRange
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedresize/utils/getselectedmediaembedwidthinunits.d.ts
+ *
+ * @typedef {module:media-embed/mediaembedresize/utils/getselectedmediaembedwidthinunits} module:media-embed/mediaembedresize/utils/getselectedmediaembedwidthinunits~getSelectedMediaEmbedWidthInUnits
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedstyle.d.ts
+ *
+ * @typedef {module:media-embed/mediaembedstyle} module:media-embed/mediaembedstyle~MediaEmbedStyle
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedstyle/mediaembedstylecommand.d.ts
+ *
+ * @typedef {module:media-embed/mediaembedstyle/mediaembedstylecommand} module:media-embed/mediaembedstyle/mediaembedstylecommand~MediaEmbedStyleCommand
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-media-embed/dist/mediaembedstyle/mediaembedstyleui.d.ts
+ *
+ * @typedef {module:media-embed/mediaembedstyle/mediaembedstyleui} module:media-embed/mediaembedstyle/mediaembedstyleui~MediaEmbedStyleUI
  */
 
 /**
@@ -3647,7 +3780,6 @@
  * Declared in file @ckeditor/ckeditor5-paste-from-office/dist/normalizer.d.ts
  *
  * @typedef {module:paste-from-office/normalizer} module:paste-from-office/normalizer~PasteFromOfficeNormalizer
- * @typedef {module:paste-from-office/normalizer} module:paste-from-office/normalizer~PasteFromOfficeNormalizerData
  */
 
 /**
@@ -3660,6 +3792,12 @@
  * Declared in file @ckeditor/ckeditor5-paste-from-office/dist/normalizers/googlesheetsnormalizer.d.ts
  *
  * @typedef {module:paste-from-office/normalizers/googlesheetsnormalizer} module:paste-from-office/normalizers/googlesheetsnormalizer~GoogleSheetsNormalizer
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-paste-from-office/dist/normalizers/mswordnormalizer.d.ts
+ *
+ * @typedef {module:paste-from-office/normalizers/mswordnormalizer} module:paste-from-office/normalizers/mswordnormalizer~PasteFromOfficeMSWordNormalizer
  */
 
 /**
@@ -4304,12 +4442,20 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-table/dist/tablecolumnresize/commands/tablecolumnwidthcommand.d.ts
+ *
+ * @typedef {module:table/tablecolumnresize/commands/tablecolumnwidthcommand} module:table/tablecolumnresize/commands/tablecolumnwidthcommand~TableColumnWidthCommand
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-table/dist/tablecolumnresize/constants.d.ts
  *
  * @typedef {module:table/tablecolumnresize/constants} module:table/tablecolumnresize/constants~COLUMN_MIN_WIDTH_AS_PERCENTAGE
  * @typedef {module:table/tablecolumnresize/constants} module:table/tablecolumnresize/constants~COLUMN_MIN_WIDTH_IN_PIXELS
  * @typedef {module:table/tablecolumnresize/constants} module:table/tablecolumnresize/constants~COLUMN_WIDTH_PRECISION
  * @typedef {module:table/tablecolumnresize/constants} module:table/tablecolumnresize/constants~COLUMN_RESIZE_DISTANCE_THRESHOLD
+ * @typedef {module:table/tablecolumnresize/constants} module:table/tablecolumnresize/constants~TABLE_WIDTH_SNAP_THRESHOLD_IN_PIXELS
+ * @typedef {module:table/tablecolumnresize/constants} module:table/tablecolumnresize/constants~TABLE_WIDTH_GROWTH_RESISTANCE_IN_PIXELS
  */
 
 /**
@@ -4334,6 +4480,8 @@
  * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~getColumnMinWidthAsPercentage
  * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~getTableWidthInPixels
  * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~getElementWidthInPixels
+ * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~getContainerContentWidth
+ * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~getEditableContentWidth
  * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~getColumnEdgesIndexes
  * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~toPrecision
  * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~clamp
@@ -4345,7 +4493,10 @@
  * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~getColumnGroupElement
  * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~getTableColumnElements
  * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~getTableColumnsWidths
+ * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~isTableWidthInPixels
+ * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~isColumnWidthsInPixels
  * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~translateColSpanAttribute
+ * @typedef {module:table/tablecolumnresize/utils} module:table/tablecolumnresize/utils~removeCellWidthsFromTable
  */
 
 /**
@@ -4359,6 +4510,7 @@
  * @typedef {module:table/tableconfig} module:table/tableconfig~TableCellPropertiesOptions
  * @typedef {module:table/tableconfig} module:table/tableconfig~TableLayoutConfig
  * @typedef {module:table/tableconfig} module:table/tableconfig~TableCaptionConfig
+ * @typedef {module:table/tableconfig} module:table/tableconfig~TableScrollConfig
  * @typedef {module:table/tableconfig} module:table/tableconfig~TableType
  * @typedef {module:table/tableconfig} module:table/tableconfig~TableAlignmentConfig
  */
@@ -4489,6 +4641,19 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-table/dist/tablescroll.d.ts
+ *
+ * @typedef {module:table/tablescroll} module:table/tablescroll~TableScroll
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-table/dist/tablescroll/watchers.d.ts
+ *
+ * @typedef {module:table/tablescroll/watchers} module:table/tablescroll/watchers~watchTableModelElements
+ * @typedef {module:table/tablescroll/watchers} module:table/tablescroll/watchers~watchRootsWidthResize
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-table/dist/tableselection.d.ts
  *
  * @typedef {module:table/tableselection} module:table/tableselection~TableSelection
@@ -4537,6 +4702,7 @@
  * @typedef {module:table/utils/common} module:table/utils/common~groupCellsByTable
  * @typedef {module:table/utils/common} module:table/utils/common~isEntireCellsLineHeader
  * @typedef {module:table/utils/common} module:table/utils/common~isTableCellTypeEnabled
+ * @typedef {module:table/utils/common} module:table/utils/common~getEmptyTableCellBlocks
  */
 
 /**
@@ -4627,6 +4793,18 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-typing/dist/textwatcher.d.ts
+ *
+ * @typedef {module:typing/textwatcher} module:typing/textwatcher~TextWatcher
+ * @typedef {module:typing/textwatcher} module:typing/textwatcher~TextWatcherMatchedEvent
+ * @typedef {module:typing/textwatcher} module:typing/textwatcher~TextWatcherMatchedDataEvent
+ * @typedef {module:typing/textwatcher} module:typing/textwatcher~TextWatcherMatchedTypingDataEventData
+ * @typedef {module:typing/textwatcher} module:typing/textwatcher~TextWatcherMatchedTypingSelectionEvent
+ * @typedef {module:typing/textwatcher} module:typing/textwatcher~TextWatcherMatchedTypingSelectionEventData
+ * @typedef {module:typing/textwatcher} module:typing/textwatcher~TextWatcherUnmatchedTypingEvent
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-typing/dist/twostepcaretmovement.d.ts
  *
  * @typedef {module:typing/twostepcaretmovement} module:typing/twostepcaretmovement~TwoStepCaretMovement
@@ -4695,6 +4873,7 @@
 /**
  * Declared in file @ckeditor/ckeditor5-ui/dist/bindings/csstransitiondisablermixin.d.ts
  *
+ * @typedef {module:ui/bindings/csstransitiondisablermixin} module:ui/bindings/csstransitiondisablermixin~CssTransitionDisablerMixinConstructor
  * @typedef {module:ui/bindings/csstransitiondisablermixin} module:ui/bindings/csstransitiondisablermixin~CssTransitionDisablerMixin
  * @typedef {module:ui/bindings/csstransitiondisablermixin} module:ui/bindings/csstransitiondisablermixin~ViewWithCssTransitionDisabler
  */
@@ -4702,6 +4881,7 @@
 /**
  * Declared in file @ckeditor/ckeditor5-ui/dist/bindings/draggableviewmixin.d.ts
  *
+ * @typedef {module:ui/bindings/draggableviewmixin} module:ui/bindings/draggableviewmixin~DraggableViewMixinConstructor
  * @typedef {module:ui/bindings/draggableviewmixin} module:ui/bindings/draggableviewmixin~MyDraggableView
  * @typedef {module:ui/bindings/draggableviewmixin} module:ui/bindings/draggableviewmixin~DraggableViewMixin
  * @typedef {module:ui/bindings/draggableviewmixin} module:ui/bindings/draggableviewmixin~DraggableView
@@ -4749,6 +4929,7 @@
 /**
  * Declared in file @ckeditor/ckeditor5-ui/dist/button/filedialogbuttonview.d.ts
  *
+ * @typedef {module:ui/button/filedialogbuttonview} module:ui/button/filedialogbuttonview~FileDialogViewMixinConstructor
  * @typedef {module:ui/button/filedialogbuttonview} module:ui/button/filedialogbuttonview~FileDialogButtonView
  * @typedef {module:ui/button/filedialogbuttonview} module:ui/button/filedialogbuttonview~FileDialogListItemButtonView
  * @typedef {module:ui/button/filedialogbuttonview} module:ui/button/filedialogbuttonview~FileDialogViewMixin
@@ -4839,6 +5020,7 @@
  *
  * @typedef {module:ui/dialog/dialog} module:ui/dialog/dialog~Dialog
  * @typedef {module:ui/dialog/dialog} module:ui/dialog/dialog~DialogDefinition
+ * @typedef {module:ui/dialog/dialog} module:ui/dialog/dialog~DialogPositionCallback
  * @typedef {module:ui/dialog/dialog} module:ui/dialog/dialog~DialogShowEvent
  * @typedef {module:ui/dialog/dialog} module:ui/dialog/dialog~DialogHideEvent
  */
@@ -5156,6 +5338,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/dist/model.d.ts
+ *
+ * @typedef {module:ui/model} module:ui/model~UIModel
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/dist/notification/notification.d.ts
  *
  * @typedef {module:ui/notification/notification} module:ui/notification/notification~Notification
@@ -5370,6 +5558,12 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-upload/dist/filereader.d.ts
+ *
+ * @typedef {module:upload/filereader} module:upload/filereader~FileReader
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-upload/dist/filerepository.d.ts
  *
  * @typedef {module:upload/filerepository} module:upload/filerepository~FileRepository
@@ -5406,6 +5600,17 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/dist/collection.d.ts
+ *
+ * @typedef {module:utils/collection} module:utils/collection~Collection
+ * @typedef {module:utils/collection} module:utils/collection~CollectionAddEvent
+ * @typedef {module:utils/collection} module:utils/collection~CollectionChangeEvent
+ * @typedef {module:utils/collection} module:utils/collection~CollectionChangeEventData
+ * @typedef {module:utils/collection} module:utils/collection~CollectionRemoveEvent
+ * @typedef {module:utils/collection} module:utils/collection~CollectionBindToChain
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/dist/collectstylesheets.d.ts
  *
  * @typedef {module:utils/collectstylesheets} module:utils/collectstylesheets~collectStylesheets
@@ -5432,6 +5637,14 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/dist/diff.d.ts
+ *
+ * @typedef {module:utils/diff} module:utils/diff~Diff
+ * @typedef {module:utils/diff} module:utils/diff~diff
+ * @typedef {module:utils/diff} module:utils/diff~DiffResult
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/dist/difftochanges.d.ts
  *
  * @typedef {module:utils/difftochanges} module:utils/difftochanges~diffToChanges
@@ -5443,6 +5656,7 @@
 /**
  * Declared in file @ckeditor/ckeditor5-utils/dist/dom/emittermixin.d.ts
  *
+ * @typedef {module:utils/dom/emittermixin} module:utils/dom/emittermixin~DomEmitterMixinConstructor
  * @typedef {module:utils/dom/emittermixin} module:utils/dom/emittermixin~DomEmitterMixin
  * @typedef {module:utils/dom/emittermixin} module:utils/dom/emittermixin~DomEmitterMixin
  * @typedef {module:utils/dom/emittermixin} module:utils/dom/emittermixin~DomEventMap
@@ -5550,6 +5764,7 @@
 /**
  * Declared in file @ckeditor/ckeditor5-utils/dist/emittermixin.d.ts
  *
+ * @typedef {module:utils/emittermixin} module:utils/emittermixin~EmitterMixinConstructor
  * @typedef {module:utils/emittermixin} module:utils/emittermixin~EmitterMixin
  * @typedef {module:utils/emittermixin} module:utils/emittermixin~EmitterMixin
  * @typedef {module:utils/emittermixin} module:utils/emittermixin~Emitter
@@ -5575,6 +5790,14 @@
  * Declared in file @ckeditor/ckeditor5-utils/dist/first.d.ts
  *
  * @typedef {module:utils/first} module:utils/first~first
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/dist/focustracker.d.ts
+ *
+ * @typedef {module:utils/focustracker} module:utils/focustracker~FocusTracker
+ * @typedef {module:utils/focustracker} module:utils/focustracker~ViewWithFocusTracker
+ * @typedef {module:utils/focustracker} module:utils/focustracker~isViewWithFocusTracker
  */
 
 /**
@@ -5659,6 +5882,7 @@
 /**
  * Declared in file @ckeditor/ckeditor5-utils/dist/observablemixin.d.ts
  *
+ * @typedef {module:utils/observablemixin} module:utils/observablemixin~ObservableMixinConstructor
  * @typedef {module:utils/observablemixin} module:utils/observablemixin~ObservableMixin
  * @typedef {module:utils/observablemixin} module:utils/observablemixin~ObservableMixin
  * @typedef {module:utils/observablemixin} module:utils/observablemixin~Observable
@@ -5675,6 +5899,14 @@
  * Declared in file @ckeditor/ckeditor5-utils/dist/parsebase64encodedobject.d.ts
  *
  * @typedef {module:utils/parsebase64encodedobject} module:utils/parsebase64encodedobject~parseBase64EncodedObject
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/dist/parsedimensionwithunit.d.ts
+ *
+ * @typedef {module:utils/parsedimensionwithunit} module:utils/parsedimensionwithunit~tryParseDimensionWithUnit
+ * @typedef {module:utils/parsedimensionwithunit} module:utils/parsedimensionwithunit~tryCastDimensionsToUnit
+ * @typedef {module:utils/parsedimensionwithunit} module:utils/parsedimensionwithunit~DimensionWithUnit
  */
 
 /**
@@ -5784,6 +6016,14 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-widget/dist/highlightstack.d.ts
+ *
+ * @typedef {module:widget/highlightstack} module:widget/highlightstack~WidgetHighlightStack
+ * @typedef {module:widget/highlightstack} module:widget/highlightstack~WidgetHighlightStackChangeEvent
+ * @typedef {module:widget/highlightstack} module:widget/highlightstack~WidgetHighlightStackChangeEventData
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-widget/dist/verticalnavigation.d.ts
  *
  * @typedef {module:widget/verticalnavigation} module:widget/verticalnavigation~verticalWidgetNavigationHandler
@@ -5800,6 +6040,12 @@
  *
  * @typedef {module:widget/widgetresize} module:widget/widgetresize~WidgetResize
  * @typedef {module:widget/widgetresize} module:widget/widgetresize~WidgetResizerOptions
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-widget/dist/widgetresize/resizerstate.d.ts
+ *
+ * @typedef {module:widget/widgetresize/resizerstate} module:widget/widgetresize/resizerstate~WidgetResizeState
  */
 
 /**

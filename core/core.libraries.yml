@@ -2,10 +2,10 @@
 
 ckeditor5:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "48.0.1"
+  version: "48.5.1"
   license:
     name: GPL-2.0-or-later
-    url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v48.0.1/LICENSE.md
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v48.5.1/LICENSE.md
     gpl-compatible: true
   js:
     # This file is not aggregated to force the creation of a new aggregate file
@@ -21,133 +21,133 @@ ckeditor5:
     - core/ckeditor5.translations
 
 ckeditor5.editorClassic:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.editorDecoupled:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.essentials:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.heading:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.basic:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.specialCharacters:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.blockquote:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.image:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.link:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.list:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.horizontalLine:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.htmlSupport:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.alignment:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.removeFormat:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.pasteFromOffice:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.indent:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.sourceEditing:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.table:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.language:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.codeBlock:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.showBlocks:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.style:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
@@ -162,13 +162,13 @@ ckeditor5.translations:
     assets/vendor/ckeditor5/translation.js: {}
 
 ckeditor5.autoformat:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5
 
 ckeditor5.fullscreen:
-  version: "48.0.1"
+  version: "48.5.1"
   deprecated: The "%library_id%" asset library is deprecated in drupal:12.0.0 and is removed from drupal:13.0.0. All CKEditor 5 plugins are now in the core/ckeditor5 library. See https://www.drupal.org/node/3581531
   dependencies:
     - core/ckeditor5

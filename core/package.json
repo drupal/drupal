@@ -37,7 +37,7 @@
     "@floating-ui/dom": "^1.7.4",
     "@gitlab-formatters/stylelint-formatter-gitlab": "^1.0.2",
     "chokidar": "^4.0.3",
-    "ckeditor5": "^48.0.1",
+    "ckeditor5": "^48.5.1",
     "cspell": "^10.3.2",
     "dotenv": "^17.2.3",
     "dotenv-safe": "^9.1.0",
