@@ -14,7 +14,7 @@
     --admin-color-text: rgb(0, 0, 0, 0.8);
     --admin-color-text-soft: rgb(0, 0, 0, 0.8);
     --admin-color-icon: rgb(0, 0, 0, 0.8);
-    --admin-color-focus: rgb(0, 0, 0, 0.8);
+    --admin-color-focus: black;
     --admin-color-border: rgb(0, 0, 0, 0.8);
     --admin-color-border-soft: rgb(0, 0, 0, 0.6);
     --admin-color-border-loud: rgb(0, 0, 0, 0.8);
@@ -26,7 +26,7 @@
       --admin-color-text: rgb(255, 255, 255, 0.8);
       --admin-color-text-soft: rgb(255, 255, 255, 0.8);
       --admin-color-icon: rgb(255, 255, 255, 0.8);
-      --admin-color-focus: rgb(255, 255, 255, 0.8);
+      --admin-color-focus: white;
       --admin-color-border: rgb(255, 255, 255, 0.8);
       --admin-color-border-soft: rgb(255, 255, 255, 0.6);
       --admin-color-border-loud: rgb(255, 255, 255, 0.8);
@@ -36,18 +36,17 @@
   }
 }
 [data-admin-focus="green"] {
-  --admin-color-focus: rgb(8, 163, 144, 0.6);
+  --admin-color-focus: light-dark(#067a6c, #22b8a5);
 }
 [data-admin-focus="legacy_green"] {
-  --admin-color-focus: rgb(38, 167, 105, 0.6);
+  --admin-color-focus: light-dark(#1c7d4f, #40bc7e);
 }
 [data-admin-focus="orange"] {
-  --admin-color-focus: rgb(236, 124, 87, 0.6);
+  --admin-color-focus: light-dark(#c9552e, #f4a07f);
 }
 [data-admin-focus="dark"] {
   --admin-color-focus: var(--admin-color-focus-neutral);
 }
 [data-admin-focus="accent"] {
-  /* stylelint-disable-next-line color-function-notation */
-  --admin-color-focus: rgb(from var(--admin-color-primary) r g b / 0.6);
+  --admin-color-focus: var(--admin-color-primary);
 }

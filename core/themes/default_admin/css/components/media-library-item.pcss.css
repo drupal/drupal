@@ -75,7 +75,7 @@
 
     .media-library-item__preview-wrapper {
       outline: var(--focus-outline);
-      box-shadow: var(--focus-box-shadow);
+      outline-offset: var(--outline-offset);
     }
   }
 

@@ -258,6 +258,7 @@ img {
 .page-wrapper *:focus,
 .ui-dialog *:focus {
   outline: var(--focus-outline);
+  outline-offset: var(--outline-offset);
 }
 
 /**

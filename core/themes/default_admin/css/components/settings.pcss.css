@@ -149,6 +149,7 @@
 
     &:focus + .form-item__label {
       outline: var(--focus-outline);
+      outline-offset: var(--outline-offset);
     }
   }
 }

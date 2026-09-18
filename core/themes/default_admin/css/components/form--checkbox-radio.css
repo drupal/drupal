@@ -32,7 +32,7 @@
   appearance: none;
 
   &:focus {
-    outline-offset: -1px;
+    outline-offset: var(--outline-offset);
   }
 
   &:hover,
@@ -115,10 +115,6 @@
     &:focus,
     &:hover:focus {
       border-color: var(--admin-color-focus-border);
-      box-shadow:
-        inset 0 0 0 5px var(--admin-color-primary),
-        0 0 0 1px var(--admin-color-focus-border),
-        0 0 0 4px var(--admin-color-focus);
     }
   }
 
@@ -201,14 +197,6 @@
   &:hover {
     box-shadow: inset 0 0 0 1px var(--input--error-border-color);
   }
-  &:focus,
-  &:focus:active,
-  &:focus:hover {
-    box-shadow:
-      0 0 0 2px var(--admin-color-bg-input),
-      0 0 0 5px var(--admin-color-focus),
-      inset 0 0 0 1px var(--input--error-border-color);
-  }
   &:checked:active,
   &:checked:hover {
     border-color: var(--input--error-border-color);
@@ -226,13 +214,6 @@
 .form-boolean--type-radio.error:checked:active,
 .form-boolean--type-radio.error:checked:hover {
   background-image: url("data:image/svg+xml,%3csvg width='17' height='17' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle r='4.5' cx='8.5' cy='8.5' fill='%23d72222'/%3e%3c/svg%3e");
-}
-
-.form-boolean--type-radio.error:checked:focus {
-  box-shadow:
-    0 0 0 2px var(--admin-color-bg-input),
-    0 0 0 5px var(--admin-color-focus),
-    inset 0 0 0 1px var(--input--error-border-color);
 }
 
 /**
