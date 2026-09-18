@@ -16,8 +16,6 @@ namespace Drupal\Core\Hook\Attribute;
  * Apart from performance benefits, when this attribute is applied to a class,
  * services provided by the module dependency can be injected as required
  * properties.
- *
- * @see \Drupal\node\Hook\NodeSearchHooks
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 class HookDependsOnModule implements HookAttributeInterface {

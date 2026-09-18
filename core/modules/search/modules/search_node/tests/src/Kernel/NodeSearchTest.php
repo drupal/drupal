@@ -52,7 +52,7 @@ class NodeSearchTest extends KernelTestBase {
    * The idea is not to save URL aliases or execute certain procedures
    * if the node being processed is not the default revision.
    *
-   * @see \Drupal\node\Hook\NodeSearchHooks::nodeUpdate()
+   * @see \Drupal\search_node\Hook\NodeSearchHooks::nodeUpdate()
    */
   public function testNodeReindexDefaultRevision(): void {
     $node = $this->createNode([

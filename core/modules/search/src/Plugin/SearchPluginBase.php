@@ -136,7 +136,7 @@ abstract class SearchPluginBase extends PluginBase implements ContainerFactoryPl
    * {@inheritdoc}
    */
   public function getHelp() {
-    // This default search help is appropriate for plugins like NodeSearch
+    // This default search help is appropriate for plugins like SearchNode
     // that use the SearchQuery class.
     $help = [
       'list' => [

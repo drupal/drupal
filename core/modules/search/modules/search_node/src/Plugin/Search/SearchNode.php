@@ -106,9 +106,6 @@ class SearchNode extends ConfigurableSearchPluginBase implements AccessibleInter
     );
   }
 
-  /**
-   * Constructs a \Drupal\node\Plugin\Search\NodeSearch object.
-   */
   public function __construct(
     array $configuration,
     $plugin_id,
@@ -466,7 +463,7 @@ class SearchNode extends ConfigurableSearchPluginBase implements AccessibleInter
    * {@inheritdoc}
    */
   public function indexClear(): void {
-    // All NodeSearch pages share a common search index "type" equal to
+    // All SearchNode pages share a common search index "type" equal to
     // the plugin ID.
     $this->searchIndex->clear($this->getPluginId());
   }
@@ -475,7 +472,7 @@ class SearchNode extends ConfigurableSearchPluginBase implements AccessibleInter
    * {@inheritdoc}
    */
   public function markForReindex(): void {
-    // All NodeSearch pages share a common search index "type" equal to
+    // All SearchNode pages share a common search index "type" equal to
     // the plugin ID.
     $this->searchIndex->markForReindex($this->getPluginId());
   }
