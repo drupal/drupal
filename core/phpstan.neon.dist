@@ -64,6 +64,9 @@ parameters:
     - "#^Class .* extends @internal class#"
     - identifier: missingType.iterableValue
 
+    # @todo Fix this in https://www.drupal.org/project/drupal/issues/3624168
+    - identifier: loadIncludes.fileNotLoadable
+
 rules:
   - Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest
   - Drupal\PHPStan\Rules\TestClassClassMetadata
