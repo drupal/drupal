@@ -153,7 +153,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
 
     // Make sure the node/1 node exists.
     $this->drupalGet('node/1');
-    $this->clickLink('Test Article - New title');
+    $this->assertSession()->pageTextContains('Test Article - New title');
     $this->assertSession()->pageTextContains('Body');
     $this->assertSession()->pageTextContains('Tags');
     $this->assertSession()->responseContains('Text format');
@@ -178,13 +178,13 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
     $this->assertSession()->pageTextContains('Test block');
 
     // Make sure our custom visibility conditions are correct.
-    $this->drupalGet('admin/structure/block/manage/testblock');
+    $this->drupalGet('admin/structure/block/manage/stark_testblock');
     $this->assertSession()->checkboxNotChecked('edit-visibility-language-langcodes-es');
     $this->assertSession()->checkboxChecked('edit-visibility-language-langcodes-en');
     $this->assertSession()->checkboxChecked('edit-visibility-entity-bundlenode-bundles-test-content-type');
 
     // Make sure our block is still translated.
-    $this->drupalGet('admin/structure/block/manage/testblock/translate/es/edit');
+    $this->drupalGet('admin/structure/block/manage/stark_testblock/translate/es/edit');
     $this->assertSession()->responseContains('Test block spanish');
 
     // Make sure our custom text format exists.
