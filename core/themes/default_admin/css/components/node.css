@@ -4,6 +4,11 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 .node__submitted {
   margin: 1em 0;
+}
+
+.node--unpublished {
+  background-color: var(--admin-color-bg-warning);
 }

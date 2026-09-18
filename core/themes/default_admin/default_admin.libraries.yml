@@ -32,6 +32,7 @@ global-styling:
       css/components/dropbutton.css: {}
       css/components/details.css: {}
       css/components/divider.css: {}
+      css/components/field.css: {}
       css/components/messages.css: {}
       css/components/entity-meta.css: {}
       css/components/fieldset.css: {}

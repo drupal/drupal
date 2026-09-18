@@ -1,3 +1,7 @@
 .node__submitted {
   margin: 1em 0;
 }
+
+.node--unpublished {
+  background-color: var(--admin-color-bg-warning);
+}
