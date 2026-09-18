@@ -1,0 +1,24 @@
+/**
+ * @file
+ * Visual styles for fields.
+ */
+
+.field__label {
+  font-weight: bold;
+}
+.field--label-inline {
+  .field__label,
+  .field__items {
+    float: inline-start;
+    padding-inline-end: 0.5em;
+  }
+  .field__label,
+  > .field__item,
+  .field__items {
+    padding-block-start: 0.4em;
+  }
+
+  .field__label::after {
+    content: ":";
+  }
+}

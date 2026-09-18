@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Theme implementation the content area of the modal media library dialog.
+ *
+ * The content area is everything that is not the menu of available media
+ * types. This includes the form to add new media items, if available, and
+ * the view of available media to select.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - children: The rendered child elements of the container.
+ * - has_parent: A flag to indicate that the container has one or more parent
+     containers.
+ *
+ * @see \Drupal\Core\Theme\ThemePreprocess::preprocessContainer()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    has_parent ? 'js-form-wrapper',
+    has_parent ? 'form-wrapper',
+    'media-library-content',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>{{ children }}</div>

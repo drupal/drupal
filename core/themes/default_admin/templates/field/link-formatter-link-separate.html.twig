@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Theme override of a link with separate title and URL elements.
+ *
+ * Available variables:
+ * - link: The link that has already been formatted by l().
+ * - title: (optional) A descriptive or alternate title for the link, which may
+ *   be different than the actual link text.
+ *
+ * @see \Drupal\link\LinkThemeHooks::preprocessLinkFormatterLinkSeparate()
+ */
+#}
+<div class="link-item">
+  {%- if title -%}
+    <div class="link-title">{{- title -}}</div>
+  {%- endif -%}
+  <div class="link-url">{{- link -}}</div>
+</div>
