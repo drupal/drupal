@@ -3,8 +3,9 @@ node_modules/**/*
 **/build/**/*
 **/js_test_files/**/*
 **/css_test_files/**/*.css
-modules/locale/tests/locale_test.js
+modules/locale/tests/js/locale_test.js
 *.yml
+themes/default_admin/migration/js/scroll_sync.js
 themes/stable9/css/core/assets/vendor/**/*.css
 misc/jquery.form.js
 
