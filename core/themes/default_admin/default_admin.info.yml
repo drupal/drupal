@@ -5,7 +5,6 @@ description: A clean, accessible and powerful Drupal administration theme with a
 alt text: Screenshot of Default Admin, the Drupal administration theme.
 package: Core
 version: VERSION
-lifecycle: experimental
 
 libraries:
   - core/drupal.message
