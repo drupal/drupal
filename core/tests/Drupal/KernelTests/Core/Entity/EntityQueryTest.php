@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Query\QueryException;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMulRev;
@@ -67,6 +68,13 @@ class EntityQueryTest extends EntityKernelTestBase {
   public $figures;
 
   /**
+   * Field name for the unlimited cardinality figures field.
+   *
+   * @var string
+   */
+  public $figuresUnlimited;
+
+  /**
    * The entity_test_mulrev entity storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -84,13 +92,18 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->installConfig(['language']);
 
     $figures = $this->randomMachineName();
+    $figures_unlimited = $this->randomMachineName();
     $greetings = $this->randomMachineName();
-    foreach ([$figures => 'shape', $greetings => 'text'] as $field_name => $field_type) {
+    foreach ([
+      $figures => ['shape', 2],
+      $figures_unlimited => ['shape', FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED],
+      $greetings => ['text', 2],
+    ] as $field_name => [$field_type, $cardinality]) {
       $field_storage = FieldStorageConfig::create([
         'field_name' => $field_name,
         'entity_type' => 'entity_test_mulrev',
         'type' => $field_type,
-        'cardinality' => 2,
+        'cardinality' => $cardinality,
       ]);
       $field_storage->save();
       $field_storages[] = $field_storage;
@@ -170,10 +183,12 @@ class EntityQueryTest extends EntityKernelTestBase {
           $entity->getTranslation($units[$key][1])->{$units[$key][0]}[] = $units[$key][2];
         }
       }
+      $entity->{$figures_unlimited} = $entity->{$figures}->getValue();
       $entity->save();
     }
     $this->bundles = $bundles;
     $this->figures = $figures;
+    $this->figuresUnlimited = $figures_unlimited;
     $this->greetings = $greetings;
     $this->storage = $this->container->get('entity_type.manager')->getStorage('entity_test_mulrev');
   }
@@ -184,6 +199,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   public function testEntityQuery(): void {
     $greetings = $this->greetings;
     $figures = $this->figures;
+    $figures_unlimited = $this->figuresUnlimited;
     $this->queryResults = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
@@ -250,6 +266,18 @@ class EntityQueryTest extends EntityKernelTestBase {
     $query = $this->storage->getQuery()->accessCheck(FALSE);
     $group_blue = $query->andConditionGroup()->condition("$figures.color", 'blue');
     $group_red = $query->andConditionGroup()->condition("$figures.color", 'red');
+    $this->queryResults = $query
+      ->condition($group_blue)
+      ->condition($group_red)
+      ->sort('revision_id')
+      ->execute();
+    // Unit 0 and unit 1, so bits 0 1.
+    $this->assertResult(3, 7, 11, 15);
+
+    // Do the same test with an unlimited cardinality field.
+    $query = $this->storage->getQuery()->accessCheck(FALSE);
+    $group_blue = $query->andConditionGroup()->condition("$figures_unlimited.color", 'blue');
+    $group_red = $query->andConditionGroup()->condition("$figures_unlimited.color", 'red');
     $this->queryResults = $query
       ->condition($group_blue)
       ->condition($group_red)
