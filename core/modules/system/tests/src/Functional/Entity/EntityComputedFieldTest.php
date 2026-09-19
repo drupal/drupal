@@ -26,7 +26,7 @@ class EntityComputedFieldTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * The state service.

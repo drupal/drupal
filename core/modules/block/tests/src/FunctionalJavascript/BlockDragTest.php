@@ -23,7 +23,7 @@ class BlockDragTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'default_admin';
 
   /**
    * {@inheritdoc}
@@ -51,22 +51,22 @@ class BlockDragTest extends WebDriverTestBase {
     $this->assertNotEmpty($assertSession->waitForElementVisible('css', '.tabledrag-handle-y'));
 
     // Dragging Secondary tabs and Status messages to header region.
-    $primaryTabs = $this->getDragRow($page, 'edit-blocks-claro-primary-local-tasks');
+    $primaryTabs = $this->getDragRow($page, 'edit-blocks-default-admin-primary-local-tasks');
 
-    $secondaryTabs = $this->getDragRow($page, 'edit-blocks-claro-secondary-local-tasks');
+    $secondaryTabs = $this->getDragRow($page, 'edit-blocks-default-admin-secondary-local-tasks');
     $secondaryTabs->dragTo($primaryTabs);
-    $messages = $this->getDragRow($page, 'edit-blocks-claro-messages');
+    $messages = $this->getDragRow($page, 'edit-blocks-default-admin-messages');
     $messages->dragTo($primaryTabs);
 
     // Test if both blocks above were positioned on the header region.
     $this->assertEquals(
       'header',
-      $page->findField('edit-blocks-claro-secondary-local-tasks-region')->getValue(),
+      $page->findField('edit-blocks-default-admin-secondary-local-tasks-region')->getValue(),
       'Main menu should be positioned on header region'
     );
     $this->assertEquals(
       'header',
-      $page->findField('edit-blocks-claro-messages-region')->getValue(),
+      $page->findField('edit-blocks-default-admin-messages-region')->getValue(),
       'Status messages should be positioned on header region'
     );
 
@@ -79,7 +79,7 @@ class BlockDragTest extends WebDriverTestBase {
     $this->assertSession()->assert($noBlockMessage === 'No blocks in this region', 'Region pre-content should be empty.');
 
     // Testing drag row to an empty region.
-    $pageTitle = $this->getDragRow($page, 'edit-blocks-claro-page-title');
+    $pageTitle = $this->getDragRow($page, 'edit-blocks-default-admin-page-title');
     $heroRegion = $page->find('css', 'tr[data-drupal-selector="edit-blocks-region-help-message"]');
     $pageTitle->dragTo($heroRegion);
     $this->assertSession()->assert(

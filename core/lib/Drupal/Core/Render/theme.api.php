@@ -1319,16 +1319,16 @@ function hook_theme($existing, $type, $theme, $path): array {
  * @code
  * $theme_registry['entity_add_list'] = [
  *   'template' => 'entity-add-list',
- *   'path' => 'core/themes/claro/templates',
+ *   'path' => 'core/themes/my_theme/templates',
  *   'type' => 'theme_engine',
- *   'theme path' => 'core/themes/claro',
+ *   'theme path' => 'core/themes/my_theme',
  *   'variables' => [
  *     'bundles' => NULL,
  *   ],
  *   'preprocess functions' => [
  *     1 => 'template_preprocess_entity_add_list',
  *     2 => 'contextual_preprocess',
- *     3 => 'claro_preprocess_entity_add_list',
+ *     3 => 'my_theme_preprocess_entity_add_list',
  *   ],
  * ];
  * @endcode

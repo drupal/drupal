@@ -34,7 +34,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
   name: 'ex:install',
   description: 'Installs one or more modules or themes.',
   aliases: ['exin', 'pm:install', 'pm:enable', 'enable', 'en'],
-  usages: ['views,views_ui', 'claro']
+  usages: ['views,views_ui', 'default_admin']
 )]
 class ExtensionInstallCommand {
 
