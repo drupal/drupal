@@ -32,6 +32,7 @@ langcode
 langcodes
 mulrev
 mulrevpub
+olivero
 prerender
 renderable
 revlog
