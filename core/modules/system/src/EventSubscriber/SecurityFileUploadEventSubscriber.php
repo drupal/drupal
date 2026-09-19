@@ -15,6 +15,40 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
 
   /**
+   * A PCRE pattern matching characters that are never safe in a filename.
+   *
+   * @see \Drupal\Core\File\FileSystem::createFilename()
+   */
+  protected const string INSECURE_CHARACTERS = '@['
+    // Unicode general category Cc, the C0 and C1 control characters. They are
+    // meaningless in a filename and allow line splitting in anything that
+    // later treats it as text. Null bytes are removed separately.
+    . '\p{Cc}'
+    // Unicode general category Cf, format characters. These are invisible, so
+    // they cannot be seen in a filename, and the bidirectional overrides among
+    // them allow tampering with the way a filename is displayed.
+    . '\p{Cf}'
+    // Shell meta-characters and quotes, which allow command injection if the
+    // filename is ever passed to a shell. Dropping quotes and angle brackets
+    // also protects against XSS should a filename ever be rendered unsafely.
+    . '`$;|&<>(){}\[\]!*?~^\'"\\\\'
+    // Path and stream separators, which allow traversal and, on Windows,
+    // alternate data streams.
+    . '/:'
+    // Characters that change the meaning of the file URL.
+    . '#%'
+    . ']@u';
+
+  /**
+   * The filename used when sanitization leaves nothing behind.
+   *
+   * Collisions with a real upload of this name are resolved by the usual
+   * suffixing in \Drupal\Core\File\FileSystem::createFilename(), producing
+   * unnamed_0, unnamed_1 and so on.
+   */
+  protected const string FALLBACK_FILENAME = 'unnamed';
+
+  /**
    * Constructs a new file event listener.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
@@ -51,6 +85,18 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
     // Remove any null bytes. See
     // http://php.net/manual/security.filesystem.nullbytes.php
     $filename = str_replace(chr(0), '', $filename);
+
+    // Replace characters that are never safe.
+    $filename = preg_replace(self::INSECURE_CHARACTERS, '_', $filename);
+
+    // A leading dash is parsed as an option by most command line tools.
+    $filename = ltrim($filename, '-');
+
+    // Give the file a name if sanitization has left it without one; either
+    // empty or with nothing before the extension.
+    if ($filename === '' || str_starts_with($filename, '.')) {
+      $filename = self::FALLBACK_FILENAME . $filename;
+    }
 
     if ($filename !== $event->getFilename()) {
       $event->setFilename($filename)->setSecurityRename();
