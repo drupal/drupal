@@ -1193,10 +1193,6 @@ details.fieldset-no-legend {
     border: 2px solid #ed541d;
   }
 
-  a:focus {
-    outline: none;
-  }
-
   li a {
     padding: var(--admin-space-xs) var(--admin-space-m);
     color: var(--admin-color-primary);
@@ -1236,13 +1232,6 @@ details.fieldset-no-legend {
         color: var(--admin-color-bg);
         border-color: transparent;
         background: var(--admin-color-primary);
-      }
-
-      &:focus {
-        outline: none;
-        box-shadow:
-          0 0 0 1px var(--admin-color-focus-border),
-          0 0 0 4px var(--admin-color-focus);
       }
     }
 

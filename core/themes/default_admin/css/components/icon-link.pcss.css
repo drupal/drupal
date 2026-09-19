@@ -27,23 +27,9 @@
     background-color: var(--icon-link--hover-bg-color);
   }
 
-  &:focus {
-    box-shadow:
-      0 0 0 1.5px var(--admin-color-bg-surface),
-      0 0 0 3.5px var(--admin-color-focus);
-  }
-
   &:active,
   .open > & {
     border-color: var(--icon-link--active-border-color);
     background-color: var(--icon-link--active-bg-color);
-  }
-}
-
-.icon-link--small {
-  &:focus {
-    box-shadow:
-      0 0 0 1px var(--admin-color-bg-surface),
-      0 0 0 3px var(--admin-color-focus);
   }
 }

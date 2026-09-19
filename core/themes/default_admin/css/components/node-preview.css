@@ -112,10 +112,8 @@
   }
 
   *:focus {
-    outline: none;
-    box-shadow:
-      0 0 0 1px var(--admin-color-focus-border),
-      0 0 0 4px var(--admin-color-focus);
+    outline: var(--focus-outline);
+    outline-offset: var(--outline-offset);
   }
 
   @supports (backdrop-filter: blur()) {

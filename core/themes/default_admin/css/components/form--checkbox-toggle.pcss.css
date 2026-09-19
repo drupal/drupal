@@ -67,12 +67,11 @@
       box-shadow: 0 0 2px rgb(0, 0, 0, 0.2);
     }
 
-    /* Hover/Focus state */
+    /* Active/Focus state */
     &:active,
     &:focus {
-      box-shadow:
-        0 0 0 1px var(--admin-color-focus-border),
-        0 0 0 4px var(--admin-color-focus);
+      outline: var(--focus-outline);
+      outline-offset: var(--outline-offset);
     }
 
     /* Active state */
