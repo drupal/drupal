@@ -20,7 +20,6 @@
       "modules/ckeditor5/js/build/*",
       "modules/media/tests/fixtures/oembed/*",
       "modules/navigation/assets/**",
-      "modules/search/tests/UnicodeTest.txt",
       "modules/system/tests/logo.svgz",
       "node_modules/*",
       "profiles/demo_umami/modules/demo_umami_content/default_content/languages/es/**/*",

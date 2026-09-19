@@ -45,26 +45,11 @@ trait SchemaCheckTrait {
    * @var array<string, array<string, array<int, string>>>
    */
   protected static array $ignoredPropertyPaths = [
-    'search.page.*' => [
-      // @todo Fix config or tweak schema of `type: search.page.*` in
-      //   https://drupal.org/i/3380475.
-      // @see search.schema.yml
-      'label' => [
-        'This value should not be blank.',
-      ],
-    ],
     'contact.settings' => [
       // @todo Simple config cannot have dependencies on any other config.
       //   Remove this in https://www.drupal.org/project/drupal/issues/3425992.
       'default_form' => [
         "The 'contact.form.feedback' config does not exist.",
-      ],
-    ],
-    'search.settings' => [
-      // @todo Simple config cannot have dependencies on any other config.
-      //   Remove this in https://www.drupal.org/project/drupal/issues/3425992.
-      'default_page' => [
-        "The 'search.page.node_search' config does not exist.",
       ],
     ],
   ];

@@ -363,9 +363,6 @@ Responsive Image
 Routing
 - Tim Plunkett 'tim.plunkett' (tim.plunkett) https://www.drupal.org/u/tim.plunkett
 
-Search
-- Peter Wolanin 'pwolanin' (pwolanin) https://www.drupal.org/u/pwolanin
-
 Serialization
 - Brad Jones 'bradjones1' (bradjones1) https://www.drupal.org/u/bradjones1
 

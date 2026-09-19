@@ -1,7 +1,0 @@
-search_embedded_form.test_embedded_form:
-  path: '/search_embedded_form'
-  defaults:
-    _title: 'Search_Embed_Form'
-    _form: '\Drupal\search_embedded_form\Form\SearchEmbeddedForm'
-  requirements:
-    _permission: 'search content'

@@ -50,6 +50,7 @@ class SystemRequirements implements InstallRequirementsInterface {
     'rdf' => 'RDF',
     'settings_tray' => 'Settings Tray',
     'shortcut' => 'Shortcut',
+    'search' => 'Search',
     'statistics' => 'Statistics',
     'telephone' => 'Telephone',
     'toolbar' => 'Toolbar',

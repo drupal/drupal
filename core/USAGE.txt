@@ -5,8 +5,8 @@ Drupal core (what you get when you download and extract a drupal-x.y.tar.gz or
 drupal-x.y.zip file from https://www.drupal.org/project/drupal) has what you
 need to get started with your website. It includes several modules (extensions
 that add functionality) for common website features, such as managing content,
-user accounts, image uploading, and search. Core comes with many options that
-allow site-specific configuration. In addition to the core modules, there are
+user accounts, and image uploading. Core comes with many options that allow
+site-specific configuration. In addition to the core modules, there are
 thousands of contributed modules (for functionality not included with Drupal
 core) available for download.
 

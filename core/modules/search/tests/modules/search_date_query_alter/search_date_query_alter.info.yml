@@ -1,5 +1,0 @@
-name: 'Search Date Query Alter'
-type: module
-description: 'Test module that adds date conditions to node searches.'
-package: Testing
-version: VERSION
