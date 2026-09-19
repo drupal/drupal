@@ -219,7 +219,7 @@ class Tables implements TablesInterface {
             $next_index_prefix = "$relationship_specifier.$column";
           }
         }
-        if ($index_prefix === '' && $field_storage->getCardinality() > 1) {
+        if ($index_prefix === '' && $field_storage->isMultiple()) {
           $index_prefix = $condition_prefix;
         }
         $table = $this->ensureFieldTable($index_prefix, $field_storage, $type, $langcode, $base_table, $entity_id_field, $field_id_field, $delta);
