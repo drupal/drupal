@@ -63,6 +63,7 @@ class SystemRequirements implements InstallRequirementsInterface {
    */
   public const DRUPAL_CORE_REMOVED_THEME_LIST = [
     'bartik' => 'Bartik',
+    'claro' => 'Claro',
     'classy' => 'Classy',
     'seven' => 'Seven',
     'stable' => 'Stable',

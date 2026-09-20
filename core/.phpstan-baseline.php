@@ -34732,36 +34732,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/bootstrap.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\claro\\\\ClaroPreRender\\:\\:managedFile\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/claro/src/ClaroPreRender.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\claro\\\\ClaroPreRender\\:\\:operations\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/claro/src/ClaroPreRender.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\claro\\\\ClaroPreRender\\:\\:textFormat\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/claro/src/ClaroPreRender.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\claro\\\\ClaroPreRender\\:\\:verticalTabs\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/claro/src/ClaroPreRender.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$array of function array_key_first expects array, Drupal\\\\Core\\\\Template\\\\AttributeValueBase\\|null given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/claro/src/Hook/ClaroHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Form alter hook "form_media_library_add_form_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
 	'identifier' => 'hookFormAlter.invalidParameterCount',
 	'count' => 1,

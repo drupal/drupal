@@ -129,11 +129,6 @@ Cache
 CKEditor 5
 - Ben Mullins 'bnjmnm' (bnjmnm) https://www.drupal.org/u/bnjmnm
 
-Claro
-- Cristina Chumillas 'ckrina' (ckrina) https://www.drupal.org/u/ckrina
-- Sascha Eggenberger 'saschaeggi' (saschaeggi) https://www.drupal.org/u/saschaeggi
-- Ben Mullins 'bnjmnm' (bnjmnm) https://www.drupal.org/u/bnjmnm
-
 Command Line Interface (CLI) - `dr`
 - Moshe Weitzman 'moshe weitzman' (weitzman) https://www.drupal.org/u/moshe-weitzman
 - Derek Wright 'dww' (dww) https://www.drupal.org/u/dww

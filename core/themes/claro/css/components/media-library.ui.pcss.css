@@ -1,8 +1,0 @@
-/**
- * @file
- * Styles for the Media Library UI.
- */
-
-.media-library-selected-count {
-  margin: 0 var(--space-l);
-}
