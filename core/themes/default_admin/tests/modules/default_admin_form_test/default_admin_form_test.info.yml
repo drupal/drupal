@@ -1,0 +1,5 @@
+name: 'Default Admin form test'
+type: module
+description: 'Provides form alters for testing the Default Admin theme.'
+package: Testing
+version: VERSION

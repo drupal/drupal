@@ -27,7 +27,7 @@ class AdminTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected $defaultTheme = 'default_admin';
 
   /**
    * {@inheritdoc}
@@ -35,7 +35,6 @@ class AdminTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->assertTrue(\Drupal::service('theme_installer')->install(['default_admin']));
     $this->container->get('config.factory')
       ->getEditable('system.theme')
       ->set('default', 'default_admin')
