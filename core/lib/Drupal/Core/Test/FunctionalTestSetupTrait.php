@@ -714,7 +714,8 @@ trait FunctionalTestSetupTrait {
     }
 
     // Reset statics.
-    drupal_static_reset();
+    // @phpstan-ignore function.deprecated
+    drupal_static_reset('clear_all_skip_deprecation');
 
     $this->container = NULL;
 

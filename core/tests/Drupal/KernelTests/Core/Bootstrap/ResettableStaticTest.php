@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Bootstrap;
 
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -21,7 +22,13 @@ class ResettableStaticTest extends KernelTestBase {
    * Tests that a variable reference returned by drupal_static() gets reset when
    * drupal_static_reset() is called.
    */
+  #[IgnoreDeprecations()]
   public function testDrupalStatic(): void {
+    $this->expectUserDeprecationMessage('Calling drupal_static() with "Drupal\KernelTests\Core\Bootstrap\ResettableStaticTest_Drupal\KernelTests\Core\Bootstrap\ResettableStaticTest::testDrupalStatic" as argument is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::cache(\'memory\')->set() and \Drupal::cache(\'memory\')->get() instead. See https://www.drupal.org/node/2661204');
+    $this->expectUserDeprecationMessage('Calling drupal_static_reset() with "Drupal\KernelTests\Core\Bootstrap\ResettableStaticTest_Drupal\KernelTests\Core\Bootstrap\ResettableStaticTest::testDrupalStatic" as argument is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::cache(\'memory\')->delete() instead. See https://www.drupal.org/node/2661204');
+    $this->expectUserDeprecationMessage('Calling drupal_static_reset() with "NULL" as argument is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::cache(\'memory\')->delete() instead. See https://www.drupal.org/node/2661204');
+    $this->expectUserDeprecationMessage('Calling drupal_static() with "Drupal\KernelTests\Core\Bootstrap\ResettableStaticTest_Drupal\KernelTests\Core\Bootstrap\ResettableStaticTest::testDrupalStatic1" as argument is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::cache(\'memory\')->set() and \Drupal::cache(\'memory\')->get() instead. See https://www.drupal.org/node/2661204');
+    $this->expectUserDeprecationMessage('Calling drupal_static_reset() with "Drupal\KernelTests\Core\Bootstrap\ResettableStaticTest_Drupal\KernelTests\Core\Bootstrap\ResettableStaticTest::testDrupalStatic1" as argument is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::cache(\'memory\')->delete() instead. See https://www.drupal.org/node/2661204');
     $name = __CLASS__ . '_' . __METHOD__;
     $var = &drupal_static($name, 'foo');
     $this->assertEquals('foo', $var, 'Variable returned by drupal_static() was set to its default.');

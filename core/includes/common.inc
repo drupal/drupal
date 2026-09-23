@@ -282,7 +282,8 @@ function drupal_flush_all_caches($kernel = NULL): void {
   \Drupal::service('asset.query_string')->reset();
 
   // Reset all static caches.
-  drupal_static_reset();
+  // @phpstan-ignore function.deprecated
+  drupal_static_reset('clear_all_skip_deprecation');
 
   // Wipe the Twig PHP Storage cache.
   \Drupal::service('twig')->invalidate();

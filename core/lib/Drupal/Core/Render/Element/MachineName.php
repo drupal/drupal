@@ -290,7 +290,9 @@ class MachineName extends Textfield {
    * @see \Drupal\Core\Transliteration\PhpTransliteration::readLanguageOverrides()
    */
   private static function getTransliterationLanguageOverrides(LanguageInterface $language) {
-    $overrides = &drupal_static(__CLASS__ . '_' . __METHOD__, []);
+    $cid = __CLASS__ . '_' . __METHOD__;
+    $cached = \Drupal::cache('memory')->get($cid);
+    $overrides = $cached->data ?? [];
     $langcode = $language->getId();
 
     if (isset($overrides[$langcode])) {
@@ -306,6 +308,7 @@ class MachineName extends Textfield {
 
     \Drupal::moduleHandler()->alter('transliteration_overrides', $overrides[$langcode], $langcode);
 
+    \Drupal::cache('memory')->set($cid, $overrides);
     return [$langcode => $overrides[$langcode]];
   }
 

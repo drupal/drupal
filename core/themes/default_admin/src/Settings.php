@@ -161,7 +161,9 @@ final class Settings implements ContainerInjectionInterface {
    *   TRUE, if the user has overridden theme settings, FALSE otherwise.
    */
   public function userOverrideEnabled(?AccountInterface $account = NULL): bool {
-    $overrides = &drupal_static(__CLASS__ . '_' . __METHOD__, []);
+    $cid = __CLASS__ . '_' . __METHOD__;
+    $cached = \Drupal::cache('memory')->get($cid);
+    $overrides = $cached->data ?? [];
 
     if (!$account || !$this->userData) {
       $account = $this->currentUser;
@@ -170,6 +172,7 @@ final class Settings implements ContainerInjectionInterface {
     if (!isset($overrides[$account->id()])) {
       $overrides[$account->id()] = $this->allowUserOverrides()
         && $this->userData->get('default_admin', $account->id(), 'enable_user_settings');
+      \Drupal::cache('memory')->set($cid, $overrides);
     }
 
     return $overrides[$account->id()];
