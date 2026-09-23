@@ -1,0 +1,3 @@
+# Exclude test code from packaged releases.
+tests           export-ignore
+.gitattributes  export-ignore

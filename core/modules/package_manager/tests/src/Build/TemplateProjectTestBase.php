@@ -15,6 +15,7 @@ use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Drupal\Tests\package_manager\Traits\AssertPreconditionsTrait;
 use Drupal\Tests\package_manager\Traits\FixtureUtilityTrait;
 use Drupal\Tests\RandomGeneratorTrait;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -333,6 +334,14 @@ END;
     // Install Drupal.
     $this->installQuickStart('minimal');
     $this->formLogin($this->adminUsername, $this->adminPassword);
+
+    // Core's .gitattributes excludes test code from the drupal/core package.
+    // The test project therefore has no Package Manager test modules, so copy
+    // them in from the code base running the test.
+    (new Filesystem())->mirror(
+      dirname(__DIR__, 2) . '/modules',
+      $this->getWebRoot() . '/modules',
+    );
 
     // When checking for updates, we need to be able to make sub-requests, but
     // the built-in PHP server is single-threaded. Therefore, open a second
