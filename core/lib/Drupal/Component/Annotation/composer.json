@@ -9,10 +9,10 @@
     "require": {
         "php": ">=8.5.0",
         "doctrine/lexer": "^3",
-        "drupal/core-class-finder": "12.x-dev",
-        "drupal/core-file-cache": "12.x-dev",
-        "drupal/core-plugin": "12.x-dev",
-        "drupal/core-utility": "12.x-dev"
+        "drupal/core-class-finder": "12.0.x-dev",
+        "drupal/core-file-cache": "12.0.x-dev",
+        "drupal/core-plugin": "12.0.x-dev",
+        "drupal/core-utility": "12.0.x-dev"
     },
     "autoload": {
         "psr-4": {
