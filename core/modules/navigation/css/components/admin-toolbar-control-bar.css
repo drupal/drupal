@@ -4,9 +4,11 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 :root {
   --admin-toolbar-top-bar-height: var(-admin-toolbar-space-64);
 }
+
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
   &.admin-toolbar-control-bar {
     position: relative;

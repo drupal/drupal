@@ -10,9 +10,11 @@
 .layout-region {
   box-sizing: border-box;
 }
+
 .layout-region--footer .layout-region__content {
   margin-top: var(--admin-space-l);
 }
+
 /**
  * Move to two column layout at wider widths.
  */

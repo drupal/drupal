@@ -4,11 +4,9 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * Add spacing to top and bottom of pages.
  */
-
 .page-content {
   margin-block: 0 5rem;
 
@@ -24,7 +22,6 @@
 /**
  * Add color to layout icons.
  */
-
 .layout-icon__region {
   fill: #f5f5f2;
   stroke: #666;

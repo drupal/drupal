@@ -79,7 +79,6 @@
 }
 
 /* Active number link. */
-
 .pager__link.is-active,
 .pager__item--current {
   color: var(--admin-color-bg);

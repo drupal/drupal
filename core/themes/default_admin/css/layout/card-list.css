@@ -41,7 +41,6 @@
 }
 
 /* 36.75rem theme screenshot width */
-
 @media screen and (min-width: 36.75rem) {
   .card-list--four-cols .card-list__item {
     flex-basis: var(--cards-two-cols-width);
@@ -66,7 +65,6 @@
 }
 
 /* 53.75rem it is width of screenshot image + toolbar width(15rem) + 2rem of margins. */
-
 @media screen and (max-width: 53.75rem) {
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card-list--four-cols .card-list__item {
     flex-basis: 100%;

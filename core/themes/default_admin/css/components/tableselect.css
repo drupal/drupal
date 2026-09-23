@@ -120,7 +120,6 @@ tr.selected td {
     margin-block-end: 0;
   }
 }
-
 .views-bulk-actions__item--status {
   width: 100%;
   margin-inline-end: var(--admin-space-l);

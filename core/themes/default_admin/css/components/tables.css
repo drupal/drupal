@@ -4,12 +4,10 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * @file
  * Default Admin styles for Tables.
  */
-
 table {
   --cell-padding-y: var(--admin-space-density-m);
   --cell-padding-x: var(--admin-space-m);
@@ -162,7 +160,6 @@ table th {
 }
 
 /* The actual sort link. */
-
 .sortable-heading {
   padding: var(--admin-space-xs) var(--admin-space-m);
 
@@ -314,7 +311,6 @@ td {
  * Target every .form-element input that parent is a form-item of a table cell.
  * This ignores the filter format select of the textarea editor.
  */
-
 td {
   & > .form-item {
     display: flex;
@@ -348,13 +344,11 @@ td {
 }
 
 /* Win over table-file-multiple-widget. */
-
 th.is-disabled.is-disabled {
   color: var(--admin-color-text-disabled);
 }
 
 /* Force browsers to calculate the width of a 'select all' <th> element. */
-
 th.select-all {
   width: 1px;
 }
@@ -362,7 +356,6 @@ th.select-all {
 /**
  * Captions.
  */
-
 .caption {
   margin-block-end: 1.25rem;
   /* 20px */
@@ -387,7 +380,6 @@ tfoot {
 /**
  * Responsive table cells.
  */
-
 th.priority-low,
 th.priority-medium,
 td.priority-low,

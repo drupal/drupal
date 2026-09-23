@@ -4,19 +4,16 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * @file
  * Vertical tabs module.
  *
  * Replaces /core/misc/vertical-tabs.css.
  */
-
 /**
  * Main wrapper of vertical tabs.
  * This wrapper div is added by JavaScript.
  */
-
 .vertical-tabs {
   box-sizing: border-box;
   margin-block: var(--vertical-tabs-margin-vertical);
@@ -32,7 +29,6 @@
 /**
  * Vertical tabs menu.
  */
-
 .vertical-tabs__menu {
   position: relative;
   display: block;
@@ -47,7 +43,6 @@
 /**
  * Vertical tabs menu item.
  */
-
 .vertical-tabs__menu-item {
   overflow: hidden; /* Necessary to cut off the end of the focus state. */
   margin-block: var(--vertical-tabs-menu-item--top-margin);
@@ -110,7 +105,6 @@
 /**
  * Anchor link inside the vertical tabs menu item.
  */
-
 .vertical-tabs__menu-link {
   position: relative;
   display: block;
@@ -223,7 +217,6 @@
 /**
  * Details summary in vertical tabs menu link and in the summary of the details.
  */
-
 .vertical-tabs__menu-link-summary {
   display: block;
   color: var(--admin-color-text-soft);
@@ -238,7 +231,6 @@
 /**
  * Wrapper of vertical tabs panes.
  */
-
 .vertical-tabs__items {
   box-sizing: border-box;
   margin-block: var(--vertical-tabs-margin-vertical);
@@ -259,7 +251,6 @@
 }
 
 /* This modifier is added by JavaScript (this is inherited from Drupal core). */
-
 .vertical-tabs__panes {
   position: relative;
   z-index: 1; /* Above the vertical tabs menu. */
@@ -287,7 +278,6 @@
  *
  * This is a details element which in this case is also vertical-tabs__item.
  */
-
 .vertical-tabs__item {
   /* Render on top of the border of vertical-tabs__items. */
   margin-block: calc(var(--vertical-tabs-border-size) * -1) 0;

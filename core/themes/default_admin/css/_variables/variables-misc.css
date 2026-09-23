@@ -4,7 +4,6 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * @file
  * Miscellaneous global custom properties.
@@ -14,7 +13,6 @@
  * Split out of the former css/base/variables.pcss.css as part of
  * https://www.drupal.org/i/3582351 (relocation only — no value changes).
  */
-
 :root {
   /*
    * Common.

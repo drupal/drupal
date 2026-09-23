@@ -54,7 +54,6 @@
 /**
  * Fieldset legend.
  */
-
 .fieldset__legend {
   display: contents; /* For Firefox. */
   float: left; /* iOS Safari, Android Chrome, Edge. */
@@ -78,7 +77,6 @@
 }
 
 /* This is used only on install configure form. */
-
 .fieldset__legend--group {
   text-transform: uppercase;
   color: inherit;
@@ -134,7 +132,6 @@
 }
 
 /* Error message (Inline form errors). */
-
 .fieldset__error-message {
   margin-block: calc(6rem / 16); /* 6px */
   color: var(--input--error-color);

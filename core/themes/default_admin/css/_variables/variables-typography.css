@@ -19,7 +19,6 @@
  *
  * Sizes are authored in px; the build's px-to-rem step converts them.
  */
-
 :root {
   /* Font families. */
   --admin-font-family: inter, "Helvetica Neue", blinkmacsystemfont, -apple-system, "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, sans-serif;

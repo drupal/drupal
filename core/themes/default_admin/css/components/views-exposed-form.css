@@ -4,12 +4,10 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * @file
  * Visual styles for views exposed form.
  */
-
 .views-exposed-form {
   display: flex;
   flex-wrap: wrap;

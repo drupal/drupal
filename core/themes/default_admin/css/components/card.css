@@ -32,7 +32,6 @@
 }
 
 /* 588px theme screenshot width. 53.75rem is screenshot image width + toolbar width (15rem) + 2rem of margins. */
-
 .card--horizontal {
   /* 588px theme screenshot width */
   @media screen and (min-width: 36.75rem) {
@@ -70,7 +69,6 @@
 /**
  * Card image.
  */
-
 .card__image {
   overflow: hidden;
   border-radius: var(--admin-radius-m) var(--admin-radius-m) 0 0;
@@ -84,7 +82,6 @@
 /**
  * Card content.
  */
-
 .card__content-wrapper {
   display: flex;
   flex-direction: column;
@@ -111,7 +108,6 @@
 /**
  * Card content items (title, description).
  */
-
 .card__content-item {
   margin-block: 0 var(--admin-space-m);
 
@@ -123,7 +119,6 @@
 /**
  * Card footer.
  */
-
 .card__footer {
   order: 100;
   margin-block-start: var(--admin-space-l);

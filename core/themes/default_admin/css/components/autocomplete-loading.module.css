@@ -13,14 +13,12 @@
  */
 
 /* Wrapper around the autocomplete element. */
-
 .admin-autocomplete {
   position: relative;
   width: fit-content;
 }
 
 /* The "Loading" message gets positioned to the top right. */
-
 .admin-autocomplete__message {
   position: absolute;
   max-width: 100%;
@@ -54,7 +52,6 @@
 }
 
 /* The actual <input type="text"> element. */
-
 .form-autocomplete {
   margin-inline-end: calc(var(--input-border-size) - 1.5 * var(--input-padding-horizontal));
   padding-inline-end: 2.25rem;
@@ -69,7 +66,6 @@
 }
 
 /* <ul> dropdown */
-
 .ui-autocomplete {
   color: var(--admin-color-text);
   border-radius: 0 0 var(--admin-radius-m) var(--admin-radius-m);

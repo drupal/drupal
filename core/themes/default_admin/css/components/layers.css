@@ -13,7 +13,6 @@
  */
 
 /* cspell:ignore imageapi */
-
 .layer-wrapper {
   padding: var(--admin-space-s);
 
@@ -107,13 +106,11 @@
 }
 
 /* Unpublished node */
-
 .node--unpublished {
   background-color: var(--admin-color-bg-unpublished);
 }
 
 /* Has table filter */
-
 .block-system-main-block > form:has(.table-filter) {
   .table-filter {
     margin-block-end: var(--admin-space-l);

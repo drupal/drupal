@@ -4,9 +4,11 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 /**
  * Tabs.
  */
+
 :root {
   /**
   * Tabs.
@@ -19,6 +21,7 @@
   --tabs-base-border: 1px solid var(--admin-color-border);
   --tabs-trigger-border: 1px solid rgb(216, 217, 224, 0.8);
 }
+
 .tabs-wrapper {
   box-sizing: border-box;
   padding: 0 var(--admin-space-xs);
@@ -35,6 +38,7 @@
     padding: 0;
   }
 }
+
 .tabs {
   display: flex;
   flex-direction: column;
@@ -70,6 +74,7 @@
     }
   }
 }
+
 .tabs--primary {
   @media (min-width: 48rem) {
     margin-block-end: 0;
@@ -79,6 +84,7 @@
     }
   }
 }
+
 .tabs--secondary {
   .is-horizontal & {
     @media (min-width: 48rem) {
@@ -120,6 +126,7 @@
     }
   }
 }
+
 .tabs__tab {
   position: relative;
   border-block-end: var(--tabs-base-border);
@@ -200,6 +207,7 @@
     }
   }
 }
+
 .tabs__link {
   display: flex;
   flex-grow: 1;
@@ -306,6 +314,7 @@
     background: unset;
   }
 }
+
 .tabs__trigger {
   display: flex;
   flex-shrink: 0;

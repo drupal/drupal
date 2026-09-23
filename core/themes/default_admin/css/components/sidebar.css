@@ -4,12 +4,10 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * @file
  * Sidebar panel and controls.
  */
-
 #sidebar-draggable {
   position: absolute;
   z-index: 104;

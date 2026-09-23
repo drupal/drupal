@@ -94,7 +94,6 @@
 /**
  * Details summary styles.
  */
-
 .details__summary {
   position: relative;
   box-sizing: border-box;
@@ -189,7 +188,6 @@
 }
 
 /* Modifiers */
-
 .details__summary--accordion,
 .details__summary--accordion-item,
 .details__summary--vertical-tabs-item {
@@ -207,7 +205,6 @@
  * Accordion list items must not have border radius except they are the first
  * or the last ones.
  */
-
 .details__summary--accordion-item {
   border-radius: 0;
 
@@ -229,7 +226,6 @@
 /**
  * Details summary states.
  */
-
 [open] .details__summary--accordion,
 [open] .details__summary--accordion-item,
 [open] .details__summary--vertical-tabs-item {
@@ -282,7 +278,6 @@
  * because the elements inside the details content won't cause too big
  * vertical spacing.
  */
-
 .details__wrapper,
 .details__content {
   margin-block: var(--admin-space-m);
@@ -331,7 +326,6 @@
 }
 
 /* Description. */
-
 .details__description {
   margin-block-end: var(--admin-space-m);
   color: var(--admin-color-text-soft);
@@ -352,7 +346,6 @@
 }
 
 /* @todo this probably needs to be moved.  */
-
 .required-mark::after {
   display: inline-block;
   inline-size: 0.4375rem;

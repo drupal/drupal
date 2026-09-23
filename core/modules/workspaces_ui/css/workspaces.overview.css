@@ -11,7 +11,6 @@
  */
 
 /** @todo Move to the admin theme before Workspaces is marked stable. */
-
 tr.active-workspace {
   background-color: #ebeae4;
 }

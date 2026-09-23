@@ -4,6 +4,7 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 .node-preview-container {
   position: sticky;
   z-index: 501;
@@ -123,6 +124,7 @@
     backdrop-filter: blur(0.75rem);
   }
 }
+
 .node-preview-form-select {
   display: flex;
   flex-wrap: wrap;

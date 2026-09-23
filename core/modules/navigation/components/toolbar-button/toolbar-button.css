@@ -27,6 +27,7 @@
   /* Icon */
   --toolbar-button-icon-size: var(--admin-toolbar-space-20);
 }
+
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
   .toolbar-button {
     z-index: 1;

@@ -4,17 +4,14 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /*
  * @file
  *
  * Styling for Media Library.
  */
-
 /*
  * The field widget shown on the entity create page.
  */
-
 .field--widget-media-library-widget {
   .media-library-item__preview {
     cursor: move;
@@ -34,7 +31,6 @@
  * Negative margins compensate for modal dialog padding and compensate for
  * positioning that would otherwise hide the active tab indicator on the start.
  */
-
 #media-library-wrapper {
   display: flex;
   margin-inline: calc(-1 * var(--admin-space-l));
@@ -102,7 +98,6 @@
 }
 
 /* Generic media add form styles. */
-
 .media-library-add-form--without-input .form-item {
   margin-inline-end: 1rem;
 }
@@ -119,7 +114,6 @@
 }
 
 /* Form within media library that allows you to upload additional media. */
-
 .media-library-add-form {
   .messages-list:has(.messages) {
     margin-block: var(--admin-space-m);
@@ -131,7 +125,6 @@
 }
 
 /* Style the media add oEmbed form. */
-
 .media-library-add-form--oembed {
   .media-library-add-form__input-wrapper {
     display: flex;
@@ -239,7 +232,6 @@
  * Selection widget area shown on the parent form after items are
  * inserted.
  */
-
 .media-library-selection {
   display: grid;
   gap: 0.625rem;
@@ -247,7 +239,6 @@
 }
 
 /* Media library widget styles. */
-
 .media-library-widget {
   position: relative;
 }
@@ -273,7 +264,6 @@ fieldset.media-library-widget {
 }
 
 /* The <li> that is shown after a media item has been uploaded */
-
 .media-library-add-form__media {
   position: relative;
   display: flex;
@@ -292,7 +282,6 @@ fieldset.media-library-widget {
  * Only renders after a file is uploaded via the add-form. Coverage matrix never
  * completed an upload.
  */
-
 .media-library-add-form__preview {
   display: flex;
   align-items: center;

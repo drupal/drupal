@@ -4,12 +4,10 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * @file
  * Help icon description toggle styles.
  */
-
 .help-icon {
   display: flex;
 }

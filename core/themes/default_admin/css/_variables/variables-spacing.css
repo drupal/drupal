@@ -4,7 +4,6 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * @file
  * Spacing & layout-dimension custom properties.
@@ -18,7 +17,6 @@
  *
  * Values are authored in px; the build's px-to-rem step converts them.
  */
-
 :root {
   /**
    * Spacing scale.

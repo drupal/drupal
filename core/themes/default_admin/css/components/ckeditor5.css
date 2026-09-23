@@ -11,7 +11,6 @@
  */
 
 /* cspell:ignore fullscreeneditor */
-
 .ck {
   --ck-color-text: var(--admin-color-text);
   --ck-content-font-color: var(--admin-color-text);

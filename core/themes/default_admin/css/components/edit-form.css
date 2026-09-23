@@ -4,12 +4,10 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * @file
  * Node edit form layout and sidebar styles.
  */
-
 .edit-form {
   .dialog-off-canvas-main-canvas {
     @media (min-width: 64em) and (prefers-reduced-motion: no-preference) {
@@ -200,7 +198,6 @@
 }
 
 /* Sidebar accordion items — broken out to limit nesting depth. */
-
 .edit-form .page-wrapper__node-edit-form .layout-region--secondary .entity-meta > .accordion__item {
   margin: 0;
   border: 0 none;

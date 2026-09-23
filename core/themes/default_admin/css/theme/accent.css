@@ -35,18 +35,23 @@
     }
   }
 }
+
 [data-admin-focus="green"] {
   --admin-color-focus: light-dark(#067a6c, #22b8a5);
 }
+
 [data-admin-focus="legacy_green"] {
   --admin-color-focus: light-dark(#1c7d4f, #40bc7e);
 }
+
 [data-admin-focus="orange"] {
   --admin-color-focus: light-dark(#c9552e, #f4a07f);
 }
+
 [data-admin-focus="dark"] {
   --admin-color-focus: var(--admin-color-focus-neutral);
 }
+
 [data-admin-focus="accent"] {
   --admin-color-focus: var(--admin-color-primary);
 }
