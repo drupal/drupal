@@ -676,7 +676,8 @@ abstract class KernelTestBase extends DrupalTestCase implements ServiceProviderI
 
     // Clean up statics, container, and settings.
     if (function_exists('drupal_static_reset')) {
-      drupal_static_reset();
+      // @phpstan-ignore function.deprecated
+      drupal_static_reset('clear_all_skip_deprecation');
     }
     \Drupal::unsetContainer();
     $this->container = NULL;

@@ -281,7 +281,10 @@ class CommentHooks {
    */
   #[Hook('node_update_index')]
   public function nodeUpdateIndex(EntityInterface $node): string {
-    $index_comments =& drupal_static('comment_node_update_index');
+    $cid = 'comment_node_update_index';
+    $cached = \Drupal::cache('memory')->get($cid);
+    $index_comments = $cached->data ?? NULL;
+
     if ($index_comments === NULL) {
       // Do not index in the following three cases:
       // 1. 'Authenticated user' can search content but can't access comments.
@@ -303,6 +306,7 @@ class CommentHooks {
           }
         }
       }
+      \Drupal::cache('memory')->set($cid, $index_comments);
     }
     $build = [];
     if ($index_comments) {
