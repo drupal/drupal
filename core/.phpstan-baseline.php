@@ -2966,12 +2966,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Config/Entity/ConfigEntityBundleBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Core\\\\Config\\\\Entity\\\\ConfigEntityListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Config/Entity/ConfigEntityListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Config\\\\Entity\\\\ConfigEntityStorage\\:\\:doDelete\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -10744,12 +10738,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block/src/BlockListBuilder.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\block\\\\BlockListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/src/BlockListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\block\\\\BlockListBuilder\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -10952,12 +10940,6 @@ $ignoreErrors[] = [
 	'identifier' => 'return.missing',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/src/BlockContentTypeForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\block_content\\\\BlockContentTypeListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/src/BlockContentTypeListBuilder.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\block_content\\\\BlockContentTypeListBuilder\\:\\:getTitle\\(\\) has no return type specified\\.$#',
@@ -11580,12 +11562,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/src/CommentTypeListBuilder.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\comment\\\\CommentTypeListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/CommentTypeListBuilder.php',
 ];
@@ -13600,12 +13576,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field_ui/src/EntityDisplayModeListBuilder.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\field_ui\\\\FieldConfigListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/FieldConfigListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\FieldUI\\:\\:getOverviewRouteInfo\\(\\) should return Drupal\\\\Core\\\\Url but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
 	'count' => 1,
@@ -14428,12 +14398,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/filter/src/FilterFormatListBuilder.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\filter\\\\FilterFormatListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/filter/src/FilterFormatListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\filter\\\\FilterFormatListBuilder\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -14756,12 +14720,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/src/ImageStyleInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\image\\\\ImageStyleListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/src/ImageStyleListBuilder.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\image\\\\ImageStyleStorage\\:\\:clearReplacementId\\(\\) has no return type specified\\.$#',
@@ -18454,12 +18412,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/menu_link_content/src/MenuLinkListBuilder.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\menu_link_content\\\\MenuLinkListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/src/MenuLinkListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\menu_link_content\\\\Plugin\\\\Menu\\\\MenuLinkContent\\:\\:deleteLink\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -18578,12 +18530,6 @@ $ignoreErrors[] = [
 	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_ui/src/MenuForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\menu_ui\\\\MenuListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/src/MenuListBuilder.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\menu_ui\\\\Functional\\\\MenuUiLanguageTest\\:\\:assertMenuLink\\(\\) has no return type specified\\.$#',
@@ -20002,12 +19948,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/NodeTypeInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\node\\\\NodeTypeListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/NodeTypeListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\NodeViewBuilder\\:\\:buildComponents\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -20780,12 +20720,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/responsive_image/src/ResponsiveImageStyleForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/responsive_image/src/ResponsiveImageStyleListBuilder.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\rest\\\\Entity\\\\ConfigDependencies\\:\\:create\\(\\) has no return type specified\\.$#',
@@ -24102,12 +24036,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/VocabularyListBuilder.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\taxonomy\\\\VocabularyListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/VocabularyListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\VocabularyListBuilder\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -25202,12 +25130,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/RoleListBuilder.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\user\\\\RoleListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/RoleListBuilder.php',
 ];
@@ -32926,12 +32848,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views_ui/src/ViewListBuilder.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\views_ui\\\\ViewListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/src/ViewListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_ui\\\\ViewPreviewForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -33924,12 +33840,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces_ui/src/WorkspaceListBuilder.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workspaces_ui\\\\WorkspaceListBuilder\\:\\:getDefaultOperations\\(\\) is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to\\: getDefaultOperations\\(\\\\Drupal\\\\Core\\\\Entity\\\\EntityInterface \\$entity, \\?\\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability \\= NULL\\)\\.$#',
-	'identifier' => 'drupal.entityListBuilderMissingCacheabilityParameter',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces_ui/src/WorkspaceListBuilder.php',
 ];
