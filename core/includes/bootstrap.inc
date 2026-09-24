@@ -377,9 +377,26 @@ function drupal_maintenance_theme(): void {
  * @return mixed
  *   Returns a variable by reference.
  *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::cache('memory')->set() and \Drupal::cache('memory')->get()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/2661204
  * @see drupal_static_reset()
  */
 function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
+  if ($name === 'clear_all_skip_deprecation') {
+    $name = NULL;
+  }
+  else {
+    $cid = $name ?? 'null';
+    $cid = $cid . 'drupal_static_deprecation';
+    if (!\Drupal::cache('memory')->get($cid)) {
+      // The memory cache ensures the deprecation only triggers once.
+      \Drupal::cache('memory')->set($cid, TRUE);
+      @trigger_error("Calling drupal_static() with \"$name\" as argument is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::cache('memory')->set() and \Drupal::cache('memory')->get() instead. See https://www.drupal.org/node/2661204", E_USER_DEPRECATED);
+    }
+  }
   static $data = [], $defaults = [];
   if (isset($name)) {
     // Check if we're dealing with a previously defined static variable.
@@ -424,6 +441,11 @@ function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
  *   Name of the static variable to reset. Omit to reset all variables.
  *   Resetting all variables should only be used, for example, for running
  *   unit tests with a clean environment.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal::cache('memory')->delete() instead.
+ *
+ * @see https://www.drupal.org/node/2661204
  */
 function drupal_static_reset($name = NULL): void {
   switch ($name) {
@@ -461,6 +483,24 @@ function drupal_static_reset($name = NULL): void {
     case 'options_allowed_values':
       @trigger_error("Calling drupal_static_reset() with 'options_allowed_values' as argument is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::cache('memory')->delete('options.allowed_values') instead. See https://www.drupal.org/node/3572185", E_USER_DEPRECATED);
       \Drupal::cache('memory')->delete('options.allowed_values');
+      break;
+
+    case 'clear_all_skip_deprecation':
+      break;
+
+    default:
+      $cid = $name ?? 'null';
+      $cid = $cid . 'drupal_static_reset_deprecation';
+      if (!\Drupal::cache('memory')->get($cid)) {
+        // The memory cache ensures the deprecation only triggers once.
+        \Drupal::cache('memory')->set($cid, TRUE);
+        if (!isset($name)) {
+          @trigger_error("Calling drupal_static_reset() with \"NULL\" as argument is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::cache('memory')->delete() instead. See https://www.drupal.org/node/2661204", E_USER_DEPRECATED);
+        }
+        else {
+          @trigger_error("Calling drupal_static_reset() with \"$name\" as argument is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::cache('memory')->delete() instead. See https://www.drupal.org/node/2661204", E_USER_DEPRECATED);
+        }
+      }
       break;
 
   }

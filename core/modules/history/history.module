@@ -41,6 +41,9 @@ function history_read($nid) {
  *   otherwise, zero.
  */
 function history_read_multiple($nids): array {
+  // The history module was removed already in main when drupal_static was
+  // deprecated.
+  // @phpstan-ignore function.deprecated
   $history = &drupal_static(__FUNCTION__, []);
 
   $return = [];
@@ -98,6 +101,9 @@ function history_write($nid, $account = NULL): void {
       ->fields(['timestamp' => $request_time])
       ->execute();
     // Update static cache.
+    // The history module was removed already in main when drupal_static was
+    // deprecated.
+    // @phpstan-ignore function.deprecated
     $history = &drupal_static('history_read_multiple', []);
     $history[$nid] = $request_time;
   }

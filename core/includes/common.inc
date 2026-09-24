@@ -293,7 +293,8 @@ function drupal_flush_all_caches($kernel = NULL): void {
   \Drupal::service('asset.query_string')->reset();
 
   // Reset all static caches.
-  drupal_static_reset();
+  // @phpstan-ignore function.deprecated
+  drupal_static_reset('clear_all_skip_deprecation');
 
   // Wipe the Twig PHP Storage cache.
   \Drupal::service('twig')->invalidate();
@@ -352,6 +353,9 @@ function drupal_flush_all_caches($kernel = NULL): void {
 function drupal_get_updaters() {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
 
+  // The function drupal_get_updaters was removed already in main when
+  // drupal_static was deprecated.
+  // @phpstan-ignore function.deprecated
   $updaters = &drupal_static(__FUNCTION__);
   if (!isset($updaters)) {
     $updaters = \Drupal::moduleHandler()->invokeAllDeprecated('There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', 'updater_info');
@@ -374,6 +378,9 @@ function drupal_get_updaters() {
 function drupal_get_filetransfer_info() {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
 
+  // The function drupal_get_filetransfer_info was removed already in main when
+  // drupal_static was deprecated.
+  // @phpstan-ignore function.deprecated
   $info = &drupal_static(__FUNCTION__);
   if (!isset($info)) {
     $info = \Drupal::moduleHandler()->invokeAllDeprecated('There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', 'filetransfer_info');
