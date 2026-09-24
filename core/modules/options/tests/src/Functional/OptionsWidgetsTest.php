@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\options\Functional;
 
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\field\Functional\FieldTestBase;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -17,6 +20,9 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('options')]
 #[RunTestsInSeparateProcesses]
 class OptionsWidgetsTest extends FieldTestBase {
+
+  use EntityReferenceFieldCreationTrait;
+  use TaxonomyTestTrait;
 
   /**
    * {@inheritdoc}
@@ -374,6 +380,51 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     $this->submitForm($edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_1', []);
+
+    // Test required entity reference field when default value is deleted.
+
+    // Create vocabulary and terms.
+    $vocab = $this->createVocabulary();
+    // Create some test terms.
+    $term_to_delete = $this->createTerm($vocab);
+    $another_test_term = $this->createTerm($vocab, ['weight' => 1000]);
+    // Create the field and set as required.
+    $field_name = mb_strtolower($this->randomMachineName());
+    $handler_settings = [
+      'target_bundles' => [
+        $vocab->id() => $vocab->id(),
+      ],
+      'auto_create' => FALSE,
+    ];
+    $this->createEntityReferenceField('entity_test', 'entity_test', $field_name, 'Test term reference', 'taxonomy_term', 'default', $handler_settings);
+    $field = FieldConfig::load('entity_test.entity_test.' . $field_name);
+    $field->setRequired(TRUE);
+    $field->save();
+    // Set field widget as select list.
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
+      ->setComponent($field_name, [
+        'type' => 'options_select',
+      ])->save();
+
+    // Create a page assigning it the $term_to_delete.
+    $entity = EntityTest::create([
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
+      $field_name => $term_to_delete->id(),
+    ]);
+    $entity->save();
+
+    // Delete the $term_to_delete.
+    $term_to_delete->delete();
+
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->optionExists($field_name, $another_test_term->id());
+    $empty_option = $this->assertSession()->optionExists($field_name, '_none');
+    $this->assertTrue($empty_option->isSelected());
+    $this->assertSame('- Select a value -', $empty_option->getText());
   }
 
   /**
@@ -537,6 +588,63 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     $this->submitForm($edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', []);
+
+    // Test required entity reference field when selected value is deleted.
+
+    // Create vocabulary and terms.
+    $vocab = $this->createVocabulary();
+    // Create some test terms.
+    $term_to_delete = $this->createTerm($vocab);
+    $term2 = $this->createTerm($vocab, ['weight' => 100]);
+    $term3 = $this->createTerm($vocab, ['weight' => 1000]);
+
+    // Create a required unlimited-cardinality entity reference field.
+    $field_name = mb_strtolower($this->randomMachineName());
+    $handler_settings = [
+      'target_bundles' => [
+        $vocab->id() => $vocab->id(),
+      ],
+      'auto_create' => FALSE,
+    ];
+    $this->createEntityReferenceField('entity_test', 'entity_test', $field_name, 'Test term reference', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $field = FieldConfig::load('entity_test.entity_test.' . $field_name);
+    $field->setRequired(TRUE);
+    $field->save();
+    // Set field widget as select list.
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
+    $display_repository = \Drupal::service('entity_display.repository');
+    $display_repository->getFormDisplay('entity_test', 'entity_test')
+      ->setComponent($field_name, [
+        'type' => 'options_select',
+      ])->save();
+
+    // Create a page assigning it the $term_to_delete.
+    $entity = EntityTest::create([
+      'user_id' => 1,
+      'name' => $this->randomMachineName(),
+      $field_name => $term_to_delete->id(),
+    ]);
+    $entity->save();
+
+    // Delete the selected term. Two options remain but neither should be
+    // selected.
+    $term_to_delete->delete();
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertTrue($this->assertSession()->fieldExists('Test term reference')->hasAttribute('multiple'));
+    $this->assertSession()->optionNotExists('Test term reference', '_none');
+    $this->assertFalse($this->assertSession()->optionExists('Test term reference', $term2->id())->isSelected());
+    $this->assertFalse($this->assertSession()->optionExists('Test term reference', $term3->id())->isSelected());
+
+    // Delete term3 as well. Since there's only one option left the select will
+    // not be a multiple select and _none should appear to force the user to
+    // choose.
+    $term3->delete();
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertFalse($this->assertSession()->fieldExists('Test term reference')->hasAttribute('multiple'));
+    $this->assertTrue($this->assertSession()->optionExists('Test term reference', '_none')->isSelected());
+    $this->assertFalse($this->assertSession()->optionExists('Test term reference', $term2->id())->isSelected());
   }
 
   /**
