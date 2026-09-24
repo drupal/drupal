@@ -1,0 +1,21 @@
+uuid: 0f6d1c6a-3b1e-4b55-8f0e-6a9f2e7c4d21
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+  theme:
+    - stark
+id: stark_syndicate
+theme: stark
+region: content
+weight: 0
+provider: null
+plugin: node_syndicate_block
+settings:
+  id: node_syndicate_block
+  label: 'RSS feed'
+  label_display: '0'
+  provider: node
+  block_count: 10
+visibility: {  }

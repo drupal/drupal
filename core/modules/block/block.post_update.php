@@ -18,3 +18,17 @@ function block_removed_post_updates(): array {
     'block_post_update_set_menu_block_depth_to_null_if_zero' => '12.0.0',
   ];
 }
+
+/**
+ * Delete blocks placed using the removed Syndicate block plugin.
+ */
+function block_post_update_remove_syndicate_blocks(): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('block');
+  $blocks = $storage->loadByProperties([
+    'plugin' => 'node_syndicate_block',
+    'settings.provider' => 'node',
+  ]);
+  if ($blocks) {
+    $storage->delete($blocks);
+  }
+}
