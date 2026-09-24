@@ -43,7 +43,7 @@ class BuilderTest extends TestCase {
           [
             'branch-alias' =>
             [
-              'dev-main' => '11.4.x-dev',
+              'dev-main' => '11.x-dev',
             ],
           ],
         ],
@@ -68,7 +68,7 @@ class BuilderTest extends TestCase {
           [
             'branch-alias' =>
             [
-              'dev-main' => '11.4.x-dev',
+              'dev-main' => '11.x-dev',
             ],
           ],
         ],
@@ -97,7 +97,7 @@ class BuilderTest extends TestCase {
           [
             'branch-alias' =>
             [
-              'dev-main' => '11.4.x-dev',
+              'dev-main' => '11.x-dev',
             ],
           ],
         ],
