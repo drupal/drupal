@@ -303,4 +303,4 @@
       return prepareMachineName(transliteratedSource, settings);
     },
   };
-})(jQuery, Drupal, drupalSettings, transliterate);
+})(jQuery, Drupal, drupalSettings, transliteration.transliterate);
