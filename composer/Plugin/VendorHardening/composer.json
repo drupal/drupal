@@ -13,7 +13,7 @@
   "extra": {
     "class": "Drupal\\Composer\\Plugin\\VendorHardening\\VendorHardeningPlugin",
     "branch-alias": {
-      "dev-main": "12.0.x-dev"
+      "dev-main": "12.x-dev"
     }
   },
   "require": {
