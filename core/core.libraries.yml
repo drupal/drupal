@@ -640,10 +640,10 @@ internal.floating-ui:
   aggregate_target:
     js: true
   remote: https://github.com/floating-ui/floating-ui
-  version: "1.7.4"
+  version: "1.8.0"
   license:
     name: MIT
-    url: https://github.com/floating-ui/floating-ui/blob/@floating-ui/dom@1.7.4/LICENSE
+    url: https://github.com/floating-ui/floating-ui/blob/@floating-ui/dom@1.8.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/floating-ui/floating-ui.core.umd.min.js: { minified: true }
@@ -709,30 +709,30 @@ once:
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
-  version: "1.15.6"
+  version: "1.15.7"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.15.6/LICENSE
+    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.15.7/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/sortable/Sortable.min.js: { minified: true, preprocess: false }
 
 tabbable:
   remote: https://github.com/focus-trap/tabbable
-  version: "6.3.0"
+  version: "6.5.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/focus-trap/tabbable/v6.3.0/LICENSE
+    url: https://raw.githubusercontent.com/focus-trap/tabbable/v6.5.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { minified: true, preprocess: false }
 
 transliteration:
-  remote: https://github.com/dzcpy/transliteration
-  version: "2.3.5"
+  remote: https://github.com/yf-hk/transliteration
+  version: "2.6.1"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/dzcpy/transliteration/1.6.5/LICENSE.txt
+    url: https://raw.githubusercontent.com/yf-hk/transliteration/refs/tags/v2.6.1/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/transliteration/bundle.umd.min.js: { minified: true, preprocess: false }

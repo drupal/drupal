@@ -1,6 +1,5 @@
 // cspell:ignore UIDOM
 import { defineConfig } from 'eslint/config';
-import { fixupPluginRules } from '@eslint/compat';
 import importPlugin from 'eslint-plugin-import';
 import noJQuery from 'eslint-plugin-no-jquery';
 import prettierConfig from 'eslint-plugin-prettier/recommended';
@@ -41,7 +40,7 @@ export default defineConfig(
   ymlConfig.configs['flat/recommended'],
   {
     plugins: {
-      'no-jquery': fixupPluginRules(noJQuery),
+      'no-jquery': noJQuery,
     },
     languageOptions: {
       ecmaVersion: 2020,
@@ -63,7 +62,7 @@ export default defineConfig(
         CKEditor5: 'readonly',
         CKEDITOR: 'readonly',
         tabbable: 'readonly',
-        transliterate: 'readonly',
+        transliteration: 'readonly',
         bodyScrollLock: 'readonly',
         FloatingUIDOM: 'readonly',
       },
