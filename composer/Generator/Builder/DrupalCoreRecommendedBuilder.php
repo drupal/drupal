@@ -95,7 +95,7 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
       ],
       "extra" => [
         "branch-alias" => [
-          "dev-main" => Composer::drupalVersionBranch(),
+          "dev-main" => Composer::drupalMajorVersionBranch(),
         ],
       ],
     ];
