@@ -57,13 +57,9 @@ class TwigNodeVisitor implements NodeVisitorInterface {
         $line
       );
     }
-    // Change the 'escape' filter to our own 'drupal_escape' filter.
     elseif ($node instanceof FilterExpression) {
       $name = $node->getAttribute('twig_callable')->getName();
-      if ('escape' == $name || 'e' == $name) {
-        // Use our own escape filter that is MarkupInterface aware.
-        $node->setAttribute('twig_callable', $env->getFilter('drupal_escape'));
-
+      if (in_array($name, ['escape', 'e', 'drupal_escape'], TRUE)) {
         // Store that we have a filter active already that knows
         // how to deal with render arrays.
         $this->skipRenderVarFunction = TRUE;

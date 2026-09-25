@@ -177,6 +177,46 @@ class TwigExtensionTest extends UnitTestCase {
   }
 
   /**
+   * Tests that Twig's escape filters are replaced with our own.
+   */
+  #[DataProvider('providerTestEscapeFilterOverride')]
+  public function testEscapeFilterOverride(string $template, string $expected): void {
+    $loader = new ArrayLoader(['test' => $template]);
+    $twig = new Environment($loader, [
+      'cache' => FALSE,
+      'autoescape' => 'html',
+    ]);
+    $twig->addExtension($this->systemUnderTest);
+
+    // Explicit and automatic escaping must both call our filter.
+    $source = $twig->compileSource($loader->getSourceContext('test'));
+    $this->assertStringContainsString(sprintf("\$this->extensions['%s']->escapeFilter(", TwigExtension::class), $source);
+
+    $this->assertSame($expected, $twig->render('test', [
+      'text' => '<b>',
+      'markup' => Markup::create('<b>'),
+    ]));
+  }
+
+  /**
+   * Provides test data for testEscapeFilterOverride().
+   *
+   * @return array
+   *   An array of test data, each containing a Twig template string and the
+   *   expected rendered output.
+   */
+  public static function providerTestEscapeFilterOverride(): array {
+    return [
+      'auto-escaped string' => ['{{ text }}', '&lt;b&gt;'],
+      'auto-escaped markup' => ['{{ markup }}', '<b>'],
+      'escape filter' => ['{{ text|escape }}', '&lt;b&gt;'],
+      'e filter' => ['{{ text|e }}', '&lt;b&gt;'],
+      'escape filter with html strategy' => ['{{ text|e("html") }}', '&lt;b&gt;'],
+      'filter before auto-escaping' => ['{{ text|upper }}', '&lt;B&gt;'],
+    ];
+  }
+
+  /**
    * Tests the active_theme function.
    */
   public function testActiveTheme(): void {
