@@ -170,8 +170,13 @@ default:
     fi
   # Get the cache file from the artifacts of the latest successful job from the
   # target branch. Allow the job to proceed and pass if the file doesn't exist.
-  - echo Downloading $CACHE_URL
-  - curl --fail --location --create-dirs --output $CACHE_FILE "$CACHE_URL" || true
+  # Daily pipelines skip the download so the lint jobs do a full run and the
+  # caches are rebuilt from scratch.
+  - |
+    if [[ "$DAILY_TEST" != "1" ]]; then
+      echo Downloading $CACHE_URL
+      curl --fail --location --create-dirs --output $CACHE_FILE "$CACHE_URL" || true
+    fi
 
 .core-spellcheck: &core-spellcheck
   - cd core
@@ -610,7 +615,6 @@ default:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
       when: never
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - if: ($CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Test lint cache warming/)
     - if: $PERFORMANCE_TEST == "1"
   script:
@@ -679,6 +683,7 @@ default:
   <<: [ *yarn-install-from-cache ]
   stage: 🪄 Lint
   rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
       when: never
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $CI_COMMIT_BRANCH == "main"
@@ -747,6 +752,7 @@ default:
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
       when: never
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - <<: *on-commit
       allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -791,6 +797,7 @@ default:
       when: never
     - <<: *on-commit
       allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - core/.eslint*
@@ -824,6 +831,7 @@ default:
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
       when: never
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - <<: *on-commit
       allow_failure: true
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
