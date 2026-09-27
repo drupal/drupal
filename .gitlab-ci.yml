@@ -635,7 +635,7 @@ default:
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    KUBERNETES_CPU_REQUEST: "4"
+    KUBERNETES_CPU_REQUEST: "1"
     _ARTIFACTS_DIR: "test-artifacts/phpstan"
     _PHPSTAN_NEON: "core/phpstan.neon.dist"
     _PHPSTAN_BASELINE: "core/.phpstan-baseline.php"
@@ -689,7 +689,7 @@ default:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $CI_COMMIT_BRANCH == "main"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
   variables:
-    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_CPU_REQUEST: "1"
     CACHE_FILE: "core/.cspellcache"
   script:
     - *download-cache
@@ -705,7 +705,7 @@ default:
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    KUBERNETES_CPU_REQUEST: "4"
+    KUBERNETES_CPU_REQUEST: "1"
     _ARTIFACTS_DIR: "test-artifacts/phpcs"
     CACHE_FILE: "core/.phpcscache"
   before_script:
@@ -736,7 +736,7 @@ default:
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    KUBERNETES_CPU_REQUEST: "4"
+    KUBERNETES_CPU_REQUEST: "1"
     _ARTIFACTS_DIR: "test-artifacts/twig-cs-fixer"
     CACHE_FILE: "core/.twigcsfixercache"
   before_script:
@@ -789,7 +789,7 @@ default:
     policy: pull-push
   stage: 🪄 Lint
   variables:
-    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_CPU_REQUEST: "1"
     CACHE_FILE: "core/.eslintcache"
   # Run on release-branch pushes, or on MRs if JS files have changed, or manually.
   rules:
@@ -825,7 +825,7 @@ default:
   <<: [ *yarn-install-from-cache ]
   stage: 🪄 Lint
   variables:
-    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_CPU_REQUEST: "1"
     CACHE_FILE: "core/.stylelintcache"
   # Run on release-branch pushes, or on MRs if CSS files have changed, or manually.
   rules:
@@ -860,7 +860,7 @@ default:
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_CPU_REQUEST: "1"
   # Run on MRs if config schema files have changed, or manually.
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
