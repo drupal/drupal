@@ -6,87 +6,103 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\ColumnSize;
+use Drupal\Core\Database\SchemaDefinition\ForeignKey;
+use Drupal\Core\Database\SchemaDefinition\IntValue;
+use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
+use Drupal\Core\Database\SchemaDefinition\Schema;
+use Drupal\Core\Database\SchemaDefinition\SchemaDefinitionType;
+use Drupal\Core\Database\SchemaDefinition\StringValue;
+use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_schema().
  */
-function node_schema(): array {
-  $schema['node_access'] = [
-    'description' => 'Identifies which realm/grant pairs a user must possess in order to view, update, or delete specific nodes.',
-    'fields' => [
-      'nid' => [
-        'description' => 'The {node}.nid this record affects.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ],
-      'langcode' => [
-        'description' => 'The {language}.langcode of this node.',
-        'type' => 'varchar_ascii',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ],
-      'fallback' => [
-        'description' => 'Boolean indicating whether this record should be used as a fallback if a language condition is not provided.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 1,
-        'size' => 'tiny',
-      ],
-      'gid' => [
-        'description' => "The grant ID a user must possess in the specified realm to gain this row's privileges on the node.",
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ],
-      'realm' => [
-        'description' => 'The realm in which the user must possess the grant ID. Modules can define one or more realms by implementing hook_node_grants().',
-        'type' => 'varchar_ascii',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ],
-      'grant_view' => [
-        'description' => 'Boolean indicating whether a user with the realm/grant pair can view this node.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ],
-      'grant_update' => [
-        'description' => 'Boolean indicating whether a user with the realm/grant pair can edit this node.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ],
-      'grant_delete' => [
-        'description' => 'Boolean indicating whether a user with the realm/grant pair can delete this node.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ],
+function node_schema(): Schema {
+  $tables[] = new Table(
+    name: 'node_access',
+    description: 'Identifies which realm/grant pairs a user must possess in order to view, update, or delete specific nodes.',
+    columns: [
+      Column::int(
+        name: 'nid',
+        description: 'The {node}.nid this record affects.',
+        unsigned: TRUE,
+        notNull: TRUE,
+        default: new IntValue(0),
+      ),
+      Column::varcharAscii(
+        name: 'langcode',
+        description: 'The {language}.langcode of this node.',
+        length: 12,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::int(
+        name: 'fallback',
+        description: 'Boolean indicating whether this record should be used as a fallback if a language condition is not provided.',
+        size: ColumnSize::Tiny,
+        unsigned: TRUE,
+        notNull: TRUE,
+        default: new IntValue(1),
+      ),
+      Column::int(
+        name: 'gid',
+        description: "The grant ID a user must possess in the specified realm to gain this row's privileges on the node.",
+        unsigned: TRUE,
+        notNull: TRUE,
+        default: new IntValue(0),
+      ),
+      Column::varcharAscii(
+        name: 'realm',
+        description: 'The realm in which the user must possess the grant ID. Modules can define one or more realms by implementing hook_node_grants().',
+        length: 255,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::int(
+        name: 'grant_view',
+        description: 'Boolean indicating whether a user with the realm/grant pair can view this node.',
+        size: ColumnSize::Tiny,
+        unsigned: TRUE,
+        notNull: TRUE,
+        default: new IntValue(0),
+      ),
+      Column::int(
+        name: 'grant_update',
+        description: 'Boolean indicating whether a user with the realm/grant pair can edit this node.',
+        size: ColumnSize::Tiny,
+        unsigned: TRUE,
+        notNull: TRUE,
+        default: new IntValue(0),
+      ),
+      Column::int(
+        name: 'grant_delete',
+        description: 'Boolean indicating whether a user with the realm/grant pair can delete this node.',
+        size: ColumnSize::Tiny,
+        unsigned: TRUE,
+        notNull: TRUE,
+        default: new IntValue(0),
+      ),
     ],
-    'primary key' => ['nid', 'gid', 'realm', 'langcode'],
-    'foreign keys' => [
-      'affected_node' => [
-        'table' => 'node',
-        'columns' => ['nid' => 'nid'],
-      ],
+    primaryKey: new PrimaryKey(['nid', 'gid', 'realm', 'langcode']),
+    foreignKeys: [
+      new ForeignKey(
+        name: 'affected_node',
+        foreignTable: 'node',
+        columns: ['nid'],
+        foreignColumns: ['nid'],
+      ),
     ],
-  ];
+  );
 
-  return $schema;
+  return new Schema(
+    type: SchemaDefinitionType::Module,
+    name: 'node',
+    tables: $tables,
+  );
 }
 
 /**

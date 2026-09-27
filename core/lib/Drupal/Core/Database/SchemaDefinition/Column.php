@@ -174,6 +174,14 @@ final class Column implements SchemaDefinitionInterface {
       throw new SchemaDefinitionException("Cannot set 'length' for {$this->type->value} column '{$this->name}'");
     }
 
+    // Length is mandatory for varchar column types.
+    if ($this->length === NULL && $this->type !== NULL && in_array($this->type, [
+      ColumnType::Varchar,
+      ColumnType::VarcharAscii,
+    ], TRUE)) {
+      throw new SchemaDefinitionException("Missing 'length' for {$this->type->value} column '{$this->name}'");
+    }
+
     // Can only set binary for some column types.
     if ($this->binary !== NULL && $this->type !== NULL && !in_array($this->type, [
       ColumnType::Char,

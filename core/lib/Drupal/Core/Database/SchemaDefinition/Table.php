@@ -75,6 +75,11 @@ final class Table implements SchemaDefinitionInterface {
       throw new SchemaDefinitionException("All members of the 'foreignKeys' argument of the '{$this->name}' Table must be ForeignKey objects");
     }
 
+    $columnNames = $this->columnNames();
+    if (count($columnNames) !== count(array_unique($columnNames))) {
+      throw new SchemaDefinitionException("Duplicate columns for '{$this->name}' table: " . implode(', ', $columnNames));
+    }
+
     // MariaDB and SQLite do not allow generated columns in the primary key.
     if ($this->columns && $this->primaryKey) {
       $generatedColumnNames = array_map(
@@ -89,6 +94,19 @@ final class Table implements SchemaDefinitionInterface {
         throw new SchemaDefinitionException("The primary key of the '{$this->name}' Table cannot include generated columns");
       }
     }
+  }
+
+  /**
+   * Returns the names of the columns in this table.
+   *
+   * @return list<string>
+   *   The names of the columns.
+   */
+  public function columnNames(): array {
+    return array_map(
+      fn(Column $column): string => $column->name,
+      $this->columns,
+    );
   }
 
   /**

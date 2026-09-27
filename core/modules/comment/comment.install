@@ -5,6 +5,16 @@
  * Install, update and uninstall functions for the Comment module.
  */
 
+use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\ColumnSize;
+use Drupal\Core\Database\SchemaDefinition\ForeignKey;
+use Drupal\Core\Database\SchemaDefinition\Index;
+use Drupal\Core\Database\SchemaDefinition\IntValue;
+use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
+use Drupal\Core\Database\SchemaDefinition\Schema;
+use Drupal\Core\Database\SchemaDefinition\SchemaDefinitionType;
+use Drupal\Core\Database\SchemaDefinition\StringValue;
+use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 
@@ -33,82 +43,87 @@ function comment_install(): void {
 /**
  * Implements hook_schema().
  */
-function comment_schema(): array {
-  $schema['comment_entity_statistics'] = [
-    'description' => 'Maintains statistics of entity and comments posts to show "new" and "updated" flags.',
-    'fields' => [
-      'entity_id' => [
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The entity_id of the entity for which the statistics are compiled.',
-      ],
-      'entity_type' => [
-        'type' => 'varchar_ascii',
-        'not null' => TRUE,
-        'default' => 'node',
-        'length' => EntityTypeInterface::ID_MAX_LENGTH,
-        'description' => 'The entity_type of the entity to which this comment is a reply.',
-      ],
-      'field_name' => [
-        'type' => 'varchar_ascii',
-        'not null' => TRUE,
-        'default' => '',
-        'length' => FieldStorageConfig::NAME_MAX_LENGTH,
-        'description' => 'The field_name of the field that was used to add this comment.',
-      ],
-      'cid' => [
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {comment}.cid of the last comment.',
-      ],
-      'last_comment_timestamp' => [
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.changed.',
-        'size' => 'big',
-      ],
-      'last_comment_name' => [
-        'type' => 'varchar',
-        'length' => 60,
-        'not null' => FALSE,
-        'description' => 'The name of the latest author to post a comment on this node, from {comment}.name.',
-      ],
-      'last_comment_uid' => [
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The user ID of the latest author to post a comment on this node, from {comment}.uid.',
-      ],
-      'comment_count' => [
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The total number of comments on this entity.',
-      ],
+function comment_schema(): Schema {
+  $tables[] = new Table(
+    name: 'comment_entity_statistics',
+    description: 'Maintains statistics of entity and comments posts to show "new" and "updated" flags.',
+    columns: [
+      Column::int(
+        name: 'entity_id',
+        description: 'The entity_id of the entity for which the statistics are compiled.',
+        unsigned: TRUE,
+        notNull: TRUE,
+        default: new IntValue(0),
+      ),
+      Column::varcharAscii(
+        name: 'entity_type',
+        description: 'The entity_type of the entity to which this comment is a reply.',
+        length: EntityTypeInterface::ID_MAX_LENGTH,
+        notNull: TRUE,
+        default: new StringValue('node'),
+      ),
+      Column::varcharAscii(
+        name: 'field_name',
+        description: 'The field_name of the field that was used to add this comment.',
+        length: FieldStorageConfig::NAME_MAX_LENGTH,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::int(
+        name: 'cid',
+        description: 'The {comment}.cid of the last comment.',
+        notNull: TRUE,
+        default: new IntValue(0),
+      ),
+      Column::int(
+        name: 'last_comment_timestamp',
+        description: 'The Unix timestamp of the last comment that was posted within this node, from {comment}.changed.',
+        size: ColumnSize::Big,
+        notNull: TRUE,
+        default: new IntValue(0),
+      ),
+      Column::varchar(
+        name: 'last_comment_name',
+        description: 'The name of the latest author to post a comment on this node, from {comment}.name.',
+        length: 60,
+        notNull: FALSE,
+      ),
+      Column::int(
+        name: 'last_comment_uid',
+        description: 'The user ID of the latest author to post a comment on this node, from {comment}.uid.',
+        unsigned: TRUE,
+        notNull: TRUE,
+        default: new IntValue(0),
+      ),
+      Column::int(
+        name: 'comment_count',
+        description: 'The total number of comments on this entity.',
+        unsigned: TRUE,
+        notNull: TRUE,
+        default: new IntValue(0),
+      ),
     ],
-    'primary key' => ['entity_id', 'entity_type', 'field_name'],
-    'indexes' => [
-      'last_comment_timestamp' => ['last_comment_timestamp'],
-      'comment_count' => ['comment_count'],
-      'last_comment_uid' => ['last_comment_uid'],
+    primaryKey: new PrimaryKey(['entity_id', 'entity_type', 'field_name']),
+    indexes: [
+      new Index(name: 'last_comment_timestamp', columns: ['last_comment_timestamp']),
+      new Index(name: 'comment_count', columns: ['comment_count']),
+      new Index(name: 'last_comment_uid', columns: ['last_comment_uid']),
     ],
-    'foreign keys' => [
-      'last_comment_author' => [
-        'table' => 'users',
-        'columns' => [
-          'last_comment_uid' => 'uid',
-        ],
-      ],
+    foreignKeys: [
+      new ForeignKey(
+        name: 'last_comment_author',
+        foreignTable: 'users',
+        columns: ['last_comment_uid'],
+        foreignColumns: ['uid'],
+      ),
     ],
-  ];
+  );
 
-  return $schema;
+  return new Schema(
+    type: SchemaDefinitionType::Module,
+    name: 'comment',
+    tables: $tables,
+  );
 }
 
 /**

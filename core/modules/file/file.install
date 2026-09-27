@@ -5,56 +5,71 @@
  * Install, update and uninstall functions for File module.
  */
 
+use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\Index;
+use Drupal\Core\Database\SchemaDefinition\IntValue;
+use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
+use Drupal\Core\Database\SchemaDefinition\Schema;
+use Drupal\Core\Database\SchemaDefinition\SchemaDefinitionType;
+use Drupal\Core\Database\SchemaDefinition\StringValue;
+use Drupal\Core\Database\SchemaDefinition\Table;
+
 /**
  * Implements hook_schema().
  */
-function file_schema(): array {
-  $schema['file_usage'] = [
-    'description' => 'Track where a file is used.',
-    'fields' => [
-      'fid' => [
-        'description' => 'File ID.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ],
-      'module' => [
-        'description' => 'The name of the module that is using the file.',
-        'type' => 'varchar_ascii',
-        'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
-        'not null' => TRUE,
-        'default' => '',
-      ],
-      'type' => [
-        'description' => 'The name of the object type in which the file is used.',
-        'type' => 'varchar_ascii',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => '',
-      ],
-      'id' => [
-        'description' => 'The primary key of the object using the file.',
-        'type' => 'varchar_ascii',
-        'length' => 64,
-        'not null' => TRUE,
-        'default' => 0,
-      ],
-      'count' => [
-        'description' => 'The number of times this file is used by this object.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ],
+function file_schema(): Schema {
+  $tables[] = new Table(
+    name: 'file_usage',
+    description: 'Track where a file is used.',
+    columns: [
+      Column::int(
+        name: 'fid',
+        description: 'File ID.',
+        unsigned: TRUE,
+        notNull: TRUE,
+      ),
+      Column::varcharAscii(
+        name: 'module',
+        description: 'The name of the module that is using the file.',
+        length: DRUPAL_EXTENSION_NAME_MAX_LENGTH,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::varcharAscii(
+        name: 'type',
+        description: 'The name of the object type in which the file is used.',
+        length: 64,
+        notNull: TRUE,
+        default: new StringValue(''),
+      ),
+      Column::varcharAscii(
+        name: 'id',
+        description: 'The primary key of the object using the file.',
+        length: 64,
+        notNull: TRUE,
+        default: new StringValue('0'),
+      ),
+      Column::int(
+        name: 'count',
+        description: 'The number of times this file is used by this object.',
+        unsigned: TRUE,
+        notNull: TRUE,
+        default: new IntValue(0),
+      ),
     ],
-    'primary key' => ['fid', 'type', 'id', 'module'],
-    'indexes' => [
-      'type_id' => ['type', 'id'],
-      'fid_count' => ['fid', 'count'],
-      'fid_module' => ['fid', 'module'],
+    primaryKey: new PrimaryKey(['fid', 'type', 'id', 'module']),
+    indexes: [
+      new Index(name: 'type_id', columns: ['type', 'id']),
+      new Index(name: 'fid_count', columns: ['fid', 'count']),
+      new Index(name: 'fid_module', columns: ['fid', 'module']),
     ],
-  ];
-  return $schema;
+  );
+
+  return new Schema(
+    type: SchemaDefinitionType::Module,
+    name: 'file',
+    tables: $tables,
+  );
 }
 
 /**

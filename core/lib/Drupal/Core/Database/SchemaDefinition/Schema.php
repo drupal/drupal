@@ -36,11 +36,13 @@ final class Schema implements SchemaDefinitionInterface {
    * @throws \Drupal\Core\Database\Exception\SchemaDefinitionException
    */
   private function validate(): void {
-
     if ($this->tables && !Inspector::assertAllObjects($this->tables, Table::class)) {
       throw new SchemaDefinitionException("All members of the 'tables' argument of a Schema must be Table objects");
     }
-
+    $tableNames = $this->tableNames();
+    if (count($tableNames) !== count(array_unique($tableNames))) {
+      throw new SchemaDefinitionException("Duplicate tables for '{$this->name}' schema: " . implode(', ', $tableNames));
+    }
   }
 
   /**

@@ -7,40 +7,54 @@
 
 use Drupal\Core\Entity\EntityTypeInterface;
 
+use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\Index;
+use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
+use Drupal\Core\Database\SchemaDefinition\Schema;
+use Drupal\Core\Database\SchemaDefinition\SchemaDefinitionType;
+use Drupal\Core\Database\SchemaDefinition\StringValue;
+use Drupal\Core\Database\SchemaDefinition\Table;
+
 /**
  * Implements hook_schema().
  */
-function layout_builder_schema(): array {
-  $schema['inline_block_usage'] = [
-    'description' => 'Track where a block_content entity is used.',
-    'fields' => [
-      'block_content_id' => [
-        'description' => 'The block_content entity ID.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ],
-      'layout_entity_type' => [
-        'description' => 'The entity type of the parent entity.',
-        'type' => 'varchar_ascii',
-        'length' => EntityTypeInterface::ID_MAX_LENGTH,
-        'not null' => FALSE,
-        'default' => '',
-      ],
-      'layout_entity_id' => [
-        'description' => 'The ID of the parent entity.',
-        'type' => 'varchar_ascii',
-        'length' => 128,
-        'not null' => FALSE,
-        'default' => 0,
-      ],
+function layout_builder_schema(): Schema {
+  $tables[] = new Table(
+    name: 'inline_block_usage',
+    description: 'Track where a block_content entity is used.',
+    columns: [
+      Column::int(
+        name: 'block_content_id',
+        description: 'The block_content entity ID.',
+        unsigned: TRUE,
+        notNull: TRUE,
+      ),
+      Column::varcharAscii(
+        name: 'layout_entity_type',
+        description: 'The entity type of the parent entity.',
+        length: EntityTypeInterface::ID_MAX_LENGTH,
+        notNull: FALSE,
+        default: new StringValue(''),
+      ),
+      Column::varcharAscii(
+        name: 'layout_entity_id',
+        description: 'The ID of the parent entity.',
+        length: 128,
+        notNull: FALSE,
+        default: new StringValue('0'),
+      ),
     ],
-    'primary key' => ['block_content_id'],
-    'indexes' => [
-      'type_id' => ['layout_entity_type', 'layout_entity_id'],
+    primaryKey: new PrimaryKey(['block_content_id']),
+    indexes: [
+      new Index(name: 'type_id', columns: ['layout_entity_type', 'layout_entity_id']),
     ],
-  ];
-  return $schema;
+  );
+
+  return new Schema(
+    type: SchemaDefinitionType::Module,
+    name: 'layout_builder',
+    tables: $tables,
+  );
 }
 
 /**

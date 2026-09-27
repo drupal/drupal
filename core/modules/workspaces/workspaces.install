@@ -5,81 +5,105 @@
  * Contains install, update and uninstall functions for the Workspaces module.
  */
 
-use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\ColumnSize;
+use Drupal\Core\Database\SchemaDefinition\Index;
+use Drupal\Core\Database\SchemaDefinition\IntValue;
+use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
+use Drupal\Core\Database\SchemaDefinition\Schema;
+use Drupal\Core\Database\SchemaDefinition\SchemaDefinitionType;
+use Drupal\Core\Database\SchemaDefinition\StringValue;
+use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Implements hook_schema().
  */
-function workspaces_schema(): array {
-  $schema['workspace_association'] = [
-    'description' => 'Stores the latest entity revisions tracked by a workspace.',
-    'fields' => [
-      'workspace' => [
-        'type' => 'varchar_ascii',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The workspace ID.',
-      ],
-      'target_entity_type_id' => [
-        'type' => 'varchar_ascii',
-        'length' => EntityTypeInterface::ID_MAX_LENGTH,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The ID of the associated entity type.',
-      ],
-      'target_entity_id' => [
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The ID of the associated entity.',
-      ],
-      'target_entity_id_string' => [
-        'type' => 'varchar_ascii',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The string ID of the associated entity.',
-      ],
-      'target_entity_revision_id' => [
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'description' => 'The revision ID of the associated entity.',
-      ],
-    ],
-    'primary key' => ['workspace', 'target_entity_type_id', 'target_entity_id', 'target_entity_id_string'],
-    'indexes' => [
-      'target_entity_revision_id' => ['target_entity_revision_id'],
-    ],
+function workspaces_schema(): Schema {
+  $columns = [
+    Column::varcharAscii(
+      name: 'workspace',
+      description: 'The workspace ID.',
+      length: 128,
+      notNull: TRUE,
+      default: new StringValue(''),
+    ),
+    Column::varcharAscii(
+      name: 'target_entity_type_id',
+      description: 'The ID of the associated entity type.',
+      length: EntityTypeInterface::ID_MAX_LENGTH,
+      notNull: TRUE,
+      default: new StringValue(''),
+    ),
+    Column::int(
+      name: 'target_entity_id',
+      description: 'The ID of the associated entity.',
+      unsigned: TRUE,
+      notNull: TRUE,
+      default: new IntValue(0),
+    ),
+    Column::varcharAscii(
+      name: 'target_entity_id_string',
+      description: 'The string ID of the associated entity.',
+      length: 128,
+      notNull: TRUE,
+      default: new StringValue(''),
+    ),
+    Column::int(
+      name: 'target_entity_revision_id',
+      description: 'The revision ID of the associated entity.',
+      unsigned: TRUE,
+      notNull: TRUE,
+    ),
   ];
 
-  $schema['workspace_association_revision'] = NestedArray::mergeDeep($schema['workspace_association'], [
-    'description' => 'Stores all entity revisions tracked by a workspace.',
-    'fields' => [
-      'initial_revision' => [
-        'type' => 'int',
-        'size' => 'tiny',
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'Whether this entity was created in the workspace.',
-      ],
+  $workspace_association_table = new Table(
+    name: 'workspace_association',
+    description: 'Stores the latest entity revisions tracked by a workspace.',
+    columns: $columns,
+    primaryKey: new PrimaryKey([
+      'workspace',
+      'target_entity_type_id',
+      'target_entity_id',
+      'target_entity_id_string',
+    ]),
+    indexes: [
+      new Index(name: 'target_entity_revision_id', columns: ['target_entity_revision_id']),
     ],
-  ]);
-  $schema['workspace_association_revision']['primary key'] = [
-    'workspace',
-    'target_entity_type_id',
-    'target_entity_id',
-    'target_entity_id_string',
-    'target_entity_revision_id',
-  ];
-  $schema['workspace_association_revision']['indexes'] = [
-    'initial_revision' => ['initial_revision'],
-  ];
+  );
 
-  return $schema;
+  $columns[] = Column::int(
+    name: 'initial_revision',
+    description: 'Whether this entity was created in the workspace.',
+    size: ColumnSize::Tiny,
+    notNull: TRUE,
+    default: new IntValue(0),
+  );
+
+  $workspace_association_revision_table = new Table(
+    name: 'workspace_association_revision',
+    description: 'Stores all entity revisions tracked by a workspace.',
+    columns: $columns,
+    primaryKey: new PrimaryKey([
+      'workspace',
+      'target_entity_type_id',
+      'target_entity_id',
+      'target_entity_id_string',
+      'target_entity_revision_id',
+    ]),
+    indexes: [
+      new Index(name: 'initial_revision', columns: ['initial_revision']),
+    ],
+  );
+
+  return new Schema(
+    type: SchemaDefinitionType::Module,
+    name: 'workspaces',
+    tables: [
+      $workspace_association_table,
+      $workspace_association_revision_table,
+    ],
+  );
 }
 
 /**

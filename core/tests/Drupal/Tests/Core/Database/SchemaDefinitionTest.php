@@ -101,6 +101,41 @@ class SchemaDefinitionTest extends UnitTestCase {
   }
 
   /**
+   * Tests passing duplicate Table to Schema::$tables.
+   */
+  public function testDuplicateTableInSchema(): void {
+    $this->expectException(SchemaDefinitionException::class);
+    $this->expectExceptionMessageIs('Duplicate tables for \'test_foo_bar\' schema: foo, foo');
+    $schemaDefinition = new Schema(
+      type: SchemaDefinitionType::Test,
+      name: 'test_foo_bar',
+      tables: [
+        new Table(
+          name: 'foo',
+          description: 'Foo table for the database unit tests.',
+          columns: [
+            Column::serial(
+              name: 'id',
+            ),
+          ],
+          primaryKey: new PrimaryKey(['id']),
+        ),
+        new Table(
+          name: 'foo',
+          description: 'Foo table for the database unit tests.',
+          columns: [
+            Column::serial(
+              name: 'id',
+            ),
+          ],
+          primaryKey: new PrimaryKey(['id']),
+        ),
+      ],
+    );
+    $this->assertInstanceOf(Schema::class, $schemaDefinition);
+  }
+
+  /**
    * Tests passing a non Column array member to Table::$columns.
    */
   public function testInvalidColumnInTable(): void {
@@ -118,6 +153,27 @@ class SchemaDefinitionTest extends UnitTestCase {
           'default' => '',
           'binary' => TRUE,
         ],
+      ],
+      primaryKey: new PrimaryKey(['id']),
+    );
+    $this->assertInstanceOf(Table::class, $table);
+  }
+
+  /**
+   * Tests passing duplicate Column to Table::$columns.
+   */
+  public function testDuplicateColumnInTable(): void {
+    $this->expectException(SchemaDefinitionException::class);
+    $this->expectExceptionMessage('Duplicate columns for \'test\' table: id, id');
+    $table = new Table(
+      name: 'test',
+      columns: [
+        Column::serial(
+          name: 'id',
+        ),
+        Column::int(
+          name: 'id',
+        ),
       ],
       primaryKey: new PrimaryKey(['id']),
     );
@@ -593,6 +649,24 @@ class SchemaDefinitionTest extends UnitTestCase {
       ],
     );
     $this->assertInstanceOf(Table::class, $table);
+  }
+
+  /**
+   * Tests passing varchar columns without length.
+   */
+  public function testMissingVarcharColumnLength(): void {
+    $this->expectException(SchemaDefinitionException::class);
+    $this->expectExceptionMessageIs('Missing \'length\' for varchar column \'id\'');
+    new Table(
+      name: 'test',
+      columns: [
+        Column::varchar(
+          name: 'id',
+          default: new StringValue('foo'),
+        ),
+      ],
+      primaryKey: new PrimaryKey(['id']),
+    );
   }
 
 }

@@ -310,166 +310,186 @@ use Drupal\Core\Database\SchemaDefinition\Table;
  * @{
  * API to handle database schemas.
  *
- * A Drupal schema definition is an array structure representing one or
- * more tables and their related keys and indexes. A schema is defined by
- * hook_schema(), which usually lives in a modulename.install file.
+ * A Drupal schema definition is an object representing one or more tables and
+ * their related keys and indexes. A schema is defined by hook_schema(), which
+ * usually lives in a modulename.install file, or dynamically in storage
+ * handling classes.
  *
  * By implementing hook_schema() and specifying the tables your module
- * declares, you can easily create and drop these tables on all
- * supported database engines. You don't have to deal with the
- * different SQL dialects for table creation and alteration of the
- * supported database engines.
+ * declares, you can easily create and drop these tables on all supported
+ * database engines. A SchemaDefinition structure is immutable and database
+ * abstract. This implies you do not have to deal with the different SQL
+ * dialects for table creation and alteration of the supported database
+ * engines.
  *
- * hook_schema() should return an array with a key for each table that
- * the module defines.
+ * hook_schema() should return a Drupal\Core\Database\SchemaDefinition\Schema
+ * object that holds public readonly properties for each table that the module
+ * defines.
  *
- * The following keys are defined:
+ * For each Drupal\Core\Database\SchemaDefinition\Table object in the
+ * definition, the following properties are defined:
+ *   - 'name': A string identifying the table in Drupal.
  *   - 'description': A string in non-markup plain text describing this table
  *     and its purpose. References to other tables should be enclosed in curly
  *     brackets.
- *   - 'fields': An associative array ('fieldname' => specification)
- *     that describes the table's database columns. The specification
- *     is also an array. The following specification parameters are defined:
- *     - 'description': A string in non-markup plain text describing this field
+ *   - 'columns': An array of Drupal\Core\Database\SchemaDefinition\Column
+ *     objects that describes the table's database columns. The following
+ *     object properties are defined:
+ *     - 'name': A string identifying the column in Drupal.
+ *     - 'description': A string in non-markup plain text describing this column
  *       and its purpose. References to other tables should be enclosed in curly
- *       brackets. For example, the users_data table 'uid' field description
+ *       brackets. For example, the users_data table 'uid' column description
  *       might contain "The {users}.uid this record affects."
- *     - 'type': The generic datatype: 'char', 'varchar', 'text', 'blob', 'int',
- *       'float', 'numeric', or 'serial'. Most types just map to the according
- *       database engine specific data types. Use 'serial' for auto incrementing
- *       fields. This will expand to 'INT auto_increment' on MySQL.
- *       A special 'varchar_ascii' type is also available for limiting machine
- *       name field to US ASCII characters.
- *     - 'mysql_type', 'pgsql_type', 'sqlite_type', etc.: If you need to
- *       use a record type not included in the officially supported list
- *       of types above, you can specify a type for each database
- *       backend. In this case, you can leave out the type parameter,
- *       but be advised that your schema will fail to load on backends that
- *       do not have a type specified. A possible solution can be to
- *       use the "text" type as a fallback.
- *     - 'serialize': A boolean indicating whether the field will be stored as
+ *     - 'type': The column datatype, as a case of the
+ *       Drupal\Core\Database\SchemaDefinition\ColumnType enumerator: ::Char,
+ *       ::Varchar, ::Text, ::Blob, ::Int, ::Float, ::Numeric, ::Serial, etc.
+ *       Most types just map to the according database engine specific data
+ *       types. Use 'Column::serial' for auto incrementing columns. This will
+ *       expand to 'INT auto_increment' on MySQL.
+ *       A special ::VarcharAscii type is also available for limiting machine
+ *       name column to US ASCII characters.
+ *     - 'serialize': A boolean indicating whether the column will be stored as
  *       a serialized string.
- *     - 'size': The data size: 'tiny', 'small', 'medium', 'normal',
- *       'big'. This is a hint about the largest value the field will
- *       store and determines which of the database engine specific
- *       data types will be used (e.g. on MySQL, TINYINT vs. INT vs. BIGINT).
- *       'normal', the default, selects the base type (e.g. on MySQL,
- *       INT, VARCHAR, BLOB, etc.).
- *       Not all sizes are available for all data types. See
- *       DatabaseSchema::getFieldTypeMap() for possible combinations.
- *     - 'not null': If true, no NULL values will be allowed in this
- *       database column. Defaults to false.
- *     - 'default': The field's default value. The PHP type of the
- *       value matters: '', '0', and 0 are all different. If you
- *       specify '0' as the default value for a type 'int' field it
- *       will not work because '0' is a string containing the
- *       character "zero", not an integer.
- *     - 'length': The maximal length of a type 'char', 'varchar' or 'text'
- *       field. Ignored for other field types.
- *     - 'unsigned': A boolean indicating whether a type 'int', 'float'
- *       and 'numeric' only is signed or unsigned. Defaults to
- *       FALSE. Ignored for other field types.
- *     - 'precision', 'scale': For type 'numeric' fields, indicates
- *       the precision (total number of significant digits) and scale
- *       (decimal digits right of the decimal point). Both values are
- *       mandatory. Ignored for other field types.
- *     - 'binary': A boolean indicating that MySQL should force 'char',
- *       'varchar' or 'text' fields to use case-sensitive binary collation.
+ *     - 'size': The data size as a case of the
+ *       Drupal\Core\Database\SchemaDefinition\ColumnSize enumerator: ::Tiny,
+ *       ::Small, ::Medium, ::Normal, ::Big. This is a hint about the largest
+ *       value the column will store and determines which of the database
+ *       engine specific data types will be used (e.g. on MySQL, TINYINT vs.
+ *       INT vs. BIGINT).
+ *       ::Normal, the default, selects the base type (e.g. on MySQL, INT,
+ *       VARCHAR, BLOB, etc.).
+ *       Not all sizes are available for all data types.
+ *     - 'notNull': If true, no NULL values will be allowed in this database
+ *       column. Defaults to false.
+ *     - 'default': The columns's default value, expressed as an object holding
+ *       its type and the default value.
+ *     - 'length': The maximal length of a type ::Char, ::Varchar or ::Text
+ *       column. Ignored for other column types.
+ *     - 'unsigned': A boolean indicating whether a type ::Int, ::Float and
+ *       ::Numeric only is signed or unsigned. Defaults to FALSE. For ::Serial
+ *       columns, it is forced to TRUE. Ignored for other column types.
+ *     - 'precision', 'scale': For type ::Numeric columns, indicates the
+ *       precision (total number of significant digits) and scale (decimal
+ *       digits right of the decimal point). Both values are mandatory. Ignored
+ *       for other column types.
+ *     - 'binary': A boolean indicating that MySQL should force ::Char,
+ *       ::Varchar or ::Text columns to use case-sensitive binary collation.
  *       This has no effect on other database types for which case sensitivity
  *       is already the default behavior.
- *     - 'generated': A \Drupal\Core\Database\SchemaDefinition\Column object
- *       returned by Column::generated(). It holds the expression the database
- *       computes the column value from, and whether that value is stored on
- *       write or computed on read. A generated column cannot have a 'default'
- *       or a 'not null' constraint, and cannot be part of the primary key.
- *       Prefer stored over virtual for portability: PostgreSQL supports virtual
- *       columns only from version 18 and cannot index them.
+ *     - 'generatedExpression': The expression of an object returned by
+ *       Column::generated(). It holds the expression the database computes the
+ *       column value from. A generated column cannot have a 'default' or a
+ *       'not null' constraint, and cannot be part of the primary key.
+ *     - 'generatedStorage': The storage strategy of a Column::generated(). It
+ *       holds whether the generated value is stored on write or computed on
+ *       read. Prefer stored over virtual for portability: PostgreSQL supports
+ *       virtual columns only from version 18 and cannot index them.
+ *     - 'dbSpecificExtra': If you need to use a column type not included in
+ *       the officially supported list of types above, you can specify a type
+ *       for each database backend. Specify this as an associative array having
+ *       the database type ('mysql', 'sqlite', 'pgsql', 'oracle', etc.) as the
+ *       key, and an array of extra information <string,mixed> as the value. If
+ *       NULL, it is not specified.
+ *       If you specify a database specific type, you can leave out the type
+ *       parameter, but be advised that your schema will fail to load on
+ *       backends that do not have a type specified. A possible solution can be
+ *       to use the "text" type as a fallback.
  *     All parameters apart from 'type' are optional except that type
  *     'numeric' columns must specify 'precision' and 'scale', and type
  *     'varchar' must specify the 'length' parameter.
- *  - 'primary key': An array of one or more key column specifiers (see below)
- *    that form the primary key.
- *  - 'unique keys': An associative array of unique keys ('key_name' =>
- *    specification). Each specification is an array of one or more
- *    key column specifiers (see below) that form a unique key on the table.
- *  - 'foreign keys': An associative array of relations ('my_relation' =>
- *    specification). Each specification is an array containing the name of
- *    the referenced table ('table'), and an array of column mappings
- *    ('columns'). Column mappings are defined by key pairs ('source_column' =>
- *    'referenced_column'). This key is for documentation purposes only; foreign
- *    keys are not created in the database, nor are they enforced by Drupal.
- *  - 'indexes':  An associative array of indexes ('indexname' =>
- *    specification). Each specification is an array of one or more
- *    key column specifiers (see below) that form an index on the
- *    table.
+ *  - 'primary key': A Drupal\Core\Database\SchemaDefinition\PrimaryKey
+ *    object that describes the table primary key with an array of one or more
+ *    key column specifiers (see below).
+ *  - 'unique keys': An array of Drupal\Core\Database\SchemaDefinition\UniqueKey
+ *    objects that describes the table unique keys. Each specification has the
+ *    key name and an array of one or more key column specifiers (see below)
+ *    that form a unique key on the table.
+ *  - 'foreign keys': An array of
+ *    Drupal\Core\Database\SchemaDefinition\ForeignKey objects that describes
+ *    the table foreign keys. Each object contains the name of the referenced
+ *    table ('foreignTable'), and an array of column mappings
+ *    ('foreignColumns'). Column mappings are defined by matching the 'columns'
+ *    property with 'foreignColumns'. This property is for documentation
+ *    purposes only; foreign keys are not created in the database, nor are they
+ *    enforced by Drupal.
+ *  - 'indexes': An array of Drupal\Core\Database\SchemaDefinition\Index objects
+ *    that describes the table indexes. Each object is an array of one or more
+ *    key column specifiers (see below) that form an index on the table.
  *
  * A key column specifier is either a string naming a column or an array of two
  * elements, column name and length, specifying a prefix of the named column.
  * Note that some DBMS drivers may opt to ignore the prefix length configuration
- * and still use the whole field value for the key. Code should therefore not
+ * and still use the whole column value for the key. Code should therefore not
  * rely on this functionality.
  *
  * As an example, this is the schema definition for the 'users_data' table. It
- * shows five fields ('uid', 'module', 'name', 'value', and 'serialized'), the
- * primary key (on the 'uid', 'module', and 'name' fields), and two indexes (the
- * 'module' index on the 'module' field and the 'name' index on the 'name'
- * field).
+ * shows five columns ('uid', 'module', 'name', 'value', and 'serialized'), the
+ * primary key (on the 'uid', 'module', and 'name' columns), and two indexes
+ * (the 'module' index on the 'module' column and the 'name' index on the 'name'
+ * column).
  *
  * @code
- * $schema['users_data'] = [
- *   'description' => 'Stores module data as key/value pairs per user.',
- *   'fields' => [
- *     'uid' => [
- *       'description' => 'The {users}.uid this record affects.',
- *       'type' => 'int',
- *       'unsigned' => TRUE,
- *       'not null' => TRUE,
- *       'default' => 0,
+ * function user_schema(): Schema {
+ *   $tables[] = new Table(
+ *     name: 'users_data',
+ *     description: 'Stores module data as key/value pairs per user.',
+ *     columns: [
+ *       Column::int(
+ *         name: 'uid',
+ *         description: 'The {users}.uid this record affects.',
+ *         unsigned: TRUE,
+ *         notNull: TRUE,
+ *         default: new IntValue(0),
+ *       ),
+ *       Column::varcharAscii(
+ *         name: 'module',
+ *         description: 'The name of the module declaring the variable.',
+ *         length: DRUPAL_EXTENSION_NAME_MAX_LENGTH,
+ *         notNull: TRUE,
+ *         default: new StringValue(''),
+ *       ),
+ *       Column::varcharAscii(
+ *         name: 'name',
+ *         description: 'The identifier of the data.',
+ *         length: 128,
+ *         notNull: TRUE,
+ *         default: new StringValue(''),
+ *       ),
+ *       Column::blob(
+ *         name: 'value',
+ *         description: 'The value.',
+ *         size: ColumnSize::Big,
+ *         notNull: FALSE,
+ *       ),
+ *       Column::int(
+ *         name: 'serialized',
+ *         description: 'Whether value is serialized.',
+ *         size: ColumnSize::Tiny,
+ *         unsigned: TRUE,
+ *         default: new IntValue(0),
+ *       ),
  *     ],
- *     'module' => [
- *       'description' => 'The name of the module declaring the variable.',
- *       'type' => 'varchar_ascii',
- *       'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
- *       'not null' => TRUE,
- *       'default' => '',
+ *     primaryKey: new PrimaryKey(['uid', 'module', 'name']),
+ *     indexes: [
+ *       new Index(name: 'module', columns: ['module']),
+ *       new Index(name: 'name', columns: ['name']),
  *     ],
- *     'name' => [
- *       'description' => 'The identifier of the data.',
- *       'type' => 'varchar_ascii',
- *       'length' => 128,
- *       'not null' => TRUE,
- *       'default' => '',
+ *     foreignKeys: [
+ *       new ForeignKey(
+ *         name: 'data_user',
+ *         foreignTable: 'users',
+ *         columns: ['uid'],
+ *         foreignColumns: ['uid'],
+ *       ),
  *     ],
- *     'value' => [
- *       'description' => 'The value.',
- *       'type' => 'blob',
- *       'not null' => FALSE,
- *       'size' => 'big',
- *     ],
- *     'serialized' => [
- *       'description' => 'Whether value is serialized.',
- *       'type' => 'int',
- *       'size' => 'tiny',
- *       'unsigned' => TRUE,
- *       'default' => 0,
- *     ],
- *   ],
- *   'primary key' => ['uid', 'module', 'name'],
- *   'indexes' => [
- *     'module' => ['module'],
- *     'name' => ['name'],
- *   ],
- *   // For documentation purposes only; foreign keys are not created in the
- *   // database.
- *   'foreign keys' => [
- *     'data_user' => [
- *       'table' => 'users',
- *       'columns' => [
- *         'uid' => 'uid',
- *       ],
- *     ],
- *   ],
- * ];
+ *   );
+ *
+ *   return new Schema(
+ *     type: SchemaDefinitionType::Module,
+ *     name: 'user',
+ *     tables: $tables,
+ *   );
+ * }
  * @endcode
  *
  * @see \Drupal\Core\Extension\ModuleInstaller::installSchema()
