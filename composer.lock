@@ -364,7 +364,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "11.3.x-dev",
+            "version": "11.3.18",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -535,7 +535,7 @@
         },
         {
             "name": "drupal/core-composer-scaffold",
-            "version": "11.3.x-dev",
+            "version": "11.3.18",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/Scaffold",
@@ -577,7 +577,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "11.3.x-dev",
+            "version": "11.3.18",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -610,7 +610,7 @@
         },
         {
             "name": "drupal/core-recipe-unpack",
-            "version": "11.3.x-dev",
+            "version": "11.3.18",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/RecipeUnpack",
@@ -646,7 +646,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "11.3.x-dev",
+            "version": "11.3.18",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
@@ -10345,12 +10345,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "drupal/core": 20,
-        "drupal/core-project-message": 20,
-        "drupal/core-recipe-unpack": 20,
-        "drupal/core-vendor-hardening": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {},
