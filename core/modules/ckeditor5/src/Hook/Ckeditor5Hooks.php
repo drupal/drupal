@@ -27,6 +27,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
 
@@ -406,6 +407,16 @@ class Ckeditor5Hooks {
     $definitions['ckeditor5_valid_pair__format_and_editor']['mapping']['filters'] = $definitions['filter.format.*']['mapping']['filters'];
     // @see @see editor.editor.*.image_upload
     $definitions['ckeditor5_valid_pair__format_and_editor']['mapping']['image_upload'] = $definitions['editor.editor.*']['mapping']['image_upload'];
+  }
+
+  /**
+   * Implements hook_config_action_alter().
+   */
+  #[Hook('config_action_alter')]
+  public function configActionAlter(array &$definitions): void {
+    // Create a pluralized alias for the `addItemToToolbar` action.
+    $definitions['editor:addItemsToToolbar'] = $definitions['editor:addItemToToolbar'];
+    $definitions['editor:addItemsToToolbar']['admin_label'] = new TranslatableMarkup('Add multiple items to a CKEditor 5 toolbar');
   }
 
   /**
