@@ -2454,6 +2454,20 @@ function hook_config_schema_info_alter(&$definitions) {
 }
 
 /**
+ * Alter config action plugin definitions.
+ *
+ * @param array[] $definitions
+ *   The array of config action plugin definitions, keyed by plugin ID.
+ *
+ * @see \Drupal\Core\Config\Action\ConfigActionManager
+ * @see \Drupal\Core\Config\Action\Attribute\ConfigAction
+ */
+function hook_config_action_alter(array &$definitions): void {
+  // Create an alias for an existing config action.
+  $definitions['editor:addItemsToToolbar'] = $definitions['editor:addItemToToolbar'];
+}
+
+/**
  * Alter validation constraint plugin definitions.
  *
  * @param array[] $definitions
