@@ -57,6 +57,18 @@ class ComponentValidatorTest extends UnitTestCase {
     foreach ($data as $definition) {
       yield [$definition];
     }
+
+    // Variant names may contain dashes because they are used as string values
+    // (e.g. CSS modifiers) and are never converted to Twig variable or block
+    // names, unlike props and slots.
+    $cta_with_dashed_variant = static::loadComponentDefinitionFromFs('my-cta');
+    $cta_with_dashed_variant['variants'] = [
+      'my-variant' => [
+        'title' => 'My variant',
+        'description' => 'Variant names with dashes are valid.',
+      ],
+    ];
+    yield 'variant name with dashes is valid' => [$cta_with_dashed_variant];
   }
 
   /**
@@ -139,6 +151,38 @@ class ComponentValidatorTest extends UnitTestCase {
       ],
     ];
     yield 'invalid slot (name with spaces)' => [$cta_with_invalid_slot_name];
+
+    $cta_with_dashed_slot_name = $valid_cta;
+    $cta_with_dashed_slot_name['slots'] = [
+      'invalid-slot' => [
+        'title' => 'Invalid slot',
+        'description' => 'Slot name cannot contain dashes because Twig disallows them in variable names.',
+      ],
+    ];
+    yield 'invalid slot (name with dashes)' => [$cta_with_dashed_slot_name];
+
+    $cta_with_dashed_prop_name = $valid_cta;
+    $cta_with_dashed_prop_name['props']['properties']['my-prop'] = [
+      'type' => 'string',
+      'title' => 'My prop',
+    ];
+    yield 'invalid prop (name with dashes)' => [$cta_with_dashed_prop_name];
+
+    $cta_with_leading_digit_prop_name = $valid_cta;
+    $cta_with_leading_digit_prop_name['props']['properties']['1prop'] = [
+      'type' => 'string',
+      'title' => '1prop',
+    ];
+    yield 'invalid prop (name starts with digit)' => [$cta_with_leading_digit_prop_name];
+
+    $cta_with_leading_digit_slot_name = $valid_cta;
+    $cta_with_leading_digit_slot_name['slots'] = [
+      '1slot' => [
+        'title' => 'Invalid slot',
+        'description' => 'Slot name cannot start with a digit because Twig identifiers must start with a letter or underscore.',
+      ],
+    ];
+    yield 'invalid slot (name starts with digit)' => [$cta_with_leading_digit_slot_name];
 
     $cta_with_invalid_variant_title_type = $valid_cta;
     $cta_with_invalid_variant_title_type['variants'] = [
