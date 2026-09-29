@@ -3,7 +3,20 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "$defs": {
     "propDefinition": {
-      "$ref": "http://json-schema.org/draft-04/schema#",
+      "$comment": "Prop names are exposed as Twig variables in the component template. Twig identifiers must start with a letter or underscore and cannot contain dashes, so prop names must match ^[a-zA-Z_][a-zA-Z0-9_]*$. Same pattern as slotDefinition.",
+      "allOf": [
+        { "$ref": "http://json-schema.org/draft-04/schema#" },
+        {
+          "properties": {
+            "properties": {
+              "additionalProperties": false,
+              "patternProperties": {
+                "^[a-zA-Z_][a-zA-Z0-9_]*$": {}
+              }
+            }
+          }
+        }
+      ],
       "meta:enum": {
         "type": "object",
         "minItems": 1,
@@ -22,9 +35,10 @@
     },
     "slotDefinition": {
       "type": "object",
+      "$comment": "Slot names are exposed as Twig block names in the component template. Twig identifiers must start with a letter or underscore and cannot contain dashes, so slot names must match ^[a-zA-Z_][a-zA-Z0-9_]*$. Same pattern as propDefinition",
       "additionalProperties": false,
       "patternProperties": {
-        "^[a-zA-Z0-9_-]+$": {
+        "^[a-zA-Z_][a-zA-Z0-9_]*$": {
           "type": "object",
           "properties": {
             "title": {
