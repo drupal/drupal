@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e0f207b34e66fecdec5d42dd73aed53",
+    "content-hash": "656c5666d63d59c98e1a32836019f088",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -368,7 +368,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "17d2b0926409eccf01dd12d91139e79a321d7e07"
+                "reference": "56fdfed7e4ef932dad548e43ec17949f843b89eb"
             },
             "require": {
                 "asm89/stack-cors": "^2.3",
@@ -391,7 +391,7 @@
                 "ext-tokenizer": "*",
                 "ext-xml": "*",
                 "ext-zlib": "*",
-                "guzzlehttp/guzzle": "^8.0",
+                "guzzlehttp/guzzle": "^8.0.1",
                 "guzzlehttp/psr7": "^3.0",
                 "justinrainbow/json-schema": "^6.5.2",
                 "masterminds/html5": "^2.7",
