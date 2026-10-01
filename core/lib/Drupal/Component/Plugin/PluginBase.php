@@ -45,10 +45,15 @@ abstract class PluginBase implements PluginInspectionInterface, DerivativeInspec
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
+   *   If the plugin is being created by calling
+   *   \Drupal\Component\Plugin\Factory\FactoryInterface::createInstance(),
+   *   this is the configuration array passed to that method.
    * @param string $plugin_id
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
+   *
+   * @see https://www.drupal.org/docs/8/api/plugin-api/plugin-definitions
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     $this->configuration = $configuration;
