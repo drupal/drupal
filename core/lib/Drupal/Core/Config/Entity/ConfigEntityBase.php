@@ -16,6 +16,7 @@ use Drupal\Core\Plugin\RemovableDependentPluginInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
 use Drupal\Core\Plugin\RemovableDependentPluginReturn;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Utility\NaturalSort;
 
 /**
  * Defines a base configuration entity class.
@@ -248,7 +249,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
     if ($a_weight == $b_weight) {
       $a_label = $a->label() ?? '';
       $b_label = $b->label() ?? '';
-      return strnatcasecmp($a_label, $b_label);
+      return NaturalSort::strnatcasecmp($a_label, $b_label);
     }
     return $a_weight <=> $b_weight;
   }

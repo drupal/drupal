@@ -129,6 +129,9 @@
     "config": {
         "preferred-install": "dist"
     },
+    "suggest": {
+        "ext-intl": "Improves sorting of non-english languages."
+    },
     "extra": {
         "branch-alias": {
             "dev-main": "12.x-dev"
