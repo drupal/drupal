@@ -11,11 +11,21 @@ interface TrustedCallbackInterface {
 
   /**
    * Untrusted callbacks throw exceptions.
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is
+   *   no replacement. This is the default behavior.
+   *
+   * @see https://www.drupal.org/node/3627046
    */
   const THROW_EXCEPTION = 'exception';
 
   /**
    * Untrusted callbacks trigger silenced E_USER_DEPRECATION errors.
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. There is
+   *   no replacement. This behavior is no longer supported.
+   *
+   * @see https://www.drupal.org/node/3627046
    */
   const TRIGGER_SILENCED_DEPRECATION = 'silenced_deprecation';
 
