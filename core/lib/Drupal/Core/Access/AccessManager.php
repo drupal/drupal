@@ -134,6 +134,13 @@ class AccessManager implements AccessManagerInterface {
       $result = AccessResult::allowed();
       foreach ($checks as $service_id) {
         $result = $result->andIf($this->performCheck($service_id, $arguments_resolver));
+        // Stop as soon as the first non-allowed check is encountered. Neutral
+        // or forbidden results will always deny access in the end, so there is
+        // no need to run any extra code or add any extra cacheability after we
+        // know the route will be inaccessible.
+        if (!$result->isAllowed()) {
+          break;
+        }
       }
     }
     return $return_as_object ? $result : $result->isAllowed();
