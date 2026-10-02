@@ -84,6 +84,9 @@
       const { ctx } = detail;
       const url = new URL(ctx.request.action, document.location.href);
       const drupalIdentifier = (element) => {
+        if (!(element instanceof Element)) {
+          return '';
+        }
         if (element?.name) {
           return `${element.tagName.toLowerCase()}[name="${encodeURI(element.name)}"]`;
         }
@@ -163,9 +166,11 @@
         if (
           task.swapSpec.style === 'none' ||
           task.swapSpec.style.includes('after') ||
-          task.swapSpec.style.includes('before')
+          task.swapSpec.style.includes('before') ||
+          !(task.target instanceof Element)
         ) {
           // Swap style does not remove elements
+          // or target is not an Element, so no processing is required.
           continue;
         }
         processTargets.add(behaviorTarget(task.target));

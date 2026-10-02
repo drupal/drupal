@@ -36,7 +36,7 @@ class HtmxDynamicFormTest extends WebDriverTestBase {
       'access content',
     ]));
     // Check that the data is empty on load.
-    $this->drupalGet('/htmx-test-attachments/form-builder-test/');
+    $this->drupalGet('htmx-test-attachments/form-builder-test/');
     $page = $this->getSession()->getPage();
     $this->assertTrue($this->assertSession()->optionExists('selected', '- None -')->isSelected());
     $this->assertSession()->pageTextNotContains('Data is');
@@ -91,7 +91,7 @@ class HtmxDynamicFormTest extends WebDriverTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'access content',
     ]));
-    $this->drupalGet('/htmx-test-attachments/wrapper');
+    $this->drupalGet('htmx-test-attachments/wrapper');
     $button = $this->assertSession()->elementExists('css', '[name="replace"]');
     // Should be present in the HTMX markup on the button.
     $this->assertSession()->elementExists('css', '[data-hx-drupal-only-main-content]');
@@ -100,6 +100,74 @@ class HtmxDynamicFormTest extends WebDriverTestBase {
     $button->click();
     $this->assertSession()->assertExpectedAjaxRequest(1);
     $this->assertSession()->elementExists('css', '.htmx-test-flag');
+  }
+
+  /**
+   * Verify that a bad swap target selector does not cause an error.
+   */
+  public function testMissingSwapTarget(): void {
+    $this->drupalLogin($this->drupalCreateUser([
+      'access content',
+    ]));
+    $this->drupalGet('htmx-test-attachments/form-builder-test/');
+    $checkbox = $this->assertSession()->elementExists('css', '[name="bad_swap_target"]');
+    // Selector used in the htmx target attribute.
+    $this->assertSession()->elementNotExists('css', 'div.bad-target');
+    $checkbox->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+  }
+
+  /**
+   * Verify that response with two partials: one bad, one good.
+   *
+   * The first partial is missing a target, the second is good. The missing
+   * target should not cause an error, execution should continue, and the good
+   * partial should be applied.
+   */
+  public function testMissingPartialTarget(): void {
+    $this->drupalLogin($this->drupalCreateUser([
+      'access content',
+    ]));
+    $this->drupalGet('htmx-test-attachments/form-builder-test/');
+    $checkbox = $this->assertSession()->elementExists('css', '[name="partial_missing"]');
+    // Selector used in the htmx target attribute.
+    $this->assertSession()->elementNotExists('css', 'div.does-not-exist');
+    $checkbox->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->elementNotExists('css', '[data-drupal-wrapper-selector="edit-partial-replace"]');
+    $this->assertSession()->pageTextContainsOnce('Inserted by htmx!');
+  }
+
+  /**
+   * Verify that an hx-partial response replaces the target.
+   */
+  public function testPartialTarget(): void {
+    $this->drupalLogin($this->drupalCreateUser([
+      'access content',
+    ]));
+    $this->drupalGet('htmx-test-attachments/form-builder-test/');
+    $this->assertSession()->elementExists('css', '[data-drupal-wrapper-selector="edit-partial-replace"]');
+    $this->assertSession()->pageTextNotContains('Inserted by htmx!');
+    $checkbox = $this->assertSession()->elementExists('css', '[name="partial"]');
+    $checkbox->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->elementNotExists('css', '[data-drupal-wrapper-selector="edit-partial-replace"]');
+    $this->assertSession()->pageTextContainsOnce('Inserted by htmx!');
+  }
+
+  /**
+   * Verify that an hx-partial response with a delete swap removes the target.
+   */
+  public function testPartialDelete(): void {
+    $this->drupalLogin($this->drupalCreateUser([
+      'access content',
+    ]));
+    $this->drupalGet('htmx-test-attachments/form-builder-test/');
+    $this->assertSession()->elementExists('css', '[data-drupal-wrapper-selector="edit-partial-replace"]');
+    $checkbox = $this->assertSession()->elementExists('css', '[name="partial_delete"]');
+    $checkbox->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->elementNotExists('css', '[data-drupal-wrapper-selector="edit-partial-replace"]');
   }
 
 }

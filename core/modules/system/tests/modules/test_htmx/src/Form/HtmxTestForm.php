@@ -67,6 +67,49 @@ class HtmxTestForm extends FormBase {
       ->swapOob(TRUE)
       ->applyTo($form['data'], '#wrapper_attributes');
 
+    $form['bad_swap_target'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Target does not exist',
+    ];
+    (new Htmx())
+      ->get($formUrl)
+      ->select('select')
+      ->swap('innerHTML')
+      ->target('div.bad-target')
+      ->applyTo($form['bad_swap_target']);
+    // Test hx-replace fragments.
+    $partialReplace = Url::fromRoute('test_htmx.htmx_fragment');
+    $form['partial-replace'] = [
+      '#type' => 'item',
+      '#title' => 'Replacement target',
+    ];
+    $form['partial'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Replace via partial',
+    ];
+    (new Htmx())
+      ->get($partialReplace)
+      ->onlyMainContent()
+      ->applyTo($form['partial']);
+    $partialMissingTarget = Url::fromRoute('test_htmx.htmx_fragment_missing');
+    $form['partial_missing'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Target does not exist',
+    ];
+    (new Htmx())
+      ->get($partialMissingTarget)
+      ->onlyMainContent()
+      ->applyTo($form['partial_missing']);
+    $partialDelete = Url::fromRoute('test_htmx.htmx_fragment_delete');
+    $form['partial_delete'] = [
+      '#type' => 'checkbox',
+      '#title' => 'Delete via partial',
+    ];
+    (new Htmx())
+      ->get($partialDelete)
+      ->onlyMainContent()
+      ->applyTo($form['partial_delete']);
+
     $push = FALSE;
     if ($this->getHtmxTriggerName() === 'type') {
       $form['data']['#markup'] = '';
