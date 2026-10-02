@@ -143,7 +143,7 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
    */
   public function testEmptyItemListIsRejected(): void {
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessageIs('The editor:addItemsToToolbar config action requires one or more toolbar items.');
+    $this->expectExceptionMessage('The editor:addItemsToToolbar config action requires one or more toolbar items.');
     $this->container->get('plugin.manager.config_action')
       ->applyAction('editor:addItemsToToolbar', 'editor.editor.filter_test', []);
   }
@@ -153,7 +153,7 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
    */
   public function testInvalidItemTypeIsRejected(): void {
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessageIs('The editor:addItemsToToolbar config action requires each toolbar item to be a string or an array of options.');
+    $this->expectExceptionMessage('The editor:addItemsToToolbar config action requires each toolbar item to be a string or an array of options.');
     $this->container->get('plugin.manager.config_action')
       ->applyAction('editor:addItemsToToolbar', 'editor.editor.filter_test', [123]);
   }
@@ -163,7 +163,7 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
    */
   public function testMissingItemNameIsRejected(): void {
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessageIs("The editor:addItemsToToolbar config action requires each toolbar item to define an 'item_name' string.");
+    $this->expectExceptionMessage("The editor:addItemsToToolbar config action requires each toolbar item to define an 'item_name' string.");
     $this->container->get('plugin.manager.config_action')
       ->applyAction('editor:addItemsToToolbar', 'editor.editor.filter_test', [['position' => 0]]);
   }
