@@ -264,12 +264,11 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     $this->drupalGet($path, ['query' => ['uuid' => 'ðŸ¦™', 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(400);
 
-    // Ensure that users that don't have access to the filter format receive
-    // either 404 or 403.
+    // Ensure that users without access to the filter format receive 403.
     $this->drupalLogout();
     $token = $this->container->get('csrf_token')->get(ltrim($path, '/'));
     $this->drupalGet($path, ['token' => $token]);
-    $this->assertSession()->statusCodeEquals(400);
+    $this->assertSession()->statusCodeEquals(403);
 
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(403);
