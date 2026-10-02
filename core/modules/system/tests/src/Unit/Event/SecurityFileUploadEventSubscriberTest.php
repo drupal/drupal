@@ -95,6 +95,28 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
       '.phtml, .txt extension allowed with .phtml file' => ['foo.phtml', 'phtml txt', 'foo.phtml_.txt', 'foo.phtml'],
       'All extensions allowed with .phtml file' => ['foo.phtml', '', 'foo.phtml_.txt', 'foo.phtml'],
       'dot files are renamed even if allowed and not in security list' => ['.git', 'git', 'git'],
+      // Characters that are never safe are replaced regardless of the
+      // filename_sanitization settings in file.settings.
+      'Carriage return is replaced' => ["a\rb.txt", 'txt', 'a_b.txt'],
+      'Tab is replaced' => ["a\tb.txt", 'txt', 'a_b.txt'],
+      'Delete is replaced' => ["a\x7Fb.txt", 'txt', 'a_b.txt'],
+      'Shell meta-characters are replaced' => ['a;b|c&d.txt', 'txt', 'a_b_c_d.txt'],
+      'Backtick and dollar are replaced' => ['a`b$c.txt', 'txt', 'a_b_c.txt'],
+      'Quotes are replaced' => ['a\'b"c.txt', 'txt', 'a_b_c.txt'],
+      'Bidirectional override is replaced' => ["photo_\u{202E}gnp.txt", 'txt', 'photo__gnp.txt'],
+      'Zero width space is replaced' => ["photo\u{200B}graph.txt", 'txt', 'photo_graph.txt'],
+      'An ampersand is replaced, not dropped' => ['Love&War.pdf', 'pdf', 'Love_War.pdf'],
+      'A name of only unsafe characters keeps its extension' => ['<>|.txt', 'txt', '___.txt'],
+      'A name of only unsafe characters is not emptied' => ['<>|', '', '___'],
+      'Leading dashes are stripped' => ['--opt.txt', 'txt', 'opt.txt'],
+      'Leading dashes do not expose a dot file' => ['---.txt', 'txt', 'unnamed.txt'],
+      'A name of only dots falls back' => ['...', '', 'unnamed'],
+      'The fallback name is not itself disturbed' => ['unnamed', '', 'unnamed'],
+      // The extension is still munged after the replacements.
+      'Unsafe characters with a disallowed insecure extension' => ["a\rb.php", 'txt', 'a_b.php'],
+      'Unsafe characters with an insecure extension' => ["a\rb.php", '', 'a_b.php_.txt', 'a_b.php'],
+      'An ordinary filename is untouched' => ['holiday-photo.jpg', 'jpg', 'holiday-photo.jpg'],
+      'Spaces are left to the sanitization settings' => ['drupal rocks.txt', 'txt', 'drupal rocks.txt'],
     ];
   }
 
