@@ -107,7 +107,12 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains($description);
 
-    // Ensure the filename in the link's title attribute is escaped.
+    // Ensure the filename in the link's title attribute is escaped. Uploaded
+    // filenames cannot contain characters that need escaping, so set one
+    // directly on the file entity.
+    $node_file->setFilename('escaped-&-text.txt');
+    $node_file->save();
+    $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseContains('title="escaped-&amp;-text.txt"');
 
     // Test that fields appear as expected after during the preview.
