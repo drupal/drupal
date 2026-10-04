@@ -17642,12 +17642,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media/src/Controller/OEmbedIframeController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\media\\\\Entity\\\\Media\\:\\:getRequestTime\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/src/Entity/Media.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media\\\\Entity\\\\Media\\:\\:postSave\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,

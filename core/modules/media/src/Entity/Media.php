@@ -591,7 +591,6 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
       ->setDescription(t('The time the media item was created.'))
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
-      ->setDefaultValueCallback(static::class . '::getRequestTime')
       ->setDisplayOptions('form', [
         'type' => 'datetime_timestamp',
         'weight' => 10,
@@ -614,9 +613,19 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the default value used for the created field.
+   *
+   * @return int
+   *   The current request time.
+   *
+   * @deprecated in drupal:12.1.0 and is removed from drupal:13.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3624921
    */
-  public static function getRequestTime() {
+  public static function getRequestTime(): int {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:12.1.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3624921', E_USER_DEPRECATED);
+
     return \Drupal::time()->getRequestTime();
   }
 
