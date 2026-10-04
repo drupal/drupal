@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Drupal\deprecation_hook_attribute_test\Hook;
+namespace Drupal\deprecation_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
- * Implements hooks for the deprecation hook attribute test.
+ * Implements hooks for the deprecation test.
  */
-class DeprecationHookAttributeTestHooks {
+class DeprecationTestHooks {
 
   /**
    * Implements hook_deprecated_hook().

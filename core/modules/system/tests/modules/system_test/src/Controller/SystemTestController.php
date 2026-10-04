@@ -446,7 +446,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
     requirements: ['_access' => 'TRUE'],
   )]
   public function shutdownFunctions($arg1, $arg2) {
-    drupal_register_shutdown_function('_system_test_first_shutdown_function', $arg1, $arg2);
+    drupal_register_shutdown_function(self::class . '::firstShutdown', $arg1, $arg2);
     // If using PHP-FPM then fastcgi_finish_request() will have been fired
     // preventing further output to the browser which means that the escaping of
     // the exception message can not be tested.
@@ -628,6 +628,29 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
   public function getInstallProfile() {
     $install_profile = \Drupal::installProfile() ?: 'NONE';
     return new Response('install_profile: ' . $install_profile);
+  }
+
+  /**
+   * Dummy shutdown function which registers another shutdown function.
+   */
+  public static function firstShutdown($arg1, $arg2): void {
+    // Set something to ensure that this function got called.
+    \Drupal::state()->set('_system_test_first_shutdown_function', [$arg1, $arg2]);
+    drupal_register_shutdown_function(self::class . '::secondShutdown', $arg1, $arg2);
+  }
+
+  /**
+   * Dummy shutdown function.
+   */
+  public static function secondShutdown($arg1, $arg2): void {
+    // Set something to ensure that this function got called.
+    \Drupal::state()->set('_system_test_second_shutdown_function', [$arg1, $arg2]);
+
+    // Throw an exception with an HTML tag. Since this is called in a shutdown
+    // function, it will not bubble up to the default exception handler but will
+    // be caught in _drupal_shutdown_function() and be displayed through
+    // \Drupal\Core\Utility\Error::renderExceptionSafe() if possible.
+    throw new \Exception('Drupal is <blink>awesome</blink>.');
   }
 
 }
