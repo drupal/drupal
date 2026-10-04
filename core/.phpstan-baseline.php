@@ -22144,10 +22144,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/default_format_test/src/DefaultFormatTestController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated function deprecation_test_function\\(\\)\\:
+	'message' => '#^Call to deprecated method testDeprecation\\(\\) of class Drupal\\\\deprecation_test\\\\DeprecatedController\\:
 in drupal\\:8\\.4\\.0 and is removed from drupal\\:9\\.0\\.0\\. This is
-  the deprecation message for deprecated_test_function\\(\\)\\.$#',
-	'identifier' => 'function.deprecated',
+  the deprecation message for testDeprecation\\(\\)\\.$#',
+	'identifier' => 'staticMethod.deprecated',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/deprecation_test/src/DeprecatedController.php',
 ];
