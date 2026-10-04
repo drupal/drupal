@@ -97,7 +97,7 @@ class BrowserTestBaseTest extends UnitTestCase {
 /**
  * A class extending BrowserTestBase for testing purposes.
  *
- * @phpstan-ignore testClass.missingAttribute.Group, testClass.missingAttribute.RunInSeparateProcesses
+ * @phpstan-ignore testClass.missingAttribute.Group, testClass.missingAttribute.RunTestsInSeparateProcesses
  */
 class BrowserTestBaseMockableClassTest extends BrowserTestBase {
 
