@@ -620,7 +620,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    */
   #[IgnoreDeprecations]
   public function testDeprecationTriggeredInSystemUnderTest(): void {
-    $this->expectUserDeprecationMessage('This is the deprecation message for deprecation_test_function().');
+    $this->expectUserDeprecationMessage('This is the deprecation message for testDeprecation().');
     $this->drupalGet(Url::fromRoute('deprecation_test.route'));
   }
 
