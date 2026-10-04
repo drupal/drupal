@@ -441,12 +441,12 @@ END;
       $name = $package_info['name'];
 
       $requirements = $package_info['require'] ?? [];
-      // These polyfills are dependencies of some packages, but for reasons we
-      // don't understand, they are not installed in code bases built on PHP
-      // versions that are newer than the ones being polyfilled, which means we
+      // These polyfills are dependencies of some packages, but because they
+      // appear in the "replace" section of our composer.json file, we
       // won't be able to build our test project because these polyfills aren't
       // available in the local code base. Since we're guaranteed to be on PHP
-      // 8.5 or later, no package should need to polyfill older versions.
+      // 8.5 or later, no package should need to polyfill older versions. This
+      // list should be kept in sync with the replace section of composer.json.
       unset(
         $requirements['symfony/polyfill-php72'],
         $requirements['symfony/polyfill-php73'],
