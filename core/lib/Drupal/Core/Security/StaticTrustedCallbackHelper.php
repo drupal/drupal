@@ -20,11 +20,6 @@ class StaticTrustedCallbackHelper {
    * @param string $message
    *   The error message if the callback is not trusted. If the message contains
    *   "%s" it will be replaced in with the resolved callback.
-   * @param string $error_type
-   *   (optional) The type of error to trigger. One of:
-   *   - TrustedCallbackInterface::THROW_EXCEPTION
-   *   - TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION
-   *   Defaults to TrustedCallbackInterface::THROW_EXCEPTION.
    * @param string $extra_trusted_interface
    *   (optional) An additional interface that if implemented by the callback
    *   object means any public methods on that object are trusted.
@@ -39,8 +34,12 @@ class StaticTrustedCallbackHelper {
    * @see \Drupal\Core\Security\TrustedCallbackInterface
    * @see \Drupal\Core\Security\DoTrustedCallbackTrait::doTrustedCallback()
    */
-  public static function callback(callable $callback, array $args, string $message, $error_type = TrustedCallbackInterface::THROW_EXCEPTION, $extra_trusted_interface = NULL) {
-    return (new static())->doTrustedCallback($callback, $args, $message, $error_type, $extra_trusted_interface);
+  public static function callback(callable $callback, array $args, string $message, $extra_trusted_interface = NULL) {
+    if (func_num_args() > 4) {
+      @trigger_error('Calling Drupal\\Core\\Security\\StaticTrustedCallbackHelper::callback() with 5 arguments is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. See https://www.drupal.org/node/3627046', E_USER_DEPRECATED);
+      $extra_trusted_interface = func_get_arg(4);
+    }
+    return (new static())->doTrustedCallback($callback, $args, $message, $extra_trusted_interface);
   }
 
 }
