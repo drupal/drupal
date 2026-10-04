@@ -12,7 +12,6 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Render\Element\RenderCallbackInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Utility\CallableResolver;
@@ -911,7 +910,7 @@ class Renderer implements RendererInterface {
     // - All public methods on Render elements are considered trusted.
     // - Helper classes that contain only callback methods can implement this
     //   instead of TrustedCallbackInterface.
-    return $this->doTrustedCallback($callable, $args, $message, TrustedCallbackInterface::THROW_EXCEPTION, RenderCallbackInterface::class);
+    return $this->doTrustedCallback($callable, $args, $message, RenderCallbackInterface::class);
   }
 
   /**
