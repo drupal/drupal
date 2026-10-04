@@ -65,7 +65,7 @@ class TestClassClassMetadataTest extends RuleTestCase {
       [__DIR__ . '/../fixtures/test-classes-missing-attributes.php'],
       [
         [
-          'Test class Drupal\Tests\Core\Foo\MissingAttributes must have attribute \PHPUnit\Framework\Attributes\RunInSeparateProcesses.',
+          'Test class Drupal\Tests\Core\Foo\MissingAttributes must have attribute \PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses.',
           18,
         ],
         [
@@ -77,7 +77,7 @@ class TestClassClassMetadataTest extends RuleTestCase {
           21,
         ],
         [
-          'Test class Drupal\Tests\Core\Foo\MissingRunTestsInSeparateProcesses must have attribute \PHPUnit\Framework\Attributes\RunInSeparateProcesses.',
+          'Test class Drupal\Tests\Core\Foo\MissingRunTestsInSeparateProcesses must have attribute \PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses.',
           25,
         ],
       ]
