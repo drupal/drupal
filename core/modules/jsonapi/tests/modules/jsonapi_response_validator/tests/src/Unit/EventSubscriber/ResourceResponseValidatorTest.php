@@ -18,6 +18,8 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Tests Drupal\jsonapi_response_validator\EventSubscriber\ResourceResponseValidator.
@@ -198,6 +200,24 @@ EOD
       $response->setContent($json);
     }
     return $response;
+  }
+
+  /**
+   * Tests that a response with a NULL Content-Type header is ignored.
+   */
+  public function testOnResponseNullContentType(): void {
+    $response = static::createResponse();
+    $response->headers->set('Content-Type', NULL);
+    $event = new ResponseEvent(
+      $this->prophesize(HttpKernelInterface::class)->reveal(),
+      new Request(),
+      HttpKernelInterface::MAIN_REQUEST,
+      $response
+    );
+
+    $this->subscriber->onResponse($event);
+
+    $this->assertNull($event->getResponse()->headers->get('Content-Type'));
   }
 
 }
