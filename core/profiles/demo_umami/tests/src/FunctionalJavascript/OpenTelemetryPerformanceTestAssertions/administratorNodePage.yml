@@ -1,5 +1,5 @@
-QueryCount: 262
-CacheGetCount: 258
+QueryCount: 259
+CacheGetCount: 257
 CacheGetCountByBin:
   config: 52
   bootstrap: 15
@@ -11,8 +11,8 @@ CacheGetCountByBin:
   routes: 16
   render: 18
   file_parsing: 2
-  menu: 22
-CacheSetCount: 263
+  menu: 21
+CacheSetCount: 262
 CacheDeleteCount: 0
 CacheTagInvalidationCount: 0
 CacheTagLookupQueryCount: 28
