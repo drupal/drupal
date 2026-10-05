@@ -57,6 +57,28 @@ class RegistryTest extends KernelTestBase {
   }
 
   /**
+   * Tests that runtime theme hooks remain available after registry cleanup.
+   */
+  public function testRuntimeRegistryAfterDestruct(): void {
+    \Drupal::request()->setMethod('GET');
+    $registry = $this->container->get(Registry::class);
+    $runtime_registry = $registry->getRuntime();
+    $hook = 'theme_test_template_test';
+
+    $this->assertTrue($runtime_registry->has($hook));
+    $definition = $runtime_registry->get($hook);
+    $this->assertNotEmpty($definition);
+
+    // Persistent workers may keep the service alive after cleanup.
+    $registry->destruct();
+    $next_runtime_registry = $registry->getRuntime();
+
+    $this->assertTrue($next_runtime_registry->has($hook));
+    $this->assertSame($definition, $next_runtime_registry->get($hook));
+    $this->assertNotSame($runtime_registry, $next_runtime_registry);
+  }
+
+  /**
    * Tests the theme registry with multiple subthemes.
    */
   public function testMultipleSubThemes(): void {
