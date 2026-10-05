@@ -953,7 +953,10 @@ class Registry implements DestructableInterface {
    * {@inheritdoc}
    */
   public function destruct() {
-    foreach ($this->runtimeRegistry as $runtime_registry) {
+    // Release the registries so later requests get fresh runtime collectors.
+    $runtime_registries = $this->runtimeRegistry;
+    $this->runtimeRegistry = [];
+    foreach ($runtime_registries as $runtime_registry) {
       $runtime_registry->destruct();
     }
   }
