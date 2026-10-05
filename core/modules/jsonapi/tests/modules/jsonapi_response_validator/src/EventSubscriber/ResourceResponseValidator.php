@@ -66,7 +66,7 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    */
   public function onResponse(ResponseEvent $event): void {
     $response = $event->getResponse();
-    if (!str_contains($response->headers->get('Content-Type', ''), 'application/vnd.api+json')) {
+    if (!str_contains($response->headers->get('Content-Type') ?? '', 'application/vnd.api+json')) {
       return;
     }
 
