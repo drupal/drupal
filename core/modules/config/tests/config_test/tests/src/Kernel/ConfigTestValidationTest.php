@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\config_test\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use Drupal\TestTools\Attribute\ShareEnvironment;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -13,6 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  */
 #[Group('config_test')]
 #[RunTestsInSeparateProcesses]
+#[ShareEnvironment]
 class ConfigTestValidationTest extends ConfigEntityValidationTestBase {
 
   /**
@@ -23,8 +25,8 @@ class ConfigTestValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    parent::setUp();
+  protected function setUpEnvironment(): void {
+    parent::setUpEnvironment();
 
     $this->installConfig('config_test');
 

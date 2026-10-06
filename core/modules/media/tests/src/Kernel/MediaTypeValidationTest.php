@@ -6,6 +6,7 @@ namespace Drupal\Tests\media\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
+use Drupal\TestTools\Attribute\ShareEnvironment;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('config')]
 #[Group('Validation')]
 #[RunTestsInSeparateProcesses]
+#[ShareEnvironment]
 class MediaTypeValidationTest extends ConfigEntityValidationTestBase {
 
   use MediaTypeCreationTrait;
@@ -28,13 +30,16 @@ class MediaTypeValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    parent::setUp();
+  protected function setUpEnvironment(): void {
+    parent::setUpEnvironment();
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('media');
 
-    $this->entity = $this->createMediaType('test', ['id' => 'test_media']);
+    $this->entity = $this->createMediaType('test', [
+      'id' => 'test_media',
+      'label' => 'Test media',
+    ]);
   }
 
   /**

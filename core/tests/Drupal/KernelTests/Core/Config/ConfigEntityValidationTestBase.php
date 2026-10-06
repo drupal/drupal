@@ -32,7 +32,17 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   protected static $modules = ['system'];
 
   /**
+   * The key-value entry holding the type and the ID of the entity being tested.
+   */
+  private const string ENTITY_UNDER_TEST = 'config_entity_validation_test.entity_under_test';
+
+  /**
    * The config entity being tested.
+   *
+   * Built once per test class by ::setUpEnvironment() when the class shares
+   * its environment, and reloaded by ::setUp() for every test method. A test
+   * method may change it in memory, and must not save it: the test methods that
+   * follow validate the same entity.
    */
   protected ConfigEntityInterface $entity;
 
@@ -81,6 +91,29 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    if (!static::sharesEnvironment()) {
+      // The environment is not shared, so it is built for this test method
+      // only. ::setUpEnvironment() is never called by the parent class in that
+      // case. Subclasses that assign ::$entity after calling this method keep
+      // working, because nothing is reloaded here.
+      $this->setUpEnvironment();
+      return;
+    }
+    // The process that built the shared state still holds the entity it
+    // created. Every test method that follows runs in its own process and
+    // reloads it.
+    if (isset($this->entity)) {
+      $this->rememberEntityUnderTest();
+    }
+    else {
+      $this->entity = $this->loadEntityUnderTest();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpEnvironment(): void {
     $this->installConfig('system');
 
     // Install Stark so we can add a legitimately installed theme to config
@@ -90,7 +123,42 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   }
 
   /**
-   * Ensures that the entity created in ::setUp() has no validation errors.
+   * Records which entity the test methods of this class validate.
+   *
+   * Only the process that built the shared state has the entity object. What
+   * the other processes need to reload it is stored in state, which for a
+   * shared environment is backed by the database.
+   */
+  private function rememberEntityUnderTest(): void {
+    \Drupal::keyValue(static::class)->set(self::ENTITY_UNDER_TEST, [
+      $this->entity->getEntityTypeId(),
+      $this->entity->id(),
+    ]);
+  }
+
+  /**
+   * Loads the entity the test methods of this class validate.
+   *
+   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
+   *   The entity built by ::setUpEnvironment().
+   */
+  protected function loadEntityUnderTest(): ConfigEntityInterface {
+    $recorded = \Drupal::keyValue(static::class)->get(self::ENTITY_UNDER_TEST);
+    if ($recorded === NULL) {
+      throw new \LogicException(sprintf('%s did not assign ::$entity while building the shared environment. Assign it in ::setUpEnvironment().', static::class));
+    }
+    [$entity_type_id, $entity_id] = $recorded;
+    $entity = \Drupal::entityTypeManager()
+      ->getStorage($entity_type_id)
+      ->load($entity_id);
+    if (!$entity instanceof ConfigEntityInterface) {
+      throw new \LogicException(sprintf("The %s '%s' built by %s::setUpEnvironment() no longer exists. A test method must not delete the entity it shares with the other test methods.", $entity_type_id, $entity_id, static::class));
+    }
+    return $entity;
+  }
+
+  /**
+   * Ensures that the entity built for this class has no validation errors.
    */
   public function testEntityIsValid(): void {
     $this->assertInstanceOf(ConfigEntityInterface::class, $this->entity);
@@ -450,8 +518,18 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
       'langcode' => 'The value you selected is not a valid choice.',
     ]);
     // Once we create the language, it should be a valid choice.
-    ConfigurableLanguage::createFromLangcode('kthxbai')->save();
+    $language = ConfigurableLanguage::createFromLangcode('kthxbai');
+    $language->save();
     $this->assertValidationErrors([]);
+
+    // The language is a config entity, so it outlives this test method when the
+    // test class shares its environment. Remove it, otherwise the test methods
+    // that follow would validate against a language list this one invented.
+    // Deleting the configuration rather than the entity: deleting the entity
+    // invokes hooks that update the langcode of existing content, and the
+    // subclasses of this class may not install the schema of the entity types
+    // those hooks touch.
+    \Drupal::configFactory()->getEditable($language->getConfigDependencyName())->delete();
   }
 
   /**
