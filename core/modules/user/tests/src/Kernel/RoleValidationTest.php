@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use Drupal\TestTools\Attribute\ShareEnvironment;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('config')]
 #[Group('Validation')]
 #[RunTestsInSeparateProcesses]
+#[ShareEnvironment]
 class RoleValidationTest extends ConfigEntityValidationTestBase {
 
   /**
@@ -26,8 +28,8 @@ class RoleValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    parent::setUp();
+  protected function setUpEnvironment(): void {
+    parent::setUpEnvironment();
 
     $this->installConfig('user');
 
