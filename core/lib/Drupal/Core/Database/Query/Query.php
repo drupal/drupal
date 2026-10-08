@@ -82,8 +82,14 @@ abstract class Query implements PlaceholderInterface {
 
   /**
    * Implements the magic __sleep function to disconnect from the database.
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3625908
    */
   public function __sleep(): array {
+    @trigger_error('Serializing ' . __CLASS__ . ' objects is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3625908', E_USER_DEPRECATED);
     $keys = get_object_vars($this);
     unset($keys['connection']);
     return array_keys($keys);
@@ -91,8 +97,14 @@ abstract class Query implements PlaceholderInterface {
 
   /**
    * Implements the magic __wakeup function to reconnect to the database.
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/3625908
    */
   public function __wakeup(): void {
+    @trigger_error('Unserializing ' . __CLASS__ . ' objects is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3625908', E_USER_DEPRECATED);
     $this->connection = Database::getConnection($this->connectionTarget, $this->connectionKey);
   }
 
