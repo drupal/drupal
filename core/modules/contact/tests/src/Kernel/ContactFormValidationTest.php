@@ -7,6 +7,7 @@ namespace Drupal\Tests\contact\Kernel;
 use Drupal\contact\ContactFormInterface;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use Drupal\TestTools\Attribute\ShareEnvironment;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -19,6 +20,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('Validation')]
 #[IgnoreDeprecations]
 #[RunTestsInSeparateProcesses]
+#[ShareEnvironment]
 class ContactFormValidationTest extends ConfigEntityValidationTestBase {
 
   /**
@@ -29,8 +31,8 @@ class ContactFormValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    parent::setUp();
+  protected function setUpEnvironment(): void {
+    parent::setUpEnvironment();
 
     $this->entity = ContactForm::create([
       'id' => 'test',

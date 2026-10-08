@@ -6,6 +6,7 @@ namespace Drupal\Tests\responsive_image\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
+use Drupal\TestTools\Attribute\ShareEnvironment;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('config')]
 #[Group('Validation')]
 #[RunTestsInSeparateProcesses]
+#[ShareEnvironment]
 class ResponsiveImageStyleValidationTest extends ConfigEntityValidationTestBase {
 
   /**
@@ -26,8 +28,8 @@ class ResponsiveImageStyleValidationTest extends ConfigEntityValidationTestBase 
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    parent::setUp();
+  protected function setUpEnvironment(): void {
+    parent::setUpEnvironment();
 
     $this->entity = ResponsiveImageStyle::create([
       'id' => 'test',

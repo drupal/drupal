@@ -7,6 +7,8 @@ namespace Drupal\KernelTests;
 use Drupal\Component\FileCache\ApcuFileCacheBackend;
 use Drupal\Component\FileCache\FileCache;
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Serialization\Json;
+use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Exception\SchemaDefinitionException;
@@ -16,6 +18,8 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\KeyValueStore\KeyValueDatabaseFactory;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Routing\RouteObjectInterface;
@@ -29,12 +33,15 @@ use Drupal\Tests\ExtensionListTestTrait;
 use Drupal\Tests\HttpKernelUiHelperTrait;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\RandomGeneratorTrait;
+use Drupal\TestTools\Attribute\ShareEnvironment;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use Drupal\TestTools\Extension\SchemaInspector;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use PHPUnit\Framework\Attributes\After;
+use PHPUnit\Framework\Attributes\AfterClass;
+use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -175,11 +182,37 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected $configImporter;
 
   /**
+   * Environment variable carrying the shared prefix from parent to children.
+   */
+  private const string SHARED_DATABASE_PREFIX_ENV = 'DRUPAL_TEST_SHARED_DB_PREFIX';
+
+  /**
+   * Name of the table recording the state of the shared database.
+   */
+  protected const string STATE_TABLE = 'test_shared_database_state';
+
+  /**
+   * Tables that Drupal creates on its own, whatever a test method does.
+   *
+   * @var list<string>
+   */
+  protected const array INFRASTRUCTURE_TABLES = [
+    'cache_container',
+  ];
+
+  /**
+   * The names of the tables that make up the shared environment.
+   *
+   * @var list<string>|null
+   */
+  private ?array $environmentTables = NULL;
+
+  /**
    * The key_value service that must persist between container rebuilds.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory
    */
-  protected KeyValueMemoryFactory $keyValue;
+  protected KeyValueFactoryInterface $keyValue;
 
   /**
    * Set to TRUE to strict check all configuration saved.
@@ -250,7 +283,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     // Set up virtual filesystem.
     Database::addConnectionInfo('default', 'test-runner', $this->getDatabaseConnectionInfo()['default']);
-    $test_db = new TestDatabase();
+    $test_db = $this->getTestDatabase();
     $this->siteDirectory = $test_db->getTestSitePath();
 
     // Ensure that all code that relies on drupal_valid_test_ua() can still be
@@ -277,6 +310,115 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   }
 
   /**
+   * Returns whether this test class shares its environment between its methods.
+   *
+   * @return bool
+   *   TRUE if the test methods of this class share one environment.
+   *
+   * @see \Drupal\TestTools\Attribute\ShareEnvironment
+   */
+  protected static function sharesEnvironment(): bool {
+    // The attribute is deliberately not inherited: every test class declares
+    // for itself, as it already does for the PHPUnit attributes.
+    return ShareEnvironment::isEnabledFor(static::class);
+  }
+
+  /**
+   * Allocates one database prefix for the whole test class.
+   */
+  #[BeforeClass]
+  public static function allocateSharedDatabase(): void {
+    if (!static::sharesEnvironment()) {
+      return;
+    }
+    // PHPUnit runs this once in the test runner process, before it forks the
+    // first test method, and once again inside every forked process. The runner
+    // process allocates the prefix and exports it; the forked processes inherit
+    // the environment and read it back.
+    if (getenv(self::SHARED_DATABASE_PREFIX_ENV) !== FALSE) {
+      // A forked test method process: the prefix is already allocated.
+      return;
+    }
+    // Force a lock. This prefix stays in use for as long as the whole test
+    // class runs, so it has to be reserved against concurrent test runners.
+    $test_database = new TestDatabase(NULL, create_lock: TRUE);
+    putenv(self::SHARED_DATABASE_PREFIX_ENV . '=' . $test_database->getDatabasePrefix() . ':' . getmypid());
+  }
+
+  /**
+   * Drops the tables of the test class once all its test methods have run.
+   */
+  #[AfterClass]
+  public static function releaseSharedDatabase(): void {
+    if (!static::sharesEnvironment()) {
+      return;
+    }
+
+    $shared_database = getenv(self::SHARED_DATABASE_PREFIX_ENV);
+    if ($shared_database === FALSE) {
+      return;
+    }
+    [$prefix, $pid] = explode(':', $shared_database);
+    if ((int) $pid !== getmypid()) {
+      // A forked test method process: more test methods may still follow.
+      return;
+    }
+    putenv(self::SHARED_DATABASE_PREFIX_ENV);
+
+    // This runs in the test runner process, which has no bootstrapped Drupal,
+    // so the connection has to be set up from scratch.
+    $db_url = getenv('SIMPLETEST_DB');
+    if ($db_url === FALSE) {
+      return;
+    }
+
+    // Resolving the database driver reads its .info.yml and its class through
+    // paths that the extension discovery returns relative to the Drupal root.
+    // The working directory of the test runner process is not guaranteed to be
+    // that root, while the forked test method processes chdir() into it.
+    // @see _drupal_shutdown_function()
+    $working_directory = getcwd();
+    chdir(DRUPAL_ROOT);
+    try {
+      $connection_info = Database::convertDbUrlToConnectionInfo($db_url, TRUE);
+      $connection_info['prefix'] = $prefix;
+      Database::addConnectionInfo(__METHOD__, 'default', $connection_info);
+      $schema = Database::getConnection('default', __METHOD__)->schema();
+      foreach ($schema->findTables('%') as $table) {
+        $schema->dropTable($table);
+      }
+    }
+    finally {
+      Database::removeConnection(__METHOD__);
+      (new TestDatabase($prefix))->releaseLock();
+      if ($working_directory !== FALSE) {
+        chdir($working_directory);
+      }
+    }
+  }
+
+  /**
+   * Returns the test database for this test.
+   *
+   * The returned object determines the database prefix and the test site
+   * directory.
+   *
+   * @return \Drupal\Core\Test\TestDatabase
+   *   The test database.
+   */
+  protected function getTestDatabase(): TestDatabase {
+    if (!static::sharesEnvironment()) {
+      return new TestDatabase();
+    }
+    $shared_database = getenv(self::SHARED_DATABASE_PREFIX_ENV);
+    if ($shared_database === FALSE) {
+      throw new \RuntimeException(sprintf('%s did not receive a shared database prefix from the test runner process. The prefix travels in the %s environment variable, which the forked test method process inherits.', static::class, self::SHARED_DATABASE_PREFIX_ENV));
+    }
+    [$prefix] = explode(':', $shared_database);
+    return new TestDatabase($prefix);
+  }
+
+  /**
    * Sets up the filesystem, so things like the file directory.
    */
   protected function setUpFilesystem() {
@@ -295,6 +437,18 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $settings['config_sync_directory'] = $this->siteDirectory . '/files/config/sync';
     new Settings($settings);
   }
+
+  /**
+   * Sets up the environment shared by every test method in this class.
+   *
+   * Runs once per test class instead of once per test method, and only when the
+   * shared environment has to be built. Does nothing by default.
+   *
+   * Must be deterministic: what this creates is reused by every test method.
+   *
+   * @see \Drupal\TestTools\Attribute\ShareEnvironment
+   */
+  protected function setUpEnvironment(): void {}
 
   /**
    * Gets the database prefix used for test isolation.
@@ -373,9 +527,20 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     // Write the core.extension configuration.
     // Required for ConfigInstaller::installDefaultConfig() to work.
-    $this->container->get('config.storage')->write('core.extension', [
+    //
+    // The module list is rebuilt from scratch for every test method, so that a
+    // test method enabling a module does not leak it into the ones that follow
+    // it. The theme list is kept instead, because installing a theme writes its
+    // default configuration, which a test class sharing its environment does
+    // once, in ::setUpEnvironment().
+    $config_storage = $this->container->get('config.storage');
+    $themes = [];
+    if (static::sharesEnvironment() && ($extension = $config_storage->read('core.extension'))) {
+      $themes = $extension['theme'] ?? [];
+    }
+    $config_storage->write('core.extension', [
       'module' => array_fill_keys($modules, 0),
-      'theme' => [],
+      'theme' => $themes,
     ]);
 
     $settings = Settings::getAll();
@@ -401,6 +566,32 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // functions don't have to install system and its configuration.
     // @see file_default_scheme()
     $GLOBALS['config']['system.file']['default_scheme'] = 'public';
+
+    if (!static::sharesEnvironment()) {
+      return;
+    }
+
+    $record = $this->loadSharedDatabaseState();
+
+    if ($record === NULL) {
+      try {
+        $this->setUpEnvironment();
+      }
+      catch (\Throwable $e) {
+        // The initial state is half built. Record that, so the test methods
+        // that follow report this failure properly.
+        $this->invalidateDatabaseState(sprintf('%s::setUpEnvironment() failed: %s', static::class, $e->getMessage()));
+        throw $e;
+      }
+      $this->environmentTables = $this->getSharedStateTables();
+      $this->createStateTable($this->environmentTables);
+    }
+    elseif ($record['status'] !== 'ready') {
+      throw new \RuntimeException(sprintf("The shared database state of %s was invalidated by an earlier test method and is not rebuilt, so this test method cannot run. The reason was:\n%s", static::class, $record['message']));
+    }
+    elseif ($record['tables'] !== NULL) {
+      $this->environmentTables = Json::decode($record['tables']);
+    }
   }
 
   /**
@@ -549,8 +740,16 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Use memory for key value storages to avoid database queries. Store the
     // key value factory on the test object so that key value storages persist
     // container rebuilds, otherwise all state data would vanish.
+    // A test class that shares its environment reads them from the database
+    // instead: installed entity type and field storage definitions, and state,
+    // are key value data, and have to outlive the test method process together
+    // with the tables they describe.
     if (!isset($this->keyValue)) {
-      $this->keyValue = new KeyValueMemoryFactory();
+      // The container is still being compiled, so the connection is taken
+      // from the database registry rather than from the 'database' service.
+      $this->keyValue = static::sharesEnvironment()
+        ? new KeyValueDatabaseFactory(new PhpSerialize(), Database::getConnection())
+        : new KeyValueMemoryFactory();
     }
     $container->set('keyvalue', $this->keyValue);
     $container->getDefinition('keyvalue')->setSynthetic(TRUE);
@@ -673,19 +872,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       $this->kernel->shutdown();
     }
 
-    // Remove all prefixed tables.
-    $original_connection_info = Database::getConnectionInfo('simpletest_original_default');
-    $original_prefix = $original_connection_info['default']['prefix'] ?? NULL;
-    $test_connection_info = Database::getConnectionInfo('default');
-    $test_prefix = $test_connection_info['default']['prefix'] ?? NULL;
-    if ($original_prefix != $test_prefix) {
-      $tables = Database::getConnection()->schema()->findTables('%');
-      foreach ($tables as $table) {
-        if (Database::getConnection()->schema()->dropTable($table)) {
-          unset($tables[$table]);
-        }
-      }
-    }
+    $this->tearDownEnvironment();
 
     // If the test used the regular file system, remove any files created.
     if ($this->siteDirectory && !str_starts_with($this->siteDirectory, 'vfs://')) {
@@ -716,6 +903,51 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     new Settings([]);
 
     parent::tearDown();
+  }
+
+  /**
+   * Cleans the environment up after a test method and checks the result.
+   *
+   * @throws \Throwable
+   *   Whatever ::resetEnvironment() threw, once the failure is recorded.
+   */
+  protected function tearDownEnvironment(): void {
+    try {
+      $this->resetEnvironment();
+    }
+    catch (\Throwable $e) {
+      if (static::sharesEnvironment() && $this->environmentTables !== NULL) {
+        $this->invalidateDatabaseState(sprintf('%s::resetEnvironment() failed: %s', static::class, $e->getMessage()));
+      }
+      throw $e;
+    }
+    if (static::sharesEnvironment()) {
+      $this->checkSharedDatabaseState();
+    }
+  }
+
+  /**
+   * Resets the environment after a test method has run.
+   *
+   * @see \Drupal\TestTools\Attribute\ShareEnvironment
+   */
+  protected function resetEnvironment(): void {
+    if (static::sharesEnvironment()) {
+      return;
+    }
+    // Remove all prefixed tables.
+    $original_connection_info = Database::getConnectionInfo('simpletest_original_default');
+    $original_prefix = $original_connection_info['default']['prefix'] ?? NULL;
+    $test_connection_info = Database::getConnectionInfo('default');
+    $test_prefix = $test_connection_info['default']['prefix'] ?? NULL;
+    if ($original_prefix != $test_prefix) {
+      $tables = Database::getConnection()->schema()->findTables('%');
+      foreach ($tables as $table) {
+        if (Database::getConnection()->schema()->dropTable($table)) {
+          unset($tables[$table]);
+        }
+      }
+    }
   }
 
   /**
@@ -1030,6 +1262,139 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // together.
     $modules = array_values(array_reverse($modules));
     return call_user_func_array('array_merge_recursive', $modules);
+  }
+
+  /**
+   * Checks the shared database state after a test method has run.
+   */
+  private function checkSharedDatabaseState(): void {
+    if ($this->environmentTables === NULL) {
+      // The test method never reached the point where the environment is
+      // known, for example because ::setUp() skipped it before the test
+      // database connection was set up, so there is nothing to compare
+      // against. Anything left behind is dropped once the test class finishes.
+      return;
+    }
+    try {
+      $this->checkNoSharedTableWasDropped();
+      $this->checkNoTableWasLeftBehind();
+    }
+    catch (\Throwable $e) {
+      $this->invalidateDatabaseState($e->getMessage());
+      throw $e;
+    }
+  }
+
+  /**
+   * Fails when a test method dropped a table of the shared environment.
+   *
+   * @see \Drupal\TestTools\Attribute\ShareEnvironment
+   */
+  protected function checkNoSharedTableWasDropped(): void {
+    $dropped_tables = array_diff($this->environmentTables ?? [], $this->getSharedStateTables());
+    if ($dropped_tables !== []) {
+      throw new \RuntimeException(sprintf('%s dropped %s, which belongs to the shared environment of the test class. A test method may create tables, and may drop only the tables it created itself.', static::class, implode(', ', $dropped_tables)));
+    }
+  }
+
+  /**
+   * Fails when a test method left a table behind.
+   *
+   * @see \Drupal\TestTools\Attribute\ShareEnvironment
+   */
+  protected function checkNoTableWasLeftBehind(): void {
+    $added_tables = array_diff($this->getSharedStateTables(), $this->environmentTables ?? [], static::INFRASTRUCTURE_TABLES);
+    if ($added_tables !== []) {
+      throw new \RuntimeException(sprintf('%s left %s behind. A test method that adds to the database schema must remove what it added, in ::resetEnvironment().', static::class, implode(', ', $added_tables)));
+    }
+  }
+
+  /**
+   * Reads the record describing the shared database state.
+   *
+   * @return array|null
+   *   The state record, or NULL when this process has to build the initial
+   *   state.
+   */
+  private function loadSharedDatabaseState(): ?array {
+    $connection = $this->container->get('database');
+    try {
+      // The read is attempted before checking that the table exists, so that a
+      // test method finding a state already built spends one query here instead
+      // of two.
+      $record = $connection->select(self::STATE_TABLE, 's')
+        ->fields('s', ['status', 'message', 'tables'])
+        ->execute()
+        ->fetchAssoc();
+    }
+    catch (\Exception $e) {
+      if ($connection->schema()->tableExists(self::STATE_TABLE)) {
+        // The table is there, so the query failed for another reason.
+        throw $e;
+      }
+      return NULL;
+    }
+    return $record === FALSE ? NULL : $record;
+  }
+
+  /**
+   * Creates the table recording the state of the shared database.
+   */
+  private function createStateTable(array $tables = []): void {
+    $connection = $this->container->get('database');
+    $connection->schema()->createTable(self::STATE_TABLE, [
+      'description' => 'Records whether the shared database state of a kernel test class is usable.',
+      'fields' => [
+        'status' => [
+          'type' => 'varchar',
+          'length' => 32,
+          'not null' => TRUE,
+        ],
+        'message' => [
+          'type' => 'text',
+          'not null' => FALSE,
+        ],
+        'tables' => [
+          'type' => 'text',
+          'not null' => FALSE,
+        ],
+      ],
+      'primary key' => ['status'],
+    ]);
+    $connection->insert(self::STATE_TABLE)
+      ->fields(['status' => 'ready', 'message' => NULL, 'tables' => Json::encode($tables)])
+      ->execute();
+  }
+
+  /**
+   * Records that the shared database state can no longer be trusted.
+   *
+   * The record is committed, so it outlives the test method process and every
+   * test method that follows reports the same reason.
+   *
+   * @param string $reason
+   *   Why the state is no longer usable.
+   */
+  protected function invalidateDatabaseState(string $reason): void {
+    $connection = $this->container->get('database');
+    if (!$connection->schema()->tableExists(self::STATE_TABLE)) {
+      $this->createStateTable();
+    }
+    $connection->delete(self::STATE_TABLE)->execute();
+    $connection->insert(self::STATE_TABLE)
+      ->fields(['status' => 'invalid', 'message' => $reason, 'tables' => NULL])
+      ->execute();
+  }
+
+  /**
+   * Returns the tables that make up the shared database state.
+   *
+   * @return list<string>
+   *   The table names, without the table recording the state itself.
+   */
+  private function getSharedStateTables(): array {
+    $tables = array_values($this->container->get('database')->schema()->findTables('%'));
+    return array_values(array_diff($tables, [self::STATE_TABLE]));
   }
 
   /**
