@@ -7,6 +7,7 @@ namespace Drupal\Tests\rest\Kernel\Entity;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\rest\Entity\RestResourceConfig;
 use Drupal\rest\RestResourceConfigInterface;
+use Drupal\TestTools\Attribute\ShareEnvironment;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -17,6 +18,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('config')]
 #[Group('Validation')]
 #[RunTestsInSeparateProcesses]
+#[ShareEnvironment]
 class RestResourceConfigValidationTest extends ConfigEntityValidationTestBase {
 
   /**
@@ -32,8 +34,8 @@ class RestResourceConfigValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    parent::setUp();
+  protected function setUpEnvironment(): void {
+    parent::setUpEnvironment();
 
     $this->entity = RestResourceConfig::create([
       'id' => 'test',

@@ -12,6 +12,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\TestTools\Attribute\ShareEnvironment;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -22,6 +23,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[Group('Validation')]
 #[Group('config')]
 #[RunTestsInSeparateProcesses]
+#[ShareEnvironment]
 class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;
@@ -39,8 +41,8 @@ class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    parent::setUp();
+  protected function setUpEnvironment(): void {
+    parent::setUpEnvironment();
 
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
@@ -57,6 +59,23 @@ class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
       'targetEntityType' => 'node',
     ])->save();
 
+    $text_field_storage_config = FieldStorageConfig::create([
+      'type' => 'text_long',
+      'field_name' => 'novel',
+      'entity_type' => 'user',
+    ]);
+    $text_field_storage_config->save();
+
+    FieldConfig::create([
+      'field_storage' => $text_field_storage_config,
+      'bundle' => 'user',
+      'dependencies' => [
+        'config' => [
+          $text_field_storage_config->getConfigDependencyName(),
+        ],
+      ],
+    ])->save();
+
     $this->entity = $this->container->get(EntityDisplayRepositoryInterface::class)
       ->getFormDisplay('node', 'one', 'test');
     $this->entity->save();
@@ -66,26 +85,6 @@ class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
    * Tests validation of entity form display component's widget settings.
    */
   public function testMultilineTextFieldWidgetTextAreaPlaceholder(): void {
-    // First, create a field for which widget settings exist.
-    $text_field_storage_config = FieldStorageConfig::create([
-      'type' => 'text_long',
-      'field_name' => 'novel',
-      'entity_type' => 'user',
-    ]);
-    $text_field_storage_config->save();
-
-    $text_field_config = FieldConfig::create([
-      'field_storage' => $text_field_storage_config,
-      'bundle' => 'user',
-      'dependencies' => [
-        'config' => [
-          $text_field_storage_config->getConfigDependencyName(),
-        ],
-      ],
-    ]);
-    $text_field_config->save();
-
-    // Then, configure a form display widget for this field.
     assert($this->entity instanceof EntityFormDisplayInterface);
     $this->entity->setComponent('novel', [
       'type' => 'text_textarea',
@@ -106,26 +105,6 @@ class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
    * @todo move in https://www.drupal.org/project/drupal/issues/3551650.
    */
   public function testMultilineTextFieldWidgetTextAreaSummaryPlaceholder(): void {
-    // First, create a field for which widget settings exist.
-    $text_field_storage_config = FieldStorageConfig::create([
-      'type' => 'text_long',
-      'field_name' => 'novel',
-      'entity_type' => 'user',
-    ]);
-    $text_field_storage_config->save();
-
-    $text_field_config = FieldConfig::create([
-      'field_storage' => $text_field_storage_config,
-      'bundle' => 'user',
-      'dependencies' => [
-        'config' => [
-          $text_field_storage_config->getConfigDependencyName(),
-        ],
-      ],
-    ]);
-    $text_field_config->save();
-
-    // Then, configure a form display widget for this field.
     assert($this->entity instanceof EntityFormDisplayInterface);
     $this->entity->setComponent('novel', [
       'type' => 'text_textarea',

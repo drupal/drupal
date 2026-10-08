@@ -7,6 +7,7 @@ namespace Drupal\Tests\node\Kernel;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\node\NodePreviewMode;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\TestTools\Attribute\ShareEnvironment;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -20,6 +21,7 @@ use PHPUnit\Framework\Attributes\TestWith;
 #[Group('config')]
 #[Group('Validation')]
 #[RunTestsInSeparateProcesses]
+#[ShareEnvironment]
 class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
 
   use ContentTypeCreationTrait;
@@ -45,13 +47,18 @@ class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
   ];
 
   /**
+   * The state key toggling the `FullyValidatable` constraint on menu_ui.
+   */
+  private const string MENU_UI_VALIDATABLE_STATE = 'config_schema_test_menu_ui_third_party_settings_fully_validatable';
+
+  /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
-    parent::setUp();
+  protected function setUpEnvironment(): void {
+    parent::setUpEnvironment();
     $this->installEntitySchema('node');
     $this->installConfig('node');
-    $this->entity = $this->createContentType();
+    $this->entity = $this->createContentType(['type' => 'test']);
   }
 
   /**
@@ -103,15 +110,23 @@ class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
     // Set or unset the `FullyValidatable` constraint on
     // `node.type.*.third_party.menu_ui`.
     $this->enableModules(['config_schema_test']);
-    \Drupal::state()->set('config_schema_test_menu_ui_third_party_settings_fully_validatable', $third_party_settings_menu_ui_fully_validatable);
+    \Drupal::state()->set(self::MENU_UI_VALIDATABLE_STATE, $third_party_settings_menu_ui_fully_validatable);
     $this->container->get('kernel')->rebuildContainer();
-    $this->entity = $this->createContentType();
 
     // @see system.menu.main.yml
     $this->installConfig(['system']);
     $this->entity->setThirdPartySetting('menu_ui', 'available_menus', ['main']);
 
     $this->assertValidationErrors($expected_validation_errors);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function resetEnvironment(): void {
+    parent::resetEnvironment();
+
+    $this->container->get('state')->delete(self::MENU_UI_VALIDATABLE_STATE);
   }
 
 }
