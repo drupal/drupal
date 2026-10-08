@@ -15,17 +15,23 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 class SerializeQueryTest extends DatabaseTestBase {
 
   /**
-   * Confirms that a query can be serialized and unserialized.
+   * Confirms that a query cannot be serialized.
    */
   public function testSerializeQuery(): void {
     $query = $this->connection->select('test');
-    $query->addField('test', 'age');
-    $query->condition('name', 'Ringo');
-    // If this doesn't work, it will throw an exception, so no need for an
-    // assertion.
-    $query = unserialize(serialize($query));
-    $results = $query->execute()->fetchCol();
-    $this->assertEquals(28, $results[0], 'Query properly executed after unserialization.');
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('Database query objects are not serializable');
+    serialize($query);
+  }
+
+  /**
+   * Confirms that a query cannot be unserialized.
+   */
+  public function testUnserializeQuery(): void {
+    $class = get_class($this->connection->select('test'));
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('Database query objects cannot be unserialized');
+    unserialize(sprintf('O:%d:"%s":0:{}', strlen($class), $class));
   }
 
 }
