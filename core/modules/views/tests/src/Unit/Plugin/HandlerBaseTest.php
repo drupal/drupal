@@ -104,7 +104,7 @@ class HandlerBaseTest extends UnitTestCase {
     $handler = new TestHandler([], 'test_handler', $definition);
 
     $this->expectException(AccessException::class);
-    $this->expectExceptionMessage("The 'access callback' key in Views handler definitions is no longer supported in drupal:12.0.0. Use a custom access method on the handler instead.");
+    $this->expectExceptionMessageIs("The 'access callback' key in Views handler definitions is no longer supported in drupal:12.0.0. Use a custom access method on the handler instead.");
     $handler->access($this->createStub(AccountInterface::class));
   }
 

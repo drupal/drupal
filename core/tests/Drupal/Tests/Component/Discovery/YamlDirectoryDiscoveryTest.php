@@ -7,6 +7,7 @@ namespace Drupal\Tests\Component\Discovery;
 use Drupal\Component\Discovery\DiscoveryException;
 use Drupal\Component\Discovery\YamlDirectoryDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\TestTools\PhpUnitCompatibility\ForwardCompatibilityTrait;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
@@ -18,6 +19,8 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(YamlDirectoryDiscovery::class)]
 #[Group('Discovery')]
 class YamlDirectoryDiscoveryTest extends TestCase {
+
+  use ForwardCompatibilityTrait;
 
   /**
    * {@inheritdoc}
@@ -178,7 +181,7 @@ class YamlDirectoryDiscoveryTest extends TestCase {
    */
   public function testDiscoveryNoIdException(): void {
     $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessage('The vfs://modules/test_1' . DIRECTORY_SEPARATOR . 'item_1.test.yml contains no data in the identifier key \'id\'');
+    $this->expectExceptionMessageIs('The vfs://modules/test_1' . DIRECTORY_SEPARATOR . 'item_1.test.yml contains no data in the identifier key \'id\'');
     vfsStream::setup('modules', NULL, [
       'test_1' => [
         'item_1.test.yml' => "",
@@ -199,7 +202,7 @@ class YamlDirectoryDiscoveryTest extends TestCase {
    */
   public function testDiscoveryInvalidYamlException(): void {
     $this->expectException(DiscoveryException::class);
-    $this->expectExceptionMessage('The vfs://modules/test_1' . DIRECTORY_SEPARATOR . 'item_1.test.yml contains invalid YAML');
+    $this->expectExceptionMessageIs('The vfs://modules/test_1' . DIRECTORY_SEPARATOR . 'item_1.test.yml contains invalid YAML');
     vfsStream::setup('modules', NULL, [
       'test_1' => [
         'item_1.test.yml' => "id: invalid\nfoo : [bar}",
