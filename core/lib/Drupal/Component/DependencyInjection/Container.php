@@ -204,7 +204,24 @@ class Container implements ContainerInterface, ResetInterface {
    * a new instance of the shared service.
    */
   public function reset(): void {
-    $this->services = [];
+    $this->privateServices = [];
+    foreach (array_keys($this->services) as $id) {
+
+      if ($id === 'request_stack') {
+        continue;
+      }
+
+      $definition = $this->serviceDefinitions[$id] ?? NULL;
+
+      // Definitions can either be a keyed array or a serialized string.
+      if (is_string($definition)) {
+        $definition = unserialize($definition);
+      }
+
+      if (!isset($definition['synthetic']) || $definition['synthetic'] === FALSE) {
+        unset($this->services[$id]);
+      }
+    }
   }
 
   /**

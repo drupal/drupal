@@ -6,7 +6,6 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\InfoParser;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Extend DrupalKernel to handle force some kernel behaviors.
@@ -113,19 +112,6 @@ class InstallerKernel extends DrupalKernel {
     // subsequently executed code does not involve the installer at all.
     // @see install_drupal()
     return isset($GLOBALS['install_state']) && empty($GLOBALS['install_state']['installation_finished']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function attachSynthetic(ContainerInterface $container): void {
-    parent::attachSynthetic($container);
-
-    // Reset any existing container in order to avoid holding on to old object
-    // references, otherwise memory usage grows exponentially with each rebuild
-    // when multiple modules are being installed.
-    // @todo Move this to the parent class after https://www.drupal.org/i/2066993
-    $this->container?->reset();
   }
 
   /**
