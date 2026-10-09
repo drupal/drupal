@@ -626,9 +626,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Set the allowed protocols.
     UrlHelper::setAllowedProtocols($this->container->getParameter('filter_protocols'));
 
-    // Override of Symfony's MIME type guesser singleton.
-    MimeTypeGuesser::registerWithSymfonyGuesser($this->container);
-
     $this->prepared = TRUE;
   }
 
@@ -1115,6 +1112,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->container->get('logger.factory')->get('DrupalKernel')->error('Container cannot be saved to cache.');
     }
 
+    // Override of Symfony's MIME type guesser singleton.
+    MimeTypeGuesser::registerWithSymfonyGuesser($this->container);
+
     return $this->container;
   }
 
@@ -1468,6 +1468,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Set the class loader which was registered as a synthetic service.
     $container->set('class_loader', $this->classLoader);
+
+    // Reset any existing container in order to avoid holding on to old object
+    // references, otherwise memory usage grows exponentially with each rebuild.
+    $this->container?->reset();
+
     return $container;
   }
 
