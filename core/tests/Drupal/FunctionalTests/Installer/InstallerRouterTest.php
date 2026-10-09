@@ -59,7 +59,7 @@ class InstallerRouterTest extends InstallerTestBase {
     // Ensures that router is not rebuilt unnecessarily during the install. It
     // is rebuilt during:
     // - router_test_install()
-    // - router_installer_test_modules_installed()
+    // - \Drupal\router_installer_test\Hook\RouterInstallerTestHooks::modulesInstalled()
     // - install_finished()
     $this->assertSame(3, \Drupal::service('core.performance.test.recorder')->getCount('event', RoutingEvents::FINISHED));
     $this->assertStringEndsWith('/core/install.php/router_installer_test/test1', \Drupal::state()->get('router_installer_test_modules_installed'));

@@ -80,4 +80,20 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
     return array_keys(get_object_vars($this));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function reset(): void {
+    $persist_services = [];
+    foreach (array_keys($this->services) as $id) {
+      $definition = $this->hasDefinition($id) ? $this->getDefinition($id) : NULL;
+
+      if ($id === 'request_stack' || $definition?->isSynthetic()) {
+        $persist_services[$id] = $this->services[$id];
+      }
+    }
+    parent::reset();
+    $this->services = $persist_services;
+  }
+
 }
