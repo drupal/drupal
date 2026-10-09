@@ -6,6 +6,7 @@ namespace Drupal\Tests\Component\Serialization;
 
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\Yaml;
+use Drupal\TestTools\PhpUnitCompatibility\ForwardCompatibilityTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -17,6 +18,8 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('Drupal')]
 #[Group('Serialization')]
 class YamlTest extends YamlTestBase {
+
+  use ForwardCompatibilityTrait;
 
   /**
    * Tests encoding and decoding basic data structures.
@@ -70,7 +73,7 @@ class YamlTest extends YamlTestBase {
    */
   public function testEncodeObjectSupportDisabled(): void {
     $this->expectException(InvalidDataTypeException::class);
-    $this->expectExceptionMessage('Object support when dumping a YAML file has been disabled.');
+    $this->expectExceptionMessageIs('Object support when dumping a YAML file has been disabled.');
     $object = new \stdClass();
     $object->foo = 'bar';
     Yaml::encode([$object]);

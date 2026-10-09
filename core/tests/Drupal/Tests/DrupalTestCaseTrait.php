@@ -7,6 +7,7 @@ namespace Drupal\Tests;
 use Drupal\TestTools\ErrorHandler\BootstrapErrorHandler;
 use Drupal\TestTools\Extension\DeprecationBridge\Configuration as DeprecationHandlerConfiguration;
 use Drupal\TestTools\Extension\Dump\DebugDump;
+use Drupal\TestTools\PhpUnitCompatibility\ForwardCompatibilityTrait;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\BeforeClass;
 use Symfony\Component\VarDumper\VarDumper;
@@ -33,6 +34,8 @@ use Symfony\Component\VarDumper\VarDumper;
  */
 trait DrupalTestCaseTrait {
 
+  use ForwardCompatibilityTrait;
+
   /**
    * Registers the dumper CLI handler when the DebugDump extension is enabled.
    */
@@ -54,30 +57,6 @@ trait DrupalTestCaseTrait {
     if (DeprecationHandlerConfiguration::instance()->projectIgnoresEnabled && !get_error_handler() instanceof BootstrapErrorHandler) {
       throw new \RuntimeException(sprintf('%s registered its own error handler without restoring the previous one before or during tear down. This can cause unpredictable test results. Ensure the test cleans up after itself.', $this->name()));
     }
-  }
-
-  /**
-   * Expects an exactly matching exception message.
-   *
-   * Forward compatibility for PHPUnit 13.
-   *
-   * @param string $message
-   *   The expected exception message.
-   */
-  protected function expectExceptionMessageIs(string $message): void {
-    $this->expectExceptionMessage($message);
-  }
-
-  /**
-   * Expects an exception message containing a specified string.
-   *
-   * Forward compatibility for PHPUnit 13.
-   *
-   * @param string $message
-   *   The expected exception message.
-   */
-  protected function expectExceptionMessageIsOrContains(string $message): void {
-    $this->expectExceptionMessage($message);
   }
 
 }

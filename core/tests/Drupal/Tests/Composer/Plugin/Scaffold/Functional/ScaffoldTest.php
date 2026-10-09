@@ -8,6 +8,7 @@ use Composer\Util\Filesystem;
 use Drupal\Tests\Composer\Plugin\Scaffold\AssertUtilsTrait;
 use Drupal\Tests\Composer\Plugin\Scaffold\Fixtures;
 use Drupal\Tests\Composer\Plugin\Scaffold\ScaffoldTestResult;
+use Drupal\TestTools\PhpUnitCompatibility\ForwardCompatibilityTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +21,9 @@ use PHPUnit\Framework\TestCase;
  */
 #[Group('Scaffold')]
 class ScaffoldTest extends TestCase {
+
   use AssertUtilsTrait;
+  use ForwardCompatibilityTrait;
 
   /**
    * The root of this project.
@@ -175,7 +178,7 @@ class ScaffoldTest extends TestCase {
     $this->markTestSkipped('Temporarily skipped due to random failures. See https://www.drupal.org/project/drupal/issues/3150040');
     // Test scaffold. Expect an error.
     $this->expectException(\Exception::class);
-    $this->expectExceptionMessage($expected_exception_message);
+    $this->expectExceptionMessageIs($expected_exception_message);
     $this->scaffoldSut($fixture_name, $is_link);
   }
 

@@ -7,6 +7,7 @@ namespace Drupal\Tests\Component\Gettext;
 use Drupal\Component\Gettext\PoHeader;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Gettext\PoStreamWriter;
+use Drupal\TestTools\PhpUnitCompatibility\ForwardCompatibilityTrait;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -23,6 +24,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 class PoStreamWriterTest extends TestCase {
 
   use ProphecyTrait;
+  use ForwardCompatibilityTrait;
 
   /**
    * The PO writer object under test.
@@ -59,7 +61,7 @@ class PoStreamWriterTest extends TestCase {
    */
   public function testGetUriException(): void {
     $this->expectException(\Exception::class);
-    $this->expectExceptionMessage('No URI set.');
+    $this->expectExceptionMessageIs('No URI set.');
 
     $this->poWriter->getURI();
   }
@@ -71,7 +73,7 @@ class PoStreamWriterTest extends TestCase {
   public function testWriteItem(string $poContent, string $expected, bool $long): void {
     if ($long) {
       $this->expectException(\Exception::class);
-      $this->expectExceptionMessage('Unable to write data:');
+      $this->expectExceptionMessageIsOrContains('Unable to write data:');
     }
 
     // Limit the file system quota to make the write fail on long strings.
@@ -113,7 +115,7 @@ class PoStreamWriterTest extends TestCase {
    */
   public function testCloseException(): void {
     $this->expectException(\Exception::class);
-    $this->expectExceptionMessage('Cannot close stream that is not open.');
+    $this->expectExceptionMessageIs('Cannot close stream that is not open.');
 
     $this->poWriter->close();
   }
