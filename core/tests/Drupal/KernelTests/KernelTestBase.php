@@ -9,7 +9,6 @@ use Drupal\Component\FileCache\ApcuFileCacheBackend;
 use Drupal\Component\FileCache\FileCache;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
@@ -18,12 +17,10 @@ use Drupal\Core\Database\Exception\SchemaDefinitionException;
 use Drupal\Core\Database\SchemaDefinition\Schema;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
-use Drupal\Core\DrupalKernel;
+use Drupal\Core\Test\KernelTestDrupalKernel;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Extension\ExtensionDiscovery;
-use Drupal\Core\KeyValueStore\KeyValueDatabaseFactory;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
-use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Core\Site\Settings;
@@ -48,6 +45,7 @@ use PHPUnit\Framework\Exception;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -131,7 +129,7 @@ abstract class KernelTestBase extends DrupalTestCase implements ServiceProviderI
   /**
    * The test container.
    */
-  protected ?ContainerBuilder $container;
+  protected ?ContainerInterface $container;
 
   /**
    * Modules to install.
@@ -186,7 +184,9 @@ abstract class KernelTestBase extends DrupalTestCase implements ServiceProviderI
   private ?array $environmentTables = NULL;
 
   /**
-   * The key_value service that must persist between container rebuilds.
+   * The key value factory of the container that booted the test method.
+   *
+   * It is not refreshed when the container is rebuilt during the test method.
    */
   protected KeyValueFactoryInterface $keyValue;
 
@@ -466,13 +466,17 @@ abstract class KernelTestBase extends DrupalTestCase implements ServiceProviderI
     }
 
     // Bootstrap the kernel. Do not use createFromRequest() to retain Settings.
-    $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
+    $kernel = new KernelTestDrupalKernel('testing', $this->classLoader, static::sharesEnvironment());
     $kernel->setSitePath($this->siteDirectory);
     // Boot a new one-time container from scratch. Set the module list upfront
     // to avoid a subsequent rebuild or setting the kernel into the
     // pre-installer mode.
     $extensions = $modules ? $this->getExtensionsForModules($modules) : [];
     $kernel->updateModules($extensions, $extensions);
+    if (static::sharesEnvironment()) {
+      $kernel->setContainerNeedsRebuild(FALSE);
+      $kernel->setOverrideUseCache(TRUE);
+    }
 
     // DrupalKernel::boot() is not sufficient as it does not invoke preHandle(),
     // which is required to initialize legacy global variables.
@@ -480,9 +484,10 @@ abstract class KernelTestBase extends DrupalTestCase implements ServiceProviderI
     $kernel->boot();
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('<none>'));
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<none>');
-    $kernel->preHandle($request);
 
     $this->container = $kernel->getContainer();
+    $this->keyValue = $this->container->get('keyvalue');
+    $kernel->preHandle($request);
 
     // Run database tasks and check for errors.
     $installer_class = $namespace . "\\Install\\Tasks";
@@ -541,6 +546,14 @@ abstract class KernelTestBase extends DrupalTestCase implements ServiceProviderI
     }
 
     $record = $this->loadSharedDatabaseState();
+    // For each method in the test, reset the kernel container cache suffix to
+    // 0. This ensures that the initial container state is the same for each
+    // method, while container rebuilds during tests will force a new cache key.
+    $kernel->resetCacheSuffix();
+    // Reset the container so it is always reloaded from the cache and any
+    // stateful services lose their state.
+    // @todo revisit as part of https://www.drupal.org/node/2218651
+    $kernel->resetContainer();
 
     if ($record === NULL) {
       try {
@@ -705,23 +718,6 @@ abstract class KernelTestBase extends DrupalTestCase implements ServiceProviderI
       $this->usesSuperUserAccessPolicy = !str_starts_with($test_file_name, $this->root . DIRECTORY_SEPARATOR . 'core');
     }
     $container->setParameter('security.enable_super_user', $this->usesSuperUserAccessPolicy);
-
-    // Use memory for key value storages to avoid database queries. Store the
-    // key value factory on the test object so that key value storages persist
-    // container rebuilds, otherwise all state data would vanish.
-    // A test class that shares its environment reads them from the database
-    // instead: installed entity type and field storage definitions, and state,
-    // are key value data, and have to outlive the test method process together
-    // with the tables they describe.
-    if (!isset($this->keyValue)) {
-      // The container is still being compiled, so the connection is taken
-      // from the database registry rather than from the 'database' service.
-      $this->keyValue = static::sharesEnvironment()
-        ? new KeyValueDatabaseFactory(new PhpSerialize(), Database::getConnection())
-        : new KeyValueMemoryFactory();
-    }
-    $container->set('keyvalue', $this->keyValue);
-    $container->getDefinition('keyvalue')->setSynthetic(TRUE);
 
     // Set the default language on the minimal container.
     $container->setParameter('language.default_values', Language::$defaultValues);

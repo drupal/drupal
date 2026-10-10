@@ -1025,15 +1025,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $source_storage = $this->container->get('config.installer')->getSourceStorage();
     }
 
-    // If the module list hasn't already been set in updateModules and we are
-    // not forcing a rebuild, then try and load the container from the cache.
-    if (empty($this->moduleList) && !$this->containerNeedsRebuild) {
-      $container_definition = $this->getCachedContainerDefinition();
-    }
-
+    $container_definition = $this->getContainerFromCacheIfCacheable();
     // If there is no cached container definition, build a new container from
     // scratch.
-    if (!isset($container_definition)) {
+    if ($container_definition === NULL) {
       $container = $this->compileContainer();
 
       // Only dump the container if dumping is allowed. This is useful for
@@ -1931,6 +1926,22 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function getExtensions(): array|false {
     return $this->getConfigStorage()->read('core.extension');
+  }
+
+  /**
+   * Gets the cached container definition if the cache may be used.
+   *
+   * @return array|null
+   *   The cached container definition, or NULL if the cache must not be used
+   *   or holds no definition.
+   */
+  protected function getContainerFromCacheIfCacheable(): ?array {
+    // If the module list hasn't already been set in updateModules and we are
+    // not forcing a rebuild, then try and load the container from the cache.
+    if (!$this->moduleList && !$this->containerNeedsRebuild) {
+      return $this->getCachedContainerDefinition();
+    }
+    return NULL;
   }
 
 }
