@@ -128,6 +128,7 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
       'cache_discovery',
       'cache_entity',
       'file_managed',
+      'key_value',
       'menu_link_content',
       'menu_link_content_data',
       'menu_link_content_revision',

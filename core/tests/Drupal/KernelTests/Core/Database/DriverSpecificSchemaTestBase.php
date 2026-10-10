@@ -1123,9 +1123,11 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $tables = $test_schema->findTables('%');
     sort($tables);
     $expected = [
-      // The 'config' table is added by
-      // \Drupal\KernelTests\KernelTestBase::containerBuild().
+      // The 'config' and 'key_value' tables are created on demand by the
+      // database config and key value storages during
+      // \Drupal\KernelTests\KernelTestBase::bootKernel().
       'config',
+      'key_value',
       'test_1_table',
       // This table uses a per-table prefix, yet it is returned as un-prefixed.
       'test_2_table',
@@ -1390,7 +1392,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     // Finding all tables.
     $tables = $this->schema->findTables('%');
     sort($tables);
-    $this->assertEquals(['config', 'select'], $tables);
+    $this->assertEquals(['config', 'key_value', 'select'], $tables);
 
     // Renaming a table.
     $table_name_new = 'from';
