@@ -1,0 +1,5 @@
+name: Testing OOP Install tasks in profile
+type: profile
+description: 'Profile for testing TaskInterface implementations.'
+version: VERSION
+hidden: true

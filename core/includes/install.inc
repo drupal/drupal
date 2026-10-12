@@ -742,11 +742,47 @@ function install_profile_info($profile, $langcode = 'en') {
 }
 
 /**
+ * Checks a profile for install tasks.
+ *
+ * See \Drupal\Core\Extension\Install\TasksInterface for more information.
+ *
+ * @param \Drupal\Core\Extension\Extension $extension
+ *   The extension to check install tasks for.
+ * @param string $directory_search
+ *   The namespace to check.
+ *
+ * @return string
+ *   The tasks.
+ *
+ * @internal
+ */
+function install_get_fixed_class_name(Extension $extension, string $directory_search): string {
+  $class_name = '';
+  $extension_path = $extension->getPath();
+  $extension_name = $extension->getName();
+  $dir = \Drupal::root() . "/$extension_path/src/$directory_search";
+  if (is_dir($dir)) {
+    $fileSystemIterator = new FilesystemIterator($dir);
+    foreach ($fileSystemIterator as $fileInfo) {
+      if ($fileInfo->isFile() && $fileInfo->getExtension() === 'php') {
+        $filename = $fileInfo->getFilename();
+        $extension_path = $dir . '/' . $filename;
+        require_once $extension_path;
+
+        $namespace = "Drupal\\$extension_name\\" . str_replace('/', '\\', $directory_search);
+        $class_name = $namespace . '\\' . $fileInfo->getBasename('.php');
+      }
+    }
+  }
+  return $class_name;
+}
+
+/**
  * Checks a module or profile requirements.
  *
  * See \Drupal\Core\Extension\InstallRequirementsInterface for more information.
  *
- * @param \Drupal\Core\Extension $extension
+ * @param \Drupal\Core\Extension\Extension $extension
  *   The extension to check install requirements for.
  *
  * @return array
@@ -755,26 +791,10 @@ function install_profile_info($profile, $langcode = 'en') {
  * @internal
  */
 function install_check_class_requirements(Extension $extension): array {
-  $extension_path = $extension->getPath();
-  $extension_name = $extension->getName();
-  $dir = \Drupal::root() . "/$extension_path/src/Install/Requirements";
+  $class_name = install_get_fixed_class_name($extension, 'Install/Requirements');
   $requirements = [];
-  if (is_dir($dir)) {
-    $fileSystemIterator = new FilesystemIterator($dir);
-    foreach ($fileSystemIterator as $fileInfo) {
-      if ($fileInfo->isFile() && $fileInfo->getExtension() === 'php') {
-        $filename = $fileInfo->getFilename();
-        $requirements_path = $dir . '/' . $filename;
-        require_once $requirements_path;
-
-        $namespace = "Drupal\\$extension_name\\Install\\Requirements";
-        $class_name = $namespace . '\\' . $fileInfo->getBasename('.php');
-        if (class_exists($class_name) && is_subclass_of($class_name, InstallRequirementsInterface::class)) {
-          $requirements = $class_name::getRequirements();
-        }
-      }
-    }
-
+  if (class_exists($class_name) && is_subclass_of($class_name, InstallRequirementsInterface::class)) {
+    $requirements = $class_name::getRequirements();
   }
   return $requirements;
 }
