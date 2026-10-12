@@ -279,6 +279,8 @@ function hook_uninstall($is_syncing): void {
  * Return an array of tasks to be performed by an installation profile.
  *
  * Only procedural implementations are supported for this hook.
+ * See \Drupal\Core\Extension\Install\TasksInterface for OOP versions.
+ * This hook will not run if an OOP implementation is present.
  *
  * Any tasks you define here will be run, in order, after the installer has
  * finished the site configuration step but before it has moved on to the
@@ -375,6 +377,11 @@ function hook_uninstall($is_syncing): void {
  *     could be used, for example, to allow the same function to be called by
  *     two different tasks.
  *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\Core\Extension\Install\TasksInterface instead.
+ *
+ * @see https://www.drupal.org/node/3623397
+ *
  * @see install_state_defaults()
  * @see batch_set()
  * @see hook_install_tasks_alter()
@@ -445,6 +452,8 @@ function hook_install_tasks(&$install_state) {
  * Alter the full list of installation tasks.
  *
  * Only procedural implementations are supported for this hook.
+ * See \Drupal\Core\Extension\Install\TasksInterface for OOP versions.
+ * This hook will not run if an OOP implementation is present.
  *
  * You can use this hook to change or replace any part of the Drupal
  * installation process that occurs after the installation profile is selected.
@@ -457,6 +466,11 @@ function hook_install_tasks(&$install_state) {
  *   steps within the installation process.
  * @param array $install_state
  *   An array of information about the current installation state.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use
+ *   \Drupal\Core\Extension\Install\TasksInterface instead.
+ *
+ * @see https://www.drupal.org/node/3623397
  *
  * @see hook_install_tasks()
  * @see install_tasks()
