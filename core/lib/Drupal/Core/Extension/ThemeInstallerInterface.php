@@ -80,4 +80,28 @@ interface ThemeInstallerInterface {
    */
   public function uninstall(array $theme_list);
 
+  /**
+   * Determines the full set of themes to uninstall for the given list.
+   *
+   * @param string[] $theme_list
+   *   An array of theme machine names.
+   * @param bool $uninstall_dependents
+   *   (optional) If TRUE, installed sub-themes of the given themes are added to
+   *   the returned list. If FALSE, an exception is thrown when a given base
+   *   theme has an installed sub-theme that is not also in the list.
+   *
+   * @return string[]
+   *   The machine names of the themes to uninstall, including any added
+   *   sub-themes.
+   *
+   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
+   *   Thrown when a requested theme is not installed.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when trying to uninstall the admin theme, the default theme or,
+   *   when $uninstall_dependents is FALSE, a theme that another theme depends
+   *   on.
+   */
+  public function getThemesToUninstall(array $theme_list, bool $uninstall_dependents = TRUE): array;
+
 }

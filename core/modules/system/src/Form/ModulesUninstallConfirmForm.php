@@ -152,6 +152,9 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
     }
 
     $data = $this->moduleExtensionList->getList();
+    // Resolves all modules to uninstall including any dependencies in the order
+    // the module installer will uninstall them.
+    $this->modules = $this->moduleInstaller->getModulesToUninstall($this->modules);
     $form['text']['#markup'] = '<p>' . $this->t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>';
     $form['modules'] = [
       '#theme' => 'item_list',

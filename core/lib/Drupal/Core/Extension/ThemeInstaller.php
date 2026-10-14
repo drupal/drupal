@@ -212,12 +212,11 @@ class ThemeInstaller implements ThemeInstallerInterface {
   /**
    * {@inheritdoc}
    */
-  public function uninstall(array $theme_list) {
-    $extension_config = $this->configFactory->getEditable('core.extension');
-    $theme_config = $this->configFactory->getEditable('system.theme');
+  public function getThemesToUninstall(array $theme_list, bool $uninstall_dependents = TRUE): array {
+    $extension_config = $this->configFactory->get('core.extension');
+    $theme_config = $this->configFactory->get('system.theme');
     $list = $this->themeHandler->listInfo();
-    $installed_themes = $extension_config->get('theme') ?: [];
-    $theme_data = $this->themeExtensionList->reset()->getList();
+    $theme_list = array_combine(array_values($theme_list), array_values($theme_list));
     foreach ($theme_list as $key) {
       if ($extension_config->get("theme.$key") === NULL) {
         throw new UnknownExtensionException("Unknown theme: $key.");
@@ -228,16 +227,30 @@ class ThemeInstaller implements ThemeInstallerInterface {
       if ($key === $theme_config->get('admin')) {
         throw new \InvalidArgumentException("The current administration theme $key cannot be uninstalled.");
       }
-      // Base themes cannot be uninstalled if sub themes are installed, and if
-      // they are not uninstalled at the same time.
-      if (isset($list[$key]) && !empty($list[$key]->sub_themes)) {
-        foreach ($list[$key]->sub_themes as $sub_key => $sub_label) {
-          if (isset($list[$sub_key]) && !in_array($sub_key, $theme_list, TRUE)) {
+      // Base themes cannot be uninstalled if sub themes are installed, unless
+      // they are uninstalled at the same time.
+      foreach (array_keys($list[$key]->sub_themes ?? []) as $sub_key) {
+        if (isset($list[$sub_key]) && !isset($theme_list[$sub_key])) {
+          if (!$uninstall_dependents) {
             throw new \InvalidArgumentException("The base theme $key cannot be uninstalled, because theme $sub_key depends on it.");
           }
+          $theme_list[$sub_key] = $sub_key;
         }
       }
     }
+    return array_values($theme_list);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function uninstall(array $theme_list) {
+    // Validate the request without adding sub-themes: callers must list them
+    // explicitly, see ::getThemesToUninstall() to resolve them beforehand.
+    $theme_list = $this->getThemesToUninstall($theme_list, FALSE);
+    $extension_config = $this->configFactory->getEditable('core.extension');
+    $installed_themes = $extension_config->get('theme') ?: [];
+    $theme_data = $this->themeExtensionList->reset()->getList();
 
     $this->cssCollectionOptimizer->deleteAll();
     foreach ($theme_list as $key) {

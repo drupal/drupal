@@ -102,7 +102,7 @@ class ExtensionInstallCommand {
       return Command::FAILURE;
     }
 
-    // Installing modules and themes together would require interleaving two
+    // Installing modules and themes together would require combining two
     // different dependency-resolution and install processes (a theme may even
     // depend on a module being installed first). Keep each invocation to a
     // single extension type rather than guessing at the correct ordering.

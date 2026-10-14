@@ -20,6 +20,7 @@ drupalorg
 druplicon
 drush
 exin
+exun
 fapi
 fieldable
 fulldate

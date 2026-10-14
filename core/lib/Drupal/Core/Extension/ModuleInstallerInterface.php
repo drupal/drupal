@@ -97,6 +97,26 @@ interface ModuleInstallerInterface {
   public function uninstall(array $module_list, $uninstall_dependents = TRUE);
 
   /**
+   * Determines the full set of modules to uninstall for the given list.
+   *
+   * @param string[] $module_list
+   *   An array of module machine names.
+   * @param bool $uninstall_dependents
+   *   (optional) If TRUE, installed modules that depend on the given modules
+   *   are added to the returned list. If FALSE, only the given modules that
+   *   are currently installed are returned.
+   *
+   * @return string[]
+   *   The machine names of the installed modules to uninstall, including any
+   *   dependents, ordered the way ::uninstall() would uninstall them. Modules
+   *   that are not installed are omitted.
+   *
+   * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
+   *   Thrown when a requested module, or a dependent of one, does not exist.
+   */
+  public function getModulesToUninstall(array $module_list, bool $uninstall_dependents = TRUE): array;
+
+  /**
    * Determines whether a list of modules can be uninstalled.
    *
    * @param string[] $module_list
