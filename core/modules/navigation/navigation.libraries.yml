@@ -76,6 +76,7 @@ internal.tooltip:
     base:
       css/components/tooltip.css: {}
   dependencies:
+    - core/drupal
     - core/once
     - core/internal.floating-ui
 
