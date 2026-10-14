@@ -69,7 +69,10 @@ class FieldUiTable extends Table {
           unset($list[$name]);
 
           // Determine the region for the row.
-          $region_name = call_user_func_array($row['#region_callback'], [&$row]);
+          $region_name = $row['region']['#value'] ?? '';
+          if (!isset($regions[$region_name])) {
+            $region_name = isset($regions['hidden']) ? 'hidden' : array_key_first($regions);
+          }
 
           // Add the element in the tree.
           // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
