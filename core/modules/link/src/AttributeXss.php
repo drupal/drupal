@@ -41,6 +41,8 @@ final class AttributeXss {
             $skip = (
               $attribute_name == 'style' ||
               str_starts_with($attribute_name, 'on') ||
+              str_starts_with($attribute_name, 'data-hx') ||
+              str_starts_with($attribute_name, 'hx') ||
               str_starts_with($attribute_name, '-') ||
               // Ignore long attributes to avoid unnecessary processing
               // overhead.
