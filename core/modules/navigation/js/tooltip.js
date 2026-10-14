@@ -29,10 +29,20 @@
    * @return {HTMLElement}
    *   A DOM Node.
    */
-  Drupal.theme.tooltipWrapper = (dataset) =>
-    `<div class="toolbar-tooltip ${dataset.drupalTooltipClass || ''}">
-      ${dataset.drupalTooltip}
-    </div>`;
+  Drupal.theme.tooltipWrapper = (dataset) => {
+    const el = document.createElement('div');
+    el.classList.add('toolbar-tooltip');
+    if (dataset.drupalTooltipClass) {
+      dataset.drupalTooltipClass
+        .split(/\s+/)
+        .filter((token) => token !== '')
+        .forEach((token) => {
+          el.classList.add(token);
+        });
+    }
+    el.textContent = dataset.drupalTooltip || '';
+    return el;
+  };
 
   /**
    * Attaches the tooltip behavior to all required triggers.
@@ -46,7 +56,7 @@
     attach: (context) => {
       once('tooltip-trigger', '[data-drupal-tooltip]', context).forEach(
         (trigger) => {
-          trigger.insertAdjacentHTML(
+          trigger.insertAdjacentElement(
             'afterend',
             Drupal.theme.tooltipWrapper(trigger.dataset),
           );
