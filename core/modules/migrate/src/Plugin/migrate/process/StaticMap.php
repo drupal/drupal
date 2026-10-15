@@ -90,7 +90,7 @@ use Drupal\migrate\MigrateSkipRowException;
  *
  * A default value can be defined for all values that are not included in the
  * map. See the example below. If the value of the source property 'foo' is
- * 'yet_another' (a value that is not in the map), 'bar' will be returned.
+ * 'yet_another' (a value that is not in the map), 'fallback' will be returned.
  * @code
  * process:
  *   bar:
@@ -99,7 +99,7 @@ use Drupal\migrate\MigrateSkipRowException;
  *     map:
  *       from: to
  *       this: that
- *     default_value: bar
+ *     default_value: fallback
  * @endcode
  *
  * If your source data has boolean values as strings, you need to use single
@@ -115,9 +115,9 @@ use Drupal\migrate\MigrateSkipRowException;
  *
  * If your source data contains booleans, the boolean is treated as a numeric 0
  * or 1. If the value of the source property 'foo' is TRUE then the value of the
- * destination property bar will be 'bar'. And if the value of the source
+ * destination property bar will be 'quux'. And if the value of the source
  * property 'foo' is FALSE then the value of the destination property bar will
- * be 'bar'.
+ * be 'baz'.
  *
  * @code
  * process:
@@ -125,8 +125,8 @@ use Drupal\migrate\MigrateSkipRowException;
  *     plugin: static_map
  *     source: foo
  *     map:
- *       0: foo
- *       1: bar
+ *       0: baz
+ *       1: quux
  * @endcode
  *
  * Note you cannot map NULL to a value. Use the default_value or bypass setting
