@@ -16,6 +16,16 @@ use Drupal\migrate\Row;
  * The get plugin returns the value of the property given by the "source"
  * configuration key.
  *
+ * If the source configuration contains an empty value, the current value in the
+ * process pipeline will be used. This applies when source is a list of source
+ * properties and one of the list items is empty, such as null, an empty string,
+ * or an empty array.
+ *
+ * The string '0' is not treated as empty.
+ *
+ * This makes it impossible to reference a source property with an empty string
+ * as its name.
+ *
  * Examples:
  *
  * @code
@@ -49,10 +59,6 @@ use Drupal\migrate\Row;
  *
  * This copies the array of source values [foo1, foo2] to the destination
  * property "bar".
- *
- * If the list of source properties contains an empty element then the current
- * value will be used. This makes it impossible to reach a source property with
- * an empty string as its name.
  *
  * Get also supports copying destination values. These are indicated by a
  * starting @ sign. Values using @ must be wrapped in quotes.
