@@ -185,7 +185,6 @@ class FormHooks {
   #[Hook('form_media_library_add_form_alter')]
   public function formMediaLibraryAddFormAlter(array &$form): void {
     $form['#attributes']['class'][] = 'media-library-add-form';
-    $form['#attached']['library'][] = 'default_admin/media_library.theme';
 
     // If there are unsaved media items, apply styling classes to various parts
     // of the form.
