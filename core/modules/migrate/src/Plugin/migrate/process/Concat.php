@@ -48,7 +48,7 @@ use Drupal\migrate\Row;
  * This will set new_text_field to the concatenation of the 'foo' source value,
  * the delimiter and the 'bar' source value. For example, using the values above
  * and "/" as the delimiter, if the 'foo' property is "Rosa" and the 'bar'
- * property is "Rosa", new_text_field will be "Rosa/Parks".
+ * property is "Parks", new_text_field will be "Rosa/Parks".
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
  */
