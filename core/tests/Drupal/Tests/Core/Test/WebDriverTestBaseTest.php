@@ -52,7 +52,7 @@ class WebDriverTestBaseTest extends UnitTestCase {
     $this->putEnv("MINK_DRIVER_ARGS_WEBDRIVER", $mink_driver_args_webdriver);
     $this->putEnv("MINK_DRIVER_ARGS", $mink_driver_args);
 
-    // @phpstan-ignore testClass.missingAttribute.Group, testClass.missingAttribute.RunInSeparateProcesses
+    // @phpstan-ignore testClass.missingAttribute.Group, testClass.missingAttribute.RunTestsInSeparateProcesses
     $object = new #[IgnoreDeprecations] class('test') extends WebDriverTestBase {
 
       public function test(): void {

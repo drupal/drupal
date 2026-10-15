@@ -152,8 +152,8 @@ final class TestClassClassMetadata implements Rule {
         $class->isSubclassOfClass($this->reflectionProvider->getClass(BrowserTestBase::class)) ||
         $class->isSubclassOfClass($this->reflectionProvider->getClass(KernelTestBase::class));
       if ($should_run_in_separate_process && !$has_run_in_separate_process_attribute) {
-        $fails[] = RuleErrorBuilder::message("Test class {$class->getName()} must have attribute \PHPUnit\Framework\Attributes\RunInSeparateProcesses.")
-          ->identifier('testClass.missingAttribute.RunInSeparateProcesses')
+        $fails[] = RuleErrorBuilder::message("Test class {$class->getName()} must have attribute \PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses.")
+          ->identifier('testClass.missingAttribute.RunTestsInSeparateProcesses')
           ->line($node->getStartLine())
           ->build();
       }
