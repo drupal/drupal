@@ -955,8 +955,8 @@ default:
     # that we allow here.
     exit_codes: 100
   variables:
-    KUBERNETES_CPU_REQUEST: "4"
-    CONCURRENCY: 24
+    KUBERNETES_CPU_REQUEST: "1"
+    CONCURRENCY: 6
     PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
   before_script:
     - *composer-setup
@@ -997,7 +997,7 @@ default:
     # that we allow here.
     exit_codes: 100
   variables:
-    KUBERNETES_CPU_REQUEST: "2"
+    KUBERNETES_CPU_REQUEST: "1"
     _ARTIFACTS_DIR: "test-artifacts/phpunit"
     PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
   before_script:
