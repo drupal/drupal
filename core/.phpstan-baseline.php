@@ -1070,12 +1070,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Component/Version/Constraint.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$permission might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Access/AccessResult.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Access\\\\CheckProvider\\:\\:addCheckService\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -3038,12 +3032,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Config/Entity/ConfigEntityUpdater.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Config/Entity/DraggableListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Config\\\\Entity\\\\DraggableListBuilder\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -3624,6 +3612,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Database/Transaction.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\#1 \\$count of method Drupal\\\\Core\\\\Datetime\\\\DateFormatter\\:\\:formatPlural\\(\\) expects int, float given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 2,
+	'path' => __DIR__ . '/lib/Drupal/Core/Datetime/DateFormatter.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
@@ -5672,12 +5666,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'identifier' => 'isset.variable',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
@@ -6572,6 +6560,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Field/Entity/BaseFieldOverride.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Constructor of class Drupal\\\\Core\\\\Field\\\\FallbackFieldTypeCategory has an unused parameter \\$plugin_id\\.$#',
+	'identifier' => 'constructor.unusedParameter',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Field/FallbackFieldTypeCategory.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Field\\\\FieldConfigBase\\:\\:postCreate\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -6864,6 +6858,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Field/Plugin/Field/FieldFormatter/EntityReferenceFormatterBase.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$url in isset\\(\\) always exists and is not nullable\\.$#',
+	'identifier' => 'isset.variable',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Field/Plugin/Field/FieldFormatter/StringFormatter.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Direct injection of entity storage via \\$dateFormatStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
@@ -8414,12 +8414,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuTreeStorage.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'identifier' => 'isset.variable',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuTreeStorage.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Menu\\\\MenuTreeStorageInterface\\:\\:delete\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -9346,12 +9340,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Routing\\\\MatcherDumper\\:\\:addRoutes\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Routing/MatcherDumper.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'identifier' => 'isset.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Routing/MatcherDumper.php',
 ];
@@ -10732,12 +10720,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block/src/BlockForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/src/BlockListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\block\\\\BlockListBuilder\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -11560,12 +11542,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/src/CommentTypeForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/src/CommentTypeListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\CommentViewBuilder\\:\\:alterBuild\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -11678,12 +11654,6 @@ $ignoreErrors[] = [
 	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/Plugin/Validation/Constraint/CommentNameConstraintValidator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/destination/EntityComment.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\Plugin\\\\migrate\\\\destination\\\\EntityComment\\:\\:processStubRow\\(\\) has no return type specified\\.$#',
@@ -12112,18 +12082,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/config_translation/src/ConfigNamesMapper.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config_translation/src/Controller/ConfigTranslationBlockListBuilder.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config_translation/src/Controller/ConfigTranslationFieldListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\config_translation\\\\Form\\\\ConfigTranslationDeleteForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -12410,12 +12368,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/src/Form/EntityModerationForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/src/ModeratedNodeListBuilder.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\content_moderation\\\\ModerationInformation\\:\\:getAffectedRevisionTranslation\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#',
@@ -13570,12 +13522,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field_ui/src/Access/ViewModeAccessCheck.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/EntityDisplayModeListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\FieldUI\\:\\:getOverviewRouteInfo\\(\\) should return Drupal\\\\Core\\\\Url but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
 	'count' => 1,
@@ -13814,12 +13760,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldStorageReuseForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_field_ui_field_storage_add_form_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/src/Hook/FieldUiHooks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_ui\\\\Hook\\\\FieldUiHooks\\:\\:entityOperation\\(\\) implements hook_entity_operation but is missing the CacheableMetadata parameter added in Drupal 11\\.3\\. Update the signature to include \\\\Drupal\\\\Core\\\\Cache\\\\CacheableMetadata \\$cacheability as the second parameter\\.$#',
@@ -14122,6 +14062,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/src/Plugin/Field/FieldWidget/FileWidget.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Parameter \\#2 \\$arguments of class Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup constructor expects array\\<string, bool\\|float\\|int\\|string\\|Stringable\\>, array\\<string, array\\> given\\.$#',
+	'identifier' => 'argument.type',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/file/src/Plugin/Field/FieldWidget/FileWidget.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\file\\\\Plugin\\\\Validation\\\\Constraint\\\\FileExtensionSecureConstraintValidator\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -14392,12 +14338,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/filter/src/FilterFormatInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/filter/src/FilterFormatListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\filter\\\\FilterFormatListBuilder\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -14624,12 +14564,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/src/Form/ImageStyleDeleteForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$image_style_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/src/Form/ImageStyleEditForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\image\\\\Form\\\\ImageStyleEditForm\\:\\:effectSave\\(\\) has no return type specified\\.$#',
@@ -15466,6 +15400,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/JsonApiFunctionalTestBase.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Anonymous function has an unused use \\$resource_type\\.$#',
+	'identifier' => 'closure.unusedUse',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:addOmittedObject\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -15994,12 +15934,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/language/src/LanguageAccessControlHandler.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/src/LanguageListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\language\\\\LanguageListBuilder\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -16092,12 +16026,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\language\\\\LanguageNegotiator\\:\\:updateConfiguration\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/src/LanguageNegotiator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$method_id might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/src/LanguageNegotiator.php',
 ];
@@ -17654,12 +17582,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media/src/MediaListBuilder.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/src/MediaListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media\\\\MediaPermissions\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -17760,12 +17682,6 @@ $ignoreErrors[] = [
 	'identifier' => 'nullCoalesce.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/src/OEmbed/UrlResolver.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$image_style_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/src/Plugin/Field/FieldFormatter/MediaThumbnailFormatter.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Logger assigned from LoggerChannelFactory in a class using DependencySerializationTrait will break serialization\\. Inject a named logger channel service directly \\(e\\.g\\. @logger\\.channel\\.my_channel\\) instead\\.$#',
@@ -18406,20 +18322,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/menu_link_content/src/MenuLinkContentInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/src/MenuLinkListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\menu_link_content\\\\Plugin\\\\Menu\\\\MenuLinkContent\\:\\:deleteLink\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/src/Plugin/Menu/MenuLinkContent.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$uuid might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_link_content/src/Plugin/Menu/MenuLinkContent.php',
 ];
@@ -18982,12 +18886,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/destination/Entity.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/destination/EntityConfigBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\EntityConfigBase\\:\\:rollback\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -18998,18 +18896,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/destination/EntityConfigBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$config might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/destination/EntityConfigBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/destination/EntityContentBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\EntityContentBase\\:\\:isTranslationDestination\\(\\) has no return type specified\\.$#',
@@ -19040,12 +18926,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/destination/EntityFieldStorageConfig.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/destination/EntityRevision.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\EntityViewMode\\:\\:rollback\\(\\) has no return type specified\\.$#',
@@ -19792,12 +19672,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/Form/NodeRevisionRevertForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$node_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Form/NodeRevisionRevertTranslationForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\Form\\\\NodeTypeForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -19894,12 +19768,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/NodeGrantDatabaseStorageInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/NodeListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\NodeServiceProvider\\:\\:register\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -19952,12 +19820,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/NodeViewBuilder.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage_controller is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/NodeViewsData.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Direct injection of entity storage via \\$node_type_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
@@ -20326,7 +20188,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/package_manager/src/Plugin/QueueWorker/Cleaner.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup\\)\\: mixed\\)\\|null, Closure\\(string, array\\=, array\\=\\)\\: Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup given\\.$#',
+	'message' => '#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup\\)\\: mixed\\)\\|null, Closure\\(string, array\\<string, bool\\|float\\|int\\|string\\|Stringable\\>\\=, array\\<string, mixed\\>\\=\\)\\: Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/package_manager/src/Validator/SandboxDatabaseUpdatesValidator.php',
@@ -20366,12 +20228,6 @@ $ignoreErrors[] = [
 	'identifier' => 'return.missing',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/path/src/PathAliasForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/path/src/PathAliasListBuilder.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$entity of method Drupal\\\\Core\\\\Entity\\\\EntityListBuilder\\:\\:buildOperations\\(\\) expects Drupal\\\\Core\\\\Entity\\\\EntityInterface, Drupal\\\\Core\\\\Path\\\\Entity\\\\PathAlias given\\.$#',
@@ -21412,12 +21268,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Controller/SystemInfoController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/DateFormatListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Element\\\\StatusReportPage\\:\\:preRenderCounters\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -21500,12 +21350,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/CronForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$date_format_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/DateFormatEditForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\DateFormatEditForm\\:\\:form\\(\\) has no return type specified\\.$#',
@@ -21686,12 +21530,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/ThemeUninstallConfirmForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$pdo_message might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Install/Requirements/SystemRequirements.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\PhpStorage\\\\MockPhpStorage\\:\\:getConfiguration\\(\\) has no return type specified\\.$#',
@@ -22240,12 +22078,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/EntityTestForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_entity_test_form_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/src/Hook/EntityTestHooks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\entity_test\\\\Plugin\\\\Field\\\\ComputedReferenceTestFieldItemList\\:\\:computeValue\\(\\) has no return type specified\\.$#',
@@ -23526,18 +23358,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Token/TokenReplaceKernelTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_install_configure_form_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/themes/test_installer_theme/src/Hook/TestInstallerThemeHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_install_select_language_form_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/themes/test_installer_theme/src/Hook/TestInstallerThemeHooks.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Function test_theme_depending_on_modules_post_update_module_install\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -24555,12 +24375,6 @@ $ignoreErrors[] = [
 	'message' => '#^Direct injection of entity storage via \\$role_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Form/EntityPermissionsForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$role_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Form/RoleSettingsForm.php',
 ];
 $ignoreErrors[] = [
@@ -24784,12 +24598,6 @@ $ignoreErrors[] = [
 	'identifier' => 'isset.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Plugin/Validation/Constraint/UserMailRequiredValidator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Plugin/migrate/destination/EntityUser.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Plugin\\\\migrate\\\\destination\\\\EntityUser\\:\\:processStubRow\\(\\) has no return type specified\\.$#',
@@ -25128,12 +24936,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/src/RoleForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/RoleListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\RoleListBuilder\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -25180,12 +24982,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/UserFloodControl.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/UserListBuilder.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\UserStorage\\:\\:deleteRoleReferences\\(\\) has no return type specified\\.$#',
@@ -32842,12 +32638,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views_ui/src/ViewFormBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/src/ViewListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_ui\\\\ViewPreviewForm\\:\\:form\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -33268,12 +33058,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workflows/src/Plugin/WorkflowTypeTransitionFormBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workflows/src/WorkflowListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workflows\\\\WorkflowListBuilder\\:\\:getFormId\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -33476,12 +33260,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspacePublisherInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'identifier' => 'isset.variable',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceTracker.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces\\\\WorkspacesServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
@@ -33838,12 +33616,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces_ui/src/Form/WorkspaceSwitcherForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces_ui/src/WorkspaceListBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces_ui\\\\WorkspaceListBuilder\\:\\:offCanvasRender\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -34018,6 +33790,12 @@ $ignoreErrors[] = [
 	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Config/ConfigEntityUnitTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Parameter \\#1 \\$expected of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) contains unresolvable type\\.$#',
+	'identifier' => 'argument.unresolvableType',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Config/ConfigImporterTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
@@ -34640,72 +34418,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/bootstrap.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_media_library_add_form_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/default_admin/src/Hook/FormHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_media_library_add_form_oembed_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/default_admin/src/Hook/FormHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_media_library_add_form_upload_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/default_admin/src/Hook/FormHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_menu_link_content_form_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/default_admin/src/Hook/FormHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_menu_link_edit_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/default_admin/src/Hook/FormHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_node_form_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/default_admin/src/Hook/FormHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_node_preview_form_select_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/default_admin/src/Hook/FormHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_system_modules_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/default_admin/src/Hook/FormHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_system_theme_settings_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/default_admin/src/Hook/FormHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_user_admin_permissions_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/default_admin/src/Hook/FormHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Form alter hook "form_views_ui_add_handler_form_alter" implementation must have 2 or 3 parameters\\. Expected signature\\: method\\(&\\$form, \\\\Drupal\\\\Core\\\\Form\\\\FormStateInterface \\$form_state\\[, \\$form_id\\]\\)$#',
-	'identifier' => 'hookFormAlter.invalidParameterCount',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/default_admin/src/Hook/FormHooks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$array of function array_key_first expects array, Drupal\\\\Core\\\\Template\\\\AttributeValueBase\\|null given\\.$#',
