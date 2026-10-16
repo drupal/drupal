@@ -636,6 +636,8 @@ default:
     - *download-cache
     - CACHE_FILE=core/.twigcsfixercache
     - *download-cache
+    - CACHE_FILE=vendor.tar.gz
+    - *download-cache
   artifacts:
     paths:
       - core/phpstan-tmp/resultCache.php
@@ -644,6 +646,7 @@ default:
       - core/.stylelintcache
       - core/.phpcscache
       - core/.twigcsfixercache
+      - vendor.tar.gz
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
@@ -1098,8 +1101,10 @@ default:
     - if [ ! -f core/.stylelintcache ]; then exit 1; fi
     - if [ ! -f core/.phpcscache ]; then exit 1; fi
     - if [ ! -f core/.twigcsfixercache ]; then exit 1; fi
-    - if [ ! -d vendor ]; then exit 1; fi
-    - tar -czf vendor.tar.gz vendor
+    # Performance pipelines run no lint jobs, so there is no vendor directory;
+    # keep the tarball passed through by 'Lint cache download' instead.
+    - if [ -d vendor ]; then tar -czf vendor.tar.gz vendor; fi
+    - if [ ! -f vendor.tar.gz ]; then exit 1; fi
   artifacts:
     paths:
       - core/phpstan-tmp/resultCache.php
