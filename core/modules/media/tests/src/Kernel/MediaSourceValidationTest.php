@@ -61,7 +61,7 @@ final class MediaSourceValidationTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('media');
     $this->installSchema('file', ['file_usage']);
-    $this->installConfig(['media']);
+    $this->installConfig(['system', 'media']);
     $this->mediaType = $this->createMediaType('oembed:video');
     $this->fieldName = $this->mediaType->getSource()
       ->getSourceFieldDefinition($this->mediaType)
