@@ -421,6 +421,8 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
    * Tests full HTML text format.
    */
   public function testFullHtml(): void {
+    // @todo Re-enable in https://www.drupal.org/project/drupal/issues/3621903.
+    $this->markTestSkipped('Filter tips are not rendered, see https://www.drupal.org/project/drupal/issues/3621903.');
     FilterFormat::create(
       Yaml::parseFile('core/profiles/standard/config/install/filter.format.full_html.yml')
     )->save();

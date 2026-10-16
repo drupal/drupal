@@ -90,6 +90,7 @@ variables:
   SIMPLETEST_BASE_URL: http://localhost/subdirectory
   MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable", "--disable-dev-shm-usage"]}}, "http://selenium:4444"]'
   SELENIUM_JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
+  SELENIUM_CHROME_TAG: "155.0"
   # Use local cache for yarn, see .yarn-install-from-cache.
   YARN_ENABLE_GLOBAL_CACHE: false
   YARN_ENABLE_MIRROR: false
@@ -137,7 +138,7 @@ default:
   alias: database
 
 .with-selenium-chrome: &with-selenium-chrome
-  name: selenium/standalone-chrome:133.0
+  name: selenium/standalone-chrome:$SELENIUM_CHROME_TAG
   alias: selenium
   variables:
     JAVA_OPTS: $SELENIUM_JAVA_OPTS
@@ -452,6 +453,7 @@ default:
       allow_failure: true
   variables:
     COMPOSER_UPDATE: "1"
+    SELENIUM_CHROME_TAG: "latest"
 
 # Runs only the tests affected by changes in the MR.
 # The name starts with a space to be listed before the other jobs.
