@@ -16,6 +16,7 @@ use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\GeneratedUrl;
+use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
@@ -138,6 +139,11 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
   protected $token;
 
   /**
+   * The image factory service.
+   */
+  protected ImageFactory $imageFactory;
+
+  /**
    * Constructs a new OEmbed instance.
    *
    * @param array $configuration
@@ -170,8 +176,10 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    *   The file system.
    * @param \Drupal\Core\Utility\Token $token
    *   The token replacement service.
+   * @param \Drupal\Core\Image\ImageFactory|null $image_factory
+   *   The image factory service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_manager, LoggerInterface $logger, MessengerInterface $messenger, ClientInterface $http_client, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, IFrameUrlHelper $iframe_url_helper, FileSystemInterface $file_system, Token $token) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_manager, LoggerInterface $logger, MessengerInterface $messenger, ClientInterface $http_client, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, IFrameUrlHelper $iframe_url_helper, FileSystemInterface $file_system, Token $token, ?ImageFactory $image_factory = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $entity_field_manager, $field_type_manager, $config_factory);
     $this->logger = $logger;
     $this->messenger = $messenger;
@@ -181,6 +189,11 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     $this->iFrameUrlHelper = $iframe_url_helper;
     $this->fileSystem = $file_system;
     $this->token = $token;
+    if (!$image_factory) {
+      @trigger_error('Calling ' . __CLASS__ . '::__construct() without the $image_factory argument is deprecated in drupal:11.4.0 and the $image_factory argument will be required in drupal:12.0.0. See https://www.drupal.org/node/9999999', E_USER_DEPRECATED);
+      $image_factory = \Drupal::service('image.factory');
+    }
+    $this->imageFactory = $image_factory;
   }
 
   /**
@@ -202,7 +215,8 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       $container->get('media.oembed.url_resolver'),
       $container->get('media.oembed.iframe_url_helper'),
       $container->get('file_system'),
-      $container->get('token')
+      $container->get('token'),
+      $container->get('image.factory'),
     );
   }
 
@@ -455,8 +469,26 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     try {
       $response = $this->httpClient->request('GET', $remote_thumbnail_url);
       if ($response->getStatusCode() === 200) {
-        $local_thumbnail_uri = $directory . DIRECTORY_SEPARATOR . $hash . '.' . $this->getThumbnailFileExtensionFromUrl($remote_thumbnail_url, $response);
+        // Only accept extensions that the active image toolkit supports.
+        $extension = $this->getThumbnailFileExtensionFromUrl($remote_thumbnail_url, $response);
+        if (!$extension || !in_array($extension, $this->imageFactory->getSupportedExtensions(), TRUE)) {
+          $this->logger->warning('Could not determine a supported image extension for the remote thumbnail at @url.', [
+            '@url' => $remote_thumbnail_url,
+          ]);
+          return NULL;
+        }
+        $local_thumbnail_uri = $directory . DIRECTORY_SEPARATOR . $hash . '.' . $extension;
         $this->fileSystem->saveData((string) $response->getBody(), $local_thumbnail_uri, FileExists::Replace);
+
+        // Confirm the saved file is actually a valid image.
+        if (!$this->imageFactory->get($local_thumbnail_uri)->isValid()) {
+          $this->fileSystem->delete($local_thumbnail_uri);
+          $this->logger->warning('The remote thumbnail at @url is not a valid image.', [
+            '@url' => $remote_thumbnail_url,
+          ]);
+          return NULL;
+        }
+
         return $local_thumbnail_uri;
       }
     }
