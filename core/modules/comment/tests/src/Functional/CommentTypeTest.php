@@ -184,8 +184,8 @@ class CommentTypeTest extends CommentTestBase {
 
     // Attempt to delete the comment type, which should not be allowed.
     $this->drupalGet('admin/structure/comment/manage/' . $type->id() . '/delete');
-    $this->assertSession()->pageTextContains($type->label() . ' is used by 1 comment on your site. You can not remove this comment type until you have removed all of the ' . $type->label() . ' comments.');
-    $this->assertSession()->pageTextContains('foo is used by the node.foo field on your site. You can not remove this comment type until you have removed the field.');
+    $this->assertSession()->pageTextContains($type->label() . ' is used by 1 comment on your site. You may not remove this comment type until you have removed all of the ' . $type->label() . ' comments.');
+    $this->assertSession()->pageTextContains('foo is used by the node.foo field on your site. You may not remove this comment type until you have removed the field.');
     $this->assertSession()->pageTextNotContains('This action cannot be undone.');
 
     // Delete the comment and the field.

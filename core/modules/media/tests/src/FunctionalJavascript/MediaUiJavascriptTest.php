@@ -210,7 +210,7 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal'));
     $assert_session->addressEquals('admin/structure/media/manage/' . $media_type2->id());
     $assert_session->elementNotExists('css', '.ui-dialog button:contains("Delete")');
-    $assert_session->pageTextContains("$label2 is used by 1 media item on your site. You can not remove this media type until you have removed all of the $label2 media items.");
+    $assert_session->pageTextContains("$label2 is used by 1 media item on your site. You may not remove this media type until you have removed all of the $label2 media items.");
   }
 
 }

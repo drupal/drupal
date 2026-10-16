@@ -5,11 +5,11 @@ namespace Drupal\media\Entity;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\Form\BundleEntityDeleteForm;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\media\Form\MediaTypeDeleteConfirmForm;
 use Drupal\media\MediaTypeAccessControlHandler;
 use Drupal\media\MediaTypeForm;
 use Drupal\media\MediaTypeInterface;
@@ -36,7 +36,7 @@ use Drupal\user\Entity\EntityPermissionsRouteProvider;
     'form' => [
       'add' => MediaTypeForm::class,
       'edit' => MediaTypeForm::class,
-      'delete' => MediaTypeDeleteConfirmForm::class,
+      'delete' => BundleEntityDeleteForm::class,
     ],
     'list_builder' => MediaTypeListBuilder::class,
     'route_provider' => [

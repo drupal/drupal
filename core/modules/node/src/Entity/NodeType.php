@@ -7,7 +7,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\node\Form\NodeTypeDeleteConfirm;
+use Drupal\Core\Entity\Form\BundleEntityDeleteForm;
 use Drupal\node\NodePreviewMode;
 use Drupal\node\NodeTypeAccessControlHandler;
 use Drupal\node\Form\NodeTypeForm;
@@ -34,7 +34,7 @@ use Drupal\user\Entity\EntityPermissionsRouteProvider;
     'form' => [
       'add' => NodeTypeForm::class,
       'edit' => NodeTypeForm::class,
-      'delete' => NodeTypeDeleteConfirm::class,
+      'delete' => BundleEntityDeleteForm::class,
     ],
     'route_provider' => [
       'permissions' => EntityPermissionsRouteProvider::class,
