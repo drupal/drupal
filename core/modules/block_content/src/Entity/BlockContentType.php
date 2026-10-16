@@ -5,12 +5,12 @@ namespace Drupal\block_content\Entity;
 use Drupal\block_content\BlockContentTypeForm;
 use Drupal\block_content\BlockContentTypeListBuilder;
 use Drupal\block_content\BlockTypeAccessControlHandler;
-use Drupal\block_content\Form\BlockContentTypeDeleteForm;
 use Drupal\block_content\Routing\BlockContentTypeRouteProvider;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\block_content\BlockContentTypeInterface;
+use Drupal\Core\Entity\Form\BundleEntityDeleteForm;
 use Drupal\user\Entity\EntityPermissionsRouteProvider;
 
 /**
@@ -33,7 +33,7 @@ use Drupal\user\Entity\EntityPermissionsRouteProvider;
       'default' => BlockContentTypeForm::class,
       'add' => BlockContentTypeForm::class,
       'edit' => BlockContentTypeForm::class,
-      'delete' => BlockContentTypeDeleteForm::class,
+      'delete' => BundleEntityDeleteForm::class,
     ],
     'route_provider' => [
       'html' => BlockContentTypeRouteProvider::class,

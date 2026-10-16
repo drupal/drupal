@@ -3,8 +3,7 @@
 namespace Drupal\comment\Form;
 
 use Drupal\comment\CommentManagerInterface;
-use Drupal\Core\Entity\EntityDeleteForm;
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\Form\BundleEntityDeleteForm;
 use Drupal\field\Entity\FieldStorageConfig;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -14,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
-class CommentTypeDeleteForm extends EntityDeleteForm {
+class CommentTypeDeleteForm extends BundleEntityDeleteForm {
 
   /**
    * The comment manager service.
@@ -63,34 +62,21 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    $comment_count = $this->entityTypeManager->getStorage('comment')->getQuery()
-      ->accessCheck(FALSE)
-      ->condition('comment_type', $this->entity->id())
-      ->count()
-      ->execute();
+  protected function getAdditionalReasonsToPreventDeletion(): array {
+    $reasons = parent::getAdditionalReasonsToPreventDeletion();
+
     $entity_type = $this->entity->getTargetEntityTypeId();
-    $caption = '';
     foreach (array_keys($this->commentManager->getFields($entity_type)) as $field_name) {
       /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
       if (($field_storage = FieldStorageConfig::loadByName($entity_type, $field_name)) && $field_storage->getSetting('comment_type') == $this->entity->id() && !$field_storage->isDeleted()) {
-        $caption .= '<p>' . $this->t('%label is used by the %field field on your site. You can not remove this comment type until you have removed the field.', [
+        $reasons[] = $this->t('%label is used by the %field field on your site. You may not remove this comment type until you have removed the field.', [
           '%label' => $this->entity->label(),
           '%field' => $field_storage->label(),
-        ]) . '</p>';
+        ]);
       }
     }
 
-    if ($comment_count) {
-      $caption .= '<p>' . $this->formatPlural($comment_count, '%label is used by 1 comment on your site. You can not remove this comment type until you have removed all of the %label comments.', '%label is used by @count comments on your site. You may not remove %label until you have removed all of the %label comments.', ['%label' => $this->entity->label()]) . '</p>';
-    }
-    if ($caption) {
-      $form['description'] = ['#markup' => $caption];
-      return $form;
-    }
-    else {
-      return parent::buildForm($form, $form_state);
-    }
+    return $reasons;
   }
 
 }

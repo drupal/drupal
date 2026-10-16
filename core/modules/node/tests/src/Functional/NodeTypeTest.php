@@ -177,7 +177,7 @@ class NodeTypeTest extends NodeTestBase {
     $node = $this->drupalCreateNode(['type' => $type->id()]);
     // Attempt to delete the content type, which should not be allowed.
     $this->drupalGet('admin/structure/types/manage/' . $type->label() . '/delete');
-    $this->assertSession()->pageTextContains("{$type->label()} is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the {$type->label()} content.");
+    $this->assertSession()->pageTextContains("{$type->label()} is used by 1 content item on your site. You may not remove this content type until you have removed all of the {$type->label()} content items.");
     $this->assertSession()->pageTextNotContains('This action cannot be undone.');
 
     // Delete the node.
