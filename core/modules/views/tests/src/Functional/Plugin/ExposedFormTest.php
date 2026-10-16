@@ -214,6 +214,12 @@ class ExposedFormTest extends ViewTestBase {
     $this->drupalGet('test_exposed_form_buttons');
     $this->assertSession()->fieldNotExists('edit-reset');
 
+    // Verify Reset button appears with just order + sort keys.
+    $this->drupalGet('test_exposed_form_buttons', [
+      'query' => ['order' => 'id', 'sort' => 'asc'],
+    ]);
+    $this->assertSession()->buttonExists('Reset');
+
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article']]);
     // Test that the type has been set.
     $this->assertSession()->fieldValueEquals('edit-type', 'article');
