@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Batch\BatchStorageInterface;
+use Drupal\Core\Form\FormSelectOptions;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\CallableResolver;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -38,67 +39,16 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *   - type: A string that defines the element type. The value can be 'option'
  *     or 'optgroup'.
  *   - value: A string that contains the value attribute for the option.
+ *
+ * @deprecated in drupal:11.6.0 and is removed from drupal:13.0.0. Use
+ *  \Drupal\Core\Form\FormSelectOptions::process() instead.
+ *
+ * @see https://www.drupal.org/node/3412600
+ * @see \Drupal\Core\Form\FormSelectOptions::process()
  */
 function form_select_options($element, $choices = NULL): array {
-  if (!isset($choices)) {
-    if (empty($element['#options'])) {
-      return [];
-    }
-    $choices = $element['#options'];
-    $sort_options = isset($element['#sort_options']) && $element['#sort_options'];
-    $sort_start = $element['#sort_start'] ?? 0;
-  }
-  else {
-    // We are within an option group.
-    $sort_options = isset($choices['#sort_options']) && $choices['#sort_options'];
-    $sort_start = $choices['#sort_start'] ?? 0;
-    unset($choices['#sort_options']);
-    unset($choices['#sort_start']);
-  }
-
-  // array_key_exists() accommodates the rare event where $element['#value'] is
-  // NULL. isset() fails in this situation.
-  $value_valid = \array_key_exists('#value', $element);
-  $value_is_array = $value_valid && is_array($element['#value']);
-  // Check if the element is multiple select and no value has been selected.
-  $empty_value = (empty($element['#value']) && !empty($element['#multiple']));
-  $options = [];
-  foreach ($choices as $key => $choice) {
-    if (is_array($choice)) {
-      $options[] = [
-        'type' => 'optgroup',
-        'label' => $key,
-        'options' => form_select_options($element, $choice),
-      ];
-    }
-    elseif (is_object($choice) && isset($choice->option)) {
-      $options = array_merge($options, form_select_options($element, $choice->option));
-    }
-    else {
-      $option = [];
-      $key = (string) $key;
-      $empty_choice = $empty_value && $key == '_none';
-      if ($value_valid && ((!$value_is_array && (string) $element['#value'] === $key || ($value_is_array && in_array($key, $element['#value']))) || $empty_choice)) {
-        $option['selected'] = TRUE;
-      }
-      else {
-        $option['selected'] = FALSE;
-      }
-      $option['type'] = 'option';
-      $option['value'] = $key;
-      $option['label'] = $choice;
-      $options[] = $option;
-    }
-  }
-  if ($sort_options) {
-    $unsorted = array_slice($options, 0, $sort_start);
-    $sorted = array_slice($options, $sort_start);
-    uasort($sorted, function ($a, $b) {
-      return strcmp((string) $a['label'], (string) $b['label']);
-    });
-    $options = array_merge($unsorted, $sorted);
-  }
-  return $options;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.6.0 and is removed from drupal:13.0.0. Use \Drupal\Core\Form\FormSelectOptions::process() instead. See https://www.drupal.org/node/3412600', E_USER_DEPRECATED);
+  return FormSelectOptions::process($element, $choices);
 }
 
 /**
@@ -132,8 +82,14 @@ function form_select_options($element, $choices = NULL): array {
  * @return array|bool
  *   An array of indexes that match the given $key. Array will be
  *   empty if no elements were found. FALSE if optgroups were found.
+ *
+ * @deprecated in drupal:11.5.0 and is removed from drupal:13.0.0.
+ *    There is no replacement.
+ *
+ * @see https://www.drupal.org/node/3412600
  */
 function form_get_options($element, $key) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.6.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3412600', E_USER_DEPRECATED);
   $keys = [];
   foreach ($element['#options'] as $index => $choice) {
     if (is_array($choice)) {

@@ -278,7 +278,7 @@ class FormPreprocess {
     RenderElementBase::setAttributes($element, ['form-select']);
 
     $variables['attributes'] = $element['#attributes'];
-    $variables['options'] = form_select_options($element);
+    $variables['options'] = FormSelectOptions::process($element);
   }
 
   /**
