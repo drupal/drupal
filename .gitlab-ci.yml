@@ -1,4 +1,4 @@
-# cspell:ignore codequality Micheh micheh webide testdox updatedb stylelintrc fastzip phpcscache Ksection drupaltestbot drupaltestbotpw Dwebdriver logfile XVFB
+# cspell:ignore codequality Micheh micheh webide testdox updatedb stylelintrc fastzip phpcscache Ksection drupaltestbot drupaltestbotpw Dwebdriver logfile XVFB pipefail
 
 ################
 # Drupal GitLabCI template.
@@ -157,6 +157,21 @@ default:
 
 .composer-setup: &composer-setup
   - echo -e "\e[0Ksection_start:`date +%s`:composer_setup[collapsed=true]\r\e[0K\e[0;30;103m*** Composer setup ***\e[0m"
+  # Unpack the vendor directory from the latest 'Write lint caches' job on the
+  # target branch, so composer install only downloads changed packages.
+  - |
+    if [[ "$CI_MERGE_REQUEST_LABELS" =~ "Test lint cache warming" ]]; then
+      VENDOR_URL=https://git.drupalcode.org/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/refs%2Fmerge-requests%2F${CI_MERGE_REQUEST_IID}%2Fmerge/raw/vendor.tar.gz?job=Write%20lint%20caches
+    else
+      VENDOR_URL=https://git.drupalcode.org/api/v4/projects/project%2Fdrupal/jobs/artifacts/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}/raw/vendor.tar.gz?job=Write%20lint%20caches
+    fi
+  # Daily pipelines skip the download to test a clean install.
+  - |
+    if [[ "$DAILY_TEST" != "1" ]]; then
+      echo Downloading $VENDOR_URL
+      # Remove a partial extraction so composer does a clean install instead.
+      (set -o pipefail; curl --fail --location "$VENDOR_URL" | tar -xz) || rm -rf vendor
+    fi
   - composer validate
   - composer install --optimize-autoloader
   - composer run-script drupal-phpunit-upgrade-check
@@ -165,7 +180,7 @@ default:
 .download-cache: &download-cache
   - |
     if [[ "$CI_MERGE_REQUEST_LABELS" =~ "Test lint cache warming" ]]; then
-      CACHE_URL=https://git.drupalcode.org/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}/raw/${CACHE_FILE}?job=Write%20lint%20caches
+      CACHE_URL=https://git.drupalcode.org/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/refs%2Fmerge-requests%2F${CI_MERGE_REQUEST_IID}%2Fmerge/raw/${CACHE_FILE}?job=Write%20lint%20caches
     else
       CACHE_URL=https://git.drupalcode.org/api/v4/projects/project%2Fdrupal/jobs/artifacts/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}/raw/${CACHE_FILE}?job=Write%20lint%20caches
     fi
@@ -595,23 +610,12 @@ default:
 # Lint Jobs
 ################
 
-.lint-cache-artifacts: &lint-cache-artifacts
-  artifacts:
-    paths:
-      - core/phpstan-tmp/resultCache.php
-      - core/.cspellcache
-      - core/.eslintcache
-      - core/.stylelintcache
-      - core/.phpcscache
-      - core/.twigcsfixercache
-
 # Download the cache artifacts from the previous pipeline run to work around
 # https://gitlab.com/gitlab-org/gitlab/-/issues/458828 due to performance
 # testing. Note that this job must come before the lint jobs that create the
 # updated cache files. This ensures that their updated artifacts are used in the
 # 'Write lint caches' job.
 'Lint cache download':
-  <<: [ *lint-cache-artifacts ]
   stage: 🪄 Lint
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
@@ -632,6 +636,14 @@ default:
     - *download-cache
     - CACHE_FILE=core/.twigcsfixercache
     - *download-cache
+  artifacts:
+    paths:
+      - core/phpstan-tmp/resultCache.php
+      - core/.cspellcache
+      - core/.eslintcache
+      - core/.stylelintcache
+      - core/.phpcscache
+      - core/.twigcsfixercache
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
@@ -1070,7 +1082,6 @@ default:
 
 # This job should be real quick and run at the very end of the pipeline.
 'Write lint caches':
-  <<: [ *lint-cache-artifacts ]
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
       when: never
@@ -1087,3 +1098,14 @@ default:
     - if [ ! -f core/.stylelintcache ]; then exit 1; fi
     - if [ ! -f core/.phpcscache ]; then exit 1; fi
     - if [ ! -f core/.twigcsfixercache ]; then exit 1; fi
+    - if [ ! -d vendor ]; then exit 1; fi
+    - tar -czf vendor.tar.gz vendor
+  artifacts:
+    paths:
+      - core/phpstan-tmp/resultCache.php
+      - core/.cspellcache
+      - core/.eslintcache
+      - core/.stylelintcache
+      - core/.phpcscache
+      - core/.twigcsfixercache
+      - vendor.tar.gz
