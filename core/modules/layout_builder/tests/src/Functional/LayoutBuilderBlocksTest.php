@@ -251,6 +251,35 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
   }
 
   /**
+   * Tests the usage of placeholders for empty field blocks.
+   */
+  public function testFieldBlockPlaceholder(): void {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+      'administer node fields',
+    ]));
+
+    $label = 'Field block test';
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $this->fieldUIAddNewField($field_ui_prefix, 'field_block_test', $label, 'string');
+
+    $this->drupalGet("{$field_ui_prefix}/display/default");
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+
+    $this->drupalGet("$field_ui_prefix/display/default/layout");
+    $this->clickLink('Add block');
+    $this->clickLink($label);
+    $page->fillField('settings[formatter][type]', 'blank');
+    $page->pressButton('Add block');
+
+    $assert_session->pageTextContains("Placeholder for the \"{$label}\" field");
+  }
+
+  /**
    * Tests the ability to use a specified block label for field blocks.
    */
   public function testFieldBlockLabel(): void {

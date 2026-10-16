@@ -20,6 +20,7 @@ use Drupal\Core\Form\FormHelper;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\FieldConfigInterface;
@@ -154,13 +155,17 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
    * {@inheritdoc}
    */
   public function build() {
+    $cacheability = CacheableMetadata::createFromObject($this);
     $display_settings = $this->getConfiguration()['formatter'];
     $display_settings['third_party_settings']['layout_builder']['view_mode'] = $this->getContextValue('view_mode');
     $entity = $this->getEntity();
     try {
       $build = [];
       $view = $entity->get($this->fieldName)->view($display_settings);
-      if ($view) {
+      if (Element::isEmpty($view)) {
+        $cacheability->addCacheableDependency(CacheableMetadata::createFromRenderArray($view));
+      }
+      else {
         $build = [$view];
       }
     }
@@ -175,7 +180,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
         '%error' => $e->getMessage(),
       ]);
     }
-    CacheableMetadata::createFromRenderArray($build)->addCacheableDependency($this)->applyTo($build);
+    $cacheability->applyTo($build);
     return $build;
   }
 
