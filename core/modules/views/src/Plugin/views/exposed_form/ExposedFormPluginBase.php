@@ -262,8 +262,11 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
       }
       $all_exposed = array_merge($exposed_sorts, $exposed_filters);
 
-      // Set the access to FALSE if there is no exposed input.
-      if (!array_intersect_key($all_exposed, $this->view->getExposedInput())) {
+      // Don't display the reset button if there is no input in the exposed
+      // form or while using the default sort.
+      $exposed_input = $this->view->getExposedInput();
+      $reset = array_intersect_key($all_exposed, $exposed_input) || isset($exposed_input['order']) || isset($exposed_input['sort']);
+      if (!$reset) {
         $form['actions']['reset']['#access'] = FALSE;
       }
     }
