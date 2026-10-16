@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\FunctionalTests\Entity;
+namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\Form\BundleEntityDeleteForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
