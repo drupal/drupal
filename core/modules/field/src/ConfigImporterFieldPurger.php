@@ -65,7 +65,7 @@ class ConfigImporterFieldPurger {
    *   The config importer.
    */
   protected static function initializeSandbox(array &$context, ConfigImporter $config_importer) {
-    if (!($config_purge_batch_size = \Drupal::config('field.field_settings')->get('purge_batch_size'))) {
+    if (!($config_purge_batch_size = \Drupal::config('field.settings')->get('purge_batch_size'))) {
       $config_purge_batch_size = Settings::get('field_purge_batch_size', 50);
     }
 
