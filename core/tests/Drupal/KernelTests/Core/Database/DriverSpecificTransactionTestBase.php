@@ -56,6 +56,10 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
 
   /**
    * Create a root Drupal transaction.
+   *
+   * Keep the return value in a variable for as long as you need the
+   * transaction open. It commits or releases itself when destructed, so
+   * dropping the variable ends the transaction early.
    */
   protected function createRootTransaction(string $name = '', bool $insertRow = TRUE): Transaction {
     $this->assertFalse($this->connection->inTransaction());
@@ -78,6 +82,9 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
 
   /**
    * Create a Drupal savepoint transaction after root.
+   *
+   * Same rule as createRootTransaction(): keep the return value in scope
+   * for as long as you need the savepoint open.
    */
   protected function createFirstSavepointTransaction(string $name = '', bool $insertRow = TRUE): Transaction {
     $this->assertTrue($this->connection->inTransaction());
@@ -248,6 +255,8 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
    */
   public function testRollbackRootWithActiveSavepoint(): void {
     $transaction = $this->createRootTransaction();
+    // $savepoint must be kept alive until the end of the test; see
+    // createFirstSavepointTransaction().
     // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis
     $savepoint = $this->createFirstSavepointTransaction();
 
@@ -289,6 +298,8 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
    * Tests savepoint transaction duplicated rollback.
    */
   public function testRollbackTwiceSameSavepoint(): void {
+    // $transaction must be kept alive until the end of the test; see
+    // createRootTransaction().
     // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis
     $transaction = $this->createRootTransaction();
     $savepoint = $this->createFirstSavepointTransaction();
@@ -324,12 +335,14 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
    * Tests savepoint transaction rollback failure when later savepoints exist.
    */
   public function testRollbackSavepointWithLaterSavepoint(): void {
+    // $transaction must be kept alive until the end of the test; see
+    // createRootTransaction().
     // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis
     $transaction = $this->createRootTransaction();
     $savepoint1 = $this->createFirstSavepointTransaction();
 
-    // Starts another savepoint transaction. Corresponds to 'SAVEPOINT
-    // savepoint_2' on the database.
+    // Starts another savepoint transaction ('SAVEPOINT savepoint_2').
+    // $savepoint2 must stay in scope or the savepoint ends early.
     // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis
     $savepoint2 = $this->connection->startTransaction();
     $this->assertTrue($this->connection->inTransaction());
@@ -720,13 +733,12 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
     // on the database.
     $savepoint2 = $this->connection->startTransaction();
     $this->assertSame(3, $this->connection->transactionManager()->stackDepth());
-    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_3'
-    // on the database.
+    // Starts a savepoint transaction ('SAVEPOINT savepoint_3').
+    // $savepoint3 must stay in scope or the savepoint ends early.
     // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis
     $savepoint3 = $this->connection->startTransaction();
     $this->assertSame(4, $this->connection->transactionManager()->stackDepth());
-    // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_4'
-    // on the database.
+    // Same as above ('SAVEPOINT savepoint_4').
     // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis
     $savepoint4 = $this->connection->startTransaction();
     $this->assertSame(5, $this->connection->transactionManager()->stackDepth());
@@ -755,6 +767,8 @@ abstract class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseT
   #[IgnoreDeprecations]
   public function testCommitWithActiveSavepoint(): void {
     $transaction = $this->createRootTransaction();
+    // $savepoint1 must be kept alive until the end of the test; see
+    // createFirstSavepointTransaction().
     // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis
     $savepoint1 = $this->createFirstSavepointTransaction('', FALSE);
 
