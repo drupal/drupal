@@ -275,6 +275,10 @@ abstract class Database {
           $connection_info['namespace'] = 'Drupal\\mysql\\Driver\\Database\\mysql';
           break;
 
+        case 'mysqli':
+          $connection_info['namespace'] = 'Drupal\\mysqli\\Driver\\Database\\mysqli';
+          break;
+
         case 'pgsql':
           $connection_info['namespace'] = 'Drupal\\pgsql\\Driver\\Database\\pgsql';
           break;
@@ -291,6 +295,10 @@ abstract class Database {
       switch (trim($connection_info['namespace'], '\\')) {
         case "Drupal\\mysql\\Driver\\Database\\mysql":
           $connection_info['autoload'] = "core/modules/mysql/src/Driver/Database/mysql/";
+          break;
+
+        case "Drupal\\mysqli\\Driver\\Database\\mysqli":
+          $connection_info['autoload'] = "core/modules/mysqli/src/Driver/Database/mysqli/";
           break;
 
         case "Drupal\\pgsql\\Driver\\Database\\pgsql":
