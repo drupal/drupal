@@ -41,4 +41,22 @@ class ProcessingTest extends WebDriverTestBase {
     $this->assertSession()->pageTextContains('Redirection successful.');
   }
 
+  /**
+   * Tests that JS batches replace the op in the URL and do not add to it.
+   */
+  public function testBatchUrls(): void {
+    $edit = ['batch' => 'batch9'];
+    $this->drupalGet('batch-test');
+    $this->submitForm($edit, 'Submit');
+    $this->assertSession()->waitForElementVisible('css', '.batch-urls');
+    $batch_url_list = $this->assertSession()->elementExists('css', '.batch-urls');
+    $batch_url_list_items = $batch_url_list->findAll('css', 'li');
+    $this->assertCount(5, $batch_url_list_items);
+    foreach ($batch_url_list_items as $batch_url_list_item) {
+      $this->assertStringEndsWith('/batch?_format=json&id=1&op=do', $batch_url_list_item->getText());
+    }
+    $batch_finished_url = $this->assertSession()->elementExists('css', '.batch-finished-url');
+    $this->assertStringEndsWith('/batch?id=1&op=finished', $batch_finished_url->getText());
+  }
+
 }
