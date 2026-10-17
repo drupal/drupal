@@ -188,4 +188,14 @@ class BatchTestDefinitions {
     return $batch_builder->toArray() + ['batch_test_id' => 'batch8'];
   }
 
+  /**
+   * Batch 9: Displays URLs.
+   */
+  public function batch9(): array {
+    $batch_builder = (new BatchBuilder())
+      ->addOperation(BatchTestCallbacks::class . ':callback9')
+      ->setFinishCallback(BatchTestCallbacks::class . ':finished9');
+    return $batch_builder->toArray();
+  }
+
 }
