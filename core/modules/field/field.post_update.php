@@ -28,7 +28,7 @@ function field_post_update_clear_purge_batch_size(): ?TranslatableMarkup {
   if (!$config->isNew()) {
     $purge_batch_size = $config->get('purge_batch_size');
     if ($purge_batch_size !== Settings::get('field_purge_batch_size', 50)) {
-      return t("The configuration field.settings:field_purge_batch_size is deprecated and is set to non-default value @field_purge_batch_size. Support for setting this through configuration will be removed in Drupal 13.0.0 and must set in settings.php: \$settings['field_purge_batch_size'] = '@field_purge_batch_size';, see https://www.drupal.org/node/3494023.", [
+      return t("The configuration field.settings:purge_batch_size is deprecated and is set to non-default value @field_purge_batch_size. Support for setting this through configuration will be removed in Drupal 13.0.0 and must set in settings.php: \$settings['field_purge_batch_size'] = '@field_purge_batch_size';, see https://www.drupal.org/node/3494023.", [
         '@field_purge_batch_size' => $purge_batch_size,
       ]);
     }
