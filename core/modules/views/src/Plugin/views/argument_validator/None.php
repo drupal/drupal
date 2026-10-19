@@ -28,7 +28,7 @@ class None extends ArgumentValidatorPluginBase {
       return FALSE;
     }
 
-    if (!empty($this->argument->definition['numeric']) && !isset($this->argument->options['break_phrase'])) {
+    if (!empty($this->argument->definition['numeric']) && !isset($this->argument->options['break_phrase']) && !is_numeric($argument)) {
       return FALSE;
     }
 
