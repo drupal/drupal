@@ -330,6 +330,22 @@ class EntityLinksTest extends KernelTestBase {
   }
 
   /**
+   * Tests that an unresolvable entity link does not throw a fatal error.
+   */
+  public function testProcessLogsExceptionForUnresolvableEntityLink(): void {
+    $input = '<a data-entity-type="true" data-entity-uuid="not-a-real-uuid" href="/original">Link text</a>';
+
+    $result = $this->filter->process($input, 'en');
+
+    $this->assertInstanceOf(FilterProcessResult::class, $result);
+    $this->assertTrue($this->logger->hasRecords());
+    $processed = $result->getProcessedText();
+    $this->assertStringContainsString('data-entity-type="true"', $processed);
+    $this->assertStringContainsString('data-entity-uuid="not-a-real-uuid"', $processed);
+    $this->assertStringContainsString('href="/original"', $processed);
+  }
+
+  /**
    * Asserts an input string + langcode yield the expected FilterProcessResult.
    *
    * @param string $input
