@@ -83,6 +83,18 @@ class DrupalSelenium2Driver extends Selenium2Driver {
   /**
    * {@inheritdoc}
    */
+  public function setDesiredCapabilities(?array $desiredCapabilities = NULL): void {
+    // Since Chrome 134, a click in a test can return before the new page starts
+    // loading, so the test still sees the old page. This restores the previous
+    // behavior.
+    // @see https://issues.chromium.org/issues/350540984
+    $desiredCapabilities['goog:chromeOptions']['args'][] = '--disable-features=DeferRendererTasksAfterInput';
+    parent::setDesiredCapabilities($desiredCapabilities);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function click($xpath): void {
     /** @var \Exception $not_clickable_exception */
     $not_clickable_exception = NULL;

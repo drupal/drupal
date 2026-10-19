@@ -77,6 +77,7 @@ variables:
   PHPUNIT_CONFIGURATION_FILE_PATH: $CI_PROJECT_DIR/core
   PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
   _TARGET_PHP: "${PRIMARY_PHP}"
+  SELENIUM_CHROME_TAG: "155.0"
   # Use local cache for yarn, see .yarn-install-from-cache.
   YARN_ENABLE_GLOBAL_CACHE: false
   YARN_ENABLE_MIRROR: false
@@ -344,6 +345,7 @@ default:
       allow_failure: true
   variables:
     COMPOSER_UPDATE: "1"
+    SELENIUM_CHROME_TAG: "latest"
   trigger:
     include: .gitlab-ci.yml
 
