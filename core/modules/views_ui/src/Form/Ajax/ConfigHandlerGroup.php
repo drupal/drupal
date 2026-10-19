@@ -103,17 +103,17 @@ class ConfigHandlerGroup extends ViewsFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state->get('view');
-    $item = &$form_state->get('handler')->options;
-    $type = $form_state->get('type');
-
-    $handler = \Drupal::service('views.plugin_managers')->get($type)->getHandler($item);
-    $executable = $view->getExecutable();
-    $handler->init($executable, $executable->display_handler, $item);
+    // Use the same handler that built the form. When aggregation is enabled,
+    // the display swaps in the aggregation handler, so recreating the handler
+    // from the item would submit with a different handler than the one whose
+    // form elements were displayed.
+    $handler = $form_state->get('handler');
+    $item = &$handler->options;
 
     $handler->submitGroupByForm($form, $form_state);
 
     // Store the item back on the view.
-    $executable->setHandler($form_state->get('display_id'), $form_state->get('type'), $form_state->get('id'), $item);
+    $view->getExecutable()->setHandler($form_state->get('display_id'), $form_state->get('type'), $form_state->get('id'), $item);
 
     // Write to cache.
     $view->cacheSet();
