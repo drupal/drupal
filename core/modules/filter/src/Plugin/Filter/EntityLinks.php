@@ -98,7 +98,7 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
         $element->removeAttribute('data-entity-metadata');
       }
       catch (\Exception $e) {
-        Error::logException('filter', $e);
+        Error::logException(\Drupal::logger('filter'), $e);
       }
     }
 
