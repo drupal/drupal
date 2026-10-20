@@ -696,8 +696,9 @@ default:
 '📔 Spell-checking':
   <<: [ *yarn-install-from-cache ]
   stage: 🪄 Lint
+  # Any changes to the rules will probably require changes to the
+  # 'Write lint caches' job.
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
       when: never
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $CI_COMMIT_BRANCH == "main"
@@ -1093,7 +1094,11 @@ default:
   script:
     # Exit with an error if any of the lint cache files do not exist.
     - if [ ! -f core/phpstan-tmp/resultCache.php ]; then exit 1; fi
-    - if [ ! -f core/.cspellcache ]; then exit 1; fi
+    # cspell only runs on pushes to main and MRs targeting main.
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "main" ] || [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" = "main" ]; then
+        if [ ! -f core/.cspellcache ]; then exit 1; fi
+      fi
     - if [ ! -f core/.eslintcache ]; then exit 1; fi
     - if [ ! -f core/.stylelintcache ]; then exit 1; fi
     - if [ ! -f core/.phpcscache ]; then exit 1; fi
