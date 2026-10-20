@@ -639,6 +639,7 @@ default:
       when: never
     - <<: *on-commit
       allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - core/.eslint*
@@ -674,6 +675,7 @@ default:
       when: never
     - <<: *on-commit
       allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - core/.stylelintrc.json
