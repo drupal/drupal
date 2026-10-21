@@ -35,7 +35,7 @@
         "symfony/event-dispatcher-contracts": "~v3.7.1",
         "symfony/filesystem": "~v8.1.6",
         "symfony/finder": "~v8.1.5",
-        "symfony/http-foundation": "~v8.1.6",
+        "symfony/http-foundation": "~v8.1.9",
         "symfony/http-kernel": "~v8.1.6",
         "symfony/mailer": "~v8.1.5",
         "symfony/mime": "~v8.1.6",
