@@ -119,11 +119,11 @@ class DateRangeDatelistWidget extends DateRangeWidgetBase {
         '#title' => $this->t('Time increments'),
         '#default_value' => $this->getSetting('increment'),
         '#options' => [
-          1 => $this->t('1 minute'),
-          5 => $this->t('@count minutes', ['@count' => 5]),
-          10 => $this->t('@count minutes', ['@count' => 10]),
-          15 => $this->t('@count minutes', ['@count' => 15]),
-          30 => $this->t('@count minutes', ['@count' => 30]),
+          1 => $this->formatPlural(1, '@count minute', '@count minutes'),
+          5 => $this->formatPlural(5, '@count minute', '@count minutes'),
+          10 => $this->formatPlural(10, '@count minute', '@count minutes'),
+          15 => $this->formatPlural(15, '@count minute', '@count minutes'),
+          30 => $this->formatPlural(30, '@count minute', '@count minutes'),
         ],
       ];
     }
