@@ -12,7 +12,7 @@
 <h3 class="views-ui-view-title" data-drupal-selector="views-table-filter-text-source">{{ view.label }}</h3>
 <div class="views-ui-view-displays">
   {% if displays %}
-    {% trans %}
+    {% trans with {context: 'View displays'} %}
       Display
     {% plural displays %}
       Displays

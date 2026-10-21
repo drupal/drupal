@@ -363,11 +363,11 @@ class TimestampFormatter extends FormatterBase {
   protected function getRefreshIntervals(): array {
     return [
       0 => $this->t('No refresh'),
-      1 => $this->t('1 second'),
-      15 => $this->t('@count seconds', ['@count' => 15]),
-      60 => $this->t('1 minute'),
-      300 => $this->t('@count minutes', ['@count' => 5]),
-      600 => $this->t('@count minutes', ['@count' => 10]),
+      1 => $this->formatPlural(1, '@count second', '@count seconds'),
+      15 => $this->formatPlural(15, '@count second', '@count seconds'),
+      60 => $this->formatPlural(1, '@count minute', '@count minutes'),
+      300 => $this->formatPlural(5, '@count minute', '@count minutes'),
+      600 => $this->formatPlural(10, '@count minute', '@count minutes'),
     ];
   }
 

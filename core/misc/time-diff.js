@@ -207,7 +207,7 @@
 
       if (options.strict && diff < 0) {
         return {
-          formatted: Drupal.formatPlural(0, '1 second', '@count seconds'),
+          formatted: Drupal.formatPlural(0, '@count second', '@count seconds'),
           value: { second: 0 },
         };
       }
@@ -225,30 +225,38 @@
           diff %= units * duration;
           switch (interval) {
             case 'year':
-              output.push(Drupal.formatPlural(units, '1 year', '@count years'));
+              output.push(
+                Drupal.formatPlural(units, '@count year', '@count years'),
+              );
               break;
             case 'month':
               output.push(
-                Drupal.formatPlural(units, '1 month', '@count months'),
+                Drupal.formatPlural(units, '@count month', '@count months'),
               );
               break;
             case 'week':
-              output.push(Drupal.formatPlural(units, '1 week', '@count weeks'));
+              output.push(
+                Drupal.formatPlural(units, '@count week', '@count weeks'),
+              );
               break;
             case 'day':
-              output.push(Drupal.formatPlural(units, '1 day', '@count days'));
+              output.push(
+                Drupal.formatPlural(units, '@count day', '@count days'),
+              );
               break;
             case 'hour':
-              output.push(Drupal.formatPlural(units, '1 hour', '@count hours'));
+              output.push(
+                Drupal.formatPlural(units, '@count hour', '@count hours'),
+              );
               break;
             case 'minute':
               output.push(
-                Drupal.formatPlural(units, '1 minute', '@count minutes'),
+                Drupal.formatPlural(units, '@count minute', '@count minutes'),
               );
               break;
             default:
               output.push(
-                Drupal.formatPlural(units, '1 second', '@count seconds'),
+                Drupal.formatPlural(units, '@count second', '@count seconds'),
               );
           }
           value[interval] = units;
@@ -268,7 +276,7 @@
 
       if (output.length === 0) {
         return {
-          formatted: Drupal.formatPlural(0, '1 second', '@count seconds'),
+          formatted: Drupal.formatPlural(0, '@count second', '@count seconds'),
           value: { second: 0 },
         };
       }
