@@ -8,10 +8,10 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": ">=8.1.0",
-        "drupal/core-class-finder": "^10.6",
-        "drupal/core-file-cache": "^10.6",
-        "drupal/core-plugin": "^10.6",
-        "drupal/core-utility": "^10.6",
+        "drupal/core-class-finder": "10.6.x-dev",
+        "drupal/core-file-cache": "10.6.x-dev",
+        "drupal/core-plugin": "10.6.x-dev",
+        "drupal/core-utility": "10.6.x-dev",
         "doctrine/lexer": "^2"
     },
     "autoload": {
