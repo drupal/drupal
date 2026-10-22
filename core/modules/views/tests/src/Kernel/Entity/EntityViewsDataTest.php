@@ -439,6 +439,28 @@ class EntityViewsDataTest extends KernelTestBase {
   }
 
   /**
+   * Tests decimal and float fields on the base table.
+   */
+  public function testBaseTableDecimalFields(): void {
+    $this->commonBaseFields['decimal'] = BaseFieldDefinition::create('decimal')
+      ->setLabel('Decimal');
+    $this->commonBaseFields['float'] = BaseFieldDefinition::create('float')
+      ->setLabel('Float');
+    $this->setUpEntityType($this->baseEntityType, $this->commonBaseFields);
+
+    $data = $this->entityTypeManager->getHandler('entity_test', 'views_data')->getViewsData();
+
+    foreach (['decimal', 'float'] as $field_name) {
+      $this->assertNumericField($data['entity_test'][$field_name]);
+      // Decimal values are flagged so that the numeric field handler, used
+      // when aggregation is enabled, offers precision and decimal point
+      // settings.
+      $this->assertTrue($data['entity_test'][$field_name]['field']['float']);
+    }
+    $this->assertArrayNotHasKey('float', $data['entity_test']['id']['field']);
+  }
+
+  /**
    * Tests fields on the data table.
    */
   public function testDataTableFields(): void {
