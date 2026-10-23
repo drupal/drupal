@@ -16,6 +16,15 @@ namespace Drupal\TestTools\TestRunner;
 class WorkAllocator {
 
   /**
+   * The weight multiplier for tests in the '#slow' group.
+   *
+   * A test class weighs its number of test cases. Tests in the '#slow' group
+   * take several times longer per test case than other tests, so their weight
+   * is multiplied by this value.
+   */
+  const SLOW_TEST_WEIGHT = 8;
+
+  /**
    * The sorted tests list, prior to allocation.
    *
    * @var TestClassInfoList
@@ -69,25 +78,18 @@ class WorkAllocator {
    * Allocates tests to workers.
    */
   private function process(): void {
-
-    // Separate tests in the '#slow' group from the rest.
+    // Merge the tests from all groups into a unique list, since tests may
+    // appear in more than one group, and weigh them.
+    $tests = array_merge(...array_values($this->groupedTestClassInfoList));
     $slowTests = $this->groupedTestClassInfoList['#slow'] ?? [];
-    $notSlowTests = [];
-    foreach ($this->groupedTestClassInfoList as $group => $tests) {
-      if ($group === '#slow') {
-        continue;
-      }
-      $notSlowTests = array_merge($notSlowTests, $tests);
+    foreach ($tests as $class => &$test) {
+      $test['weight'] = $test['tests_count'] * (isset($slowTests[$class]) ? self::SLOW_TEST_WEIGHT : 1);
     }
-
-    // Filter slow tests out of the not slow tests and ensure a unique list
-    // since tests may appear in more than one group.
-    $notSlowTests = array_diff_key($notSlowTests, $slowTests);
+    unset($test);
 
     // Sort all tests.
-    $this->sortTestsByTypeAndCount($slowTests);
-    $this->sortTestsByTypeAndCount($notSlowTests);
-    $this->sortedList = array_merge($slowTests, $notSlowTests);
+    $this->sortTestsByTypeAndWeight($tests);
+    $this->sortedList = $tests;
     $this->assignTestsSequence($this->sortedList, 'sorted_sequence');
 
     // If the tests are not being run in parallel, the sorted list is enough.
@@ -97,35 +99,30 @@ class WorkAllocator {
       return;
     }
 
-    // Set up a bin per test runner. Loop over the slow tests and add them to
-    // a bin one by one, this distributes the tests evenly across the bins.
-    $binnedSlowTests = $this->placeTestsIntoBins($slowTests);
-    $slowTestsForJob = $binnedSlowTests[$this->binIndex - 1];
-
-    // And the same for the rest of the tests.
-    $binnedOtherTests = $this->placeTestsIntoBins($notSlowTests);
-    $otherTestsForJob = $binnedOtherTests[$this->binIndex - 1];
-
-    $this->allocatedList = array_merge($slowTestsForJob, $otherTestsForJob);
+    $binnedTests = $this->placeTestsIntoBins($this->sortedList);
+    $this->allocatedList = $binnedTests[$this->binIndex - 1];
     $this->assignTestsSequence($this->allocatedList, 'worker_sequence');
   }
 
   /**
-   * Sort tests by test type and count of tests to be executed.
+   * Sort tests by test type and weight.
    *
-   * Tests with several methods take longer to run than tests with a single
-   * method all else being equal, so this allows tests runs to be sorted by
-   * approximately the slowest to fastest tests. Tests that are exceptionally
-   * slow can be added to the '#slow' group so they are placed first in each
-   * test run regardless of the number of methods.
+   * Tests with several test cases take longer to run than tests with a single
+   * test case, all else being equal, so this sorts tests approximately from
+   * the slowest to the fastest. Tests that are exceptionally slow can be added
+   * to the '#slow' group to increase their weight.
+   *
+   * Every worker computes the same sort, so ties are broken by class name.
    *
    * @param TestClassInfoList $tests
    *   The tests to sort.
    */
-  private function sortTestsByTypeAndCount(array &$tests): void {
+  private function sortTestsByTypeAndWeight(array &$tests): void {
     uasort(
       $tests,
-      fn (array $a, array $b): int => $this->getTestTypeWeight($b) <=> $this->getTestTypeWeight($a) ?: $b['tests_count'] <=> $a['tests_count'],
+      fn(array $a, array $b): int => $this->getTestTypeWeight($b) <=> $this->getTestTypeWeight($a)
+        ?: $b['weight'] <=> $a['weight']
+          ?: strcmp($a['name'], $b['name']),
     );
   }
 
@@ -161,19 +158,24 @@ class WorkAllocator {
   }
 
   /**
-   * Distribute tests into roughly equal sized bins.
+   * Distribute tests into bins of roughly equal total weight.
+   *
+   * Each test, in sorted order, goes into the bin with the lowest total weight
+   * so far. When several bins have the lowest weight, the first one is used.
    *
    * @param TestClassInfoList $tests
-   *   An array of test class names.
+   *   The sorted tests.
    *
    * @return array<int,TestClassInfoList>
    *   An associative array of bins and the test class names in each bin.
    */
   private function placeTestsIntoBins(array $tests): array {
     $bins = array_fill(0, $this->totalBins, []);
-    $i = 0;
+    $binWeights = array_fill(0, $this->totalBins, 0);
     foreach ($tests as $key => $test) {
-      $bins[($i++ % $this->totalBins)][$key] = $test;
+      $bin = array_search(min($binWeights), $binWeights, TRUE);
+      $bins[$bin][$key] = $test;
+      $binWeights[$bin] += $test['weight'];
     }
     return $bins;
   }

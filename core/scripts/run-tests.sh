@@ -761,19 +761,20 @@ function dump_tests_sequence(array $tests): void {
   }
   echo "Test execution sequence\n";
   echo "-----------------------\n\n";
-  echo " Seq Slow? Group            Cnt Class\n";
-  echo "-----------------------------------------\n";
+  echo " Seq Slow? Group            Cnt Weight Class\n";
+  echo "------------------------------------------------\n";
   foreach ($tests as $testInfo) {
     echo sprintf(
-      "%4d %5s %15s %4d %s\n",
+      "%4d %5s %15s %4d %6d %s\n",
       $testInfo['worker_sequence'],
       in_array('#slow', $testInfo['groups']) ? '#slow' : '',
       trim_with_ellipsis($testInfo['group'], 15, \STR_PAD_RIGHT),
       $testInfo['tests_count'],
+      $testInfo['weight'],
       trim_with_ellipsis($testInfo['name'], 60, \STR_PAD_LEFT),
     );
   }
-  echo "-----------------------------------------\n\n";
+  echo "------------------------------------------------\n\n";
 }
 
 /**
@@ -789,25 +790,26 @@ function dump_tests_sequence(array $tests): void {
 function dump_bin_tests_sequence(int $bin, array $allTests, array $tests): void {
   echo "Test execution sequence. ";
   echo "Tests marked *** will be executed in this PARALLEL BIN #{$bin}.\n";
-  echo "-------------------------------------------------------------------------------------\n\n";
+  echo "--------------------------------------------------------------------------------------------\n\n";
   echo "    Sort  Bin                                 \n";
-  echo "Bin  Seq  Seq Slow? Group            Cnt Class\n";
-  echo "-------------------------------------------------------------------------------------\n";
+  echo "Bin  Seq  Seq Slow? Group            Cnt Weight Class\n";
+  echo "--------------------------------------------------------------------------------------------\n";
   foreach ($allTests as $testInfo) {
     $inBin = isset($tests[$testInfo['name']]);
     $message = sprintf(
-      "%s %4d %s %5s %15s %4d %s\n",
+      "%s %4d %s %5s %15s %4d %6d %s\n",
       $inBin ? "***" : "   ",
       $testInfo['sorted_sequence'],
       $inBin ? sprintf('%4d', $tests[$testInfo['name']]['worker_sequence']) : "    ",
       in_array('#slow', $testInfo['groups']) ? '#slow' : '',
       trim_with_ellipsis($testInfo['group'], 15, \STR_PAD_RIGHT),
       $testInfo['tests_count'],
+      $testInfo['weight'],
       trim_with_ellipsis($testInfo['name'], 60, \STR_PAD_LEFT),
     );
     simpletest_script_print($message, $inBin ? SIMPLETEST_SCRIPT_COLOR_BRIGHT_WHITE : SIMPLETEST_SCRIPT_COLOR_GRAY);
   }
-  echo "-------------------------------------------------------------------------------------\n\n";
+  echo "--------------------------------------------------------------------------------------------\n\n";
 }
 
 /**
