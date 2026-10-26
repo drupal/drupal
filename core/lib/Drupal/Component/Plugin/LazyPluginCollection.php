@@ -28,6 +28,9 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
    *
    * @param string $instance_id
    *   The ID of the plugin instance to initialize.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   *   Thrown if the plugin cannot be instantiated.
    */
   abstract protected function initializePlugin($instance_id);
 
