@@ -2,20 +2,46 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
-use Drupal\Core\Database\StatementInterface;
-use Drupal\Core\Database\StatementPrefetchIterator;
 use Drupal\Core\Database\Statement\FetchAs;
+use Drupal\Core\Database\Statement\PdoTrait;
+use Drupal\Core\Database\Statement\PrefetchedResult;
+use Drupal\Core\Database\Statement\StatementBase;
 
 /**
- * SQLite implementation of \Drupal\Core\Database\Statement.
+ * SQLite implementation of \Drupal\Core\Database\StatementInterface.
  *
  * The PDO SQLite driver only closes SELECT statements when the PDOStatement
- * destructor is called and SQLite does not allow data change (INSERT,
- * UPDATE etc) on a table which has open SELECT statements. This is a
- * user-space mock of PDOStatement that buffers all the data and doesn't
- * have those limitations.
+ * destructor is called and SQLite does not allow data change (INSERT, UPDATE
+ * etc) on a table which has open SELECT statements. Here we buffer all the
+ * data and don't have those limitations.
  */
-class Statement extends StatementPrefetchIterator implements StatementInterface {
+class Statement extends StatementBase {
+
+  use PdoTrait;
+
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\sqlite\Driver\Database\sqlite\SqliteConnection $clientConnection
+   *   Client database connection object, for example \PDO.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
+   * @param string $queryString
+   *   The query string.
+   * @param array $driverOptions
+   *   (optional) Driver-specific options.
+   * @param bool $rowCountEnabled
+   *   (optional) Enables counting the rows matched. Defaults to FALSE.
+   */
+  public function __construct(
+    SqliteConnection $clientConnection,
+    Connection $connection,
+    string $queryString,
+    protected array $driverOptions = [],
+    bool $rowCountEnabled = FALSE,
+  ) {
+    parent::__construct($connection, $clientConnection, $queryString, $rowCountEnabled);
+  }
 
   /**
    * {@inheritdoc}
@@ -87,10 +113,12 @@ class Statement extends StatementPrefetchIterator implements StatementInterface 
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
+    $args ??= [];
     assert(!isset($options['fetch']) || $options['fetch'] instanceof FetchAs || is_string($options['fetch']), 'The "fetch" option passed to execute() must contain a FetchAs enum case or a string. See https://www.drupal.org/node/3488338');
+    $fetchAs = $options['fetch'] ?? NULL;
 
     try {
-      $return = parent::execute($args, $options);
+      $return = $this->executeAndPrefetch($args);
     }
     catch (\PDOException $e) {
       // The database schema might be changed by another process in between the
@@ -102,7 +130,7 @@ class Statement extends StatementPrefetchIterator implements StatementInterface 
       if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 17) {
         // The schema has changed. SQLite specifies that we must resend the
         // query.
-        $return = parent::execute($args, $options);
+        $return = $this->executeAndPrefetch($args);
       }
       else {
         // Rethrow the exception.
@@ -110,6 +138,56 @@ class Statement extends StatementPrefetchIterator implements StatementInterface 
       }
     }
 
+    if ($fetchAs) {
+      if (is_string($fetchAs)) {
+        $this->setFetchMode(FetchAs::ClassObject, $fetchAs);
+      }
+      else {
+        $this->setFetchMode($fetchAs);
+      }
+    }
+
+    return $return;
+  }
+
+  /**
+   * Executes the statement and prefetches the result.
+   *
+   * @param array $args
+   *   An array of values with as many elements as there are bound parameters in
+   *   the SQL statement being executed.
+   *
+   * @return bool
+   *   TRUE on success, or FALSE on failure.
+   */
+  protected function executeAndPrefetch(array $args): bool {
+    $startEvent = $this->dispatchStatementExecutionStartEvent($args);
+
+    // Prepare and execute the statement.
+    try {
+      $this->clientStatement = $this->getStatement($this->queryString, $args);
+      $return = $this->clientExecute($args);
+    }
+    catch (\Exception $e) {
+      // In case of failure, cleanup and exit early - without preprocessing the
+      // exception.
+      $this->dispatchStatementExecutionFailureEvent($startEvent, $e);
+      $this->clientStatement = NULL;
+      throw $e;
+    }
+
+    // Fetch all the data from the reply, in order to release any lock as soon
+    // as possible. Then, destroy the client statement.
+    $this->result = new PrefetchedResult(
+      $this->fetchMode,
+      $this->fetchOptions,
+      $this->clientFetchAll(FetchAs::Associative),
+      $this->rowCountEnabled ? $this->clientRowCount() : NULL,
+    );
+    $this->clientStatement = NULL;
+    $this->markResultsetIterable($return);
+
+    $this->dispatchStatementExecutionEndEvent($startEvent);
     return $return;
   }
 

@@ -82,17 +82,23 @@ trait PdoTrait {
   }
 
   /**
-   * Returns the client-level database statement object.
+   * Returns the client-level database PDO statement object.
    *
    * This method should normally be used only within database driver code.
    *
-   * @return object
-   *   The client-level database statement.
+   * @return \PDOStatement
+   *   The client-level database PDO statement.
    *
-   * @throws \RuntimeException
+   * @throws \LogicException
    *   If the client-level statement is not set.
    */
-  abstract public function getClientStatement(): object;
+  public function getClientStatement(): \PDOStatement {
+    if (isset($this->clientStatement)) {
+      assert($this->clientStatement instanceof \PDOStatement);
+      return $this->clientStatement;
+    }
+    throw new \LogicException('\\PDOStatement not initialized');
+  }
 
   /**
    * Sets the default fetch mode for the PDO statement.

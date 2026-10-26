@@ -8,7 +8,7 @@ use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Statement\FetchAs;
-use Drupal\Core\Database\StatementPrefetchIterator;
+use Drupal\Core\Database\Statement\StatementBase;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -868,10 +868,19 @@ class ConnectionTest extends UnitTestCase {
    */
   #[DataProvider('providerSupportedFetchModes')]
   public function testSupportedFetchModes(FetchAs $mode): void {
-    $mockPdo = $this->createStub(\PDO::class);
-    $mockConnection = new StubConnection($mockPdo, []);
-    $statement = new StatementPrefetchIterator($mockPdo, $mockConnection, '');
-    $this->assertInstanceOf(StatementPrefetchIterator::class, $statement);
+    $stubPdo = $this->createStub(\PDO::class);
+    $stubConnection = new StubConnection($stubPdo, []);
+    $statement = new class($stubConnection, $stubPdo, '') extends StatementBase {
+
+      /**
+       * {@inheritdoc}
+       */
+      public function execute($args = [], $options = []) {
+        return TRUE;
+      }
+
+    };
+    $this->assertInstanceOf(StatementBase::class, $statement);
     $statement->setFetchMode($mode);
   }
 

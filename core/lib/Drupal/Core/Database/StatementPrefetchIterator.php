@@ -7,12 +7,19 @@ use Drupal\Core\Database\Statement\PdoTrait;
 use Drupal\Core\Database\Statement\PrefetchedResult;
 use Drupal\Core\Database\Statement\StatementBase;
 
+@trigger_error('\\Drupal\\Core\\Database\\StatementPrefetchIterator is deprecated in drupal:12.1.0 and is removed from drupal:13.0.0. Extend from \\Drupal\\Core\\Database\\Statement\\StatementBase instead. See https://www.drupal.org/node/3575664', E_USER_DEPRECATED);
+
 /**
  * An implementation of StatementInterface that prefetches all data.
  *
  * This class behaves very similar to a StatementWrapperIterator of a
  * \PDOStatement but as it always fetches every row it is possible to
  * manipulate those results.
+ *
+ * @deprecated in drupal:12.1.0 and is removed from drupal:13.0.0. Extend from
+ *   \Drupal\Core\Database\Statement\StatementBase instead.
+ *
+ * @see https://www.drupal.org/node/3575664
  */
 class StatementPrefetchIterator extends StatementBase {
 
@@ -39,26 +46,8 @@ class StatementPrefetchIterator extends StatementBase {
     protected array $driverOptions = [],
     bool $rowCountEnabled = FALSE,
   ) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:12.1.0 and is removed from drupal:13.0.0. Extend from \\Drupal\\Core\\Database\\Statement\\StatementBase instead. See https://www.drupal.org/node/3575664', E_USER_DEPRECATED);
     parent::__construct($connection, $clientConnection, $queryString, $rowCountEnabled);
-  }
-
-  /**
-   * Returns the client-level database PDO statement object.
-   *
-   * This method should normally be used only within database driver code.
-   *
-   * @return \PDOStatement
-   *   The client-level database PDO statement.
-   *
-   * @throws \RuntimeException
-   *   If the client-level statement is not set.
-   */
-  public function getClientStatement(): \PDOStatement {
-    if (isset($this->clientStatement)) {
-      assert($this->clientStatement instanceof \PDOStatement);
-      return $this->clientStatement;
-    }
-    throw new \LogicException('\\PDOStatement not initialized');
   }
 
   /**
