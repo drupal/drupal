@@ -26,7 +26,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
   admin_permission: 'administer modules',
   config_export: [
     'id',
-    'label',
+    'name',
   ],
 )]
 class TestConfigType extends ConfigEntityBase {
