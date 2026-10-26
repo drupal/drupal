@@ -3534,7 +3534,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   An array of nested include paths.
    */
   protected function getNestedIncludePaths($depth = 3) {
-    $get_nested_relationship_field_names = function (EntityInterface $entity, $depth, $path = "") use (&$get_nested_relationship_field_names): array {
+    $get_nested_relationship_field_names = function (EntityInterface $entity, $depth, $path = ""): array {
       $relationship_field_names = $this->getRelationshipFieldNames($entity);
       if ($depth > 0) {
         $paths = [];
@@ -3542,7 +3542,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
           $next = ($path) ? "$path.$field_name" : $field_name;
           $internal_field_name = $this->resourceType->getInternalName($field_name);
           if ($target_entity = $entity->{$internal_field_name}->entity) {
-            $deep = $get_nested_relationship_field_names($target_entity, $depth - 1, $next);
+            $deep = \Closure::getCurrent()($target_entity, $depth - 1, $next);
             $paths = array_merge($paths, $deep);
           }
           else {

@@ -404,10 +404,10 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   protected function getQueryParametersCacheIdPart(Request $request) {
     // @todo Use \Symfony\Component\HttpFoundation\Request::normalizeQueryString
     //   for recursive key ordering if support is added in the future.
-    $recursive_sort = function (&$array) use (&$recursive_sort) {
+    $recursive_sort = function (&$array) {
       foreach ($array as &$v) {
         if (is_array($v)) {
-          $recursive_sort($v);
+          \Closure::getCurrent()($v);
         }
       }
       ksort($array);
