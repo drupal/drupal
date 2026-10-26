@@ -4,9 +4,9 @@ update_test.settings:
   type: config_object
   label: 'Update test settings'
   mapping:
-    system_info:
+    extension_info:
       type: sequence
-      label: 'System info'
+      label: 'Extension info'
       sequence:
         type: sequence
         label: 'Items'

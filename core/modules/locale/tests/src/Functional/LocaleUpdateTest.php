@@ -350,7 +350,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    */
   public function testEnableUninstallModule(): void {
     // Make the hidden test modules look like a normal custom module.
-    \Drupal::state()->set('locale.test_system_info_alter', TRUE);
+    \Drupal::state()->set('locale.test_extension_info_alter', TRUE);
 
     // Check if there is no translation yet.
     $this->assertTranslation('Tuesday', '', 'de');
@@ -392,7 +392,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    */
   public function testEnableLanguage(): void {
     // Make the hidden test modules look like a normal custom module.
-    \Drupal::state()->set('locale.test_system_info_alter', TRUE);
+    \Drupal::state()->set('locale.test_extension_info_alter', TRUE);
 
     // Enable a module.
     $edit = [
@@ -450,7 +450,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    */
   public function testEnableCustomLanguage(): void {
     // Make the hidden test modules look like a normal custom module.
-    \Drupal::state()->set('locale.test_system_info_alter', TRUE);
+    \Drupal::state()->set('locale.test_extension_info_alter', TRUE);
 
     // Enable a module.
     $edit = [

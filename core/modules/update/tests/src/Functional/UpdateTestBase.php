@@ -17,10 +17,10 @@ use Drupal\Tests\BrowserTestBase;
  * files we fetch say is available. We have dummy XML files (in the
  * core/modules/update/tests directory) that describe various scenarios of
  * what's available for different test projects, and we have dummy .info file
- * data (specified via hook_system_info_alter() in the update_test helper
+ * data (specified via hook_extension_info_alter() in the update_test helper
  * module) describing what's currently installed. Each test case defines a set
  * of projects to install, their current state (via the
- * 'update_test_system_info' variable) and the desired available update data
+ * 'update_test_extension_info' variable) and the desired available update data
  * (via the 'update_test_xml_map' variable), and then performs a series of
  * assertions that the report matches our expectations given the specific
  * initial state and availability scenario.

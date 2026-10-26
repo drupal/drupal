@@ -57,7 +57,7 @@ class ProjectInfo {
       }
 
       // Skip if it's a hidden project and the project is a test project. Tests
-      // should use hook_system_info_alter() to test ProjectInfo's
+      // should use hook_extension_info_alter() to test ProjectInfo's
       // functionality.
       if (!empty($file->info['hidden']) && isset($file->info['package']) && $file->info['package'] == 'Testing') {
         continue;

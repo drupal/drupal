@@ -478,7 +478,7 @@ class FilterAPITest extends EntityKernelTestBase {
    * deleted.
    *
    * @see \Drupal\filter\Entity\FilterFormat::onDependencyRemoval()
-   * @see filter_system_info_alter()
+   * @see \Drupal\filter\FilterUninstallValidator
    */
   public function testDependencyRemoval(): void {
     $this->installSchema('user', ['users_data']);

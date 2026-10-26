@@ -48,7 +48,7 @@ class ProjectInfoTest extends PackageManagerKernelTestBase {
       ];
       // @todo Replace with use of the trait from the Update Status module in https://drupal.org/i/3348234.
       $this->config('update_test.settings')
-        ->set("system_info.$project", $extension_info_update)
+        ->set("extension_info.$project", $extension_info_update)
         ->save();
       // The Update Status module will always request Drupal core's update XML.
       $metadata_fixtures['drupal'] = $fixtures_directory . 'drupal.9.8.2.xml';

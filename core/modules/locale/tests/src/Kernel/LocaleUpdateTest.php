@@ -29,9 +29,10 @@ class LocaleUpdateTest extends KernelTestBase {
    */
   public function testUpdateProjects(): void {
     // Make the test modules look like a normal custom module. I.e. make the
-    // modules not hidden. locale_test_system_info_alter() modifies the project
-    // info of the locale_test and locale_test_translate modules.
-    \Drupal::state()->set('locale.test_system_info_alter', TRUE);
+    // modules not hidden.
+    // \Drupal\locale_test\Hook\LocaleTestHooks::extensionInfoAlter() modifies
+    // the project info of the locale_test and locale_test_translate modules.
+    \Drupal::state()->set('locale.test_extension_info_alter', TRUE);
 
     // Check if interface translation data is collected from hook_info.
     \Drupal::service(LocaleProjectRepository::class)->buildProjects();

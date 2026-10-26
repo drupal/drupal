@@ -54,9 +54,9 @@ class RebuildScriptTest extends BrowserTestBase {
     $this->assertFalse($cache->get('rebuild_test'));
     $this->refreshVariables();
     $this->assertSame(1, \Drupal::state()->get('container_rebuild_test.count', 0));
-    $this->drupalGet('/container_rebuild_test/module_test/system_info_alter');
+    $this->drupalGet('/container_rebuild_test/module_test/extension_info_alter');
     $this->assertSession()->pageTextContains('module_test: core/modules/system/tests/modules/module_test');
-    $this->assertSession()->pageTextContains('system_info_alter: true');
+    $this->assertSession()->pageTextContains('extension_info_alter: true');
 
     // Move a module to ensure it does not break the rebuild.
     $file_system = new Filesystem();
@@ -66,9 +66,9 @@ class RebuildScriptTest extends BrowserTestBase {
     $this->assertSession()->addressEquals(new Url('<front>'));
     $this->refreshVariables();
     $this->assertSame(1, \Drupal::state()->get('container_rebuild_test.count', 0));
-    $this->drupalGet('/container_rebuild_test/module_test/system_info_alter');
+    $this->drupalGet('/container_rebuild_test/module_test/extension_info_alter');
     $this->assertSession()->pageTextContains('module_test: ' . $this->siteDirectory . '/modules/module_test');
-    $this->assertSession()->pageTextContains('system_info_alter: true');
+    $this->assertSession()->pageTextContains('extension_info_alter: true');
 
     // Disable a module by writing to the core.extension list.
     $this->config('core.extension')->clear('module.module_test')->save();
@@ -77,9 +77,9 @@ class RebuildScriptTest extends BrowserTestBase {
     $this->assertSession()->addressEquals(new Url('<front>'));
     $this->refreshVariables();
     $this->assertSame(1, \Drupal::state()->get('container_rebuild_test.count', 0));
-    $this->drupalGet('/container_rebuild_test/module_test/system_info_alter');
+    $this->drupalGet('/container_rebuild_test/module_test/extension_info_alter');
     $this->assertSession()->pageTextContains('module_test: not installed');
-    $this->assertSession()->pageTextContains('system_info_alter: false');
+    $this->assertSession()->pageTextContains('extension_info_alter: false');
 
     // Enable a module by writing to the core.extension list.
     $modules = $this->config('core.extension')->get('module');
@@ -90,9 +90,9 @@ class RebuildScriptTest extends BrowserTestBase {
     $this->assertSession()->addressEquals(new Url('<front>'));
     $this->refreshVariables();
     $this->assertSame(1, \Drupal::state()->get('container_rebuild_test.count', 0));
-    $this->drupalGet('/container_rebuild_test/module_test/system_info_alter');
+    $this->drupalGet('/container_rebuild_test/module_test/extension_info_alter');
     $this->assertSession()->pageTextContains('module_test: ' . $this->siteDirectory . '/modules/module_test');
-    $this->assertSession()->pageTextContains('system_info_alter: true');
+    $this->assertSession()->pageTextContains('extension_info_alter: true');
 
     // Test how many container rebuild occur when there is no cached container.
     \Drupal::state()->set('container_rebuild_test.count', 0);

@@ -335,7 +335,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    */
   protected function setCoreVersion(string $version): void {
     $this->config('update_test.settings')
-      ->set('system_info.#all.version', $version)
+      ->set('extension_info.#all.version', $version)
       ->save();
   }
 

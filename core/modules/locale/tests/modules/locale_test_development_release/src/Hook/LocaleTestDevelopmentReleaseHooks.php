@@ -13,13 +13,13 @@ use Drupal\Core\Hook\Attribute\Hook;
 class LocaleTestDevelopmentReleaseHooks {
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    *
    * Change the core version number to a development one for testing.
    * 8.0.0-alpha102-dev is the simulated version.
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type): void {
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(&$info, Extension $file, $type): void {
     if (isset($info['package']) && $info['package'] == 'Core') {
       $info['version'] = '8.0.0-alpha102-dev';
     }

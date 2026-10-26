@@ -13,12 +13,12 @@ use Drupal\Core\Hook\Attribute\Hook;
 class ModuleTestThemeHooks {
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    *
    * Manipulate module dependencies to test dependency chains.
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type): void {
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(&$info, Extension $file, $type): void {
     if (\Drupal::state()->get('module_test.dependency') == 'missing dependency') {
       if ($file->getName() == 'dblog') {
         // Make dblog module depend on config.

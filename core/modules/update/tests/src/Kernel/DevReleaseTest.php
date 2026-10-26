@@ -55,7 +55,7 @@ class DevReleaseTest extends KernelTestBase {
    */
   protected function setCoreVersion(string $version): void {
     $this->config('update_test.settings')
-      ->set('system_info.#all.version', $version)
+      ->set('extension_info.#all.version', $version)
       ->save();
   }
 
@@ -88,13 +88,13 @@ class DevReleaseTest extends KernelTestBase {
    * seconds.
    */
   public function testSecurityUpdates(): void {
-    $system_info = [
+    $extension_info = [
       '#all' => [
         'version' => '8.1.0-dev',
         'datestamp' => '1280424641',
       ],
     ];
-    $project_data = $this->getProjectData($system_info);
+    $project_data = $this->getProjectData($extension_info);
     $this->assertCount(1, $project_data['drupal']['security updates']);
     $this->assertSame('8.1.2', $project_data['drupal']['security updates'][0]['version']);
     $this->assertSame(UpdateManagerInterface::NOT_CURRENT, $project_data['drupal']['status']);
@@ -108,13 +108,13 @@ class DevReleaseTest extends KernelTestBase {
    *  no updates will be shown as security update.
    */
   public function testSecurityUpdateEmptyProjectTimestamp(): void {
-    $system_info = [
+    $extension_info = [
       '#all' => [
         'version' => '8.1.0-dev',
         'datestamp' => '0',
       ],
     ];
-    $project_data = $this->getProjectData($system_info);
+    $project_data = $this->getProjectData($extension_info);
     $this->assertArrayNotHasKey('security updates', $project_data['drupal']);
     $this->assertSame(UpdateFetcherInterface::NOT_CHECKED, $project_data['drupal']['status']);
     $this->assertSame('Unknown release date', (string) $project_data['drupal']['reason']);
@@ -123,18 +123,19 @@ class DevReleaseTest extends KernelTestBase {
   /**
    * Gets project data from \Drupal\update\UpdateManagerInterface::calculateProjectData().
    *
-   * @param array $system_info
-   *   System test information as used by update_test_system_info_alter().
+   * @param array $extension_info
+   *   System test information as used by
+   *   \Drupal\update_test\Hook\UpdateTestHooks::extensionInfoAlter().
    *
    * @return array[]
    *   The project data as returned by
    *   \Drupal\update\UpdateManagerInterface::calculateProjectData().
    *
-   * @see update_test_system_info_alter()
+   * @see \Drupal\update_test\Hook\UpdateTestHooks::extensionInfoAlter()
    */
-  private function getProjectData(array $system_info): array {
+  private function getProjectData(array $extension_info): array {
     $this->config('update_test.settings')
-      ->set('system_info', $system_info)
+      ->set('extension_info', $extension_info)
       ->save();
 
     \Drupal::service(UpdateManagerInterface::class)->reset();

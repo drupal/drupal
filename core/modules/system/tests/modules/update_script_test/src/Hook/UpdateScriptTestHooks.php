@@ -29,11 +29,11 @@ class UpdateScriptTestHooks {
   }
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(array &$info, Extension $file, $type): void {
-    $new_info = \Drupal::state()->get('update_script_test.system_info_alter');
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(array &$info, Extension $file, $type): void {
+    $new_info = \Drupal::state()->get('update_script_test.extension_info_alter');
     if ($new_info) {
       if ($file->getName() == 'update_script_test') {
         $info = $new_info + $info;

@@ -13,10 +13,10 @@ use Drupal\Core\Hook\Attribute\Hook;
 class FieldStorageEntityTypeDependencyTestHook {
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(array &$info, Extension $file, string $type): void {
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(array &$info, Extension $file, string $type): void {
     if ($file->getName() === 'taxonomy') {
       $info['dependencies'][] = 'drupal:workspaces';
     }

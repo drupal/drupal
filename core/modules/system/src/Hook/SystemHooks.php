@@ -258,10 +258,10 @@ class SystemHooks {
   }
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type): void {
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(&$info, Extension $file, $type): void {
     // Remove page-top and page-bottom from the blocks UI since they are
     // reserved for
     // modules to populate from outside the blocks system.

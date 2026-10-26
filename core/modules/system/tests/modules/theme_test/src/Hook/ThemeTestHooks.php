@@ -249,12 +249,12 @@ class ThemeTestHooks {
   }
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    *
    * @see \Drupal\system\Tests\Theme\ThemeInfoTest::testChanges()
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(array &$info, Extension $file, $type): void {
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(array &$info, Extension $file, $type): void {
     if ($type == 'theme' && $file->getName() == 'test_theme' && \Drupal::state()->get('theme_test.modify_info_files')) {
       // Add a library to see if the system picks it up.
       $info += ['libraries' => []];

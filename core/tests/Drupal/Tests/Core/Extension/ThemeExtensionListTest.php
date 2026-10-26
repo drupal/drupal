@@ -60,7 +60,10 @@ class ThemeExtensionListTest extends UnitTestCase {
       ->buildModuleDependencies(Argument::type('array'))
       ->willReturnArgument(0);
     $module_handler
-      ->alter('system_info', Argument::type('array'), Argument::type(Extension::class), Argument::any())
+      ->alter('extension_info', Argument::type('array'), Argument::type(Extension::class), Argument::any())
+      ->shouldBeCalled();
+    $module_handler
+      ->alterDeprecated(Argument::type('string'), 'system_info', Argument::type('array'), Argument::type(Extension::class), Argument::any())
       ->shouldBeCalled();
 
     $state = new State(new KeyValueMemoryFactory(), new NullBackend('bin'), new NullLockBackend());

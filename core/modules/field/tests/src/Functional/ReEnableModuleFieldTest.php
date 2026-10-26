@@ -52,7 +52,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
   /**
    * Tests the behavior of a field module after being disabled and re-enabled.
    *
-   * @see field_system_info_alter()
+   * @see \Drupal\field\FieldUninstallValidator
    */
   public function testReEnabledField(): void {
     // Add a link field to the article content type.

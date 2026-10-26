@@ -20,19 +20,19 @@ class LocaleTestHooks {
   use StringTranslationTrait;
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    *
    * Make the test scripts to be believe this is not a hidden test module, but
    * a regular custom module.
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type): void {
-    // Only modify the system info if required. By default the locale_test
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(&$info, Extension $file, $type): void {
+    // Only modify the extension info if required. By default the locale_test
     // modules are hidden and have a project specified. To test the module
     // detection process by
     // \Drupal\locale\LocaleProjectRepository::getProjectList() the test modules
     // should mimic a custom module. I.e. be non-hidden.
-    if (\Drupal::state()->get('locale.test_system_info_alter')) {
+    if (\Drupal::state()->get('locale.test_extension_info_alter')) {
       if ($file->getName() == 'locale_test' || $file->getName() == 'locale_test_translate') {
         // Don't hide the module.
         $info['hidden'] = FALSE;
@@ -40,7 +40,7 @@ class LocaleTestHooks {
     }
     // Alter the name and the core version of the project. This should not
     // affect the locale project information.
-    if (\Drupal::state()->get('locale.test_system_info_alter_name_core')) {
+    if (\Drupal::state()->get('locale.test_extension_info_alter_name_core')) {
       if ($file->getName() == 'locale_test') {
         $info['core'] = '8.6.7';
         $info['name'] = 'locale_test_alter';

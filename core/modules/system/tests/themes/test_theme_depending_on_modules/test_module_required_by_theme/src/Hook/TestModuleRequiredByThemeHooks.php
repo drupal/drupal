@@ -13,12 +13,12 @@ use Drupal\Core\Hook\Attribute\Hook;
 class TestModuleRequiredByThemeHooks {
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(array &$info, Extension $file, $type): void {
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(array &$info, Extension $file, $type): void {
     if ($file->getName() == 'test_theme_depending_on_modules') {
-      $new_info = \Drupal::state()->get('test_theme_depending_on_modules.system_info_alter');
+      $new_info = \Drupal::state()->get('test_theme_depending_on_modules.extension_info_alter');
       if ($new_info) {
         $info = $new_info + $info;
       }

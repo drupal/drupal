@@ -38,7 +38,7 @@ class UpdateMiscTest extends UpdateTestBase {
         'version' => '8.0.0',
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $setting)->save();
+    $this->config('update_test.settings')->set('extension_info', $setting)->save();
     $this->drupalPlaceBlock('local_actions_block');
   }
 

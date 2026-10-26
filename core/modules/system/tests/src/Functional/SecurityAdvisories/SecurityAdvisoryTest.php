@@ -128,7 +128,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
       // The info for the test modules 'generic_module1_test' and
       // 'generic_module2_test' are altered for this test so match the items in
       // the test json feeds.
-      // @see advisory_feed_test_system_info_alter()
+      // @see \Drupal\advisory_feed_test\Hook\AdvisoryFeedTestHooks::extensionInfoAlter()
       'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
       'Generic Module2 project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
     ];

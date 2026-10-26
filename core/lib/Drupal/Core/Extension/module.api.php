@@ -82,6 +82,28 @@ use Drupal\Core\Utility\UpdateException;
  *
  * @see \Drupal\Core\Extension\ModuleUninstallValidatorInterface
  */
+function hook_extension_info_alter(array &$info, \Drupal\Core\Extension\Extension $file, $type) {
+  // Only fill this in if the .info.yml file does not define a 'datestamp'.
+  if (empty($info['datestamp'])) {
+    $info['datestamp'] = $file->getFileInfo()->getMTime();
+  }
+}
+
+/**
+ * Alter the information parsed from module and theme .info.yml files.
+ *
+ * @param array $info
+ *   The .info.yml file contents, passed by reference so that it can be altered.
+ * @param \Drupal\Core\Extension\Extension $file
+ *   Full information about the module or theme.
+ * @param string $type
+ *   Either 'module' or 'theme', depending on the type of .info.yml file that
+ *   was passed.
+ *
+ * @deprecated in drupal:12.1.0 and is removed from drupal:13.0.0. Use
+ *   hook_extension_info_alter() instead.
+ * @see https://www.drupal.org/node/3624723
+ */
 function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $file, $type) {
   // Only fill this in if the .info.yml file does not define a 'datestamp'.
   if (empty($info['datestamp'])) {

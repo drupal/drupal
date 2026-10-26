@@ -71,7 +71,7 @@ class ThemeInfoTest extends BrowserTestBase {
       $active_theme->getLibraries(),
     );
 
-    // @see theme_test_system_info_alter()
+    // @see \Drupal\theme_test\Hook\ThemeTestHooks::extensionInfoAlter()
     $this->container->get('state')->set('theme_test.modify_info_files', TRUE);
     $this->resetAll();
     $active_theme = $this->container->get('theme.manager')->getActiveTheme();

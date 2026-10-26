@@ -54,11 +54,11 @@ class UpdateCalculateProjectDataTest extends KernelTestBase {
    * @param string $version
    *   The core version.
    *
-   * @see update_test_system_info_alter()
+   * @see \Drupal\update_test\Hook\UpdateTestHooks::extensionInfoAlter()
    */
   protected function setCoreVersion(string $version): void {
     $this->config('update_test.settings')
-      ->set('system_info.#all.version', $version)
+      ->set('extension_info.#all.version', $version)
       ->save();
   }
 

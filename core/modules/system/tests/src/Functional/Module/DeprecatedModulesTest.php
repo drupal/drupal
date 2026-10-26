@@ -195,7 +195,7 @@ class DeprecatedModulesTest extends BrowserTestBase {
 
     // Now, test when installing a non-core deprecated module alone and then
     // with a core deprecated module. First, install 'deprecated_module_test'
-    // because it uses hook_system_info_alter() to set the origin of
+    // because it uses hook_extension_info_alter() to set the origin of
     // 'deprecated_module_contrib' to something other than 'core'.
     $this->drupalGet('admin/modules');
     $this->submitForm(["modules[deprecated_module_test][enable]" => TRUE], 'Install');

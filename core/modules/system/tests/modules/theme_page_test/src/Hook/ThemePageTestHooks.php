@@ -13,10 +13,10 @@ use Drupal\Core\Hook\Attribute\Hook;
 class ThemePageTestHooks {
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type): void {
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(&$info, Extension $file, $type): void {
     // Make sure that all themes are visible on the Appearance form.
     if ($type === 'theme') {
       unset($info['hidden']);

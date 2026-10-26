@@ -154,7 +154,8 @@ class ModuleExtensionList extends ExtensionList {
     // Find modules.
     $extensions = parent::doList();
     // It is possible that a module was marked as required by
-    // hook_system_info_alter() and modules that it depends on are not required.
+    // hook_extension_info_alter() and modules that it depends on are not
+    // required.
     foreach ($extensions as $extension) {
       $this->ensureRequiredDependencies($extension, $extensions);
     }

@@ -13,15 +13,15 @@ use Drupal\Core\Hook\Attribute\Hook;
 class ModuleRequiredTestHooks {
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    *
    * Manipulate module dependencies to test dependency chains.
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type): void {
-    if ($file->getName() == 'module_required_test' && \Drupal::state()->get('module_required_test.hook_system_info_alter')) {
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(&$info, Extension $file, $type): void {
+    if ($file->getName() == 'module_required_test' && \Drupal::state()->get('module_required_test.hook_extension_info_alter')) {
       $info['required'] = TRUE;
-      $info['explanation'] = 'Testing hook_system_info_alter()';
+      $info['explanation'] = 'Testing hook_extension_info_alter()';
     }
   }
 

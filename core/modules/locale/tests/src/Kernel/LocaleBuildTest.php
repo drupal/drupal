@@ -35,9 +35,10 @@ class LocaleBuildTest extends KernelTestBase {
     $module_list = \Drupal::service('extension.list.module');
 
     // Make the test modules look like a normal custom module. I.e. make the
-    // modules not hidden. locale_test_system_info_alter() modifies the project
-    // info of the locale_test and locale_test_translate modules.
-    \Drupal::state()->set('locale.test_system_info_alter', TRUE);
+    // modules not hidden.
+    // \Drupal\locale_test\Hook\LocaleTestHooks::extensionInfoAlter() modifies
+    // the project info of the locale_test and locale_test_translate modules.
+    \Drupal::state()->set('locale.test_extension_info_alter', TRUE);
 
     // Confirm the project name and core value before the module is altered.
     $projects = \Drupal::service(LocaleProjectRepository::class)->buildProjects();
@@ -49,7 +50,7 @@ class LocaleBuildTest extends KernelTestBase {
     $this->assertSame('/all/locale_test/locale_test-1.2.de.po', \Drupal::service(LocaleSource::class)->buildServerPattern($projects['locale_test'], '/%core/%project/%project-%version.%language.po'));
 
     // Alter both the name and core value of the project.
-    \Drupal::state()->set('locale.test_system_info_alter_name_core', TRUE);
+    \Drupal::state()->set('locale.test_extension_info_alter_name_core', TRUE);
     $module_list->reset();
 
     // Confirm the name and core value are changed in $module->info.
@@ -76,7 +77,7 @@ class LocaleBuildTest extends KernelTestBase {
    */
   #[IgnoreDeprecations]
   public function testLocaleTranslationGetProjects() : void {
-    \Drupal::state()->set('locale.test_system_info_alter', TRUE);
+    \Drupal::state()->set('locale.test_extension_info_alter', TRUE);
     $this->expectUserDeprecationMessage('locale_translation_get_projects() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleProjectRepository::class)->getAll() or \Drupal::service(LocaleProjectRepository::class)->getMultiple($project_names) instead. See https://www.drupal.org/node/3569330');
     $this->container->get('module_handler')->loadInclude('locale', 'translation.inc');
     $this->assertCount(2, locale_translation_get_projects());

@@ -13,10 +13,10 @@ use Drupal\Core\Hook\Attribute\Hook;
 class DependencyVersionTestHooks {
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type): void {
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(&$info, Extension $file, $type): void {
     // Simulate that the core version for Views module contains the string
     // '8.x'.
     if ($file->getName() == 'views') {

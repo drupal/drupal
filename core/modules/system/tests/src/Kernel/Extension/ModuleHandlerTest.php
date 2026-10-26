@@ -80,13 +80,13 @@ class ModuleHandlerTest extends KernelTestBase {
   /**
    * Tests dependency resolution.
    *
-   * Intentionally using fake dependencies added via hook_system_info_alter()
+   * Intentionally using fake dependencies added via hook_extension_info_alter()
    * for modules that normally do not have any dependencies.
    *
    * To simplify things further, all of the manipulated modules are either
    * purely UI-facing or live at the "bottom" of all dependency chains.
    *
-   * @see module_test_system_info_alter()
+   * @see \Drupal\module_test\Hook\ModuleTestThemeHooks::extensionInfoAlter()
    * @see https://www.drupal.org/files/issues/dep.gv__0.png
    */
   public function testDependencyResolution(): void {

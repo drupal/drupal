@@ -126,12 +126,12 @@ class UpdateScriptTest extends UpdateScriptTestBase {
     // Ensure that changes to a module's requirements that would cause errors
     // are displayed correctly.
     $update_script_test_config->set('requirement_type', RequirementSeverity::OK->value)->save();
-    \Drupal::state()->set('update_script_test.system_info_alter', ['dependencies' => ['a_module_that_does_not_exist']]);
+    \Drupal::state()->set('update_script_test.extension_info_alter', ['dependencies' => ['a_module_that_does_not_exist']]);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertSession()->responseContains('a_module_that_does_not_exist (Missing)');
     $this->assertSession()->responseContains('Update script test requires this module.');
 
-    \Drupal::state()->set('update_script_test.system_info_alter', ['dependencies' => ['node (<7.x-0.0-dev)']]);
+    \Drupal::state()->set('update_script_test.extension_info_alter', ['dependencies' => ['node (<7.x-0.0-dev)']]);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertSession()->assertEscaped('Node (Version <7.x-0.0-dev required)');
     $this->assertSession()->responseContains('Update script test requires this module and version. Currently using Node version ' . \Drupal::VERSION);
@@ -147,7 +147,7 @@ class UpdateScriptTest extends UpdateScriptTestBase {
     // Ensure that when a theme depends on a module and that module's
     // requirements change, errors are displayed in the same manner as modules
     // depending on other modules.
-    \Drupal::state()->set('test_theme_depending_on_modules.system_info_alter', ['dependencies' => ['test_module_required_by_theme (<7.x-0.0-dev)']]);
+    \Drupal::state()->set('test_theme_depending_on_modules.extension_info_alter', ['dependencies' => ['test_module_required_by_theme (<7.x-0.0-dev)']]);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertSession()->assertEscaped('Test Module Required by Theme (Version <7.x-0.0-dev required)');
     $this->assertSession()->responseContains('Test Theme Depending on Modules requires this module and version. Currently using Test Module Required by Theme version ' . \Drupal::VERSION);
@@ -155,7 +155,7 @@ class UpdateScriptTest extends UpdateScriptTestBase {
     // Ensure that when a theme is updated to depend on an unavailable module,
     // errors are displayed in the same manner as modules depending on other
     // modules.
-    \Drupal::state()->set('test_theme_depending_on_modules.system_info_alter', ['dependencies' => ['a_module_theme_needs_that_does_not_exist']]);
+    \Drupal::state()->set('test_theme_depending_on_modules.extension_info_alter', ['dependencies' => ['a_module_theme_needs_that_does_not_exist']]);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertSession()->responseContains('a_module_theme_needs_that_does_not_exist (Missing)');
     $this->assertSession()->responseContains('Test Theme Depending on Modules requires this module.');

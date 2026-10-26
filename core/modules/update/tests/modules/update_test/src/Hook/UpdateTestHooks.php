@@ -13,19 +13,19 @@ use Drupal\Core\Hook\Attribute\Hook;
 class UpdateTestHooks {
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    *
-   * Checks the 'update_test.settings:system_info' configuration and sees if we
-   * need to alter the system info for the given $file based on the setting. The
-   * setting is expected to be a nested associative array. If the key '#all' is
-   * defined, its subarray will include .info.yml keys and values for all
-   * modules and themes on the system. Otherwise, the settings array is keyed by
-   * the module or theme short name ($file->name) and the subarrays contain
-   * settings just for that module or theme.
+   * Checks the 'update_test.settings:extension_info' configuration and sees if
+   * we need to alter the extension info for the given $file based on the
+   * setting. The setting is expected to be a nested associative array. If the
+   * key '#all' is defined, its subarray will include .info.yml keys and values
+   * for all modules and themes on the system. Otherwise, the settings array is
+   * keyed by the module or theme short name ($file->name) and the subarrays
+   * contain settings just for that module or theme.
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file): void {
-    $setting = \Drupal::config('update_test.settings')->get('system_info');
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(&$info, Extension $file): void {
+    $setting = \Drupal::config('update_test.settings')->get('extension_info');
     foreach (['#all', $file->getName()] as $id) {
       if (!empty($setting[$id])) {
         foreach ($setting[$id] as $key => $value) {

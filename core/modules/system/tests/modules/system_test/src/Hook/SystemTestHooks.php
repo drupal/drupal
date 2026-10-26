@@ -68,10 +68,10 @@ class SystemTestHooks {
   }
 
   /**
-   * Implements hook_system_info_alter().
+   * Implements hook_extension_info_alter().
    */
-  #[Hook('system_info_alter')]
-  public function systemInfoAlter(&$info, Extension $file, $type): void {
+  #[Hook('extension_info_alter')]
+  public function extensionInfoAlter(&$info, Extension $file, $type): void {
     if (($dependencies = \Drupal::state()->get('system_test.dependency'))) {
       if ($file->getName() == 'module_test') {
         $info['hidden'] = FALSE;
