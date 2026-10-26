@@ -20,7 +20,7 @@ class SerializeQueryTest extends DatabaseTestBase {
   public function testSerializeQuery(): void {
     $query = $this->connection->select('test');
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Database query objects are not serializable');
+    $this->expectExceptionMessageIs('Database query objects are not serializable. This probably means you are serializing an object that has a reference to a query object. Adjust your code so that is not necessary, for example by storing the query arguments or results instead.');
     serialize($query);
   }
 
@@ -30,7 +30,7 @@ class SerializeQueryTest extends DatabaseTestBase {
   public function testUnserializeQuery(): void {
     $class = get_class($this->connection->select('test'));
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('Database query objects cannot be unserialized');
+    $this->expectExceptionMessageIs('Database query objects cannot be unserialized.');
     unserialize(sprintf('O:%d:"%s":0:{}', strlen($class), $class));
   }
 

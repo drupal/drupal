@@ -245,7 +245,7 @@ class ExtensionStreamTest extends KernelTestBase {
     $this->assertSame('theme://default_admin', $this->streamWrappers['theme']->dirname('theme://default_admin/default_admin.info.yml'));
     $this->container->get('theme_installer')->uninstall(['default_admin']);
     $this->expectException(UnknownExtensionException::class);
-    $this->expectExceptionMessage('The theme default_admin does not exist.');
+    $this->expectExceptionMessageIs('The theme default_admin does not exist.');
     $this->streamWrappers['theme']->dirname('theme://default_admin/default_admin.info.yml');
   }
 

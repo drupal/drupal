@@ -81,7 +81,7 @@ class CssSelectorConstraintValidatorTest extends KernelTestBase {
     $data->setValue(5);
 
     $this->expectException(UnexpectedValueException::class);
-    $this->expectExceptionMessage('Expected argument of type "string", "int" given');
+    $this->expectExceptionMessageIs('Expected argument of type "string", "int" given');
     $data->validate();
   }
 

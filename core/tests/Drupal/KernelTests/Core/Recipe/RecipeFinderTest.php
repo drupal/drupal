@@ -54,7 +54,7 @@ class RecipeFinderTest extends KernelTestBase {
   ])]
   public function testForbiddenMethods(string $method, array $arguments, string $expected_exception): void {
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage($expected_exception);
+    $this->expectExceptionMessageIs($expected_exception);
 
     $finder = new Finder($this->root . '/core/recipes');
     $finder->$method(...$arguments);
@@ -105,7 +105,7 @@ class RecipeFinderTest extends KernelTestBase {
   public function testInvalidDirectoriesRejected(string|array $directories): void {
     $error_directory = array_last((array) $directories);
     $this->expectException(DirectoryNotFoundException::class);
-    $this->expectExceptionMessage("The \"$error_directory\" directory does not exist.");
+    $this->expectExceptionMessageIs("The \"$error_directory\" directory does not exist.");
     new Finder($directories);
   }
 
@@ -115,7 +115,7 @@ class RecipeFinderTest extends KernelTestBase {
   public function testUnknownComposerRecipeDirectory(): void {
     // By default, core's `composer.json` does not set up a recipe install path.
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage("No recipe install location is configured in $this->root/composer.json.");
+    $this->expectExceptionMessageIs("No recipe install location is configured in $this->root/composer.json.");
     Finder::getComposerRecipesDirectory();
   }
 
@@ -153,7 +153,7 @@ class RecipeFinderTest extends KernelTestBase {
   public function testInvalidRecipesThrow(): void {
     $finder = new Finder($this->root . '/core/tests/fixtures/recipes');
     // This is a parse error, so we don't care about the exception type.
-    $this->expectExceptionMessage('foo: !php/enum Drupal\config_enum_test\DoesNotExistEnumValue::No');
+    $this->expectExceptionMessageIs('The enum "Drupal\config_enum_test\DoesNotExistEnumValue" is not defined at line 9 (near "foo: !php/enum Drupal\config_enum_test\DoesNotExistEnumValue::No").');
     iterator_to_array($finder);
   }
 

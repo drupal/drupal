@@ -113,7 +113,7 @@ class FontWeightTest extends DesignTokenValuePluginTestBase {
    */
   public function testInvalidUnit(): void {
     $this->expectException(\ValueError::class);
-    $this->expectExceptionMessage('"<script>alert()</script>" is not a valid backing value for enum Drupal\Core\Theme\DesignToken\Enum\FontWeightAlias');
+    $this->expectExceptionMessageIs('"<script>alert()</script>" is not a valid backing value for enum Drupal\Core\Theme\DesignToken\Enum\FontWeightAlias');
     $configuration = [
       'value' => '<script>alert()</script>',
     ];
