@@ -106,14 +106,6 @@ class ThemeSuggestionHooks {
   }
 
   /**
-   * Implements hook_theme_suggestions_HOOK_alter() for top_bar.
-   */
-  #[Hook('theme_suggestions_top_bar_alter')]
-  public function themeSuggestionsTopBarAlter(array &$suggestions): void {
-    $suggestions[] = 'top_bar__default_admin';
-  }
-
-  /**
    * Implements hook_theme_suggestions_HOOK_alter() for views_view_field.
    */
   #[Hook('theme_suggestions_views_view_field_alter')]
