@@ -153,6 +153,16 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
+   * Tests decompressing a query parameter with data over the length limit.
+   */
+  public function testUncompressExceededLengthLimit(): void {
+    $data = str_repeat('a', 20000);
+    $compressed = UrlHelper::compressQueryParameter($data);
+
+    $this->assertSame($compressed, UrlHelper::uncompressQueryParameter($compressed));
+  }
+
+  /**
    * Tests passing an invalid string as a compressed query parameter.
    */
   public function testUncompressInvalidString(): void {
