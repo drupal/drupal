@@ -17,6 +17,14 @@ class UrlHelper {
   protected static $allowedProtocols = ['http', 'https'];
 
   /**
+   * The length limit for gzuncompress().
+   *
+   * Because query strings come from the request, set a 10000 limit to avoid
+   * implausibly large compressed strings being sent.
+   */
+  protected const int GZUNCOMPRESS_LIMIT = 10000;
+
+  /**
    * Parses an array into a valid query string encoded with rawurlencode().
    *
    * Function rawurlencode() is RFC3986 compliant, and as a consequence RFC3987
@@ -101,9 +109,11 @@ class UrlHelper {
    * @see \Drupal\Component\Utility\UrlHelper::compressQueryParameter()
    */
   public static function uncompressQueryParameter(string $compressed): string {
-    // Because this comes from user data, suppress the PHP warning that
-    // gzcompress() throws if the base64-encoded string is invalid.
-    $return = @gzuncompress(base64_decode(str_replace(['-', '_'], ['+', '/'], $compressed)));
+    // Because this comes from the request, suppress the PHP warning that
+    // gzuncompress() throws if the base64-encoded string is invalid.
+    // Additionally, set a limit to avoid implausibly large compressed strings
+    // being sent.
+    $return = @gzuncompress(base64_decode(str_replace(['-', '_'], ['+', '/'], $compressed)), static::GZUNCOMPRESS_LIMIT);
 
     // If we failed to uncompress the query parameter, it may be a stale link
     // from before compression was implemented with the URL parameter
