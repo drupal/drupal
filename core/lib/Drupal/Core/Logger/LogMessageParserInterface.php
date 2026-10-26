@@ -26,7 +26,7 @@ interface LogMessageParserInterface {
    * @param array $context
    *   An array that may or may not contain placeholder variables.
    *
-   * @return array
+   * @return array<string, scalar|\Stringable|null>
    *   An array of the extracted message placeholders.
    *
    * @see \Drupal\Component\Render\FormattableMarkup
