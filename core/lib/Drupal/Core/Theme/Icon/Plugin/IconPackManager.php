@@ -392,7 +392,7 @@ class IconPackManager extends DefaultPluginManager implements IconPackManagerInt
    * Validates a definition against the JSON schema specification.
    *
    * @param array $definition
-   *   The definition to alter.
+   *   The definition to check.
    *
    * @return bool
    *   FALSE if the response failed validation, otherwise TRUE.
