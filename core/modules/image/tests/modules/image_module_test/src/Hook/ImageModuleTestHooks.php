@@ -52,10 +52,18 @@ class ImageModuleTestHooks {
    * Implements hook_file_download().
    */
   #[Hook('file_download')]
-  public function fileDownload($uri): array {
+  public function fileDownload($uri): array|int {
     $default_uri = \Drupal::keyValue('image')->get('test_file_download', FALSE);
     if ($default_uri == $uri) {
       return ['X-Image-Owned-By' => 'image_module_test'];
+    }
+    // When we have custom stream wrapper is enabled, do the validation based
+    // on state variable to allow it.
+    if (str_starts_with($uri, 'image-test-dummy://')) {
+      if (\Drupal::state()->get('image_module_test.allow_image_test_dummy', FALSE)) {
+        return ['X-Allowed-By' => 'image_module_test'];
+      }
+      return -1;
     }
     return [];
   }
