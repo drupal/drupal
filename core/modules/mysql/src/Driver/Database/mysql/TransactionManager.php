@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\mysql\Driver\Database\mysql;
 
-use Drupal\Core\Database\Transaction\ClientConnectionTransactionState;
 use Drupal\Core\Database\Transaction\TransactionManagerBase;
+use Drupal\Core\Database\TransactionCommitFailedException;
+use Drupal\Core\Database\TransactionException;
+use Drupal\Core\Database\TransactionNoActiveException;
 
 /**
  * MySql implementation of TransactionManagerInterface.
@@ -21,18 +23,12 @@ class TransactionManager extends TransactionManagerBase {
    * {@inheritdoc}
    */
   protected function beginClientTransaction(): bool {
-    return $this->connection->getClientConnection()->beginTransaction();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function processRootCommit(): void {
-    if (!$this->connection->getClientConnection()->inTransaction()) {
-      $this->voidClientTransaction();
-      return;
+    try {
+      return $this->connection->getClientConnection()->beginTransaction();
     }
-    parent::processRootCommit();
+    catch (\Exception $e) {
+      throw new TransactionException('Failed start of transaction', $e->getCode(), $e);
+    }
   }
 
   /**
@@ -40,8 +36,7 @@ class TransactionManager extends TransactionManagerBase {
    */
   protected function rollbackClientSavepoint(string $name): bool {
     if (!$this->connection->getClientConnection()->inTransaction()) {
-      $this->voidClientTransaction();
-      return TRUE;
+      throw new TransactionNoActiveException();
     }
     return parent::rollbackClientSavepoint($name);
   }
@@ -51,8 +46,7 @@ class TransactionManager extends TransactionManagerBase {
    */
   protected function releaseClientSavepoint(string $name): bool {
     if (!$this->connection->getClientConnection()->inTransaction()) {
-      $this->voidClientTransaction();
-      return TRUE;
+      throw new TransactionNoActiveException();
     }
     return parent::releaseClientSavepoint($name);
   }
@@ -61,12 +55,12 @@ class TransactionManager extends TransactionManagerBase {
    * {@inheritdoc}
    */
   protected function commitClientTransaction(): bool {
-    $clientCommit = $this->connection->getClientConnection()->commit();
-    $this->setConnectionTransactionState($clientCommit ?
-      ClientConnectionTransactionState::Committed :
-      ClientConnectionTransactionState::CommitFailed
-    );
-    return $clientCommit;
+    try {
+      return $this->connection->getClientConnection()->commit();
+    }
+    catch (\Exception $e) {
+      throw new TransactionCommitFailedException('Failed commit of transaction', $e->getCode(), $e);
+    }
   }
 
   /**
@@ -74,15 +68,14 @@ class TransactionManager extends TransactionManagerBase {
    */
   protected function rollbackClientTransaction(): bool {
     if (!$this->connection->getClientConnection()->inTransaction()) {
-      $this->voidClientTransaction();
-      return FALSE;
+      throw new TransactionNoActiveException();
     }
-    $clientRollback = $this->connection->getClientConnection()->rollBack();
-    $this->setConnectionTransactionState($clientRollback ?
-      ClientConnectionTransactionState::RolledBack :
-      ClientConnectionTransactionState::RollbackFailed
-    );
-    return $clientRollback;
+    try {
+      return $this->connection->getClientConnection()->rollBack();
+    }
+    catch (\Exception $e) {
+      throw new TransactionException('Failed rollback of transaction', $e->getCode(), $e);
+    }
   }
 
 }

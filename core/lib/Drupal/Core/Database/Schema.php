@@ -141,7 +141,7 @@ abstract class Schema implements PlaceholderInterface {
     // DDL statements when in a transaction force a commit in some databases.
     // Void the transaction in that case.
     if (!$this->connection->supportsTransactionalDDL() && $this->connection->transactionManager()->inTransaction()) {
-      $this->connection->transactionManager()->voidClientTransaction();
+      $this->connection->transactionManager()->handleAutomaticCommit();
     }
   }
 

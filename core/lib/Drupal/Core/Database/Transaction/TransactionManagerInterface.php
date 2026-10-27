@@ -60,6 +60,8 @@ interface TransactionManagerInterface {
    * @param string $id
    *   The id of the transaction.
    *
+   * @throws \Drupal\Core\Database\TransactionNoActiveException
+   *   When there is no client transaction active.
    * @throws \Drupal\Core\Database\TransactionOutOfOrderException
    *   If a Drupal Transaction with the specified name does not exist.
    * @throws \Drupal\Core\Database\TransactionCommitFailedException
@@ -83,6 +85,8 @@ interface TransactionManagerInterface {
    * @param string $id
    *   The id of the transaction.
    *
+   * @throws \Drupal\Core\Database\TransactionNoActiveException
+   *   When there is no client transaction active.
    * @throws \Drupal\Core\Database\TransactionOutOfOrderException
    *   If a Drupal Transaction with the specified name does not exist.
    * @throws \Drupal\Core\Database\TransactionCommitFailedException
@@ -108,7 +112,7 @@ interface TransactionManagerInterface {
    *   The id of the transaction.
    *
    * @throws \Drupal\Core\Database\TransactionNoActiveException
-   *   If there is no active client connection.
+   *   When there is no client transaction active.
    * @throws \Drupal\Core\Database\TransactionOutOfOrderException
    *   If the order of rollback is not in reverse sequence against the pushes
    *   to the stack.
@@ -122,15 +126,27 @@ interface TransactionManagerInterface {
   /**
    * Voids the client connection.
    *
-   * In some cases the active transaction can be automatically committed by the
-   * database server (for example, MySql when a DDL statement is executed
-   * during a transaction). In such cases we need to void the remaining items
-   * on the stack so that when outliving Transaction object get out of scope
-   * they will not try operations on the database.
+   * Void any existing items on the stack so that when outliving Transaction
+   * objects get out of scope they will not try operations on the database.
    *
    * This method should only be called internally by a database driver.
    */
   public function voidClientTransaction(): void;
+
+  /**
+   * Manages the occurrence of an automatic commit.
+   *
+   * In some cases the active transaction is automatically committed by the
+   * database server when a DDL statement is executed during a transaction
+   * (for example, MySQL). In such cases we void the remaining items on the
+   * stack, and emit a TransactionAutoCommitEvent to notify that a database
+   * commit happened while the Drupal transaction was still active. Later, a
+   * normal TransactionCommitEvent is triggered when the Drupal transaction is
+   * finalized.
+   *
+   * This method should only be called internally by a database driver.
+   */
+  public function handleAutomaticCommit(): void;
 
   /**
    * Adds a root transaction end callback.
