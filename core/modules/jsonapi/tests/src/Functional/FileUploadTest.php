@@ -700,6 +700,52 @@ class FileUploadTest extends ResourceTestBase {
   }
 
   /**
+   * Tests using the image upload POST route with a malicious image.
+   */
+  public function testImageUploadMaliciousContent(): void {
+    $this->container->get('module_installer')->install(['image']);
+
+    \Drupal::service('router.builder')->rebuild();
+    $this->setUpAuthorization('POST');
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
+
+    // Add a file field.
+    $imageStorage = FieldStorageConfig::create([
+      'entity_type' => 'entity_test',
+      'field_name' => 'field_rest_image_test',
+      'type' => 'image',
+      'settings' => [
+        'uri_scheme' => 'public',
+      ],
+    ])
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $imageStorage->save();
+
+    $imageField = FieldConfig::create([
+      'entity_type' => 'entity_test',
+      'field_name' => 'field_rest_image_test',
+      'bundle' => 'entity_test',
+      'settings' => [
+        'file_directory' => 'field_rest_image_test',
+        'file_extensions' => '',
+        'max_filesize' => '',
+      ],
+    ])
+      ->setLabel('Test image field')
+      ->setTranslatable(FALSE);
+    $imageField->save();
+
+    $uri = Url::fromUri('base:/jsonapi/entity_test/entity_test/field_rest_image_test');
+
+    $php_string = '<?php print "Drupal"; ?>';
+
+    // Test using a masked exploit file.
+    $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example.png"']);
+    $this->assertSame(422, $response->getStatusCode());
+    $this->assertFileDoesNotExist('public://field_rest_image_test/example.png');
+  }
+
+  /**
    * Tests using the file upload POST route no configuration.
    */
   public function testFileUploadNoConfiguration(): void {
