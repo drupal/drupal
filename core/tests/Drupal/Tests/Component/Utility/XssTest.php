@@ -440,6 +440,18 @@ class XssTest extends TestCase {
         'HTML filter attributes removal -- srcdoc attribute.',
         ['iframe'],
       ],
+      [
+        '<a href="foo" data-hx-on-click="alert(document.domain)">Click me!</a>',
+        'alert',
+        'HTML filter attributes removal -- data-hx-* attributes.',
+        ['a'],
+      ],
+      [
+        '<a href="foo" hx-on-click="alert(document.domain)">Click me!</a>',
+        'alert',
+        'HTML filter attributes removal -- hx-* attributes.',
+        ['a'],
+      ],
     ];
     return $cases;
   }
