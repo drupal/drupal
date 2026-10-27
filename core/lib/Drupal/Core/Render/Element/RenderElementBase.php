@@ -36,6 +36,10 @@ use Drupal\Core\Url;
  * of type string, they would generally end up being
  * \Drupal\Core\StringTranslation\TranslatableMarkup objects instead.
  *
+ * For properties containing callables it is not recommended to use a closure
+ * or anonymous function because it will trigger an error if the element is
+ * serialized. Examples in which serializing occurs include form caching.
+ *
  * Here is the list of the properties used during the rendering of all render
  * elements:
  * - #access: (bool or AccessResultInterface)
@@ -124,6 +128,7 @@ use Drupal\Core\Url;
  * @see \Drupal\Core\Render\ElementInterface
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see plugin_api
+ * @see \Drupal\Core\Form\FormState::setCached()
  *
  * @ingroup theme_render
  */

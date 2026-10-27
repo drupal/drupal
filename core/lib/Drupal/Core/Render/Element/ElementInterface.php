@@ -13,6 +13,8 @@ use Drupal\Component\Plugin\PluginInspectionInterface;
  * properties specified in render arrays. Thus, you can specify defaults for any
  * Render API keys, in addition to those explicitly documented by
  * \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
+ * These defaults will be serialized so they should not contain closures or
+ * anonymous functions.
  *
  * Some render elements are specifically form input elements; see
  * \Drupal\Core\Render\Element\FormElementInterface for more information.
