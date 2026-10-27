@@ -53,7 +53,12 @@ class Schema extends DatabaseSchema {
    */
   public function createTableSql($name, $table) {
     if (!empty($table['primary key']) && is_array($table['primary key'])) {
-      $this->ensureNotNullPrimaryKey($table['primary key'], $table['fields']);
+      $this->validatePrimaryKeySchema($table['primary key'], $table['fields']);
+    }
+    if (!empty($table['unique keys'])) {
+      foreach ($table['unique keys'] as $key_fields) {
+        $this->validateUniqueKeySchema($key_fields);
+      }
     }
 
     $sql = [];
@@ -347,8 +352,13 @@ class Schema extends DatabaseSchema {
     if ($this->fieldExists($table, $field)) {
       throw new SchemaObjectExistsException("Cannot add field '$table.$field': field already exists.");
     }
-    if (isset($keys_new['primary key']) && in_array($field, $keys_new['primary key'], TRUE)) {
-      $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field => $specification]);
+    if (!empty($keys_new['primary key'])) {
+      $this->validatePrimaryKeySchema($keys_new['primary key'], [$field => $specification]);
+    }
+    if (!empty($keys_new['unique keys'])) {
+      foreach ($keys_new['unique keys'] as $key_fields) {
+        $this->validateUniqueKeySchema($key_fields);
+      }
     }
 
     // SQLite doesn't have a full-featured ALTER TABLE statement. It only
@@ -845,8 +855,13 @@ class Schema extends DatabaseSchema {
     if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
       throw new SchemaObjectExistsException("Cannot rename field '$table.$field' to '$field_new': target field already exists.");
     }
-    if (isset($keys_new['primary key']) && in_array($field_new, $keys_new['primary key'], TRUE)) {
-      $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field_new => $spec]);
+    if (!empty($keys_new['primary key'])) {
+      $this->validatePrimaryKeySchema($keys_new['primary key'], [$field_new => $spec]);
+    }
+    if (!empty($keys_new['unique keys'])) {
+      foreach ($keys_new['unique keys'] as $key_fields) {
+        $this->validateUniqueKeySchema($key_fields);
+      }
     }
 
     $old_schema = $this->introspectSchema($table);
@@ -953,6 +968,7 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function addUniqueKey($table, $name, $fields) {
+    $this->validateUniqueKeySchema($fields);
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot add unique key '$name' to table '$table': table doesn't exist.");
     }
@@ -997,7 +1013,7 @@ class Schema extends DatabaseSchema {
     }
 
     $new_schema['primary key'] = $fields;
-    $this->ensureNotNullPrimaryKey($new_schema['primary key'], $new_schema['fields']);
+    $this->validatePrimaryKeySchema($new_schema['primary key'], $new_schema['fields']);
     $this->alterTable($table, $old_schema, $new_schema);
   }
 

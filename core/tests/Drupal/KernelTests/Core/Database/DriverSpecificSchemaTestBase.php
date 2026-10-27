@@ -23,6 +23,7 @@ use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Tests\Core\Database\SchemaIntrospectionTestTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests table creation and modification via the schema API.
@@ -841,6 +842,196 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
       ['type' => 'int'],
       ['primary key' => ['test_field', 'new_test_field']]
     );
+  }
+
+  /**
+   * Tests invalid primary key columns on create table.
+   */
+  #[IgnoreDeprecations]
+  public function testInvalidPrimaryKeyColumnsOnCreateTable(): void {
+    $this->expectUserDeprecationMessage("Specification of primary key with column length is deprecated in drupal:12.1.0 and will throw a SchemaException from drupal:13.0.0. Specify full columns for a primary key, or use an index for columns with partial length. See https://www.drupal.org/node/3375071");
+    // Test with partial column length.
+    $this->schema->createTable('table_with_invalid_pk', [
+      'description' => 'Table with partial column length primary key.',
+      'fields' => [
+        'test_field_1'  => [
+          'type' => 'varchar',
+          'length' => 50,
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => [['test_field_1', 10]],
+    ]);
+  }
+
+  /**
+   * Tests invalid primary key columns on add primary key.
+   */
+  #[IgnoreDeprecations]
+  public function testInvalidPrimaryKeyColumnsOnAddPrimaryKey(): void {
+    $this->expectUserDeprecationMessage("Specification of primary key with column length is deprecated in drupal:12.1.0 and will throw a SchemaException from drupal:13.0.0. Specify full columns for a primary key, or use an index for columns with partial length. See https://www.drupal.org/node/3375071");
+    // Test with partial column length.
+    $this->schema->createTable('table_with_invalid_pk', [
+      'description' => 'Table with partial column length primary key.',
+      'fields' => [
+        'test_field_1'  => [
+          'type' => 'varchar',
+          'length' => 50,
+          'not null' => TRUE,
+        ],
+      ],
+    ]);
+    $this->schema->addPrimaryKey('table_with_invalid_pk', [['test_field_1', 10]]);
+  }
+
+  /**
+   * Tests invalid primary key columns on add field.
+   */
+  #[IgnoreDeprecations]
+  public function testInvalidPrimaryKeyColumnsOnAddField(): void {
+    $this->expectUserDeprecationMessage("Specification of primary key with column length is deprecated in drupal:12.1.0 and will throw a SchemaException from drupal:13.0.0. Specify full columns for a primary key, or use an index for columns with partial length. See https://www.drupal.org/node/3375071");
+    // Test with partial column length.
+    $this->schema->createTable('table_with_invalid_pk', [
+      'description' => 'Table with partial column length primary key.',
+      'fields' => [
+        'test_field_1'  => [
+          'type' => 'varchar',
+          'length' => 50,
+          'not null' => TRUE,
+        ],
+      ],
+    ]);
+    $this->schema->addField('table_with_invalid_pk', 'new_test_field', [
+      'type' => 'varchar',
+      'length' => 50,
+      'not null' => TRUE,
+    ], [
+      'primary key' => [['new_test_field', 10]],
+    ]);
+  }
+
+  /**
+   * Tests invalid primary key columns on change field.
+   */
+  #[IgnoreDeprecations]
+  public function testInvalidPrimaryKeyColumnsOnChangeField(): void {
+    $this->expectUserDeprecationMessage("Specification of primary key with column length is deprecated in drupal:12.1.0 and will throw a SchemaException from drupal:13.0.0. Specify full columns for a primary key, or use an index for columns with partial length. See https://www.drupal.org/node/3375071");
+    // Test with partial column length.
+    $this->schema->createTable('table_with_invalid_pk', [
+      'description' => 'Table with partial column length primary key.',
+      'fields' => [
+        'test_field_1'  => [
+          'type' => 'varchar',
+          'length' => 50,
+          'not null' => TRUE,
+        ],
+      ],
+    ]);
+    $this->schema->changeField('table_with_invalid_pk', 'test_field_1', 'test_field_1', [
+      'type' => 'varchar',
+      'length' => 20,
+      'not null' => TRUE,
+    ], [
+      'primary key' => [['test_field_1', 10]],
+    ]);
+  }
+
+  /**
+   * Tests invalid unique key columns on create table.
+   */
+  #[IgnoreDeprecations]
+  public function testInvalidUniqueKeyColumnsOnCreateTable(): void {
+    $this->expectUserDeprecationMessage("Specification of unique keys with column length is deprecated in drupal:12.1.0 and will throw a SchemaException from drupal:13.0.0. Specify full columns for an unique key, or use an index for columns with partial length. See https://www.drupal.org/node/3375071");
+    // Test with partial column length.
+    $this->schema->createTable('table_with_invalid_unique_key', [
+      'description' => 'Table with partial column length unique key.',
+      'fields' => [
+        'test_field_1'  => [
+          'type' => 'varchar',
+          'length' => 50,
+          'not null' => TRUE,
+        ],
+      ],
+      'unique keys' => [
+        'test_unique_key' => [['test_field_1', 10]],
+      ],
+    ]);
+  }
+
+  /**
+   * Tests invalid unique key columns on add unique key.
+   */
+  #[IgnoreDeprecations]
+  public function testInvalidUniqueKeyColumnsOnAddUniqueKey(): void {
+    $this->expectUserDeprecationMessage("Specification of unique keys with column length is deprecated in drupal:12.1.0 and will throw a SchemaException from drupal:13.0.0. Specify full columns for an unique key, or use an index for columns with partial length. See https://www.drupal.org/node/3375071");
+    // Test with partial column length.
+    $this->schema->createTable('table_with_invalid_unique_key', [
+      'description' => 'Table with partial column length unique key.',
+      'fields' => [
+        'test_field_1'  => [
+          'type' => 'varchar',
+          'length' => 50,
+          'not null' => TRUE,
+        ],
+      ],
+    ]);
+    $this->schema->addUniqueKey('table_with_invalid_unique_key', 'test_unique_key', [['test_field_1', 10]]);
+  }
+
+  /**
+   * Tests invalid unique key columns on add field.
+   */
+  #[IgnoreDeprecations]
+  public function testInvalidUniqueKeyColumnsOnAddField(): void {
+    $this->expectUserDeprecationMessage("Specification of unique keys with column length is deprecated in drupal:12.1.0 and will throw a SchemaException from drupal:13.0.0. Specify full columns for an unique key, or use an index for columns with partial length. See https://www.drupal.org/node/3375071");
+    // Test with partial column length.
+    $this->schema->createTable('table_with_invalid_unique_key', [
+      'description' => 'Table with partial column length unique key.',
+      'fields' => [
+        'test_field_1'  => [
+          'type' => 'varchar',
+          'length' => 50,
+          'not null' => TRUE,
+        ],
+      ],
+    ]);
+    $this->schema->addField('table_with_invalid_unique_key', 'new_test_field', [
+      'type' => 'varchar',
+      'length' => 50,
+      'not null' => TRUE,
+    ], [
+      'unique keys' => [
+        'test_unique_key' => [['new_test_field', 10]],
+      ],
+    ]);
+  }
+
+  /**
+   * Tests invalid unique key columns on change field.
+   */
+  #[IgnoreDeprecations]
+  public function testInvalidUniqueKeyColumnsOnChangeField(): void {
+    $this->expectUserDeprecationMessage("Specification of unique keys with column length is deprecated in drupal:12.1.0 and will throw a SchemaException from drupal:13.0.0. Specify full columns for an unique key, or use an index for columns with partial length. See https://www.drupal.org/node/3375071");
+    // Test with partial column length.
+    $this->schema->createTable('table_with_invalid_unique_key', [
+      'description' => 'Table with partial column length unique key.',
+      'fields' => [
+        'test_field_1'  => [
+          'type' => 'varchar',
+          'length' => 50,
+          'not null' => TRUE,
+        ],
+      ],
+    ]);
+    $this->schema->changeField('table_with_invalid_unique_key', 'test_field_1', 'test_field_1', [
+      'type' => 'varchar',
+      'length' => 20,
+      'not null' => TRUE,
+    ], [
+      'unique keys' => [
+        'test_unique_key' => [['test_field_1', 10]],
+      ],
+    ]);
   }
 
   /**

@@ -307,11 +307,12 @@ EOD;
 
     $sql_keys = [];
     if (!empty($table['primary key']) && is_array($table['primary key'])) {
-      $this->ensureNotNullPrimaryKey($table['primary key'], $table['fields']);
+      $this->validatePrimaryKeySchema($table['primary key'], $table['fields']);
       $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, '', 'pkey') . ' PRIMARY KEY (' . $this->createPrimaryKeySql($table['primary key']) . ')';
     }
     if (isset($table['unique keys']) && is_array($table['unique keys'])) {
       foreach ($table['unique keys'] as $key_name => $key) {
+        $this->validateUniqueKeySchema($key);
         // Use the createPrimaryKeySql(), which already discards any prefix
         // lengths passed as part of the key column specifiers. (Postgres
         // doesn't support setting a prefix length for PRIMARY or UNIQUE
@@ -678,9 +679,15 @@ EOD;
     }
 
     // Fields that are part of a PRIMARY KEY must be added as NOT NULL.
-    $is_primary_key = isset($new_keys['primary key']) && in_array($field, $new_keys['primary key'], TRUE);
+    $is_primary_key = !empty($new_keys['primary key']);
     if ($is_primary_key) {
-      $this->ensureNotNullPrimaryKey($new_keys['primary key'], [$field => $spec]);
+      $this->validatePrimaryKeySchema($new_keys['primary key'], [$field => $spec]);
+    }
+
+    if (!empty($new_keys['unique keys'])) {
+      foreach ($new_keys['unique keys'] as $key_fields) {
+        $this->validateUniqueKeySchema($key_fields);
+      }
     }
 
     $fix_null = FALSE;
@@ -812,7 +819,7 @@ EOD;
     if ($this->constraintExists($table, 'pkey')) {
       throw new SchemaObjectExistsException("Cannot add primary key to table '$table': primary key already exists.");
     }
-
+    $this->validatePrimaryKeySchema($fields);
     $this->executeDdlStatement('ALTER TABLE {' . $table . '} ADD CONSTRAINT ' . $this->ensureIdentifiersLength($table, '', 'pkey') . ' PRIMARY KEY (' . $this->createPrimaryKeySql($fields) . ')');
     $this->resetTableInformation($table);
   }
@@ -850,7 +857,7 @@ EOD;
     if ($this->constraintExists($table, $name . '__key')) {
       throw new SchemaObjectExistsException("Cannot add unique key '$name' to table '$table': unique key already exists.");
     }
-
+    $this->validateUniqueKeySchema($fields);
     // Use the createPrimaryKeySql(), which already discards any prefix lengths
     // passed as part of the key column specifiers. (Postgres doesn't support
     // setting a prefix length for PRIMARY or UNIQUE indices.)
@@ -943,8 +950,13 @@ EOD;
     if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
       throw new SchemaObjectExistsException("Cannot rename field '$table.$field' to '$field_new': target field already exists.");
     }
-    if (isset($new_keys['primary key']) && in_array($field_new, $new_keys['primary key'], TRUE)) {
-      $this->ensureNotNullPrimaryKey($new_keys['primary key'], [$field_new => $spec]);
+    if (!empty($new_keys['primary key'])) {
+      $this->validatePrimaryKeySchema($new_keys['primary key'], [$field_new => $spec]);
+    }
+    if (!empty($new_keys['unique keys'])) {
+      foreach ($new_keys['unique keys'] as $key_fields) {
+        $this->validateUniqueKeySchema($key_fields);
+      }
     }
 
     $spec = $this->processField($spec);

@@ -399,11 +399,13 @@ use Drupal\Core\Database\SchemaDefinition\Table;
  *     'varchar' must specify the 'length' parameter.
  *  - 'primary key': A Drupal\Core\Database\SchemaDefinition\PrimaryKey
  *    object that describes the table primary key with an array of one or more
- *    key column specifiers (see below).
+ *    key column specifiers (see below). Primary keys do not allow partial
+ *    column length specifications.
  *  - 'unique keys': An array of Drupal\Core\Database\SchemaDefinition\UniqueKey
  *    objects that describes the table unique keys. Each specification has the
  *    key name and an array of one or more key column specifiers (see below)
- *    that form a unique key on the table.
+ *    that form a unique key on the table. Unique keys do not allow partial
+ *    column length specifications.
  *  - 'foreign keys': An array of
  *    Drupal\Core\Database\SchemaDefinition\ForeignKey objects that describes
  *    the table foreign keys. Each object contains the name of the referenced
@@ -418,9 +420,10 @@ use Drupal\Core\Database\SchemaDefinition\Table;
  *
  * A key column specifier is either a string naming a column or an array of two
  * elements, column name and length, specifying a prefix of the named column.
- * Note that some DBMS drivers may opt to ignore the prefix length configuration
- * and still use the whole column value for the key. Code should therefore not
- * rely on this functionality.
+ * Partial column length for a column can only be specified for indexes. Note
+ * that some DBMS drivers may opt to ignore the prefix length configuration and
+ * still use the whole field value for the key. Code should therefore not rely
+ * on this functionality.
  *
  * As an example, this is the schema definition for the 'users_data' table. It
  * shows five columns ('uid', 'module', 'name', 'value', and 'serialized'), the
