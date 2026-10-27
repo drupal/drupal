@@ -857,6 +857,8 @@ function hook_render_template($template_file, $variables): string|\Stringable {
  * @param array $info
  *   An associative array with structure identical to that of the return value
  *   of \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
+ *   This array will be serialized so it should not contain closures or
+ *   anonymous functions.
  *
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see \Drupal\Core\Render\Element\ElementInterface
