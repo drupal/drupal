@@ -2,18 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Core\Common;
+namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Tags;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\TestCase;
 
 // cspell:ignore sloopal troopal
 /**
  * Tests explosion and implosion of autocomplete tags.
  */
-#[Group('Common')]
-class TagsTest extends UnitTestCase {
+#[CoversClass(Tags::class)]
+#[Group('Utility')]
+class TagsTest extends TestCase {
 
   /**
    * A list of valid tags.

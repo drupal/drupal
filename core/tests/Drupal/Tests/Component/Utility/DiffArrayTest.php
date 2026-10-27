@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Core\Common;
+namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\DiffArray;
-use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the DiffArray helper class.
  */
-#[Group('Common')]
-class DiffArrayTest extends UnitTestCase {
+#[CoversClass(DiffArray::class)]
+#[Group('Utility')]
+class DiffArrayTest extends TestCase {
 
   /**
    * Array to use for testing.
