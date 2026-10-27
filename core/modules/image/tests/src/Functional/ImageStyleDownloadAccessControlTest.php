@@ -8,6 +8,7 @@ use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageStyleInterface;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -22,7 +23,7 @@ class ImageStyleDownloadAccessControlTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['image'];
+  protected static $modules = ['image', 'image_module_test'];
 
   /**
    * {@inheritdoc}
@@ -109,6 +110,35 @@ class ImageStyleDownloadAccessControlTest extends BrowserTestBase {
 
     $this->drupalGet(PublicStream::basePath() . '/styles/' . $this->style->id() . '/private/image.png');
     $this->assertSession()->statusCodeEquals(403);
+  }
+
+  /**
+   * Tests that hook_file_download runs for non-public scheme derivatives.
+   */
+  public function testNonPublicSchemeInvokesFileDownloadHook(): void {
+    $this->fileSystem->copy(\Drupal::root() . '/core/tests/fixtures/files/image-1.png', 'image-test-dummy://image.png');
+
+    $token = $this->style->getPathToken('image-test-dummy://image.png');
+    $url = Url::fromRoute('image_module_test.image_style_protected', [
+      'image_style' => $this->style->id(),
+      'scheme' => 'image-test-dummy',
+    ], [
+      'query' => [
+        'file' => 'image.png',
+        ImageStyleInterface::TOKEN => $token,
+      ],
+      'absolute' => TRUE,
+    ])->toString();
+
+    // The hook denies by default, so the derivative must not be served.
+    $this->drupalGet($url);
+    $this->assertSession()->statusCodeEquals(403);
+
+    // Set the state variable so that file download hook in image_module_test
+    // allows the access of the file.
+    \Drupal::state()->set('image_module_test.allow_image_test_dummy', TRUE);
+    $this->drupalGet($url);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**

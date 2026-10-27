@@ -1,0 +1,5 @@
+services:
+  stream_wrapper.image_test_private:
+    class: Drupal\image_module_test\StreamWrapper\ImageTestDummyStreamWrapper
+    tags:
+      - { name: stream_wrapper, scheme: image-test-dummy }
