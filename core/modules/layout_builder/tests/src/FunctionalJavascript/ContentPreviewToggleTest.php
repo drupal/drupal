@@ -6,6 +6,9 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
+use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 use PHPUnit\Framework\Attributes\Group;
@@ -123,6 +126,41 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $assert_session->pageTextContains($content_preview_body_text);
     $this->assertNotEmpty($assert_session->waitForText('Placeholder for the "Links" field'));
     $this->assertOrderInPage([$content_preview_body_text, 'Placeholder for the "Links" field']);
+  }
+
+  /**
+   * Tests that block labels are properly escaped in preview.
+   */
+  public function testBlockLabelXss(): void {
+    $page = $this->getSession()->getPage();
+    $node = $this->createNode([
+      'type' => 'bundle_for_this_particular_test',
+    ]);
+
+    $section = new Section('layout_onecol');
+    $component = new SectionComponent(
+      \Drupal::service('uuid')->generate(),
+      'content',
+      [
+        'id' => 'user_login_block',
+        'label' => '<img src="x" onerror="document.querySelector(\'body\').innerHTML = \'XSS has been triggered\';">',
+      ]
+    );
+    $section->appendComponent($component);
+    $node->get(OverridesSectionStorage::FIELD_NAME)->appendSection($section);
+    $node->save();
+
+    $this->drupalGet('node/1/layout');
+    $page->uncheckField('layout-builder-content-preview');
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.layout-builder-block__content-preview-placeholder-label'));
+    // Add a micro-sleep here to give the browser a moment to try
+    // trigger the XSS.
+    usleep(100000);
+
+    // If this is still present after the preview has been enabled, then
+    // the XSS has not been triggered.
+    $this->assertSession()->elementExists('css', '.layout-builder-block__content-preview-placeholder-label');
+
   }
 
   /**
