@@ -49,6 +49,16 @@ class LocaleStringIsSafeTest extends KernelTestBase {
     $result = LocaleXss::stringIsSafe($string);
     $this->assertTrue($result);
 
+    // Check a translatable string which includes the <front> placeholder.
+    $string = 'Enter <front> to link to the front page.';
+    $result = LocaleXss::stringIsSafe($string);
+    $this->assertTrue($result);
+
+    // Check that the <front> placeholder does not make unsafe HTML safe.
+    $string = 'Enter <front> <script>alert("unsafe");</script>';
+    $result = LocaleXss::stringIsSafe($string);
+    $this->assertFalse($result);
+
     // Check a translatable string which includes a wbr tag.
     $string = 'DrupalLocaleModule<wbr>Test<wbr>Example';
     $result = LocaleXss::stringIsSafe($string);
