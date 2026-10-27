@@ -56,6 +56,9 @@ class LocaleXss {
     //   \Drupal\Component\Utility\Xss::filter() to not incorrectly alter the
     //   string. https://www.drupal.org/node/2372127
     $string = preg_replace('/\[[a-z0-9_-]+(:[a-z0-9_-]+)+\]/i', '', $string);
+    // Remove the "<front>" placeholder if it exists, before testing with the
+    // XSS filter, as it looks like an invalid HTML tag while it's a Drupalism.
+    $string = str_replace('<front>', '', $string);
 
     return Html::decodeEntities($string) == Html::decodeEntities(Xss::filter($string, [
       'a',
