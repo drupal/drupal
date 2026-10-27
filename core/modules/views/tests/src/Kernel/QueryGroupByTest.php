@@ -28,6 +28,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     'test_group_by_in_filters',
     'test_aggregate_count',
     'test_aggregate_count_function',
+    'test_aggregate_decimal',
     'test_group_by_count',
     'test_group_by_count_multicardinality',
     'test_group_by_field_not_within_bundle',
@@ -96,6 +97,43 @@ class QueryGroupByTest extends ViewsKernelTestBase {
 
     $this->assertEquals(7, $view->result[0]->id);
     $this->assertCount(1, $view->result, 'Make sure the count of rows is one.');
+  }
+
+  /**
+   * Tests formatted output for an aggregated decimal field.
+   */
+  public function testAggregateDecimalOutput(): void {
+    FieldStorageConfig::create([
+      'field_name' => 'field_decimal',
+      'entity_type' => 'entity_test',
+      'type' => 'decimal',
+      'settings' => [
+        'precision' => 10,
+        'scale' => 3,
+      ],
+    ])->save();
+    FieldConfig::create([
+      'field_name' => 'field_decimal',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+    ])->save();
+
+    // The test view rounds the sum, 5.789, to two decimal places and uses a
+    // comma as the decimal point, resulting in "5,79".
+    $this->storage->create([
+      'name' => $this->randomMachineName(),
+      'field_decimal' => '1.234',
+    ])->save();
+    $this->storage->create([
+      'name' => $this->randomMachineName(),
+      'field_decimal' => '4.555',
+    ])->save();
+
+    $view = Views::getView('test_aggregate_decimal');
+    $this->executeView($view);
+
+    $this->assertCount(1, $view->result);
+    $this->assertEquals('5,79', $view->getStyle()->getField(0, 'field_decimal'));
   }
 
   /**

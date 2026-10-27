@@ -186,6 +186,43 @@ class FieldApiDataTest extends ViewsKernelTestBase {
   }
 
   /**
+   * Tests the float flag for decimal and integer fields.
+   */
+  public function testViewsDataFloatFlag(): void {
+    NodeType::create([
+      'type' => 'page',
+      'name' => 'Page',
+    ])->save();
+
+    $table_mapping = $this->container->get('entity_type.manager')
+      ->getStorage('node')
+      ->getTableMapping();
+
+    foreach (['decimal' => TRUE, 'float' => TRUE, 'integer' => FALSE] as $type => $float) {
+      $field_storage = FieldStorageConfig::create([
+        'field_name' => 'field_' . $type,
+        'entity_type' => 'node',
+        'type' => $type,
+      ]);
+      $field_storage->save();
+      FieldConfig::create([
+        'field_name' => 'field_' . $type,
+        'entity_type' => 'node',
+        'bundle' => 'page',
+      ])->save();
+
+      $table = $table_mapping->getDedicatedDataTableName($field_storage);
+      $data = $this->container->get('views.views_data')->get($table);
+      if ($float) {
+        $this->assertTrue($data['field_' . $type]['field']['float'], "The $type field is flagged as float.");
+      }
+      else {
+        $this->assertArrayNotHasKey('float', $data['field_' . $type]['field'], "The $type field is not flagged as float.");
+      }
+    }
+  }
+
+  /**
    * Gets the views data for the field created in setUp().
    *
    * @param string $field_storage_key
