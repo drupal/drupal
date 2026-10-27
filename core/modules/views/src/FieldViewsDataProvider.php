@@ -327,6 +327,12 @@ class FieldViewsDataProvider {
         'element type' => 'div',
         'is revision' => $type == EntityStorageInterface::FIELD_LOAD_REVISION,
       ];
+      // The decimal field type uses the numeric schema column type.
+      // Set the float flag for float and numeric columns. The numeric field
+      // handler uses the flag to show precision and decimal point settings.
+      if (in_array($field_columns[$real_field]['type'], ['float', 'numeric'], TRUE)) {
+        $data[$table_alias][$field_alias]['field']['float'] = TRUE;
+      }
     }
 
     // Expose data for each field property individually.
