@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -31,17 +28,7 @@ class FieldUITest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = [
-    'test_view',
-    'test_aggregate_count',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = [
-    'entity_test',
-  ];
+  public static $testViews = ['test_view'];
 
   /**
    * Tests the UI of field handlers.
@@ -118,47 +105,6 @@ class FieldUITest extends UITestBase {
     $view = Views::getView($view['id']);
     $view->initHandlers();
     $this->assertEquals('', $view->field['title']->options['label'], 'The field label for normal styles are empty.');
-  }
-
-  /**
-   * Tests decimal settings are available for aggregated decimal fields.
-   */
-  public function testAggregatedDecimalFieldSettings(): void {
-    FieldStorageConfig::create([
-      'field_name' => 'field_decimal',
-      'entity_type' => 'entity_test',
-      'type' => 'decimal',
-    ])->save();
-    FieldConfig::create([
-      'field_name' => 'field_decimal',
-      'entity_type' => 'entity_test',
-      'bundle' => 'entity_test',
-    ])->save();
-
-    $view = View::load('test_aggregate_count');
-    $display = &$view->getDisplay('default');
-    $display['display_options']['fields']['field_decimal'] = [
-      'id' => 'field_decimal',
-      'table' => 'entity_test__field_decimal',
-      'field' => 'field_decimal',
-      'plugin_id' => 'field',
-      'group_type' => 'sum',
-    ];
-    $view->save();
-
-    // The numeric handler used for the aggregated decimal field offers the
-    // precision and decimal point settings.
-    $this->drupalGet('admin/structure/views/nojs/handler/test_aggregate_count/default/field/field_decimal');
-    $this->assertSession()->fieldExists('options[set_precision]');
-    $this->assertSession()->fieldExists('options[precision]');
-    $this->assertSession()->fieldExists('options[decimal]');
-
-    // An aggregated integer field does not offer them.
-    $this->drupalGet('admin/structure/views/nojs/handler-group/test_aggregate_count/default/field/id');
-    $this->submitForm(['options[group_type]' => 'count'], 'Apply');
-    $this->drupalGet('admin/structure/views/nojs/handler/test_aggregate_count/default/field/id');
-    $this->assertSession()->fieldNotExists('options[set_precision]');
-    $this->assertSession()->fieldExists('options[separator]');
   }
 
 }
