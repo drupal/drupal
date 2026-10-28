@@ -976,8 +976,8 @@ default:
     PHPUNIT_FAIL_ON_PHPUNIT_DEPRECATION: true
   before_script:
     - *composer-setup
-    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
-    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
+    - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer /var/cache/opcache-cli
+    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/ /var/cache/opcache-cli
   script:
     - export EXIT_CODE=0
     - sudo -u www-data -E -H php ./core/scripts/run-tests.sh --color --keep-results --types "unit" --concurrency "$CONCURRENCY" --repeat "1" --verbose --non-html --all || EXIT_CODE=$?
