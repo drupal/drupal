@@ -115,7 +115,7 @@ class DimensionTest extends DesignTokenValuePluginTestBase {
    */
   public function testInvalidUnit(): void {
     $this->expectException(\ValueError::class);
-    $this->expectExceptionMessage('"<script>alert()</script>" is not a valid backing value for enum Drupal\Core\Theme\DesignToken\Enum\DimensionUnit');
+    $this->expectExceptionMessageIs('"<script>alert()</script>" is not a valid backing value for enum Drupal\Core\Theme\DesignToken\Enum\DimensionUnit');
     $configuration = [
       'value' => 2,
       'unit' => '<script>alert()</script>',

@@ -149,13 +149,13 @@ class ScaffoldTest extends TestCase {
 
       [
         'project-with-empty-scaffold-path',
-        'No scaffold file path given for [web-root]/my-error in package fixtures/project-with-empty-scaffold-path',
+        'No scaffold file path given for [web-root]/my-error in package fixtures/project-with-empty-scaffold-path.',
         FALSE,
       ],
 
       [
         'project-with-invalid-dir-scaffold',
-        'Scaffold file assets in package fixtures/project-with-invalid-dir-scaffold is a directory; only files may be scaffolded',
+        'Scaffold file assets in package fixtures/project-with-invalid-dir-scaffold is a directory; only files may be scaffolded.',
         FALSE,
       ],
     ];

@@ -424,7 +424,7 @@ class ModuleHandlerTest extends KernelTestBase {
 
     $expected_exception_message = 'Module hook_single_invoke should not implement custom_hook_invoke_string more than once.';
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage($expected_exception_message);
+    $this->expectExceptionMessageIs($expected_exception_message);
     $this->moduleHandler()->invoke('hook_single_invoke', 'custom_hook_invoke_string', args: [TRUE]);
   }
 
@@ -436,7 +436,7 @@ class ModuleHandlerTest extends KernelTestBase {
 
     $expected_exception_message = 'Module hook_single_invoke should not implement custom_hook_invoke_class more than once.';
     $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage($expected_exception_message);
+    $this->expectExceptionMessageIs($expected_exception_message);
     $this->moduleHandler()->invoke('hook_single_invoke', 'custom_hook_invoke_class', args: [TRUE]);
   }
 

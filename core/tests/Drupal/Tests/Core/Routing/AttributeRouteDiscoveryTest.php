@@ -217,7 +217,7 @@ EOF
    */
   public function testTitleConflictsWithTitleDefault(): void {
     $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('The "title" property cannot be used together with a "_title" default on the Route attribute.');
+    $this->expectExceptionMessageIs('The "title" property cannot be used together with a "_title" default on the Route attribute.');
     new Route(
       path: '/test',
       name: 'router_test.title_conflict',

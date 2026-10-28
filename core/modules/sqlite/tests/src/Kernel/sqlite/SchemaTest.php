@@ -173,7 +173,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
 
     };
     $this->expectException(SchemaException::class);
-    $this->expectExceptionMessage("Unable to recover the definition of generated column double_age");
+    $this->expectExceptionMessageIs("Unable to recover the definition of generated column double_age");
     // Schema::fieldExists() introspects the whole table, so it trips on
     // 'double_age' no matter which column it is asked about.
     $schema->fieldExists($tableName, 'age');

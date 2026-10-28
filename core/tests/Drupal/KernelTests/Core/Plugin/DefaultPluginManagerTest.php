@@ -112,7 +112,7 @@ class DefaultPluginManagerTest extends KernelTestBase {
     $namespaces = new \ArrayObject(['Drupal\plugin_test' => $base_directory]);
     $module_handler = $this->container->get('module_handler');
 
-    $this->expectExceptionMessage('Drupal\Core\Plugin\DefaultPluginManager only supports annotation-based discovery, which is no longer supported as of Drupal 12.0. Provide an Attribute class and an Annotation class for BC. See https://www.drupal.org/node/3395582');
+    $this->expectExceptionMessageIs('Drupal\Core\Plugin\DefaultPluginManager only supports annotation-based discovery, which is no longer supported as of Drupal 12.0. Provide an Attribute class and an Annotation class for BC. See https://www.drupal.org/node/3395582');
 
     $manager = new DefaultPluginManager($subdir, $namespaces, $module_handler, NULL, AnnotationPluginExample::class);
     $manager->getDefinitions();
