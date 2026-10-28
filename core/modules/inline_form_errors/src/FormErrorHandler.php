@@ -96,7 +96,7 @@ class FormErrorHandler extends CoreFormErrorHandler {
       }
       elseif ($is_visible_element && $has_title && $has_id) {
         $url = Url::fromRoute('<none>', [], ['fragment' => $form_element['#id'], 'external' => TRUE]);
-        $error_links[] = Link::fromTextAndUrl($title, $url)->toRenderable();
+        $error_links[] = ['value' => Link::fromTextAndUrl($title, $url)->toRenderable()];
         unset($errors[$name]);
       }
     }
@@ -108,17 +108,11 @@ class FormErrorHandler extends CoreFormErrorHandler {
 
     if (!empty($error_links)) {
       $render_array = [
-        [
-          '#markup' => $this->formatPlural(count($error_links), '1 error has been found: ', '@count errors have been found: '),
-        ],
-        [
-          '#theme' => 'item_list',
-          '#items' => $error_links,
-          '#context' => ['list_style' => 'comma-list'],
-        ],
+        '#theme' => 'inline_form_errors_summary',
+        '#error_links' => $error_links,
+        '#form_id' => $form['#form_id'] ?? NULL,
       ];
-      $message = $this->renderer->renderInIsolation($render_array);
-      $this->messenger->addError($message);
+      $this->messenger->addError($this->renderer->renderInIsolation($render_array));
     }
   }
 

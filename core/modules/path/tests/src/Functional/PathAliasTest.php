@@ -421,7 +421,8 @@ class PathAliasTest extends PathTestBase {
     // This error should still be present next to the field.
     $this->assertSession()->pageTextContains("The alias {$edit['path[0][alias]']} is already in use in this language.");
     // The validation error set for the page should include this text.
-    $this->assertSession()->statusMessageContains('1 error has been found: URL alias', 'error');
+    $this->assertSession()->statusMessageContains('1 error has been found:', 'error');
+    $this->assertSession()->statusMessageContains('URL alias', 'error');
     // The text 'URL alias' should be a link.
     $this->assertSession()->linkExists('URL alias');
     // The link should be to the ID of the URL alias field.

@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the Inline Form Errors summary.
+ *
+ * Available variables:
+ * - error_links: A list of render arrays for the errored elements, one link
+ *   per element.
+ * - form_id: The form's machine ID; drives the theme suggestion
+ *   inline_form_errors_summary__FORM_ID.
+ *
+ * @ingroup themeable
+ */
+#}
+{% if error_links %}
+  {%- set count = error_links|length -%}
+  {%- trans -%}
+    <span>{{ count }} error has been found:</span>
+  {%- plural count -%}
+    <span>{{ count }} errors have been found:</span>
+  {%- endtrans -%}
+  {{ include('item-list.html.twig', {
+    items: error_links,
+    list_type: 'ul',
+    wrapper_attributes: create_attribute(),
+    context: {list_style: 'comma-list'},
+  }) }}
+{% endif %}
