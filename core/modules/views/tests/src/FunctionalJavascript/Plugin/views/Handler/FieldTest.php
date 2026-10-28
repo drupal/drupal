@@ -112,7 +112,7 @@ class FieldTest extends WebDriverTestBase {
     $page->clickLink('Content link');
     // Verify the modal title.
     $web_assert->assertWaitOnAjaxRequest();
-    $this->assertEquals('Content', $web_assert->waitForElement('css', '.ui-dialog-title')->getText());
+    $this->assertEquals('Content', $web_assert->waitForElementVisible('css', '.ui-dialog-title')->getText());
   }
 
   /**
