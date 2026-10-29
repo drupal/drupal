@@ -58,6 +58,14 @@ class DrupalDebugClassLoader extends DebugClassLoader {
       : $class;
 
     foreach ($returnTypes as $method => $returnTypeData) {
+      // PHPDoc template return types have no equivalent native PHP type. Symfony
+      // stores NULL to stop child classes from inheriting return type data from
+      // their interfaces. Skip this entry. It has no return type or declaring
+      // class for the cross-extension deprecation check.
+      // @see \Symfony\Component\ErrorHandler\DebugClassLoader::setReturnType()
+      if ($returnTypeData === NULL) {
+        continue;
+      }
       [$normalizedType, , $declaringClass] = $returnTypeData;
 
       // Skip if no cross-extension boundary: empty declaring class (magic

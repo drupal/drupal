@@ -54,6 +54,7 @@ class DrupalDebugClassLoaderTest extends TestCase {
   #[TestWith(['Drupal\drupal_debug_test_other\ChildWithReturnAnnotation'])]
   #[TestWith(['Drupal\drupal_debug_test_other\ChildWithDeprecatedMethod'])]
   #[TestWith(['Drupal\drupal_debug_test_other\ChildWithoutOverride'])]
+  #[TestWith(['Drupal\drupal_debug_test_core\ClassWithGenericReturn'], 'generic return type')]
   public function testNoDeprecation(string $class): void {
     $this->assertEmpty($this->getReturnTypeDeprecations($class));
   }
