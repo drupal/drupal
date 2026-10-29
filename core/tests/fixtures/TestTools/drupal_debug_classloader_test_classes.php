@@ -42,6 +42,26 @@ class SameModuleChild extends ParentWithReturn {
 
 }
 
+/**
+ * Fixture: class with a generic PHPDoc return type.
+ */
+class ClassWithGenericReturn {
+
+  /**
+   * @template TRuntime of object
+   *
+   * @param class-string<TRuntime> $class
+   *   The runtime class name.
+   *
+   * @return TRuntime
+   *   The runtime instance.
+   */
+  public function getRuntime(string $class) {
+    return new $class();
+  }
+
+}
+
 namespace Drupal\drupal_debug_test_other;
 
 use Drupal\drupal_debug_test_core\ParentWithReturn;
