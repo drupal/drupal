@@ -14,7 +14,6 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use Prophecy\Argument;
 
 // cSpell:ignore ilike
 
@@ -46,13 +45,12 @@ class ConditionTest extends UnitTestCase {
    */
   #[DataProvider('providerSimpleCondition')]
   public function testSimpleCondition($expected, $field_name): void {
-    $connection = $this->prophesize(Connection::class);
-    $connection->escapeField($field_name)->will(function ($args) {
-      return preg_replace('/[^A-Za-z0-9_.]+/', '', $args[0]);
+    $connection = $this->createStub(Connection::class);
+    $connection->method('escapeField')->willReturnCallback(function (string $field): string|array|null {
+      return preg_replace('/[^A-Za-z0-9_.]+/', '', $field);
     });
-    $connection->mapConditionOperator('=')->willReturn(['operator' => '=']);
-    $connection->condition('AND')->willReturn(new Condition('AND'));
-    $connection = $connection->reveal();
+    $connection->method('mapConditionOperator')->willReturn(['operator' => '=']);
+    $connection->method('condition')->willReturn(new Condition('AND'));
 
     $query_placeholder = $this->prophesize(PlaceholderInterface::class);
 
@@ -87,13 +85,12 @@ class ConditionTest extends UnitTestCase {
    */
   #[DataProvider('dataProviderTestCompileWithKnownOperators')]
   public function testCompileWithKnownOperators($expected, $field, $value, $operator, $expected_arguments = NULL): void {
-    $connection = $this->prophesize(Connection::class);
-    $connection->escapeField(Argument::any())->will(function ($args) {
-      return preg_replace('/[^A-Za-z0-9_.]+/', '', $args[0]);
+    $connection = $this->createStub(Connection::class);
+    $connection->method('escapeField')->willReturnCallback(function (string $field): string|array|null {
+      return preg_replace('/[^A-Za-z0-9_.]+/', '', $field);
     });
-    $connection->mapConditionOperator(Argument::any())->willReturn(NULL);
-    $connection->condition('AND')->willReturn(new Condition('AND'));
-    $connection = $connection->reveal();
+    $connection->method('mapConditionOperator')->willReturn(NULL);
+    $connection->method('condition')->willReturn(new Condition('AND'));
 
     $query_placeholder = $this->prophesize(PlaceholderInterface::class);
 
@@ -220,13 +217,12 @@ class ConditionTest extends UnitTestCase {
    */
   #[DataProvider('providerTestCompileWithSqlInjectionForOperator')]
   public function testCompileWithSqlInjectionForOperator($operator): void {
-    $connection = $this->prophesize(Connection::class);
-    $connection->escapeField(Argument::any())->will(function ($args) {
-      return preg_replace('/[^A-Za-z0-9_.]+/', '', $args[0]);
+    $connection = $this->createStub(Connection::class);
+    $connection->method('escapeField')->willReturnCallback(function (string $field): string|array|null {
+      return preg_replace('/[^A-Za-z0-9_.]+/', '', $field);
     });
-    $connection->mapConditionOperator(Argument::any())->willReturn(NULL);
-    $connection->condition('AND')->willReturn(new Condition('AND'));
-    $connection = $connection->reveal();
+    $connection->method('mapConditionOperator')->willReturn(NULL);
+    $connection->method('condition')->willReturn(new Condition('AND'));
 
     $query_placeholder = $this->prophesize(PlaceholderInterface::class);
 
