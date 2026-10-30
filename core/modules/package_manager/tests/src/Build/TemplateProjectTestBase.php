@@ -112,7 +112,6 @@ abstract class TemplateProjectTestBase extends QuickStartTestBase {
     $this->createVendorRepository([
       'drupal/core' => $version,
       'drupal/core-dev' => $version,
-      'drupal/core-dev-pinned' => $version,
       'drupal/core-recommended' => $version,
       'drupal/core-composer-scaffold' => $version,
       'drupal/core-project-message' => $version,

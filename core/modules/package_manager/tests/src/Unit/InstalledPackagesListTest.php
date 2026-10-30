@@ -114,12 +114,6 @@ class InstalledPackagesListTest extends UnitTestCase {
         'type' => 'metapackage',
         'path' => NULL,
       ]),
-      'drupal/core-dev-pinned' => InstalledPackage::createFromArray([
-        'name' => 'drupal/core-dev-pinned',
-        'version' => \Drupal::VERSION,
-        'type' => 'metapackage',
-        'path' => NULL,
-      ]),
       'drupal/core-composer-scaffold' => InstalledPackage::createFromArray([
         'name' => 'drupal/core-composer-scaffold',
         'version' => \Drupal::VERSION,
@@ -153,7 +147,6 @@ class InstalledPackagesListTest extends UnitTestCase {
     // include_dev is set to FALSE.
     $core_packages_no_dev = $list->getCorePackages(FALSE);
     $this->assertArrayNotHasKey('drupal/core-dev', $core_packages_no_dev);
-    $this->assertArrayNotHasKey('drupal/core-dev-pinned', $core_packages_no_dev);
     // We still get other packages as intended.
     $this->assertArrayHasKey('drupal/core', $core_packages_no_dev);
 

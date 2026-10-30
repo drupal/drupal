@@ -1069,7 +1069,7 @@ default:
     - if: $PERFORMANCE_TEST != "1"
       changes:
         - core/tests/PHPStan/**/*
-        - composer/Metapackage/PinnedDevDependencies/composer.json
+        - composer/Metapackage/DevDependencies/composer.json
     - when: manual
       allow_failure: true
   script:

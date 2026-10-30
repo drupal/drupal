@@ -137,7 +137,6 @@ final class InstalledPackagesList extends \ArrayObject {
       'drupal/core',
       'drupal/core-composer-scaffold',
       'drupal/core-dev',
-      'drupal/core-dev-pinned',
       'drupal/core-project-message',
       'drupal/core-recommended',
       'drupal/core-vendor-hardening',
@@ -169,7 +168,6 @@ final class InstalledPackagesList extends \ArrayObject {
     }
     if (!$include_dev) {
       unset($core_packages['drupal/core-dev']);
-      unset($core_packages['drupal/core-dev-pinned']);
     }
     return new static($core_packages);
   }

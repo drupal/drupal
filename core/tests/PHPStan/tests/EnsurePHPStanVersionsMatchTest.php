@@ -15,7 +15,7 @@ class EnsurePHPStanVersionsMatchTest extends TestCase {
 
   public function testVersions(): void {
     $test_composer = json_decode(file_get_contents(__DIR__ . '/../composer.json'), TRUE);
-    $drupal_composer = json_decode(file_get_contents(__DIR__ . '/../../../../composer/Metapackage/PinnedDevDependencies/composer.json'), TRUE);
+    $drupal_composer = json_decode(file_get_contents(__DIR__ . '/../../../../composer/Metapackage/DevDependencies/composer.json'), TRUE);
     $this->assertSame($test_composer['require-dev']['phpstan/phpstan'], $drupal_composer['require']['phpstan/phpstan']);
   }
 
