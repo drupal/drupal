@@ -23,10 +23,10 @@ class InlineBlockUsageTest extends UnitTestCase {
    * @legacy-covers ::deleteUsage
    */
   public function testEmptyDeleteUsageCall(): void {
-    $connection = $this->prophesize(Connection::class);
-    $connection->delete('inline_block_usage')->shouldNotBeCalled();
+    $connection = $this->createMock(Connection::class);
+    $connection->expects($this->never())->method('delete');
 
-    (new InlineBlockUsage($connection->reveal()))->deleteUsage([]);
+    (new InlineBlockUsage($connection))->deleteUsage([]);
   }
 
 }

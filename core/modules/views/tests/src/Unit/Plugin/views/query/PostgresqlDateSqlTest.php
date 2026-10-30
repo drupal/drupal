@@ -30,7 +30,7 @@ class PostgresqlDateSqlTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->database = $this->prophesize(Connection::class)->reveal();
+    $this->database = $this->createStub(Connection::class);
   }
 
   /**
@@ -82,9 +82,9 @@ class PostgresqlDateSqlTest extends UnitTestCase {
    * Tests setting the database offset.
    */
   public function testSetTimezoneOffset(): void {
-    $database = $this->prophesize(Connection::class);
-    $database->query("SET TIME ZONE INTERVAL '42' HOUR TO MINUTE")->shouldBeCalledTimes(1);
-    $date_sql = new PostgresqlDateSql($database->reveal());
+    $database = $this->createMock(Connection::class);
+    $database->expects($this->once())->method('query')->with("SET TIME ZONE INTERVAL '42' HOUR TO MINUTE");
+    $date_sql = new PostgresqlDateSql($database);
     $date_sql->setTimezoneOffset(42);
   }
 
