@@ -7,7 +7,7 @@ provide dependencies, not to provide code or data.
 
 ## Metapackages Provided by Drupal Core
 
-Drupal Core provides three metapackages that serve different purposes.
+Drupal Core provides two metapackages.
 
  - drupal/core-recommended: This project pins to the exact version of each
    dependency used in drupal/core. It also requires drupal/core, so
@@ -19,21 +19,6 @@ Drupal Core provides three metapackages that serve different purposes.
    uses for testing. It is useful for projects that either wish to run some of
    the Drupal tests directly, or for projects that may wish to use the same
    components that Drupal does for testing.
-
- - drupal/core-dev-pinned: Deprecated. This project is deprecated and will be
-   removed in Drupal 12. Use drupal/core-dev instead. Pinning to exact versions
-   of testing dependencies can create security vulnerabilities when security
-   updates are released for development tools.
-
-Note that a project that uses both drupal/core-recommended and
-drupal/core-dev-pinned must update them both at the same time, e.g.:
-
-  composer update drupal/core-recommended drupal/core-dev-pinned --with-dependencies
-
-Composer may have trouble with the update if one of these projects is listed
-on the command line without the other. Running composer update without any
-parameters should also work, because in this instance every dependency is
-updated.
 
 
 ## Metapackage Usage in Template Projects
