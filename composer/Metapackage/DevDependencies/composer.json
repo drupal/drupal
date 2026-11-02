@@ -17,6 +17,7 @@
         "colinodell/psr-testlogger": "^1.2",
         "composer/composer": "^2.10.3",
         "drupal/coder": "^9.0",
+        "jangregor/phpstan-prophecy": "^2.2",
         "lullabot/mink-selenium2-driver": "^1.7.3",
         "lullabot/php-webdriver": "^2.0.7",
         "mglaman/phpstan-drupal": "^2.2.2",
