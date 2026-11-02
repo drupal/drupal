@@ -1190,6 +1190,58 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests that array keys cannot inject SQL.
+   */
+  public function testCaseInsensitiveInWithAssociativeArrayKeys(): void {
+    $bundle = $this->randomMachineName();
+    EntityTestHelper::createBundle($bundle, entity_type: 'entity_test_mulrev');
+
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'field_ci',
+      'entity_type' => 'entity_test_mulrev',
+      'type' => 'string',
+      'cardinality' => 1,
+      'translatable' => FALSE,
+      'settings' => [
+        'case_sensitive' => FALSE,
+      ],
+    ]);
+    $field_storage->save();
+
+    FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => $bundle,
+    ])->save();
+
+    $entity = EntityTestMulRev::create([
+      'type' => $bundle,
+      'name' => $this->randomMachineName(),
+      'langcode' => 'en',
+      'field_ci' => 'Needle',
+    ]);
+    $entity->save();
+
+    $result = $this->storage
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('field_ci', [
+        "evil) OR 1=1 --" => 'needle',
+        "x'); DROP TABLE {entity_test_mulrev} --" => 'NEEDLE',
+      ], 'IN')
+      ->execute();
+    $this->assertCount(1, $result);
+    $this->assertSame([(string) $entity->getRevisionId() => (string) $entity->id()], $result);
+
+    // Verify the table still exists.
+    $second = $this->storage
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->condition('field_ci', ['needle'], 'IN')
+      ->execute();
+    $this->assertCount(1, $second);
+  }
+
+  /**
    * Tests base fields with multiple columns.
    */
   public function testBaseFieldMultipleColumns(): void {
