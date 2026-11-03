@@ -424,11 +424,17 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
 
     $user_input = $form_state->getUserInput();
     $input = NestedArray::getValue($user_input, $parent_element['#parents'], $exists);
-    $weight = -1 * $field_state['items_count'];
+    // Renumber the weights in the order of the submitted "_weight" values.
+    $weights = [];
     foreach ($input as $key => $item) {
       if ($item) {
-        $input[$key]['_weight'] = $weight++;
+        $weights[$key] = (int) ($item['_weight'] ?? 0);
       }
+    }
+    asort($weights, SORT_NUMERIC);
+    $weight = -1 * $field_state['items_count'];
+    foreach (array_keys($weights) as $key) {
+      $input[$key]['_weight'] = $weight++;
     }
     // Reset indices.
     $input = array_values($input);
