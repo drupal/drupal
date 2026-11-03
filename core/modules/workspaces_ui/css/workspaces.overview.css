@@ -13,5 +13,5 @@
 /** @todo Move to Claro theme before Workspaces is marked stable. */
 
 tr.active-workspace {
-  background-color: #ebeae4;
+  background-color: var(--admin-color-bg-item, #ebeae4);
 }
