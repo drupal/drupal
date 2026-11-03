@@ -217,6 +217,7 @@ introspectable
 invalidators
 invokable
 isam
+jangregor
 javascripts
 jessebeach
 jqueryui

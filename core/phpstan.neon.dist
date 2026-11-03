@@ -8,7 +8,7 @@ parameters:
 
   tmpDir: phpstan-tmp
 
-  level: 1
+  level: 3
 
   checkFunctionArgumentTypes: true
   checkInternalClassCaseSensitivity: true
@@ -101,8 +101,6 @@ rules:
   - Drupal\PHPStan\Rules\TestClassClassMetadata
   - Drupal\PHPStan\Rules\TestClassMethodMetadata
   # ----------------------------------------------------------
-  # The rule below can be removed when we increase level to 2.
-  - PHPStan\Rules\Classes\AccessPrivateConstantThroughStaticRule
   # The rules below can be removed when we increase level to 6.
   - PHPStan\Rules\Functions\MissingFunctionReturnTypehintRule
   - PHPStan\Rules\Methods\MissingMethodReturnTypehintRule
