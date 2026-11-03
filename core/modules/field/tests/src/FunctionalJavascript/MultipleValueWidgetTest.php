@@ -198,6 +198,76 @@ class MultipleValueWidgetTest extends WebDriverTestBase {
   }
 
   /**
+   * Tests that removing an item keeps the order set through the weight selects.
+   */
+  public function testFieldMultipleValueWidgetRemoveKeepsWeightOrderWhenRowWeightsAreShown(): void {
+    $this->drupalGet('entity_test/add');
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    $add_more_button = $page->findButton('field_unlimited_add_more');
+
+    $page->findField('field_unlimited[0][value]')->setValue('1');
+    $add_more_button->click();
+    $assert_session->waitForField('field_unlimited[1][value]')->setValue('2');
+    $add_more_button->click();
+    $assert_session->waitForField('field_unlimited[2][value]')->setValue('3');
+
+    // Switch to the row weight selects and reorder the items to 3, 2, 1.
+    $page->pressButton('Show row weights');
+    $assert_session->waitForElementVisible('css', 'select[name="field_unlimited[0][_weight]"]');
+    $page->selectFieldOption('field_unlimited[0][_weight]', '2');
+    $page->selectFieldOption('field_unlimited[1][_weight]', '0');
+    $page->selectFieldOption('field_unlimited[2][_weight]', '-2');
+
+    // Remove the middle item ("2", delta 1).
+    $page->findButton('field_unlimited_1_remove_button')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $this->assertSame(['3', '1'], $this->getItemValuesInDomOrder());
+    $assert_session->fieldValueEquals('field_unlimited[0][value]', '1');
+    $assert_session->fieldValueEquals('field_unlimited[0][_weight]', '0');
+    $assert_session->fieldValueEquals('field_unlimited[1][value]', '3');
+    $assert_session->fieldValueEquals('field_unlimited[1][_weight]', '-1');
+  }
+
+  /**
+   * Tests that removing an item keeps the order set through drag and drop.
+   */
+  public function testFieldMultipleValueWidgetRemoveKeepsOrderWithTabledrag(): void {
+    $this->drupalGet('entity_test/add');
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    $add_more_button = $page->findButton('field_unlimited_add_more');
+
+    $field_0 = $page->findField('field_unlimited[0][value]');
+    $field_0->setValue('1');
+    $add_more_button->click();
+    $field_1 = $assert_session->waitForField('field_unlimited[1][value]');
+    $field_1->setValue('2');
+    $add_more_button->click();
+    $field_2 = $assert_session->waitForField('field_unlimited[2][value]');
+    $field_2->setValue('3');
+
+    // Drag the first row after the third row, so the items read 2, 3, 1.
+    $dragged = $field_0->find('xpath', 'ancestor::tr[contains(@class, "draggable")]//a[starts-with(@class, "tabledrag-handle")]');
+    $target = $field_2->find('xpath', 'ancestor::tr[contains(@class, "draggable")]');
+    $dragged->dragTo($target);
+    $this->assertSame(['2', '3', '1'], $this->getItemValuesInDomOrder());
+
+    // Remove the item "3" (delta 2), which is displayed in the middle.
+    $page->findButton('field_unlimited_2_remove_button')->click();
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $this->assertSame(['2', '1'], $this->getItemValuesInDomOrder());
+    $assert_session->fieldValueEquals('field_unlimited[0][value]', '2');
+    $assert_session->fieldValueEquals('field_unlimited[0][_weight]', '-1');
+    $assert_session->fieldValueEquals('field_unlimited[1][value]', '1');
+    $assert_session->fieldValueEquals('field_unlimited[1][_weight]', '0');
+  }
+
+  /**
    * Asserts an element specified by an attribute value has focus.
    *
    * @param string $name
@@ -210,6 +280,22 @@ class MultipleValueWidgetTest extends WebDriverTestBase {
   private function assertHasFocusByAttribute(string $name, string $value): void {
     $active_element = $this->getSession()->evaluateScript('document.activeElement');
     $this->assertSame($value, $active_element->attribute($name));
+  }
+
+  /**
+   * Returns the values of the widget items as they are ordered in the DOM.
+   *
+   * This matches what the user sees.
+   *
+   * @return string[]
+   *   The item values.
+   */
+  protected function getItemValuesInDomOrder(): array {
+    $values = [];
+    foreach ($this->getSession()->getPage()->findAll('css', 'tr.draggable input[name$="[value]"]') as $input) {
+      $values[] = $input->getValue();
+    }
+    return $values;
   }
 
 }
