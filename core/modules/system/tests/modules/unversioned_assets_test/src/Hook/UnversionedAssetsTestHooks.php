@@ -20,7 +20,7 @@ class UnversionedAssetsTestHooks {
       // Remove the version and provide an additional CSS file we can alter the
       // contents of .
       unset($libraries['base']['version']);
-      $libraries['base']['css']['component']['public://test.css'] = ['weight' => -10];
+      $libraries['base']['css']['base']['public://test.css'] = ['weight' => -10];
     }
   }
 
