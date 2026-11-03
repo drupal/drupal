@@ -312,7 +312,7 @@ media_library:
       css/components/media-library-item.css: {}
       css/components/media-library-vertical-tabs.css: {}
   js:
-    js/media-library.ui.js: { weight: -1 }
+    js/media-library.ui.js: {}
   dependencies:
     - core/drupal
     - core/jquery
@@ -353,7 +353,7 @@ tableselect:
 init:
   header: true
   js:
-    migration/js/init.js: { minified: false, preprocess: false, weight: -99 }
+    migration/js/init.js: { minified: false, preprocess: false }
   dependencies:
     - core/drupalSettings
 
@@ -411,7 +411,7 @@ escape_admin:
 
 scroll_sync:
   js:
-    migration/js/scroll_sync.js: { minified: true, weight: -1 }
+    migration/js/scroll_sync.js: { minified: true }
 
 # Overrides
 
