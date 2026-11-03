@@ -32,9 +32,9 @@ CacheTagGroupedLookups:
     - rendered
   -
     - 'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form'
-    - config:system.site
+    - 'config:system.site'
   -
-    - '4xx-response'
+    - 4xx-response
     - 'config:user.role.anonymous'
 ScriptCount: 0
 ScriptBytes: 0

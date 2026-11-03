@@ -37,7 +37,7 @@ libraries-override:
         /core/modules/system/tests/themes/test_base_theme/css/components/dialog.css: false
   system/base:
     css:
-      component:
+      base:
         css/components/js.module.css: false
   # It works for JS as well.
   core/drupal.batch:
