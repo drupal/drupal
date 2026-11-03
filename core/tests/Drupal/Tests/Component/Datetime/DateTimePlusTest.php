@@ -1115,4 +1115,13 @@ class DateTimePlusTest extends TestCase {
     $this->assertEquals('America/New_York', $date_time_plus->getTimezone()->getName());
   }
 
+  /**
+   * Tests unserializing a payload whose $dateTimeObject is not a date.
+   */
+  public function testUnserializeWithInvalidDateTimeObject(): void {
+    $serialized = "O:38:\"Drupal\\Component\\Datetime\\DateTimePlus\":3:{s:11:\"\0*\0langcode\";N;s:9:\"\0*\0errors\";a:0:{}s:17:\"\0*\0dateTimeObject\";s:8:\"not-date\";}";
+    $this->expectException(\TypeError::class);
+    unserialize($serialized);
+  }
+
 }
