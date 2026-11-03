@@ -557,6 +557,24 @@ class ViewExecutableTest extends ViewsKernelTestBase {
   }
 
   /**
+   * Tests that tampered serialized ViewExecutable data throws an exception.
+   */
+  public function testTamperedDeserializationT(): void {
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('Deserialization of Drupal\views\ViewExecutable::$built is not allowed.');
+    unserialize('O:27:"Drupal\views\ViewExecutable":2:{s:5:"built";b:1;s:5:"pager";i:1;}');
+  }
+
+  /**
+   * Tests that tampered serializationData keys throw an exception.
+   */
+  public function testTamperedSerializationData(): void {
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('Unexpected keys in Drupal\views\ViewExecutable::$serializationData.');
+    unserialize('O:27:"Drupal\views\ViewExecutable":1:{s:17:"serializationData";a:1:{s:9:"malicious";s:4:"test";}}');
+  }
+
+  /**
    * Tests if argument overrides by validators are propagated to tokens.
    */
   public function testArgumentValidatorValueOverride(): void {

@@ -15,8 +15,11 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Twig\Environment;
 use Twig\Markup as TwigMarkup;
+
+// cspell:ignore phpggc
 
 /**
  * Tests Drupal\Core\Template\Attribute.
@@ -547,6 +550,21 @@ class AttributeTest extends UnitTestCase {
     $attributes = new Attribute(['class' => ['example-class']]);
     $this->expectException(\TypeError::class);
     $attributes->merge('not an array');
+  }
+
+  /**
+   * Tests type enforcement in \Drupal\Core\Template\Attribute::__toString.
+   */
+  #[IgnoreDeprecations]
+  public function testAttributeGadgetChain(): void {
+    // The Gadget Chain itself may trigger a deprecation before the Exception
+    // that prevents the payload from executing is thrown, so we ignore
+    // deprecations for this test.
+    $payload = 'O:30:"Drupal\Core\Template\Attribute":1:{s:7:"storage";a:1:{i:0;O:27:"Drupal\views\ViewExecutable":1:{s:17:"serializationData";a:9:{s:4:"args";N;s:15:"current_display";N;s:12:"current_page";N;s:6:"dom_id";N;s:8:"executed";N;s:12:"exposed_data";N;s:13:"exposed_input";N;s:17:"exposed_raw_input";N;s:7:"storage";N;}}}}';
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('Unexpected type for $value (Drupal\views\ViewExecutable).');
+    // The print is to invoke the __toString() method.
+    print unserialize($payload);
   }
 
 }
