@@ -91,7 +91,7 @@
    *   --admin-color-bg-{status}    the light tint behind highlighted rows / reports.
    *   --admin-color-text-{status}  text ON that tint (AA-verified pair).
    */
-  --admin-color-error: light-dark(#cc3d3d, #ce6060);
+  --admin-color-error: light-dark(#cc3d3d, #d67a7a);
   --admin-color-bg-error: color-mix(in srgb, #de7560 15%, transparent);
   --admin-color-text-error: light-dark(#cc3d3d, #e69e9e);
   --admin-color-warning: light-dark(#d8b234, #dec15f);
