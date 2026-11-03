@@ -14,7 +14,7 @@
         "egulias/email-validator": "~4.0.4",
         "justinrainbow/json-schema": "~6.12.0",
         "marc-mabe/php-enum": "~v4.7.2",
-        "masterminds/html5": "~2.11.0",
+        "masterminds/html5": "~2.12.0",
         "mck89/peast": "~v1.18.0",
         "pear/archive_tar": "~1.6.1",
         "pear/console_getopt": "~v1.4.3",
