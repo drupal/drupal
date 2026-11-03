@@ -3,13 +3,29 @@ base:
     css: 'global'
   version: VERSION
   css:
-    # Adjust the weights to load these early.
-    component:
-      css/components/align.module.css: { weight: -10 }
-      css/components/container-inline.module.css: { weight: -10 }
-      css/components/clearfix.module.css: { weight: -10 }
-      css/components/hidden.module.css: { weight: -10 }
-      css/components/js.module.css: { weight: -10 }
+    base:
+      css/components/align.module.css: {}
+      css/components/container-inline.module.css: {}
+      css/components/clearfix.module.css: {}
+      css/components/hidden.module.css: {}
+      css/components/js.module.css: {}
+  moved_files:
+    system/base:
+      deprecation_version: 11.5.0
+      removed_version: 13.0.0
+      deprecation_link: https://www.drupal.org/project/drupal/issues/3619507
+      css:
+        component:
+          css/components/align.module.css:
+            base: css/components/align.module.css
+          css/components/container-inline.module.css:
+            base: css/components/container-inline.module.css
+          css/components/clearfix.module.css:
+            base: css/components/clearfix.module.css
+          css/components/hidden.module.css:
+            base: css/components/hidden.module.css
+          css/components/js.module.css:
+            base: css/components/js.module.css
 
 admin:
   version: VERSION
@@ -23,7 +39,7 @@ maintenance:
   version: VERSION
   css:
     theme:
-      css/system.maintenance.css: { weight: -10 }
+      css/system.maintenance.css: {}
   dependencies:
     - system/base
     - system/admin
@@ -32,9 +48,9 @@ status.report:
   version: VERSION
   css:
     component:
-      css/components/system-status-counter.css: { weight: -10 }
-      css/components/system-status-report-counters.css: { weight: -10 }
-      css/components/system-status-report-general-info.css: { weight: -10 }
+      css/components/system-status-counter.css: {}
+      css/components/system-status-report-counters.css: {}
+      css/components/system-status-report-general-info.css: {}
 
 drupal.system:
   version: VERSION
@@ -61,7 +77,7 @@ drupal.system.admin_compact:
   version: VERSION
   css:
     theme:
-      css/system.admin_compact.css: { weight: -10 }
+      css/system.admin_compact.css: {}
   js:
     js/system.admin_compact.js: {}
   dependencies:
