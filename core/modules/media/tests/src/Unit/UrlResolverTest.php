@@ -17,6 +17,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Tests the oEmbed URL resolver.
@@ -66,7 +67,10 @@ class UrlResolverTest extends UnitTestCase {
   /**
    * Tests that discoverResourceUrl parses HTML responses.
    */
-  public function testDiscoverResourceUrlParsesHtml(): void {
+  #[TestWith(['https://example.com/some-page', 'https://example.com/oembed?url=test'])]
+  #[TestWith(['https://evil.com/some-page', FALSE])]
+  #[TestWith(['look-ma-no-host', FALSE])]
+  public function testDiscoverResourceUrlParsesHtml(string $url, string|bool $expected): void {
     $html_with_oembed = <<<HTML
 <!DOCTYPE html>
 <html>
@@ -82,9 +86,9 @@ HTML;
     $client = new Client(['handler' => HandlerStack::create($mock_handler)]);
 
     $url_resolver = $this->createTestableUrlResolver($client);
-    $result = $url_resolver->discoverResourceUrl('https://example.com/some-page');
+    $result = $url_resolver->discoverResourceUrl($url);
 
-    $this->assertSame('https://example.com/oembed?url=test', $result);
+    $this->assertSame($expected, $result);
   }
 
   /**
