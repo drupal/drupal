@@ -14,20 +14,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 class WorkspaceRepository implements WorkspaceRepositoryInterface {
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The cache backend used to store the workspace tree.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
    * An array of tree items, keyed by workspace IDs and sorted in tree order.
    *
    * @var array|null
@@ -37,14 +23,15 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface {
   /**
    * Constructs a new WorkspaceRepository instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, CacheBackendInterface $cache_backend) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->cache = $cache_backend;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected CacheBackendInterface $cache,
+  ) {
   }
 
   /**

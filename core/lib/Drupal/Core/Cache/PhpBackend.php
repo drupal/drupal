@@ -41,25 +41,21 @@ class PhpBackend implements CacheBackendInterface {
   protected $cache = [];
 
   /**
-   * The cache tags checksum provider.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsChecksumInterface
-   */
-  protected $checksumProvider;
-
-  /**
    * Constructs a PhpBackend object.
    *
    * @param string $bin
    *   The cache bin for which the object is created.
-   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksum_provider
+   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksumProvider
    *   The cache tags checksum provider.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct($bin, CacheTagsChecksumInterface $checksum_provider, protected TimeInterface $time) {
+  public function __construct(
+    $bin,
+    protected CacheTagsChecksumInterface $checksumProvider,
+    protected TimeInterface $time,
+  ) {
     $this->bin = 'cache_' . $bin;
-    $this->checksumProvider = $checksum_provider;
   }
 
   /**

@@ -22,23 +22,18 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class BlockContentAccessControlHandler extends EntityAccessControlHandler implements EntityHandlerInterface {
 
   /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
    * BlockContentAccessControlHandler constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
    */
-  public function __construct(EntityTypeInterface $entity_type, EventDispatcherInterface $dispatcher) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    protected EventDispatcherInterface $eventDispatcher,
+  ) {
     parent::__construct($entity_type);
-    $this->eventDispatcher = $dispatcher;
   }
 
   /**

@@ -19,30 +19,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ThemeExperimentalConfirmForm extends ConfirmFormBase {
 
   /**
-   * An extension discovery instance.
-   *
-   * @var \Drupal\Core\Extension\ThemeExtensionList
-   */
-  protected $themeList;
-
-  /**
-   * The theme installer service.
-   *
-   * @var \Drupal\Core\Extension\ThemeInstallerInterface
-   */
-  protected $themeInstaller;
-
-  /**
    * Constructs a ThemeExperimentalConfirmForm object.
    *
-   * @param \Drupal\Core\Extension\ThemeExtensionList $theme_list
+   * @param \Drupal\Core\Extension\ThemeExtensionList $themeList
    *   The theme extension list.
-   * @param \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer
+   * @param \Drupal\Core\Extension\ThemeInstallerInterface $themeInstaller
    *   The theme installer.
    */
-  public function __construct(ThemeExtensionList $theme_list, ThemeInstallerInterface $theme_installer) {
-    $this->themeList = $theme_list;
-    $this->themeInstaller = $theme_installer;
+  public function __construct(
+    protected ThemeExtensionList $themeList,
+    protected ThemeInstallerInterface $themeInstaller,
+  ) {
   }
 
   /**

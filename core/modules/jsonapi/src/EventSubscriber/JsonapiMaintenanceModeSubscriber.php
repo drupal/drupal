@@ -23,30 +23,17 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class JsonapiMaintenanceModeSubscriber implements EventSubscriberInterface {
 
   /**
-   * The maintenance mode.
-   *
-   * @var \Drupal\Core\Site\MaintenanceMode
-   */
-  protected $maintenanceMode;
-
-  /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $config;
-
-  /**
    * Constructs a new JsonapiMaintenanceModeSubscriber.
    *
-   * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
+   * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenanceMode
    *   The maintenance mode.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The config factory.
    */
-  public function __construct(MaintenanceModeInterface $maintenance_mode, ConfigFactoryInterface $config_factory) {
-    $this->maintenanceMode = $maintenance_mode;
-    $this->config = $config_factory;
+  public function __construct(
+    protected MaintenanceModeInterface $maintenanceMode,
+    protected ConfigFactoryInterface $config,
+  ) {
   }
 
   /**

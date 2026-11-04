@@ -14,30 +14,17 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The field type plugin manager.
-   *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
-   */
-  protected $fieldTypeManager;
-
-  /**
    * Constructs a FieldTranslationSynchronizer object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $fieldTypeManager
    *   The field type plugin manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->fieldTypeManager = $field_type_manager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected FieldTypePluginManagerInterface $fieldTypeManager,
+  ) {
   }
 
   /**

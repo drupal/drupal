@@ -12,20 +12,14 @@ use Symfony\Component\Routing\Route;
 class MenuLinkPluginConverter implements ParamConverterInterface {
 
   /**
-   * Plugin manager which creates the instance from the value.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
-   */
-  protected $menuLinkManager;
-
-  /**
    * Constructs a new MenuLinkPluginConverter.
    *
-   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
    *   The menu link plugin manager.
    */
-  public function __construct(MenuLinkManagerInterface $menu_link_manager) {
-    $this->menuLinkManager = $menu_link_manager;
+  public function __construct(
+    protected MenuLinkManagerInterface $menuLinkManager,
+  ) {
   }
 
   /**

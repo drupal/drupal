@@ -27,53 +27,27 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class CommentController extends ControllerBase {
 
   /**
-   * The HTTP kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $httpKernel;
-
-  /**
-   * The comment manager service.
-   *
-   * @var \Drupal\comment\CommentManagerInterface
-   */
-  protected $commentManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The entity repository.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
    * Constructs a CommentController object.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   HTTP kernel to handle requests.
-   * @param \Drupal\comment\CommentManagerInterface $comment_manager
+   * @param \Drupal\comment\CommentManagerInterface $commentManager
    *   The comment manager service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager service.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository service.
    */
-  public function __construct(HttpKernelInterface $http_kernel, CommentManagerInterface $comment_manager, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, EntityRepositoryInterface $entity_repository) {
-    $this->httpKernel = $http_kernel;
-    $this->commentManager = $comment_manager;
+  public function __construct(
+    protected HttpKernelInterface $httpKernel,
+    protected CommentManagerInterface $commentManager,
+    EntityTypeManagerInterface $entity_type_manager,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected EntityRepositoryInterface $entityRepository,
+  ) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->entityRepository = $entity_repository;
   }
 
   /**

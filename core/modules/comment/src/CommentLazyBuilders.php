@@ -21,70 +21,29 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
   use StringTranslationTrait;
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity form builder service.
-   *
-   * @var \Drupal\Core\Entity\EntityFormBuilderInterface
-   */
-  protected $entityFormBuilder;
-
-  /**
-   * Comment manager service.
-   *
-   * @var \Drupal\comment\CommentManagerInterface
-   */
-  protected $commentManager;
-
-  /**
-   * Current logged in user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a new CommentLazyBuilders object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\Core\Entity\EntityFormBuilderInterface $entity_form_builder
+   * @param \Drupal\Core\Entity\EntityFormBuilderInterface $entityFormBuilder
    *   The entity form builder service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current logged in user.
-   * @param \Drupal\comment\CommentManagerInterface $comment_manager
+   * @param \Drupal\comment\CommentManagerInterface $commentManager
    *   The comment manager service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFormBuilderInterface $entity_form_builder, AccountInterface $current_user, CommentManagerInterface $comment_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityFormBuilder = $entity_form_builder;
-    $this->currentUser = $current_user;
-    $this->commentManager = $comment_manager;
-    $this->moduleHandler = $module_handler;
-    $this->renderer = $renderer;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityFormBuilderInterface $entityFormBuilder,
+    protected AccountInterface $currentUser,
+    protected CommentManagerInterface $commentManager,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected RendererInterface $renderer,
+  ) {
   }
 
   /**

@@ -20,13 +20,6 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
   use DependencySerializationTrait;
 
   /**
-   * The route provider to load routes by name.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
    * Constructs a LocalActionDefault object.
    *
    * @param array $configuration
@@ -35,13 +28,16 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider to load routes by name.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected RouteProviderInterface $routeProvider,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->routeProvider = $route_provider;
   }
 
   /**

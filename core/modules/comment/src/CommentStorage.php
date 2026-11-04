@@ -26,13 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CommentStorage extends SqlContentEntityStorage implements CommentStorageInterface {
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Constructs a CommentStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_info
@@ -41,7 +34,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
    *   The database connection to be used.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   Cache backend instance to use.
@@ -54,9 +47,18 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(EntityTypeInterface $entity_info, Connection $database, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    EntityTypeInterface $entity_info,
+    Connection $database,
+    EntityFieldManagerInterface $entity_field_manager,
+    protected AccountInterface $currentUser,
+    CacheBackendInterface $cache,
+    LanguageManagerInterface $language_manager,
+    MemoryCacheInterface $memory_cache,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    EntityTypeManagerInterface $entity_type_manager,
+  ) {
     parent::__construct($entity_info, $database, $entity_field_manager, $cache, $language_manager, $memory_cache, $entity_type_bundle_info, $entity_type_manager);
-    $this->currentUser = $current_user;
   }
 
   /**

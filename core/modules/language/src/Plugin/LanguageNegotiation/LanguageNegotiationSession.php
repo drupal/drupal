@@ -49,13 +49,6 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
   protected $queryValue;
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * The language negotiation method id.
    */
   const METHOD_ID = 'language-session';
@@ -63,11 +56,12 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
   /**
    * Constructs a LanguageNegotiationSession object.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    */
-  public function __construct(RequestStack $request_stack) {
-    $this->requestStack = $request_stack;
+  public function __construct(
+    protected RequestStack $requestStack,
+  ) {
   }
 
   /**

@@ -56,20 +56,6 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
   protected $entityType;
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The link relation type manager used to create HTTP header links.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $linkRelationTypeManager;
-
-  /**
    * Constructs a Drupal\rest\Plugin\rest\resource\EntityResource object.
    *
    * @param array $configuration
@@ -84,16 +70,23 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    *   The available serialization formats.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $link_relation_type_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $linkRelationTypeManager
    *   The link relation type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, $serializer_formats, LoggerInterface $logger, ConfigFactoryInterface $config_factory, PluginManagerInterface $link_relation_type_manager) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
+    $serializer_formats,
+    LoggerInterface $logger,
+    protected ConfigFactoryInterface $configFactory,
+    protected PluginManagerInterface $linkRelationTypeManager,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->entityType = $entity_type_manager->getDefinition($plugin_definition['entity_type']);
-    $this->configFactory = $config_factory;
-    $this->linkRelationTypeManager = $link_relation_type_manager;
   }
 
   /**

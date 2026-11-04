@@ -28,20 +28,6 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
   ];
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The view executable factory.
-   *
-   * @var \Drupal\views\ViewExecutableFactory
-   */
-  protected $viewExecutableFactory;
-
-  /**
    * The view executable of the menu link.
    *
    * @var \Drupal\views\ViewExecutable
@@ -57,16 +43,19 @@ class ViewsMenuLink extends MenuLinkBase implements ContainerFactoryPluginInterf
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\views\ViewExecutableFactory $view_executable_factory
+   * @param \Drupal\views\ViewExecutableFactory $viewExecutableFactory
    *   The view executable factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, ViewExecutableFactory $view_executable_factory) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ViewExecutableFactory $viewExecutableFactory,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->entityTypeManager = $entity_type_manager;
-    $this->viewExecutableFactory = $view_executable_factory;
   }
 
   /**

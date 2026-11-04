@@ -17,26 +17,18 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class Session implements HttpKernelInterface {
 
   /**
-   * The wrapped HTTP kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $httpKernel;
-
-  /**
    * Constructs a Session stack middleware object.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   The decorated kernel.
    * @param \Closure $sessionClosure
    *   A closure that wraps the session service.
    */
   public function __construct(
-    HttpKernelInterface $http_kernel,
+    protected HttpKernelInterface $httpKernel,
     #[AutowireServiceClosure('session')]
     protected \Closure $sessionClosure,
   ) {
-    $this->httpKernel = $http_kernel;
   }
 
   /**

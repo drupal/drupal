@@ -17,30 +17,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MenuLinkContentDeriver extends DeriverBase implements ContainerDeriverInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The menu link manager.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
-   */
-  protected $menuLinkManager;
-
-  /**
    * Constructs a MenuLinkContentDeriver instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
    *   The menu link manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MenuLinkManagerInterface $menu_link_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->menuLinkManager = $menu_link_manager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected MenuLinkManagerInterface $menuLinkManager,
+  ) {
   }
 
   /**

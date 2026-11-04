@@ -8,30 +8,17 @@ namespace Drupal\Core\TempStore;
 final class Lock {
 
   /**
-   * The owner ID.
-   *
-   * @var int
-   */
-  private $ownerId;
-
-  /**
-   * The timestamp the lock was last updated.
-   *
-   * @var int
-   */
-  private $updated;
-
-  /**
    * Constructs a new Lock object.
    *
-   * @param int $owner_id
+   * @param int $ownerId
    *   The owner ID.
    * @param int $updated
    *   The updated timestamp.
    */
-  public function __construct($owner_id, $updated) {
-    $this->ownerId = $owner_id;
-    $this->updated = $updated;
+  public function __construct(
+    private $ownerId,
+    private $updated,
+  ) {
   }
 
   /**

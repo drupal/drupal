@@ -22,20 +22,6 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstrai
 class TypedConfigManager extends TypedDataManager implements TypedConfigManagerInterface {
 
   /**
-   * A storage instance for reading configuration data.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $configStorage;
-
-  /**
-   * A storage instance for reading configuration schema data.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $schemaStorage;
-
-  /**
    * The array of plugin definitions, keyed by plugin id.
    *
    * @var array
@@ -61,9 +47,13 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   (optional) The class resolver.
    */
-  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ?ClassResolverInterface $class_resolver = NULL) {
-    $this->configStorage = $configStorage;
-    $this->schemaStorage = $schemaStorage;
+  public function __construct(
+    protected StorageInterface $configStorage,
+    protected StorageInterface $schemaStorage,
+    CacheBackendInterface $cache,
+    ModuleHandlerInterface $module_handler,
+    ?ClassResolverInterface $class_resolver = NULL,
+  ) {
     $this->setCacheBackend($cache, 'typed_config_definitions');
     $this->alterInfo('config_schema_info');
     $this->moduleHandler = $module_handler;

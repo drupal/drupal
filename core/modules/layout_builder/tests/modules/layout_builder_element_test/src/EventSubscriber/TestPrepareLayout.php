@@ -24,30 +24,17 @@ class TestPrepareLayout implements EventSubscriberInterface {
   use StringTranslationTrait;
 
   /**
-   * The layout tempstore repository.
-   *
-   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
-   */
-  protected $layoutTempstoreRepository;
-
-  /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
    * Constructs a new TestPrepareLayout.
    *
-   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
+   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layoutTempstoreRepository
    *   The tempstore repository.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, MessengerInterface $messenger) {
-    $this->layoutTempstoreRepository = $layout_tempstore_repository;
-    $this->messenger = $messenger;
+  public function __construct(
+    protected LayoutTempstoreRepositoryInterface $layoutTempstoreRepository,
+    protected MessengerInterface $messenger,
+  ) {
   }
 
   /**

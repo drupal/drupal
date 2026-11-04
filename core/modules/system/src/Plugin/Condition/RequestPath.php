@@ -23,43 +23,15 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * An alias manager to find the alias for the current system path.
-   *
-   * @var \Drupal\path_alias\AliasManagerInterface
-   */
-  protected $aliasManager;
-
-  /**
-   * The path matcher.
-   *
-   * @var \Drupal\Core\Path\PathMatcherInterface
-   */
-  protected $pathMatcher;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The current path.
-   *
-   * @var \Drupal\Core\Path\CurrentPathStack
-   */
-  protected $currentPath;
-
-  /**
    * Constructs a RequestPath condition plugin.
    *
-   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManagerInterface $aliasManager
    *   An alias manager to find the alias for the current system path.
-   * @param \Drupal\Core\Path\PathMatcherInterface $path_matcher
+   * @param \Drupal\Core\Path\PathMatcherInterface $pathMatcher
    *   The path matcher service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Path\CurrentPathStack $current_path
+   * @param \Drupal\Core\Path\CurrentPathStack $currentPath
    *   The current path.
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -68,12 +40,16 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
    * @param array $plugin_definition
    *   The plugin implementation definition.
    */
-  public function __construct(AliasManagerInterface $alias_manager, PathMatcherInterface $path_matcher, RequestStack $request_stack, CurrentPathStack $current_path, array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(
+    protected AliasManagerInterface $aliasManager,
+    protected PathMatcherInterface $pathMatcher,
+    protected RequestStack $requestStack,
+    protected CurrentPathStack $currentPath,
+    array $configuration,
+    $plugin_id,
+    array $plugin_definition,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->aliasManager = $alias_manager;
-    $this->pathMatcher = $path_matcher;
-    $this->requestStack = $request_stack;
-    $this->currentPath = $current_path;
   }
 
   /**

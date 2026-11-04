@@ -12,20 +12,14 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
 class PluginFormFactory implements PluginFormFactoryInterface {
 
   /**
-   * The class resolver.
-   *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
-   */
-  protected $classResolver;
-
-  /**
    * PluginFormFactory constructor.
    *
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $classResolver
    *   The class resolver.
    */
-  public function __construct(ClassResolverInterface $class_resolver) {
-    $this->classResolver = $class_resolver;
+  public function __construct(
+    protected ClassResolverInterface $classResolver,
+  ) {
   }
 
   /**

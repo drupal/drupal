@@ -18,36 +18,20 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
   use StringTranslationTrait;
 
   /**
-   * Current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * Comment manager service.
-   *
-   * @var \Drupal\comment\CommentManagerInterface
-   */
-  protected $commentManager;
-
-  /**
    * Constructs a new CommentLinkBuilder object.
    *
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   Current user.
-   * @param \Drupal\comment\CommentManagerInterface $comment_manager
+   * @param \Drupal\comment\CommentManagerInterface $commentManager
    *   Comment manager service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   String translation service.
    */
   public function __construct(
-    AccountInterface $current_user,
-    CommentManagerInterface $comment_manager,
+    protected AccountInterface $currentUser,
+    protected CommentManagerInterface $commentManager,
     TranslationInterface $string_translation,
   ) {
-    $this->currentUser = $current_user;
-    $this->commentManager = $comment_manager;
     $this->stringTranslation = $string_translation;
   }
 

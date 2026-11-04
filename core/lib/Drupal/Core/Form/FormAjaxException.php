@@ -8,25 +8,11 @@ namespace Drupal\Core\Form;
 class FormAjaxException extends \Exception {
 
   /**
-   * The form definition.
-   *
-   * @var array
-   */
-  protected $form;
-
-  /**
-   * The form state.
-   *
-   * @var \Drupal\Core\Form\FormStateInterface
-   */
-  protected $formState;
-
-  /**
    * Constructs a FormAjaxException object.
    *
    * @param array $form
    *   The form definition.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $formState
    *   The form state.
    * @param string $message
    *   (optional) The exception message.
@@ -35,10 +21,14 @@ class FormAjaxException extends \Exception {
    * @param \Throwable $previous
    *   (optional) The previous exception for nested exceptions.
    */
-  public function __construct(array $form, FormStateInterface $form_state, $message = "", $code = 0, ?\Throwable $previous = NULL) {
+  public function __construct(
+    protected array $form,
+    protected FormStateInterface $formState,
+    $message = "",
+    $code = 0,
+    ?\Throwable $previous = NULL,
+  ) {
     parent::__construct($message, $code, $previous);
-    $this->form = $form;
-    $this->formState = $form_state;
   }
 
   /**

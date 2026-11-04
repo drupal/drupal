@@ -21,25 +21,21 @@ class RegionalForm extends ConfigFormBase {
   use RedundantEditableConfigNamesTrait;
 
   /**
-   * The country manager.
-   *
-   * @var \Drupal\Core\Locale\CountryManagerInterface
-   */
-  protected $countryManager;
-
-  /**
    * Constructs a RegionalForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed config manager.
-   * @param \Drupal\Core\Locale\CountryManagerInterface $country_manager
+   * @param \Drupal\Core\Locale\CountryManagerInterface $countryManager
    *   The country manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, CountryManagerInterface $country_manager) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    TypedConfigManagerInterface $typedConfigManager,
+    protected CountryManagerInterface $countryManager,
+  ) {
     parent::__construct($config_factory, $typedConfigManager);
-    $this->countryManager = $country_manager;
   }
 
   /**

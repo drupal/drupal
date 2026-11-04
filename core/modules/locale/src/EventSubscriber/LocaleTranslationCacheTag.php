@@ -12,20 +12,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class LocaleTranslationCacheTag implements EventSubscriberInterface {
 
   /**
-   * The cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
    * Constructs a LocaleTranslationCacheTag object.
    *
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
    *   The cache tags invalidator.
    */
-  public function __construct(CacheTagsInvalidatorInterface $cache_tags_invalidator) {
-    $this->cacheTagsInvalidator = $cache_tags_invalidator;
+  public function __construct(
+    protected CacheTagsInvalidatorInterface $cacheTagsInvalidator,
+  ) {
   }
 
   /**

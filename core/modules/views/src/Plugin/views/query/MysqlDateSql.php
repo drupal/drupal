@@ -15,13 +15,6 @@ use Drupal\Core\Database\Connection;
 class MysqlDateSql implements DateSqlInterface {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
    * An array of PHP-to-MySQL replacement patterns.
    *
    * @var string[]
@@ -52,8 +45,9 @@ class MysqlDateSql implements DateSqlInterface {
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    */
-  public function __construct(Connection $database) {
-    $this->database = $database;
+  public function __construct(
+    protected Connection $database,
+  ) {
   }
 
   /**

@@ -23,20 +23,6 @@ class DeleteMultipleForm extends ConfirmFormBase implements BaseFormIdInterface,
   use WorkspaceSafeFormTrait;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The tempstore.
    *
    * @var \Drupal\Core\TempStore\SharedTempStore
@@ -74,18 +60,21 @@ class DeleteMultipleForm extends ConfirmFormBase implements BaseFormIdInterface,
   /**
    * Constructs a new DeleteMultiple object.
    *
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
    */
-  public function __construct(AccountInterface $current_user, EntityTypeManagerInterface $entity_type_manager, PrivateTempStoreFactory $temp_store_factory, MessengerInterface $messenger) {
-    $this->currentUser = $current_user;
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected AccountInterface $currentUser,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    PrivateTempStoreFactory $temp_store_factory,
+    MessengerInterface $messenger,
+  ) {
     $this->tempStore = $temp_store_factory->get('entity_delete_multiple_confirm');
     $this->messenger = $messenger;
   }

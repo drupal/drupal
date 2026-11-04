@@ -13,20 +13,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class AdvisoriesConfigSubscriber implements EventSubscriberInterface {
 
   /**
-   * The security advisory fetcher service.
-   *
-   * @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
-   */
-  protected $securityAdvisoriesFetcher;
-
-  /**
    * Constructs a new ConfigSubscriber object.
    *
-   * @param \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $security_advisories_fetcher
+   * @param \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $securityAdvisoriesFetcher
    *   The security advisory fetcher service.
    */
-  public function __construct(SecurityAdvisoriesFetcher $security_advisories_fetcher) {
-    $this->securityAdvisoriesFetcher = $security_advisories_fetcher;
+  public function __construct(
+    protected SecurityAdvisoriesFetcher $securityAdvisoriesFetcher,
+  ) {
   }
 
   /**

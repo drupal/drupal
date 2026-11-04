@@ -47,20 +47,6 @@ class OEmbedFormatter extends FormatterBase {
   protected $messenger;
 
   /**
-   * The oEmbed resource fetcher.
-   *
-   * @var \Drupal\media\OEmbed\ResourceFetcherInterface
-   */
-  protected $resourceFetcher;
-
-  /**
-   * The oEmbed URL resolver service.
-   *
-   * @var \Drupal\media\OEmbed\UrlResolverInterface
-   */
-  protected $urlResolver;
-
-  /**
    * The logger service.
    *
    * @var \Psr\Log\LoggerInterface
@@ -73,13 +59,6 @@ class OEmbedFormatter extends FormatterBase {
    * @var \Drupal\Core\Config\ImmutableConfig
    */
   protected $config;
-
-  /**
-   * The iFrame URL helper service.
-   *
-   * @var \Drupal\media\IFrameUrlHelper
-   */
-  protected $iFrameUrlHelper;
 
   /**
    * Constructs an OEmbedFormatter instance.
@@ -100,25 +79,36 @@ class OEmbedFormatter extends FormatterBase {
    *   Any third party settings.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
-   * @param \Drupal\media\OEmbed\ResourceFetcherInterface $resource_fetcher
+   * @param \Drupal\media\OEmbed\ResourceFetcherInterface $resourceFetcher
    *   The oEmbed resource fetcher service.
-   * @param \Drupal\media\OEmbed\UrlResolverInterface $url_resolver
+   * @param \Drupal\media\OEmbed\UrlResolverInterface $urlResolver
    *   The oEmbed URL resolver service.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger factory service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
-   * @param \Drupal\media\IFrameUrlHelper $iframe_url_helper
+   * @param \Drupal\media\IFrameUrlHelper $iFrameUrlHelper
    *   The iFrame URL helper service.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, MessengerInterface $messenger, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, LoggerChannelFactoryInterface $logger_factory, ConfigFactoryInterface $config_factory, IFrameUrlHelper $iframe_url_helper) {
+  public function __construct(
+    $plugin_id,
+    $plugin_definition,
+    FieldDefinitionInterface $field_definition,
+    array $settings,
+    $label,
+    $view_mode,
+    array $third_party_settings,
+    MessengerInterface $messenger,
+    protected ResourceFetcherInterface $resourceFetcher,
+    protected UrlResolverInterface $urlResolver,
+    LoggerChannelFactoryInterface $logger_factory,
+    ConfigFactoryInterface $config_factory,
+    protected IFrameUrlHelper $iFrameUrlHelper,
+  ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->messenger = $messenger;
-    $this->resourceFetcher = $resource_fetcher;
-    $this->urlResolver = $url_resolver;
     $this->logger = $logger_factory->get('media');
     $this->config = $config_factory->get('media.settings');
-    $this->iFrameUrlHelper = $iframe_url_helper;
   }
 
   /**

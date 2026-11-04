@@ -16,21 +16,14 @@ use Symfony\Component\Console\Input\InputInterface;
 class GenerateProxyClassApplication extends Application {
 
   /**
-   * The proxy builder.
-   *
-   * @var \Drupal\Component\ProxyBuilder\ProxyBuilder
-   */
-  protected $proxyBuilder;
-
-  /**
    * Constructs a new GenerateProxyClassApplication instance.
    *
-   * @param \Drupal\Component\ProxyBuilder\ProxyBuilder $proxy_builder
+   * @param \Drupal\Component\ProxyBuilder\ProxyBuilder $proxyBuilder
    *   The proxy builder.
    */
-  public function __construct(ProxyBuilder $proxy_builder) {
-    $this->proxyBuilder = $proxy_builder;
-
+  public function __construct(
+    protected ProxyBuilder $proxyBuilder,
+  ) {
     parent::__construct();
   }
 

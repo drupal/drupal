@@ -14,13 +14,6 @@ class Update extends Query implements ConditionInterface {
   use QueryConditionTrait;
 
   /**
-   * The table to update.
-   *
-   * @var string
-   */
-  protected $table;
-
-  /**
    * An array of fields that will be updated.
    *
    * @var array
@@ -59,9 +52,12 @@ class Update extends Query implements ConditionInterface {
    * @param array $options
    *   Array of database options.
    */
-  public function __construct(Connection $connection, $table, array $options = []) {
+  public function __construct(
+    Connection $connection,
+    protected $table,
+    array $options = [],
+  ) {
     parent::__construct($connection, $options);
-    $this->table = $table;
 
     $this->condition = $this->connection->condition('AND');
   }

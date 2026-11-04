@@ -10,13 +10,6 @@ use Drupal\Component\Render\FormattableMarkup;
 class ViewsDataHelper {
 
   /**
-   * The views data object, containing the cached information.
-   *
-   * @var \Drupal\views\ViewsData
-   */
-  protected $data;
-
-  /**
    * A prepared list of all fields, keyed by base_table and handler type.
    *
    * @var array
@@ -26,11 +19,12 @@ class ViewsDataHelper {
   /**
    * Constructs a ViewsData object.
    *
-   * @param \Drupal\views\ViewsData $views_data
+   * @param \Drupal\views\ViewsData $data
    *   The views data object, containing the cached table information.
    */
-  public function __construct(ViewsData $views_data) {
-    $this->data = $views_data;
+  public function __construct(
+    protected ViewsData $data,
+  ) {
   }
 
   /**

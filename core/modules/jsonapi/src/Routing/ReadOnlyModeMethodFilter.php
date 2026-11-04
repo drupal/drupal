@@ -15,13 +15,6 @@ use Symfony\Component\Routing\RouteCollection;
 class ReadOnlyModeMethodFilter implements FilterInterface {
 
   /**
-   * The decorated method filter.
-   *
-   * @var \Drupal\Core\Routing\FilterInterface
-   */
-  protected $inner;
-
-  /**
    * Whether JSON:API's read-only mode is enabled.
    *
    * @var bool
@@ -36,8 +29,10 @@ class ReadOnlyModeMethodFilter implements FilterInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
    */
-  public function __construct(FilterInterface $inner, ConfigFactoryInterface $config_factory) {
-    $this->inner = $inner;
+  public function __construct(
+    protected FilterInterface $inner,
+    ConfigFactoryInterface $config_factory,
+  ) {
     $this->readOnlyModeIsEnabled = $config_factory->get('jsonapi.settings')->get('read_only');
   }
 

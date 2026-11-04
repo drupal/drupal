@@ -13,20 +13,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ThemeLocalTask extends DeriverBase implements ContainerDeriverInterface {
 
   /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * Constructs a new ThemeLocalTask.
    *
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler) {
-    $this->themeHandler = $theme_handler;
+  public function __construct(
+    protected ThemeHandlerInterface $themeHandler,
+  ) {
   }
 
   /**

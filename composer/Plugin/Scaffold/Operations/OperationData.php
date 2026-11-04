@@ -25,13 +25,6 @@ class OperationData {
   protected $data;
 
   /**
-   * The destination path.
-   *
-   * @var string
-   */
-  protected $destination;
-
-  /**
    * OperationData constructor.
    *
    * @param string $destination
@@ -39,9 +32,11 @@ class OperationData {
    * @param mixed $data
    *   The raw data array to wrap.
    */
-  public function __construct($destination, $data) {
-    $this->destination = $destination;
-    $this->data = $this->normalizeScaffoldMetadata($destination, $data);
+  public function __construct(
+    protected $destination,
+    $data,
+  ) {
+    $this->data = $this->normalizeScaffoldMetadata($this->destination, $data);
   }
 
   /**

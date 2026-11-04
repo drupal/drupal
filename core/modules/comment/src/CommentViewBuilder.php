@@ -20,20 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CommentViewBuilder extends EntityViewBuilder {
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a new CommentViewBuilder.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -42,19 +28,25 @@ class CommentViewBuilder extends EntityViewBuilder {
    *   The entity repository service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    * @param \Drupal\Core\Theme\Registry $theme_registry
    *   The theme registry.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, AccountInterface $current_user, Registry $theme_registry, EntityDisplayRepositoryInterface $entity_display_repository, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    EntityRepositoryInterface $entity_repository,
+    LanguageManagerInterface $language_manager,
+    protected AccountInterface $currentUser,
+    Registry $theme_registry,
+    EntityDisplayRepositoryInterface $entity_display_repository,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
     parent::__construct($entity_type, $entity_repository, $language_manager, $theme_registry, $entity_display_repository);
-    $this->currentUser = $current_user;
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

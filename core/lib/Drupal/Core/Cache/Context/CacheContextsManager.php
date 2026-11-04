@@ -23,20 +23,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CacheContextsManager {
 
   /**
-   * The service container.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $container;
-
-  /**
-   * Available cache context IDs and corresponding labels.
-   *
-   * @var string[]
-   */
-  protected $contexts;
-
-  /**
    * The set of valid context tokens.
    */
   protected array $validContextTokens;
@@ -49,9 +35,10 @@ class CacheContextsManager {
    * @param string[] $contexts
    *   An array of the available cache context IDs.
    */
-  public function __construct(ContainerInterface $container, array $contexts) {
-    $this->container = $container;
-    $this->contexts = $contexts;
+  public function __construct(
+    protected ContainerInterface $container,
+    protected array $contexts,
+  ) {
   }
 
   /**

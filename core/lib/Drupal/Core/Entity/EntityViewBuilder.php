@@ -37,39 +37,11 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   protected $entityType;
 
   /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The entity display repository.
-   *
-   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
-   */
-  protected $entityDisplayRepository;
-
-  /**
    * The cache bin used to store the render cache.
    *
    * @var string
    */
   protected $cacheBin = 'render';
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The theme registry.
-   *
-   * @var \Drupal\Core\Theme\Registry
-   */
-  protected $themeRegistry;
 
   /**
    * The EntityViewDisplay objects created for individual field rendering.
@@ -92,22 +64,24 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
-   * @param \Drupal\Core\Theme\Registry $theme_registry
+   * @param \Drupal\Core\Theme\Registry $themeRegistry
    *   The theme registry.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entityDisplayRepository
    *   The entity display repository.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityRepositoryInterface $entity_repository, LanguageManagerInterface $language_manager, Registry $theme_registry, EntityDisplayRepositoryInterface $entity_display_repository) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    protected EntityRepositoryInterface $entityRepository,
+    protected LanguageManagerInterface $languageManager,
+    protected Registry $themeRegistry,
+    protected EntityDisplayRepositoryInterface $entityDisplayRepository,
+  ) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
-    $this->entityRepository = $entity_repository;
-    $this->languageManager = $language_manager;
-    $this->themeRegistry = $theme_registry;
-    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**

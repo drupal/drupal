@@ -27,27 +27,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   protected $bundleKey = FALSE;
 
   /**
-   * The entity field manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The entity bundle info.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  /**
-   * Cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * Whether the static revision cache should be ignored.
    *
    * This property will be set internally when loading an unchanged revision
@@ -66,21 +45,24 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
    *   The cache backend to be used.
    * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
    *   The memory cache backend.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entityTypeBundleInfo
    *   The entity type bundle info.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, MemoryCacheInterface $memory_cache, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected CacheBackendInterface $cacheBackend,
+    MemoryCacheInterface $memory_cache,
+    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+  ) {
     parent::__construct($entity_type, $memory_cache);
     $this->bundleKey = $this->entityType->getKey('bundle');
-    $this->entityFieldManager = $entity_field_manager;
-    $this->cacheBackend = $cache;
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 
   /**

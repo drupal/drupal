@@ -25,32 +25,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface {
 
   /**
-   * A storage instance for reading and writing configuration data.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $storage;
-
-  /**
-   * An event dispatcher instance to use for configuration events.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
    * Cached configuration objects.
    *
    * @var \Drupal\Core\Config\Config[]
    */
   protected $cache = [];
-
-  /**
-   * The typed config manager.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected $typedConfigManager;
 
   /**
    * An array of config factory override objects ordered by priority.
@@ -64,15 +43,16 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
    *   The configuration storage engine.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   An event dispatcher instance to use for configuration events.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed configuration manager.
    */
-  public function __construct(StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManagerInterface $typed_config) {
-    $this->storage = $storage;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->typedConfigManager = $typed_config;
+  public function __construct(
+    protected StorageInterface $storage,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected TypedConfigManagerInterface $typedConfigManager,
+  ) {
   }
 
   /**

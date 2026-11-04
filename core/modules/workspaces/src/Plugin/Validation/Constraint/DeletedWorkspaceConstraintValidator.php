@@ -14,20 +14,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 class DeletedWorkspaceConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Creates a new DeletedWorkspaceConstraintValidator instance.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    */
-  public function __construct(StateInterface $state) {
-    $this->state = $state;
+  public function __construct(
+    protected StateInterface $state,
+  ) {
   }
 
   /**

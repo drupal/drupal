@@ -15,20 +15,14 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class ExceptionLoggingSubscriber implements EventSubscriberInterface {
 
   /**
-   * The logger channel factory.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
-   */
-  protected $logger;
-
-  /**
    * Constructs a new ExceptionLoggingSubscriber.
    *
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger
    *   The logger channel factory.
    */
-  public function __construct(LoggerChannelFactoryInterface $logger) {
-    $this->logger = $logger;
+  public function __construct(
+    protected LoggerChannelFactoryInterface $logger,
+  ) {
   }
 
   /**

@@ -16,20 +16,14 @@ use Symfony\Component\Routing\Attribute\Route;
 class CategoryAutocompleteController implements ContainerInjectionInterface {
 
   /**
-   * The block manager.
-   *
-   * @var \Drupal\Core\Block\BlockManagerInterface
-   */
-  protected $blockManager;
-
-  /**
    * Constructs a new CategoryAutocompleteController.
    *
-   * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
+   * @param \Drupal\Core\Block\BlockManagerInterface $blockManager
    *   The block manager.
    */
-  public function __construct(BlockManagerInterface $block_manager) {
-    $this->blockManager = $block_manager;
+  public function __construct(
+    protected BlockManagerInterface $blockManager,
+  ) {
   }
 
   /**

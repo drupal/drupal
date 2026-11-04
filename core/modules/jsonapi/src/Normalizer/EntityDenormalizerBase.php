@@ -28,40 +28,20 @@ abstract class EntityDenormalizerBase extends NormalizerBase implements Denormal
   protected $resourceTypeRepository;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $fieldManager;
-
-  /**
-   * The field plugin manager.
-   *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
-   */
-  protected $pluginManager;
-
-  /**
    * Constructs an EntityDenormalizerBase object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $fieldManager
    *   The entity field manager.
-   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $plugin_manager
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $pluginManager
    *   The plugin manager for fields.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, FieldTypePluginManagerInterface $plugin_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->fieldManager = $field_manager;
-    $this->pluginManager = $plugin_manager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityFieldManagerInterface $fieldManager,
+    protected FieldTypePluginManagerInterface $pluginManager,
+  ) {
   }
 
   /**

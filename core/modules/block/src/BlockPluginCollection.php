@@ -12,13 +12,6 @@ use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 class BlockPluginCollection extends DefaultSingleLazyPluginCollection {
 
   /**
-   * The block ID this plugin collection belongs to.
-   *
-   * @var string
-   */
-  protected $blockId;
-
-  /**
    * Constructs a new BlockPluginCollection.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
@@ -27,13 +20,16 @@ class BlockPluginCollection extends DefaultSingleLazyPluginCollection {
    *   The ID of the plugin instance.
    * @param array $configuration
    *   An array of configuration.
-   * @param string $block_id
+   * @param string $blockId
    *   The unique ID of the block entity using this plugin.
    */
-  public function __construct(PluginManagerInterface $manager, $instance_id, array $configuration, $block_id) {
+  public function __construct(
+    PluginManagerInterface $manager,
+    $instance_id,
+    array $configuration,
+    protected $blockId,
+  ) {
     parent::__construct($manager, $instance_id, $configuration);
-
-    $this->blockId = $block_id;
   }
 
   /**

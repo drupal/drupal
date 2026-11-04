@@ -10,21 +10,14 @@ namespace Drupal\Core\StringTranslation\Translator;
 class StaticTranslation implements TranslatorInterface {
 
   /**
-   * String translations.
-   *
-   * @var array
-   *   Array of cached translations indexed by language and context.
-   */
-  protected $translations;
-
-  /**
    * Constructs a translator from an array of translations.
    *
    * @param array $translations
    *   Array of override strings indexed by language and context.
    */
-  public function __construct($translations = []) {
-    $this->translations = $translations;
+  public function __construct(
+    protected $translations = [],
+  ) {
   }
 
   /**

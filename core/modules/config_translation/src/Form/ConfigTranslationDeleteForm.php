@@ -21,27 +21,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ConfigTranslationDeleteForm extends ConfirmFormBase {
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\language\ConfigurableLanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The configuration mapper manager.
-   *
-   * @var \Drupal\config_translation\ConfigMapperManagerInterface
-   */
-  protected $configMapperManager;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * The configuration translation to be deleted.
    *
    * @var \Drupal\config_translation\ConfigMapperInterface
@@ -58,17 +37,18 @@ class ConfigTranslationDeleteForm extends ConfirmFormBase {
   /**
    * Constructs a ConfigTranslationDeleteForm.
    *
-   * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
+   * @param \Drupal\language\ConfigurableLanguageManagerInterface $languageManager
    *   The language override configuration storage.
-   * @param \Drupal\config_translation\ConfigMapperManagerInterface $config_mapper_manager
+   * @param \Drupal\config_translation\ConfigMapperManagerInterface $configMapperManager
    *   The configuration mapper manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    */
-  public function __construct(ConfigurableLanguageManagerInterface $language_manager, ConfigMapperManagerInterface $config_mapper_manager, ModuleHandlerInterface $module_handler) {
-    $this->languageManager = $language_manager;
-    $this->configMapperManager = $config_mapper_manager;
-    $this->moduleHandler = $module_handler;
+  public function __construct(
+    protected ConfigurableLanguageManagerInterface $languageManager,
+    protected ConfigMapperManagerInterface $configMapperManager,
+    protected ModuleHandlerInterface $moduleHandler,
+  ) {
   }
 
   /**

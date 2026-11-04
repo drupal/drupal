@@ -15,90 +15,35 @@ use Symfony\Component\Validator\Validation;
 final class ProjectRelease {
 
   /**
-   * Whether the release is compatible with the site's Drupal core version.
-   *
-   * @var bool
-   */
-  private $coreCompatible;
-
-  /**
-   * The core compatibility message or NULL if not set.
-   *
-   * @var string|null
-   */
-  private $coreCompatibilityMessage;
-
-  /**
-   * The download URL or NULL if none is available.
-   *
-   * @var string|null
-   */
-  private $downloadUrl;
-
-  /**
-   * The URL for the release.
-   *
-   * @var string
-   */
-  private $releaseUrl;
-
-  /**
-   * The release types or NULL if not set.
-   *
-   * @var string[]|null
-   */
-  private $releaseTypes;
-
-  /**
-   * Whether the release is published.
-   *
-   * @var bool
-   */
-  private $published;
-
-  /**
-   * The release version.
-   *
-   * @var string
-   */
-  private $version;
-
-  /**
-   * The release date as a Unix timestamp or NULL if no date was set.
-   *
-   * @var int|null
-   */
-  private $date;
-
-  /**
    * Constructs a ProjectRelease object.
    *
    * @param bool $published
    *   Whether the release is published.
    * @param string $version
    *   The release version.
-   * @param string $release_url
+   * @param string $releaseUrl
    *   The URL for the release.
-   * @param string[]|null $release_types
+   * @param string[]|null $releaseTypes
    *   The release types or NULL if not set.
-   * @param bool|null $core_compatible
+   * @param bool|null $coreCompatible
    *   Whether the release is compatible with the site's version of Drupal core.
-   * @param string|null $core_compatibility_message
+   * @param string|null $coreCompatibilityMessage
    *   The core compatibility message or NULL if not set.
-   * @param string|null $download_url
+   * @param string|null $downloadUrl
    *   The download URL or NULL if not available.
    * @param int|null $date
    *   The release date in Unix timestamp format.
    */
-  private function __construct(bool $published, string $version, string $release_url, ?array $release_types, ?bool $core_compatible, ?string $core_compatibility_message, ?string $download_url, ?int $date) {
-    $this->published = $published;
-    $this->version = $version;
-    $this->releaseUrl = $release_url;
-    $this->releaseTypes = $release_types;
-    $this->coreCompatible = $core_compatible;
-    $this->coreCompatibilityMessage = $core_compatibility_message;
-    $this->downloadUrl = $download_url;
-    $this->date = $date;
+  private function __construct(
+    private bool $published,
+    private string $version,
+    private string $releaseUrl,
+    private ?array $releaseTypes,
+    private ?bool $coreCompatible,
+    private ?string $coreCompatibilityMessage,
+    private ?string $downloadUrl,
+    private ?int $date,
+  ) {
   }
 
   /**

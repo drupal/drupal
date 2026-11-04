@@ -11,20 +11,14 @@ use Drupal\Composer\Generator\Util\DrupalCoreComposer;
 abstract class DrupalPackageBuilder implements BuilderInterface {
 
   /**
-   * Information about composer.json, composer.lock etc. in current release.
-   *
-   * @var \Drupal\Composer\Generator\Util\DrupalCoreComposer
-   */
-  protected $drupalCoreInfo;
-
-  /**
    * DrupalPackageBuilder constructor.
    *
    * @param \Drupal\Composer\Generator\Util\DrupalCoreComposer $drupalCoreInfo
    *   Information about composer.json and composer.lock from current release.
    */
-  public function __construct(DrupalCoreComposer $drupalCoreInfo) {
-    $this->drupalCoreInfo = $drupalCoreInfo;
+  public function __construct(
+    protected DrupalCoreComposer $drupalCoreInfo,
+  ) {
   }
 
 }

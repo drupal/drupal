@@ -82,13 +82,6 @@ class Config {
   ];
 
   /**
-   * The root package.
-   *
-   * @var \Composer\Package\RootPackageInterface
-   */
-  protected $rootPackage;
-
-  /**
    * Configuration gleaned from the root package.
    *
    * @var array
@@ -98,11 +91,12 @@ class Config {
   /**
    * Construct a Config object.
    *
-   * @param \Composer\Package\RootPackageInterface $root_package
+   * @param \Composer\Package\RootPackageInterface $rootPackage
    *   Composer package object for the root package.
    */
-  public function __construct(RootPackageInterface $root_package) {
-    $this->rootPackage = $root_package;
+  public function __construct(
+    protected RootPackageInterface $rootPackage,
+  ) {
   }
 
   /**

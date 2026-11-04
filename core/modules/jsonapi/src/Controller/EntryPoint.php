@@ -28,30 +28,17 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class EntryPoint extends ControllerBase {
 
   /**
-   * The JSON:API resource type repository.
-   *
-   * @var \Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface
-   */
-  protected $resourceTypeRepository;
-
-  /**
-   * The account object.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $user;
-
-  /**
    * EntryPoint constructor.
    *
-   * @param \Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface $resource_type_repository
+   * @param \Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface $resourceTypeRepository
    *   The resource type repository.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
    */
-  public function __construct(ResourceTypeRepositoryInterface $resource_type_repository, AccountInterface $user) {
-    $this->resourceTypeRepository = $resource_type_repository;
-    $this->user = $user;
+  public function __construct(
+    protected ResourceTypeRepositoryInterface $resourceTypeRepository,
+    protected AccountInterface $user,
+  ) {
   }
 
   /**

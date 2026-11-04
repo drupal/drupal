@@ -23,13 +23,6 @@ class LinkRelationTypeManager extends DefaultPluginManager {
   ];
 
   /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * Constructs a new LinkRelationTypeManager.
    *
    * @param string $root
@@ -39,8 +32,11 @@ class LinkRelationTypeManager extends DefaultPluginManager {
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache) {
-    $this->root = $root;
+  public function __construct(
+    protected $root,
+    ModuleHandlerInterface $module_handler,
+    CacheBackendInterface $cache,
+  ) {
     $this->pluginInterface = LinkRelationTypeInterface::class;
     $this->moduleHandler = $module_handler;
     $this->setCacheBackend($cache, 'link_relation_type_plugins');

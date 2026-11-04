@@ -84,13 +84,6 @@ class ComponentMetadata {
   public readonly string $description;
 
   /**
-   * TRUE if the schemas for props and slots are mandatory.
-   *
-   * @var bool
-   */
-  public readonly bool $mandatorySchemas;
-
-  /**
    * Slot information.
    *
    * @var array
@@ -114,12 +107,16 @@ class ComponentMetadata {
    *   The metadata info.
    * @param string $app_root
    *   The application root.
-   * @param bool $enforce_schemas
+   * @param bool $mandatorySchemas
    *   Enforces the definition of schemas for props and slots.
    *
    * @throws \Drupal\Core\Render\Component\Exception\InvalidComponentException
    */
-  public function __construct(array $metadata_info, string $app_root, bool $enforce_schemas) {
+  public function __construct(
+    array $metadata_info,
+    string $app_root,
+    public readonly bool $mandatorySchemas,
+  ) {
     $path = $metadata_info['path'];
     // Make the absolute path, relative to the Drupal root.
     $app_root = rtrim($app_root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
@@ -127,7 +124,6 @@ class ComponentMetadata {
       $path = substr($path, strlen($app_root));
     }
     $this->id = $metadata_info['id'];
-    $this->mandatorySchemas = $enforce_schemas;
     $this->path = $path;
 
     [, $machine_name] = explode(':', $metadata_info['id'] ?? []);

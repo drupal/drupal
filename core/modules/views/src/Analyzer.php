@@ -20,20 +20,14 @@ class Analyzer {
   use StringTranslationTrait;
 
   /**
-   * A module handler that invokes the 'views_analyze' hook.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs an Analyzer object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler that invokes the 'views_analyze' hook.
    */
-  public function __construct(ModuleHandlerInterface $module_handler) {
-    $this->moduleHandler = $module_handler;
+  public function __construct(
+    protected ModuleHandlerInterface $moduleHandler,
+  ) {
   }
 
   /**

@@ -8,33 +8,21 @@ namespace Drupal\file\Upload;
 class FileValidationException extends \RuntimeException {
 
   /**
-   * The validation errors.
-   *
-   * @var array
-   */
-  protected $errors;
-
-  /**
-   * The file name.
-   *
-   * @var string
-   */
-  protected $fileName;
-
-  /**
    * Constructs a new FileValidationException.
    *
    * @param string $message
    *   The message.
-   * @param string $file_name
+   * @param string $fileName
    *   The file name.
    * @param array $errors
    *   The validation errors.
    */
-  public function __construct(string $message, string $file_name, array $errors) {
+  public function __construct(
+    string $message,
+    protected string $fileName,
+    protected array $errors,
+  ) {
     parent::__construct($message, 0, NULL);
-    $this->fileName = $file_name;
-    $this->errors = $errors;
   }
 
   /**

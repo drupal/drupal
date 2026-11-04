@@ -28,45 +28,27 @@ class WorkspaceListBuilder extends EntityListBuilder {
   use AjaxHelperTrait;
 
   /**
-   * The workspace manager service.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
-   * The workspace repository service.
-   *
-   * @var \Drupal\workspaces\WorkspaceRepositoryInterface
-   */
-  protected $workspaceRepository;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a new EntityListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager service.
-   * @param \Drupal\workspaces\WorkspaceRepositoryInterface $workspace_repository
+   * @param \Drupal\workspaces\WorkspaceRepositoryInterface $workspaceRepository
    *   The workspace repository service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, WorkspaceManagerInterface $workspace_manager, WorkspaceRepositoryInterface $workspace_repository, RendererInterface $renderer) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    EntityStorageInterface $storage,
+    protected WorkspaceManagerInterface $workspaceManager,
+    protected WorkspaceRepositoryInterface $workspaceRepository,
+    protected RendererInterface $renderer,
+  ) {
     parent::__construct($entity_type, $storage);
-    $this->workspaceManager = $workspace_manager;
-    $this->workspaceRepository = $workspace_repository;
-    $this->renderer = $renderer;
   }
 
   /**

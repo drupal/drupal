@@ -18,20 +18,6 @@ use Drupal\Composer\Plugin\Scaffold\Operations\OperationInterface;
 class ScaffoldFileInfo {
 
   /**
-   * The path to the destination.
-   *
-   * @var \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath
-   */
-  protected $destination;
-
-  /**
-   * The operation used to create the destination.
-   *
-   * @var \Drupal\Composer\Plugin\Scaffold\Operations\OperationInterface
-   */
-  protected $op;
-
-  /**
    * Constructs a ScaffoldFileInfo object.
    *
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $destination
@@ -40,9 +26,10 @@ class ScaffoldFileInfo {
    * @param \Drupal\Composer\Plugin\Scaffold\Operations\OperationInterface $op
    *   Operations object that will handle scaffolding operations.
    */
-  public function __construct(ScaffoldFilePath $destination, OperationInterface $op) {
-    $this->destination = $destination;
-    $this->op = $op;
+  public function __construct(
+    protected ScaffoldFilePath $destination,
+    protected OperationInterface $op,
+  ) {
   }
 
   /**

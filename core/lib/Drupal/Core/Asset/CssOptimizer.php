@@ -19,20 +19,14 @@ class CssOptimizer implements AssetOptimizerInterface {
   public $rewriteFileURIBasePath;
 
   /**
-   * The file URL generator.
-   *
-   * @var \Drupal\Core\File\FileUrlGeneratorInterface
-   */
-  protected $fileUrlGenerator;
-
-  /**
    * Constructs a CssOptimizer.
    *
-   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $fileUrlGenerator
    *   The file URL generator.
    */
-  public function __construct(FileUrlGeneratorInterface $file_url_generator) {
-    $this->fileUrlGenerator = $file_url_generator;
+  public function __construct(
+    protected FileUrlGeneratorInterface $fileUrlGenerator,
+  ) {
   }
 
   /**

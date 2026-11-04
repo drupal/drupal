@@ -31,20 +31,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class AddFormBase extends FormBase implements BaseFormIdInterface, TrustedCallbackInterface, WorkspaceSafeFormInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The media library UI builder.
-   *
-   * @var \Drupal\media_library\MediaLibraryUiBuilder
-   */
-  protected $libraryUiBuilder;
-
-  /**
    * The type of media items being created by this form.
    *
    * @var \Drupal\media\MediaTypeInterface
@@ -59,27 +45,21 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
   protected $viewBuilder;
 
   /**
-   * The opener resolver.
-   *
-   * @var \Drupal\media_library\OpenerResolverInterface
-   */
-  protected $openerResolver;
-
-  /**
    * Constructs an AddFormBase object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\media_library\MediaLibraryUiBuilder $library_ui_builder
+   * @param \Drupal\media_library\MediaLibraryUiBuilder $libraryUiBuilder
    *   The media library UI builder.
-   * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
+   * @param \Drupal\media_library\OpenerResolverInterface $openerResolver
    *   The opener resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, OpenerResolverInterface $opener_resolver) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->libraryUiBuilder = $library_ui_builder;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected MediaLibraryUiBuilder $libraryUiBuilder,
+    protected OpenerResolverInterface $openerResolver,
+  ) {
     $this->viewBuilder = $this->entityTypeManager->getViewBuilder('media');
-    $this->openerResolver = $opener_resolver;
   }
 
   /**

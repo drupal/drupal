@@ -22,34 +22,6 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
   use ConfigDependencyDeleteFormTrait;
 
   /**
-   * The module installer service.
-   *
-   * @var \Drupal\Core\Extension\ModuleInstallerInterface
-   */
-  protected $moduleInstaller;
-
-  /**
-   * The expirable key value store.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
-   */
-  protected $keyValueExpirable;
-
-  /**
-   * The configuration manager.
-   *
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * An array of modules to uninstall.
    *
    * @var array
@@ -57,34 +29,29 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
   protected $modules = [];
 
   /**
-   * The module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
    * Constructs a ModulesUninstallConfirmForm object.
    *
-   * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
+   * @param \Drupal\Core\Extension\ModuleInstallerInterface $moduleInstaller
    *   The module installer.
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $keyValueExpirable
    *   The key value expirable factory.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
    *   The configuration manager.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
    * @param string|false|null $installProfile
    *   The install profile.
    */
-  public function __construct(ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_type_manager, ModuleExtensionList $extension_list_module, protected string|false|null $installProfile = NULL) {
-    $this->moduleInstaller = $module_installer;
-    $this->keyValueExpirable = $key_value_expirable;
-    $this->configManager = $config_manager;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->moduleExtensionList = $extension_list_module;
+  public function __construct(
+    protected ModuleInstallerInterface $moduleInstaller,
+    protected KeyValueStoreExpirableInterface $keyValueExpirable,
+    protected ConfigManagerInterface $configManager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ModuleExtensionList $moduleExtensionList,
+    protected string|false|null $installProfile = NULL,
+  ) {
     $this->installProfile ??= \Drupal::installProfile();
   }
 

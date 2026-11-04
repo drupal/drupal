@@ -64,22 +64,14 @@ use Drupal\Core\Render\PlaceholderGenerator;
 class FilterProcessResult extends BubbleableMetadata {
 
   /**
-   * The processed text.
-   *
-   * @var string
-   *
-   * @see \Drupal\filter\Plugin\FilterInterface::process()
-   */
-  protected $processedText;
-
-  /**
    * Constructs a FilterProcessResult object.
    *
-   * @param string $processed_text
+   * @param string $processedText
    *   The text as processed by a text filter.
    */
-  public function __construct($processed_text = '') {
-    $this->processedText = $processed_text;
+  public function __construct(
+    protected $processedText = '',
+  ) {
   }
 
   /**

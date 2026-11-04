@@ -20,20 +20,6 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 class CurrentThemeCondition extends ConditionPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * Constructs a CurrentThemeCondition condition plugin.
    *
    * @param array $configuration
@@ -42,15 +28,19 @@ class CurrentThemeCondition extends ConditionPluginBase implements ContainerFact
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
    *   The theme manager.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ThemeManagerInterface $theme_manager, ThemeHandlerInterface $theme_handler) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected ThemeManagerInterface $themeManager,
+    protected ThemeHandlerInterface $themeHandler,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->themeManager = $theme_manager;
-    $this->themeHandler = $theme_handler;
   }
 
   /**

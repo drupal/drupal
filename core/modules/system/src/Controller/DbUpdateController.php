@@ -27,27 +27,6 @@ use Symfony\Component\HttpFoundation\Response;
 class DbUpdateController extends ControllerBase {
 
   /**
-   * The keyvalue expirable factory.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface
-   */
-  protected $keyValueExpirableFactory;
-
-  /**
-   * A cache backend interface.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -55,39 +34,11 @@ class DbUpdateController extends ControllerBase {
   protected $moduleHandler;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
-   * The bare HTML page renderer.
-   *
-   * @var \Drupal\Core\Render\BareHtmlPageRendererInterface
-   */
-  protected $bareHtmlPageRenderer;
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
-   * The post update registry.
-   *
-   * @var \Drupal\Core\Update\UpdateRegistry
-   */
-  protected $postUpdateRegistry;
-
-  /**
    * Constructs a new UpdateController.
    *
    * @param string $root
    *   The app root.
-   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
+   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $keyValueExpirableFactory
    *   The keyvalue expirable factory.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   A cache backend interface.
@@ -97,9 +48,9 @@ class DbUpdateController extends ControllerBase {
    *   The module handler.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
-   * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_page_renderer
+   * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bareHtmlPageRenderer
    *   The bare HTML page renderer.
-   * @param \Drupal\Core\Update\UpdateRegistry $post_update_registry
+   * @param \Drupal\Core\Update\UpdateRegistry $postUpdateRegistry
    *   The post update registry.
    * @param \Drupal\Core\Asset\AssetQueryStringInterface $assetQueryString
    *   The asset query string.
@@ -109,26 +60,19 @@ class DbUpdateController extends ControllerBase {
    *   The update hook registry.
    */
   public function __construct(
-    $root,
-    KeyValueExpirableFactoryInterface $key_value_expirable_factory,
-    CacheBackendInterface $cache,
-    StateInterface $state,
+    protected $root,
+    protected KeyValueExpirableFactoryInterface $keyValueExpirableFactory,
+    protected CacheBackendInterface $cache,
+    protected StateInterface $state,
     ModuleHandlerInterface $module_handler,
-    AccountInterface $account,
-    BareHtmlPageRendererInterface $bare_html_page_renderer,
-    UpdateRegistry $post_update_registry,
+    protected AccountInterface $account,
+    protected BareHtmlPageRendererInterface $bareHtmlPageRenderer,
+    protected UpdateRegistry $postUpdateRegistry,
     protected AssetQueryStringInterface $assetQueryString,
     protected ?DatabaseUpdate $databaseUpdate = NULL,
     protected ?UpdateHookRegistry $updateHookRegistry = NULL,
   ) {
-    $this->root = $root;
-    $this->keyValueExpirableFactory = $key_value_expirable_factory;
-    $this->cache = $cache;
-    $this->state = $state;
     $this->moduleHandler = $module_handler;
-    $this->account = $account;
-    $this->bareHtmlPageRenderer = $bare_html_page_renderer;
-    $this->postUpdateRegistry = $post_update_registry;
 
     if ($this->databaseUpdate === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $databaseUpdate argument is deprecated in drupal:11.5.0 and it will be required in drupal:13.0.0. See https://www.drupal.org/node/3013060', E_USER_DEPRECATED);

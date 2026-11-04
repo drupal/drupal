@@ -11,20 +11,6 @@ use Drupal\Component\Datetime\TimeInterface;
 class ApcuBackend implements CacheBackendInterface {
 
   /**
-   * The name of the cache bin to use.
-   *
-   * @var string
-   */
-  protected $bin;
-
-  /**
-   * Prefix for all keys in the storage that belong to this site.
-   *
-   * @var string
-   */
-  protected $sitePrefix;
-
-  /**
    * Prefix for all keys in this cache bin.
    *
    * Includes the site-specific prefix in $sitePrefix.
@@ -34,33 +20,23 @@ class ApcuBackend implements CacheBackendInterface {
   protected $binPrefix;
 
   /**
-   * The cache tags checksum provider.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsChecksumInterface
-   */
-  protected $checksumProvider;
-
-  /**
    * Constructs a new ApcuBackend instance.
    *
    * @param string $bin
    *   The name of the cache bin.
-   * @param string $site_prefix
+   * @param string $sitePrefix
    *   The prefix to use for all keys in the storage that belong to this site.
-   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksum_provider
+   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksumProvider
    *   The cache tags checksum provider.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
    */
   public function __construct(
-    $bin,
-    $site_prefix,
-    CacheTagsChecksumInterface $checksum_provider,
+    protected $bin,
+    protected $sitePrefix,
+    protected CacheTagsChecksumInterface $checksumProvider,
     protected TimeInterface $time,
   ) {
-    $this->bin = $bin;
-    $this->sitePrefix = $site_prefix;
-    $this->checksumProvider = $checksum_provider;
     $this->binPrefix = $this->sitePrefix . '::' . $this->bin . '::';
   }
 

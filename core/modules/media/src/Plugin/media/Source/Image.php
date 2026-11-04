@@ -44,20 +44,6 @@ class Image extends File {
   const METADATA_ATTRIBUTE_HEIGHT = 'height';
 
   /**
-   * The image factory service.
-   *
-   * @var \Drupal\Core\Image\ImageFactory
-   */
-  protected $imageFactory;
-
-  /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
    * Constructs a new class instance.
    *
    * @param array $configuration
@@ -74,16 +60,23 @@ class Image extends File {
    *   The field type plugin manager service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
-   * @param \Drupal\Core\Image\ImageFactory $image_factory
+   * @param \Drupal\Core\Image\ImageFactory $imageFactory
    *   The image factory.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, FieldTypePluginManagerInterface $field_type_manager, ConfigFactoryInterface $config_factory, ImageFactory $image_factory, FileSystemInterface $file_system) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
+    EntityFieldManagerInterface $entity_field_manager,
+    FieldTypePluginManagerInterface $field_type_manager,
+    ConfigFactoryInterface $config_factory,
+    protected ImageFactory $imageFactory,
+    protected FileSystemInterface $fileSystem,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $entity_field_manager, $field_type_manager, $config_factory);
-
-    $this->imageFactory = $image_factory;
-    $this->fileSystem = $file_system;
   }
 
   /**

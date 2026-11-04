@@ -21,40 +21,20 @@ use Drupal\node\NodeInterface;
 class NodeController extends ControllerBase implements ContainerInjectionInterface {
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
    * Constructs a NodeController object.
    *
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
    */
-  public function __construct(DateFormatterInterface $date_formatter, RendererInterface $renderer, EntityRepositoryInterface $entity_repository) {
-    $this->dateFormatter = $date_formatter;
-    $this->renderer = $renderer;
-    $this->entityRepository = $entity_repository;
+  public function __construct(
+    protected DateFormatterInterface $dateFormatter,
+    protected RendererInterface $renderer,
+    protected EntityRepositoryInterface $entityRepository,
+  ) {
   }
 
   /**

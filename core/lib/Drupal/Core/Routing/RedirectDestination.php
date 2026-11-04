@@ -11,20 +11,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class RedirectDestination implements RedirectDestinationInterface {
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The URL generator.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
-
-  /**
    * The destination used by the current request.
    *
    * @var string
@@ -34,14 +20,15 @@ class RedirectDestination implements RedirectDestinationInterface {
   /**
    * Constructs a new RedirectDestination instance.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $urlGenerator
    *   The URL generator.
    */
-  public function __construct(RequestStack $request_stack, UrlGeneratorInterface $url_generator) {
-    $this->requestStack = $request_stack;
-    $this->urlGenerator = $url_generator;
+  public function __construct(
+    protected RequestStack $requestStack,
+    protected UrlGeneratorInterface $urlGenerator,
+  ) {
   }
 
   /**

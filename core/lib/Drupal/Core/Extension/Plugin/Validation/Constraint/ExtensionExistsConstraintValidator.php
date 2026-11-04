@@ -17,30 +17,17 @@ use Symfony\Component\Validator\ConstraintValidator;
 class ExtensionExistsConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected ModuleHandlerInterface $moduleHandler;
-
-  /**
-   * The theme handler service.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected ThemeHandlerInterface $themeHandler;
-
-  /**
    * Constructs a ExtensionExistsConstraintValidator object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler service.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
-    $this->moduleHandler = $module_handler;
-    $this->themeHandler = $theme_handler;
+  public function __construct(
+    protected ModuleHandlerInterface $moduleHandler,
+    protected ThemeHandlerInterface $themeHandler,
+  ) {
   }
 
   /**

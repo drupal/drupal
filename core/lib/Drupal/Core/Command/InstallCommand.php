@@ -30,21 +30,15 @@ class InstallCommand extends Command {
   use StringTranslationTrait;
 
   /**
-   * The class loader.
-   *
-   * @var object
-   */
-  protected $classLoader;
-
-  /**
    * Constructs a new InstallCommand command.
    *
-   * @param object $class_loader
+   * @param object $classLoader
    *   The class loader.
    */
-  public function __construct($class_loader) {
+  public function __construct(
+    protected $classLoader,
+  ) {
     parent::__construct('install');
-    $this->classLoader = $class_loader;
   }
 
   /**

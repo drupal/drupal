@@ -21,25 +21,11 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
   use LayoutEntityHelperTrait;
 
   /**
-   * Inline block usage tracking service.
-   *
-   * @var \Drupal\layout_builder\InlineBlockUsageInterface
-   */
-  protected $usage;
-
-  /**
    * The block content storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $blockContentStorage;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
 
   /**
    * Constructs a new EntityOperations object.
@@ -51,10 +37,12 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
    * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
    *   The section storage manager.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, InlineBlockUsageInterface $usage, SectionStorageManagerInterface $section_storage_manager) {
-    $this->entityTypeManager = $entityTypeManager;
-    $this->blockContentStorage = $entityTypeManager->getStorage('block_content');
-    $this->usage = $usage;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected InlineBlockUsageInterface $usage,
+    SectionStorageManagerInterface $section_storage_manager,
+  ) {
+    $this->blockContentStorage = $this->entityTypeManager->getStorage('block_content');
     $this->sectionStorageManager = $section_storage_manager;
   }
 

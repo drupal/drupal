@@ -10,13 +10,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class MemoryBackend implements FloodInterface, PrefixFloodInterface {
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * An array holding flood events, keyed by event name and identifier.
    *
    * @var array
@@ -26,11 +19,12 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
   /**
    * Construct the MemoryBackend.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack used to retrieve the current request.
    */
-  public function __construct(RequestStack $request_stack) {
-    $this->requestStack = $request_stack;
+  public function __construct(
+    protected RequestStack $requestStack,
+  ) {
   }
 
   /**

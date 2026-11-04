@@ -26,58 +26,26 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
   use StringTranslationTrait;
 
   /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity type bundle info.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  /**
-   * The entity type repository.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeRepositoryInterface
-   */
-  protected $entityTypeRepository;
-
-  /**
    * Constructs new FieldBlockDeriver.
    *
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entityTypeBundleInfo
    *   The entity type bundle info.
-   * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface $entity_type_repository
+   * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface $entityTypeRepository
    *   The entity type repository.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    */
   public function __construct(
-    EntityFieldManagerInterface $entity_field_manager,
-    EntityTypeManagerInterface $entity_type_manager,
-    EntityTypeBundleInfoInterface $entity_type_bundle_info,
-    EntityTypeRepositoryInterface $entity_type_repository,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+    protected EntityTypeRepositoryInterface $entityTypeRepository,
     protected ModuleHandlerInterface $moduleHandler,
   ) {
-    $this->entityFieldManager = $entity_field_manager;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
-    $this->entityTypeRepository = $entity_type_repository;
   }
 
   /**

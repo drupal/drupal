@@ -21,34 +21,20 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class RecursiveValidator implements ValidatorInterface {
 
   /**
-   * @var \Symfony\Component\Validator\Context\ExecutionContextFactoryInterface
-   */
-  protected $contextFactory;
-
-  /**
-   * @var \Symfony\Component\Validator\ConstraintValidatorFactoryInterface
-   */
-  protected $constraintValidatorFactory;
-
-  /**
-   * @var \Drupal\Core\TypedData\TypedDataManager
-   */
-  protected $typedDataManager;
-
-  /**
    * Creates a new validator.
    *
-   * @param \Symfony\Component\Validator\Context\ExecutionContextFactoryInterface $context_factory
+   * @param \Symfony\Component\Validator\Context\ExecutionContextFactoryInterface $contextFactory
    *   The factory for creating new contexts.
-   * @param \Symfony\Component\Validator\ConstraintValidatorFactoryInterface $validator_factory
+   * @param \Symfony\Component\Validator\ConstraintValidatorFactoryInterface $constraintValidatorFactory
    *   The constraint validator factory.
-   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
+   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
    *   The typed data manager.
    */
-  public function __construct(ExecutionContextFactoryInterface $context_factory, ConstraintValidatorFactoryInterface $validator_factory, TypedDataManagerInterface $typed_data_manager) {
-    $this->contextFactory = $context_factory;
-    $this->constraintValidatorFactory = $validator_factory;
-    $this->typedDataManager = $typed_data_manager;
+  public function __construct(
+    protected ExecutionContextFactoryInterface $contextFactory,
+    protected ConstraintValidatorFactoryInterface $constraintValidatorFactory,
+    protected TypedDataManagerInterface $typedDataManager,
+  ) {
   }
 
   /**

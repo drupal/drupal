@@ -17,20 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CommentTypeDeleteForm extends EntityDeleteForm {
 
   /**
-   * The comment manager service.
-   *
-   * @var \Drupal\comment\CommentManagerInterface
-   */
-  protected $commentManager;
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * The entity being used by this form.
    *
    * @var \Drupal\comment\CommentTypeInterface
@@ -40,14 +26,15 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
   /**
    * Constructs a query factory object.
    *
-   * @param \Drupal\comment\CommentManagerInterface $comment_manager
+   * @param \Drupal\comment\CommentManagerInterface $commentManager
    *   The comment manager service.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */
-  public function __construct(CommentManagerInterface $comment_manager, LoggerInterface $logger) {
-    $this->commentManager = $comment_manager;
-    $this->logger = $logger;
+  public function __construct(
+    protected CommentManagerInterface $commentManager,
+    protected LoggerInterface $logger,
+  ) {
   }
 
   /**

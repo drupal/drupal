@@ -19,20 +19,6 @@ use Drupal\content_moderation\ModerationInformationInterface;
 class ModerationOptOutPublish extends PublishAction implements ContainerFactoryPluginInterface {
 
   /**
-   * Moderation information service.
-   *
-   * @var \Drupal\content_moderation\ModerationInformationInterface
-   */
-  protected $moderationInfo;
-
-  /**
-   * Bundle info service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $bundleInfo;
-
-  /**
    * Messenger service.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
@@ -50,17 +36,23 @@ class ModerationOptOutPublish extends PublishAction implements ContainerFactoryP
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_info
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInfo
    *   The moderation information service.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundleInfo
    *   Bundle info service.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   Messenger service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, ModerationInformationInterface $moderation_info, EntityTypeBundleInfoInterface $bundle_info, MessengerInterface $messenger) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
+    protected ModerationInformationInterface $moderationInfo,
+    protected EntityTypeBundleInfoInterface $bundleInfo,
+    MessengerInterface $messenger,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager);
-    $this->moderationInfo = $moderation_info;
-    $this->bundleInfo = $bundle_info;
     $this->messenger = $messenger;
   }
 

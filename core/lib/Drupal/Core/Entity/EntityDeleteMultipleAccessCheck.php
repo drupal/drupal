@@ -14,13 +14,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class EntityDeleteMultipleAccessCheck implements AccessInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The tempstore service.
    *
    * @var \Drupal\Core\TempStore\PrivateTempStore
@@ -28,26 +21,21 @@ class EntityDeleteMultipleAccessCheck implements AccessInterface {
   protected $tempStore;
 
   /**
-   * Request stack service.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * Constructs a new EntityDeleteMultipleAccessCheck.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, PrivateTempStoreFactory $temp_store_factory, RequestStack $request_stack) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    PrivateTempStoreFactory $temp_store_factory,
+    protected RequestStack $requestStack,
+  ) {
     $this->tempStore = $temp_store_factory->get('entity_delete_multiple_confirm');
-    $this->requestStack = $request_stack;
   }
 
   /**

@@ -50,11 +50,6 @@ class Query extends QueryBase implements QueryInterface {
   protected $sqlGroupBy = [];
 
   /**
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a query object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -67,9 +62,13 @@ class Query extends QueryBase implements QueryInterface {
    * @param array $namespaces
    *   List of potential namespaces of the classes belonging to this query.
    */
-  public function __construct(EntityTypeInterface $entity_type, $conjunction, Connection $connection, array $namespaces) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    $conjunction,
+    protected Connection $connection,
+    array $namespaces,
+  ) {
     parent::__construct($entity_type, $conjunction, $namespaces);
-    $this->connection = $connection;
   }
 
   /**

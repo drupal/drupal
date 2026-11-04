@@ -65,20 +65,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityConfigBase extends Entity {
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Construct a new entity.
    *
    * @param array $configuration
@@ -93,15 +79,22 @@ class EntityConfigBase extends Entity {
    *   The storage for this entity type.
    * @param array $bundles
    *   The list of bundles this entity type has.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles, LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    MigrationInterface $migration,
+    EntityStorageInterface $storage,
+    array $bundles,
+    protected LanguageManagerInterface $languageManager,
+    protected ConfigFactoryInterface $configFactory,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $storage, $bundles);
-    $this->languageManager = $language_manager;
-    $this->configFactory = $config_factory;
   }
 
   /**

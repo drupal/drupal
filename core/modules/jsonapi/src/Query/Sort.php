@@ -45,13 +45,6 @@ class Sort {
   const LANGUAGE_KEY = 'langcode';
 
   /**
-   * The fields on which to sort.
-   *
-   * @var array
-   */
-  protected $fields;
-
-  /**
    * Constructs a new Sort object.
    *
    * Takes an array of sort fields. Example:
@@ -70,8 +63,9 @@ class Sort {
    * @param array $fields
    *   The entity query sort fields.
    */
-  public function __construct(array $fields) {
-    $this->fields = $fields;
+  public function __construct(
+    protected array $fields,
+  ) {
   }
 
   /**

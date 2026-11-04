@@ -13,21 +13,14 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 class TestLazyPluginCollection extends LazyPluginCollection {
 
   /**
-   * Stores the plugin manager used by this collection.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $manager;
-
-  /**
    * Constructs a TestLazyPluginCollection object.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
    *   The plugin manager that handles test plugins.
    */
-  public function __construct(PluginManagerInterface $manager) {
-    $this->manager = $manager;
-
+  public function __construct(
+    protected PluginManagerInterface $manager,
+  ) {
     $instance_ids = array_keys($this->manager->getDefinitions());
     $this->instanceIds = array_combine($instance_ids, $instance_ids);
   }

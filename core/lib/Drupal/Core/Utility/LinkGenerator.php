@@ -20,40 +20,20 @@ use Drupal\Core\Url;
 class LinkGenerator implements LinkGeneratorInterface {
 
   /**
-   * The URL generator.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
-
-  /**
-   * The module handler firing the route_link alter hook.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a LinkGenerator instance.
    *
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $urlGenerator
    *   The URL generator.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
-  public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler, RendererInterface $renderer) {
-    $this->urlGenerator = $url_generator;
-    $this->moduleHandler = $module_handler;
-    $this->renderer = $renderer;
+  public function __construct(
+    protected UrlGeneratorInterface $urlGenerator,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected RendererInterface $renderer,
+  ) {
   }
 
   /**

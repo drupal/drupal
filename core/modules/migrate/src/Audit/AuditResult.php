@@ -11,13 +11,6 @@ use Drupal\migrate\Plugin\MigrationInterface;
 class AuditResult implements MarkupInterface, \Countable {
 
   /**
-   * The audited migration.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
    * The result of the audit (TRUE if passed, FALSE otherwise).
    *
    * @var bool
@@ -41,11 +34,14 @@ class AuditResult implements MarkupInterface, \Countable {
    * @param string[] $reasons
    *   (optional) The reasons why the migration passed or failed the audit.
    */
-  public function __construct(MigrationInterface $migration, $status, array $reasons = []) {
+  public function __construct(
+    protected MigrationInterface $migration,
+    $status,
+    array $reasons = [],
+  ) {
     if (!is_bool($status)) {
       throw new \InvalidArgumentException('Audit results must have a boolean status.');
     }
-    $this->migration = $migration;
     $this->status = $status;
     array_walk($reasons, [$this, 'addReason']);
   }

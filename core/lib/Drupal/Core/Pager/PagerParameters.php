@@ -13,20 +13,14 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class PagerParameters implements PagerParametersInterface {
 
   /**
-   * The HTTP request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * Construct a PagerManager object.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The current HTTP request stack.
    */
-  public function __construct(RequestStack $stack) {
-    $this->requestStack = $stack;
+  public function __construct(
+    protected RequestStack $requestStack,
+  ) {
   }
 
   /**

@@ -19,13 +19,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
 
   /**
-   * The module handler to invoke the alter hook.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Holds arrays of breadcrumb builders, keyed by priority.
    *
    * @var array
@@ -44,11 +37,12 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
   /**
    * Constructs a \Drupal\Core\Breadcrumb\BreadcrumbManager object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    */
-  public function __construct(ModuleHandlerInterface $module_handler) {
-    $this->moduleHandler = $module_handler;
+  public function __construct(
+    protected ModuleHandlerInterface $moduleHandler,
+  ) {
   }
 
   /**

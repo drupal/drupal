@@ -18,30 +18,17 @@ use Symfony\Component\Routing\Route;
 class ContentTranslationManageAccessCheck implements AccessInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * Constructs a ContentTranslationManageAccessCheck object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->languageManager = $language_manager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected LanguageManagerInterface $languageManager,
+  ) {
   }
 
   /**

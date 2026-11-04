@@ -14,25 +14,19 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 class PhpTransliteration extends BaseTransliteration {
 
   /**
-   * The module handler to execute the transliteration_overrides alter hook.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs a PhpTransliteration object.
    *
    * @param string|null $data_directory
    *   The directory where data files reside. If NULL, defaults to subdirectory
    *   'data' underneath the directory where the class's PHP file resides.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler to execute the transliteration_overrides alter hook.
    */
-  public function __construct($data_directory, ModuleHandlerInterface $module_handler) {
+  public function __construct(
+    $data_directory,
+    protected ModuleHandlerInterface $moduleHandler,
+  ) {
     parent::__construct($data_directory);
-
-    $this->moduleHandler = $module_handler;
   }
 
   /**

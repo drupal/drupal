@@ -16,40 +16,20 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class FileUrlGenerator implements FileUrlGeneratorInterface {
 
   /**
-   * The stream wrapper manager.
-   *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
-   */
-  protected $streamWrapperManager;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs a new file URL generator object.
    *
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
    *   The stream wrapper manager.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    */
-  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, RequestStack $request_stack, ModuleHandlerInterface $module_handler) {
-    $this->streamWrapperManager = $stream_wrapper_manager;
-    $this->requestStack = $request_stack;
-    $this->moduleHandler = $module_handler;
+  public function __construct(
+    protected StreamWrapperManagerInterface $streamWrapperManager,
+    protected RequestStack $requestStack,
+    protected ModuleHandlerInterface $moduleHandler,
+  ) {
   }
 
   /**

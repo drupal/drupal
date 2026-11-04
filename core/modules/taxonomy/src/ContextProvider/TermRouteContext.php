@@ -19,20 +19,14 @@ class TermRouteContext implements ContextProviderInterface {
   use StringTranslationTrait;
 
   /**
-   * The route match object.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
    * Constructs a new TermRouteContext.
    *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The route match object.
    */
-  public function __construct(RouteMatchInterface $route_match) {
-    $this->routeMatch = $route_match;
+  public function __construct(
+    protected RouteMatchInterface $routeMatch,
+  ) {
   }
 
   /**

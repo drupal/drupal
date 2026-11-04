@@ -19,13 +19,6 @@ class QueueFactory {
   protected $queues = [];
 
   /**
-   * The settings object.
-   *
-   * @var \Drupal\Core\Site\Settings
-   */
-  protected $settings;
-
-  /**
    * Constructs QueueFactory object.
    *
    * @param \Drupal\Core\Site\Settings $settings
@@ -34,11 +27,10 @@ class QueueFactory {
    *   A service locator that contains the queue services.
    */
   public function __construct(
-    Settings $settings,
+    protected Settings $settings,
     #[AutowireLocator('queue_factory')]
     protected ContainerInterface $container,
   ) {
-    $this->settings = $settings;
   }
 
   /**

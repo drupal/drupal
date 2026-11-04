@@ -12,20 +12,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class PathProcessorFront implements InboundPathProcessorInterface {
 
   /**
-   * A config factory for retrieving required config settings.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $config;
-
-  /**
    * Constructs a PathProcessorFront object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   A config factory for retrieving the site front page configuration.
    */
-  public function __construct(ConfigFactoryInterface $config) {
-    $this->config = $config;
+  public function __construct(
+    protected ConfigFactoryInterface $config,
+  ) {
   }
 
   /**

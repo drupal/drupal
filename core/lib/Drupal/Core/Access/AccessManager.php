@@ -19,61 +19,28 @@ use Drupal\Core\Routing\RouteObjectInterface;
  * @see \Drupal\Tests\Core\Access\AccessManagerTest
  */
 class AccessManager implements AccessManagerInterface {
-  /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The paramconverter manager.
-   *
-   * @var \Drupal\Core\ParamConverter\ParamConverterManagerInterface
-   */
-  protected $paramConverterManager;
-
-  /**
-   * The access arguments resolver.
-   *
-   * @var \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface
-   */
-  protected $argumentsResolverFactory;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The check provider.
-   *
-   * @var \Drupal\Core\Access\CheckProviderInterface
-   */
-  protected $checkProvider;
 
   /**
    * Constructs an AccessManager instance.
    *
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
-   * @param \Drupal\Core\ParamConverter\ParamConverterManagerInterface $paramconverter_manager
+   * @param \Drupal\Core\ParamConverter\ParamConverterManagerInterface $paramConverterManager
    *   The param converter manager.
-   * @param \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface $arguments_resolver_factory
+   * @param \Drupal\Core\Access\AccessArgumentsResolverFactoryInterface $argumentsResolverFactory
    *   The access arguments resolver.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
-   * @param CheckProviderInterface $check_provider
+   * @param CheckProviderInterface $checkProvider
    *   The check access provider.
    */
-  public function __construct(RouteProviderInterface $route_provider, ParamConverterManagerInterface $paramconverter_manager, AccessArgumentsResolverFactoryInterface $arguments_resolver_factory, AccountInterface $current_user, CheckProviderInterface $check_provider) {
-    $this->routeProvider = $route_provider;
-    $this->paramConverterManager = $paramconverter_manager;
-    $this->argumentsResolverFactory = $arguments_resolver_factory;
-    $this->currentUser = $current_user;
-    $this->checkProvider = $check_provider;
+  public function __construct(
+    protected RouteProviderInterface $routeProvider,
+    protected ParamConverterManagerInterface $paramConverterManager,
+    protected AccessArgumentsResolverFactoryInterface $argumentsResolverFactory,
+    protected AccountInterface $currentUser,
+    protected CheckProviderInterface $checkProvider,
+  ) {
   }
 
   /**

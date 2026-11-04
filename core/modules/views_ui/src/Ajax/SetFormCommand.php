@@ -12,20 +12,14 @@ use Drupal\Core\Ajax\CommandInterface;
 class SetFormCommand implements CommandInterface {
 
   /**
-   * The URL of the form.
-   *
-   * @var string
-   */
-  protected $url;
-
-  /**
    * Constructs a SetFormCommand object.
    *
    * @param string $url
    *   The URL of the form.
    */
-  public function __construct($url) {
-    $this->url = $url;
+  public function __construct(
+    protected $url,
+  ) {
   }
 
   /**

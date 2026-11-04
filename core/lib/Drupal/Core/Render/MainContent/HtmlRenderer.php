@@ -35,91 +35,35 @@ use Symfony\Component\HttpFoundation\Request;
 class HtmlRenderer implements MainContentRendererInterface {
 
   /**
-   * The title resolver.
-   *
-   * @var \Drupal\Core\Controller\TitleResolverInterface
-   */
-  protected $titleResolver;
-
-  /**
-   * The display variant manager.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $displayVariantManager;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The render cache service.
-   *
-   * @var \Drupal\Core\Render\RenderCacheInterface
-   */
-  protected $renderCache;
-
-  /**
-   * The renderer configuration array.
-   *
-   * @var array
-   *
-   * @see sites/default/default.services.yml
-   */
-  protected $rendererConfig;
-
-  /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
    * Constructs a new HtmlRenderer.
    *
-   * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
+   * @param \Drupal\Core\Controller\TitleResolverInterface $titleResolver
    *   The title resolver.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $display_variant_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $displayVariantManager
    *   The display variant manager.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\Core\Render\RenderCacheInterface $render_cache
+   * @param \Drupal\Core\Render\RenderCacheInterface $renderCache
    *   The render cache service.
-   * @param array $renderer_config
+   * @param array $rendererConfig
    *   The renderer configuration array.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
    *   The theme manager.
    */
-  public function __construct(TitleResolverInterface $title_resolver, PluginManagerInterface $display_variant_manager, EventDispatcherInterface $event_dispatcher, ModuleHandlerInterface $module_handler, RendererInterface $renderer, RenderCacheInterface $render_cache, array $renderer_config, ThemeManagerInterface $theme_manager) {
-    $this->titleResolver = $title_resolver;
-    $this->displayVariantManager = $display_variant_manager;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->moduleHandler = $module_handler;
-    $this->renderer = $renderer;
-    $this->renderCache = $render_cache;
-    $this->rendererConfig = $renderer_config;
-    $this->themeManager = $theme_manager;
+  public function __construct(
+    protected TitleResolverInterface $titleResolver,
+    protected PluginManagerInterface $displayVariantManager,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected RendererInterface $renderer,
+    protected RenderCacheInterface $renderCache,
+    protected array $rendererConfig,
+    protected ThemeManagerInterface $themeManager,
+  ) {
   }
 
   /**

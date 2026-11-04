@@ -1118,11 +1118,6 @@ class MockService {
   /**
    * @var string
    */
-  protected $someParameter;
-
-  /**
-   * @var string
-   */
   protected $someOtherParameter;
 
   /**
@@ -1135,15 +1130,17 @@ class MockService {
    *
    * @param object $some_other_service
    *   (optional) Another injected service.
-   * @param string $some_parameter
+   * @param string $someParameter
    *   (optional) An injected parameter.
    */
-  public function __construct($some_other_service = NULL, $some_parameter = NULL) {
+  public function __construct(
+    $some_other_service = NULL,
+    protected $someParameter = NULL,
+  ) {
     if (is_array($some_other_service)) {
       $some_other_service = $some_other_service[0];
     }
     $this->someOtherService = $some_other_service;
-    $this->someParameter = $some_parameter;
   }
 
   /**

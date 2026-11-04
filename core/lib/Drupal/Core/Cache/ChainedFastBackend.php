@@ -60,20 +60,6 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
   protected $bin;
 
   /**
-   * The consistent cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $consistentBackend;
-
-  /**
-   * The fast cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $fastBackend;
-
-  /**
    * The time at which the last write to this cache bin happened.
    *
    * @var float
@@ -83,16 +69,18 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
   /**
    * Constructs a ChainedFastBackend object.
    *
-   * @param \Drupal\Core\Cache\CacheBackendInterface $consistent_backend
+   * @param \Drupal\Core\Cache\CacheBackendInterface $consistentBackend
    *   The consistent cache backend.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $fast_backend
+   * @param \Drupal\Core\Cache\CacheBackendInterface $fastBackend
    *   The fast cache backend.
    * @param string $bin
    *   The cache bin for which the object is created.
    */
-  public function __construct(CacheBackendInterface $consistent_backend, CacheBackendInterface $fast_backend, $bin) {
-    $this->consistentBackend = $consistent_backend;
-    $this->fastBackend = $fast_backend;
+  public function __construct(
+    protected CacheBackendInterface $consistentBackend,
+    protected CacheBackendInterface $fastBackend,
+    $bin,
+  ) {
     $this->bin = 'cache_' . $bin;
     $this->lastWriteTimestamp = NULL;
   }

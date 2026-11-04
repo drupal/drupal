@@ -20,13 +20,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class AuthenticationSubscriber implements EventSubscriberInterface {
 
   /**
-   * Authentication provider.
-   *
-   * @var \Drupal\Core\Authentication\AuthenticationProviderInterface
-   */
-  protected $authenticationProvider;
-
-  /**
    * Authentication provider filter.
    *
    * @var \Drupal\Core\Authentication\AuthenticationProviderFilterInterface|null
@@ -41,25 +34,19 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
   protected $challengeProvider;
 
   /**
-   * Account proxy.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected $accountProxy;
-
-  /**
    * Constructs an authentication subscriber.
    *
-   * @param \Drupal\Core\Authentication\AuthenticationProviderInterface $authentication_provider
+   * @param \Drupal\Core\Authentication\AuthenticationProviderInterface $authenticationProvider
    *   An authentication provider.
-   * @param \Drupal\Core\Session\AccountProxyInterface $account_proxy
+   * @param \Drupal\Core\Session\AccountProxyInterface $accountProxy
    *   Account proxy.
    */
-  public function __construct(AuthenticationProviderInterface $authentication_provider, AccountProxyInterface $account_proxy) {
-    $this->authenticationProvider = $authentication_provider;
-    $this->filter = ($authentication_provider instanceof AuthenticationProviderFilterInterface) ? $authentication_provider : NULL;
-    $this->challengeProvider = ($authentication_provider instanceof AuthenticationProviderChallengeInterface) ? $authentication_provider : NULL;
-    $this->accountProxy = $account_proxy;
+  public function __construct(
+    protected AuthenticationProviderInterface $authenticationProvider,
+    protected AccountProxyInterface $accountProxy,
+  ) {
+    $this->filter = ($this->authenticationProvider instanceof AuthenticationProviderFilterInterface) ? $this->authenticationProvider : NULL;
+    $this->challengeProvider = ($this->authenticationProvider instanceof AuthenticationProviderChallengeInterface) ? $this->authenticationProvider : NULL;
   }
 
   /**

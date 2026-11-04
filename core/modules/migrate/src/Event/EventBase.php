@@ -12,20 +12,6 @@ use Drupal\Component\EventDispatcher\Event;
 class EventBase extends Event {
 
   /**
-   * The migration.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
-   * The current message service.
-   *
-   * @var \Drupal\migrate\MigrateMessageInterface
-   */
-  protected $message;
-
-  /**
    * Constructs a Migrate event object.
    *
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
@@ -33,9 +19,10 @@ class EventBase extends Event {
    * @param \Drupal\migrate\MigrateMessageInterface $message
    *   The Migrate message service.
    */
-  public function __construct(MigrationInterface $migration, MigrateMessageInterface $message) {
-    $this->migration = $migration;
-    $this->message = $message;
+  public function __construct(
+    protected MigrationInterface $migration,
+    protected MigrateMessageInterface $message,
+  ) {
   }
 
   /**

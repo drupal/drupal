@@ -26,13 +26,6 @@ class LanguageManager implements LanguageManagerInterface {
   protected $languages = [];
 
   /**
-   * The default language object.
-   *
-   * @var \Drupal\Core\Language\LanguageDefault
-   */
-  protected $defaultLanguage;
-
-  /**
    * Information about all defined language types.
    */
   protected array $definedLanguageTypesInfo;
@@ -40,11 +33,12 @@ class LanguageManager implements LanguageManagerInterface {
   /**
    * Constructs the language manager.
    *
-   * @param \Drupal\Core\Language\LanguageDefault $default_language
+   * @param \Drupal\Core\Language\LanguageDefault $defaultLanguage
    *   The default language.
    */
-  public function __construct(LanguageDefault $default_language) {
-    $this->defaultLanguage = $default_language;
+  public function __construct(
+    protected LanguageDefault $defaultLanguage,
+  ) {
   }
 
   /**

@@ -16,20 +16,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SwitchToLiveForm extends ConfirmFormBase implements ContainerInjectionInterface, WorkspaceSafeFormInterface {
 
   /**
-   * The workspace manager.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
    * Constructs a new SwitchToLiveForm.
    *
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager.
    */
-  public function __construct(WorkspaceManagerInterface $workspace_manager) {
-    $this->workspaceManager = $workspace_manager;
+  public function __construct(
+    protected WorkspaceManagerInterface $workspaceManager,
+  ) {
   }
 
   /**

@@ -15,27 +15,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class ReplicaKillSwitch implements EventSubscriberInterface {
 
   /**
-   * The settings object.
-   *
-   * @var \Drupal\Core\Site\Settings
-   */
-  protected $settings;
-
-  /**
-   * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected $time;
-
-  /**
-   * The session.
-   *
-   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
-   */
-  protected $session;
-
-  /**
    * Constructs a ReplicaKillSwitch object.
    *
    * @param \Drupal\Core\Site\Settings $settings
@@ -45,10 +24,11 @@ class ReplicaKillSwitch implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
    *   The session.
    */
-  public function __construct(Settings $settings, TimeInterface $time, SessionInterface $session) {
-    $this->settings = $settings;
-    $this->time = $time;
-    $this->session = $session;
+  public function __construct(
+    protected Settings $settings,
+    protected TimeInterface $time,
+    protected SessionInterface $session,
+  ) {
   }
 
   /**

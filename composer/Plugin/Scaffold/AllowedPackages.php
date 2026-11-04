@@ -18,27 +18,6 @@ use Composer\Package\PackageInterface;
 class AllowedPackages implements PostPackageEventListenerInterface {
 
   /**
-   * The Composer service.
-   *
-   * @var \Composer\Composer
-   */
-  protected $composer;
-
-  /**
-   * Composer's I/O service.
-   *
-   * @var \Composer\IO\IOInterface
-   */
-  protected $io;
-
-  /**
-   * Manager of the options in the top-level composer.json's 'extra' section.
-   *
-   * @var \Drupal\Composer\Plugin\Scaffold\ManageOptions
-   */
-  protected $manageOptions;
-
-  /**
    * The list of new packages added by this Composer command.
    *
    * @var array
@@ -52,13 +31,14 @@ class AllowedPackages implements PostPackageEventListenerInterface {
    *   The composer object.
    * @param \Composer\IO\IOInterface $io
    *   IOInterface to write to.
-   * @param \Drupal\Composer\Plugin\Scaffold\ManageOptions $manage_options
+   * @param \Drupal\Composer\Plugin\Scaffold\ManageOptions $manageOptions
    *   Manager of the options in the top-level composer.json's 'extra' section.
    */
-  public function __construct(Composer $composer, IOInterface $io, ManageOptions $manage_options) {
-    $this->composer = $composer;
-    $this->io = $io;
-    $this->manageOptions = $manage_options;
+  public function __construct(
+    protected Composer $composer,
+    protected IOInterface $io,
+    protected ManageOptions $manageOptions,
+  ) {
   }
 
   /**

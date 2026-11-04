@@ -23,40 +23,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MediaTypeForm extends EntityForm {
 
   /**
-   * Media source plugin manager.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $sourceManager;
-
-  /**
-   * Entity field manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * Entity display repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
-   */
-  protected $entityDisplayRepository;
-
-  /**
    * Constructs a new class instance.
    *
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $source_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $sourceManager
    *   Media source plugin manager.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   Entity field manager service.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entityDisplayRepository
    *   Entity display repository service.
    */
-  public function __construct(PluginManagerInterface $source_manager, EntityFieldManagerInterface $entity_field_manager, EntityDisplayRepositoryInterface $entityDisplayRepository) {
-    $this->sourceManager = $source_manager;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->entityDisplayRepository = $entityDisplayRepository;
+  public function __construct(
+    protected PluginManagerInterface $sourceManager,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected EntityDisplayRepositoryInterface $entityDisplayRepository,
+  ) {
   }
 
   /**

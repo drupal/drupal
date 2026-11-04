@@ -11,20 +11,14 @@ use Drupal\Core\Language\LanguageManagerInterface;
 class LanguagesCacheContext implements CalculatedCacheContextInterface {
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * Constructs a new LanguagesCacheContext service.
    *
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    */
-  public function __construct(LanguageManagerInterface $language_manager) {
-    $this->languageManager = $language_manager;
+  public function __construct(
+    protected LanguageManagerInterface $languageManager,
+  ) {
   }
 
   /**

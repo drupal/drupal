@@ -10,20 +10,6 @@ namespace Drupal\Composer\Plugin\Scaffold;
 class Interpolator {
 
   /**
-   * The character sequence that identifies the start of a token.
-   *
-   * @var string
-   */
-  protected $startToken;
-
-  /**
-   * The character sequence that identifies the end of a token.
-   *
-   * @var string
-   */
-  protected $endToken;
-
-  /**
    * The associative array of replacements.
    *
    * @var array
@@ -33,14 +19,15 @@ class Interpolator {
   /**
    * Interpolator constructor.
    *
-   * @param string $start_token
+   * @param string $startToken
    *   The start marker for a token, e.g. '['.
-   * @param string $end_token
+   * @param string $endToken
    *   The end marker for a token, e.g. ']'.
    */
-  public function __construct($start_token = '\\[', $end_token = '\\]') {
-    $this->startToken = $start_token;
-    $this->endToken = $end_token;
+  public function __construct(
+    protected $startToken = '\\[',
+    protected $endToken = '\\]',
+  ) {
   }
 
   /**

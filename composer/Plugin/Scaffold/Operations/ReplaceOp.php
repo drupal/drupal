@@ -20,31 +20,18 @@ class ReplaceOp extends AbstractOperation {
   const ID = 'replace';
 
   /**
-   * The relative path to the source file.
-   *
-   * @var \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath
-   */
-  protected $source;
-
-  /**
-   * Whether to overwrite existing files.
-   *
-   * @var bool
-   */
-  protected $overwrite;
-
-  /**
    * Constructs a ReplaceOp.
    *
-   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $sourcePath
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $source
    *   The relative path to the source file.
    * @param bool $overwrite
    *   Whether to allow this scaffold file to overwrite files already at
    *   the destination. Defaults to TRUE.
    */
-  public function __construct(ScaffoldFilePath $sourcePath, $overwrite = TRUE) {
-    $this->source = $sourcePath;
-    $this->overwrite = $overwrite;
+  public function __construct(
+    protected ScaffoldFilePath $source,
+    protected $overwrite = TRUE,
+  ) {
   }
 
   /**

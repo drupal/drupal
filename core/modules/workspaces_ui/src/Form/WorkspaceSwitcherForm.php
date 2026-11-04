@@ -18,13 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WorkspaceSwitcherForm extends FormBase implements WorkspaceSafeFormInterface {
 
   /**
-   * The workspace manager.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
    * The workspace entity storage handler.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -39,29 +32,25 @@ class WorkspaceSwitcherForm extends FormBase implements WorkspaceSafeFormInterfa
   protected $messenger;
 
   /**
-   * The entity reference selection plugin manager.
-   *
-   * @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface
-   */
-  protected $selectionManager;
-
-  /**
    * Constructs a new WorkspaceSwitcherForm.
    *
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
-   * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface $selection_manager
+   * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface $selectionManager
    *   The entity reference selection plugin manager.
    */
-  public function __construct(WorkspaceManagerInterface $workspace_manager, EntityTypeManagerInterface $entity_type_manager, MessengerInterface $messenger, SelectionPluginManagerInterface $selection_manager) {
-    $this->workspaceManager = $workspace_manager;
+  public function __construct(
+    protected WorkspaceManagerInterface $workspaceManager,
+    EntityTypeManagerInterface $entity_type_manager,
+    MessengerInterface $messenger,
+    protected SelectionPluginManagerInterface $selectionManager,
+  ) {
     $this->workspaceStorage = $entity_type_manager->getStorage('workspace');
     $this->messenger = $messenger;
-    $this->selectionManager = $selection_manager;
   }
 
   /**

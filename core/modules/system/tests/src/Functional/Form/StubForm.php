@@ -15,30 +15,17 @@ use Drupal\Core\Form\FormStateInterface;
 class StubForm extends FormBase {
 
   /**
-   * The form array.
-   *
-   * @var array
-   */
-  protected $form;
-
-  /**
-   * The form ID.
-   *
-   * @var string
-   */
-  protected $formId;
-
-  /**
    * Constructs a StubForm.
    *
-   * @param string $form_id
+   * @param string $formId
    *   The form ID.
    * @param array $form
    *   The form array.
    */
-  public function __construct($form_id, $form) {
-    $this->formId = $form_id;
-    $this->form = $form;
+  public function __construct(
+    protected $formId,
+    protected $form,
+  ) {
   }
 
   /**

@@ -16,37 +16,21 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
 
   /**
-   * A request stack object.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The outbound path processor.
-   *
-   * @var \Drupal\Core\PathProcessor\OutboundPathProcessorInterface
-   */
-  protected $pathProcessor;
-
-  /**
    * Constructs a new unroutedUrlAssembler object.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   A request stack object.
-   * @param \Drupal\Core\PathProcessor\OutboundPathProcessorInterface $path_processor
+   * @param \Drupal\Core\PathProcessor\OutboundPathProcessorInterface $pathProcessor
    *   The output path processor.
    * @param string[] $filter_protocols
    *   (optional) An array of protocols allowed for URL generation.
    */
   public function __construct(
-    RequestStack $request_stack,
-    OutboundPathProcessorInterface $path_processor,
+    protected RequestStack $requestStack,
+    protected OutboundPathProcessorInterface $pathProcessor,
     array $filter_protocols = ['http', 'https'],
   ) {
     UrlHelper::setAllowedProtocols($filter_protocols);
-    $this->requestStack = $request_stack;
-    $this->pathProcessor = $path_processor;
   }
 
   /**

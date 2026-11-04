@@ -15,30 +15,17 @@ use Symfony\Component\Serializer\SerializerInterface;
 class DefaultExceptionSubscriber extends HttpExceptionSubscriberBase {
 
   /**
-   * The serializer.
-   *
-   * @var \Symfony\Component\Serializer\Serializer
-   */
-  protected $serializer;
-
-  /**
-   * The available serialization formats.
-   *
-   * @var array
-   */
-  protected $serializerFormats = [];
-
-  /**
    * DefaultExceptionSubscriber constructor.
    *
    * @param \Symfony\Component\Serializer\SerializerInterface $serializer
    *   The serializer service.
-   * @param array $serializer_formats
+   * @param array $serializerFormats
    *   The available serialization formats.
    */
-  public function __construct(SerializerInterface $serializer, array $serializer_formats) {
-    $this->serializer = $serializer;
-    $this->serializerFormats = $serializer_formats;
+  public function __construct(
+    protected SerializerInterface $serializer,
+    protected array $serializerFormats,
+  ) {
   }
 
   /**

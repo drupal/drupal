@@ -22,13 +22,6 @@ use Symfony\Component\Routing\RouteCollection;
 class ContentModerationRouteSubscriber extends RouteSubscriberBase {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * An associative array of moderated entity types keyed by ID.
    *
    * @var \Drupal\Core\Entity\ContentEntityTypeInterface[]
@@ -38,11 +31,12 @@ class ContentModerationRouteSubscriber extends RouteSubscriberBase {
   /**
    * ContentModerationRouteSubscriber constructor.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
   }
 
   /**

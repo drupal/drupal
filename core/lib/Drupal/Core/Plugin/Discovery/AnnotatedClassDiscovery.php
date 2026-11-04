@@ -31,19 +31,12 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
   protected $namespaceSuffix = '';
 
   /**
-   * A list of base namespaces with their PSR-4 directories.
-   *
-   * @var \Traversable
-   */
-  protected $rootNamespacesIterator;
-
-  /**
    * Constructs an AnnotatedClassDiscovery object.
    *
    * @param string $subdir
    *   Either the plugin's subdirectory, for example 'Plugin/views/filter', or
    *   empty string if plugins are located at the top level of the namespace.
-   * @param \Traversable $root_namespaces
+   * @param \Traversable $rootNamespacesIterator
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations.
    *   If $subdir is not an empty string, it will be appended to each namespace.
@@ -53,7 +46,12 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
    * @param string[] $annotation_namespaces
    *   (optional) Additional namespaces to scan for annotation definitions.
    */
-  public function __construct($subdir, \Traversable $root_namespaces, $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin', array $annotation_namespaces = []) {
+  public function __construct(
+    $subdir,
+    protected \Traversable $rootNamespacesIterator,
+    $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin',
+    array $annotation_namespaces = [],
+  ) {
     if ($subdir) {
       // Prepend a directory separator to $subdir,
       // if it does not already have one.
@@ -63,7 +61,6 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
       $this->directorySuffix = $subdir;
       $this->namespaceSuffix = str_replace('/', '\\', $subdir);
     }
-    $this->rootNamespacesIterator = $root_namespaces;
     $plugin_namespaces = [];
     parent::__construct($plugin_namespaces, $plugin_definition_annotation_name, $annotation_namespaces);
   }

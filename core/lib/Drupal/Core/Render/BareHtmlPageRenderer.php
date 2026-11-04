@@ -11,36 +11,20 @@ use Drupal\Core\Extension\ThemeSettingsProvider;
 class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
 
   /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\Renderer
-   */
-  protected $renderer;
-
-  /**
-   * The HTML response attachments processor service.
-   *
-   * @var \Drupal\Core\Render\AttachmentsResponseProcessorInterface
-   */
-  protected $htmlResponseAttachmentsProcessor;
-
-  /**
    * Constructs a new BareHtmlPageRenderer.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\Core\Render\AttachmentsResponseProcessorInterface $html_response_attachments_processor
+   * @param \Drupal\Core\Render\AttachmentsResponseProcessorInterface $htmlResponseAttachmentsProcessor
    *   The HTML response attachments processor service.
    * @param \Drupal\Core\Extension\ThemeSettingsProvider $themeSettingsProvider
    *   The theme settings provider service.
    */
   public function __construct(
-    RendererInterface $renderer,
-    AttachmentsResponseProcessorInterface $html_response_attachments_processor,
+    protected RendererInterface $renderer,
+    protected AttachmentsResponseProcessorInterface $htmlResponseAttachmentsProcessor,
     protected ThemeSettingsProvider $themeSettingsProvider,
   ) {
-    $this->renderer = $renderer;
-    $this->htmlResponseAttachmentsProcessor = $html_response_attachments_processor;
   }
 
   /**

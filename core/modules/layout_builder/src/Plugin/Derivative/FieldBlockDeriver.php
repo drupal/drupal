@@ -30,43 +30,15 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
   use LoggerChannelTrait;
 
   /**
-   * The entity type repository.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeRepositoryInterface
-   */
-  protected $entityTypeRepository;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The field type manager.
-   *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
-   */
-  protected $fieldTypeManager;
-
-  /**
-   * The formatter manager.
-   *
-   * @var \Drupal\Core\Field\FormatterPluginManager
-   */
-  protected $formatterManager;
-
-  /**
    * Constructs new FieldBlockDeriver.
    *
-   * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface $entity_type_repository
+   * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface $entityTypeRepository
    *   The entity type repository.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
-   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $fieldTypeManager
    *   The field type manager.
-   * @param \Drupal\Core\Field\FormatterPluginManager $formatter_manager
+   * @param \Drupal\Core\Field\FormatterPluginManager $formatterManager
    *   The formatter manager.
    * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $entityViewDisplayStorage
    *   The entity view display storage.
@@ -74,17 +46,13 @@ class FieldBlockDeriver extends DeriverBase implements ContainerDeriverInterface
    *   The module handler.
    */
   public function __construct(
-    EntityTypeRepositoryInterface $entity_type_repository,
-    EntityFieldManagerInterface $entity_field_manager,
-    FieldTypePluginManagerInterface $field_type_manager,
-    FormatterPluginManager $formatter_manager,
+    protected EntityTypeRepositoryInterface $entityTypeRepository,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected FieldTypePluginManagerInterface $fieldTypeManager,
+    protected FormatterPluginManager $formatterManager,
     protected ConfigEntityStorageInterface $entityViewDisplayStorage,
     protected ModuleHandlerInterface $moduleHandler,
   ) {
-    $this->entityTypeRepository = $entity_type_repository;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->fieldTypeManager = $field_type_manager;
-    $this->formatterManager = $formatter_manager;
   }
 
   /**

@@ -46,34 +46,6 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
   protected $block;
 
   /**
-   * The layout tempstore repository.
-   *
-   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
-   */
-  protected $layoutTempstoreRepository;
-
-  /**
-   * The block manager.
-   *
-   * @var \Drupal\Core\Block\BlockManagerInterface
-   */
-  protected $blockManager;
-
-  /**
-   * The UUID generator.
-   *
-   * @var \Drupal\Component\Uuid\UuidInterface
-   */
-  protected $uuidGenerator;
-
-  /**
-   * The plugin form manager.
-   *
-   * @var \Drupal\Core\Plugin\PluginFormFactoryInterface
-   */
-  protected $pluginFormFactory;
-
-  /**
    * The field delta.
    *
    * @var int
@@ -104,23 +76,25 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
   /**
    * Constructs a new block form.
    *
-   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
+   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layoutTempstoreRepository
    *   The layout tempstore repository.
    * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
    *   The context repository.
-   * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
+   * @param \Drupal\Core\Block\BlockManagerInterface $blockManager
    *   The block manager.
-   * @param \Drupal\Component\Uuid\UuidInterface $uuid
+   * @param \Drupal\Component\Uuid\UuidInterface $uuidGenerator
    *   The UUID generator.
-   * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $plugin_form_manager
+   * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $pluginFormFactory
    *   The plugin form manager.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, ContextRepositoryInterface $context_repository, BlockManagerInterface $block_manager, UuidInterface $uuid, PluginFormFactoryInterface $plugin_form_manager) {
-    $this->layoutTempstoreRepository = $layout_tempstore_repository;
+  public function __construct(
+    protected LayoutTempstoreRepositoryInterface $layoutTempstoreRepository,
+    ContextRepositoryInterface $context_repository,
+    protected BlockManagerInterface $blockManager,
+    protected UuidInterface $uuidGenerator,
+    protected PluginFormFactoryInterface $pluginFormFactory,
+  ) {
     $this->contextRepository = $context_repository;
-    $this->blockManager = $block_manager;
-    $this->uuidGenerator = $uuid;
-    $this->pluginFormFactory = $plugin_form_manager;
   }
 
   /**

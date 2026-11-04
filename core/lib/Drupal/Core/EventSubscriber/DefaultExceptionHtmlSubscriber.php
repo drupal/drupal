@@ -18,50 +18,23 @@ use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
 
   /**
-   * The HTTP kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $httpKernel;
-
-  /**
-   * The logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The redirect destination service.
-   *
-   * @var \Drupal\Core\Routing\RedirectDestinationInterface
-   */
-  protected $redirectDestination;
-
-  /**
-   * A router implementation which does not check access.
-   *
-   * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface
-   */
-  protected $accessUnawareRouter;
-
-  /**
    * Constructs a new DefaultExceptionHtmlSubscriber.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   The HTTP kernel.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger service.
-   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
+   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirectDestination
    *   The redirect destination service.
-   * @param \Symfony\Component\Routing\Matcher\UrlMatcherInterface $access_unaware_router
+   * @param \Symfony\Component\Routing\Matcher\UrlMatcherInterface $accessUnawareRouter
    *   A router implementation which does not check access.
    */
-  public function __construct(HttpKernelInterface $http_kernel, LoggerInterface $logger, RedirectDestinationInterface $redirect_destination, UrlMatcherInterface $access_unaware_router) {
-    $this->httpKernel = $http_kernel;
-    $this->logger = $logger;
-    $this->redirectDestination = $redirect_destination;
-    $this->accessUnawareRouter = $access_unaware_router;
+  public function __construct(
+    protected HttpKernelInterface $httpKernel,
+    protected LoggerInterface $logger,
+    protected RedirectDestinationInterface $redirectDestination,
+    protected UrlMatcherInterface $accessUnawareRouter,
+  ) {
   }
 
   /**

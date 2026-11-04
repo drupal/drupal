@@ -16,30 +16,17 @@ use Symfony\Component\HttpFoundation\Request;
 class AjaxRenderer implements MainContentRendererInterface {
 
   /**
-   * The element info manager.
-   *
-   * @var \Drupal\Core\Render\ElementInfoManagerInterface
-   */
-  protected $elementInfoManager;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a new AjaxRenderer instance.
    *
-   * @param \Drupal\Core\Render\ElementInfoManagerInterface $element_info_manager
+   * @param \Drupal\Core\Render\ElementInfoManagerInterface $elementInfoManager
    *   The element info manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(ElementInfoManagerInterface $element_info_manager, RendererInterface $renderer) {
-    $this->elementInfoManager = $element_info_manager;
-    $this->renderer = $renderer;
+  public function __construct(
+    protected ElementInfoManagerInterface $elementInfoManager,
+    protected RendererInterface $renderer,
+  ) {
   }
 
   /**

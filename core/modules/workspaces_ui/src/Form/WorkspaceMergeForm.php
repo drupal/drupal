@@ -34,30 +34,17 @@ class WorkspaceMergeForm extends ConfirmFormBase implements ContainerInjectionIn
   protected $targetWorkspace;
 
   /**
-   * The workspace operation factory.
-   *
-   * @var \Drupal\workspaces\WorkspaceOperationFactory
-   */
-  protected $workspaceOperationFactory;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a new WorkspaceMergeForm.
    *
-   * @param \Drupal\workspaces\WorkspaceOperationFactory $workspace_operation_factory
+   * @param \Drupal\workspaces\WorkspaceOperationFactory $workspaceOperationFactory
    *   The workspace operation factory service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(WorkspaceOperationFactory $workspace_operation_factory, EntityTypeManagerInterface $entity_type_manager) {
-    $this->workspaceOperationFactory = $workspace_operation_factory;
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected WorkspaceOperationFactory $workspaceOperationFactory,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
   }
 
   /**

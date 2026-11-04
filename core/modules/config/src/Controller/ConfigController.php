@@ -25,62 +25,6 @@ class ConfigController implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   /**
-   * The target storage.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $targetStorage;
-
-  /**
-   * The sync storage.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $syncStorage;
-
-  /**
-   * The import transformer service.
-   *
-   * @var \Drupal\Core\Config\ImportStorageTransformer
-   */
-  protected $importTransformer;
-
-  /**
-   * The configuration manager.
-   *
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
-   * The export storage.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $exportStorage;
-
-  /**
-   * The file download controller.
-   *
-   * @var \Drupal\system\FileDownloadController
-   */
-  protected $fileDownloadController;
-
-  /**
-   * The diff formatter.
-   *
-   * @var \Drupal\Core\Diff\DiffFormatter
-   */
-  protected $diffFormatter;
-
-  /**
-   * The file system.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -99,32 +43,33 @@ class ConfigController implements ContainerInjectionInterface {
   /**
    * Constructs a ConfigController object.
    *
-   * @param \Drupal\Core\Config\StorageInterface $target_storage
+   * @param \Drupal\Core\Config\StorageInterface $targetStorage
    *   The target storage.
-   * @param \Drupal\Core\Config\StorageInterface $sync_storage
+   * @param \Drupal\Core\Config\StorageInterface $syncStorage
    *   The sync storage.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
    *   The config manager.
-   * @param \Drupal\system\FileDownloadController $file_download_controller
+   * @param \Drupal\system\FileDownloadController $fileDownloadController
    *   The file download controller.
-   * @param \Drupal\Core\Diff\DiffFormatter $diff_formatter
+   * @param \Drupal\Core\Diff\DiffFormatter $diffFormatter
    *   The diff formatter.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system.
-   * @param \Drupal\Core\Config\StorageInterface $export_storage
+   * @param \Drupal\Core\Config\StorageInterface $exportStorage
    *   The export storage.
-   * @param \Drupal\Core\Config\ImportStorageTransformer $import_transformer
+   * @param \Drupal\Core\Config\ImportStorageTransformer $importTransformer
    *   The import transformer service.
    */
-  public function __construct(StorageInterface $target_storage, StorageInterface $sync_storage, ConfigManagerInterface $config_manager, FileDownloadController $file_download_controller, DiffFormatter $diff_formatter, FileSystemInterface $file_system, StorageInterface $export_storage, ImportStorageTransformer $import_transformer) {
-    $this->targetStorage = $target_storage;
-    $this->syncStorage = $sync_storage;
-    $this->configManager = $config_manager;
-    $this->fileDownloadController = $file_download_controller;
-    $this->diffFormatter = $diff_formatter;
-    $this->fileSystem = $file_system;
-    $this->exportStorage = $export_storage;
-    $this->importTransformer = $import_transformer;
+  public function __construct(
+    protected StorageInterface $targetStorage,
+    protected StorageInterface $syncStorage,
+    protected ConfigManagerInterface $configManager,
+    protected FileDownloadController $fileDownloadController,
+    protected DiffFormatter $diffFormatter,
+    protected FileSystemInterface $fileSystem,
+    protected StorageInterface $exportStorage,
+    protected ImportStorageTransformer $importTransformer,
+  ) {
   }
 
   /**

@@ -15,40 +15,20 @@ use Drupal\Core\Theme\ThemeNegotiatorInterface;
 class MenuTestController extends ControllerBase {
 
   /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
-   * The theme negotiator.
-   *
-   * @var \Drupal\Core\Theme\ThemeNegotiatorInterface
-   */
-  protected $themeNegotiator;
-
-  /**
-   * The active route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
    * Constructs the MenuTestController object.
    *
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
    *   The theme manager.
-   * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $theme_negotiator
+   * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $themeNegotiator
    *   The theme negotiator.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The current route match.
    */
-  public function __construct(ThemeManagerInterface $theme_manager, ThemeNegotiatorInterface $theme_negotiator, RouteMatchInterface $route_match) {
-    $this->themeManager = $theme_manager;
-    $this->themeNegotiator = $theme_negotiator;
-    $this->routeMatch = $route_match;
+  public function __construct(
+    protected ThemeManagerInterface $themeManager,
+    protected ThemeNegotiatorInterface $themeNegotiator,
+    protected RouteMatchInterface $routeMatch,
+  ) {
   }
 
   /**

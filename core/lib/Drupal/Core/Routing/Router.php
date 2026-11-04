@@ -40,13 +40,6 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   private array $deprecatedProperties = ['urlGenerator' => 'url_generator'];
 
   /**
-   * The route provider responsible for the first-pass match.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
    * The list of available enhancers.
    *
    * @var \Drupal\Core\Routing\EnhancerInterface[]
@@ -63,14 +56,16 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   /**
    * Constructs a new Router.
    *
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path
    *   The current path stack.
    */
-  public function __construct(RouteProviderInterface $route_provider, CurrentPathStack $current_path) {
+  public function __construct(
+    protected RouteProviderInterface $routeProvider,
+    CurrentPathStack $current_path,
+  ) {
     parent::__construct($current_path);
-    $this->routeProvider = $route_provider;
   }
 
   /**

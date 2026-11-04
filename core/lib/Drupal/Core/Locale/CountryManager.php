@@ -10,13 +10,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 class CountryManager implements CountryManagerInterface {
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * An array of country code => country name pairs.
    *
    * @var string[][]
@@ -26,11 +19,12 @@ class CountryManager implements CountryManagerInterface {
   /**
    * Constructor.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    */
-  public function __construct(ModuleHandlerInterface $module_handler) {
-    $this->moduleHandler = $module_handler;
+  public function __construct(
+    protected ModuleHandlerInterface $moduleHandler,
+  ) {
   }
 
   /**

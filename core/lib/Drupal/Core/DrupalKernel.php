@@ -128,13 +128,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $container;
 
   /**
-   * The environment, e.g. 'testing', 'install'.
-   *
-   * @var string
-   */
-  protected $environment;
-
-  /**
    * Whether the kernel has been booted.
    *
    * @var bool
@@ -180,27 +173,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected array $themeExtensions = [];
 
-
-  /**
-   * The class loader object.
-   *
-   * @var \Composer\Autoload\ClassLoader
-   */
-  protected $classLoader;
-
   /**
    * Config storage object used for reading enabled modules configuration.
    *
    * @var \Drupal\Core\Config\StorageInterface
    */
   protected $configStorage;
-
-  /**
-   * Whether the container can be dumped.
-   *
-   * @var bool
-   */
-  protected $allowDumping;
 
   /**
    * Whether the container needs to be rebuilt the next time it is initialized.
@@ -316,20 +294,22 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @param string $environment
    *   String indicating the environment, e.g. 'prod' or 'dev'.
-   * @param \Composer\Autoload\ClassLoader $class_loader
+   * @param \Composer\Autoload\ClassLoader $classLoader
    *   The class loader. Normally \Composer\Autoload\ClassLoader, as included by
    *   the front controller, but may also be decorated.
-   * @param bool $allow_dumping
+   * @param bool $allowDumping
    *   (optional) FALSE to stop the container from being written to or read
    *   from disk. Defaults to TRUE.
    * @param string $app_root
    *   (optional) The path to the application root as a string. If not supplied,
    *   the application root will be computed.
    */
-  public function __construct($environment, $class_loader, $allow_dumping = TRUE, $app_root = NULL) {
-    $this->environment = $environment;
-    $this->classLoader = $class_loader;
-    $this->allowDumping = $allow_dumping;
+  public function __construct(
+    protected $environment,
+    protected $classLoader,
+    protected $allowDumping = TRUE,
+    $app_root = NULL,
+  ) {
     if ($app_root === NULL) {
       $app_root = static::guessApplicationRoot();
     }

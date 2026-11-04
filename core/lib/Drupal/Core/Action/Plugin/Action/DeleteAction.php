@@ -27,13 +27,6 @@ class DeleteAction extends EntityActionBase {
   protected $tempStore;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Constructs a new DeleteAction object.
    *
    * @param array $configuration
@@ -46,11 +39,17 @@ class DeleteAction extends EntityActionBase {
    *   The entity type manager.
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   Current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, PrivateTempStoreFactory $temp_store_factory, AccountInterface $current_user) {
-    $this->currentUser = $current_user;
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
+    PrivateTempStoreFactory $temp_store_factory,
+    protected AccountInterface $currentUser,
+  ) {
     $this->tempStore = $temp_store_factory->get('entity_delete_multiple_confirm');
 
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager);

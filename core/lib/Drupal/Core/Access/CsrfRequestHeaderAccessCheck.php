@@ -18,30 +18,17 @@ class CsrfRequestHeaderAccessCheck implements AccessInterface {
   const TOKEN_KEY = 'X-CSRF-Token request header';
 
   /**
-   * The session configuration.
-   *
-   * @var \Drupal\Core\Session\SessionConfigurationInterface
-   */
-  protected $sessionConfiguration;
-
-  /**
-   * The token generator.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfToken;
-
-  /**
    * Constructs a new rest CSRF access check.
    *
-   * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
+   * @param \Drupal\Core\Session\SessionConfigurationInterface $sessionConfiguration
    *   The session configuration.
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrfToken
    *   The token generator.
    */
-  public function __construct(SessionConfigurationInterface $session_configuration, CsrfTokenGenerator $csrf_token) {
-    $this->sessionConfiguration = $session_configuration;
-    $this->csrfToken = $csrf_token;
+  public function __construct(
+    protected SessionConfigurationInterface $sessionConfiguration,
+    protected CsrfTokenGenerator $csrfToken,
+  ) {
   }
 
   /**

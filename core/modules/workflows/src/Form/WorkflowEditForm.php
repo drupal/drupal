@@ -21,20 +21,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WorkflowEditForm extends EntityForm {
 
   /**
-   * The plugin form factory.
-   *
-   * @var \Drupal\Core\Plugin\PluginFormFactoryInterface
-   */
-  protected $pluginFormFactory;
-
-  /**
    * Creates an instance of WorkflowStateEditForm.
    *
    * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $pluginFormFactory
    *   The plugin form factory.
    */
-  public function __construct(PluginFormFactoryInterface $pluginFormFactory) {
-    $this->pluginFormFactory = $pluginFormFactory;
+  public function __construct(
+    protected PluginFormFactoryInterface $pluginFormFactory,
+  ) {
   }
 
   /**

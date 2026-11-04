@@ -11,20 +11,6 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 class Row {
 
   /**
-   * The actual values of the source row.
-   *
-   * @var array
-   */
-  protected $source = [];
-
-  /**
-   * The source identifiers.
-   *
-   * @var array
-   */
-  protected $sourceIds = [];
-
-  /**
    * The destination values.
    *
    * @var array
@@ -71,13 +57,6 @@ class Row {
   protected $rawDestination = [];
 
   /**
-   * TRUE when this row is a stub.
-   *
-   * @var bool
-   */
-  protected $isStub = FALSE;
-
-  /**
    * The empty destination properties.
    *
    * @var array
@@ -87,22 +66,23 @@ class Row {
   /**
    * Constructs a \Drupal\migrate\Row object.
    *
-   * @param array $values
+   * @param array $source
    *   An array of values to add as properties on the object.
-   * @param array $source_ids
+   * @param array $sourceIds
    *   An array containing the IDs of the source using the keys as the field
    *   names.
-   * @param bool $is_stub
+   * @param bool $isStub
    *   TRUE if the row being created is a stub.
    *
    * @throws \InvalidArgumentException
    *   Thrown when a source ID property does not exist.
    */
-  public function __construct(array $values = [], array $source_ids = [], $is_stub = FALSE) {
-    $this->source = $values;
-    $this->sourceIds = $source_ids;
-    $this->isStub = $is_stub;
-    foreach (array_keys($source_ids) as $id) {
+  public function __construct(
+    protected array $source = [],
+    protected array $sourceIds = [],
+    protected $isStub = FALSE,
+  ) {
+    foreach (array_keys($this->sourceIds) as $id) {
       if (!$this->hasSourceProperty($id)) {
         throw new \InvalidArgumentException("'$id' is defined as a source ID but has no value.");
       }

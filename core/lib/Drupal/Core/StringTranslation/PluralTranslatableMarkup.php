@@ -10,13 +10,6 @@ use Drupal\Component\Gettext\PoItem;
 class PluralTranslatableMarkup extends TranslatableMarkup {
 
   /**
-   * The item count to display.
-   *
-   * @var numeric
-   */
-  protected $count;
-
-  /**
    * The already translated string.
    *
    * @var string
@@ -53,8 +46,14 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
    *
    * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
    */
-  public function __construct($count, $singular, $plural, array $args = [], array $options = [], ?TranslationInterface $string_translation = NULL) {
-    $this->count = $count;
+  public function __construct(
+    protected $count,
+    $singular,
+    $plural,
+    array $args = [],
+    array $options = [],
+    ?TranslationInterface $string_translation = NULL,
+  ) {
     $translatable_string = implode(PoItem::DELIMITER, [$singular, $plural]);
     parent::__construct($translatable_string, $args, $options, $string_translation);
   }

@@ -26,20 +26,6 @@ class WorkspaceDeleteForm extends ContentEntityDeleteForm {
   protected $entity;
 
   /**
-   * The workspace tracker service.
-   *
-   * @var \Drupal\workspaces\WorkspaceTrackerInterface
-   */
-  protected $workspaceTracker;
-
-  /**
-   * The workspace repository service.
-   *
-   * @var \Drupal\workspaces\WorkspaceRepositoryInterface
-   */
-  protected $workspaceRepository;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -57,20 +43,24 @@ class WorkspaceDeleteForm extends ContentEntityDeleteForm {
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository service.
-   * @param \Drupal\workspaces\WorkspaceTrackerInterface $workspace_tracker
+   * @param \Drupal\workspaces\WorkspaceTrackerInterface $workspaceTracker
    *   The workspace tracker service to check how many revisions will be
    *   deleted.
-   * @param \Drupal\workspaces\WorkspaceRepositoryInterface $workspace_repository
+   * @param \Drupal\workspaces\WorkspaceRepositoryInterface $workspaceRepository
    *   The workspace repository service.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, WorkspaceTrackerInterface $workspace_tracker, WorkspaceRepositoryInterface $workspace_repository, ?EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, ?TimeInterface $time = NULL) {
+  public function __construct(
+    EntityRepositoryInterface $entity_repository,
+    protected WorkspaceTrackerInterface $workspaceTracker,
+    protected WorkspaceRepositoryInterface $workspaceRepository,
+    ?EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
+    ?TimeInterface $time = NULL,
+  ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
-    $this->workspaceTracker = $workspace_tracker;
-    $this->workspaceRepository = $workspace_repository;
   }
 
   /**

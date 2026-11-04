@@ -10,13 +10,6 @@ use Drupal\Core\ImageToolkit\ImageToolkitManager;
 class ImageFactory {
 
   /**
-   * The image toolkit plugin manager.
-   *
-   * @var \Drupal\Core\ImageToolkit\ImageToolkitManager
-   */
-  protected $toolkitManager;
-
-  /**
    * The image toolkit ID to use for this factory.
    *
    * @var string
@@ -26,11 +19,12 @@ class ImageFactory {
   /**
    * Constructs a new ImageFactory object.
    *
-   * @param \Drupal\Core\ImageToolkit\ImageToolkitManager $toolkit_manager
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitManager $toolkitManager
    *   The image toolkit plugin manager.
    */
-  public function __construct(ImageToolkitManager $toolkit_manager) {
-    $this->toolkitManager = $toolkit_manager;
+  public function __construct(
+    protected ImageToolkitManager $toolkitManager,
+  ) {
   }
 
   /**

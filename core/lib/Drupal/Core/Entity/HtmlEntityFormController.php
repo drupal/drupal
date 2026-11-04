@@ -13,25 +13,21 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 class HtmlEntityFormController extends FormController {
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a new \Drupal\Core\Routing\Enhancer\FormEnhancer object.
    *
    * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
    *   The argument resolver.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
    *   The form builder.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
    */
-  public function __construct(ArgumentResolverInterface $argument_resolver, FormBuilderInterface $form_builder, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    ArgumentResolverInterface $argument_resolver,
+    FormBuilderInterface $form_builder,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
     parent::__construct($argument_resolver, $form_builder);
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

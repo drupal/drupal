@@ -14,20 +14,14 @@ use Symfony\Component\HttpFoundation\Request;
 class BrokenInboundPathProcessor implements InboundPathProcessorInterface {
 
   /**
-   * The state.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Constructs a new BrokenInboundPathProcessor instance.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state.
    */
-  public function __construct(StateInterface $state) {
-    $this->state = $state;
+  public function __construct(
+    protected StateInterface $state,
+  ) {
   }
 
   /**

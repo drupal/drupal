@@ -22,13 +22,6 @@ class MenuLinkDefault extends MenuLinkBase implements ContainerFactoryPluginInte
   ];
 
   /**
-   * The static menu link service used to store updates to weight/parent etc.
-   *
-   * @var \Drupal\Core\Menu\StaticMenuLinkOverridesInterface
-   */
-  protected $staticOverride;
-
-  /**
    * Constructs a new MenuLinkDefault.
    *
    * @param array $configuration
@@ -37,13 +30,16 @@ class MenuLinkDefault extends MenuLinkBase implements ContainerFactoryPluginInte
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Menu\StaticMenuLinkOverridesInterface $static_override
+   * @param \Drupal\Core\Menu\StaticMenuLinkOverridesInterface $staticOverride
    *   The static override storage.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, StaticMenuLinkOverridesInterface $static_override) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected StaticMenuLinkOverridesInterface $staticOverride,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->staticOverride = $static_override;
   }
 
   /**

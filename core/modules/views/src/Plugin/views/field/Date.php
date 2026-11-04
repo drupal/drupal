@@ -20,20 +20,6 @@ use Drupal\Core\Datetime\DateFormatterInterface;
 class Date extends FieldPluginBase {
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
-   * The date format storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $dateFormatStorage;
-
-  /**
    * Constructs a new Date object.
    *
    * @param array $configuration
@@ -42,9 +28,9 @@ class Date extends FieldPluginBase {
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $date_format_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $dateFormatStorage
    *   The date format storage.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
@@ -53,14 +39,11 @@ class Date extends FieldPluginBase {
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    DateFormatterInterface $date_formatter,
-    EntityStorageInterface $date_format_storage,
+    protected DateFormatterInterface $dateFormatter,
+    protected EntityStorageInterface $dateFormatStorage,
     protected TimeInterface $time,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->dateFormatter = $date_formatter;
-    $this->dateFormatStorage = $date_format_storage;
   }
 
   /**

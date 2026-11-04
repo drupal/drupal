@@ -17,27 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 class BlockContentController extends ControllerBase {
 
   /**
-   * The content block storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $blockContentStorage;
-
-  /**
-   * The content block type storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $blockContentTypeStorage;
-
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -52,17 +31,18 @@ class BlockContentController extends ControllerBase {
   /**
    * Constructs a BlockContent object.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $block_content_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $blockContentStorage
    *   The content block storage.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $block_content_type_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $blockContentTypeStorage
    *   The block type storage.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
    */
-  public function __construct(EntityStorageInterface $block_content_storage, EntityStorageInterface $block_content_type_storage, ThemeHandlerInterface $theme_handler) {
-    $this->blockContentStorage = $block_content_storage;
-    $this->blockContentTypeStorage = $block_content_type_storage;
-    $this->themeHandler = $theme_handler;
+  public function __construct(
+    protected EntityStorageInterface $blockContentStorage,
+    protected EntityStorageInterface $blockContentTypeStorage,
+    protected ThemeHandlerInterface $themeHandler,
+  ) {
   }
 
   /**

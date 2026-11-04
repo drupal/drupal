@@ -20,35 +20,11 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   use DiscoveryTrait;
 
   /**
-   * The namespaces within which to find plugin classes.
-   *
-   * @var array<string, list<string>>
-   */
-  protected $pluginNamespaces;
-
-  /**
-   * The name of the annotation that contains the plugin definition.
-   *
-   * The class corresponding to this name must implement
-   * \Drupal\Component\Annotation\AnnotationInterface.
-   *
-   * @var string
-   */
-  protected $pluginDefinitionAnnotationName;
-
-  /**
    * The doctrine annotation reader.
    *
    * @var \Doctrine\Common\Annotations\Reader
    */
   protected $annotationReader;
-
-  /**
-   * Additional namespaces to be scanned for annotation classes.
-   *
-   * @var string[]
-   */
-  protected $annotationNamespaces = [];
 
   /**
    * The file cache object.
@@ -60,22 +36,22 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   /**
    * Constructs a new instance.
    *
-   * @param array<string, list<string>> $plugin_namespaces
+   * @param array<string, list<string>> $pluginNamespaces
    *   (optional) An array of namespace that may contain plugin implementations.
    *   Defaults to an empty array.
-   * @param string $plugin_definition_annotation_name
+   * @param string $pluginDefinitionAnnotationName
    *   (optional) The name of the annotation that contains the plugin
    *   definition. Defaults to 'Drupal\Component\Annotation\Plugin'.
-   * @param string[] $annotation_namespaces
+   * @param string[] $annotationNamespaces
    *   (optional) Additional namespaces to be scanned for annotation classes.
    */
-  public function __construct($plugin_namespaces = [], $plugin_definition_annotation_name = 'Drupal\Component\Annotation\Plugin', array $annotation_namespaces = []) {
-    $this->pluginNamespaces = $plugin_namespaces;
-    $this->pluginDefinitionAnnotationName = $plugin_definition_annotation_name;
-    $this->annotationNamespaces = $annotation_namespaces;
-
-    $file_cache_suffix = str_replace('\\', '_', $plugin_definition_annotation_name);
-    $file_cache_suffix .= ':' . Crypt::hashBase64(serialize($annotation_namespaces));
+  public function __construct(
+    protected $pluginNamespaces = [],
+    protected $pluginDefinitionAnnotationName = 'Drupal\Component\Annotation\Plugin',
+    protected array $annotationNamespaces = [],
+  ) {
+    $file_cache_suffix = str_replace('\\', '_', $this->pluginDefinitionAnnotationName);
+    $file_cache_suffix .= ':' . Crypt::hashBase64(serialize($this->annotationNamespaces));
     $this->fileCache = FileCacheFactory::get('annotation_discovery:' . $file_cache_suffix);
   }
 

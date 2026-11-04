@@ -25,44 +25,6 @@ namespace Drupal\Core\Menu;
 class MenuLinkTreeElement {
 
   /**
-   * The menu link for this element in a menu link tree.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkInterface
-   */
-  public $link;
-
-  /**
-   * The subtree of this element in the menu link tree (this link's children).
-   *
-   * (Children of a link are only loaded if a link is marked as "expanded" by
-   * the query.)
-   *
-   * @var \Drupal\Core\Menu\MenuLinkTreeElement[]
-   */
-  public $subtree;
-
-  /**
-   * The depth of this link relative to the root of the tree.
-   *
-   * @var int
-   */
-  public $depth;
-
-  /**
-   * Whether this link has any children at all.
-   *
-   * @var bool
-   */
-  public $hasChildren;
-
-  /**
-   * Whether this link is in the active trail.
-   *
-   * @var bool
-   */
-  public $inActiveTrail;
-
-  /**
    * Whether this link is accessible by the current user.
    *
    * If the value is NULL the access was not determined yet, if an access result
@@ -88,24 +50,24 @@ class MenuLinkTreeElement {
    *
    * @param \Drupal\Core\Menu\MenuLinkInterface $link
    *   The menu link for this element in the menu link tree.
-   * @param bool $has_children
+   * @param bool $hasChildren
    *   A flag as to whether this element has children even if they are not
    *   included in the tree (i.e. this may be TRUE even if $subtree is empty).
    * @param int $depth
    *   The depth of this element relative to the tree root.
-   * @param bool $in_active_trail
+   * @param bool $inActiveTrail
    *   A flag as to whether this link was included in the list of active trail
    *   IDs used to build the tree.
    * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $subtree
    *   The children of this element in the menu link tree.
    */
-  public function __construct(MenuLinkInterface $link, $has_children, $depth, $in_active_trail, array $subtree) {
-    // Essential properties.
-    $this->link = $link;
-    $this->hasChildren = $has_children;
-    $this->depth = $depth;
-    $this->subtree = $subtree;
-    $this->inActiveTrail = $in_active_trail;
+  public function __construct(
+    public MenuLinkInterface $link,
+    public $hasChildren,
+    public $depth,
+    public $inActiveTrail,
+    public array $subtree,
+  ) {
   }
 
   /**

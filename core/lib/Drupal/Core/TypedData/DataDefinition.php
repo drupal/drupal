@@ -10,13 +10,6 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   use TypedDataTrait;
 
   /**
-   * The array holding values for all definition keys.
-   *
-   * @var array
-   */
-  protected $definition = [];
-
-  /**
    * Creates a new data definition.
    *
    * @param string $type
@@ -40,11 +33,12 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   /**
    * Constructs a new data definition object.
    *
-   * @param array $values
+   * @param array $definition
    *   (optional) If given, an array of initial values to set on the definition.
    */
-  public function __construct(array $values = []) {
-    $this->definition = $values;
+  public function __construct(
+    protected array $definition = [],
+  ) {
   }
 
   /**

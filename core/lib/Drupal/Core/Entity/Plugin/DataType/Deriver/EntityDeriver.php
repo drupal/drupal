@@ -23,40 +23,20 @@ class EntityDeriver implements ContainerDeriverInterface {
   protected $derivatives = [];
 
   /**
-   * The base plugin ID this derivative is for.
-   *
-   * @var string
-   */
-  protected $basePluginId;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The bundle info service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $bundleInfoService;
-
-  /**
    * Constructs an EntityDeriver object.
    *
-   * @param string $base_plugin_id
+   * @param string $basePluginId
    *   The base plugin ID.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info_service
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundleInfoService
    *   The bundle info service.
    */
-  public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info_service) {
-    $this->basePluginId = $base_plugin_id;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->bundleInfoService = $bundle_info_service;
+  public function __construct(
+    protected $basePluginId,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityTypeBundleInfoInterface $bundleInfoService,
+  ) {
   }
 
   /**

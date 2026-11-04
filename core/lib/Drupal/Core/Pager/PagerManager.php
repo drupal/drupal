@@ -14,13 +14,6 @@ class PagerManager implements PagerManagerInterface {
   use DependencySerializationTrait;
 
   /**
-   * The pager parameters.
-   *
-   * @var \Drupal\Core\Pager\PagerParametersInterface
-   */
-  protected $pagerParams;
-
-  /**
    * An associative array of pagers.
    *
    * Implemented as an array consisting of:
@@ -41,11 +34,12 @@ class PagerManager implements PagerManagerInterface {
   /**
    * Construct a PagerManager object.
    *
-   * @param \Drupal\Core\Pager\PagerParametersInterface $pager_params
+   * @param \Drupal\Core\Pager\PagerParametersInterface $pagerParams
    *   The pager parameters.
    */
-  public function __construct(PagerParametersInterface $pager_params) {
-    $this->pagerParams = $pager_params;
+  public function __construct(
+    protected PagerParametersInterface $pagerParams,
+  ) {
   }
 
   /**

@@ -36,20 +36,6 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, 
   use WorkspaceSafeFormTrait;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
    * The action storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -64,25 +50,11 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, 
   protected $actions = [];
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * The messenger.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
    */
   protected $messenger;
-
-  /**
-   * The current route match service.
-   *
-   * @var \Drupal\Core\Routing\ResettableStackedRouteMatchInterface
-   */
-  protected ResettableStackedRouteMatchInterface $routeMatch;
 
   /**
    * Constructs a new BulkForm object.
@@ -93,15 +65,15 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, 
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
-   * @param \Drupal\Core\Routing\ResettableStackedRouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\ResettableStackedRouteMatchInterface $routeMatch
    *   The current route match service.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
@@ -111,21 +83,16 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, 
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager,
-    LanguageManagerInterface $language_manager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected LanguageManagerInterface $languageManager,
     MessengerInterface $messenger,
-    EntityRepositoryInterface $entity_repository,
+    protected EntityRepositoryInterface $entityRepository,
     #[Autowire(service: 'current_route_match')]
-    ResettableStackedRouteMatchInterface $route_match,
+    protected ResettableStackedRouteMatchInterface $routeMatch,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->entityTypeManager = $entity_type_manager;
-    $this->actionStorage = $entity_type_manager->getStorage('action');
-    $this->languageManager = $language_manager;
+    $this->actionStorage = $this->entityTypeManager->getStorage('action');
     $this->messenger = $messenger;
-    $this->entityRepository = $entity_repository;
-    $this->routeMatch = $route_match;
   }
 
   /**

@@ -23,24 +23,20 @@ use Symfony\Component\HttpFoundation\Response;
 class ResourceResponse extends Response {
 
   /**
-   * Response data that should be serialized.
-   *
-   * @var mixed
-   */
-  protected $responseData;
-
-  /**
    * Constructor for ResourceResponse objects.
    *
-   * @param mixed $data
+   * @param mixed $responseData
    *   Response data that should be serialized.
    * @param int $status
    *   The response status code.
    * @param array $headers
    *   An array of response headers.
    */
-  public function __construct($data = NULL, $status = 200, array $headers = []) {
-    $this->responseData = $data;
+  public function __construct(
+    protected $responseData = NULL,
+    $status = 200,
+    array $headers = [],
+  ) {
     parent::__construct('', $status, $headers);
   }
 

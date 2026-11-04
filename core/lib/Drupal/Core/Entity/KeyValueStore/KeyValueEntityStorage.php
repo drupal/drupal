@@ -30,13 +30,6 @@ class KeyValueEntityStorage extends EntityStorageBase {
   const MAX_ID_LENGTH = 128;
 
   /**
-   * The key value store.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
-   */
-  protected $keyValueStore;
-
-  /**
    * The UUID service.
    *
    * @var \Drupal\Component\Uuid\UuidInterface
@@ -44,31 +37,28 @@ class KeyValueEntityStorage extends EntityStorageBase {
   protected $uuidService;
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * Constructs a new KeyValueEntityStorage.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
-   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $key_value_store
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyValueStore
    *   The key value store.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
    *   The memory cache.
    */
-  public function __construct(EntityTypeInterface $entity_type, KeyValueStoreInterface $key_value_store, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    protected KeyValueStoreInterface $keyValueStore,
+    UuidInterface $uuid_service,
+    protected LanguageManagerInterface $languageManager,
+    MemoryCacheInterface $memory_cache,
+  ) {
     parent::__construct($entity_type, $memory_cache);
-    $this->keyValueStore = $key_value_store;
     $this->uuidService = $uuid_service;
-    $this->languageManager = $language_manager;
 
     // Check if the entity type supports UUIDs.
     $this->uuidKey = $this->entityType->getKey('uuid');

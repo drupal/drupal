@@ -11,30 +11,17 @@ use Drupal\Core\Password\PasswordInterface;
 class UserAuthentication implements UserAuthenticationInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The password hashing service.
-   *
-   * @var \Drupal\Core\Password\PasswordInterface
-   */
-  protected $passwordChecker;
-
-  /**
    * Constructs a UserAuth object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Password\PasswordInterface $password_checker
+   * @param \Drupal\Core\Password\PasswordInterface $passwordChecker
    *   The password service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, PasswordInterface $password_checker) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->passwordChecker = $password_checker;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected PasswordInterface $passwordChecker,
+  ) {
   }
 
   /**

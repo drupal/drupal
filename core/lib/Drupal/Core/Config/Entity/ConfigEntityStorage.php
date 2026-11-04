@@ -56,25 +56,11 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   protected $uuidKey = 'uuid';
 
   /**
-   * The config factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * The config storage service.
    *
    * @var \Drupal\Core\Config\StorageInterface
    */
   protected $configStorage;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
 
   /**
    * Determines if the underlying configuration is retrieved override free.
@@ -88,21 +74,24 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory service.
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
    *   The memory cache backend.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    protected ConfigFactoryInterface $configFactory,
+    UuidInterface $uuid_service,
+    protected LanguageManagerInterface $languageManager,
+    MemoryCacheInterface $memory_cache,
+  ) {
     parent::__construct($entity_type, $memory_cache);
-
-    $this->configFactory = $config_factory;
     $this->uuidService = $uuid_service;
-    $this->languageManager = $language_manager;
   }
 
   /**

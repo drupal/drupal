@@ -29,46 +29,11 @@ use Drupal\file\Upload\ManagedFileElementHelper;
 class ThemeSettingsForm extends ConfigFormBase {
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * The MIME type guesser.
-   *
-   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface
-   */
-  protected $mimeTypeGuesser;
-
-  /**
    * An array of configuration names that should be editable.
    *
    * @var array
    */
   protected $editableConfig = [];
-
-  /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
-   * The file system.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
 
   /**
    * Constructs a ThemeSettingsForm object.
@@ -77,15 +42,15 @@ class ThemeSettingsForm extends ConfigFormBase {
    *   The factory for configuration objects.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed config manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler instance to use.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
-   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
+   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mimeTypeGuesser
    *   The MIME type guesser instance to use.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
    *   The theme manager.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system.
    * @param \Drupal\Core\Extension\ThemeSettingsProvider|null $themeSettingsProvider
    *   The theme settings helper service.
@@ -93,20 +58,14 @@ class ThemeSettingsForm extends ConfigFormBase {
   public function __construct(
     ConfigFactoryInterface $config_factory,
     TypedConfigManagerInterface $typedConfigManager,
-    ModuleHandlerInterface $module_handler,
-    ThemeHandlerInterface $theme_handler,
-    $mime_type_guesser,
-    ThemeManagerInterface $theme_manager,
-    FileSystemInterface $file_system,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected ThemeHandlerInterface $themeHandler,
+    protected $mimeTypeGuesser,
+    protected ThemeManagerInterface $themeManager,
+    protected FileSystemInterface $fileSystem,
     protected ThemeSettingsProvider $themeSettingsProvider,
   ) {
     parent::__construct($config_factory, $typedConfigManager);
-
-    $this->moduleHandler = $module_handler;
-    $this->themeHandler = $theme_handler;
-    $this->mimeTypeGuesser = $mime_type_guesser;
-    $this->themeManager = $theme_manager;
-    $this->fileSystem = $file_system;
   }
 
   /**

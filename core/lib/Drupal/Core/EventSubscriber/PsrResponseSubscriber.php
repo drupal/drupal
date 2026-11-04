@@ -15,20 +15,14 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class PsrResponseSubscriber implements EventSubscriberInterface {
 
   /**
-   * The httpFoundation factory.
-   *
-   * @var \Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface
-   */
-  protected $httpFoundationFactory;
-
-  /**
    * Constructs a new PathRootsSubscriber instance.
    *
-   * @param \Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface $http_foundation_factory
+   * @param \Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface $httpFoundationFactory
    *   The httpFoundation factory.
    */
-  public function __construct(HttpFoundationFactoryInterface $http_foundation_factory) {
-    $this->httpFoundationFactory = $http_foundation_factory;
+  public function __construct(
+    protected HttpFoundationFactoryInterface $httpFoundationFactory,
+  ) {
   }
 
   /**

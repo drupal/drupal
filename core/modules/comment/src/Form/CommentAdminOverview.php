@@ -19,13 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CommentAdminOverview extends FormBase {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The comment storage.
    *
    * @var \Drupal\comment\CommentStorageInterface
@@ -33,34 +26,21 @@ class CommentAdminOverview extends FormBase {
   protected $commentStorage;
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
-   * The tempstore factory.
-   *
-   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
-   */
-  protected $tempStoreFactory;
-
-  /**
    * Creates a CommentAdminOverview form.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
-   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempStoreFactory
    *   The tempstore factory.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, DateFormatterInterface $date_formatter, PrivateTempStoreFactory $temp_store_factory) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->commentStorage = $entity_type_manager->getStorage('comment');
-    $this->dateFormatter = $date_formatter;
-    $this->tempStoreFactory = $temp_store_factory;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected DateFormatterInterface $dateFormatter,
+    protected PrivateTempStoreFactory $tempStoreFactory,
+  ) {
+    $this->commentStorage = $this->entityTypeManager->getStorage('comment');
   }
 
   /**

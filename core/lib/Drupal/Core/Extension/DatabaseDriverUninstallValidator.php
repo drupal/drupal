@@ -14,33 +14,21 @@ class DatabaseDriverUninstallValidator implements ModuleUninstallValidatorInterf
   use StringTranslationTrait;
 
   /**
-   * The module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a new DatabaseDriverUninstallValidator.
    *
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(TranslationInterface $string_translation, ModuleExtensionList $extension_list_module, Connection $connection) {
+  public function __construct(
+    TranslationInterface $string_translation,
+    protected ModuleExtensionList $moduleExtensionList,
+    protected Connection $connection,
+  ) {
     $this->stringTranslation = $string_translation;
-    $this->moduleExtensionList = $extension_list_module;
-    $this->connection = $connection;
   }
 
   /**

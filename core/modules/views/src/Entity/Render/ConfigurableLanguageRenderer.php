@@ -13,13 +13,6 @@ use Drupal\views\ViewExecutable;
 class ConfigurableLanguageRenderer extends EntityTranslationRendererBase {
 
   /**
-   * A specific language code for rendering if available.
-   *
-   * @var string|null
-   */
-  protected $langcode;
-
-  /**
    * Constructs a renderer object.
    *
    * @param \Drupal\views\ViewExecutable $view
@@ -31,9 +24,13 @@ class ConfigurableLanguageRenderer extends EntityTranslationRendererBase {
    * @param string|null $langcode
    *   A specific language code to set, if available.
    */
-  public function __construct(ViewExecutable $view, LanguageManagerInterface $language_manager, EntityTypeInterface $entity_type, $langcode) {
+  public function __construct(
+    ViewExecutable $view,
+    LanguageManagerInterface $language_manager,
+    EntityTypeInterface $entity_type,
+    protected $langcode,
+  ) {
     parent::__construct($view, $language_manager, $entity_type);
-    $this->langcode = $langcode;
   }
 
   /**

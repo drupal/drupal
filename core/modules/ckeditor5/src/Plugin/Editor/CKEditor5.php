@@ -52,34 +52,6 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The CKEditor plugin manager.
-   *
-   * @var \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface
-   */
-  protected $ckeditor5PluginManager;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * Smart default settings utility.
-   *
-   * @var \Drupal\ckeditor5\SmartDefaultSettings
-   */
-  protected $smartDefaultSettings;
-
-  /**
    * The set of configured CKEditor 5 plugins.
    *
    * @var \Drupal\ckeditor5\Plugin\CKEditor5PluginInterface[]
@@ -94,27 +66,6 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
   private $submittedEditor;
 
   /**
-   * The cache.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The ckeditor language mapper.
-   *
-   * @var \Drupal\ckeditor5\LanguageMapper
-   */
-  protected LanguageMapper $languageMapper;
-
-  /**
    * Constructs a CKEditor 5 editor plugin.
    *
    * @param array $configuration
@@ -123,13 +74,13 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface $ckeditor5_plugin_manager
+   * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface $ckeditor5PluginManager
    *   The CKEditor 5 plugin manager.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
-   * @param \Drupal\ckeditor5\SmartDefaultSettings $smart_default_settings
+   * @param \Drupal\ckeditor5\SmartDefaultSettings $smartDefaultSettings
    *   The smart default settings utility.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache.
@@ -142,24 +93,17 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    CKEditor5PluginManagerInterface $ckeditor5_plugin_manager,
-    LanguageManagerInterface $language_manager,
-    ModuleHandlerInterface $module_handler,
-    SmartDefaultSettings $smart_default_settings,
+    protected CKEditor5PluginManagerInterface $ckeditor5PluginManager,
+    protected LanguageManagerInterface $languageManager,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected SmartDefaultSettings $smartDefaultSettings,
     #[Autowire(service: 'cache.default')]
-    CacheBackendInterface $cache,
+    protected CacheBackendInterface $cache,
     #[Autowire(service: 'logger.channel.ckeditor5')]
-    LoggerInterface $logger,
-    LanguageMapper $languageMapper,
+    protected LoggerInterface $logger,
+    protected LanguageMapper $languageMapper,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->ckeditor5PluginManager = $ckeditor5_plugin_manager;
-    $this->languageManager = $language_manager;
-    $this->moduleHandler = $module_handler;
-    $this->smartDefaultSettings = $smart_default_settings;
-    $this->cache = $cache;
-    $this->logger = $logger;
-    $this->languageMapper = $languageMapper;
   }
 
   /**

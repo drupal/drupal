@@ -8,34 +8,6 @@ namespace Drupal\workflows;
 class State implements StateInterface {
 
   /**
-   * The workflow the state is attached to.
-   *
-   * @var \Drupal\workflows\WorkflowTypeInterface
-   */
-  protected $workflow;
-
-  /**
-   * The state's ID.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
-   * The state's label.
-   *
-   * @var string
-   */
-  protected $label;
-
-  /**
-   * The state's weight.
-   *
-   * @var int
-   */
-  protected $weight;
-
-  /**
    * State constructor.
    *
    * @param \Drupal\workflows\WorkflowTypeInterface $workflow
@@ -47,11 +19,12 @@ class State implements StateInterface {
    * @param int $weight
    *   The state's weight.
    */
-  public function __construct(WorkflowTypeInterface $workflow, $id, $label, $weight = 0) {
-    $this->workflow = $workflow;
-    $this->id = $id;
-    $this->label = $label;
-    $this->weight = $weight;
+  public function __construct(
+    protected WorkflowTypeInterface $workflow,
+    protected $id,
+    protected $label,
+    protected $weight = 0,
+  ) {
   }
 
   /**

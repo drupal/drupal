@@ -16,20 +16,14 @@ class SystemConfigSubscriber implements EventSubscriberInterface {
   use StringTranslationTrait;
 
   /**
-   * The router builder.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routerBuilder;
-
-  /**
    * Constructs the SystemConfigSubscriber.
    *
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $router_builder
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $routerBuilder
    *   The router builder service.
    */
-  public function __construct(RouteBuilderInterface $router_builder) {
-    $this->routerBuilder = $router_builder;
+  public function __construct(
+    protected RouteBuilderInterface $routerBuilder,
+  ) {
   }
 
   /**

@@ -24,39 +24,9 @@ final class ImportStorageTransformer {
   const LOCK_NAME = 'config_import_transformer';
 
   /**
-   * The event dispatcher to get changes to the configuration.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The drupal database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The normal lock for the duration of the request.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $requestLock;
-
-  /**
-   * The persistent lock which the config importer uses across requests.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   *
-   * @see \Drupal\Core\Config\ConfigImporter::alreadyImporting()
-   */
-  protected $persistentLock;
-
-  /**
    * ImportStorageTransformer constructor.
    *
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
@@ -65,11 +35,12 @@ final class ImportStorageTransformer {
    * @param \Drupal\Core\Lock\LockBackendInterface $persistentLock
    *   The persistent lock used by the config importer.
    */
-  public function __construct(EventDispatcherInterface $event_dispatcher, Connection $connection, LockBackendInterface $requestLock, LockBackendInterface $persistentLock) {
-    $this->eventDispatcher = $event_dispatcher;
-    $this->connection = $connection;
-    $this->requestLock = $requestLock;
-    $this->persistentLock = $persistentLock;
+  public function __construct(
+    protected EventDispatcherInterface $eventDispatcher,
+    protected Connection $connection,
+    protected LockBackendInterface $requestLock,
+    protected LockBackendInterface $persistentLock,
+  ) {
   }
 
   /**

@@ -18,20 +18,14 @@ use Composer\Util\Filesystem;
 class ManageOptions {
 
   /**
-   * The Composer service.
-   *
-   * @var \Composer\Composer
-   */
-  protected $composer;
-
-  /**
    * ManageOptions constructor.
    *
    * @param \Composer\Composer $composer
    *   The Composer service.
    */
-  public function __construct(Composer $composer) {
-    $this->composer = $composer;
+  public function __construct(
+    protected Composer $composer,
+  ) {
   }
 
   /**

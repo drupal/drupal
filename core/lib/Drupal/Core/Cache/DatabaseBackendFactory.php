@@ -13,25 +13,11 @@ use Drupal\Core\Site\Settings;
 class DatabaseBackendFactory implements CacheFactoryInterface {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The cache tags checksum provider.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsChecksumInterface
-   */
-  protected $checksumProvider;
-
-  /**
    * Constructs the DatabaseBackendFactory object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   Database connection.
-   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksum_provider
+   * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksumProvider
    *   The cache tags checksum provider.
    * @param \Drupal\Core\Site\Settings $settings
    *   (optional) The site settings.
@@ -43,14 +29,12 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
    * @throws \BadMethodCallException
    */
   public function __construct(
-    Connection $connection,
-    CacheTagsChecksumInterface $checksum_provider,
+    protected Connection $connection,
+    protected CacheTagsChecksumInterface $checksumProvider,
     protected Settings $settings,
     protected ObjectAwareSerializationInterface $serializer,
     protected TimeInterface $time,
   ) {
-    $this->connection = $connection;
-    $this->checksumProvider = $checksum_provider;
   }
 
   /**

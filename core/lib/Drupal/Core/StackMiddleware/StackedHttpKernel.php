@@ -18,13 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 class StackedHttpKernel implements HttpKernelInterface, TerminableInterface {
 
   /**
-   * The decorated kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  private $httpKernel;
-
-  /**
    * A set of middlewares that are wrapped around this kernel.
    *
    * @var iterable<\Symfony\Component\HttpKernel\HttpKernelInterface>
@@ -34,16 +27,18 @@ class StackedHttpKernel implements HttpKernelInterface, TerminableInterface {
   /**
    * Constructs a stacked HTTP kernel.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   The decorated kernel.
    * @param iterable<\Symfony\Component\HttpKernel\HttpKernelInterface> $middlewares
    *   An array of previous middleware services.
    */
-  public function __construct(HttpKernelInterface $http_kernel, iterable $middlewares) {
+  public function __construct(
+    private HttpKernelInterface $httpKernel,
+    iterable $middlewares,
+  ) {
     if (is_array($middlewares)) {
       throw new \TypeError('The middlewares argument must be a lazy iterator, ' . gettype($middlewares) . ' given.');
     }
-    $this->httpKernel = $http_kernel;
     $this->middlewares = $middlewares;
   }
 

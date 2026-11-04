@@ -20,23 +20,17 @@ class DatabaseLockBackend extends LockBackendAbstract {
   const TABLE_NAME = 'semaphore';
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
    * Constructs a new DatabaseLockBackend.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    */
-  public function __construct(Connection $database) {
+  public function __construct(
+    protected Connection $database,
+  ) {
     // __destruct() is causing problems with garbage collections, register a
     // shutdown function instead.
     drupal_register_shutdown_function([$this, 'releaseAll']);
-    $this->database = $database;
   }
 
   /**

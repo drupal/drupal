@@ -19,37 +19,9 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 class UrlGenerator implements UrlGeneratorInterface {
 
   /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $provider;
-
-  /**
    * @var RequestContext
    */
   protected $context;
-
-  /**
-   * A request stack object.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The path processor to convert the system path to one suitable for URLs.
-   *
-   * @var \Drupal\Core\PathProcessor\OutboundPathProcessorInterface
-   */
-  protected $pathProcessor;
-
-  /**
-   * The route processor.
-   *
-   * @var \Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface
-   */
-  protected $routeProcessor;
 
   /**
    * Overrides characters that will not be percent-encoded in the path segment.
@@ -78,29 +50,24 @@ class UrlGenerator implements UrlGeneratorInterface {
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $provider
    *   The route provider to be searched for routes.
-   * @param \Drupal\Core\PathProcessor\OutboundPathProcessorInterface $path_processor
+   * @param \Drupal\Core\PathProcessor\OutboundPathProcessorInterface $pathProcessor
    *   The path processor to convert the system path to one suitable for URLs.
-   * @param \Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface $route_processor
+   * @param \Drupal\Core\RouteProcessor\OutboundRouteProcessorInterface $routeProcessor
    *   The route processor.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   A request stack object.
    * @param string[] $filter_protocols
    *   (optional) An array of protocols allowed for URL generation.
    */
   public function __construct(
-    RouteProviderInterface $provider,
-    OutboundPathProcessorInterface $path_processor,
-    OutboundRouteProcessorInterface $route_processor,
-    RequestStack $request_stack,
+    protected RouteProviderInterface $provider,
+    protected OutboundPathProcessorInterface $pathProcessor,
+    protected OutboundRouteProcessorInterface $routeProcessor,
+    protected RequestStack $requestStack,
     array $filter_protocols = ['http', 'https'],
   ) {
-    $this->provider = $provider;
     $this->context = new RequestContext();
-
-    $this->pathProcessor = $path_processor;
-    $this->routeProcessor = $route_processor;
     UrlHelper::setAllowedProtocols($filter_protocols);
-    $this->requestStack = $request_stack;
   }
 
   /**

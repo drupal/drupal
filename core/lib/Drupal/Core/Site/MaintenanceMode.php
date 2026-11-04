@@ -14,30 +14,17 @@ use Drupal\Core\State\StateInterface;
 class MaintenanceMode implements MaintenanceModeInterface {
 
   /**
-   * The state.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $config;
-
-  /**
    * Constructs a new maintenance mode service.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   The config factory.
    */
-  public function __construct(StateInterface $state, ConfigFactoryInterface $config_factory) {
-    $this->state = $state;
-    $this->config = $config_factory;
+  public function __construct(
+    protected StateInterface $state,
+    protected ConfigFactoryInterface $config,
+  ) {
   }
 
   /**

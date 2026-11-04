@@ -39,13 +39,6 @@ final class Link implements CacheableDependencyInterface {
   protected $href;
 
   /**
-   * The link relation type.
-   *
-   * @var string
-   */
-  protected $rel;
-
-  /**
    * The link target attributes.
    *
    * @var string[]
@@ -65,14 +58,19 @@ final class Link implements CacheableDependencyInterface {
    *   entity on which the link will appear.
    * @param \Drupal\Core\Url $url
    *   The Url object for the link.
-   * @param string $link_relation_type
+   * @param string $rel
    *   An array of registered or extension RFC8288 link relation types.
    * @param array $target_attributes
    *   An associative array of target attributes for the link.
    *
    * @see https://tools.ietf.org/html/rfc8288#section-2.1
    */
-  public function __construct(CacheableMetadata $cacheability, Url $url, string $link_relation_type, array $target_attributes = []) {
+  public function __construct(
+    CacheableMetadata $cacheability,
+    Url $url,
+    protected string $rel,
+    array $target_attributes = [],
+  ) {
     assert(Inspector::assertAllStrings(array_keys($target_attributes)));
     assert(Inspector::assertAll(function ($target_attribute_value) {
       return is_string($target_attribute_value) || is_array($target_attribute_value);
@@ -80,7 +78,6 @@ final class Link implements CacheableDependencyInterface {
     $generated_url = $url->setAbsolute()->toString(TRUE);
     $this->href = $generated_url->getGeneratedUrl();
     $this->uri = $url;
-    $this->rel = $link_relation_type;
     $this->attributes = $target_attributes;
     $this->setCacheability($cacheability->addCacheableDependency($generated_url));
   }

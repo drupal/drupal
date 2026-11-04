@@ -43,13 +43,6 @@ abstract class DestinationBase extends PluginBase implements MigrateDestinationI
   protected $rollbackAction = MigrateIdMapInterface::ROLLBACK_DELETE;
 
   /**
-   * The migration.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
    * Constructs an entity destination plugin.
    *
    * @param array $configuration
@@ -61,9 +54,13 @@ abstract class DestinationBase extends PluginBase implements MigrateDestinationI
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected MigrationInterface $migration,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->migration = $migration;
   }
 
   /**

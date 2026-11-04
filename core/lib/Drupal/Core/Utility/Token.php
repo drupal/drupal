@@ -68,20 +68,6 @@ class Token {
   const TOKEN_INFO_CACHE_TAG = 'token_info';
 
   /**
-   * The token cache.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * Token definitions.
    *
    * @var array[]|null
@@ -94,46 +80,26 @@ class Token {
   protected $tokenInfo;
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a new class instance.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The token cache.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
    *   The cache tags invalidator.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, CacheTagsInvalidatorInterface $cache_tags_invalidator, RendererInterface $renderer) {
-    $this->cache = $cache;
-    $this->languageManager = $language_manager;
-    $this->moduleHandler = $module_handler;
-    $this->cacheTagsInvalidator = $cache_tags_invalidator;
-    $this->renderer = $renderer;
+  public function __construct(
+    protected ModuleHandlerInterface $moduleHandler,
+    protected CacheBackendInterface $cache,
+    protected LanguageManagerInterface $languageManager,
+    protected CacheTagsInvalidatorInterface $cacheTagsInvalidator,
+    protected RendererInterface $renderer,
+  ) {
   }
 
   /**

@@ -18,50 +18,23 @@ use Symfony\Component\Validator\ConstraintValidator;
 class ModerationStateConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  private $entityTypeManager;
-
-  /**
-   * The moderation info.
-   *
-   * @var \Drupal\content_moderation\ModerationInformationInterface
-   */
-  protected $moderationInformation;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The state transition validation service.
-   *
-   * @var \Drupal\content_moderation\StateTransitionValidationInterface
-   */
-  protected $stateTransitionValidation;
-
-  /**
    * Creates a new ModerationStateConstraintValidator instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInformation
    *   The moderation information.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
-   * @param \Drupal\content_moderation\StateTransitionValidationInterface $state_transition_validation
+   * @param \Drupal\content_moderation\StateTransitionValidationInterface $stateTransitionValidation
    *   The state transition validation service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModerationInformationInterface $moderation_information, AccountInterface $current_user, StateTransitionValidationInterface $state_transition_validation) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->moderationInformation = $moderation_information;
-    $this->currentUser = $current_user;
-    $this->stateTransitionValidation = $state_transition_validation;
+  public function __construct(
+    private EntityTypeManagerInterface $entityTypeManager,
+    protected ModerationInformationInterface $moderationInformation,
+    protected AccountInterface $currentUser,
+    protected StateTransitionValidationInterface $stateTransitionValidation,
+  ) {
   }
 
   /**

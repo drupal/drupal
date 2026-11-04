@@ -46,41 +46,6 @@ class ConfigImporter {
   const LOCK_NAME = 'config_importer';
 
   /**
-   * The storage comparer used to discover configuration changes.
-   *
-   * @var \Drupal\Core\Config\StorageComparerInterface
-   */
-  protected $storageComparer;
-
-  /**
-   * The event dispatcher used to notify subscribers.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The configuration manager.
-   *
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
-   * The used lock backend instance.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
-   * The typed config manager.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected $typedConfigManager;
-
-  /**
    * List of configuration file changes processed by the import().
    *
    * @var array
@@ -107,20 +72,6 @@ class ConfigImporter {
    * @var bool
    */
   protected $validated;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
 
   /**
    * Indicates if a system theme is in processing theme install and uninstalls.
@@ -155,66 +106,47 @@ class ConfigImporter {
   protected $totalConfigurationToProcess = 0;
 
   /**
-   * The module installer.
-   *
-   * @var \Drupal\Core\Extension\ModuleInstallerInterface
-   */
-  protected $moduleInstaller;
-
-  /**
-   * The module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
-   * The theme extension list.
-   *
-   * @var \Drupal\Core\Extension\ThemeExtensionList
-   */
-  protected $themeExtensionList;
-
-  /**
    * Constructs a configuration import object.
    *
-   * @param \Drupal\Core\Config\StorageComparerInterface $storage_comparer
+   * @param \Drupal\Core\Config\StorageComparerInterface $storageComparer
    *   A storage comparer object used to determine configuration changes and
    *   access the source and target storage objects.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher used to notify subscribers of config import events.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
    *   The configuration manager.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend to ensure multiple imports do not occur at the same
    *   time.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed configuration manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
-   * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
+   * @param \Drupal\Core\Extension\ModuleInstallerInterface $moduleInstaller
    *   The module installer.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
-   * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
+   * @param \Drupal\Core\Extension\ThemeExtensionList $themeExtensionList
    *   The theme extension list.
    */
-  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme) {
-    $this->moduleExtensionList = $extension_list_module;
-    $this->storageComparer = $storage_comparer;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->configManager = $config_manager;
-    $this->lock = $lock;
-    $this->typedConfigManager = $typed_config;
-    $this->moduleHandler = $module_handler;
-    $this->moduleInstaller = $module_installer;
-    $this->themeHandler = $theme_handler;
+  public function __construct(
+    protected StorageComparerInterface $storageComparer,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected ConfigManagerInterface $configManager,
+    protected LockBackendInterface $lock,
+    protected TypedConfigManagerInterface $typedConfigManager,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected ModuleInstallerInterface $moduleInstaller,
+    protected ThemeHandlerInterface $themeHandler,
+    TranslationInterface $string_translation,
+    protected ModuleExtensionList $moduleExtensionList,
+    protected ThemeExtensionList $themeExtensionList,
+  ) {
     $this->stringTranslation = $string_translation;
-    $this->themeExtensionList = $extension_list_theme;
     foreach ($this->storageComparer->getAllCollectionNames() as $collection) {
       $this->processedConfiguration[$collection] = $this->storageComparer->getEmptyChangelist();
     }

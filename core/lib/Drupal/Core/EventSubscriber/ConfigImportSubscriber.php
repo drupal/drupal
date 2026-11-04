@@ -27,25 +27,11 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
   protected $themeData;
 
   /**
-   * Module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
-
-  /**
-   * The theme extension list.
-   *
-   * @var \Drupal\Core\Extension\ThemeExtensionList
-   */
-  protected ThemeExtensionList $themeList;
-
-  /**
    * Constructs the ConfigImportSubscriber.
    *
-   * @param \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list
+   * @param \Drupal\Core\Extension\ThemeExtensionList $themeList
    *   The theme extension list.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
    * @param \Traversable $uninstallValidators
    *   The uninstall validator services.
@@ -53,14 +39,12 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
    *   The database connection.
    */
   public function __construct(
-    ThemeExtensionList $theme_extension_list,
-    ModuleExtensionList $extension_list_module,
+    protected ThemeExtensionList $themeList,
+    protected ModuleExtensionList $moduleExtensionList,
     #[AutowireIterator(tag: 'module_install.uninstall_validator')]
     protected \Traversable $uninstallValidators,
     protected readonly Connection $connection,
   ) {
-    $this->themeList = $theme_extension_list;
-    $this->moduleExtensionList = $extension_list_module;
   }
 
   /**

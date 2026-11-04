@@ -15,20 +15,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ImageEffectAddForm extends ImageEffectFormBase {
 
   /**
-   * The image effect manager.
-   *
-   * @var \Drupal\image\ImageEffectManager
-   */
-  protected $effectManager;
-
-  /**
    * Constructs a new ImageEffectAddForm.
    *
-   * @param \Drupal\image\ImageEffectManager $effect_manager
+   * @param \Drupal\image\ImageEffectManager $effectManager
    *   The image effect manager.
    */
-  public function __construct(ImageEffectManager $effect_manager) {
-    $this->effectManager = $effect_manager;
+  public function __construct(
+    protected ImageEffectManager $effectManager,
+  ) {
   }
 
   /**

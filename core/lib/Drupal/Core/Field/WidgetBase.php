@@ -23,13 +23,6 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface, ContainerFactoryPluginInterface {
 
   /**
-   * The field definition.
-   *
-   * @var \Drupal\Core\Field\FieldDefinitionInterface
-   */
-  protected $fieldDefinition;
-
-  /**
    * The widget settings.
    *
    * @var array
@@ -43,16 +36,21 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
    *   The plugin ID for the widget.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $fieldDefinition
    *   The definition of the field to which the widget is associated.
    * @param array $settings
    *   The widget settings.
    * @param array $third_party_settings
    *   Any third party settings.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings) {
+  public function __construct(
+    $plugin_id,
+    $plugin_definition,
+    protected FieldDefinitionInterface $fieldDefinition,
+    array $settings,
+    array $third_party_settings,
+  ) {
     parent::__construct([], $plugin_id, $plugin_definition);
-    $this->fieldDefinition = $field_definition;
     $this->settings = $settings;
     $this->thirdPartySettings = $third_party_settings;
   }

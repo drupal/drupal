@@ -25,27 +25,6 @@ class EntityFieldRenderer extends RendererBase {
   use DependencySerializationTrait;
 
   /**
-   * The relationship being handled.
-   *
-   * @var string
-   */
-  protected $relationship;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
    * A list of indexes of rows whose fields have already been rendered.
    *
    * @var int[]
@@ -63,16 +42,20 @@ class EntityFieldRenderer extends RendererBase {
    *   The language manager.
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
    */
-  public function __construct(ViewExecutable $view, $relationship, LanguageManagerInterface $language_manager, EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository) {
+  public function __construct(
+    ViewExecutable $view,
+    protected $relationship,
+    LanguageManagerInterface $language_manager,
+    EntityTypeInterface $entity_type,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityRepositoryInterface $entityRepository,
+  ) {
     parent::__construct($view, $language_manager, $entity_type);
-    $this->relationship = $relationship;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityRepository = $entity_repository;
   }
 
   /**

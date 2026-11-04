@@ -14,30 +14,17 @@ use Drupal\update\UpdateManagerInterface;
 class UpdateController extends ControllerBase {
 
   /**
-   * Update manager service.
-   *
-   * @var \Drupal\update\UpdateManagerInterface
-   */
-  protected $updateManager;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs update status data.
    *
-   * @param \Drupal\update\UpdateManagerInterface $update_manager
+   * @param \Drupal\update\UpdateManagerInterface $updateManager
    *   Update Manager Service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(UpdateManagerInterface $update_manager, RendererInterface $renderer) {
-    $this->updateManager = $update_manager;
-    $this->renderer = $renderer;
+  public function __construct(
+    protected UpdateManagerInterface $updateManager,
+    protected RendererInterface $renderer,
+  ) {
   }
 
   /**

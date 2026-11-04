@@ -11,13 +11,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CurrentRouteMatch implements ResettableStackedRouteMatchInterface {
 
   /**
-   * The related request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * Internal cache of RouteMatch objects.
    *
    * @var \SplObjectStorage
@@ -27,11 +20,12 @@ class CurrentRouteMatch implements ResettableStackedRouteMatchInterface {
   /**
    * Constructs a CurrentRouteMatch object.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    */
-  public function __construct(RequestStack $request_stack) {
-    $this->requestStack = $request_stack;
+  public function __construct(
+    protected RequestStack $requestStack,
+  ) {
     $this->routeMatches = new \SplObjectStorage();
   }
 

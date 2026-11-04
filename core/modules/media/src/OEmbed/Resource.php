@@ -58,34 +58,6 @@ class Resource implements CacheableDependencyInterface {
   protected $type;
 
   /**
-   * The resource provider.
-   *
-   * @var \Drupal\media\OEmbed\Provider
-   */
-  protected $provider;
-
-  /**
-   * A text title, describing the resource.
-   *
-   * @var string
-   */
-  protected $title;
-
-  /**
-   * The name of the author/owner of the resource.
-   *
-   * @var string
-   */
-  protected $authorName;
-
-  /**
-   * A URL for the author/owner of the resource.
-   *
-   * @var string
-   */
-  protected $authorUrl;
-
-  /**
    * A URL to a thumbnail image representing the resource.
    *
    * The thumbnail must respect any maxwidth and maxheight parameters passed
@@ -156,9 +128,9 @@ class Resource implements CacheableDependencyInterface {
    *   (optional) The resource provider.
    * @param string $title
    *   (optional) A text title, describing the resource.
-   * @param string $author_name
+   * @param string $authorName
    *   (optional) The name of the author/owner of the resource.
-   * @param string $author_url
+   * @param string $authorUrl
    *   (optional) A URL for the author/owner of the resource.
    * @param int $cache_age
    *   (optional) The suggested cache lifetime for this resource, in seconds.
@@ -173,12 +145,16 @@ class Resource implements CacheableDependencyInterface {
    *   (optional) The height of the thumbnail, in pixels. If this parameter is
    *   present, $thumbnail_url and $thumbnail_width must also be present.
    */
-  protected function __construct(?Provider $provider = NULL, $title = NULL, $author_name = NULL, $author_url = NULL, $cache_age = NULL, $thumbnail_url = NULL, $thumbnail_width = NULL, $thumbnail_height = NULL) {
-    $this->provider = $provider;
-    $this->title = $title;
-    $this->authorName = $author_name;
-    $this->authorUrl = $author_url;
-
+  protected function __construct(
+    protected ?Provider $provider = NULL,
+    protected $title = NULL,
+    protected $authorName = NULL,
+    protected $authorUrl = NULL,
+    $cache_age = NULL,
+    $thumbnail_url = NULL,
+    $thumbnail_width = NULL,
+    $thumbnail_height = NULL,
+  ) {
     if (isset($cache_age) && is_numeric($cache_age)) {
       // If the cache age is too big, it can overflow the 'expire' column of
       // database cache backends, causing SQL exceptions. To prevent that,

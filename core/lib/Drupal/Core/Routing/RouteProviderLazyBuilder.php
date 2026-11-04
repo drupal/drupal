@@ -11,20 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, EventSubscriberInterface {
 
   /**
-   * The route provider service.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The route building service.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routeBuilder;
-
-  /**
    * Flag to determine if the router has been rebuilt.
    *
    * @var bool
@@ -46,14 +32,15 @@ class RouteProviderLazyBuilder implements PreloadableRouteProviderInterface, Eve
   /**
    * RouteProviderLazyBuilder constructor.
    *
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider service.
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $route_builder
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $routeBuilder
    *   The route building service.
    */
-  public function __construct(RouteProviderInterface $route_provider, RouteBuilderInterface $route_builder) {
-    $this->routeProvider = $route_provider;
-    $this->routeBuilder = $route_builder;
+  public function __construct(
+    protected RouteProviderInterface $routeProvider,
+    protected RouteBuilderInterface $routeBuilder,
+  ) {
   }
 
   /**

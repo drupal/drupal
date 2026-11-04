@@ -13,21 +13,15 @@ use Drupal\Core\Routing\RouteBuildEvent;
 class ParamConverterSubscriber implements EventSubscriberInterface {
 
   /**
-   * The parameter converter manager.
-   *
-   * @var \Drupal\Core\ParamConverter\ParamConverterManagerInterface
-   */
-  protected $paramConverterManager;
-
-  /**
    * Constructs a new ParamConverterSubscriber.
    *
-   * @param \Drupal\Core\ParamConverter\ParamConverterManagerInterface $param_converter_manager
+   * @param \Drupal\Core\ParamConverter\ParamConverterManagerInterface $paramConverterManager
    *   The parameter converter manager that will be responsible for upcasting
    *   request attributes.
    */
-  public function __construct(ParamConverterManagerInterface $param_converter_manager) {
-    $this->paramConverterManager = $param_converter_manager;
+  public function __construct(
+    protected ParamConverterManagerInterface $paramConverterManager,
+  ) {
   }
 
   /**

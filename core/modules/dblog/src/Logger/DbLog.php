@@ -23,20 +23,6 @@ class DbLog implements LoggerInterface {
   const DEDICATED_DBLOG_CONNECTION_TARGET = 'dedicated_dblog';
 
   /**
-   * The database connection object.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The message's placeholders parser.
-   *
-   * @var \Drupal\Core\Logger\LogMessageParserInterface
-   */
-  protected $parser;
-
-  /**
    * Constructs a DbLog object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -44,9 +30,10 @@ class DbLog implements LoggerInterface {
    * @param \Drupal\Core\Logger\LogMessageParserInterface $parser
    *   The parser to use when extracting message variables.
    */
-  public function __construct(Connection $connection, LogMessageParserInterface $parser) {
-    $this->connection = $connection;
-    $this->parser = $parser;
+  public function __construct(
+    protected Connection $connection,
+    protected LogMessageParserInterface $parser,
+  ) {
   }
 
   /**

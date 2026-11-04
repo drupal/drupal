@@ -36,60 +36,26 @@ use Symfony\Component\HttpFoundation\Request;
 class OEmbedIframeController implements ContainerInjectionInterface {
 
   /**
-   * The oEmbed resource fetcher service.
-   *
-   * @var \Drupal\media\OEmbed\ResourceFetcherInterface
-   */
-  protected $resourceFetcher;
-
-  /**
-   * The oEmbed URL resolver service.
-   *
-   * @var \Drupal\media\OEmbed\UrlResolverInterface
-   */
-  protected $urlResolver;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The logger channel.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The iFrame URL helper service.
-   *
-   * @var \Drupal\media\IFrameUrlHelper
-   */
-  protected $iFrameUrlHelper;
-
-  /**
    * Constructs an OEmbedIframeController instance.
    *
-   * @param \Drupal\media\OEmbed\ResourceFetcherInterface $resource_fetcher
+   * @param \Drupal\media\OEmbed\ResourceFetcherInterface $resourceFetcher
    *   The oEmbed resource fetcher service.
-   * @param \Drupal\media\OEmbed\UrlResolverInterface $url_resolver
+   * @param \Drupal\media\OEmbed\UrlResolverInterface $urlResolver
    *   The oEmbed URL resolver service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger channel.
-   * @param \Drupal\media\IFrameUrlHelper $iframe_url_helper
+   * @param \Drupal\media\IFrameUrlHelper $iFrameUrlHelper
    *   The iFrame URL helper service.
    */
-  public function __construct(ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, RendererInterface $renderer, LoggerInterface $logger, IFrameUrlHelper $iframe_url_helper) {
-    $this->resourceFetcher = $resource_fetcher;
-    $this->urlResolver = $url_resolver;
-    $this->renderer = $renderer;
-    $this->logger = $logger;
-    $this->iFrameUrlHelper = $iframe_url_helper;
+  public function __construct(
+    protected ResourceFetcherInterface $resourceFetcher,
+    protected UrlResolverInterface $urlResolver,
+    protected RendererInterface $renderer,
+    protected LoggerInterface $logger,
+    protected IFrameUrlHelper $iFrameUrlHelper,
+  ) {
   }
 
   /**

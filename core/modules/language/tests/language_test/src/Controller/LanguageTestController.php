@@ -21,30 +21,17 @@ class LanguageTestController implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   /**
-   * The HTTP kernel service.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $httpKernel;
-
-  /**
-   * The language manager service.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * Constructs a new LanguageTestController object.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   An HTTP kernel.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    */
-  public function __construct(HttpKernelInterface $httpKernel, LanguageManagerInterface $language_manager) {
-    $this->httpKernel = $httpKernel;
-    $this->languageManager = $language_manager;
+  public function __construct(
+    protected HttpKernelInterface $httpKernel,
+    protected LanguageManagerInterface $languageManager,
+  ) {
   }
 
   /**

@@ -14,20 +14,14 @@ use Drupal\Core\Cache\NullBackend;
 class UpdateBackend extends NullBackend {
 
   /**
-   * The regular runtime cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $backend;
-
-  /**
    * UpdateBackend constructor.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $backend
    *   The regular runtime cache backend.
    */
-  public function __construct(CacheBackendInterface $backend) {
-    $this->backend = $backend;
+  public function __construct(
+    protected CacheBackendInterface $backend,
+  ) {
   }
 
   /**

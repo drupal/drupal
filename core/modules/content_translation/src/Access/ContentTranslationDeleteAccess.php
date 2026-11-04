@@ -24,30 +24,17 @@ use Drupal\language\Entity\ContentLanguageSettings;
 class ContentTranslationDeleteAccess implements AccessInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The content translation manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationManagerInterface
-   */
-  protected $contentTranslationManager;
-
-  /**
    * Constructs a ContentTranslationDeleteAccess object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager
+   * @param \Drupal\content_translation\ContentTranslationManagerInterface $contentTranslationManager
    *   The content translation manager.
    */
-  public function __construct(EntityTypeManagerInterface $manager, ContentTranslationManagerInterface $content_translation_manager) {
-    $this->entityTypeManager = $manager;
-    $this->contentTranslationManager = $content_translation_manager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ContentTranslationManagerInterface $contentTranslationManager,
+  ) {
   }
 
   /**

@@ -25,27 +25,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   use StringTranslationTrait;
 
   /**
-   * Entity type for this views data handler instance.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface
-   */
-  protected $entityType;
-
-  /**
-   * The storage used for this entity type.
-   *
-   * @var \Drupal\Core\Entity\Sql\SqlEntityStorageInterface
-   */
-  protected $storage;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * The translation manager.
    *
    * @var \Drupal\Core\StringTranslation\TranslationInterface
@@ -53,42 +32,30 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   protected $translationManager;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
    * Constructs an EntityViewsData object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entityType
    *   The entity type to provide views integration for.
-   * @param \Drupal\Core\Entity\Sql\SqlEntityStorageInterface $storage_controller
+   * @param \Drupal\Core\Entity\Sql\SqlEntityStorageInterface $storage
    *   The storage handler used for this entity type.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The translation manager.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, SqlEntityStorageInterface $storage_controller, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, TranslationInterface $translation_manager, EntityFieldManagerInterface $entity_field_manager) {
-    $this->entityType = $entity_type;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->storage = $storage_controller;
-    $this->moduleHandler = $module_handler;
+  public function __construct(
+    protected EntityTypeInterface $entityType,
+    protected SqlEntityStorageInterface $storage,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ModuleHandlerInterface $moduleHandler,
+    TranslationInterface $translation_manager,
+    protected EntityFieldManagerInterface $entityFieldManager,
+  ) {
     $this->setStringTranslation($translation_manager);
-    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**

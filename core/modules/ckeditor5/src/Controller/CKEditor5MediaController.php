@@ -37,33 +37,21 @@ class CKEditor5MediaController extends ControllerBase {
   protected $currentUser;
 
   /**
-   * The entity repository.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * Constructs a new CKEditor5MediaController.
    *
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The currently authenticated user.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
    */
-  public function __construct(AccountInterface $current_user, EntityRepositoryInterface $entity_repository, RequestStack $request_stack) {
+  public function __construct(
+    AccountInterface $current_user,
+    protected EntityRepositoryInterface $entityRepository,
+    protected RequestStack $requestStack,
+  ) {
     $this->currentUser = $current_user;
-    $this->entityRepository = $entity_repository;
-    $this->requestStack = $request_stack;
   }
 
   /**

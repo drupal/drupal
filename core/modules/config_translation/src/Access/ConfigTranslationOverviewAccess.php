@@ -17,30 +17,17 @@ use Drupal\Core\Session\AccountInterface;
 class ConfigTranslationOverviewAccess implements AccessInterface {
 
   /**
-   * The mapper plugin discovery service.
-   *
-   * @var \Drupal\config_translation\ConfigMapperManagerInterface
-   */
-  protected $configMapperManager;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * Constructs a ConfigTranslationOverviewAccess object.
    *
-   * @param \Drupal\config_translation\ConfigMapperManagerInterface $config_mapper_manager
+   * @param \Drupal\config_translation\ConfigMapperManagerInterface $configMapperManager
    *   The mapper plugin discovery service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager service.
    */
-  public function __construct(ConfigMapperManagerInterface $config_mapper_manager, LanguageManagerInterface $language_manager) {
-    $this->configMapperManager = $config_mapper_manager;
-    $this->languageManager = $language_manager;
+  public function __construct(
+    protected ConfigMapperManagerInterface $configMapperManager,
+    protected LanguageManagerInterface $languageManager,
+  ) {
   }
 
   /**

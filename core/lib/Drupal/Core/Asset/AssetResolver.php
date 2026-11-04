@@ -18,80 +18,32 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 class AssetResolver implements AssetResolverInterface {
 
   /**
-   * The library discovery service.
-   *
-   * @var \Drupal\Core\Asset\LibraryDiscoveryInterface
-   */
-  protected $libraryDiscovery;
-
-  /**
-   * The library dependency resolver.
-   *
-   * @var \Drupal\Core\Asset\LibraryDependencyResolverInterface
-   */
-  protected $libraryDependencyResolver;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
-   * The theme handler service.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * Constructs a new AssetResolver instance.
    *
-   * @param \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery
+   * @param \Drupal\Core\Asset\LibraryDiscoveryInterface $libraryDiscovery
    *   The library discovery service.
-   * @param \Drupal\Core\Asset\LibraryDependencyResolverInterface $library_dependency_resolver
+   * @param \Drupal\Core\Asset\LibraryDependencyResolverInterface $libraryDependencyResolver
    *   The library dependency resolver.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
    *   The theme manager.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler service.
    */
-  public function __construct(LibraryDiscoveryInterface $library_discovery, LibraryDependencyResolverInterface $library_dependency_resolver, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, LanguageManagerInterface $language_manager, CacheBackendInterface $cache, ThemeHandlerInterface $theme_handler) {
-    $this->libraryDiscovery = $library_discovery;
-    $this->libraryDependencyResolver = $library_dependency_resolver;
-    $this->moduleHandler = $module_handler;
-    $this->themeManager = $theme_manager;
-    $this->languageManager = $language_manager;
-    $this->cache = $cache;
-    $this->themeHandler = $theme_handler;
+  public function __construct(
+    protected LibraryDiscoveryInterface $libraryDiscovery,
+    protected LibraryDependencyResolverInterface $libraryDependencyResolver,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected ThemeManagerInterface $themeManager,
+    protected LanguageManagerInterface $languageManager,
+    protected CacheBackendInterface $cache,
+    protected ThemeHandlerInterface $themeHandler,
+  ) {
   }
 
   /**

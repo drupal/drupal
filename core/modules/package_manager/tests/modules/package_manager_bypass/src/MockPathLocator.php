@@ -16,13 +16,6 @@ use Symfony\Component\Filesystem\Path;
 final class MockPathLocator extends BasePathLocator {
 
   /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  private $state;
-
-  /**
    * Constructs a PathLocator object.
    *
    * @param \Drupal\Core\State\StateInterface $state
@@ -30,9 +23,11 @@ final class MockPathLocator extends BasePathLocator {
    * @param mixed ...$arguments
    *   Additional arguments to pass to the parent constructor.
    */
-  public function __construct(StateInterface $state, ...$arguments) {
+  public function __construct(
+    private StateInterface $state,
+    ...$arguments,
+  ) {
     parent::__construct(...$arguments);
-    $this->state = $state;
   }
 
   /**

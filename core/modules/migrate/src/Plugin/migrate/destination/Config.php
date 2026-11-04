@@ -78,14 +78,6 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
   protected $config;
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
-  protected $language_manager;
-
-  /**
    * Constructs a Config destination object.
    *
    * @param array $configuration
@@ -109,12 +101,11 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
     $plugin_definition,
     MigrationInterface $migration,
     ConfigFactoryInterface $config_factory,
-    LanguageManagerInterface $language_manager,
+    protected LanguageManagerInterface $language_manager,
     protected TypedConfigManagerInterface $typedConfigManager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->config = $config_factory->getEditable($configuration['config_name']);
-    $this->language_manager = $language_manager;
     if ($this->isTranslationDestination()) {
       $this->supportsRollback = TRUE;
     }

@@ -15,20 +15,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeModerationHandler extends ModerationHandler {
 
   /**
-   * The moderation information service.
-   *
-   * @var \Drupal\content_moderation\ModerationInformationInterface
-   */
-  protected $moderationInfo;
-
-  /**
    * NodeModerationHandler constructor.
    *
-   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_info
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInfo
    *   The moderation information service.
    */
-  public function __construct(ModerationInformationInterface $moderation_info) {
-    $this->moderationInfo = $moderation_info;
+  public function __construct(
+    protected ModerationInformationInterface $moderationInfo,
+  ) {
   }
 
   /**

@@ -17,20 +17,14 @@ use Symfony\Component\HttpFoundation\Response;
 class DenyAdminRoutes implements ResponsePolicyInterface {
 
   /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
    * Constructs a deny admin route page cache policy.
    *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The current route match.
    */
-  public function __construct(RouteMatchInterface $route_match) {
-    $this->routeMatch = $route_match;
+  public function __construct(
+    protected RouteMatchInterface $routeMatch,
+  ) {
   }
 
   /**

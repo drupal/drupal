@@ -17,20 +17,14 @@ use Symfony\Component\HttpFoundation\Request;
 class NoSessionOpen implements RequestPolicyInterface {
 
   /**
-   * The session configuration.
-   *
-   * @var \Drupal\Core\Session\SessionConfigurationInterface
-   */
-  protected $sessionConfiguration;
-
-  /**
    * Constructs a new page cache session policy.
    *
-   * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
+   * @param \Drupal\Core\Session\SessionConfigurationInterface $sessionConfiguration
    *   The session configuration.
    */
-  public function __construct(SessionConfigurationInterface $session_configuration) {
-    $this->sessionConfiguration = $session_configuration;
+  public function __construct(
+    protected SessionConfigurationInterface $sessionConfiguration,
+  ) {
   }
 
   /**

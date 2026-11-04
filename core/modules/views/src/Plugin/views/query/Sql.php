@@ -139,20 +139,6 @@ class Sql extends QueryPluginBase {
   protected $noDistinct;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The database-specific date handler.
-   *
-   * @var \Drupal\views\Plugin\views\query\DateSqlInterface
-   */
-  protected $dateSql;
-
-  /**
    * The messenger.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
@@ -174,9 +160,9 @@ class Sql extends QueryPluginBase {
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\views\Plugin\views\query\DateSqlInterface $date_sql
+   * @param \Drupal\views\Plugin\views\query\DateSqlInterface $dateSql
    *   The database-specific date handler.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
@@ -185,18 +171,15 @@ class Sql extends QueryPluginBase {
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager,
+    protected EntityTypeManagerInterface $entityTypeManager,
     #[Autowire(service: 'views.date_sql')]
-    DateSqlInterface $date_sql,
+    protected DateSqlInterface $dateSql,
     MessengerInterface $messenger,
   ) {
     // By default, use AND operator to connect WHERE groups.
     $this->groupOperator = 'AND';
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->entityTypeManager = $entity_type_manager;
-    $this->dateSql = $date_sql;
     $this->messenger = $messenger;
   }
 

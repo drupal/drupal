@@ -44,13 +44,6 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
   protected $prototypes = [];
 
   /**
-   * The class resolver.
-   *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
-   */
-  protected $classResolver;
-
-  /**
    * Constructs a new TypedDataManager.
    *
    * @param \Traversable $namespaces
@@ -60,13 +53,17 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $classResolver
    *   The class resolver.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ClassResolverInterface $class_resolver) {
+  public function __construct(
+    \Traversable $namespaces,
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+    protected ClassResolverInterface $classResolver,
+  ) {
     $this->alterInfo('data_type_info');
     $this->setCacheBackend($cache_backend, 'typed_data_types_plugins');
-    $this->classResolver = $class_resolver;
 
     parent::__construct(
       'Plugin/DataType',

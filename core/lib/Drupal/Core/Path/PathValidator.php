@@ -23,50 +23,23 @@ use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 class PathValidator implements PathValidatorInterface {
 
   /**
-   * The access aware router.
-   *
-   * @var \Drupal\Core\Routing\AccessAwareRouterInterface
-   */
-  protected $accessAwareRouter;
-
-  /**
-   * A router implementation which does not check access.
-   *
-   * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface
-   */
-  protected $accessUnawareRouter;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
-   * The path processor.
-   *
-   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface
-   */
-  protected $pathProcessor;
-
-  /**
    * Creates a new PathValidator.
    *
-   * @param \Drupal\Core\Routing\AccessAwareRouterInterface $access_aware_router
+   * @param \Drupal\Core\Routing\AccessAwareRouterInterface $accessAwareRouter
    *   The access aware router.
-   * @param \Symfony\Component\Routing\Matcher\UrlMatcherInterface $access_unaware_router
+   * @param \Symfony\Component\Routing\Matcher\UrlMatcherInterface $accessUnawareRouter
    *   A router implementation which does not check access.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
-   * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
+   * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $pathProcessor
    *   The path processor.
    */
-  public function __construct(AccessAwareRouterInterface $access_aware_router, UrlMatcherInterface $access_unaware_router, AccountInterface $account, InboundPathProcessorInterface $path_processor) {
-    $this->accessAwareRouter = $access_aware_router;
-    $this->accessUnawareRouter = $access_unaware_router;
-    $this->account = $account;
-    $this->pathProcessor = $path_processor;
+  public function __construct(
+    protected AccessAwareRouterInterface $accessAwareRouter,
+    protected UrlMatcherInterface $accessUnawareRouter,
+    protected AccountInterface $account,
+    protected InboundPathProcessorInterface $pathProcessor,
+  ) {
   }
 
   /**

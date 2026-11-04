@@ -12,30 +12,17 @@ use Drupal\Component\EventDispatcher\Event;
 class ConfigMapperPopulateEvent extends Event {
 
   /**
-   * The configuration mapper this event is related to.
-   *
-   * @var \Drupal\config_translation\ConfigMapperInterface
-   */
-  protected $mapper;
-
-  /**
-   * The route match this event is related to.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
    * Constructs a ConfigMapperPopulateEvent object.
    *
    * @param \Drupal\config_translation\ConfigMapperInterface $mapper
    *   The configuration mapper this event is related to.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The route match this event is related to.
    */
-  public function __construct(ConfigMapperInterface $mapper, RouteMatchInterface $route_match) {
-    $this->mapper = $mapper;
-    $this->routeMatch = $route_match;
+  public function __construct(
+    protected ConfigMapperInterface $mapper,
+    protected RouteMatchInterface $routeMatch,
+  ) {
   }
 
   /**

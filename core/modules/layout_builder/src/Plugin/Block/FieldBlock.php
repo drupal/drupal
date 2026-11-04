@@ -42,19 +42,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class FieldBlock extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface {
 
   use FieldLabelOptionsTrait;
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The formatter manager.
-   *
-   * @var \Drupal\Core\Field\FormatterPluginManager
-   */
-  protected $formatterManager;
 
   /**
    * The entity type ID.
@@ -85,20 +72,6 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
   protected $fieldDefinition;
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The logger.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * Constructs a new FieldBlock.
    *
    * @param array $configuration
@@ -107,11 +80,11 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
-   * @param \Drupal\Core\Field\FormatterPluginManager $formatter_manager
+   * @param \Drupal\Core\Field\FormatterPluginManager $formatterManager
    *   The formatter manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
@@ -120,18 +93,13 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EntityFieldManagerInterface $entity_field_manager,
+    protected EntityFieldManagerInterface $entityFieldManager,
     #[Autowire(service: 'plugin.manager.field.formatter')]
-    FormatterPluginManager $formatter_manager,
-    ModuleHandlerInterface $module_handler,
+    protected FormatterPluginManager $formatterManager,
+    protected ModuleHandlerInterface $moduleHandler,
     #[Autowire(service: 'logger.channel.layout_builder')]
-    LoggerInterface $logger,
+    protected LoggerInterface $logger,
   ) {
-    $this->entityFieldManager = $entity_field_manager;
-    $this->formatterManager = $formatter_manager;
-    $this->moduleHandler = $module_handler;
-    $this->logger = $logger;
-
     // Get the entity type and field name from the plugin ID.
     [, $entity_type_id, $bundle, $field_name] = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 4);
     $this->entityTypeId = $entity_type_id;

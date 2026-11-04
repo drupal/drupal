@@ -19,20 +19,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SiteMaintenanceModeForm extends ConfigFormBase {
 
   /**
-   * The state keyvalue collection.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The permission handler.
-   *
-   * @var \Drupal\user\PermissionHandlerInterface
-   */
-  protected $permissionHandler;
-
-  /**
    * Constructs a new SiteMaintenanceModeForm.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -41,13 +27,16 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    *   The typed config manager.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state keyvalue collection to use.
-   * @param \Drupal\user\PermissionHandlerInterface $permission_handler
+   * @param \Drupal\user\PermissionHandlerInterface $permissionHandler
    *   The permission handler.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, StateInterface $state, PermissionHandlerInterface $permission_handler) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    TypedConfigManagerInterface $typedConfigManager,
+    protected StateInterface $state,
+    protected PermissionHandlerInterface $permissionHandler,
+  ) {
     parent::__construct($config_factory, $typedConfigManager);
-    $this->state = $state;
-    $this->permissionHandler = $permission_handler;
   }
 
   /**

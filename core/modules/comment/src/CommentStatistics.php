@@ -21,13 +21,6 @@ class CommentStatistics implements CommentStatisticsInterface {
   use StringTranslationTrait;
 
   /**
-   * The current database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
    * The replica database connection.
    *
    * @var \Drupal\Core\Database\Connection
@@ -35,34 +28,13 @@ class CommentStatistics implements CommentStatisticsInterface {
   protected $databaseReplica;
 
   /**
-   * The current logged in user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Constructs the CommentStatistics service.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The active database connection.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current logged in user.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
@@ -72,18 +44,14 @@ class CommentStatistics implements CommentStatisticsInterface {
    *   (Optional) the replica database connection.
    */
   public function __construct(
-    Connection $database,
-    AccountInterface $current_user,
-    EntityTypeManagerInterface $entity_type_manager,
-    StateInterface $state,
+    protected Connection $database,
+    protected AccountInterface $currentUser,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected StateInterface $state,
     protected TimeInterface $time,
     ?Connection $database_replica = NULL,
   ) {
-    $this->database = $database;
-    $this->currentUser = $current_user;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->state = $state;
-    $this->databaseReplica = $database_replica ?: $database;
+    $this->databaseReplica = $database_replica ?: $this->database;
   }
 
   /**

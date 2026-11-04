@@ -10,31 +10,18 @@ use Drupal\Component\EventDispatcher\Event;
 class EntityTypeEvent extends Event {
 
   /**
-   * The entity type.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface
-   */
-  protected $entityType;
-
-  /**
-   * The original entity type.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface
-   */
-  protected $original;
-
-  /**
    * Constructs a new EntityTypeEvent.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entityType
    *   The field storage definition.
    * @param \Drupal\Core\Entity\EntityTypeInterface $original
    *   (optional) The original entity type. This should be passed only when
    *   updating the entity type.
    */
-  public function __construct(EntityTypeInterface $entity_type, ?EntityTypeInterface $original = NULL) {
-    $this->entityType = $entity_type;
-    $this->original = $original;
+  public function __construct(
+    protected EntityTypeInterface $entityType,
+    protected ?EntityTypeInterface $original = NULL,
+  ) {
   }
 
   /**

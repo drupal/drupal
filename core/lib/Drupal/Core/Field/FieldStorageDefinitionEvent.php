@@ -10,31 +10,18 @@ use Drupal\Component\EventDispatcher\Event;
 class FieldStorageDefinitionEvent extends Event {
 
   /**
-   * The field storage definition.
-   *
-   * @var \Drupal\Core\Field\FieldStorageDefinitionInterface
-   */
-  protected $fieldStorageDefinition;
-
-  /**
-   * The original field storage definition.
-   *
-   * @var \Drupal\Core\Field\FieldStorageDefinitionInterface
-   */
-  protected $original;
-
-  /**
    * Constructs a new FieldStorageDefinitionEvent.
    *
-   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $field_storage_definition
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $fieldStorageDefinition
    *   The field storage definition.
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $original
    *   (optional) The original field storage definition. This should be passed
    *   only when updating the storage definition.
    */
-  public function __construct(FieldStorageDefinitionInterface $field_storage_definition, ?FieldStorageDefinitionInterface $original = NULL) {
-    $this->fieldStorageDefinition = $field_storage_definition;
-    $this->original = $original;
+  public function __construct(
+    protected FieldStorageDefinitionInterface $fieldStorageDefinition,
+    protected ?FieldStorageDefinitionInterface $original = NULL,
+  ) {
   }
 
   /**

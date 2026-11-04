@@ -26,20 +26,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class GotoAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The event dispatcher service.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $dispatcher;
-
-  /**
-   * The unrouted URL assembler service.
-   *
-   * @var \Drupal\Core\Utility\UnroutedUrlAssemblerInterface
-   */
-  protected $unroutedUrlAssembler;
-
-  /**
    * Constructs a GotoAction object.
    *
    * @param array $configuration
@@ -50,14 +36,17 @@ class GotoAction extends ConfigurableActionBase implements ContainerFactoryPlugi
    *   The plugin implementation definition.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The tempstore factory.
-   * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $url_assembler
+   * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $unroutedUrlAssembler
    *   The unrouted URL assembler service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EventDispatcherInterface $dispatcher, UnroutedUrlAssemblerInterface $url_assembler) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected EventDispatcherInterface $dispatcher,
+    protected UnroutedUrlAssemblerInterface $unroutedUrlAssembler,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->dispatcher = $dispatcher;
-    $this->unroutedUrlAssembler = $url_assembler;
   }
 
   /**

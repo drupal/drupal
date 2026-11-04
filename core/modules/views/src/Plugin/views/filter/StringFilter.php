@@ -29,13 +29,6 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
   protected $alwaysMultiple = TRUE;
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a new StringFilter object.
    *
    * @param array $configuration
@@ -47,9 +40,13 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $connection) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected Connection $connection,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->connection = $connection;
   }
 
   /**

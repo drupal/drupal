@@ -14,13 +14,6 @@ namespace Drupal\Core\Extension;
 class Extension {
 
   /**
-   * The type of the extension (e.g., 'module').
-   *
-   * @var string
-   */
-  protected $type;
-
-  /**
    * The relative pathname of the extension.
    *
    * An example relative pathname is 'core/modules/node/node.info.yml'.
@@ -28,13 +21,6 @@ class Extension {
    * @var string
    */
   protected $pathname;
-
-  /**
-   * The filename of the main extension file (e.g., 'node.module').
-   *
-   * @var string|null
-   */
-  protected $filename;
 
   /**
    * An SplFileInfo instance for the extension's info file.
@@ -70,13 +56,16 @@ class Extension {
    * @param string $filename
    *   (optional) The filename of the main extension file; e.g., 'node.module'.
    */
-  public function __construct($root, $type, $pathname, $filename = NULL) {
+  public function __construct(
+    $root,
+    protected $type,
+    $pathname,
+    protected $filename = NULL,
+  ) {
     // @see \Drupal\Core\Theme\ThemeInitialization::getActiveThemeByName()
     assert($pathname === 'core/core.info.yml' || ($pathname[0] !== '/' && file_exists($root . '/' . $pathname)), sprintf('The file specified by the given app root, relative path and file name (%s) do not exist.', $root . '/' . $pathname));
     $this->root = $root;
-    $this->type = $type;
     $this->pathname = $pathname;
-    $this->filename = $filename;
   }
 
   /**

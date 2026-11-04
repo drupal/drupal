@@ -15,13 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ViewDuplicateForm extends ViewFormBase {
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected LanguageManagerInterface $languageManager;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -36,12 +29,14 @@ class ViewDuplicateForm extends ViewFormBase {
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   Drupal's module handler.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    */
-  public function __construct(ModuleHandlerInterface $moduleHandler, LanguageManagerInterface $language_manager) {
+  public function __construct(
+    ModuleHandlerInterface $moduleHandler,
+    protected LanguageManagerInterface $languageManager,
+  ) {
     $this->setModuleHandler($moduleHandler);
-    $this->languageManager = $language_manager;
   }
 
   /**

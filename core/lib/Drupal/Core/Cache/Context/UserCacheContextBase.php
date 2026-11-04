@@ -14,20 +14,14 @@ use Drupal\Core\Session\AccountInterface;
 abstract class UserCacheContextBase {
 
   /**
-   * The account object.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $user;
-
-  /**
    * Constructs a new UserCacheContextBase class.
    *
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
    */
-  public function __construct(AccountInterface $user) {
-    $this->user = $user;
+  public function __construct(
+    protected AccountInterface $user,
+  ) {
   }
 
 }

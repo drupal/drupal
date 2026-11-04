@@ -18,23 +18,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ImageStyleEditForm extends ImageStyleFormBase {
 
   /**
-   * The image effect manager service.
-   *
-   * @var \Drupal\image\ImageEffectManager
-   */
-  protected $imageEffectManager;
-
-  /**
    * Constructs an ImageStyleEditForm object.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $image_style_storage
    *   The storage.
-   * @param \Drupal\image\ImageEffectManager $image_effect_manager
+   * @param \Drupal\image\ImageEffectManager $imageEffectManager
    *   The image effect manager service.
    */
-  public function __construct(EntityStorageInterface $image_style_storage, ImageEffectManager $image_effect_manager) {
+  public function __construct(
+    EntityStorageInterface $image_style_storage,
+    protected ImageEffectManager $imageEffectManager,
+  ) {
     parent::__construct($image_style_storage);
-    $this->imageEffectManager = $image_effect_manager;
   }
 
   /**

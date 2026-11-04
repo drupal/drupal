@@ -12,20 +12,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class UserRouteAlterSubscriber implements EventSubscriberInterface {
 
   /**
-   * The available serialization formats.
-   *
-   * @var array
-   */
-  protected $serializerFormats = [];
-
-  /**
    * UserRouteAlterSubscriber constructor.
    *
-   * @param array $serializer_formats
+   * @param array $serializerFormats
    *   The available serializer formats.
    */
-  public function __construct(array $serializer_formats) {
-    $this->serializerFormats = $serializer_formats;
+  public function __construct(
+    protected array $serializerFormats,
+  ) {
   }
 
   /**

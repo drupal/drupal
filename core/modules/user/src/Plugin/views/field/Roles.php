@@ -18,13 +18,6 @@ use Drupal\user\Entity\Role;
 class Roles extends PrerenderList {
 
   /**
-   * Database Service Object.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
    * Constructs a \Drupal\user\Plugin\views\field\Roles object.
    *
    * @param array $configuration
@@ -36,10 +29,13 @@ class Roles extends PrerenderList {
    * @param \Drupal\Core\Database\Connection $database
    *   Database Service Object.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected Connection $database,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->database = $database;
   }
 
   /**

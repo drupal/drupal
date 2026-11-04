@@ -18,13 +18,6 @@ use Drupal\views\Plugin\views\PluginBase;
 class LanguageFilter extends InOperator implements ContainerFactoryPluginInterface {
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * Constructs a new LanguageFilter instance.
    *
    * @param array $configuration
@@ -33,13 +26,16 @@ class LanguageFilter extends InOperator implements ContainerFactoryPluginInterfa
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    */
-  public function __construct($configuration, $plugin_id, $plugin_definition, LanguageManagerInterface $language_manager) {
+  public function __construct(
+    $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected LanguageManagerInterface $languageManager,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->languageManager = $language_manager;
   }
 
   /**

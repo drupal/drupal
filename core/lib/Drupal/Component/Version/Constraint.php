@@ -8,13 +8,6 @@ namespace Drupal\Component\Version;
 class Constraint {
 
   /**
-   * The constraint represented as a string. For example '>=8.x-5.x'.
-   *
-   * @var string
-   */
-  protected $constraint;
-
-  /**
    * A list of associative arrays representing the constraint.
    *
    * Each containing the keys:
@@ -34,9 +27,11 @@ class Constraint {
    *   Core compatibility declared for the current version of Drupal core.
    *   Normally this is set to \Drupal::CORE_COMPATIBILITY by the caller.
    */
-  public function __construct($constraint, $core_compatibility) {
-    $this->constraint = $constraint;
-    $this->parseConstraint($constraint, $core_compatibility);
+  public function __construct(
+    protected $constraint,
+    $core_compatibility,
+  ) {
+    $this->parseConstraint($this->constraint, $core_compatibility);
   }
 
   /**

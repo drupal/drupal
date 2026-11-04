@@ -45,17 +45,6 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
   protected $versionIdentifier;
 
   /**
-   * The object's fields.
-   *
-   * This refers to "fields" in the JSON:API sense of the word. Config entities
-   * do not have real fields, so in that case, this will be an array of values
-   * for config entity attributes.
-   *
-   * @var \Drupal\Core\Field\FieldItemListInterface[]|mixed[]
-   */
-  protected $fields;
-
-  /**
    * The resource object's links.
    *
    * @var \Drupal\jsonapi\JsonApiResource\LinkCollection
@@ -88,13 +77,20 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    * @param \Drupal\Core\Language\LanguageInterface|null $language
    *   (optional) The resource language.
    */
-  public function __construct(CacheableDependencyInterface $cacheability, ResourceType $resource_type, $id, $revision_id, array $fields, LinkCollection $links, ?LanguageInterface $language = NULL) {
+  public function __construct(
+    CacheableDependencyInterface $cacheability,
+    ResourceType $resource_type,
+    $id,
+    $revision_id,
+    protected array $fields,
+    LinkCollection $links,
+    ?LanguageInterface $language = NULL,
+  ) {
     assert(is_null($revision_id) || $resource_type->isVersionable());
     $this->setCacheability($cacheability);
     $this->resourceType = $resource_type;
     $this->resourceIdentifier = new ResourceIdentifier($resource_type, $id);
     $this->versionIdentifier = $revision_id ? 'id:' . $revision_id : NULL;
-    $this->fields = $fields;
     $this->links = $links->withContext($this);
 
     // If the specified language empty it falls back the same way as in the

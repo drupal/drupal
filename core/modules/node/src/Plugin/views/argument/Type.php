@@ -16,13 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Type extends StringArgument {
 
   /**
-   * NodeType storage handler.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $nodeTypeStorage;
-
-  /**
    * Constructs a new Node Type object.
    *
    * @param array $configuration
@@ -31,13 +24,16 @@ class Type extends StringArgument {
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $node_type_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $nodeTypeStorage
    *   The entity storage class.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $node_type_storage) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected EntityStorageInterface $nodeTypeStorage,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->nodeTypeStorage = $node_type_storage;
   }
 
   /**

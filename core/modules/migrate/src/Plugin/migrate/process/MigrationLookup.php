@@ -126,27 +126,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The migration to be executed.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
-   * The migrate lookup service.
-   *
-   * @var \Drupal\migrate\MigrateLookupInterface
-   */
-  protected $migrateLookup;
-
-  /**
-   * The migrate stub service.
-   *
-   * @var \Drupal\migrate\MigrateStubInterface
-   */
-  protected $migrateStub;
-
-  /**
    * Constructs a MigrationLookup object.
    *
    * @param array $configuration
@@ -157,16 +136,20 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
    *   The plugin implementation definition.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The Migration the plugin is being used in.
-   * @param \Drupal\migrate\MigrateLookupInterface $migrate_lookup
+   * @param \Drupal\migrate\MigrateLookupInterface $migrateLookup
    *   The migrate lookup service.
-   * @param \Drupal\migrate\MigrateStubInterface $migrate_stub
+   * @param \Drupal\migrate\MigrateStubInterface $migrateStub
    *   The migrate stub service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, MigrateLookupInterface $migrate_lookup, MigrateStubInterface $migrate_stub) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected MigrationInterface $migration,
+    protected MigrateLookupInterface $migrateLookup,
+    protected MigrateStubInterface $migrateStub,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->migration = $migration;
-    $this->migrateLookup = $migrate_lookup;
-    $this->migrateStub = $migrate_stub;
   }
 
   /**

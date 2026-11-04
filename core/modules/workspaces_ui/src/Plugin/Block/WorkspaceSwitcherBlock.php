@@ -24,20 +24,6 @@ use Drupal\workspaces_ui\Form\WorkspaceSwitcherForm;
 class WorkspaceSwitcherBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a new WorkspaceSwitcherBlock instance.
    *
    * @param array $configuration
@@ -46,15 +32,19 @@ class WorkspaceSwitcherBlock extends BlockBase implements ContainerFactoryPlugin
    *   The plugin ID.
    * @param mixed $plugin_definition
    *   The plugin definition.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    *   The form builder.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, FormBuilderInterface $form_builder, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected FormBuilderInterface $formBuilder,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->formBuilder = $form_builder;
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

@@ -13,30 +13,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ConfigTranslationLocalTasks extends DeriverBase implements ContainerDeriverInterface {
 
   /**
-   * The mapper plugin discovery service.
-   *
-   * @var \Drupal\config_translation\ConfigMapperManagerInterface
-   */
-  protected $mapperManager;
-
-  /**
-   * The base plugin ID.
-   *
-   * @var string
-   */
-  protected $basePluginId;
-
-  /**
    * Constructs a new ConfigTranslationLocalTasks.
    *
-   * @param string $base_plugin_id
+   * @param string $basePluginId
    *   The base plugin ID.
-   * @param \Drupal\config_translation\ConfigMapperManagerInterface $mapper_manager
+   * @param \Drupal\config_translation\ConfigMapperManagerInterface $mapperManager
    *   The mapper plugin discovery service.
    */
-  public function __construct($base_plugin_id, ConfigMapperManagerInterface $mapper_manager) {
-    $this->basePluginId = $base_plugin_id;
-    $this->mapperManager = $mapper_manager;
+  public function __construct(
+    protected $basePluginId,
+    protected ConfigMapperManagerInterface $mapperManager,
+  ) {
   }
 
   /**

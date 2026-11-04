@@ -13,20 +13,14 @@ use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 class MigrateStub implements MigrateStubInterface {
 
   /**
-   * The migration plugin manager.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
-   */
-  protected $migrationPluginManager;
-
-  /**
    * Constructs a MigrationStub object.
    *
-   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migrationPluginManager
    *   The migration plugin manager.
    */
-  public function __construct(MigrationPluginManagerInterface $migration_plugin_manager) {
-    $this->migrationPluginManager = $migration_plugin_manager;
+  public function __construct(
+    protected MigrationPluginManagerInterface $migrationPluginManager,
+  ) {
   }
 
   /**

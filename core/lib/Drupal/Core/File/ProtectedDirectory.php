@@ -8,27 +8,6 @@ namespace Drupal\Core\File;
 class ProtectedDirectory {
 
   /**
-   * The directory title.
-   *
-   * @var string
-   */
-  protected $title;
-
-  /**
-   * The directory path.
-   *
-   * @var string
-   */
-  protected $path;
-
-  /**
-   * If the directory is private (or public).
-   *
-   * @var bool
-   */
-  protected $private;
-
-  /**
    * ProtectedDirectory constructor.
    *
    * @param string $title
@@ -38,10 +17,11 @@ class ProtectedDirectory {
    * @param bool $private
    *   (optional) Whether the directory is private or public (default).
    */
-  public function __construct($title, $path, $private = FALSE) {
-    $this->title = $title;
-    $this->path = $path;
-    $this->private = $private;
+  public function __construct(
+    protected $title,
+    protected $path,
+    protected $private = FALSE,
+  ) {
   }
 
   /**

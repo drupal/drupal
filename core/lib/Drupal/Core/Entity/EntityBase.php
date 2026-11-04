@@ -27,13 +27,6 @@ abstract class EntityBase implements EntityInterface {
   }
 
   /**
-   * The entity type.
-   *
-   * @var string
-   */
-  protected $entityTypeId;
-
-  /**
    * Boolean indicating whether the entity should be forced to be new.
    *
    * @var bool
@@ -65,11 +58,13 @@ abstract class EntityBase implements EntityInterface {
    * @param array $values
    *   An array of values to set, keyed by property name. If the entity type
    *   has bundles, the bundle key has to be specified.
-   * @param string $entity_type
+   * @param string $entityTypeId
    *   The type of the entity to create.
    */
-  public function __construct(array $values, $entity_type) {
-    $this->entityTypeId = $entity_type;
+  public function __construct(
+    array $values,
+    protected $entityTypeId,
+  ) {
     // Set initial values.
     foreach ($values as $key => $value) {
       $this->$key = $value;

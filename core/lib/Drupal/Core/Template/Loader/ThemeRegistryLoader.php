@@ -14,20 +14,14 @@ use Twig\Loader\FilesystemLoader;
 class ThemeRegistryLoader extends FilesystemLoader {
 
   /**
-   * The theme registry used to determine which template to use.
-   *
-   * @var \Drupal\Core\Theme\Registry
-   */
-  protected $themeRegistry;
-
-  /**
    * Constructs a new ThemeRegistryLoader object.
    *
-   * @param \Drupal\Core\Theme\Registry $theme_registry
+   * @param \Drupal\Core\Theme\Registry $themeRegistry
    *   The theme registry.
    */
-  public function __construct(Registry $theme_registry) {
-    $this->themeRegistry = $theme_registry;
+  public function __construct(
+    protected Registry $themeRegistry,
+  ) {
   }
 
   /**

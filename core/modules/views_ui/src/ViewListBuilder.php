@@ -22,13 +22,6 @@ use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 class ViewListBuilder extends ConfigEntityListBuilder {
 
   /**
-   * The views display plugin manager to use.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $displayManager;
-
-  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
@@ -46,13 +39,15 @@ class ViewListBuilder extends ConfigEntityListBuilder {
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $display_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $displayManager
    *   The views display plugin manager to use.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, PluginManagerInterface $display_manager) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    EntityStorageInterface $storage,
+    protected PluginManagerInterface $displayManager,
+  ) {
     parent::__construct($entity_type, $storage);
-
-    $this->displayManager = $display_manager;
     // This list builder uses client-side filters which requires all entities to
     // be listed, disable the pager.
     // @todo https://www.drupal.org/node/2536826 change the filtering to support

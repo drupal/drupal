@@ -19,20 +19,14 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class ParamConversionEnhancer implements EnhancerInterface, EventSubscriberInterface {
 
   /**
-   * The parameter conversion manager.
-   *
-   * @var \Drupal\Core\ParamConverter\ParamConverterManagerInterface
-   */
-  protected $paramConverterManager;
-
-  /**
    * Constructs a new ParamConversionEnhancer.
    *
-   * @param \Drupal\Core\ParamConverter\ParamConverterManagerInterface $param_converter_manager
+   * @param \Drupal\Core\ParamConverter\ParamConverterManagerInterface $paramConverterManager
    *   The parameter conversion manager.
    */
-  public function __construct(ParamConverterManagerInterface $param_converter_manager) {
-    $this->paramConverterManager = $param_converter_manager;
+  public function __construct(
+    protected ParamConverterManagerInterface $paramConverterManager,
+  ) {
   }
 
   /**

@@ -13,20 +13,6 @@ class InfoHookDecorator implements DiscoveryInterface {
   use DiscoveryTrait;
 
   /**
-   * The Discovery object being decorated.
-   *
-   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface
-   */
-  protected $decorated;
-
-  /**
-   * The name of the info hook that will be implemented.
-   *
-   * @var string
-   */
-  protected $hook;
-
-  /**
    * Constructs an InfoHookDecorator object.
    *
    * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $decorated
@@ -34,9 +20,10 @@ class InfoHookDecorator implements DiscoveryInterface {
    * @param string $hook
    *   The name of the info hook to be invoked by this discovery instance.
    */
-  public function __construct(DiscoveryInterface $decorated, $hook) {
-    $this->decorated = $decorated;
-    $this->hook = $hook;
+  public function __construct(
+    protected DiscoveryInterface $decorated,
+    protected $hook,
+  ) {
   }
 
   /**

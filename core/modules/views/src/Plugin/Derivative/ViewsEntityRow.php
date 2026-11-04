@@ -27,40 +27,20 @@ class ViewsEntityRow implements ContainerDeriverInterface {
   protected $derivatives = [];
 
   /**
-   * The base plugin ID that the derivative is for.
-   *
-   * @var string
-   */
-  protected $basePluginId;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The views data service.
-   *
-   * @var \Drupal\views\ViewsData
-   */
-  protected $viewsData;
-
-  /**
    * Constructs a ViewsEntityRow object.
    *
-   * @param string $base_plugin_id
+   * @param string $basePluginId
    *   The base plugin ID.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\views\ViewsData $views_data
+   * @param \Drupal\views\ViewsData $viewsData
    *   The views data service.
    */
-  public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager, ViewsData $views_data) {
-    $this->basePluginId = $base_plugin_id;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->viewsData = $views_data;
+  public function __construct(
+    protected $basePluginId,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ViewsData $viewsData,
+  ) {
   }
 
   /**

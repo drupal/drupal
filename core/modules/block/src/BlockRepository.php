@@ -20,33 +20,21 @@ class BlockRepository implements BlockRepositoryInterface {
   protected $blockStorage;
 
   /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
-   * The context handler.
-   *
-   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface
-   */
-  protected $contextHandler;
-
-  /**
    * Constructs a new BlockRepository.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
    *   The theme manager.
-   * @param \Drupal\Core\Plugin\Context\ContextHandlerInterface $context_handler
+   * @param \Drupal\Core\Plugin\Context\ContextHandlerInterface $contextHandler
    *   The plugin context handler.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ThemeManagerInterface $theme_manager, ContextHandlerInterface $context_handler) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    protected ThemeManagerInterface $themeManager,
+    protected ContextHandlerInterface $contextHandler,
+  ) {
     $this->blockStorage = $entity_type_manager->getStorage('block');
-    $this->themeManager = $theme_manager;
-    $this->contextHandler = $context_handler;
   }
 
   /**

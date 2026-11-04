@@ -14,40 +14,20 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ConfigSnapshotSubscriber implements EventSubscriberInterface {
 
   /**
-   * The configuration manager.
-   *
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
-   * The source storage used to discover configuration changes.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $sourceStorage;
-
-  /**
-   * The snapshot storage used to write configuration changes.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $snapshotStorage;
-
-  /**
    * Constructs the ConfigSnapshotSubscriber object.
    *
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
    *   The configuration manager.
-   * @param \Drupal\Core\Config\StorageInterface $source_storage
+   * @param \Drupal\Core\Config\StorageInterface $sourceStorage
    *   The source storage used to discover configuration changes.
-   * @param \Drupal\Core\Config\StorageInterface $snapshot_storage
+   * @param \Drupal\Core\Config\StorageInterface $snapshotStorage
    *   The snapshot storage used to write configuration changes.
    */
-  public function __construct(ConfigManagerInterface $config_manager, StorageInterface $source_storage, StorageInterface $snapshot_storage) {
-    $this->configManager = $config_manager;
-    $this->sourceStorage = $source_storage;
-    $this->snapshotStorage = $snapshot_storage;
+  public function __construct(
+    protected ConfigManagerInterface $configManager,
+    protected StorageInterface $sourceStorage,
+    protected StorageInterface $snapshotStorage,
+  ) {
   }
 
   /**

@@ -12,20 +12,14 @@ namespace Drupal\new_dependency_test;
 class Service {
 
   /**
-   * The decorated service.
-   *
-   * @var \Drupal\new_dependency_test\Service
-   */
-  protected $inner;
-
-  /**
    * Service constructor.
    *
    * @param \Drupal\new_dependency_test\Service|null $inner
    *   The service to decorate.
    */
-  public function __construct(?Service $inner = NULL) {
-    $this->inner = $inner;
+  public function __construct(
+    protected ?Service $inner = NULL,
+  ) {
   }
 
   /**

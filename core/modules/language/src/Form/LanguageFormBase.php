@@ -15,20 +15,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class LanguageFormBase extends EntityForm {
 
   /**
-   * The configurable language manager.
-   *
-   * @var \Drupal\language\ConfigurableLanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * Constructs a ContentEntityForm object.
    *
-   * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
+   * @param \Drupal\language\ConfigurableLanguageManagerInterface $languageManager
    *   The configurable language manager.
    */
-  public function __construct(ConfigurableLanguageManagerInterface $language_manager) {
-    $this->languageManager = $language_manager;
+  public function __construct(
+    protected ConfigurableLanguageManagerInterface $languageManager,
+  ) {
   }
 
   /**

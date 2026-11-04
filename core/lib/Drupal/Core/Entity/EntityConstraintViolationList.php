@@ -17,13 +17,6 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
   use StringTranslationTrait;
 
   /**
-   * The entity that has been validated.
-   *
-   * @var \Drupal\Core\Entity\FieldableEntityInterface
-   */
-  protected $entity;
-
-  /**
    * Violations offsets of entity level violations.
    *
    * @var int[]|null
@@ -47,9 +40,11 @@ class EntityConstraintViolationList extends ConstraintViolationList implements E
    * @param iterable $violations
    *   The set of violations.
    */
-  public function __construct(FieldableEntityInterface $entity, iterable $violations = []) {
+  public function __construct(
+    protected FieldableEntityInterface $entity,
+    iterable $violations = [],
+  ) {
     parent::__construct($violations);
-    $this->entity = $entity;
   }
 
   /**

@@ -16,30 +16,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityViewController implements ContainerInjectionInterface, TrustedCallbackInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Creates an EntityViewController object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RendererInterface $renderer) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->renderer = $renderer;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected RendererInterface $renderer,
+  ) {
   }
 
   /**

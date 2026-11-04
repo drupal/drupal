@@ -16,20 +16,6 @@ use Symfony\Component\Routing\Route;
 class EntityResolverManager {
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The class resolver.
-   *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
-   */
-  protected $classResolver;
-
-  /**
    * The list of all entity types.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface[]
@@ -39,14 +25,15 @@ class EntityResolverManager {
   /**
    * Constructs a new EntityRouteAlterSubscriber.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $classResolver
    *   The class resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ClassResolverInterface $class_resolver) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->classResolver = $class_resolver;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ClassResolverInterface $classResolver,
+  ) {
   }
 
   /**

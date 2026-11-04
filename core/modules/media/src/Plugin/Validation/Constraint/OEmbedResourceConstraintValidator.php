@@ -23,20 +23,6 @@ use Symfony\Component\Validator\ConstraintValidator;
 class OEmbedResourceConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The oEmbed URL resolver service.
-   *
-   * @var \Drupal\media\OEmbed\UrlResolverInterface
-   */
-  protected $urlResolver;
-
-  /**
-   * The resource fetcher service.
-   *
-   * @var \Drupal\media\OEmbed\ResourceFetcherInterface
-   */
-  protected $resourceFetcher;
-
-  /**
    * The logger service.
    *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
@@ -46,16 +32,18 @@ class OEmbedResourceConstraintValidator extends ConstraintValidator implements C
   /**
    * Constructs a new OEmbedResourceConstraintValidator.
    *
-   * @param \Drupal\media\OEmbed\UrlResolverInterface $url_resolver
+   * @param \Drupal\media\OEmbed\UrlResolverInterface $urlResolver
    *   The oEmbed URL resolver service.
-   * @param \Drupal\media\OEmbed\ResourceFetcherInterface $resource_fetcher
+   * @param \Drupal\media\OEmbed\ResourceFetcherInterface $resourceFetcher
    *   The resource fetcher service.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger service.
    */
-  public function __construct(UrlResolverInterface $url_resolver, ResourceFetcherInterface $resource_fetcher, LoggerChannelFactoryInterface $logger_factory) {
-    $this->urlResolver = $url_resolver;
-    $this->resourceFetcher = $resource_fetcher;
+  public function __construct(
+    protected UrlResolverInterface $urlResolver,
+    protected ResourceFetcherInterface $resourceFetcher,
+    LoggerChannelFactoryInterface $logger_factory,
+  ) {
     $this->logger = $logger_factory->get('media');
   }
 

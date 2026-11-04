@@ -29,30 +29,17 @@ class HandlerStackConfigurator {
   protected $middlewares = NULL;
 
   /**
-   * A list of used middleware service IDs.
-   *
-   * @var string[]
-   */
-  protected $middlewareIds = [];
-
-  /**
-   * The service container.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $container;
-
-  /**
    * Constructs a new HandlerStackConfigurator object.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The service container.
-   * @param string[] $middleware_ids
+   * @param string[] $middlewareIds
    *   The middleware IDs.
    */
-  public function __construct(ContainerInterface $container, array $middleware_ids) {
-    $this->middlewareIds = $middleware_ids;
-    $this->container = $container;
+  public function __construct(
+    protected ContainerInterface $container,
+    protected array $middlewareIds,
+  ) {
   }
 
   /**

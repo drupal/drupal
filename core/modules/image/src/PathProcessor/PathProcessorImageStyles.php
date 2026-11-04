@@ -24,20 +24,14 @@ use Symfony\Component\HttpFoundation\Request;
 class PathProcessorImageStyles implements InboundPathProcessorInterface {
 
   /**
-   * The stream wrapper manager service.
-   *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
-   */
-  protected $streamWrapperManager;
-
-  /**
    * Constructs a new PathProcessorImageStyles object.
    *
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
    *   The stream wrapper manager service.
    */
-  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager) {
-    $this->streamWrapperManager = $stream_wrapper_manager;
+  public function __construct(
+    protected StreamWrapperManagerInterface $streamWrapperManager,
+  ) {
   }
 
   /**

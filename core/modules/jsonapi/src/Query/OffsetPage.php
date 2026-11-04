@@ -52,20 +52,6 @@ class OffsetPage {
   const SIZE_MAX = 50;
 
   /**
-   * The offset for the query.
-   *
-   * @var int
-   */
-  protected $offset;
-
-  /**
-   * The size of the query.
-   *
-   * @var int
-   */
-  protected $size;
-
-  /**
    * Instantiates an OffsetPage object.
    *
    * @param int $offset
@@ -73,9 +59,10 @@ class OffsetPage {
    * @param int $size
    *   The query size limit.
    */
-  public function __construct($offset, $size) {
-    $this->offset = $offset;
-    $this->size = $size;
+  public function __construct(
+    protected $offset,
+    protected $size,
+  ) {
   }
 
   /**

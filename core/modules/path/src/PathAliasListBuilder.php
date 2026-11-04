@@ -22,56 +22,30 @@ use Symfony\Component\HttpFoundation\Request;
 class PathAliasListBuilder extends EntityListBuilder {
 
   /**
-   * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $currentRequest;
-
-  /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The path alias manager.
-   *
-   * @var \Drupal\path_alias\AliasManagerInterface
-   */
-  protected $aliasManager;
-
-  /**
    * Constructs a new PathAliasListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
-   * @param \Symfony\Component\HttpFoundation\Request $current_request
+   * @param \Symfony\Component\HttpFoundation\Request $currentRequest
    *   The current request.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    *   The form builder.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
-   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManagerInterface $aliasManager
    *   The path alias manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, Request $current_request, FormBuilderInterface $form_builder, LanguageManagerInterface $language_manager, AliasManagerInterface $alias_manager) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    EntityStorageInterface $storage,
+    protected Request $currentRequest,
+    protected FormBuilderInterface $formBuilder,
+    protected LanguageManagerInterface $languageManager,
+    protected AliasManagerInterface $aliasManager,
+  ) {
     parent::__construct($entity_type, $storage);
-
-    $this->currentRequest = $current_request;
-    $this->formBuilder = $form_builder;
-    $this->languageManager = $language_manager;
-    $this->aliasManager = $alias_manager;
   }
 
   /**

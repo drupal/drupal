@@ -12,27 +12,6 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 class DefaultTableMapping implements TableMappingInterface {
 
   /**
-   * The entity type definition.
-   *
-   * @var \Drupal\Core\Entity\ContentEntityTypeInterface
-   */
-  protected $entityType;
-
-  /**
-   * The field storage definitions of this mapping.
-   *
-   * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]
-   */
-  protected $fieldStorageDefinitions = [];
-
-  /**
-   * The prefix to be used by all the tables of this mapping.
-   *
-   * @var string
-   */
-  protected $prefix;
-
-  /**
    * The base table of the entity.
    *
    * @var string
@@ -116,31 +95,31 @@ class DefaultTableMapping implements TableMappingInterface {
   /**
    * Constructs a DefaultTableMapping.
    *
-   * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type
+   * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entityType
    *   The entity type definition.
-   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $storage_definitions
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $fieldStorageDefinitions
    *   A list of field storage definitions that should be available for the
    *   field columns of this table mapping.
    * @param string $prefix
    *   (optional) A prefix to be used by all the tables of this mapping.
    *   Defaults to an empty string.
    */
-  public function __construct(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
-    $this->entityType = $entity_type;
-    $this->fieldStorageDefinitions = $storage_definitions;
-    $this->prefix = $prefix;
-
+  public function __construct(
+    protected ContentEntityTypeInterface $entityType,
+    protected array $fieldStorageDefinitions,
+    protected $prefix = '',
+  ) {
     // @todo Remove table names from the entity type definition in
     //   https://www.drupal.org/node/2232465.
-    $this->baseTable = $this->prefix . $entity_type->getBaseTable() ?: $entity_type->id();
-    if ($entity_type->isRevisionable()) {
-      $this->revisionTable = $this->prefix . $entity_type->getRevisionTable() ?: $entity_type->id() . '_revision';
+    $this->baseTable = $this->prefix . $this->entityType->getBaseTable() ?: $this->entityType->id();
+    if ($this->entityType->isRevisionable()) {
+      $this->revisionTable = $this->prefix . $this->entityType->getRevisionTable() ?: $this->entityType->id() . '_revision';
     }
-    if ($entity_type->isTranslatable()) {
-      $this->dataTable = $this->prefix . $entity_type->getDataTable() ?: $entity_type->id() . '_field_data';
+    if ($this->entityType->isTranslatable()) {
+      $this->dataTable = $this->prefix . $this->entityType->getDataTable() ?: $this->entityType->id() . '_field_data';
     }
-    if ($entity_type->isRevisionable() && $entity_type->isTranslatable()) {
-      $this->revisionDataTable = $this->prefix . $entity_type->getRevisionDataTable() ?: $entity_type->id() . '_field_revision';
+    if ($this->entityType->isRevisionable() && $this->entityType->isTranslatable()) {
+      $this->revisionDataTable = $this->prefix . $this->entityType->getRevisionDataTable() ?: $this->entityType->id() . '_field_revision';
     }
   }
 

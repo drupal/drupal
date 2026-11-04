@@ -16,20 +16,14 @@ use Drupal\Component\EventDispatcher\Event;
 class PrepareLayoutEvent extends Event {
 
   /**
-   * The section storage plugin.
-   *
-   * @var \Drupal\layout_builder\SectionStorageInterface
-   */
-  protected $sectionStorage;
-
-  /**
    * Constructs a new PrepareLayoutEvent.
    *
-   * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
+   * @param \Drupal\layout_builder\SectionStorageInterface $sectionStorage
    *   The section storage preparing the Layout.
    */
-  public function __construct(SectionStorageInterface $section_storage) {
-    $this->sectionStorage = $section_storage;
+  public function __construct(
+    protected SectionStorageInterface $sectionStorage,
+  ) {
   }
 
   /**

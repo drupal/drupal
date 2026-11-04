@@ -16,40 +16,20 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class UserFloodControl implements UserFloodControlInterface {
 
   /**
-   * The decorated flood service.
-   *
-   * @var \Drupal\Core\Flood\FloodInterface
-   */
-  protected $flood;
-
-  /**
-   * Event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * Construct the UserFloodControl.
    *
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack used to retrieve the current request.
    */
-  public function __construct(FloodInterface $flood, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack) {
-    $this->flood = $flood;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->requestStack = $request_stack;
+  public function __construct(
+    protected FloodInterface $flood,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected RequestStack $requestStack,
+  ) {
   }
 
   /**

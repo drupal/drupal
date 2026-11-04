@@ -16,32 +16,11 @@ use Psr\Http\Client\ClientExceptionInterface;
 class ProviderRepository implements ProviderRepositoryInterface {
 
   /**
-   * How long the provider data should be cached, in seconds.
-   *
-   * @var int
-   */
-  protected $maxAge;
-
-  /**
-   * The HTTP client.
-   *
-   * @var \GuzzleHttp\Client
-   */
-  protected $httpClient;
-
-  /**
    * URL of a JSON document which contains a database of oEmbed providers.
    *
    * @var string
    */
   protected $providersUrl;
-
-  /**
-   * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected $time;
 
   /**
    * The key-value store.
@@ -60,7 +39,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
   /**
    * Constructs a ProviderRepository instance.
    *
-   * @param \GuzzleHttp\ClientInterface $http_client
+   * @param \GuzzleHttp\ClientInterface $httpClient
    *   The HTTP client.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
@@ -70,14 +49,18 @@ class ProviderRepository implements ProviderRepositoryInterface {
    *   The key-value store factory.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger channel factory.
-   * @param int $max_age
+   * @param int $maxAge
    *   (optional) How long the cache data should be kept. Defaults to a week.
    */
-  public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config_factory, TimeInterface $time, KeyValueFactoryInterface $key_value_factory, LoggerChannelFactoryInterface $logger_factory, int $max_age = 604800) {
-    $this->httpClient = $http_client;
+  public function __construct(
+    protected ClientInterface $httpClient,
+    ConfigFactoryInterface $config_factory,
+    protected TimeInterface $time,
+    KeyValueFactoryInterface $key_value_factory,
+    LoggerChannelFactoryInterface $logger_factory,
+    protected int $maxAge = 604800,
+  ) {
     $this->providersUrl = $config_factory->get('media.settings')->get('oembed_providers_url');
-    $this->time = $time;
-    $this->maxAge = $max_age;
     $this->keyValue = $key_value_factory->get('media');
     $this->logger = $logger_factory->get('media');
   }

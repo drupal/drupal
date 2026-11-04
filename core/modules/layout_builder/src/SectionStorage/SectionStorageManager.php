@@ -24,13 +24,6 @@ use Drupal\layout_builder\SupportAwareSectionStorageInterface;
 class SectionStorageManager extends DefaultPluginManager implements SupportAwareSectionStorageManagerInterface {
 
   /**
-   * The context handler.
-   *
-   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface
-   */
-  protected $contextHandler;
-
-  /**
    * Constructs a new SectionStorageManager object.
    *
    * @param \Traversable $namespaces
@@ -40,13 +33,16 @@ class SectionStorageManager extends DefaultPluginManager implements SupportAware
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
-   * @param \Drupal\Core\Plugin\Context\ContextHandlerInterface $context_handler
+   * @param \Drupal\Core\Plugin\Context\ContextHandlerInterface $contextHandler
    *   The context handler.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ContextHandlerInterface $context_handler) {
+  public function __construct(
+    \Traversable $namespaces,
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+    protected ContextHandlerInterface $contextHandler,
+  ) {
     parent::__construct('Plugin/SectionStorage', $namespaces, $module_handler, SectionStorageInterface::class, SectionStorage::class, '\Drupal\layout_builder\Annotation\SectionStorage');
-
-    $this->contextHandler = $context_handler;
 
     $this->alterInfo('layout_builder_section_storage');
     $this->setCacheBackend($cache_backend, 'layout_builder_section_storage_plugins');

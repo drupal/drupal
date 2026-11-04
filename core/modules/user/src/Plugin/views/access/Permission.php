@@ -39,18 +39,6 @@ class Permission extends AccessPluginBase implements CacheableDependencyInterfac
   protected $usesOptions = TRUE;
 
   /**
-   * The permission handler.
-   *
-   * @var \Drupal\user\PermissionHandlerInterface
-   */
-  protected $permissionHandler;
-
-  /**
-   * Module extension list.
-   */
-  protected ModuleExtensionList $moduleExtensionList;
-
-  /**
    * Constructs a Permission object.
    *
    * @param array $configuration
@@ -59,22 +47,20 @@ class Permission extends AccessPluginBase implements CacheableDependencyInterfac
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\user\PermissionHandlerInterface $permission_handler
+   * @param \Drupal\user\PermissionHandlerInterface $permissionHandler
    *   The permission handler.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
+   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
    *   The module extension list.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    PermissionHandlerInterface $permission_handler,
+    protected PermissionHandlerInterface $permissionHandler,
     #[Autowire(service: 'extension.list.module')]
-    ModuleExtensionList $module_extension_list,
+    protected ModuleExtensionList $moduleExtensionList,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->permissionHandler = $permission_handler;
-    $this->moduleExtensionList = $module_extension_list;
   }
 
   /**

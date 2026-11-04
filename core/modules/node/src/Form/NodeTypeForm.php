@@ -18,20 +18,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeTypeForm extends BundleEntityFormBase {
 
   /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
    * Constructs the NodeTypeForm object.
    *
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
    */
-  public function __construct(EntityFieldManagerInterface $entity_field_manager) {
-    $this->entityFieldManager = $entity_field_manager;
+  public function __construct(
+    protected EntityFieldManagerInterface $entityFieldManager,
+  ) {
   }
 
   /**

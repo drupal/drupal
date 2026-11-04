@@ -11,20 +11,14 @@ use Drupal\file\FileInterface;
 abstract class FileUsageBase implements FileUsageInterface {
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Creates a FileUsageBase object.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
-    $this->configFactory = $config_factory;
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory,
+  ) {
   }
 
   /**

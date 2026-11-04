@@ -18,40 +18,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityDisplayRebuilder implements ContainerInjectionInterface {
 
   /**
-   * The field storage config storage.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManager
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The display repository.
-   *
-   * @var \Drupal\Core\Entity\EntityDisplayRepository
-   */
-  protected $entityDisplayRepository;
-
-  /**
-   * The entity type bundle info.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  /**
    * Constructs a new EntityDisplayRebuilder.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity manager.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entityDisplayRepository
    *   The entity display repository.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entityTypeBundleInfo
    *   The entity type bundle info.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityDisplayRepository = $entity_display_repository;
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityDisplayRepositoryInterface $entityDisplayRepository,
+    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+  ) {
   }
 
   /**

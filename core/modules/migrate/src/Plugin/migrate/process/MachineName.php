@@ -63,13 +63,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class MachineName extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The transliteration service.
-   *
-   * @var \Drupal\Component\Transliteration\TransliterationInterface
-   */
-  protected $transliteration;
-
-  /**
    * The regular expression pattern.
    *
    * @var string
@@ -93,10 +86,9 @@ class MachineName extends ProcessPluginBase implements ContainerFactoryPluginInt
     $plugin_id,
     $plugin_definition,
     #[Autowire(service: 'transliteration')]
-    TransliterationInterface $transliteration,
+    protected TransliterationInterface $transliteration,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->transliteration = $transliteration;
 
     $this->replacePattern = $this->configuration['replace_pattern'] ?? '/[^a-z0-9_]+/';
     if (!is_string($this->replacePattern)) {

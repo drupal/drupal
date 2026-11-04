@@ -35,40 +35,20 @@ use Symfony\Component\Validator\ConstraintValidator;
 class ContentTranslationSynchronizedFieldsConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The content translation manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationManagerInterface
-   */
-  protected $contentTranslationManager;
-
-  /**
-   * The field translation synchronizer.
-   *
-   * @var \Drupal\content_translation\FieldTranslationSynchronizerInterface
-   */
-  protected $synchronizer;
-
-  /**
    * ContentTranslationSynchronizedFieldsConstraintValidator constructor.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager
+   * @param \Drupal\content_translation\ContentTranslationManagerInterface $contentTranslationManager
    *   The content translation manager.
    * @param \Drupal\content_translation\FieldTranslationSynchronizerInterface $synchronizer
    *   The field translation synchronizer.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ContentTranslationManagerInterface $content_translation_manager, FieldTranslationSynchronizerInterface $synchronizer) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->contentTranslationManager = $content_translation_manager;
-    $this->synchronizer = $synchronizer;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ContentTranslationManagerInterface $contentTranslationManager,
+    protected FieldTranslationSynchronizerInterface $synchronizer,
+  ) {
   }
 
   /**

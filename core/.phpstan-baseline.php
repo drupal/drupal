@@ -3524,12 +3524,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Config/ConfigCollectionInfo.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Core\\\\Config\\\\ConfigCrudEvent\\:\\:\\$config \\(Drupal\\\\Core\\\\Config\\\\Config\\) does not accept Drupal\\\\Core\\\\Config\\\\StorableConfigBase\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Config/ConfigCrudEvent.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Config\\\\ConfigFactory\\:\\:addOverride\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -3834,12 +3828,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Config/ConfigManagerInterface.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Core\\\\Config\\\\ConfigCrudEvent\\:\\:\\$config \\(Drupal\\\\Core\\\\Config\\\\Config\\) does not accept Drupal\\\\Core\\\\Config\\\\StorableConfigBase\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Config/ConfigRenameEvent.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Config\\\\DatabaseStorage\\:\\:createCollection\\(\\) should return \\$this\\(Drupal\\\\Core\\\\Config\\\\DatabaseStorage\\) but returns static\\(Drupal\\\\Core\\\\Config\\\\DatabaseStorage\\)\\.$#',
@@ -8978,12 +8966,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Extension/DatabaseDriverList.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Core\\\\Extension\\\\Dependency\\:\\:\\$constraintString \\(Drupal\\\\Component\\\\Version\\\\Constraint\\) does not accept string\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Extension/Dependency.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Extension\\\\Extension\\:\\:getExtensionPathname\\(\\) should return string\\|null but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
 	'count' => 1,
@@ -10636,12 +10618,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Form\\\\FormCache\\:\\:setCache\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Form/FormCache.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Core\\\\Form\\\\FormCache\\:\\:\\$logger \\(Drupal\\\\Core\\\\Logger\\\\LoggerChannelInterface\\) does not accept Psr\\\\Log\\\\LoggerInterface\\.$#',
-	'identifier' => 'assign.propertyType',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Form/FormCache.php',
 ];
@@ -12794,7 +12770,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Recipe/RecipeOverrideConfigStorage.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#6 \\$install_profile of class Drupal\\\\Core\\\\Recipe\\\\RecipeConfigInstaller constructor expects string, null given\\.$#',
+	'message' => '#^Parameter \\#6 \\$installProfile of class Drupal\\\\Core\\\\Recipe\\\\RecipeConfigInstaller constructor expects string, null given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Recipe/RecipeRunner.php',
@@ -12802,12 +12778,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Render\\\\BareHtmlPageRenderer\\:\\:renderBarePage\\(\\) should return Drupal\\\\Core\\\\Render\\\\HtmlResponse but returns Drupal\\\\Core\\\\Render\\\\AttachmentsInterface\\.$#',
 	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Render/BareHtmlPageRenderer.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Core\\\\Render\\\\BareHtmlPageRenderer\\:\\:\\$renderer \\(Drupal\\\\Core\\\\Render\\\\Renderer\\) does not accept Drupal\\\\Core\\\\Render\\\\RendererInterface\\.$#',
-	'identifier' => 'assign.propertyType',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Render/BareHtmlPageRenderer.php',
 ];
@@ -13490,12 +13460,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Session/AccountProxyInterface.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Core\\\\Session\\\\AccountSwitcher\\:\\:\\$currentUser \\(Drupal\\\\Core\\\\Session\\\\AccountProxyInterface\\) does not accept default value of type array\\.$#',
-	'identifier' => 'property.defaultValue',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Session/AccountSwitcher.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Session\\\\MetadataBag\\:\\:getCsrfTokenSeed\\(\\) should return string\\|null but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
 	'count' => 1,
@@ -14006,7 +13970,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Test/TestDiscovery.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$class_loader of class Drupal\\\\Core\\\\DrupalKernel constructor expects Composer\\\\Autoload\\\\ClassLoader, null given\\.$#',
+	'message' => '#^Parameter \\#2 \\$classLoader of class Drupal\\\\Core\\\\DrupalKernel constructor expects Composer\\\\Autoload\\\\ClassLoader, null given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Test/TestKernel.php',
@@ -14522,12 +14486,6 @@ $ignoreErrors[] = [
 	'identifier' => 'isset.variable',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/TypedData/Validation/RecursiveContextualValidator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Core\\\\TypedData\\\\Validation\\\\RecursiveValidator\\:\\:\\$typedDataManager \\(Drupal\\\\Core\\\\TypedData\\\\TypedDataManager\\) does not accept Drupal\\\\Core\\\\TypedData\\\\TypedDataManagerInterface\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/TypedData/Validation/RecursiveValidator.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Update\\\\DatabaseUpdate\\:\\:systemSchemaRequirements\\(\\) should return array\\<string, array\\{title\\: Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup, value\\: mixed, description\\: Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup, severity\\: Drupal\\\\Core\\\\Extension\\\\Requirement\\\\RequirementSeverity\\}\\> but returns array\\{\'minimum schema\'\\: array\\{value\\: \'The installed…\', description\\: non\\-falsy\\-string, title\\: \'Minimum schema…\'\\}\\}\\|array\\{\'minimum schema\'\\: array\\{value\\: \'The installed…\', severity\\: Drupal\\\\Core\\\\Extension\\\\Requirement\\\\RequirementSeverity\\:\\:Error, description\\: non\\-falsy\\-string, title\\: \'Minimum schema…\'\\}\\}\\.$#',
@@ -15268,12 +15226,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block/src/BlockViewBuilder.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\block\\\\Controller\\\\BlockLibraryController\\:\\:\\$contextRepository \\(Drupal\\\\Core\\\\Plugin\\\\Context\\\\LazyContextRepository\\) does not accept Drupal\\\\Core\\\\Plugin\\\\Context\\\\ContextRepositoryInterface\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/src/Controller/BlockLibraryController.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\EntityListBuilderInterface\\:\\:render\\(\\) invoked with 2 parameters, 0 required\\.$#',
 	'identifier' => 'arguments.count',
 	'count' => 1,
@@ -15616,21 +15568,15 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block_content/src/Controller/BlockContentController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$block_content_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$blockContentStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/src/Controller/BlockContentController.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$block_content_type_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$blockContentTypeStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/src/Controller/BlockContentController.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
-	'count' => 2,
 	'path' => __DIR__ . '/modules/block_content/src/Controller/BlockContentController.php',
 ];
 $ignoreErrors[] = [
@@ -15694,14 +15640,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block_content/src/Plugin/Block/BlockContentBlock.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$block_content_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$blockContentStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/src/Plugin/Derivative/BlockContent.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/src/Plugin/Derivative/BlockContent.php',
 ];
@@ -17158,14 +17098,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/src/Plugin/Field/FieldFormatter/CommentDefaultFormatter.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$comment_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$commentStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/src/Plugin/Menu/LocalTask/UnapprovedComments.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/Plugin/Menu/LocalTask/UnapprovedComments.php',
 ];
@@ -17188,7 +17122,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/src/Plugin/Validation/Constraint/CommentNameConstraintValidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$user_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$userStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/Plugin/Validation/Constraint/CommentNameConstraintValidator.php',
@@ -17196,12 +17130,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\Plugin\\\\Validation\\\\Constraint\\\\CommentNameConstraintValidator\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/src/Plugin/Validation/Constraint/CommentNameConstraintValidator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/Plugin/Validation/Constraint/CommentNameConstraintValidator.php',
 ];
@@ -19936,7 +19864,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Unit/ModerationInformationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#2 \\$bundle_info of class Drupal\\\\content_moderation\\\\ModerationInformation constructor expects Drupal\\\\Core\\\\Entity\\\\EntityTypeBundleInfoInterface, Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface given\\.$#',
+	'message' => '#^Parameter \\#2 \\$bundleInfo of class Drupal\\\\content_moderation\\\\ModerationInformation constructor expects Drupal\\\\Core\\\\Entity\\\\EntityTypeBundleInfoInterface, Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 4,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Unit/ModerationInformationTest.php',
@@ -20728,7 +20656,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/datetime/src/Plugin/Field/FieldFormatter/DateTimeFormatterBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$date_format_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$dateFormatStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/datetime/src/Plugin/Field/FieldFormatter/DateTimeFormatterBase.php',
@@ -20736,12 +20664,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldFormatter\\\\DateTimeFormatterBase\\:\\:setTimeZone\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/datetime/src/Plugin/Field/FieldFormatter/DateTimeFormatterBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/datetime/src/Plugin/Field/FieldFormatter/DateTimeFormatterBase.php',
 ];
@@ -21696,18 +21618,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field\\\\EntityDisplayRebuilder\\:\\:rebuildEntityTypeDisplays\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/src/EntityDisplayRebuilder.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\field\\\\EntityDisplayRebuilder\\:\\:\\$entityDisplayRepository \\(Drupal\\\\Core\\\\Entity\\\\EntityDisplayRepository\\) does not accept Drupal\\\\Core\\\\Entity\\\\EntityDisplayRepositoryInterface\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/src/EntityDisplayRebuilder.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\field\\\\EntityDisplayRebuilder\\:\\:\\$entityTypeManager \\(Drupal\\\\Core\\\\Entity\\\\EntityTypeManager\\) does not accept Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\.$#',
-	'identifier' => 'assign.propertyType',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/src/EntityDisplayRebuilder.php',
 ];
@@ -25528,7 +25438,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/src/Form/ImageStyleFlushForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$image_style_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$imageStyleStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/src/Form/ImageStyleFormBase.php',
@@ -25542,12 +25452,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\image\\\\Form\\\\ImageStyleFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/src/Form/ImageStyleFormBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/src/Form/ImageStyleFormBase.php',
 ];
@@ -26386,12 +26290,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/src/EventSubscriber/JsonapiMaintenanceModeSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\jsonapi\\\\EventSubscriber\\\\JsonapiMaintenanceModeSubscriber\\:\\:\\$maintenanceMode \\(Drupal\\\\Core\\\\Site\\\\MaintenanceMode\\) does not accept Drupal\\\\Core\\\\Site\\\\MaintenanceModeInterface\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/EventSubscriber/JsonapiMaintenanceModeSubscriber.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jsonapi\\\\EventSubscriber\\\\ResourceObjectNormalizationCacher\\:\\:onTerminate\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -26826,12 +26724,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jsonapi\\\\Query\\\\Filter\\:\\:root\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/src/Query/Filter.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\jsonapi\\\\Query\\\\Filter\\:\\:\\$root \\(string\\) does not accept Drupal\\\\jsonapi\\\\Query\\\\EntityConditionGroup\\.$#',
-	'identifier' => 'assign.propertyType',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/src/Query/Filter.php',
 ];
@@ -28182,7 +28074,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/language/src/Form/NegotiationConfigureForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$block_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$blockStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/src/Form/NegotiationConfigureForm.php',
@@ -28202,12 +28094,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\language\\\\Form\\\\NegotiationConfigureForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/src/Form/NegotiationConfigureForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/src/Form/NegotiationConfigureForm.php',
 ];
@@ -31888,12 +31774,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media/src/MediaTypeListBuilder.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\media\\\\OEmbed\\\\ProviderRepository\\:\\:\\$httpClient \\(GuzzleHttp\\\\Client\\) does not accept GuzzleHttp\\\\ClientInterface\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/src/OEmbed/ProviderRepository.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media\\\\OEmbed\\\\Resource\\:\\:setDimensions\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -32064,12 +31944,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media\\\\Plugin\\\\media\\\\Source\\\\OEmbed\\:\\:validateConfigurationForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/src/Plugin/media/Source/OEmbed.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\media\\\\Plugin\\\\media\\\\Source\\\\OEmbed\\:\\:\\$httpClient \\(GuzzleHttp\\\\Client\\) does not accept GuzzleHttp\\\\ClientInterface\\.$#',
-	'identifier' => 'assign.propertyType',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/src/Plugin/media/Source/OEmbed.php',
 ];
@@ -32676,12 +32550,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media_library/src/Form/AddFormBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Render\\\\ElementInfoManagerInterface\\:\\:renderInIsolation\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/src/Form/FileUploadForm.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\media_library\\\\Form\\\\FileUploadForm\\:\\:prepareMediaEntityForSave\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -32703,12 +32571,6 @@ $ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$media_type of method Drupal\\\\media_library\\\\Form\\\\AddFormBase\\:\\:getSourceFieldName\\(\\) expects Drupal\\\\media\\\\MediaTypeInterface, Drupal\\\\Core\\\\Entity\\\\EntityInterface\\|null given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 3,
-	'path' => __DIR__ . '/modules/media_library/src/Form/FileUploadForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\media_library\\\\Form\\\\FileUploadForm\\:\\:\\$renderer \\(Drupal\\\\Core\\\\Render\\\\ElementInfoManagerInterface\\) does not accept Drupal\\\\Core\\\\Render\\\\RendererInterface\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
 	'path' => __DIR__ . '/modules/media_library/src/Form/FileUploadForm.php',
 ];
 $ignoreErrors[] = [
@@ -33384,7 +33246,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/menu_ui/src/MenuForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$menu_link_content_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$menuLinkContentStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_ui/src/MenuForm.php',
@@ -33416,12 +33278,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\menu_ui\\\\MenuForm\\:\\:submitOverviewForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/src/MenuForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_ui/src/MenuForm.php',
 ];
@@ -33918,24 +33774,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate/src/Plugin/Migration.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\migrate\\\\Plugin\\\\Migration\\:\\:\\$idMapPluginManager \\(Drupal\\\\migrate\\\\Plugin\\\\MigratePluginManager\\) does not accept Drupal\\\\migrate\\\\Plugin\\\\MigratePluginManagerInterface\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/src/Plugin/Migration.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\migrate\\\\Plugin\\\\Migration\\:\\:\\$processPluginManager \\(Drupal\\\\migrate\\\\Plugin\\\\MigratePluginManager\\) does not accept Drupal\\\\migrate\\\\Plugin\\\\MigratePluginManagerInterface\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/src/Plugin/Migration.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\migrate\\\\Plugin\\\\Migration\\:\\:\\$sourcePluginManager \\(Drupal\\\\migrate\\\\Plugin\\\\MigratePluginManager\\) does not accept Drupal\\\\migrate\\\\Plugin\\\\MigratePluginManagerInterface\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/src/Plugin/Migration.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate\\\\Plugin\\\\MigrationInterface\\:\\:clearInterruptionResult\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -34374,12 +34212,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/process/EntityExists.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/process/EntityExists.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\process\\\\MakeUniqueEntityField\\:\\:exists\\(\\) should return bool but returns int\\<0, max\\>\\.$#',
 	'identifier' => 'return.type',
 	'count' => 1,
@@ -34392,14 +34224,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/process/MenuLinkParent.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$menu_link_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$menuLinkStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/process/MenuLinkParent.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/process/MenuLinkParent.php',
 ];
@@ -36036,7 +35862,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/NodeViewBuilder.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$node_type_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$nodeTypeStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/Plugin/views/argument/Type.php',
@@ -36060,12 +35886,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/Plugin/views/argument/Type.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Plugin/views/argument/Type.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\views\\\\Plugin\\\\views\\\\query\\\\QueryPluginBase\\:\\:addWhereExpression\\(\\)\\.$#',
 	'identifier' => 'method.notFound',
 	'count' => 1,
@@ -36078,7 +35898,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/src/Plugin/views/argument/UidRevision.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$node_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$nodeStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/Plugin/views/argument/Vid.php',
@@ -36086,12 +35906,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Offset \'title\' does not exist on string\\.$#',
 	'identifier' => 'offsetAccess.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Plugin/views/argument/Vid.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/Plugin/views/argument/Vid.php',
 ];
@@ -39072,12 +38886,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/serialization/src/EventSubscriber/DefaultExceptionSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\serialization\\\\EventSubscriber\\\\DefaultExceptionSubscriber\\:\\:\\$serializer \\(Symfony\\\\Component\\\\Serializer\\\\Serializer\\) does not accept Symfony\\\\Component\\\\Serializer\\\\SerializerInterface\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/src/EventSubscriber/DefaultExceptionSubscriber.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\serialization\\\\EventSubscriber\\\\UserRouteAlterSubscriber\\:\\:onRoutingAlterAddFormats\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -39942,7 +39750,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Form/DateFormatFormBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$date_format_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$dateFormatStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/DateFormatFormBase.php',
@@ -39968,12 +39776,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\system\\\\Form\\\\DateFormatFormBase\\:\\:validateForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Form/DateFormatFormBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Form/DateFormatFormBase.php',
 ];
@@ -40380,14 +40182,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Plugin/Condition/RequestPath.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$menu_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$menuStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Plugin/Derivative/SystemMenuBlock.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Plugin/Derivative/SystemMenuBlock.php',
 ];
@@ -43778,7 +43574,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Form/TermDeleteForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$term_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$termStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Form/VocabularyResetForm.php',
@@ -43786,12 +43582,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Form\\\\VocabularyResetForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/Form/VocabularyResetForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Form/VocabularyResetForm.php',
 ];
@@ -43898,7 +43688,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/argument/IndexTidDepthModifier.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$vocabulary_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$vocabularyStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/argument_default/Tid.php',
@@ -43922,12 +43712,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/argument_default/Tid.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/argument_default/Tid.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\argument_validator\\\\TermName\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -43946,7 +43730,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/argument_validator/TermName.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$vocabulary_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$vocabularyStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/field/TaxonomyIndexTid.php',
@@ -43988,25 +43772,19 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/field/TaxonomyIndexTid.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/field/TaxonomyIndexTid.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\field\\\\TermName\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/field/TermName.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$term_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$termStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$vocabulary_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$vocabularyStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php',
@@ -44066,12 +43844,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\views\\\\Plugin\\\\views\\\\query\\\\QueryPluginBase\\:\\:addRelationship\\(\\)\\.$#',
 	'identifier' => 'method.notFound',
 	'count' => 1,
@@ -44120,7 +43892,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/relationship/NodeTermData.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$vocabulary_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$vocabularyStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/relationship/NodeTermData.php',
@@ -44140,12 +43912,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\relationship\\\\NodeTermData\\:\\:submitOptionsForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/relationship/NodeTermData.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/relationship/NodeTermData.php',
 ];
@@ -44342,7 +44108,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/VocabularyForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$vocabulary_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$vocabularyStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/VocabularyForm.php',
@@ -44356,12 +44122,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\VocabularyForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/src/VocabularyForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/VocabularyForm.php',
 ];
@@ -45446,7 +45206,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/src/Form/RoleSettingsForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$role_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$roleStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Form/RoleSettingsForm.php',
@@ -45454,12 +45214,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Form\\\\RoleSettingsForm\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Form/RoleSettingsForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Form/RoleSettingsForm.php',
 ];
@@ -45741,7 +45495,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/src/Plugin/Validation/Constraint/ProtectedUserFieldConstraintValidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$user_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$userStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Plugin/Validation/Constraint/ProtectedUserFieldConstraintValidator.php',
@@ -45749,12 +45503,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Plugin\\\\Validation\\\\Constraint\\\\ProtectedUserFieldConstraintValidator\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Plugin/Validation/Constraint/ProtectedUserFieldConstraintValidator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Plugin/Validation/Constraint/ProtectedUserFieldConstraintValidator.php',
 ];
@@ -45891,7 +45639,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/src/Plugin/views/access/Permission.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$role_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$roleStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Plugin/views/access/Role.php',
@@ -45917,12 +45665,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Plugin\\\\views\\\\access\\\\Role\\:\\:validateOptionsForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Plugin/views/access/Role.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Plugin/views/access/Role.php',
 ];
@@ -47593,7 +47335,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/EntityViewsData.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$storage_controller is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/EntityViewsData.php',
@@ -47631,12 +47373,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views\\\\EntityViewsData\\:\\:processViewsDataForUuid\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/EntityViewsData.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/EntityViewsData.php',
 ];
@@ -48175,14 +47911,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsBlock.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$view_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$viewStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsBlock.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsBlock.php',
 ];
@@ -48205,14 +47935,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsExposedFilterBlock.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$view_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$viewStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsExposedFilterBlock.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsExposedFilterBlock.php',
 ];
@@ -48223,7 +47947,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsLocalTask.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$view_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$viewStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsLocalTask.php',
@@ -48235,26 +47959,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsLocalTask.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsLocalTask.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getExecutable\\(\\)\\.$#',
 	'identifier' => 'method.notFound',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsMenuLink.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$view_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$viewStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsMenuLink.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/Derivative/ViewsMenuLink.php',
 ];
@@ -48979,7 +48691,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/area/View.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$view_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$viewStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/area/View.php',
@@ -48987,12 +48699,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\area\\\\View\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Plugin/views/area/View.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/area/View.php',
 ];
@@ -50863,7 +50569,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/display/Feed.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$menu_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$menuStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/display/Page.php',
@@ -50895,12 +50601,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\display\\\\Page\\:\\:validateOptionsForm\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Plugin/views/display/Page.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/display/Page.php',
 ];
@@ -51367,7 +51067,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/field/Custom.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Direct injection of entity storage via \\$date_format_storage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
+	'message' => '#^Direct injection of entity storage via \\$dateFormatStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/field/Date.php',
@@ -51381,12 +51081,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\Date\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Plugin/views/field/Date.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
-	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/field/Date.php',
 ];
@@ -57985,7 +57679,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workflows/tests/src/Kernel/WorkflowAccessControlHandlerTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$route_name of class Drupal\\\\Core\\\\Routing\\\\RouteMatch constructor expects string, null given\\.$#',
+	'message' => '#^Parameter \\#1 \\$routeName of class Drupal\\\\Core\\\\Routing\\\\RouteMatch constructor expects string, null given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 4,
 	'path' => __DIR__ . '/modules/workflows/tests/src/Unit/WorkflowStateTransitionOperationsAccessCheckTest.php',

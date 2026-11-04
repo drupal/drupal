@@ -25,20 +25,6 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 class ImageStyleDownloadController extends FileDownloadController {
 
   /**
-   * The lock backend.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
-   * The image factory.
-   *
-   * @var \Drupal\Core\Image\ImageFactory
-   */
-  protected $imageFactory;
-
-  /**
    * A logger instance.
    *
    * @var \Psr\Log\LoggerInterface
@@ -46,36 +32,26 @@ class ImageStyleDownloadController extends FileDownloadController {
   protected $logger;
 
   /**
-   * File system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
    * Constructs an ImageStyleDownloadController object.
    *
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
-   * @param \Drupal\Core\Image\ImageFactory $image_factory
+   * @param \Drupal\Core\Image\ImageFactory $imageFactory
    *   The image factory.
    * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
    *   The stream wrapper manager.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The system service.
    */
   public function __construct(
     #[Autowire(service: 'lock')]
-    LockBackendInterface $lock,
-    ImageFactory $image_factory,
+    protected LockBackendInterface $lock,
+    protected ImageFactory $imageFactory,
     StreamWrapperManagerInterface $stream_wrapper_manager,
-    FileSystemInterface $file_system,
+    protected FileSystemInterface $fileSystem,
   ) {
     parent::__construct($stream_wrapper_manager);
-    $this->lock = $lock;
-    $this->imageFactory = $image_factory;
     $this->logger = $this->getLogger('image');
-    $this->fileSystem = $file_system;
   }
 
   /**

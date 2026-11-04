@@ -8,20 +8,6 @@ namespace Drupal\Core\Ajax;
 class BaseCommand implements CommandInterface {
 
   /**
-   * The name of the command.
-   *
-   * @var string
-   */
-  protected $command;
-
-  /**
-   * The data to pass on to the client side.
-   *
-   * @var string
-   */
-  protected $data;
-
-  /**
    * Constructs a BaseCommand object.
    *
    * @param string $command
@@ -29,9 +15,10 @@ class BaseCommand implements CommandInterface {
    * @param string $data
    *   The data to pass on to the client side.
    */
-  public function __construct($command, $data) {
-    $this->command = $command;
-    $this->data = $data;
+  public function __construct(
+    protected $command,
+    protected $data,
+  ) {
   }
 
   /**

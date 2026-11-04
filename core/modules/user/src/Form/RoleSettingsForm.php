@@ -26,20 +26,14 @@ use Symfony\Component\Routing\Attribute\Route;
 class RoleSettingsForm extends FormBase {
 
   /**
-   * The role storage used when changing the admin role.
-   *
-   * @var \Drupal\user\RoleStorageInterface
-   */
-  protected $roleStorage;
-
-  /**
    * Constructs a \Drupal\user\Form\RoleSettingsForm object.
    *
-   * @param \Drupal\user\RoleStorageInterface $role_storage
+   * @param \Drupal\user\RoleStorageInterface $roleStorage
    *   The role storage.
    */
-  public function __construct(RoleStorageInterface $role_storage) {
-    $this->roleStorage = $role_storage;
+  public function __construct(
+    protected RoleStorageInterface $roleStorage,
+  ) {
   }
 
   /**

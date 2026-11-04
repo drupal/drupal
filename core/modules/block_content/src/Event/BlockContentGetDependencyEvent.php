@@ -14,13 +14,6 @@ use Drupal\Component\EventDispatcher\Event;
 class BlockContentGetDependencyEvent extends Event {
 
   /**
-   * The block content entity.
-   *
-   * @var \Drupal\block_content\BlockContentInterface
-   */
-  protected $blockContent;
-
-  /**
    * The dependency.
    *
    * @var \Drupal\Core\Access\AccessibleInterface
@@ -33,8 +26,9 @@ class BlockContentGetDependencyEvent extends Event {
    * @param \Drupal\block_content\BlockContentInterface $blockContent
    *   The block content entity.
    */
-  public function __construct(BlockContentInterface $blockContent) {
-    $this->blockContent = $blockContent;
+  public function __construct(
+    protected BlockContentInterface $blockContent,
+  ) {
   }
 
   /**

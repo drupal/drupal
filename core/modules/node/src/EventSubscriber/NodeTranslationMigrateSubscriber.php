@@ -28,30 +28,17 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class NodeTranslationMigrateSubscriber implements EventSubscriberInterface {
 
   /**
-   * The key value factory.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
-   */
-  protected $keyValue;
-
-  /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Constructs the NodeTranslationMigrateSubscriber.
    *
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $keyValue
    *   The key value factory.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    */
-  public function __construct(KeyValueFactoryInterface $key_value, StateInterface $state) {
-    $this->keyValue = $key_value;
-    $this->state = $state;
+  public function __construct(
+    protected KeyValueFactoryInterface $keyValue,
+    protected StateInterface $state,
+  ) {
   }
 
   /**

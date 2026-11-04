@@ -55,30 +55,17 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class EarlyRenderingControllerWrapperSubscriber implements EventSubscriberInterface {
 
   /**
-   * The argument resolver.
-   *
-   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface
-   */
-  protected $argumentResolver;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a new EarlyRenderingControllerWrapperSubscriber instance.
    *
-   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
+   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argumentResolver
    *   The argument resolver.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(ArgumentResolverInterface $argument_resolver, RendererInterface $renderer) {
-    $this->argumentResolver = $argument_resolver;
-    $this->renderer = $renderer;
+  public function __construct(
+    protected ArgumentResolverInterface $argumentResolver,
+    protected RendererInterface $renderer,
+  ) {
   }
 
   /**

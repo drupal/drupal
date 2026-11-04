@@ -21,13 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 class EnforcedResponse extends Response {
 
   /**
-   * The wrapped response object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Response
-   */
-  protected $response;
-
-  /**
    * Constructs a new enforced response from the given exception.
    *
    * Note that it is necessary to traverse the exception chain when searching
@@ -59,9 +52,10 @@ class EnforcedResponse extends Response {
    * @param \Symfony\Component\HttpFoundation\Response $response
    *   The response to wrap.
    */
-  public function __construct(Response $response) {
+  public function __construct(
+    protected Response $response,
+  ) {
     parent::__construct('', 500);
-    $this->response = $response;
   }
 
   /**

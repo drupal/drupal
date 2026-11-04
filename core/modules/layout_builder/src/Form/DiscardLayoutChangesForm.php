@@ -22,13 +22,6 @@ class DiscardLayoutChangesForm extends ConfirmFormBase implements WorkspaceDynam
   use WorkspaceSafeFormTrait;
 
   /**
-   * The layout tempstore repository.
-   *
-   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
-   */
-  protected $layoutTempstoreRepository;
-
-  /**
    * The messenger service.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
@@ -45,13 +38,15 @@ class DiscardLayoutChangesForm extends ConfirmFormBase implements WorkspaceDynam
   /**
    * Constructs a new DiscardLayoutChangesForm.
    *
-   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
+   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layoutTempstoreRepository
    *   The layout tempstore repository.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, MessengerInterface $messenger) {
-    $this->layoutTempstoreRepository = $layout_tempstore_repository;
+  public function __construct(
+    protected LayoutTempstoreRepositoryInterface $layoutTempstoreRepository,
+    MessengerInterface $messenger,
+  ) {
     $this->messenger = $messenger;
   }
 

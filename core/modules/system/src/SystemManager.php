@@ -19,50 +19,23 @@ class SystemManager {
   use StringTranslationTrait;
 
   /**
-   * Module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The menu link tree manager.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
-   */
-  protected $menuTree;
-
-  /**
-   * The active menu trail service.
-   *
-   * @var \Drupal\Core\Menu\MenuActiveTrailInterface
-   */
-  protected $menuActiveTrail;
-
-  /**
    * Constructs a SystemManager object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menuTree
    *   The menu tree manager.
-   * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menu_active_trail
+   * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menuActiveTrail
    *   The active menu trail service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, RequestStack $request_stack, MenuLinkTreeInterface $menu_tree, MenuActiveTrailInterface $menu_active_trail) {
-    $this->moduleHandler = $module_handler;
-    $this->requestStack = $request_stack;
-    $this->menuTree = $menu_tree;
-    $this->menuActiveTrail = $menu_active_trail;
+  public function __construct(
+    protected ModuleHandlerInterface $moduleHandler,
+    protected RequestStack $requestStack,
+    protected MenuLinkTreeInterface $menuTree,
+    protected MenuActiveTrailInterface $menuActiveTrail,
+  ) {
   }
 
   /**

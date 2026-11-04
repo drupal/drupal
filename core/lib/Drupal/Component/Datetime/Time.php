@@ -16,11 +16,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class Time implements TimeInterface {
 
   /**
-   * The request stack.
-   */
-  protected ?RequestStack $requestStack;
-
-  /**
    * A proxied request time if the request time is not available.
    */
   protected float $proxyRequestTime;
@@ -28,11 +23,12 @@ class Time implements TimeInterface {
   /**
    * Constructs a Time object.
    *
-   * @param \Symfony\Component\HttpFoundation\RequestStack|null $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
    *   (Optional) The request stack.
    */
-  public function __construct(?RequestStack $request_stack = NULL) {
-    $this->requestStack = $request_stack;
+  public function __construct(
+    protected ?RequestStack $requestStack = NULL,
+  ) {
   }
 
   /**

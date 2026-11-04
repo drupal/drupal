@@ -24,13 +24,6 @@ use Symfony\Component\Routing\Route;
 class CacheableMetadataCalculationTest extends AccessPluginBase implements CacheableDependencyInterface {
 
   /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Constructs a CacheableMetadataCalculationTest access plugin.
    *
    * @param array $configuration
@@ -42,9 +35,13 @@ class CacheableMetadataCalculationTest extends AccessPluginBase implements Cache
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, StateInterface $state) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected StateInterface $state,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->state = $state;
   }
 
   /**

@@ -29,32 +29,11 @@ use Symfony\Component\HttpFoundation\Response;
 class SystemTestController extends ControllerBase implements TrustedCallbackInterface {
 
   /**
-   * The lock service.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
-   * The persistent lock service.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $persistentLock;
-
-  /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
 
   /**
    * The messenger service.
@@ -68,7 +47,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
    *
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock service.
-   * @param \Drupal\Core\Lock\LockBackendInterface $persistent_lock
+   * @param \Drupal\Core\Lock\LockBackendInterface $persistentLock
    *   The persistent lock service.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
@@ -85,19 +64,16 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
    */
   public function __construct(
     #[Autowire(service: 'lock')]
-    LockBackendInterface $lock,
+    protected LockBackendInterface $lock,
     #[Autowire(service: 'lock.persistent')]
-    LockBackendInterface $persistent_lock,
+    protected LockBackendInterface $persistentLock,
     AccountInterface $current_user,
-    RendererInterface $renderer,
+    protected RendererInterface $renderer,
     MessengerInterface $messenger,
     public ?KillSwitch $killSwitch = NULL,
     public KillSwitch|null $killSwitch2 = NULL,
   ) {
-    $this->lock = $lock;
-    $this->persistentLock = $persistent_lock;
     $this->currentUser = $current_user;
-    $this->renderer = $renderer;
     $this->messenger = $messenger;
   }
 

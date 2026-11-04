@@ -37,30 +37,9 @@ class SetInlineBlockDependency implements EventSubscriberInterface {
   use LayoutEntityHelperTrait;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
-   * The inline block usage service.
-   *
-   * @var \Drupal\layout_builder\InlineBlockUsageInterface
-   */
-  protected $usage;
-
-  /**
    * Constructs SetInlineBlockDependency object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
@@ -69,10 +48,12 @@ class SetInlineBlockDependency implements EventSubscriberInterface {
    * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
    *   The section storage manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, InlineBlockUsageInterface $usage, SectionStorageManagerInterface $section_storage_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->database = $database;
-    $this->usage = $usage;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected Connection $database,
+    protected InlineBlockUsageInterface $usage,
+    SectionStorageManagerInterface $section_storage_manager,
+  ) {
     $this->sectionStorageManager = $section_storage_manager;
   }
 
