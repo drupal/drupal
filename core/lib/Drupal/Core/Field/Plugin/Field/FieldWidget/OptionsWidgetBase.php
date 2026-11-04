@@ -122,7 +122,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
+  public function massageFormValues(array $values, array $form, FormStateInterface $form_state): array {
     // Check if values are already in delta => [column => value] format.
     $first_value = reset($values);
     if (is_array($first_value) && array_key_exists($this->column, $first_value)) {
