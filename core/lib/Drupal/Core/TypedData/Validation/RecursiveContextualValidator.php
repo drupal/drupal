@@ -34,48 +34,23 @@ use Symfony\Component\Validator\Util\PropertyPath;
 class RecursiveContextualValidator implements ContextualValidatorInterface {
 
   /**
-   * The execution context.
-   *
-   * @var \Symfony\Component\Validator\Context\ExecutionContextInterface
-   */
-  protected $context;
-
-  /**
-   * The metadata factory.
-   *
-   * @var \Symfony\Component\Validator\Mapping\Factory\MetadataFactoryInterface
-   */
-  protected $metadataFactory;
-
-  /**
-   * The constraint validator factory.
-   *
-   * @var \Symfony\Component\Validator\ConstraintValidatorFactoryInterface
-   */
-  protected $constraintValidatorFactory;
-
-  /**
-   * The typed data manager.
-   */
-  protected TypedDataManagerInterface $typedDataManager;
-
-  /**
    * Creates a validator for the given context.
    *
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The factory for creating new contexts.
-   * @param \Symfony\Component\Validator\Mapping\Factory\MetadataFactoryInterface $metadata_factory
+   * @param \Symfony\Component\Validator\Mapping\Factory\MetadataFactoryInterface $metadataFactory
    *   The metadata factory.
-   * @param \Symfony\Component\Validator\ConstraintValidatorFactoryInterface $validator_factory
+   * @param \Symfony\Component\Validator\ConstraintValidatorFactoryInterface $constraintValidatorFactory
    *   The constraint validator factory.
-   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
+   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
    *   The typed data manager.
    */
-  public function __construct(ExecutionContextInterface $context, MetadataFactoryInterface $metadata_factory, ConstraintValidatorFactoryInterface $validator_factory, TypedDataManagerInterface $typed_data_manager) {
-    $this->context = $context;
-    $this->metadataFactory = $metadata_factory;
-    $this->constraintValidatorFactory = $validator_factory;
-    $this->typedDataManager = $typed_data_manager;
+  public function __construct(
+    protected ExecutionContextInterface $context,
+    protected MetadataFactoryInterface $metadataFactory,
+    protected ConstraintValidatorFactoryInterface $constraintValidatorFactory,
+    protected TypedDataManagerInterface $typedDataManager,
+  ) {
   }
 
   /**

@@ -24,20 +24,6 @@ use Drupal\Core\Utility\Token;
 class MessageAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The token service.
-   *
-   * @var \Drupal\Core\Utility\Token
-   */
-  protected $token;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * The messenger.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
@@ -60,11 +46,15 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, RendererInterface $renderer, MessengerInterface $messenger) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected Token $token,
+    protected RendererInterface $renderer,
+    MessengerInterface $messenger,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->token = $token;
-    $this->renderer = $renderer;
     $this->messenger = $messenger;
   }
 

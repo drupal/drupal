@@ -27,18 +27,14 @@ class CsrfAccessCheck implements RoutingAccessInterface {
   use RoutePathGenerationTrait;
 
   /**
-   * The CSRF token generator.
-   */
-  protected CsrfTokenGenerator $csrfToken;
-
-  /**
    * Constructs a CsrfAccessCheck object.
    *
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrfToken
    *   The CSRF token generator.
    */
-  public function __construct(CsrfTokenGenerator $csrf_token) {
-    $this->csrfToken = $csrf_token;
+  public function __construct(
+    protected CsrfTokenGenerator $csrfToken,
+  ) {
   }
 
   /**

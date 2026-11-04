@@ -28,13 +28,6 @@ class EntityConditionGroup {
   protected $conjunction;
 
   /**
-   * The members of the condition group.
-   *
-   * @var \Drupal\jsonapi\Query\EntityCondition[]
-   */
-  protected $members;
-
-  /**
    * Constructs a new condition group object.
    *
    * @param string $conjunction
@@ -42,12 +35,14 @@ class EntityConditionGroup {
    * @param array $members
    *   (optional) The group conjunction to use.
    */
-  public function __construct($conjunction, array $members = []) {
+  public function __construct(
+    $conjunction,
+    protected array $members = [],
+  ) {
     if (!in_array($conjunction, self::$allowedConjunctions)) {
       throw new \InvalidArgumentException('Allowed conjunctions: AND, OR.');
     }
     $this->conjunction = $conjunction;
-    $this->members = $members;
   }
 
   /**

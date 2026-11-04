@@ -10,20 +10,14 @@ use Drupal\Component\EventDispatcher\Event;
 final class AccountSetEvent extends Event {
 
   /**
-   * The set account.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
    * AccountSetEvent constructor.
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The set account.
    */
-  public function __construct(AccountInterface $account) {
-    $this->account = $account;
+  public function __construct(
+    protected AccountInterface $account,
+  ) {
   }
 
   /**

@@ -54,13 +54,6 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
   protected $resourceType;
 
   /**
-   * The resource ID.
-   *
-   * @var string
-   */
-  protected $id;
-
-  /**
    * The relationship's metadata.
    *
    * @var array
@@ -77,11 +70,14 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    * @param array $meta
    *   Any metadata for the ResourceIdentifier.
    */
-  public function __construct($resource_type, $id, array $meta = []) {
+  public function __construct(
+    $resource_type,
+    protected $id,
+    array $meta = [],
+  ) {
     assert(is_string($resource_type) || $resource_type instanceof ResourceType);
     assert(!isset($meta[static::ARITY_KEY]) || is_int($meta[static::ARITY_KEY]) && $meta[static::ARITY_KEY] >= 0);
     $this->resourceTypeName = is_string($resource_type) ? $resource_type : $resource_type->getTypeName();
-    $this->id = $id;
     $this->meta = $meta;
     if (!is_string($resource_type)) {
       $this->resourceType = $resource_type;

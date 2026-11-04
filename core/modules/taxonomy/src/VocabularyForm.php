@@ -17,20 +17,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class VocabularyForm extends BundleEntityFormBase {
 
   /**
-   * The vocabulary storage.
-   *
-   * @var \Drupal\taxonomy\VocabularyStorageInterface
-   */
-  protected $vocabularyStorage;
-
-  /**
    * Constructs a new vocabulary form.
    *
-   * @param \Drupal\taxonomy\VocabularyStorageInterface $vocabulary_storage
+   * @param \Drupal\taxonomy\VocabularyStorageInterface $vocabularyStorage
    *   The vocabulary storage.
    */
-  public function __construct(VocabularyStorageInterface $vocabulary_storage) {
-    $this->vocabularyStorage = $vocabulary_storage;
+  public function __construct(
+    protected VocabularyStorageInterface $vocabularyStorage,
+  ) {
   }
 
   /**

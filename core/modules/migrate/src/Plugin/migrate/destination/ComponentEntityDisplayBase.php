@@ -23,13 +23,6 @@ abstract class ComponentEntityDisplayBase extends DestinationBase implements Con
   const MODE_NAME = '';
 
   /**
-   * The entity display repository.
-   *
-   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
-   */
-  protected $entityDisplayRepository;
-
-  /**
    * PerComponentEntityDisplay constructor.
    *
    * @param array $configuration
@@ -40,12 +33,17 @@ abstract class ComponentEntityDisplayBase extends DestinationBase implements Con
    *   The plugin implementation definition.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entityDisplayRepository
    *   The entity display repository service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityDisplayRepositoryInterface $entity_display_repository) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    MigrationInterface $migration,
+    protected EntityDisplayRepositoryInterface $entityDisplayRepository,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
-    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**

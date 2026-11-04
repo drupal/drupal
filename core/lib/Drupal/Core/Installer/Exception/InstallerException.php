@@ -11,13 +11,6 @@ class InstallerException extends \RuntimeException {
   use StringTranslationTrait;
 
   /**
-   * The page title to output.
-   *
-   * @var string
-   */
-  protected $title;
-
-  /**
    * Constructs a new installer exception.
    *
    * @param string $message
@@ -29,9 +22,13 @@ class InstallerException extends \RuntimeException {
    * @param \Throwable $previous
    *   (optional) A previous exception.
    */
-  public function __construct($message, $title = 'Error', $code = 0, ?\Throwable $previous = NULL) {
+  public function __construct(
+    $message,
+    protected $title = 'Error',
+    $code = 0,
+    ?\Throwable $previous = NULL,
+  ) {
     parent::__construct($message, $code, $previous);
-    $this->title = $title;
   }
 
   /**

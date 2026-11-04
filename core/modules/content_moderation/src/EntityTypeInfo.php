@@ -37,41 +37,6 @@ class EntityTypeInfo implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   /**
-   * The moderation information service.
-   *
-   * @var \Drupal\content_moderation\ModerationInformationInterface
-   */
-  protected $moderationInfo;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The bundle information service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $bundleInfo;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The state transition validation service.
-   *
-   * @var \Drupal\content_moderation\StateTransitionValidationInterface
-   */
-  protected $validator;
-
-  /**
    * A keyed array of custom moderation handlers for given entity types.
    *
    * Any entity not specified will use a common default.
@@ -89,24 +54,26 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
    *   The translation service. for form alters.
-   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInfo
    *   The moderation information service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   Entity type manager.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundleInfo
    *   Bundle information service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   Current user.
    * @param \Drupal\content_moderation\StateTransitionValidationInterface $validator
    *   State transition validator.
    */
-  public function __construct(TranslationInterface $translation, ModerationInformationInterface $moderation_information, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info, AccountInterface $current_user, StateTransitionValidationInterface $validator) {
+  public function __construct(
+    TranslationInterface $translation,
+    protected ModerationInformationInterface $moderationInfo,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityTypeBundleInfoInterface $bundleInfo,
+    protected AccountInterface $currentUser,
+    protected StateTransitionValidationInterface $validator,
+  ) {
     $this->stringTranslation = $translation;
-    $this->moderationInfo = $moderation_information;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->bundleInfo = $bundle_info;
-    $this->currentUser = $current_user;
-    $this->validator = $validator;
   }
 
   /**

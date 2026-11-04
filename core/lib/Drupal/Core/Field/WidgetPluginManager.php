@@ -16,13 +16,6 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 class WidgetPluginManager extends DefaultPluginManager {
 
   /**
-   * The field type manager to define field.
-   *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
-   */
-  protected $fieldTypeManager;
-
-  /**
    * An array of widget options for each field type.
    *
    * @var array
@@ -39,15 +32,19 @@ class WidgetPluginManager extends DefaultPluginManager {
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $fieldTypeManager
    *   The 'field type' plugin manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, FieldTypePluginManagerInterface $field_type_manager) {
+  public function __construct(
+    \Traversable $namespaces,
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+    protected FieldTypePluginManagerInterface $fieldTypeManager,
+  ) {
     parent::__construct('Plugin/Field/FieldWidget', $namespaces, $module_handler, WidgetInterface::class, FieldWidget::class, 'Drupal\Core\Field\Annotation\FieldWidget');
 
     $this->setCacheBackend($cache_backend, 'field_widget_types_plugins');
     $this->alterInfo('field_widget_info');
-    $this->fieldTypeManager = $field_type_manager;
   }
 
   /**

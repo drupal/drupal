@@ -10,25 +10,11 @@ use Symfony\Component\Routing\CompiledRoute as SymfonyCompiledRoute;
 class CompiledRoute extends SymfonyCompiledRoute {
 
   /**
-   * The fitness of this route.
-   *
-   * @var int
-   */
-  protected $fit;
-
-  /**
    * The pattern outline of this route.
    *
    * @var string
    */
   protected $patternOutline;
-
-  /**
-   * The number of parts in the path of this route.
-   *
-   * @var int
-   */
-  protected $numParts;
 
   /**
    * Constructs a new compiled route object.
@@ -42,7 +28,7 @@ class CompiledRoute extends SymfonyCompiledRoute {
    *   The fitness of the route.
    * @param string $pattern_outline
    *   The pattern outline for this route.
-   * @param int $num_parts
+   * @param int $numParts
    *   The number of parts in the path.
    * @param string $staticPrefix
    *   The static prefix of the compiled route.
@@ -62,15 +48,24 @@ class CompiledRoute extends SymfonyCompiledRoute {
    *   An array of variables (variables defined in the path and in the host
    *   patterns)
    */
-  public function __construct($fit, $pattern_outline, $num_parts, $staticPrefix, $regex, array $tokens, array $pathVariables, $hostRegex = NULL, array $hostTokens = [], array $hostVariables = [], array $variables = []) {
+  public function __construct(
+    protected $fit,
+    $pattern_outline,
+    protected $numParts,
+    $staticPrefix,
+    $regex,
+    array $tokens,
+    array $pathVariables,
+    $hostRegex = NULL,
+    array $hostTokens = [],
+    array $hostVariables = [],
+    array $variables = [],
+  ) {
     parent::__construct($staticPrefix, $regex, $tokens, $pathVariables, $hostRegex, $hostTokens, $hostVariables, $variables);
-
-    $this->fit = $fit;
     // Support case-insensitive route matching by ensuring the pattern outline
     // is lowercase.
     // @see \Drupal\Core\Routing\RouteProvider::getRoutesByPath()
     $this->patternOutline = mb_strtolower($pattern_outline);
-    $this->numParts = $num_parts;
   }
 
   /**

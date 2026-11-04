@@ -20,20 +20,6 @@ class ViewsEntityArgumentValidator extends DeriverBase implements ContainerDeriv
   use StringTranslationTrait;
 
   /**
-   * The base plugin ID this derivative is for.
-   *
-   * @var string
-   */
-  protected $basePluginId;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * List of derivative definitions.
    *
    * @var array
@@ -43,16 +29,18 @@ class ViewsEntityArgumentValidator extends DeriverBase implements ContainerDeriv
   /**
    * Constructs a ViewsEntityArgumentValidator object.
    *
-   * @param string $base_plugin_id
+   * @param string $basePluginId
    *   The base plugin ID.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation.
    */
-  public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
-    $this->basePluginId = $base_plugin_id;
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected $basePluginId,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    TranslationInterface $string_translation,
+  ) {
     $this->stringTranslation = $string_translation;
   }
 

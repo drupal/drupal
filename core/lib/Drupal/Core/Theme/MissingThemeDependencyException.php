@@ -10,13 +10,6 @@ namespace Drupal\Core\Theme;
 class MissingThemeDependencyException extends \Exception {
 
   /**
-   * The missing theme dependency.
-   *
-   * @var string
-   */
-  protected $theme;
-
-  /**
    * Constructs the exception.
    *
    * @param string $message
@@ -24,9 +17,11 @@ class MissingThemeDependencyException extends \Exception {
    * @param string $theme
    *   The missing theme dependency.
    */
-  public function __construct($message, $theme) {
+  public function __construct(
+    $message,
+    protected $theme,
+  ) {
     parent::__construct($message);
-    $this->theme = $theme;
   }
 
   /**

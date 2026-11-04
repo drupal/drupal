@@ -26,34 +26,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class ModerationStateWidget extends OptionsSelectWidget {
 
   /**
-   * Current user service.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * Moderation information service.
-   *
-   * @var \Drupal\content_moderation\ModerationInformation
-   */
-  protected $moderationInformation;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Moderation state transition validation service.
-   *
-   * @var \Drupal\content_moderation\StateTransitionValidationInterface
-   */
-  protected $validator;
-
-  /**
    * Constructs a new ModerationStateWidget object.
    *
    * @param string $plugin_id
@@ -66,11 +38,11 @@ class ModerationStateWidget extends OptionsSelectWidget {
    *   Field settings.
    * @param array $third_party_settings
    *   Third party settings.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   Current user service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   Entity type manager.
-   * @param \Drupal\content_moderation\ModerationInformation $moderation_information
+   * @param \Drupal\content_moderation\ModerationInformation $moderationInformation
    *   Moderation information service.
    * @param \Drupal\content_moderation\StateTransitionValidationInterface $validator
    *   Moderation state transition validation service.
@@ -81,17 +53,13 @@ class ModerationStateWidget extends OptionsSelectWidget {
     FieldDefinitionInterface $field_definition,
     array $settings,
     array $third_party_settings,
-    AccountInterface $current_user,
-    EntityTypeManagerInterface $entity_type_manager,
+    protected AccountInterface $currentUser,
+    protected EntityTypeManagerInterface $entityTypeManager,
     #[Autowire(service: 'content_moderation.moderation_information')]
-    ModerationInformation $moderation_information,
-    StateTransitionValidationInterface $validator,
+    protected ModerationInformation $moderationInformation,
+    protected StateTransitionValidationInterface $validator,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
-    $this->entityTypeManager = $entity_type_manager;
-    $this->currentUser = $current_user;
-    $this->moderationInformation = $moderation_information;
-    $this->validator = $validator;
   }
 
   /**

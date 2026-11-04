@@ -19,20 +19,14 @@ class SkipOp extends AbstractOperation {
   const ID = 'skip';
 
   /**
-   * The message to output while processing.
-   *
-   * @var string
-   */
-  protected $message;
-
-  /**
    * SkipOp constructor.
    *
    * @param string $message
    *   (optional) A custom message to output while skipping.
    */
-  public function __construct($message = "  - Skip <info>[dest-rel-path]</info>: disabled") {
-    $this->message = $message;
+  public function __construct(
+    protected $message = "  - Skip <info>[dest-rel-path]</info>: disabled",
+  ) {
   }
 
   /**

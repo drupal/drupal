@@ -33,67 +33,36 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FileUploadForm extends AddFormBase {
 
   /**
-   * The element info manager.
-   *
-   * @var \Drupal\Core\Render\ElementInfoManagerInterface
-   */
-  protected $elementInfo;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\ElementInfoManagerInterface
-   */
-  protected $renderer;
-
-  /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
-   * The file usage service.
-   *
-   * @var \Drupal\file\FileUsage\FileUsageInterface
-   */
-  protected $fileUsage;
-
-  /**
-   * The file repository service.
-   *
-   * @var \Drupal\file\FileRepositoryInterface
-   */
-  protected $fileRepository;
-
-  /**
    * Constructs a new FileUploadForm.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\media_library\MediaLibraryUiBuilder $library_ui_builder
    *   The media library UI builder.
-   * @param \Drupal\Core\Render\ElementInfoManagerInterface $element_info
+   * @param \Drupal\Core\Render\ElementInfoManagerInterface $elementInfo
    *   The element info manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file system service.
    * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
    *   The opener resolver.
-   * @param \Drupal\file\FileUsage\FileUsageInterface $file_usage
+   * @param \Drupal\file\FileUsage\FileUsageInterface $fileUsage
    *   The file usage service.
-   * @param \Drupal\file\FileRepositoryInterface $file_repository
+   * @param \Drupal\file\FileRepositoryInterface $fileRepository
    *   The file repository service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, ElementInfoManagerInterface $element_info, RendererInterface $renderer, FileSystemInterface $file_system, OpenerResolverInterface $opener_resolver, FileUsageInterface $file_usage, FileRepositoryInterface $file_repository) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    MediaLibraryUiBuilder $library_ui_builder,
+    protected ElementInfoManagerInterface $elementInfo,
+    protected RendererInterface $renderer,
+    protected FileSystemInterface $fileSystem,
+    OpenerResolverInterface $opener_resolver,
+    protected FileUsageInterface $fileUsage,
+    protected FileRepositoryInterface $fileRepository,
+  ) {
     parent::__construct($entity_type_manager, $library_ui_builder, $opener_resolver);
-    $this->elementInfo = $element_info;
-    $this->renderer = $renderer;
-    $this->fileSystem = $file_system;
-    $this->fileUsage = $file_usage;
-    $this->fileRepository = $file_repository;
   }
 
   /**

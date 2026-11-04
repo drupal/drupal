@@ -11,30 +11,17 @@ use Drupal\Core\Form\FormState;
 class EntityFormBuilder implements EntityFormBuilderInterface {
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
-
-  /**
    * Constructs a new EntityFormBuilder.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    *   The form builder.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, FormBuilderInterface $form_builder) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->formBuilder = $form_builder;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected FormBuilderInterface $formBuilder,
+  ) {
   }
 
   /**

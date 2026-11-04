@@ -20,54 +20,25 @@ final class ProjectSecurityRequirement {
   use StringTranslationTrait;
 
   /**
-   * The project title.
-   *
-   * @var string|null
-   */
-  protected $projectTitle;
-
-  /**
-   * Security coverage information for the project.
-   *
-   * @var array
-   *
-   * @see \Drupal\update\ProjectSecurityData::getCoverageInfo()
-   */
-  private $securityCoverageInfo;
-
-  /**
-   * The next version after the installed version in the format [MAJOR].[MINOR].
-   *
-   * @var string|null
-   */
-  private $nextMajorMinorVersion;
-
-  /**
-   * The existing (currently installed) version in the format [MAJOR].[MINOR].
-   *
-   * @var string|null
-   */
-  private $existingMajorMinorVersion;
-
-  /**
    * Constructs a ProjectSecurityRequirement object.
    *
-   * @param string|null $project_title
+   * @param string|null $projectTitle
    *   The project title.
-   * @param array $security_coverage_info
+   * @param array $securityCoverageInfo
    *   Security coverage information as set by
    *   \Drupal\update\ProjectSecurityData::getCoverageInfo().
-   * @param string|null $existing_major_minor_version
+   * @param string|null $existingMajorMinorVersion
    *   The existing (currently installed) version in the format [MAJOR].[MINOR].
-   * @param string|null $next_major_minor_version
+   * @param string|null $nextMajorMinorVersion
    *   The next version after the installed version in the format
    *   [MAJOR].[MINOR].
    */
-  private function __construct($project_title = NULL, array $security_coverage_info = [], $existing_major_minor_version = NULL, $next_major_minor_version = NULL) {
-    $this->projectTitle = $project_title;
-    $this->securityCoverageInfo = $security_coverage_info;
-    $this->existingMajorMinorVersion = $existing_major_minor_version;
-    $this->nextMajorMinorVersion = $next_major_minor_version;
+  private function __construct(
+    protected $projectTitle = NULL,
+    private array $securityCoverageInfo = [],
+    private $existingMajorMinorVersion = NULL,
+    private $nextMajorMinorVersion = NULL,
+  ) {
   }
 
   /**

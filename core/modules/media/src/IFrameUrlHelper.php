@@ -17,30 +17,17 @@ use Drupal\Core\Site\Settings;
 class IFrameUrlHelper {
 
   /**
-   * The request context service.
-   *
-   * @var \Drupal\Core\Routing\RequestContext
-   */
-  protected $requestContext;
-
-  /**
-   * The private key service.
-   *
-   * @var \Drupal\Core\PrivateKey
-   */
-  protected $privateKey;
-
-  /**
    * IFrameUrlHelper constructor.
    *
-   * @param \Drupal\Core\Routing\RequestContext $request_context
+   * @param \Drupal\Core\Routing\RequestContext $requestContext
    *   The request context service.
-   * @param \Drupal\Core\PrivateKey $private_key
+   * @param \Drupal\Core\PrivateKey $privateKey
    *   The private key service.
    */
-  public function __construct(RequestContext $request_context, PrivateKey $private_key) {
-    $this->requestContext = $request_context;
-    $this->privateKey = $private_key;
+  public function __construct(
+    protected RequestContext $requestContext,
+    protected PrivateKey $privateKey,
+  ) {
   }
 
   /**

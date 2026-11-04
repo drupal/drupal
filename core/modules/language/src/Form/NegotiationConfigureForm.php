@@ -30,66 +30,34 @@ class NegotiationConfigureForm extends ConfigFormBase {
   protected $languageTypes;
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\language\ConfigurableLanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The language negotiator.
-   *
-   * @var \Drupal\language\LanguageNegotiatorInterface
-   */
-  protected $negotiator;
-
-  /**
-   * The block manager.
-   *
-   * @var \Drupal\Core\Block\BlockManagerInterface
-   */
-  protected $blockManager;
-
-  /**
-   * The block storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|null
-   */
-  protected $blockStorage;
-
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * Constructs a NegotiationConfigureForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed config manager.
-   * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
+   * @param \Drupal\language\ConfigurableLanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\language\LanguageNegotiatorInterface $negotiator
    *   The language negotiation methods manager.
-   * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
+   * @param \Drupal\Core\Block\BlockManagerInterface $blockManager
    *   The block manager.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $block_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $blockStorage
    *   The block storage, or NULL if not available.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, BlockManagerInterface $block_manager, ThemeHandlerInterface $theme_handler, ?EntityStorageInterface $block_storage = NULL) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    TypedConfigManagerInterface $typedConfigManager,
+    protected ConfigurableLanguageManagerInterface $languageManager,
+    protected LanguageNegotiatorInterface $negotiator,
+    protected BlockManagerInterface $blockManager,
+    protected ThemeHandlerInterface $themeHandler,
+    protected ?EntityStorageInterface $blockStorage = NULL,
+  ) {
     parent::__construct($config_factory, $typedConfigManager);
     $this->languageTypes = $this->config('language.types');
-    $this->languageManager = $language_manager;
-    $this->negotiator = $negotiator;
-    $this->blockManager = $block_manager;
-    $this->themeHandler = $theme_handler;
-    $this->blockStorage = $block_storage;
   }
 
   /**

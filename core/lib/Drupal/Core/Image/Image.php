@@ -22,13 +22,6 @@ class Image implements ImageInterface {
   protected $source = '';
 
   /**
-   * An image toolkit object.
-   *
-   * @var \Drupal\Core\ImageToolkit\ImageToolkitInterface
-   */
-  protected $toolkit;
-
-  /**
    * File size in bytes.
    *
    * @var int
@@ -44,8 +37,10 @@ class Image implements ImageInterface {
    *   (optional) The path to an image file, or NULL to construct the object
    *   with no image source.
    */
-  public function __construct(ImageToolkitInterface $toolkit, $source = NULL) {
-    $this->toolkit = $toolkit;
+  public function __construct(
+    protected ImageToolkitInterface $toolkit,
+    $source = NULL,
+  ) {
     if ($source) {
       $this->source = $source;
       $this->getToolkit()->setSource($this->source);

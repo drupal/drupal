@@ -21,13 +21,6 @@ class FormErrorHandler extends CoreFormErrorHandler {
   use StringTranslationTrait;
 
   /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * The messenger.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
@@ -44,9 +37,12 @@ class FormErrorHandler extends CoreFormErrorHandler {
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
-  public function __construct(TranslationInterface $string_translation, RendererInterface $renderer, MessengerInterface $messenger) {
+  public function __construct(
+    TranslationInterface $string_translation,
+    protected RendererInterface $renderer,
+    MessengerInterface $messenger,
+  ) {
     $this->stringTranslation = $string_translation;
-    $this->renderer = $renderer;
     $this->messenger = $messenger;
   }
 

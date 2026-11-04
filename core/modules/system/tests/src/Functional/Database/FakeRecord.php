@@ -14,13 +14,6 @@ namespace Drupal\Tests\system\Functional\Database;
 class FakeRecord {
 
   /**
-   * A class variable.
-   *
-   * @var int
-   */
-  public $fakeArg;
-
-  /**
    * The property used in tests.
    *
    * @see \Drupal\KernelTests\Core\Database\FetchTest
@@ -40,8 +33,9 @@ class FakeRecord {
    * @param int $fakeArg
    *   A class variable.
    */
-  public function __construct($fakeArg = 0) {
-    $this->fakeArg = $fakeArg;
+  public function __construct(
+    public $fakeArg = 0,
+  ) {
   }
 
 }

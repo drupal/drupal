@@ -13,20 +13,6 @@ use Symfony\Component\Routing\Route;
 class RouteMatch implements RouteMatchInterface {
 
   /**
-   * The route name.
-   *
-   * @var string
-   */
-  protected $routeName;
-
-  /**
-   * The route.
-   *
-   * @var \Symfony\Component\Routing\Route
-   */
-  protected $route;
-
-  /**
    * A key|value store of parameters.
    *
    * @var \Symfony\Component\HttpFoundation\ParameterBag
@@ -43,7 +29,7 @@ class RouteMatch implements RouteMatchInterface {
   /**
    * Constructs a RouteMatch object.
    *
-   * @param string $route_name
+   * @param string $routeName
    *   The name of the route.
    * @param \Symfony\Component\Routing\Route $route
    *   The route.
@@ -52,10 +38,12 @@ class RouteMatch implements RouteMatchInterface {
    * @param array $raw_parameters
    *   The raw $parameters array.
    */
-  public function __construct($route_name, Route $route, array $parameters = [], array $raw_parameters = []) {
-    $this->routeName = $route_name;
-    $this->route = $route;
-
+  public function __construct(
+    protected $routeName,
+    protected Route $route,
+    array $parameters = [],
+    array $raw_parameters = [],
+  ) {
     // Pre-filter parameters.
     $route_params = $this->getParameterNames();
     $parameters = array_intersect_key($parameters, $route_params);

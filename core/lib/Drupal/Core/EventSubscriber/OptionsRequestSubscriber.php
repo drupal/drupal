@@ -19,20 +19,14 @@ use Symfony\Component\Routing\Route;
 class OptionsRequestSubscriber implements EventSubscriberInterface {
 
   /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
    * Creates a new OptionsRequestSubscriber instance.
    *
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
    */
-  public function __construct(RouteProviderInterface $route_provider) {
-    $this->routeProvider = $route_provider;
+  public function __construct(
+    protected RouteProviderInterface $routeProvider,
+  ) {
   }
 
   /**

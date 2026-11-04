@@ -19,35 +19,24 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MediaSettingsForm extends ConfigFormBase {
 
   /**
-   * The iFrame URL helper service.
-   *
-   * @var \Drupal\media\IFrameUrlHelper
-   */
-  protected $iFrameUrlHelper;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * MediaSettingsForm constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed config manager.
-   * @param \Drupal\media\IFrameUrlHelper $iframe_url_helper
+   * @param \Drupal\media\IFrameUrlHelper $iFrameUrlHelper
    *   The iFrame URL helper service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, IFrameUrlHelper $iframe_url_helper, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    TypedConfigManagerInterface $typedConfigManager,
+    protected IFrameUrlHelper $iFrameUrlHelper,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
     parent::__construct($config_factory, $typedConfigManager);
-    $this->iFrameUrlHelper = $iframe_url_helper;
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

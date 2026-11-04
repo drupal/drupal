@@ -42,74 +42,31 @@ class SharedTempStore {
   use DependencySerializationTrait;
 
   /**
-   * The key/value storage object used for this data.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
-   */
-  protected $storage;
-
-  /**
-   * The lock object used for this data.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lockBackend;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The owner key to store along with the data (e.g. a user or session ID).
-   *
-   * @var mixed
-   */
-  protected $owner;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The time to live for items in seconds.
-   *
-   * By default, data is stored for one week (604800 seconds) before expiring.
-   *
-   * @var int
-   */
-  protected $expire;
-
-  /**
    * Constructs a new object for accessing data from a key/value store.
    *
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $storage
    *   The key/value storage object used for this data. Each storage object
    *   represents a particular collection of data and will contain any number
    *   of key/value pairs.
-   * @param \Drupal\Core\Lock\LockBackendInterface $lock_backend
+   * @param \Drupal\Core\Lock\LockBackendInterface $lockBackend
    *   The lock object used for this data.
    * @param mixed $owner
    *   The owner key to store along with the data (e.g. a user or session ID).
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The current user.
    * @param int $expire
    *   The time to live for items, in seconds.
    */
-  public function __construct(KeyValueStoreExpirableInterface $storage, LockBackendInterface $lock_backend, $owner, RequestStack $request_stack, AccountProxyInterface $current_user, $expire = 604800) {
-    $this->storage = $storage;
-    $this->lockBackend = $lock_backend;
-    $this->owner = $owner;
-    $this->requestStack = $request_stack;
-    $this->currentUser = $current_user;
-    $this->expire = $expire;
+  public function __construct(
+    protected KeyValueStoreExpirableInterface $storage,
+    protected LockBackendInterface $lockBackend,
+    protected $owner,
+    protected RequestStack $requestStack,
+    protected AccountProxyInterface $currentUser,
+    protected $expire = 604800,
+  ) {
   }
 
   /**

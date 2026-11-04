@@ -23,20 +23,6 @@ use Drupal\views\Attribute\ViewsArgumentDefault;
 class Raw extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
 
   /**
-   * The alias manager.
-   *
-   * @var \Drupal\path_alias\AliasManagerInterface
-   */
-  protected $aliasManager;
-
-  /**
-   * The current path.
-   *
-   * @var \Drupal\Core\Path\CurrentPathStack
-   */
-  protected $currentPath;
-
-  /**
    * Constructs a Raw object.
    *
    * @param array $configuration
@@ -45,15 +31,19 @@ class Raw extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManagerInterface $aliasManager
    *   The alias manager.
-   * @param \Drupal\Core\Path\CurrentPathStack $current_path
+   * @param \Drupal\Core\Path\CurrentPathStack $currentPath
    *   The current path.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, AliasManagerInterface $alias_manager, CurrentPathStack $current_path) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected AliasManagerInterface $aliasManager,
+    protected CurrentPathStack $currentPath,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->aliasManager = $alias_manager;
-    $this->currentPath = $current_path;
   }
 
   /**

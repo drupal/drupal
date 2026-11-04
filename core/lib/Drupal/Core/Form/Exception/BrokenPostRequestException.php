@@ -12,16 +12,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class BrokenPostRequestException extends BadRequestHttpException {
 
   /**
-   * The maximum upload size.
-   *
-   * @var int
-   */
-  protected int $size;
-
-  /**
    * Constructs a new BrokenPostRequestException.
    *
-   * @param int $max_upload_size
+   * @param int $size
    *   The size of the maximum upload size in bytes.
    * @param string $message
    *   The internal exception message.
@@ -30,10 +23,13 @@ class BrokenPostRequestException extends BadRequestHttpException {
    * @param int $code
    *   The internal exception code.
    */
-  public function __construct(int $max_upload_size, string $message = '', ?\Throwable $previous = NULL, int $code = 0) {
+  public function __construct(
+    protected int $size,
+    string $message = '',
+    ?\Throwable $previous = NULL,
+    int $code = 0,
+  ) {
     parent::__construct($message, $previous, $code);
-
-    $this->size = $max_upload_size;
   }
 
   /**

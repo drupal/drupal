@@ -28,13 +28,6 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
   use FieldAPIHandlerTrait;
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
    * Date format for SQL conversion.
    *
    * @var string
@@ -51,13 +44,6 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
   protected $calculateOffset = TRUE;
 
   /**
-   * The request stack used to determine current time.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * Constructs a new Date handler.
    *
    * @param array $configuration
@@ -66,15 +52,19 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack used to determine the current time.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatterInterface $date_formatter, RequestStack $request_stack) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected DateFormatterInterface $dateFormatter,
+    protected RequestStack $requestStack,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->dateFormatter = $date_formatter;
-    $this->requestStack = $request_stack;
 
     $definition = $this->getFieldStorageDefinition();
     if ($definition->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {

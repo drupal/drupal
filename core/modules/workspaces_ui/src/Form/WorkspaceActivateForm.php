@@ -25,13 +25,6 @@ class WorkspaceActivateForm extends EntityConfirmFormBase implements WorkspaceSa
   protected $entity;
 
   /**
-   * The workspace replication manager.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
    * The messenger service.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
@@ -41,13 +34,15 @@ class WorkspaceActivateForm extends EntityConfirmFormBase implements WorkspaceSa
   /**
    * Constructs a new WorkspaceActivateForm.
    *
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
    */
-  public function __construct(WorkspaceManagerInterface $workspace_manager, MessengerInterface $messenger) {
-    $this->workspaceManager = $workspace_manager;
+  public function __construct(
+    protected WorkspaceManagerInterface $workspaceManager,
+    MessengerInterface $messenger,
+  ) {
     $this->messenger = $messenger;
   }
 

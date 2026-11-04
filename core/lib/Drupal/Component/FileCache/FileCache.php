@@ -22,13 +22,6 @@ class FileCache implements FileCacheInterface {
   protected static $cached = [];
 
   /**
-   * The collection identifier of this cache.
-   *
-   * @var string
-   */
-  protected $collection;
-
-  /**
    * The cache backend backing this FileCache object.
    *
    * @var \Drupal\Component\FileCache\FileCacheBackendInterface
@@ -48,14 +41,18 @@ class FileCache implements FileCacheInterface {
    * @param array $cache_backend_configuration
    *   (optional) The configuration for the backend class.
    */
-  public function __construct($prefix, $collection, $cache_backend_class = NULL, array $cache_backend_configuration = []) {
+  public function __construct(
+    $prefix,
+    protected $collection,
+    $cache_backend_class = NULL,
+    array $cache_backend_configuration = [],
+  ) {
 
     if (empty($prefix)) {
       throw new \InvalidArgumentException('Required prefix configuration is missing');
     }
 
     $this->prefix = $prefix;
-    $this->collection = $collection;
 
     if (isset($cache_backend_class)) {
       $this->cache = new $cache_backend_class($cache_backend_configuration);

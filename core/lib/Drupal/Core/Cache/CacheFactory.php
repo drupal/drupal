@@ -11,37 +11,6 @@ use Psr\Container\ContainerInterface;
 class CacheFactory implements CacheFactoryInterface {
 
   /**
-   * The site settings.
-   *
-   * @var \Drupal\Core\Site\Settings
-   */
-  protected $settings;
-
-  /**
-   * A map of cache bin to default cache backend service name.
-   *
-   * All bin-specific mappings in $settings take precedence over this, but it
-   * can be used to optimize cache storage for a Drupal installation without
-   * cache customizations in settings.php. For example, this can be used to map
-   * the 'bootstrap' bin to 'cache.backend.chainedfast', while allowing other
-   * bins to fall back to the global default of 'cache.backend.database'.
-   *
-   * @var array
-   */
-  protected $defaultBinBackends;
-
-  /**
-   * A map of cache bin to default cache memory backend service name.
-   *
-   * All bin-specific mappings in $settings take precedence over this, but it
-   * can be used to optimize cache storage for a Drupal installation without
-   * cache customizations in settings.php.
-   *
-   * @var array
-   */
-  protected $memoryDefaultBinBackends;
-
-  /**
    * The service container.
    */
   protected ContainerInterface $container;
@@ -58,17 +27,18 @@ class CacheFactory implements CacheFactoryInterface {
    *
    * @param \Drupal\Core\Site\Settings $settings
    *   The site settings.
-   * @param array $default_bin_backends
+   * @param array $defaultBinBackends
    *   (optional) A mapping of bin to backend service name. Mappings in
    *   $settings take precedence over this.
-   * @param array $memory_default_bin_backends
+   * @param array $memoryDefaultBinBackends
    *   (optional) A mapping of bin to backend service name. Mappings in
    *   $settings take precedence over this.
    */
-  public function __construct(Settings $settings, array $default_bin_backends = [], array $memory_default_bin_backends = []) {
-    $this->settings = $settings;
-    $this->defaultBinBackends = $default_bin_backends;
-    $this->memoryDefaultBinBackends = $memory_default_bin_backends;
+  public function __construct(
+    protected Settings $settings,
+    protected array $defaultBinBackends = [],
+    protected array $memoryDefaultBinBackends = [],
+  ) {
   }
 
   /**

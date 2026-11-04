@@ -11,50 +11,23 @@ use Drupal\Component\EventDispatcher\Event;
 class MigrateIdMapMessageEvent extends Event {
 
   /**
-   * Migration entity.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
-   * Array of values uniquely identifying the source row.
-   *
-   * @var array
-   */
-  protected $sourceIdValues;
-
-  /**
-   * Message to be logged.
-   *
-   * @var string
-   */
-  protected $message;
-
-  /**
-   * Message severity.
-   *
-   * @var int
-   */
-  protected $level;
-
-  /**
    * Constructs a post-save event object.
    *
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   Migration entity.
-   * @param array $source_id_values
+   * @param array $sourceIdValues
    *   Values represent the source ID.
    * @param string $message
    *   The message.
    * @param int $level
    *   Severity level (one of the MigrationInterface::MESSAGE_* constants).
    */
-  public function __construct(MigrationInterface $migration, array $source_id_values, $message, $level) {
-    $this->migration = $migration;
-    $this->sourceIdValues = $source_id_values;
-    $this->message = $message;
-    $this->level = $level;
+  public function __construct(
+    protected MigrationInterface $migration,
+    protected array $sourceIdValues,
+    protected $message,
+    protected $level,
+  ) {
   }
 
   /**

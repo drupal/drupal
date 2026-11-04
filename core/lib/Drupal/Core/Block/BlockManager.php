@@ -26,13 +26,6 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
   use FilteredPluginManagerTrait;
 
   /**
-   * The logger.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * Constructs a new \Drupal\Core\Block\BlockManager object.
    *
    * @param \Traversable $namespaces
@@ -45,12 +38,16 @@ class BlockManager extends DefaultPluginManager implements BlockManagerInterface
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LoggerInterface $logger) {
+  public function __construct(
+    \Traversable $namespaces,
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+    protected LoggerInterface $logger,
+  ) {
     parent::__construct('Plugin/Block', $namespaces, $module_handler, BlockPluginInterface::class, Block::class, 'Drupal\Core\Block\Annotation\Block');
 
     $this->alterInfo($this->getType());
     $this->setCacheBackend($cache_backend, 'block_plugins');
-    $this->logger = $logger;
   }
 
   /**

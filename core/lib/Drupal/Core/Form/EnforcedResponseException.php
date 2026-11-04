@@ -10,13 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 class EnforcedResponseException extends \Exception {
 
   /**
-   * The response to be enforced.
-   *
-   * @var \Symfony\Component\HttpFoundation\Response
-   */
-  protected $response;
-
-  /**
    * Constructs a new enforced response exception.
    *
    * @param \Symfony\Component\HttpFoundation\Response $response
@@ -28,10 +21,13 @@ class EnforcedResponseException extends \Exception {
    * @param \Throwable $previous
    *   (optional) The previous exception for nested exceptions.
    */
-  public function __construct(Response $response, $message = "", $code = 0, ?\Throwable $previous = NULL) {
+  public function __construct(
+    protected Response $response,
+    $message = "",
+    $code = 0,
+    ?\Throwable $previous = NULL,
+  ) {
     parent::__construct($message, $code, $previous);
-
-    $this->response = $response;
   }
 
   /**

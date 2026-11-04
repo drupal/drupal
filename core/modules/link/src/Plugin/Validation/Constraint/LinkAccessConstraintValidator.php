@@ -16,21 +16,14 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 class LinkAccessConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * Proxy for the current user account.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
-  protected $current_user;
-
-  /**
    * Constructs an instance of the LinkAccessConstraintValidator class.
    *
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user account.
    */
-  public function __construct(AccountProxyInterface $current_user) {
-    $this->current_user = $current_user;
+  public function __construct(
+    protected AccountProxyInterface $current_user,
+  ) {
   }
 
   /**

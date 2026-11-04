@@ -22,20 +22,14 @@ use Symfony\Component\Routing\RouteCollection;
 class EntityModerationRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
    * Constructs a new DefaultHtmlRouteProvider.
    *
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
    */
-  public function __construct(EntityFieldManagerInterface $entity_field_manager) {
-    $this->entityFieldManager = $entity_field_manager;
+  public function __construct(
+    protected EntityFieldManagerInterface $entityFieldManager,
+  ) {
   }
 
   /**

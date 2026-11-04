@@ -10,20 +10,14 @@ use Symfony\Component\Routing\Route;
 class AdminContext {
 
   /**
-   * The route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
    * Construct a new admin context helper instance.
    *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The route match.
    */
-  public function __construct(RouteMatchInterface $route_match) {
-    $this->routeMatch = $route_match;
+  public function __construct(
+    protected RouteMatchInterface $routeMatch,
+  ) {
   }
 
   /**

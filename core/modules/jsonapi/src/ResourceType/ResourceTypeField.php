@@ -16,13 +16,6 @@ namespace Drupal\jsonapi\ResourceType;
 abstract class ResourceTypeField {
 
   /**
-   * The internal field name.
-   *
-   * @var string
-   */
-  protected $internalName;
-
-  /**
    * The public field name.
    *
    * @var string
@@ -30,36 +23,24 @@ abstract class ResourceTypeField {
   protected $publicName;
 
   /**
-   * Whether the field is disabled.
-   *
-   * @var bool
-   */
-  protected $enabled;
-
-  /**
-   * Whether the field can only have one value.
-   *
-   * @var bool
-   */
-  protected $hasOne;
-
-  /**
    * ResourceTypeField constructor.
    *
-   * @param string $internal_name
+   * @param string $internalName
    *   The internal field name.
    * @param string $public_name
    *   (optional) The public field name. Defaults to the internal field name.
    * @param bool $enabled
    *   (optional) Whether the field is enabled. Defaults to TRUE.
-   * @param bool $has_one
+   * @param bool $hasOne
    *   (optional) Whether the field can only have ony value. Defaults to TRUE.
    */
-  public function __construct($internal_name, $public_name = NULL, $enabled = TRUE, $has_one = TRUE) {
-    $this->internalName = $internal_name;
-    $this->publicName = $public_name ?: $internal_name;
-    $this->enabled = $enabled;
-    $this->hasOne = $has_one;
+  public function __construct(
+    protected $internalName,
+    $public_name = NULL,
+    protected $enabled = TRUE,
+    protected $hasOne = TRUE,
+  ) {
+    $this->publicName = $public_name ?: $this->internalName;
   }
 
   /**

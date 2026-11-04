@@ -12,20 +12,6 @@ use Composer\Package\RootPackageInterface;
 class Message {
 
   /**
-   * The root package.
-   *
-   * @var \Composer\Package\RootPackageInterface
-   */
-  protected $rootPackage;
-
-  /**
-   * The name of the event.
-   *
-   * @var string
-   */
-  protected $eventName;
-
-  /**
    * The message to display.
    *
    * @var string[]
@@ -35,14 +21,15 @@ class Message {
   /**
    * Construct a Config object.
    *
-   * @param \Composer\Package\RootPackageInterface $root_package
+   * @param \Composer\Package\RootPackageInterface $rootPackage
    *   Composer package object for the root package.
-   * @param string $event_name
+   * @param string $eventName
    *   The event name.
    */
-  public function __construct(RootPackageInterface $root_package, $event_name) {
-    $this->rootPackage = $root_package;
-    $this->eventName = $event_name;
+  public function __construct(
+    protected RootPackageInterface $rootPackage,
+    protected $eventName,
+  ) {
   }
 
   public function getText() {

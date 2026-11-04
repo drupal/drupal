@@ -26,13 +26,6 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
   use SchemaCheckTrait;
 
   /**
-   * The typed config manger.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected $typedManager;
-
-  /**
    * An array of config checked already. Keyed by config name and a checksum.
    *
    * @var array
@@ -40,16 +33,9 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
   protected $checked = [];
 
   /**
-   * An array of config object names that are excluded from schema checking.
-   *
-   * @var string[]
-   */
-  protected $exclude = [];
-
-  /**
    * Constructs the ConfigSchemaChecker object.
    *
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_manager
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedManager
    *   The typed config manager.
    * @param string[] $exclude
    *   An array of config object names that are excluded from schema checking.
@@ -58,9 +44,11 @@ class ConfigSchemaChecker implements EventSubscriberInterface {
    *   validation errors will be added to the errors found by
    *   SchemaCheckTrait::checkConfigSchema().
    */
-  public function __construct(TypedConfigManagerInterface $typed_manager, array $exclude = [], private readonly bool $validateConstraints = FALSE) {
-    $this->typedManager = $typed_manager;
-    $this->exclude = $exclude;
+  public function __construct(
+    protected TypedConfigManagerInterface $typedManager,
+    protected array $exclude = [],
+    private readonly bool $validateConstraints = FALSE,
+  ) {
   }
 
   /**

@@ -21,13 +21,6 @@ class AllowedValuesConstraintValidator extends ChoiceValidator implements Contai
   use TypedDataAwareValidatorTrait;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -37,11 +30,12 @@ class AllowedValuesConstraintValidator extends ChoiceValidator implements Contai
   /**
    * Constructs a new AllowedValuesConstraintValidator.
    *
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
-  public function __construct(AccountInterface $current_user) {
-    $this->currentUser = $current_user;
+  public function __construct(
+    protected AccountInterface $currentUser,
+  ) {
   }
 
   /**

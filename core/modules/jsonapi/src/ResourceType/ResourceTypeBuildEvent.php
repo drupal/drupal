@@ -15,13 +15,6 @@ use Drupal\Component\EventDispatcher\Event;
 class ResourceTypeBuildEvent extends Event {
 
   /**
-   * The JSON:API resource type name of the instance to be built.
-   *
-   * @var null|string
-   */
-  protected $resourceTypeName;
-
-  /**
    * The fields of the resource type to be built.
    *
    * @var \Drupal\jsonapi\ResourceType\ResourceTypeField[]
@@ -41,14 +34,16 @@ class ResourceTypeBuildEvent extends Event {
    * This constructor is protected by design. Use
    * static::createFromEntityTypeAndBundle() instead.
    *
-   * @param string $resource_type_name
+   * @param string $resourceTypeName
    *   A JSON:API resource type name.
    * @param \Drupal\jsonapi\ResourceType\ResourceTypeField[] $fields
    *   The fields of the resource type to be built.
    */
-  protected function __construct($resource_type_name, array $fields) {
+  protected function __construct(
+    protected $resourceTypeName,
+    array $fields,
+  ) {
     assert(Inspector::assertAllObjects($fields, ResourceTypeField::class));
-    $this->resourceTypeName = $resource_type_name;
     $this->fields = $fields;
   }
 

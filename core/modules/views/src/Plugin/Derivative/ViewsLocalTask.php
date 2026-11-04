@@ -16,40 +16,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ViewsLocalTask extends DeriverBase implements ContainerDeriverInterface {
 
   /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The state key value store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The view storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $viewStorage;
-
-  /**
    * Constructs a \Drupal\views\Plugin\Derivative\ViewsLocalTask instance.
    *
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $view_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $viewStorage
    *   The view storage.
    */
-  public function __construct(RouteProviderInterface $route_provider, StateInterface $state, EntityStorageInterface $view_storage) {
-    $this->routeProvider = $route_provider;
-    $this->state = $state;
-    $this->viewStorage = $view_storage;
+  public function __construct(
+    protected RouteProviderInterface $routeProvider,
+    protected StateInterface $state,
+    protected EntityStorageInterface $viewStorage,
+  ) {
   }
 
   /**

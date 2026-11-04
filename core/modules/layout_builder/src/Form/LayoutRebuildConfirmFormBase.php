@@ -26,13 +26,6 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase implements W
   use WorkspaceSafeFormTrait;
 
   /**
-   * The layout tempstore repository.
-   *
-   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
-   */
-  protected $layoutTempstoreRepository;
-
-  /**
    * The section storage.
    *
    * @var \Drupal\layout_builder\SectionStorageInterface
@@ -49,11 +42,12 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase implements W
   /**
    * Constructs a new RemoveSectionForm.
    *
-   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
+   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layoutTempstoreRepository
    *   The layout tempstore repository.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository) {
-    $this->layoutTempstoreRepository = $layout_tempstore_repository;
+  public function __construct(
+    protected LayoutTempstoreRepositoryInterface $layoutTempstoreRepository,
+  ) {
   }
 
   /**

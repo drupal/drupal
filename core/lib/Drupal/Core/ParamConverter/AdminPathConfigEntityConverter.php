@@ -26,36 +26,24 @@ use Symfony\Component\Routing\Route;
 class AdminPathConfigEntityConverter extends EntityConverter {
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The route admin context to determine whether a route is an admin one.
-   *
-   * @var \Drupal\Core\Routing\AdminContext
-   */
-  protected $adminContext;
-
-  /**
    * Constructs a new EntityConverter.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
-   * @param \Drupal\Core\Routing\AdminContext $admin_context
+   * @param \Drupal\Core\Routing\AdminContext $adminContext
    *   The route admin context service.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, AdminContext $admin_context, $entity_repository = NULL) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    protected ConfigFactoryInterface $configFactory,
+    protected AdminContext $adminContext,
+    $entity_repository = NULL,
+  ) {
     parent::__construct($entity_type_manager, $entity_repository);
-
-    $this->configFactory = $config_factory;
-    $this->adminContext = $admin_context;
   }
 
   /**

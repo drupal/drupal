@@ -118,7 +118,7 @@ class ErrorHandlerTest extends BrowserTestBase {
       '%line' => 64,
       '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];
-    $error_renderer_exception = '<em class="placeholder">Exception</em>: This is an exception that occurs during rendering in <em class="placeholder">Drupal\error_test\Controller\ErrorTestController-&gt;{closure:Drupal\error_test\Controller\ErrorTestController::triggerRendererException():104}()</em> (line';
+    $error_renderer_exception = '<em class="placeholder">Exception</em>: This is an exception that occurs during rendering in <em class="placeholder">Drupal\error_test\Controller\ErrorTestController-&gt;{closure:Drupal\error_test\Controller\ErrorTestController::triggerRendererException():98}()</em> (line';
     $this->drupalGet('error-test/trigger-exception');
     $this->assertSession()->statusCodeEquals(500);
     $this->assertSession()->responseContains($error_exception);

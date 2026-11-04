@@ -33,27 +33,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BlockPageVariant extends VariantBase implements PageVariantInterface, ContainerFactoryPluginInterface {
 
   /**
-   * The block repository.
-   *
-   * @var \Drupal\block\BlockRepositoryInterface
-   */
-  protected $blockRepository;
-
-  /**
-   * The block view builder.
-   *
-   * @var \Drupal\Core\Entity\EntityViewBuilderInterface
-   */
-  protected $blockViewBuilder;
-
-  /**
-   * The Block entity type list cache tags.
-   *
-   * @var string[]
-   */
-  protected $blockListCacheTags;
-
-  /**
    * The render array representing the main page content.
    *
    * @var array
@@ -76,18 +55,22 @@ class BlockPageVariant extends VariantBase implements PageVariantInterface, Cont
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\block\BlockRepositoryInterface $block_repository
+   * @param \Drupal\block\BlockRepositoryInterface $blockRepository
    *   The block repository.
-   * @param \Drupal\Core\Entity\EntityViewBuilderInterface $block_view_builder
+   * @param \Drupal\Core\Entity\EntityViewBuilderInterface $blockViewBuilder
    *   The block view builder.
-   * @param string[] $block_list_cache_tags
+   * @param string[] $blockListCacheTags
    *   The Block entity type list cache tags.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockRepositoryInterface $block_repository, EntityViewBuilderInterface $block_view_builder, array $block_list_cache_tags) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected BlockRepositoryInterface $blockRepository,
+    protected EntityViewBuilderInterface $blockViewBuilder,
+    protected array $blockListCacheTags,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->blockRepository = $block_repository;
-    $this->blockViewBuilder = $block_view_builder;
-    $this->blockListCacheTags = $block_list_cache_tags;
   }
 
   /**

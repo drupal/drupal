@@ -18,11 +18,6 @@ use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 class Tables implements TablesInterface {
 
   /**
-   * @var \Drupal\Core\Database\Query\SelectInterface
-   */
-  protected $sqlQuery;
-
-  /**
    * Entity table array.
    *
    * This array contains at most two entries: one for the data, one for the
@@ -76,14 +71,15 @@ class Tables implements TablesInterface {
   protected $caseSensitiveFields = [];
 
   /**
-   * @param \Drupal\Core\Database\Query\SelectInterface $sql_query
+   * @param \Drupal\Core\Database\Query\SelectInterface $sqlQuery
    *   The SQL query.
    */
-  public function __construct(SelectInterface $sql_query) {
-    $this->sqlQuery = $sql_query;
+  public function __construct(
+    protected SelectInterface $sqlQuery,
+  ) {
     $this->entityTypeManager = \Drupal::entityTypeManager();
     $this->entityFieldManager = \Drupal::service('entity_field.manager');
-    if ($base_table = $sql_query->getMetaData('entity_query_base_table')) {
+    if ($base_table = $this->sqlQuery->getMetaData('entity_query_base_table')) {
       $this->entityTables['base_table.' . $base_table] = 'base_table';
     }
   }

@@ -18,13 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MenuLinkResetForm extends ConfirmFormBase {
 
   /**
-   * The menu link manager.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
-   */
-  protected $menuLinkManager;
-
-  /**
    * The menu link.
    *
    * @var \Drupal\Core\Menu\MenuLinkInterface
@@ -34,11 +27,12 @@ class MenuLinkResetForm extends ConfirmFormBase {
   /**
    * Constructs a MenuLinkResetForm object.
    *
-   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
    *   The menu link manager.
    */
-  public function __construct(MenuLinkManagerInterface $menu_link_manager) {
-    $this->menuLinkManager = $menu_link_manager;
+  public function __construct(
+    protected MenuLinkManagerInterface $menuLinkManager,
+  ) {
   }
 
   /**

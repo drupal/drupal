@@ -15,20 +15,14 @@ use Drupal\node\NodeInterface;
 class TestController extends ControllerBase {
 
   /**
-   * The token replacement system.
-   *
-   * @var \Drupal\Core\Utility\Token
-   */
-  protected $token;
-
-  /**
    * Constructs a new TestController instance.
    *
    * @param \Drupal\Core\Utility\Token $token
    *   The token replacement system.
    */
-  public function __construct(Token $token) {
-    $this->token = $token;
+  public function __construct(
+    protected Token $token,
+  ) {
   }
 
   /**

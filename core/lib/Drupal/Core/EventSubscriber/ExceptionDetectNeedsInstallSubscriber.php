@@ -16,20 +16,14 @@ class ExceptionDetectNeedsInstallSubscriber implements EventSubscriberInterface 
   use InstallerRedirectTrait;
 
   /**
-   * The default database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a new ExceptionDetectNeedsInstallSubscriber.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The default database connection.
    */
-  public function __construct(Connection $connection) {
-    $this->connection = $connection;
+  public function __construct(
+    protected Connection $connection,
+  ) {
   }
 
   /**

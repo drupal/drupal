@@ -17,25 +17,11 @@ use Drupal\Core\Routing\RouteMatchInterface;
 class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface {
 
   /**
-   * The menu link plugin manager.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
-   */
-  protected $menuLinkManager;
-
-  /**
-   * The route match object for the current page.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
    * Constructs a \Drupal\Core\Menu\MenuActiveTrail object.
    *
-   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
    *   The menu link plugin manager.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   A route match object for finding the active link.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
@@ -45,15 +31,13 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
    *   The path.matcher service.
    */
   public function __construct(
-    MenuLinkManagerInterface $menu_link_manager,
-    RouteMatchInterface $route_match,
+    protected MenuLinkManagerInterface $menuLinkManager,
+    protected RouteMatchInterface $routeMatch,
     CacheBackendInterface $cache,
     LockBackendInterface $lock,
     protected PathMatcherInterface $pathMatcher,
   ) {
     parent::__construct(NULL, $cache, $lock);
-    $this->menuLinkManager = $menu_link_manager;
-    $this->routeMatch = $route_match;
   }
 
   /**

@@ -12,20 +12,14 @@ use Symfony\Component\HttpFoundation\Response;
 class CronController extends ControllerBase {
 
   /**
-   * The cron service.
-   *
-   * @var \Drupal\Core\CronInterface
-   */
-  protected $cron;
-
-  /**
    * Constructs a CronController object.
    *
    * @param \Drupal\Core\CronInterface $cron
    *   The cron service.
    */
-  public function __construct(CronInterface $cron) {
-    $this->cron = $cron;
+  public function __construct(
+    protected CronInterface $cron,
+  ) {
   }
 
   /**

@@ -12,20 +12,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ConfigTranslationListController extends ControllerBase {
 
   /**
-   * The mapper manager.
-   *
-   * @var \Drupal\config_translation\ConfigMapperManagerInterface
-   */
-  protected $mapperManager;
-
-  /**
    * Constructs a new ConfigTranslationListController object.
    *
-   * @param \Drupal\config_translation\ConfigMapperManagerInterface $mapper_manager
+   * @param \Drupal\config_translation\ConfigMapperManagerInterface $mapperManager
    *   The config mapper manager.
    */
-  public function __construct(ConfigMapperManagerInterface $mapper_manager) {
-    $this->mapperManager = $mapper_manager;
+  public function __construct(
+    protected ConfigMapperManagerInterface $mapperManager,
+  ) {
   }
 
   /**

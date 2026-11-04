@@ -16,20 +16,14 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
   use EntityReferenceFieldItemNormalizerTrait;
 
   /**
-   * The entity repository.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
    * Constructs an EntityReferenceFieldItemNormalizer object.
    *
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository) {
-    $this->entityRepository = $entity_repository;
+  public function __construct(
+    protected EntityRepositoryInterface $entityRepository,
+  ) {
   }
 
   /**

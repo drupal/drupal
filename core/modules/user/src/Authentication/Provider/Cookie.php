@@ -26,40 +26,20 @@ class Cookie implements AuthenticationProviderInterface, EventSubscriberInterfac
   use StringTranslationTrait;
 
   /**
-   * The session configuration.
-   *
-   * @var \Drupal\Core\Session\SessionConfigurationInterface
-   */
-  protected $sessionConfiguration;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The messenger.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
    * Constructs a new cookie authentication provider.
    *
-   * @param \Drupal\Core\Session\SessionConfigurationInterface $session_configuration
+   * @param \Drupal\Core\Session\SessionConfigurationInterface $sessionConfiguration
    *   The session configuration.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
-  public function __construct(SessionConfigurationInterface $session_configuration, Connection $connection, MessengerInterface $messenger) {
-    $this->sessionConfiguration = $session_configuration;
-    $this->connection = $connection;
-    $this->messenger = $messenger;
+  public function __construct(
+    protected SessionConfigurationInterface $sessionConfiguration,
+    protected Connection $connection,
+    protected MessengerInterface $messenger,
+  ) {
   }
 
   /**

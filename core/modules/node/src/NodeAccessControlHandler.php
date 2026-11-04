@@ -25,20 +25,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class NodeAccessControlHandler extends EntityAccessControlHandler implements NodeAccessControlHandlerInterface, EntityHandlerInterface {
 
   /**
-   * The node grant storage.
-   *
-   * @var \Drupal\node\NodeGrantDatabaseStorageInterface
-   */
-  protected $grantStorage;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Map of revision operations.
    *
    * Keys contain revision operations, where values are an array containing the
@@ -63,15 +49,17 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\node\NodeGrantDatabaseStorageInterface $grant_storage
+   * @param \Drupal\node\NodeGrantDatabaseStorageInterface $grantStorage
    *   The node grant storage.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, NodeGrantDatabaseStorageInterface $grant_storage, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    protected NodeGrantDatabaseStorageInterface $grantStorage,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
     parent::__construct($entity_type);
-    $this->grantStorage = $grant_storage;
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

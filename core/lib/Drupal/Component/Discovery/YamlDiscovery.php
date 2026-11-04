@@ -12,20 +12,6 @@ use Drupal\Component\Serialization\Yaml;
 class YamlDiscovery implements DiscoverableInterface {
 
   /**
-   * The base filename to look for in each directory.
-   *
-   * @var string
-   */
-  protected $name;
-
-  /**
-   * An array of directories to scan, keyed by the provider.
-   *
-   * @var array
-   */
-  protected $directories = [];
-
-  /**
    * Constructs a YamlDiscovery object.
    *
    * @param string $name
@@ -34,9 +20,10 @@ class YamlDiscovery implements DiscoverableInterface {
    * @param array $directories
    *   An array of directories to scan, keyed by the provider.
    */
-  public function __construct($name, array $directories) {
-    $this->name = $name;
-    $this->directories = $directories;
+  public function __construct(
+    protected $name,
+    protected array $directories,
+  ) {
   }
 
   /**

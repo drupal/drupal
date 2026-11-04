@@ -25,30 +25,17 @@ class CKEditor5MediaAndFilterSettingsInSyncConstraintValidator extends Constrain
   use StringTranslationTrait;
 
   /**
-   * The filter plugin manager service.
-   *
-   * @var \Drupal\filter\FilterPluginManager
-   */
-  protected $filterPluginManager;
-
-  /**
-   * The typed config manager service.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected $typedConfigManager;
-
-  /**
    * Constructs a new CKEditor5MediaAndFilterSettingsInSyncConstraintValidator.
    *
-   * @param \Drupal\filter\FilterPluginManager $filter_plugin_manager
+   * @param \Drupal\filter\FilterPluginManager $filterPluginManager
    *   The filter plugin manager service.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed config manager service.
    */
-  public function __construct(FilterPluginManager $filter_plugin_manager, TypedConfigManagerInterface $typed_config_manager) {
-    $this->filterPluginManager = $filter_plugin_manager;
-    $this->typedConfigManager = $typed_config_manager;
+  public function __construct(
+    protected FilterPluginManager $filterPluginManager,
+    protected TypedConfigManagerInterface $typedConfigManager,
+  ) {
   }
 
   /**

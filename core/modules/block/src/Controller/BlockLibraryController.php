@@ -20,50 +20,23 @@ use Symfony\Component\Routing\Attribute\Route;
 class BlockLibraryController extends ControllerBase {
 
   /**
-   * The block manager.
-   *
-   * @var \Drupal\Core\Block\BlockManagerInterface
-   */
-  protected $blockManager;
-
-  /**
-   * The context repository.
-   *
-   * @var \Drupal\Core\Plugin\Context\LazyContextRepository
-   */
-  protected $contextRepository;
-
-  /**
-   * The route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
-   * The local action manager.
-   *
-   * @var \Drupal\Core\Menu\LocalActionManagerInterface
-   */
-  protected $localActionManager;
-
-  /**
    * Constructs a BlockLibraryController object.
    *
-   * @param \Drupal\Core\Block\BlockManagerInterface $block_manager
+   * @param \Drupal\Core\Block\BlockManagerInterface $blockManager
    *   The block manager.
-   * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
+   * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $contextRepository
    *   The context repository.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The current route match.
-   * @param \Drupal\Core\Menu\LocalActionManagerInterface $local_action_manager
+   * @param \Drupal\Core\Menu\LocalActionManagerInterface $localActionManager
    *   The local action manager.
    */
-  public function __construct(BlockManagerInterface $block_manager, ContextRepositoryInterface $context_repository, RouteMatchInterface $route_match, LocalActionManagerInterface $local_action_manager) {
-    $this->blockManager = $block_manager;
-    $this->routeMatch = $route_match;
-    $this->localActionManager = $local_action_manager;
-    $this->contextRepository = $context_repository;
+  public function __construct(
+    protected BlockManagerInterface $blockManager,
+    protected ContextRepositoryInterface $contextRepository,
+    protected RouteMatchInterface $routeMatch,
+    protected LocalActionManagerInterface $localActionManager,
+  ) {
   }
 
   /**

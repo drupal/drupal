@@ -18,43 +18,24 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
   use StringTranslationTrait;
 
   /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity display repository.
-   *
-   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
-   */
-  protected $entityDisplayRepository;
-
-  /**
    * Creates a FieldUiLocalTask object.
    *
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entityDisplayRepository
    *   The entity display repository.
    */
-  public function __construct(RouteProviderInterface $route_provider, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation, EntityDisplayRepositoryInterface $entity_display_repository) {
-    $this->routeProvider = $route_provider;
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected RouteProviderInterface $routeProvider,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    TranslationInterface $string_translation,
+    protected EntityDisplayRepositoryInterface $entityDisplayRepository,
+  ) {
     $this->stringTranslation = $string_translation;
-    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**

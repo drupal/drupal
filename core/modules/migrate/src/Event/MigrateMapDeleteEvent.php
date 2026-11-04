@@ -11,31 +11,18 @@ use Drupal\Component\EventDispatcher\Event;
 class MigrateMapDeleteEvent extends Event {
 
   /**
-   * Map plugin.
-   *
-   * @var \Drupal\migrate\Plugin\MigrateIdMapInterface
-   */
-  protected $map;
-
-  /**
-   * Array of source ID fields.
-   *
-   * @var array
-   */
-  protected $sourceId;
-
-  /**
    * Constructs a migration map delete event object.
    *
    * @param \Drupal\migrate\Plugin\MigrateIdMapInterface $map
    *   Map plugin.
-   * @param array $source_id
+   * @param array $sourceId
    *   Array of source ID fields representing the object being deleted from the
    *   map.
    */
-  public function __construct(MigrateIdMapInterface $map, array $source_id) {
-    $this->map = $map;
-    $this->sourceId = $source_id;
+  public function __construct(
+    protected MigrateIdMapInterface $map,
+    protected array $sourceId,
+  ) {
   }
 
   /**

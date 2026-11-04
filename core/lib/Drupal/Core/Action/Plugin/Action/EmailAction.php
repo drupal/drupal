@@ -29,46 +29,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EmailAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The token service.
-   *
-   * @var \Drupal\Core\Utility\Token
-   */
-  protected $token;
-
-  /**
    * The user storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $storage;
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The mail manager.
-   *
-   * @var \Drupal\Core\Mail\MailManagerInterface
-   */
-  protected $mailManager;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The email validator.
-   *
-   * @var \Drupal\Component\Utility\EmailValidatorInterface
-   */
-  protected $emailValidator;
 
   /**
    * Constructs an EmailAction object.
@@ -85,22 +50,26 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
    *   The entity type manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\Mail\MailManagerInterface $mail_manager
+   * @param \Drupal\Core\Mail\MailManagerInterface $mailManager
    *   The mail manager.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
-   * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
+   * @param \Drupal\Component\Utility\EmailValidatorInterface $emailValidator
    *   The email validator.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Token $token, EntityTypeManagerInterface $entity_type_manager, LoggerInterface $logger, MailManagerInterface $mail_manager, LanguageManagerInterface $language_manager, EmailValidatorInterface $email_validator) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected Token $token,
+    EntityTypeManagerInterface $entity_type_manager,
+    protected LoggerInterface $logger,
+    protected MailManagerInterface $mailManager,
+    protected LanguageManagerInterface $languageManager,
+    protected EmailValidatorInterface $emailValidator,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->token = $token;
     $this->storage = $entity_type_manager->getStorage('user');
-    $this->logger = $logger;
-    $this->mailManager = $mail_manager;
-    $this->languageManager = $language_manager;
-    $this->emailValidator = $email_validator;
   }
 
   /**

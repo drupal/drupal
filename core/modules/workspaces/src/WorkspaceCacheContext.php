@@ -13,20 +13,14 @@ use Drupal\Core\Cache\Context\CacheContextInterface;
 class WorkspaceCacheContext implements CacheContextInterface {
 
   /**
-   * The workspace manager.
-   *
-   * @var \Drupal\workspaces\WorkspaceManagerInterface
-   */
-  protected $workspaceManager;
-
-  /**
    * Constructs a new WorkspaceCacheContext service.
    *
-   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspaceManager
    *   The workspace manager.
    */
-  public function __construct(WorkspaceManagerInterface $workspace_manager) {
-    $this->workspaceManager = $workspace_manager;
+  public function __construct(
+    protected WorkspaceManagerInterface $workspaceManager,
+  ) {
   }
 
   /**

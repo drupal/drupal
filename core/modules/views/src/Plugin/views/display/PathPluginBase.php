@@ -25,20 +25,6 @@ use Symfony\Component\Routing\RouteCollection;
 abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouterInterface, DisplayMenuInterface, PostSaveViewInterface {
 
   /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The state key value store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Constructs a PathPluginBase object.
    *
    * @param array $configuration
@@ -47,16 +33,19 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected RouteProviderInterface $routeProvider,
+    protected StateInterface $state,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->routeProvider = $route_provider;
-    $this->state = $state;
   }
 
   /**

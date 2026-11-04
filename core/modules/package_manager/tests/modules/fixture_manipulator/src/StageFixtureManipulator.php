@@ -22,20 +22,6 @@ final class StageFixtureManipulator extends FixtureManipulator implements Beginn
   private const STATE_KEY = __CLASS__ . 'MANIPULATOR_ARGUMENTS';
 
   /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  private StateInterface $state;
-
-  /**
-   * The decorated service.
-   *
-   * @var \PhpTuf\ComposerStager\API\Core\BeginnerInterface
-   */
-  private BeginnerInterface $inner;
-
-  /**
    * Constructions a StageFixtureManipulator object.
    *
    * @param \Drupal\Core\State\StateInterface $state
@@ -43,9 +29,10 @@ final class StageFixtureManipulator extends FixtureManipulator implements Beginn
    * @param \PhpTuf\ComposerStager\API\Core\BeginnerInterface $inner
    *   The decorated beginner service.
    */
-  public function __construct(StateInterface $state, BeginnerInterface $inner) {
-    $this->state = $state;
-    $this->inner = $inner;
+  public function __construct(
+    private StateInterface $state,
+    private BeginnerInterface $inner,
+  ) {
   }
 
   /**

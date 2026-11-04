@@ -14,20 +14,14 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 class EditorConfigTranslationSubscriber implements EventSubscriberInterface {
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * EditorConfigTranslationSubscriber constructor.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The factory for configuration objects.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
-    $this->configFactory = $config_factory;
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory,
+  ) {
   }
 
   /**

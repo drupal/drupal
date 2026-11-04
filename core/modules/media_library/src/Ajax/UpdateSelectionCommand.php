@@ -24,20 +24,14 @@ use Drupal\Core\Ajax\CommandInterface;
 class UpdateSelectionCommand implements CommandInterface {
 
   /**
-   * An array of media IDs to add to the current selection.
-   *
-   * @var int[]
-   */
-  protected $mediaIds;
-
-  /**
    * Constructs an UpdateSelectionCommand object.
    *
-   * @param int[] $media_ids
+   * @param int[] $mediaIds
    *   An array of media IDs to add to the current selection.
    */
-  public function __construct(array $media_ids) {
-    $this->mediaIds = $media_ids;
+  public function __construct(
+    protected array $mediaIds,
+  ) {
   }
 
   /**

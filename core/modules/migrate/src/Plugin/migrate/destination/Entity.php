@@ -83,13 +83,6 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
   protected EntityFieldManagerInterface $entityFieldManager;
 
   /**
-   * The list of the bundles of this entity type.
-   *
-   * @var array
-   */
-  protected $bundles;
-
-  /**
    * Construct a new entity.
    *
    * @param array $configuration
@@ -105,14 +98,20 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
    * @param array $bundles
    *   The list of bundles this entity type has.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityStorageInterface $storage, array $bundles) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    MigrationInterface $migration,
+    EntityStorageInterface $storage,
+    protected array $bundles,
+  ) {
     $plugin_definition += [
       'label' => $storage->getEntityType()->getPluralLabel(),
     ];
 
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->storage = $storage;
-    $this->bundles = $bundles;
     $this->supportsRollback = TRUE;
   }
 

@@ -17,32 +17,20 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   use StringTranslationTrait;
 
   /**
-   * The menu link tree service.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
-   */
-  protected $menuLinkTree;
-
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a \Drupal\Core\Menu\MenuParentFormSelector.
    *
-   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_link_tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menuLinkTree
    *   The menu link tree service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
    */
-  public function __construct(MenuLinkTreeInterface $menu_link_tree, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
-    $this->menuLinkTree = $menu_link_tree;
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected MenuLinkTreeInterface $menuLinkTree,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    TranslationInterface $string_translation,
+  ) {
     $this->stringTranslation = $string_translation;
   }
 

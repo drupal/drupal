@@ -17,33 +17,17 @@ use Drupal\Component\Plugin\Exception\PluginException;
 class DefaultFactory implements FactoryInterface {
 
   /**
-   * The object that gets the plugin definitions that this factory instantiates.
-   *
-   * The plugin definition includes the plugin class and possibly other
-   * information necessary for proper instantiation.
-   *
-   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface
-   */
-  protected $discovery;
-
-  /**
-   * Defines an interface each plugin should implement.
-   *
-   * @var string|null
-   */
-  protected $interface;
-
-  /**
    * Constructs a Drupal\Component\Plugin\Factory\DefaultFactory object.
    *
    * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $discovery
    *   The plugin discovery.
-   * @param string|null $plugin_interface
+   * @param string|null $interface
    *   (optional) The interface each plugin should implement.
    */
-  public function __construct(DiscoveryInterface $discovery, $plugin_interface = NULL) {
-    $this->discovery = $discovery;
-    $this->interface = $plugin_interface;
+  public function __construct(
+    protected DiscoveryInterface $discovery,
+    protected $interface = NULL,
+  ) {
   }
 
   /**

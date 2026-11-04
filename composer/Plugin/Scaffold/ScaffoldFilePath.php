@@ -21,51 +21,23 @@ use Composer\Util\Filesystem;
 class ScaffoldFilePath {
 
   /**
-   * The type of scaffold file this is,'autoload', 'dest' or 'src'.
-   *
-   * @var string
-   */
-  protected $type;
-
-  /**
-   * The name of the package containing the file.
-   *
-   * @var string
-   */
-  protected $packageName;
-
-  /**
-   * The relative path to the file.
-   *
-   * @var string
-   */
-  protected $relativePath;
-
-  /**
-   * The full path to the file.
-   *
-   * @var string
-   */
-  protected $fullPath;
-
-  /**
    * ScaffoldFilePath constructor.
    *
-   * @param string $path_type
+   * @param string $type
    *   The type of scaffold file this is,'autoload', 'dest' or 'src'.
-   * @param string $package_name
+   * @param string $packageName
    *   The name of the package containing the file.
-   * @param string $rel_path
+   * @param string $relativePath
    *   The relative path to the file.
-   * @param string $full_path
+   * @param string $fullPath
    *   The full path to the file.
    */
-  public function __construct($path_type, $package_name, $rel_path, $full_path) {
-    $this->type = $path_type;
-    $this->packageName = $package_name;
-    $this->relativePath = $rel_path;
-    $this->fullPath = $full_path;
-
+  public function __construct(
+    protected $type,
+    protected $packageName,
+    protected $relativePath,
+    protected $fullPath,
+  ) {
     // Ensure that the full path really is a full path. We do not use
     // 'realpath' here because the file specified by the full path might
     // not exist yet.

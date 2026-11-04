@@ -19,41 +19,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class FormCache implements FormCacheInterface {
 
   /**
-   * The factory for expirable key value stores used by form cache.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface
-   */
-  protected $keyValueExpirableFactory;
-
-  /**
-   * The CSRF token generator to validate the form token.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfToken;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * Logger channel.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
-   */
-  protected $logger;
-
-  /**
    * The config factory.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
@@ -61,56 +26,36 @@ class FormCache implements FormCacheInterface {
   protected $configFactory;
 
   /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * A policy rule determining the cacheability of a request.
-   *
-   * @var \Drupal\Core\PageCache\RequestPolicyInterface
-   */
-  protected $requestPolicy;
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * Constructs a new FormCache.
    *
    * @param string $root
    *   The app root.
-   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
+   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $keyValueExpirableFactory
    *   The key value expirable factory, used to create key value expirable
    *   stores for the form cache and form state cache.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrfToken
    *   The CSRF token generator.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param \Drupal\Core\PageCache\RequestPolicyInterface $request_policy
+   * @param \Drupal\Core\PageCache\RequestPolicyInterface $requestPolicy
    *   A policy rule determining the cacheability of a request.
    */
-  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, ModuleHandlerInterface $module_handler, AccountInterface $current_user, CsrfTokenGenerator $csrf_token, LoggerInterface $logger, RequestStack $request_stack, RequestPolicyInterface $request_policy) {
-    $this->root = $root;
-    $this->keyValueExpirableFactory = $key_value_expirable_factory;
-    $this->moduleHandler = $module_handler;
-    $this->currentUser = $current_user;
-    $this->logger = $logger;
-    $this->csrfToken = $csrf_token;
-    $this->requestStack = $request_stack;
-    $this->requestPolicy = $request_policy;
+  public function __construct(
+    protected $root,
+    protected KeyValueExpirableFactoryInterface $keyValueExpirableFactory,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected AccountInterface $currentUser,
+    protected CsrfTokenGenerator $csrfToken,
+    protected LoggerInterface $logger,
+    protected RequestStack $requestStack,
+    protected RequestPolicyInterface $requestPolicy,
+  ) {
   }
 
   /**

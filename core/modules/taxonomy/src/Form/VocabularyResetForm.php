@@ -16,20 +16,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class VocabularyResetForm extends EntityConfirmFormBase implements WorkspaceSafeFormInterface {
 
   /**
-   * The term storage.
-   *
-   * @var \Drupal\taxonomy\TermStorageInterface
-   */
-  protected $termStorage;
-
-  /**
    * Constructs a new VocabularyResetForm object.
    *
-   * @param \Drupal\taxonomy\TermStorageInterface $term_storage
+   * @param \Drupal\taxonomy\TermStorageInterface $termStorage
    *   The term storage.
    */
-  public function __construct(TermStorageInterface $term_storage) {
-    $this->termStorage = $term_storage;
+  public function __construct(
+    protected TermStorageInterface $termStorage,
+  ) {
   }
 
   /**

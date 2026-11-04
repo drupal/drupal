@@ -15,30 +15,17 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 class PlaceholderGenerator implements PlaceholderGeneratorInterface {
 
   /**
-   * The cache contexts manager service.
-   *
-   * @var \Drupal\Core\Cache\Context\CacheContextsManager
-   */
-  protected $cacheContextsManager;
-
-  /**
-   * The renderer configuration array.
-   *
-   * @var array
-   */
-  protected $rendererConfig;
-
-  /**
    * Constructs a new Placeholder service.
    *
-   * @param \Drupal\Core\Cache\Context\CacheContextsManager $cache_contexts_manager
+   * @param \Drupal\Core\Cache\Context\CacheContextsManager $cacheContextsManager
    *   The cache contexts manager service.
-   * @param array $renderer_config
+   * @param array $rendererConfig
    *   The renderer configuration array.
    */
-  public function __construct(CacheContextsManager $cache_contexts_manager, array $renderer_config) {
-    $this->cacheContextsManager = $cache_contexts_manager;
-    $this->rendererConfig = $renderer_config;
+  public function __construct(
+    protected CacheContextsManager $cacheContextsManager,
+    protected array $rendererConfig,
+  ) {
   }
 
   /**

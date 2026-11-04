@@ -36,13 +36,6 @@ class ConfigureSectionForm extends FormBase implements WorkspaceDynamicSafeFormI
   use WorkspaceSafeFormTrait;
 
   /**
-   * The layout tempstore repository.
-   *
-   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
-   */
-  protected $layoutTempstoreRepository;
-
-  /**
    * The plugin being configured.
    *
    * @var \Drupal\Core\Layout\LayoutInterface|\Drupal\Core\Plugin\PluginFormInterface
@@ -55,13 +48,6 @@ class ConfigureSectionForm extends FormBase implements WorkspaceDynamicSafeFormI
    * @var \Drupal\layout_builder\Section
    */
   protected $section;
-
-  /**
-   * The plugin form manager.
-   *
-   * @var \Drupal\Core\Plugin\PluginFormFactoryInterface
-   */
-  protected $pluginFormFactory;
 
   /**
    * The section storage.
@@ -94,14 +80,15 @@ class ConfigureSectionForm extends FormBase implements WorkspaceDynamicSafeFormI
   /**
    * Constructs a new ConfigureSectionForm.
    *
-   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
+   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layoutTempstoreRepository
    *   The layout tempstore repository.
-   * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $plugin_form_manager
+   * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $pluginFormFactory
    *   The plugin form manager.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, PluginFormFactoryInterface $plugin_form_manager) {
-    $this->layoutTempstoreRepository = $layout_tempstore_repository;
-    $this->pluginFormFactory = $plugin_form_manager;
+  public function __construct(
+    protected LayoutTempstoreRepositoryInterface $layoutTempstoreRepository,
+    protected PluginFormFactoryInterface $pluginFormFactory,
+  ) {
   }
 
   /**

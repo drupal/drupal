@@ -14,30 +14,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ConfigDependencies implements ContainerInjectionInterface {
 
   /**
-   * The serialization format providers, keyed by format.
-   *
-   * @var string[]
-   */
-  protected $formatProviders;
-
-  /**
-   * The authentication providers, keyed by ID.
-   *
-   * @var string[]
-   */
-  protected $authProviders;
-
-  /**
    * Creates a new ConfigDependencies instance.
    *
-   * @param string[] $format_providers
+   * @param string[] $formatProviders
    *   The serialization format providers, keyed by format.
-   * @param string[] $auth_providers
+   * @param string[] $authProviders
    *   The authentication providers, keyed by ID.
    */
-  public function __construct(array $format_providers, array $auth_providers) {
-    $this->formatProviders = $format_providers;
-    $this->authProviders = $auth_providers;
+  public function __construct(
+    protected array $formatProviders,
+    protected array $authProviders,
+  ) {
   }
 
   /**

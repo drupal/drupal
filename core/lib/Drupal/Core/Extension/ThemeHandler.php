@@ -18,40 +18,20 @@ class ThemeHandler implements ThemeHandlerInterface {
   protected $list;
 
   /**
-   * The config factory to get the installed themes.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * An extension discovery instance.
-   *
-   * @var \Drupal\Core\Extension\ThemeExtensionList
-   */
-  protected $themeList;
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
    * Constructs a new ThemeHandler.
    *
    * @param string $root
    *   The app root.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory to get the installed themes.
-   * @param \Drupal\Core\Extension\ThemeExtensionList $theme_list
+   * @param \Drupal\Core\Extension\ThemeExtensionList $themeList
    *   An extension discovery instance.
    */
-  public function __construct($root, ConfigFactoryInterface $config_factory, ThemeExtensionList $theme_list) {
-    $this->root = $root;
-    $this->configFactory = $config_factory;
-    $this->themeList = $theme_list;
+  public function __construct(
+    protected $root,
+    protected ConfigFactoryInterface $configFactory,
+    protected ThemeExtensionList $themeList,
+  ) {
   }
 
   /**

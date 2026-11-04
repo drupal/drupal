@@ -23,20 +23,6 @@ class DefaultsEntityForm extends EntityForm {
   use LayoutBuilderEntityFormTrait;
 
   /**
-   * Layout tempstore repository.
-   *
-   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
-   */
-  protected $layoutTempstoreRepository;
-
-  /**
-   * The entity type bundle info service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  /**
    * The section storage.
    *
    * @var \Drupal\layout_builder\SectionStorageInterface
@@ -46,14 +32,15 @@ class DefaultsEntityForm extends EntityForm {
   /**
    * Constructs a new DefaultsEntityForm.
    *
-   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
+   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layoutTempstoreRepository
    *   The layout tempstore repository.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entityTypeBundleInfo
    *   The entity type bundle info service.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
-    $this->layoutTempstoreRepository = $layout_tempstore_repository;
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+  public function __construct(
+    protected LayoutTempstoreRepositoryInterface $layoutTempstoreRepository,
+    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+  ) {
   }
 
   /**

@@ -10,13 +10,6 @@ use Drupal\Core\TempStore\SharedTempStoreFactory;
 class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
 
   /**
-   * The shared tempstore factory.
-   *
-   * @var \Drupal\Core\TempStore\SharedTempStoreFactory
-   */
-  protected $tempStoreFactory;
-
-  /**
    * The static cache of loaded values.
    *
    * @var \Drupal\layout_builder\SectionStorageInterface[]
@@ -26,11 +19,12 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
   /**
    * LayoutTempstoreRepository constructor.
    *
-   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $tempStoreFactory
    *   The shared tempstore factory.
    */
-  public function __construct(SharedTempStoreFactory $temp_store_factory) {
-    $this->tempStoreFactory = $temp_store_factory;
+  public function __construct(
+    protected SharedTempStoreFactory $tempStoreFactory,
+  ) {
   }
 
   /**

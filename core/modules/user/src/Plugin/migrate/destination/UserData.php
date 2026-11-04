@@ -17,11 +17,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 class UserData extends DestinationBase implements ContainerFactoryPluginInterface {
 
   /**
-   * @var \Drupal\user\UserData
-   */
-  protected $userData;
-
-  /**
    * Builds a user data entity destination.
    *
    * @param array $configuration
@@ -32,12 +27,17 @@ class UserData extends DestinationBase implements ContainerFactoryPluginInterfac
    *   The plugin implementation definition.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration.
-   * @param \Drupal\user\UserData $user_data
+   * @param \Drupal\user\UserData $userData
    *   The user data service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, UserDataStorage $user_data) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    MigrationInterface $migration,
+    protected UserDataStorage $userData,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
-    $this->userData = $user_data;
   }
 
   /**

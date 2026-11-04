@@ -17,20 +17,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ViewsMenuLink extends DeriverBase implements ContainerDeriverInterface {
 
   /**
-   * The view storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $viewStorage;
-
-  /**
    * Constructs a \Drupal\views\Plugin\Derivative\ViewsLocalTask instance.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $view_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $viewStorage
    *   The view storage.
    */
-  public function __construct(EntityStorageInterface $view_storage) {
-    $this->viewStorage = $view_storage;
+  public function __construct(
+    protected EntityStorageInterface $viewStorage,
+  ) {
   }
 
   /**

@@ -17,33 +17,21 @@ class TitleResolver implements TitleResolverInterface {
   use StringTranslationTrait;
 
   /**
-   * The controller resolver.
-   *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface
-   */
-  protected $controllerResolver;
-
-  /**
-   * The argument resolver.
-   *
-   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface
-   */
-  protected $argumentResolver;
-
-  /**
    * Constructs a TitleResolver instance.
    *
-   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controllerResolver
    *   The controller resolver.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager.
-   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
+   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argumentResolver
    *   The argument resolver.
    */
-  public function __construct(ControllerResolverInterface $controller_resolver, TranslationInterface $string_translation, ArgumentResolverInterface $argument_resolver) {
-    $this->controllerResolver = $controller_resolver;
+  public function __construct(
+    protected ControllerResolverInterface $controllerResolver,
+    TranslationInterface $string_translation,
+    protected ArgumentResolverInterface $argumentResolver,
+  ) {
     $this->stringTranslation = $string_translation;
-    $this->argumentResolver = $argument_resolver;
   }
 
   /**

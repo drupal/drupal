@@ -23,40 +23,20 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class AjaxBasePageNegotiator implements ThemeNegotiatorInterface {
 
   /**
-   * The CSRF token generator.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfGenerator;
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * Constructs a new AjaxBasePageNegotiator.
    *
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $token_generator
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrfGenerator
    *   The CSRF token generator.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack used to retrieve the current request.
    */
-  public function __construct(CsrfTokenGenerator $token_generator, ConfigFactoryInterface $config_factory, RequestStack $request_stack) {
-    $this->csrfGenerator = $token_generator;
-    $this->configFactory = $config_factory;
-    $this->requestStack = $request_stack;
+  public function __construct(
+    protected CsrfTokenGenerator $csrfGenerator,
+    protected ConfigFactoryInterface $configFactory,
+    protected RequestStack $requestStack,
+  ) {
   }
 
   /**

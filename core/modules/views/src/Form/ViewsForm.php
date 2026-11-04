@@ -26,70 +26,29 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
   use DependencySerializationTrait;
 
   /**
-   * The class resolver to get the subform form objects.
-   *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
-   */
-  protected $classResolver;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The URL generator to generate the form action.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
-
-  /**
-   * The ID of the view.
-   *
-   * @var string
-   */
-  protected $viewId;
-
-  /**
-   * The ID of the active view's display.
-   *
-   * @var string
-   */
-  protected $viewDisplayId;
-
-  /**
-   * The arguments passed to the active view.
-   *
-   * @var string[]
-   */
-  protected $viewArguments;
-
-  /**
    * Constructs a ViewsForm object.
    *
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $classResolver
    *   The class resolver to get the subform form objects.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $urlGenerator
    *   The URL generator to generate the form action.
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param string $view_id
+   * @param string $viewId
    *   The ID of the view.
-   * @param string $view_display_id
+   * @param string $viewDisplayId
    *   The ID of the active view's display.
-   * @param string[] $view_args
+   * @param string[] $viewArguments
    *   The arguments passed to the active view.
    */
-  public function __construct(ClassResolverInterface $class_resolver, UrlGeneratorInterface $url_generator, RequestStack $requestStack, $view_id, $view_display_id, array $view_args) {
-    $this->classResolver = $class_resolver;
-    $this->urlGenerator = $url_generator;
-    $this->requestStack = $requestStack;
-    $this->viewId = $view_id;
-    $this->viewDisplayId = $view_display_id;
-    $this->viewArguments = $view_args;
+  public function __construct(
+    protected ClassResolverInterface $classResolver,
+    protected UrlGeneratorInterface $urlGenerator,
+    protected RequestStack $requestStack,
+    protected $viewId,
+    protected $viewDisplayId,
+    protected array $viewArguments,
+  ) {
   }
 
   /**

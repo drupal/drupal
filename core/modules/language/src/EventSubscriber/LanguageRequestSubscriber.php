@@ -17,50 +17,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class LanguageRequestSubscriber implements EventSubscriberInterface {
 
   /**
-   * The language manager service.
-   *
-   * @var \Drupal\language\ConfigurableLanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The language negotiator.
-   *
-   * @var \Drupal\language\LanguageNegotiatorInterface
-   */
-  protected $negotiator;
-
-  /**
-   * The translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\Translator\TranslatorInterface
-   */
-  protected $translation;
-
-  /**
-   * The current active user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Constructs a LanguageRequestSubscriber object.
    *
-   * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
+   * @param \Drupal\language\ConfigurableLanguageManagerInterface $languageManager
    *   The language manager service.
    * @param \Drupal\language\LanguageNegotiatorInterface $negotiator
    *   The language negotiator.
    * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $translation
    *   The translation service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current active user.
    */
-  public function __construct(ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, TranslatorInterface $translation, AccountInterface $current_user) {
-    $this->languageManager = $language_manager;
-    $this->negotiator = $negotiator;
-    $this->translation = $translation;
-    $this->currentUser = $current_user;
+  public function __construct(
+    protected ConfigurableLanguageManagerInterface $languageManager,
+    protected LanguageNegotiatorInterface $negotiator,
+    protected TranslatorInterface $translation,
+    protected AccountInterface $currentUser,
+  ) {
   }
 
   /**

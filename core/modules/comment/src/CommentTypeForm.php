@@ -26,20 +26,6 @@ class CommentTypeForm extends EntityForm {
   protected $entityTypeManager;
 
   /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The comment manager.
-   *
-   * @var \Drupal\comment\CommentManagerInterface
-   */
-  protected $commentManager;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -57,13 +43,15 @@ class CommentTypeForm extends EntityForm {
    *   The entity type manager service.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\comment\CommentManagerInterface $comment_manager
+   * @param \Drupal\comment\CommentManagerInterface $commentManager
    *   The comment manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, LoggerInterface $logger, CommentManagerInterface $comment_manager) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    protected LoggerInterface $logger,
+    protected CommentManagerInterface $commentManager,
+  ) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->logger = $logger;
-    $this->commentManager = $comment_manager;
   }
 
   /**

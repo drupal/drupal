@@ -77,13 +77,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   private $baseEntityClass;
 
   /**
-   * The memory cache.
-   *
-   * @var \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface
-   */
-  protected $memoryCache;
-
-  /**
    * The memory cache tag.
    *
    * @var string
@@ -105,17 +98,19 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memoryCache
    *   The memory cache.
    */
-  public function __construct(EntityTypeInterface $entity_type, MemoryCacheInterface $memory_cache) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    protected MemoryCacheInterface $memoryCache,
+  ) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->baseEntityClass = $entity_type->getClass();
     $this->idKey = $this->entityType->getKey('id');
     $this->uuidKey = $this->entityType->getKey('uuid');
     $this->langcodeKey = $this->entityType->getKey('langcode');
-    $this->memoryCache = $memory_cache;
     $this->memoryCacheTag = 'entity.memory_cache:' . $this->entityTypeId;
     $this->uuidMemoryCacheTag = 'entity.memory_cache:uuid:' . $this->entityTypeId;
   }

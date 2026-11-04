@@ -42,13 +42,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   const SOURCE_IDS_HASH = 'source_ids_hash';
 
   /**
-   * An event dispatcher instance to use for map events.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
    * The migration map table name.
    *
    * @var string
@@ -82,13 +75,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * @var \Drupal\Core\Database\Query\SelectInterface
    */
   protected $query;
-
-  /**
-   * The migration being done.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
 
   /**
    * The source ID fields.
@@ -147,13 +133,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   protected $currentKey = [];
 
   /**
-   * The migration plugin manager.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationPluginManagerInterface
-   */
-  protected $migrationPluginManager;
-
-  /**
    * Constructs an SQL object.
    *
    * Sets up the tables and builds the maps,
@@ -166,15 +145,20 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *   The configuration for the plugin.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration to do.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
-   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migration_plugin_manager
+   * @param \Drupal\migrate\Plugin\MigrationPluginManagerInterface $migrationPluginManager
    *   The migration plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher, ?MigrationPluginManagerInterface $migration_plugin_manager = NULL) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected MigrationInterface $migration,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected ?MigrationPluginManagerInterface $migrationPluginManager = NULL,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->migration = $migration;
-    $this->eventDispatcher = $event_dispatcher;
     $this->message = new MigrateMessage();
 
     if (!isset($this->database)) {
@@ -188,7 +172,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     $this->mapTableName = mb_substr($this->mapTableName, 0, 63 - $prefix_length);
     $this->messageTableName = 'migrate_message_' . mb_strtolower($machine_name);
     $this->messageTableName = mb_substr($this->messageTableName, 0, 63 - $prefix_length);
-    $this->migrationPluginManager = $migration_plugin_manager;
   }
 
   /**

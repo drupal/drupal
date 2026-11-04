@@ -22,20 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ConfigSingleExportForm extends FormBase {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The config storage.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $configStorage;
-
-  /**
    * Tracks the valid config entity type definitions.
    *
    * @var \Drupal\Core\Entity\EntityTypeInterface[]
@@ -45,14 +31,15 @@ class ConfigSingleExportForm extends FormBase {
   /**
    * Constructs a new ConfigSingleImportForm.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Config\StorageInterface $config_storage
+   * @param \Drupal\Core\Config\StorageInterface $configStorage
    *   The config storage.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, StorageInterface $config_storage) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->configStorage = $config_storage;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected StorageInterface $configStorage,
+  ) {
   }
 
   /**

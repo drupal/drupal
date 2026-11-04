@@ -8,23 +8,18 @@ namespace Drupal\Core\Config;
 class ConfigRenameEvent extends ConfigCrudEvent {
 
   /**
-   * The old configuration object name.
-   *
-   * @var string
-   */
-  protected $oldName;
-
-  /**
    * Constructs the config rename event.
    *
    * @param \Drupal\Core\Config\StorableConfigBase $config
    *   The configuration that has been renamed.
-   * @param string $old_name
+   * @param string $oldName
    *   The old configuration object name.
    */
-  public function __construct(StorableConfigBase $config, $old_name) {
+  public function __construct(
+    StorableConfigBase $config,
+    protected $oldName,
+  ) {
     $this->config = $config;
-    $this->oldName = $old_name;
   }
 
   /**

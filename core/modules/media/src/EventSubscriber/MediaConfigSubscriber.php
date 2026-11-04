@@ -15,40 +15,20 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class MediaConfigSubscriber implements EventSubscriberInterface {
 
   /**
-   * The route builder.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routeBuilder;
-
-  /**
-   * The cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs the MediaConfigSubscriber.
    *
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $router_builder
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $routeBuilder
    *   The route builder.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
    *   The cache tags invalidator.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(RouteBuilderInterface $router_builder, CacheTagsInvalidatorInterface $cache_tags_invalidator, EntityTypeManagerInterface $entity_type_manager) {
-    $this->routeBuilder = $router_builder;
-    $this->cacheTagsInvalidator = $cache_tags_invalidator;
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected RouteBuilderInterface $routeBuilder,
+    protected CacheTagsInvalidatorInterface $cacheTagsInvalidator,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
   }
 
   /**

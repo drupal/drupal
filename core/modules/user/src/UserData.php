@@ -10,20 +10,14 @@ use Drupal\Core\Database\Connection;
 class UserData implements UserDataInterface {
 
   /**
-   * The database connection to use.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a new user data service.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection to use.
    */
-  public function __construct(Connection $connection) {
-    $this->connection = $connection;
+  public function __construct(
+    protected Connection $connection,
+  ) {
   }
 
   /**

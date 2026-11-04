@@ -13,30 +13,17 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 class Messenger implements MessengerInterface {
 
   /**
-   * The flash bag.
-   *
-   * @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface
-   */
-  protected $flashBag;
-
-  /**
-   * The kill switch.
-   *
-   * @var \Drupal\Core\PageCache\ResponsePolicy\KillSwitch
-   */
-  protected $killSwitch;
-
-  /**
    * Messenger constructor.
    *
-   * @param \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $flash_bag
+   * @param \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $flashBag
    *   The flash bag.
    * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch $killSwitch
    *   The kill switch.
    */
-  public function __construct(FlashBagInterface $flash_bag, KillSwitch $killSwitch) {
-    $this->flashBag = $flash_bag;
-    $this->killSwitch = $killSwitch;
+  public function __construct(
+    protected FlashBagInterface $flashBag,
+    protected KillSwitch $killSwitch,
+  ) {
   }
 
   /**

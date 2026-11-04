@@ -22,48 +22,6 @@ class ConfigManager implements ConfigManagerInterface {
   use StorageCopyTrait;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity repository.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The typed config manager.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected $typedConfigManager;
-
-  /**
-   * The active configuration storage.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $activeStorage;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
    * The configuration collection info.
    *
    * @var \Drupal\Core\Config\ConfigCollectionInfo
@@ -78,41 +36,36 @@ class ConfigManager implements ConfigManagerInterface {
   protected $storages;
 
   /**
-   * The extension path resolver.
-   *
-   * @var \Drupal\Core\Extension\ExtensionPathResolver
-   */
-  protected $extensionPathResolver;
-
-  /**
    * Creates ConfigManager objects.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed config manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation service.
-   * @param \Drupal\Core\Config\StorageInterface $active_storage
+   * @param \Drupal\Core\Config\StorageInterface $activeStorage
    *   The active configuration storage.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
-   * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
+   * @param \Drupal\Core\Extension\ExtensionPathResolver $extensionPathResolver
    *   The extension path resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, TranslationInterface $string_translation, StorageInterface $active_storage, EventDispatcherInterface $event_dispatcher, EntityRepositoryInterface $entity_repository, ExtensionPathResolver $extension_path_resolver) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->configFactory = $config_factory;
-    $this->typedConfigManager = $typed_config_manager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ConfigFactoryInterface $configFactory,
+    protected TypedConfigManagerInterface $typedConfigManager,
+    TranslationInterface $string_translation,
+    protected StorageInterface $activeStorage,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected EntityRepositoryInterface $entityRepository,
+    protected ExtensionPathResolver $extensionPathResolver,
+  ) {
     $this->stringTranslation = $string_translation;
-    $this->activeStorage = $active_storage;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->entityRepository = $entity_repository;
-    $this->extensionPathResolver = $extension_path_resolver;
   }
 
   /**

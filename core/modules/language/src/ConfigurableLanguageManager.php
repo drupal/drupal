@@ -22,34 +22,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ConfigurableLanguageManager extends LanguageManager implements ConfigurableLanguageManagerInterface {
 
   /**
-   * The configuration storage service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The language configuration override service.
-   *
-   * @var \Drupal\language\Config\LanguageConfigFactoryOverrideInterface
-   */
-  protected $configFactoryOverride;
-
-  /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
    * The language negotiator.
    *
    * @var \Drupal\language\LanguageNegotiatorInterface
@@ -110,23 +82,26 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    *
    * @param \Drupal\Core\Language\LanguageDefault $default_language
    *   The default language service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler service.
-   * @param \Drupal\language\Config\LanguageConfigFactoryOverrideInterface $config_override
+   * @param \Drupal\language\Config\LanguageConfigFactoryOverrideInterface $configFactoryOverride
    *   The language configuration override service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack object.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
    *   The cache backend.
    */
-  public function __construct(LanguageDefault $default_language, ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, LanguageConfigFactoryOverrideInterface $config_override, RequestStack $request_stack, protected CacheBackendInterface $cacheBackend) {
+  public function __construct(
+    LanguageDefault $default_language,
+    protected ConfigFactoryInterface $configFactory,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected LanguageConfigFactoryOverrideInterface $configFactoryOverride,
+    protected RequestStack $requestStack,
+    protected CacheBackendInterface $cacheBackend,
+  ) {
     $this->defaultLanguage = $default_language;
-    $this->configFactory = $config_factory;
-    $this->moduleHandler = $module_handler;
-    $this->configFactoryOverride = $config_override;
-    $this->requestStack = $request_stack;
   }
 
   /**

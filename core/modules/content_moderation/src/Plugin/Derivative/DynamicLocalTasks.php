@@ -20,53 +20,27 @@ class DynamicLocalTasks extends DeriverBase implements ContainerDeriverInterface
   use StringTranslationTrait;
 
   /**
-   * The base plugin ID.
-   *
-   * @var string
-   */
-  protected $basePluginId;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The moderation information service.
-   *
-   * @var \Drupal\content_moderation\ModerationInformationInterface
-   */
-  protected $moderationInfo;
-
-  /**
-   * The router.
-   *
-   * @var \Symfony\Component\Routing\RouterInterface
-   */
-  protected $router;
-
-  /**
    * Creates a FieldUiLocalTask object.
    *
-   * @param string $base_plugin_id
+   * @param string $basePluginId
    *   The base plugin ID.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager.
-   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInfo
    *   The moderation information service.
    * @param \Symfony\Component\Routing\RouterInterface $router
    *   The router.
    */
-  public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation, ModerationInformationInterface $moderation_information, RouterInterface $router) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected $basePluginId,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    TranslationInterface $string_translation,
+    protected ModerationInformationInterface $moderationInfo,
+    protected RouterInterface $router,
+  ) {
     $this->stringTranslation = $string_translation;
-    $this->basePluginId = $base_plugin_id;
-    $this->moderationInfo = $moderation_information;
-    $this->router = $router;
   }
 
   /**

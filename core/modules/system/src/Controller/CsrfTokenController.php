@@ -14,20 +14,14 @@ use Symfony\Component\HttpFoundation\Response;
 class CsrfTokenController implements ContainerInjectionInterface {
 
   /**
-   * The CSRF token generator.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $tokenGenerator;
-
-  /**
    * Constructs a new CsrfTokenController object.
    *
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $token_generator
+   * @param \Drupal\Core\Access\CsrfTokenGenerator $tokenGenerator
    *   The CSRF token generator.
    */
-  public function __construct(CsrfTokenGenerator $token_generator) {
-    $this->tokenGenerator = $token_generator;
+  public function __construct(
+    protected CsrfTokenGenerator $tokenGenerator,
+  ) {
   }
 
   /**

@@ -13,13 +13,6 @@ use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 class YamlDiscoveryDecorator extends YamlDiscovery {
 
   /**
-   * The Discovery object being decorated.
-   *
-   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface
-   */
-  protected $decorated;
-
-  /**
    * Constructs a YamlDiscoveryDecorator object.
    *
    * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $decorated
@@ -30,10 +23,12 @@ class YamlDiscoveryDecorator extends YamlDiscovery {
    * @param array $directories
    *   An array of directories to scan.
    */
-  public function __construct(DiscoveryInterface $decorated, $name, array $directories) {
+  public function __construct(
+    protected DiscoveryInterface $decorated,
+    $name,
+    array $directories,
+  ) {
     parent::__construct($name, $directories);
-
-    $this->decorated = $decorated;
   }
 
   /**

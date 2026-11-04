@@ -14,20 +14,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ErrorTestController extends ControllerBase {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
    * Constructs a \Drupal\error_test\Controller\ErrorTestController object.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    */
-  public function __construct(Connection $database) {
-    $this->database = $database;
+  public function __construct(
+    protected Connection $database,
+  ) {
   }
 
   /**

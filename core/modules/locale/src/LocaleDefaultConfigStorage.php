@@ -22,20 +22,6 @@ use Drupal\Core\Language\LanguageManagerInterface;
 class LocaleDefaultConfigStorage {
 
   /**
-   * The storage instance for reading configuration data.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $configStorage;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * The storage instance for reading required default configuration data.
    *
    * @var \Drupal\Core\Config\StorageInterface
@@ -52,17 +38,18 @@ class LocaleDefaultConfigStorage {
   /**
    * Constructs a LocaleDefaultConfigStorage.
    *
-   * @param \Drupal\Core\Config\StorageInterface $config_storage
+   * @param \Drupal\Core\Config\StorageInterface $configStorage
    *   The storage object to use for reading configuration data.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param string $install_profile
    *   The current installation profile.
    */
-  public function __construct(StorageInterface $config_storage, LanguageManagerInterface $language_manager, $install_profile) {
-    $this->configStorage = $config_storage;
-    $this->languageManager = $language_manager;
-
+  public function __construct(
+    protected StorageInterface $configStorage,
+    protected LanguageManagerInterface $languageManager,
+    $install_profile,
+  ) {
     $this->requiredInstallStorage = new ExtensionInstallStorage($this->configStorage, ExtensionInstallStorage::CONFIG_INSTALL_DIRECTORY, ExtensionInstallStorage::DEFAULT_COLLECTION, TRUE, $install_profile);
     $this->optionalInstallStorage = new ExtensionInstallStorage($this->configStorage, ExtensionInstallStorage::CONFIG_OPTIONAL_DIRECTORY, ExtensionInstallStorage::DEFAULT_COLLECTION, TRUE, $install_profile);
   }

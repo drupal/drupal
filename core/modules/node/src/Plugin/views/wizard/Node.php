@@ -34,20 +34,6 @@ class Node extends WizardPluginBase {
   protected $createdColumn = 'node_field_data-created';
 
   /**
-   * The entity display repository.
-   *
-   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
-   */
-  protected $entityDisplayRepository;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
    * Node constructor.
    *
    * @param array $configuration
@@ -58,18 +44,23 @@ class Node extends WizardPluginBase {
    *   The plugin definition.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info_service
    *   The entity bundle info service.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entityDisplayRepository
    *   The entity display repository service.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
    * @param \Drupal\Core\Menu\MenuParentFormSelectorInterface $parent_form_selector
    *   The parent form selector service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeBundleInfoInterface $bundle_info_service, EntityDisplayRepositoryInterface $entity_display_repository, EntityFieldManagerInterface $entity_field_manager, MenuParentFormSelectorInterface $parent_form_selector) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeBundleInfoInterface $bundle_info_service,
+    protected EntityDisplayRepositoryInterface $entityDisplayRepository,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    MenuParentFormSelectorInterface $parent_form_selector,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $bundle_info_service, $parent_form_selector);
-
-    $this->entityDisplayRepository = $entity_display_repository;
-    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**

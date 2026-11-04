@@ -11,20 +11,14 @@ use Drupal\Core\Entity\EntityInterface;
 class InlineBlockUsage implements InlineBlockUsageInterface {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
    * Creates an InlineBlockUsage object.
    *
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    */
-  public function __construct(Connection $database) {
-    $this->database = $database;
+  public function __construct(
+    protected Connection $database,
+  ) {
   }
 
   /**

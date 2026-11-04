@@ -13,30 +13,17 @@ use Drupal\Core\Theme\ThemeNegotiatorInterface;
 class DbUpdateNegotiator implements ThemeNegotiatorInterface {
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * Constructs a DbUpdateNegotiator.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ThemeHandlerInterface $theme_handler) {
-    $this->configFactory = $config_factory;
-    $this->themeHandler = $theme_handler;
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory,
+    protected ThemeHandlerInterface $themeHandler,
+  ) {
   }
 
   /**

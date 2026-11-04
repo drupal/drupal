@@ -16,13 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WorkflowListBuilder extends ConfigEntityListBuilder {
 
   /**
-   * The workflow type plugin manager.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $workflowTypeManager;
-
-  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
@@ -40,12 +33,15 @@ class WorkflowListBuilder extends ConfigEntityListBuilder {
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $workflow_type_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $workflowTypeManager
    *   The workflow type plugin manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, PluginManagerInterface $workflow_type_manager) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    EntityStorageInterface $storage,
+    protected PluginManagerInterface $workflowTypeManager,
+  ) {
     parent::__construct($entity_type, $storage);
-    $this->workflowTypeManager = $workflow_type_manager;
   }
 
   /**

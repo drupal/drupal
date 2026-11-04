@@ -21,48 +21,11 @@ use Drupal\Core\State\StateInterface;
 abstract class ExtensionList {
 
   /**
-   * The type of the extension.
-   *
-   * Possible values: "module", "theme", "profile" or "database_driver".
-   *
-   * @var string
-   */
-  protected $type;
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
-   * The cache.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
    * Default values to be merged into *.info.yml file arrays.
    *
    * @var mixed[]
    */
   protected $defaults = [];
-
-  /**
-   * The info parser.
-   *
-   * @var \Drupal\Core\Extension\InfoParserInterface
-   */
-  protected $infoParser;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
 
   /**
    * The cached extensions.
@@ -103,20 +66,6 @@ abstract class ExtensionList {
   protected $addedPathNames = [];
 
   /**
-   * The state store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The install profile used by the site.
-   *
-   * @var string|false|null
-   */
-  protected $installProfile;
-
-  /**
    * Constructs a new instance.
    *
    * @param string $root
@@ -125,23 +74,24 @@ abstract class ExtensionList {
    *   The extension type.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache.
-   * @param \Drupal\Core\Extension\InfoParserInterface $info_parser
+   * @param \Drupal\Core\Extension\InfoParserInterface $infoParser
    *   The info parser.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state.
-   * @param string $install_profile
+   * @param string $installProfile
    *   The install profile used by the site.
    */
-  public function __construct($root, $type, CacheBackendInterface $cache, InfoParserInterface $info_parser, ModuleHandlerInterface $module_handler, StateInterface $state, $install_profile) {
-    $this->root = $root;
-    $this->type = $type;
-    $this->cache = $cache;
-    $this->infoParser = $info_parser;
-    $this->moduleHandler = $module_handler;
-    $this->state = $state;
-    $this->installProfile = $install_profile;
+  public function __construct(
+    protected $root,
+    protected $type,
+    protected CacheBackendInterface $cache,
+    protected InfoParserInterface $infoParser,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected StateInterface $state,
+    protected $installProfile,
+  ) {
   }
 
   /**

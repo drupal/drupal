@@ -19,13 +19,6 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 class File extends FieldPluginBase {
 
   /**
-   * The file URL generator.
-   *
-   * @var \Drupal\Core\File\FileUrlGeneratorInterface
-   */
-  protected $fileUrlGenerator;
-
-  /**
    * Constructs a File object.
    *
    * @param array $configuration
@@ -34,12 +27,16 @@ class File extends FieldPluginBase {
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $fileUrlGenerator
    *   The file URL generator.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, FileUrlGeneratorInterface $file_url_generator) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected FileUrlGeneratorInterface $fileUrlGenerator,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**

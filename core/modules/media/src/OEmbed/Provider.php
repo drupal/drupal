@@ -10,13 +10,6 @@ use Drupal\Component\Utility\UrlHelper;
 class Provider {
 
   /**
-   * The provider name.
-   *
-   * @var string
-   */
-  protected $name;
-
-  /**
    * The provider URL.
    *
    * @var string
@@ -42,9 +35,11 @@ class Provider {
    *
    * @throws \Drupal\media\OEmbed\ProviderException
    */
-  public function __construct($name, $url, array $endpoints) {
-    $this->name = $name;
-
+  public function __construct(
+    protected $name,
+    $url,
+    array $endpoints,
+  ) {
     if (!UrlHelper::isValid($url, TRUE) || !UrlHelper::isExternal($url)) {
       throw new ProviderException('Provider @name does not define a valid external URL.', $this);
     }

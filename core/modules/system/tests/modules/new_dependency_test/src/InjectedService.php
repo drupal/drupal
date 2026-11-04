@@ -12,20 +12,14 @@ use Drupal\new_dependency_test_with_service\NewService;
 class InjectedService {
 
   /**
-   * The injected service.
-   *
-   * @var \Drupal\new_dependency_test_with_service\NewService
-   */
-  protected $service;
-
-  /**
    * InjectedService constructor.
    *
    * @param \Drupal\new_dependency_test_with_service\NewService $service
    *   The service of the new module.
    */
-  public function __construct(NewService $service) {
-    $this->service = $service;
+  public function __construct(
+    protected NewService $service,
+  ) {
   }
 
   /**

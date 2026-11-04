@@ -24,13 +24,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 class AjaxFormBlock extends BlockBase implements FormInterface, ContainerFactoryPluginInterface {
 
   /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
-
-  /**
    * The messenger.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
@@ -46,14 +39,19 @@ class AjaxFormBlock extends BlockBase implements FormInterface, ContainerFactory
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    *   The form builder.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, FormBuilderInterface $form_builder, MessengerInterface $messenger) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected FormBuilderInterface $formBuilder,
+    MessengerInterface $messenger,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->formBuilder = $form_builder;
     $this->messenger = $messenger;
   }
 

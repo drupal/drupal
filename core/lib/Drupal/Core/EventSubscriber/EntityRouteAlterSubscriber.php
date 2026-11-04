@@ -21,20 +21,14 @@ use Drupal\Core\Routing\RouteBuildEvent;
 class EntityRouteAlterSubscriber implements EventSubscriberInterface {
 
   /**
-   * The entity resolver manager.
-   *
-   * @var \Drupal\Core\Entity\EntityResolverManager
-   */
-  protected $resolverManager;
-
-  /**
    * Constructs an EntityRouteAlterSubscriber instance.
    *
-   * @param \Drupal\Core\Entity\EntityResolverManager $entity_resolver_manager
+   * @param \Drupal\Core\Entity\EntityResolverManager $resolverManager
    *   The entity resolver manager.
    */
-  public function __construct(EntityResolverManager $entity_resolver_manager) {
-    $this->resolverManager = $entity_resolver_manager;
+  public function __construct(
+    protected EntityResolverManager $resolverManager,
+  ) {
   }
 
   /**

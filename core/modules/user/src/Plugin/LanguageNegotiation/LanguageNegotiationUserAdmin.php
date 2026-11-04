@@ -35,53 +35,23 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
   const METHOD_ID = 'language-user-admin';
 
   /**
-   * The admin context.
-   *
-   * @var \Drupal\Core\Routing\AdminContext
-   */
-  protected $adminContext;
-
-  /**
-   * The router.
-   *
-   * This is only used when called from an event subscriber, before the request
-   * has been populated with the route info.
-   *
-   * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface
-   */
-  protected $router;
-
-  /**
-   * The path processor manager.
-   *
-   * @var \Drupal\Core\PathProcessor\PathProcessorManager
-   */
-  protected $pathProcessorManager;
-
-  /**
-   * The stacked route match.
-   *
-   * @var \Drupal\Core\Routing\StackedRouteMatchInterface
-   */
-  protected $stackedRouteMatch;
-
-  /**
    * Constructs a new LanguageNegotiationUserAdmin instance.
    *
-   * @param \Drupal\Core\Routing\AdminContext $admin_context
+   * @param \Drupal\Core\Routing\AdminContext $adminContext
    *   The admin context.
    * @param \Symfony\Component\Routing\Matcher\UrlMatcherInterface $router
    *   The router.
-   * @param \Drupal\Core\PathProcessor\PathProcessorManager $path_processor_manager
+   * @param \Drupal\Core\PathProcessor\PathProcessorManager $pathProcessorManager
    *   The path processor manager.
-   * @param \Drupal\Core\Routing\StackedRouteMatchInterface $stacked_route_match
+   * @param \Drupal\Core\Routing\StackedRouteMatchInterface $stackedRouteMatch
    *   The stacked route match.
    */
-  public function __construct(AdminContext $admin_context, UrlMatcherInterface $router, PathProcessorManager $path_processor_manager, StackedRouteMatchInterface $stacked_route_match) {
-    $this->adminContext = $admin_context;
-    $this->router = $router;
-    $this->pathProcessorManager = $path_processor_manager;
-    $this->stackedRouteMatch = $stacked_route_match;
+  public function __construct(
+    protected AdminContext $adminContext,
+    protected UrlMatcherInterface $router,
+    protected PathProcessorManager $pathProcessorManager,
+    protected StackedRouteMatchInterface $stackedRouteMatch,
+  ) {
   }
 
   /**

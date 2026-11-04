@@ -13,28 +13,17 @@ use Drupal\Core\State\StateInterface;
 class PluginManagerCacheClearer extends DefaultPluginManager {
 
   /**
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * An optional service dependency.
-   *
-   * @var object|null
-   */
-  protected $optionalService;
-
-  /**
    * PluginManagerCacheClearer constructor.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service for recording what happens.
-   * @param null $optional_service
+   * @param null $optionalService
    *   An optional service for testing.
    */
-  public function __construct(StateInterface $state, $optional_service = NULL) {
-    $this->state = $state;
-    $this->optionalService = $optional_service;
+  public function __construct(
+    protected StateInterface $state,
+    protected $optionalService = NULL,
+  ) {
   }
 
   /**

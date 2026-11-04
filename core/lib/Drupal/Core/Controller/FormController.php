@@ -16,30 +16,17 @@ abstract class FormController {
   use DependencySerializationTrait;
 
   /**
-   * The argument resolver.
-   *
-   * @var \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface
-   */
-  protected $argumentResolver;
-
-  /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
-
-  /**
    * Constructs a new \Drupal\Core\Controller\FormController object.
    *
-   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
+   * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argumentResolver
    *   The argument resolver.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    *   The form builder.
    */
-  public function __construct(ArgumentResolverInterface $argument_resolver, FormBuilderInterface $form_builder) {
-    $this->argumentResolver = $argument_resolver;
-    $this->formBuilder = $form_builder;
+  public function __construct(
+    protected ArgumentResolverInterface $argumentResolver,
+    protected FormBuilderInterface $formBuilder,
+  ) {
   }
 
   /**

@@ -18,20 +18,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class LatestTranslationAffectedRevision extends FilterPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Entity Type Manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Views Handler Plugin Manager.
-   *
-   * @var \Drupal\views\Plugin\ViewsHandlerManager
-   */
-  protected $joinHandler;
-
-  /**
    * Constructs a new LatestRevisionTranslationAffected.
    *
    * @param array $configuration
@@ -40,23 +26,20 @@ class LatestTranslationAffectedRevision extends FilterPluginBase implements Cont
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   Entity Type Manager Service.
-   * @param \Drupal\views\Plugin\ViewsHandlerManager $join_handler
+   * @param \Drupal\views\Plugin\ViewsHandlerManager $joinHandler
    *   Views Handler Plugin Manager.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager,
+    protected EntityTypeManagerInterface $entityTypeManager,
     #[Autowire(service: 'plugin.manager.views.join')]
-    ViewsHandlerManager $join_handler,
+    protected ViewsHandlerManager $joinHandler,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->entityTypeManager = $entity_type_manager;
-    $this->joinHandler = $join_handler;
   }
 
   /**

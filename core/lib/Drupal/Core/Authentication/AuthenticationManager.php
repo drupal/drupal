@@ -18,20 +18,14 @@ use Symfony\Component\HttpFoundation\Request;
 class AuthenticationManager implements AuthenticationProviderInterface, AuthenticationProviderFilterInterface, AuthenticationProviderChallengeInterface {
 
   /**
-   * The authentication provider collector.
-   *
-   * @var \Drupal\Core\Authentication\AuthenticationCollectorInterface
-   */
-  protected $authCollector;
-
-  /**
    * Creates a new authentication manager instance.
    *
-   * @param \Drupal\Core\Authentication\AuthenticationCollectorInterface $auth_collector
+   * @param \Drupal\Core\Authentication\AuthenticationCollectorInterface $authCollector
    *   The authentication provider collector.
    */
-  public function __construct(AuthenticationCollectorInterface $auth_collector) {
-    $this->authCollector = $auth_collector;
+  public function __construct(
+    protected AuthenticationCollectorInterface $authCollector,
+  ) {
   }
 
   /**

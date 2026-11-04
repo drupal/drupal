@@ -27,21 +27,15 @@ use Symfony\Component\Process\Process;
 class ServerCommand extends Command {
 
   /**
-   * The class loader.
-   *
-   * @var object
-   */
-  protected $classLoader;
-
-  /**
    * Constructs a new ServerCommand command.
    *
-   * @param object $class_loader
+   * @param object $classLoader
    *   The class loader.
    */
-  public function __construct($class_loader) {
+  public function __construct(
+    protected $classLoader,
+  ) {
     parent::__construct('server');
-    $this->classLoader = $class_loader;
   }
 
   /**

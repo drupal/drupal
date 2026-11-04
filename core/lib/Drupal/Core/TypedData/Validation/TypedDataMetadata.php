@@ -15,20 +15,14 @@ use Symfony\Component\Validator\Mapping\TraversalStrategy;
 class TypedDataMetadata implements MetadataInterface {
 
   /**
-   * The typed data object the metadata is about.
-   *
-   * @var \Drupal\Core\TypedData\TypedDataInterface
-   */
-  protected $typedData;
-
-  /**
    * Constructs the object.
    *
-   * @param \Drupal\Core\TypedData\TypedDataInterface $typed_data
+   * @param \Drupal\Core\TypedData\TypedDataInterface $typedData
    *   The typed data object the metadata is about.
    */
-  public function __construct(TypedDataInterface $typed_data) {
-    $this->typedData = $typed_data;
+  public function __construct(
+    protected TypedDataInterface $typedData,
+  ) {
   }
 
   /**

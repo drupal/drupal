@@ -14,18 +14,14 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class AcceptHeaderMiddleware implements HttpKernelInterface {
 
   /**
-   * The app kernel.
-   */
-  protected HttpKernelInterface $httpKernel;
-
-  /**
    * Constructs a new AcceptHeaderMiddleware instance.
    *
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   The app.
    */
-  public function __construct(HttpKernelInterface $http_kernel) {
-    $this->httpKernel = $http_kernel;
+  public function __construct(
+    protected HttpKernelInterface $httpKernel,
+  ) {
   }
 
   /**

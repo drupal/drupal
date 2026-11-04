@@ -21,40 +21,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityModerationForm extends FormBase implements WorkspaceSafeFormInterface {
 
   /**
-   * The moderation information service.
-   *
-   * @var \Drupal\content_moderation\ModerationInformationInterface
-   */
-  protected $moderationInfo;
-
-  /**
-   * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
-   */
-  protected $time;
-
-  /**
-   * The moderation state transition validation service.
-   *
-   * @var \Drupal\content_moderation\StateTransitionValidationInterface
-   */
-  protected $validation;
-
-  /**
    * EntityModerationForm constructor.
    *
-   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_info
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInfo
    *   The moderation information service.
    * @param \Drupal\content_moderation\StateTransitionValidationInterface $validation
    *   The moderation state transition validation service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct(ModerationInformationInterface $moderation_info, StateTransitionValidationInterface $validation, TimeInterface $time) {
-    $this->moderationInfo = $moderation_info;
-    $this->validation = $validation;
-    $this->time = $time;
+  public function __construct(
+    protected ModerationInformationInterface $moderationInfo,
+    protected StateTransitionValidationInterface $validation,
+    protected TimeInterface $time,
+  ) {
   }
 
   /**

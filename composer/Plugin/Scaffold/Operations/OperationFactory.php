@@ -14,13 +14,6 @@ use Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath;
 class OperationFactory {
 
   /**
-   * The Composer service.
-   *
-   * @var \Composer\Composer
-   */
-  protected $composer;
-
-  /**
    * OperationFactory constructor.
    *
    * @param \Composer\Composer $composer
@@ -28,8 +21,9 @@ class OperationFactory {
    *   is also responsible for evaluating relative package paths as it creates
    *   scaffold operations.
    */
-  public function __construct(Composer $composer) {
-    $this->composer = $composer;
+  public function __construct(
+    protected Composer $composer,
+  ) {
   }
 
   /**

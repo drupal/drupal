@@ -15,20 +15,14 @@ use Symfony\Component\Routing\RouteCollection;
 class ContentTranslationRouteSubscriber extends RouteSubscriberBase {
 
   /**
-   * The content translation manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationManagerInterface
-   */
-  protected $contentTranslationManager;
-
-  /**
    * Constructs a ContentTranslationRouteSubscriber object.
    *
-   * @param \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager
+   * @param \Drupal\content_translation\ContentTranslationManagerInterface $contentTranslationManager
    *   The content translation manager.
    */
-  public function __construct(ContentTranslationManagerInterface $content_translation_manager) {
-    $this->contentTranslationManager = $content_translation_manager;
+  public function __construct(
+    protected ContentTranslationManagerInterface $contentTranslationManager,
+  ) {
   }
 
   /**

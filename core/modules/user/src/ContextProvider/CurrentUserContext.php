@@ -17,13 +17,6 @@ class CurrentUserContext implements ContextProviderInterface {
   use StringTranslationTrait;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
    * The user storage.
    *
    * @var \Drupal\user\UserStorageInterface
@@ -38,8 +31,10 @@ class CurrentUserContext implements ContextProviderInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(AccountInterface $account, EntityTypeManagerInterface $entity_type_manager) {
-    $this->account = $account;
+  public function __construct(
+    protected AccountInterface $account,
+    EntityTypeManagerInterface $entity_type_manager,
+  ) {
     $this->userStorage = $entity_type_manager->getStorage('user');
   }
 

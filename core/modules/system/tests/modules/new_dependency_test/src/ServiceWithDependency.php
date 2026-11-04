@@ -12,20 +12,14 @@ namespace Drupal\new_dependency_test;
 class ServiceWithDependency {
 
   /**
-   * The injected service.
-   *
-   * @var \Drupal\new_dependency_test\InjectedService
-   */
-  protected $service;
-
-  /**
    * ServiceWithDependency constructor.
    *
    * @param \Drupal\new_dependency_test\InjectedService|null $service
    *   The service of the same module which has the new dependency.
    */
-  public function __construct(?InjectedService $service = NULL) {
-    $this->service = $service;
+  public function __construct(
+    protected ?InjectedService $service = NULL,
+  ) {
   }
 
   /**

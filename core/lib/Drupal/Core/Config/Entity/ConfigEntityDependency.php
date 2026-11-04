@@ -12,13 +12,6 @@ use Drupal\Component\Utility\NestedArray;
 class ConfigEntityDependency {
 
   /**
-   * The configuration entity's configuration object name.
-   *
-   * @var string
-   */
-  protected $name;
-
-  /**
    * The configuration entity's dependencies.
    *
    * @var array
@@ -33,8 +26,10 @@ class ConfigEntityDependency {
    * @param array $values
    *   (optional) The configuration entity's values.
    */
-  public function __construct($name, $values = []) {
-    $this->name = $name;
+  public function __construct(
+    protected $name,
+    $values = [],
+  ) {
     if (isset($values['dependencies']) && isset($values['dependencies']['enforced'])) {
       // Merge the enforced dependencies into the list of dependencies.
       $enforced_dependencies = $values['dependencies']['enforced'];

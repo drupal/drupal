@@ -10,13 +10,6 @@ use Drupal\Core\Database\Connection;
 class Truncate extends Query implements QueryExecutionVoidInterface {
 
   /**
-   * The table to truncate.
-   *
-   * @var string
-   */
-  protected $table;
-
-  /**
    * Constructs a Truncate query object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -26,9 +19,12 @@ class Truncate extends Query implements QueryExecutionVoidInterface {
    * @param array $options
    *   Array of database options.
    */
-  public function __construct(Connection $connection, $table, array $options = []) {
+  public function __construct(
+    Connection $connection,
+    protected $table,
+    array $options = [],
+  ) {
     parent::__construct($connection, $options);
-    $this->table = $table;
   }
 
   /**

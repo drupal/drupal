@@ -25,32 +25,6 @@ class PageCache implements HttpKernelInterface {
   const HEADER = 'X-Drupal-Cache';
 
   /**
-   * The wrapped HTTP kernel.
-   */
-  protected \Closure $httpKernel;
-
-  /**
-   * The cache bin.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
-   * A policy rule determining the cacheability of a request.
-   *
-   * @var \Drupal\Core\PageCache\RequestPolicyInterface
-   */
-  protected $requestPolicy;
-
-  /**
-   * A policy rule determining the cacheability of the response.
-   *
-   * @var \Drupal\Core\PageCache\ResponsePolicyInterface
-   */
-  protected $responsePolicy;
-
-  /**
    * The cache ID for the (master) request.
    *
    * @var string
@@ -60,20 +34,21 @@ class PageCache implements HttpKernelInterface {
   /**
    * Constructs a PageCache object.
    *
-   * @param \Closure $http_kernel
+   * @param \Closure $httpKernel
    *   The decorated kernel.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache bin.
-   * @param \Drupal\Core\PageCache\RequestPolicyInterface $request_policy
+   * @param \Drupal\Core\PageCache\RequestPolicyInterface $requestPolicy
    *   A policy rule determining the cacheability of a request.
-   * @param \Drupal\Core\PageCache\ResponsePolicyInterface $response_policy
+   * @param \Drupal\Core\PageCache\ResponsePolicyInterface $responsePolicy
    *   A policy rule determining the cacheability of the response.
    */
-  public function __construct(\Closure $http_kernel, CacheBackendInterface $cache, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy) {
-    $this->httpKernel = $http_kernel;
-    $this->cache = $cache;
-    $this->requestPolicy = $request_policy;
-    $this->responsePolicy = $response_policy;
+  public function __construct(
+    protected \Closure $httpKernel,
+    protected CacheBackendInterface $cache,
+    protected RequestPolicyInterface $requestPolicy,
+    protected ResponsePolicyInterface $responsePolicy,
+  ) {
   }
 
   /**

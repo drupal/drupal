@@ -16,13 +16,6 @@ use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 class UpdateCacheBackendFactory implements CacheFactoryInterface {
 
   /**
-   * The regular runtime cache_factory service.
-   *
-   * @var \Drupal\Core\Cache\CacheFactoryInterface
-   */
-  protected $cacheFactory;
-
-  /**
    * Instantiated update cache bins.
    *
    * @var \Drupal\Core\Update\UpdateBackend[]
@@ -32,11 +25,12 @@ class UpdateCacheBackendFactory implements CacheFactoryInterface {
   /**
    * UpdateCacheBackendFactory constructor.
    *
-   * @param \Drupal\Core\Cache\CacheFactoryInterface $cache_factory
+   * @param \Drupal\Core\Cache\CacheFactoryInterface $cacheFactory
    *   The regular runtime cache_factory service.
    */
-  public function __construct(CacheFactoryInterface $cache_factory) {
-    $this->cacheFactory = $cache_factory;
+  public function __construct(
+    protected CacheFactoryInterface $cacheFactory,
+  ) {
   }
 
   /**

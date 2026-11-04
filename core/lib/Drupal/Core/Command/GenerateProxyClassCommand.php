@@ -17,22 +17,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 class GenerateProxyClassCommand extends Command {
 
   /**
-   * The proxy builder.
-   *
-   * @var \Drupal\Component\ProxyBuilder\ProxyBuilder
-   */
-  protected $proxyBuilder;
-
-  /**
    * Constructs a new GenerateProxyClassCommand instance.
    *
-   * @param \Drupal\Component\ProxyBuilder\ProxyBuilder $proxy_builder
+   * @param \Drupal\Component\ProxyBuilder\ProxyBuilder $proxyBuilder
    *   The proxy builder.
    */
-  public function __construct(ProxyBuilder $proxy_builder) {
+  public function __construct(
+    protected ProxyBuilder $proxyBuilder,
+  ) {
     parent::__construct();
-
-    $this->proxyBuilder = $proxy_builder;
   }
 
   /**

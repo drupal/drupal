@@ -12,25 +12,11 @@ class StorageReplaceDataWrapper implements StorageInterface {
   use DependencySerializationTrait;
 
   /**
-   * The configuration storage to be wrapped.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $storage;
-
-  /**
    * The configuration replacement data, keyed by configuration object name.
    *
    * @var array
    */
   protected $replacementData = [];
-
-  /**
-   * The storage collection.
-   *
-   * @var string
-   */
-  protected $collection;
 
   /**
    * Constructs a new StorageReplaceDataWrapper.
@@ -41,10 +27,11 @@ class StorageReplaceDataWrapper implements StorageInterface {
    *   (optional) The collection to store configuration in. Defaults to the
    *   default collection.
    */
-  public function __construct(StorageInterface $storage, $collection = StorageInterface::DEFAULT_COLLECTION) {
-    $this->storage = $storage;
-    $this->collection = $collection;
-    $this->replacementData[$collection] = [];
+  public function __construct(
+    protected StorageInterface $storage,
+    protected $collection = StorageInterface::DEFAULT_COLLECTION,
+  ) {
+    $this->replacementData[$this->collection] = [];
   }
 
   /**

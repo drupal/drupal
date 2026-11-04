@@ -11,20 +11,6 @@ use Drupal\Core\Database\Query\PagerSelectExtender;
 class StringDatabaseStorage implements StringStorageInterface {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * Additional database connection options to use in queries.
-   *
-   * @var array
-   */
-  protected $options = [];
-
-  /**
    * Constructs a new StringDatabaseStorage class.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -32,9 +18,10 @@ class StringDatabaseStorage implements StringStorageInterface {
    * @param array $options
    *   (optional) Any additional database connection options to use in queries.
    */
-  public function __construct(Connection $connection, array $options = []) {
-    $this->connection = $connection;
-    $this->options = $options;
+  public function __construct(
+    protected Connection $connection,
+    protected array $options = [],
+  ) {
   }
 
   /**

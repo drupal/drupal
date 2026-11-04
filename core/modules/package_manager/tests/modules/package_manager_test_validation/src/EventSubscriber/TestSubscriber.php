@@ -28,20 +28,14 @@ class TestSubscriber implements EventSubscriberInterface {
   protected const STATE_KEY = 'package_manager_test_validation';
 
   /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Creates a TestSubscriber object.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    */
-  public function __construct(StateInterface $state) {
-    $this->state = $state;
+  public function __construct(
+    protected StateInterface $state,
+  ) {
   }
 
   /**

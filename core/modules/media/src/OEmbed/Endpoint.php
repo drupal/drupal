@@ -21,20 +21,6 @@ class Endpoint {
   protected $url;
 
   /**
-   * The provider this endpoint belongs to.
-   *
-   * @var \Drupal\media\OEmbed\Provider
-   */
-  protected $provider;
-
-  /**
-   * List of URL schemes supported by the provider.
-   *
-   * @var string[]
-   */
-  protected $schemes;
-
-  /**
    * List of supported formats. Only 'json' and 'xml' are allowed.
    *
    * @var string[]
@@ -67,10 +53,13 @@ class Endpoint {
    * @throws \InvalidArgumentException
    *   If the endpoint URL is empty.
    */
-  public function __construct($url, Provider $provider, array $schemes = [], array $formats = [], $supports_discovery = FALSE) {
-    $this->provider = $provider;
-    $this->schemes = $schemes;
-
+  public function __construct(
+    $url,
+    protected Provider $provider,
+    protected array $schemes = [],
+    array $formats = [],
+    $supports_discovery = FALSE,
+  ) {
     $this->formats = $formats = array_map('mb_strtolower', $formats);
     // Assert that only the supported formats are present.
     assert(array_diff($formats, ['json', 'xml']) == []);

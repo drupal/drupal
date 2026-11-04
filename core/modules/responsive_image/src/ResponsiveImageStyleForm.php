@@ -17,13 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ResponsiveImageStyleForm extends EntityForm {
 
   /**
-   * The breakpoint manager.
-   *
-   * @var \Drupal\breakpoint\BreakpointManagerInterface
-   */
-  protected $breakpointManager;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -35,11 +28,12 @@ class ResponsiveImageStyleForm extends EntityForm {
   /**
    * Constructs the responsive image style form.
    *
-   * @param \Drupal\breakpoint\BreakpointManagerInterface $breakpoint_manager
+   * @param \Drupal\breakpoint\BreakpointManagerInterface $breakpointManager
    *   The breakpoint manager.
    */
-  public function __construct(BreakpointManagerInterface $breakpoint_manager) {
-    $this->breakpointManager = $breakpoint_manager;
+  public function __construct(
+    protected BreakpointManagerInterface $breakpointManager,
+  ) {
   }
 
   /**

@@ -33,20 +33,6 @@ class ModuleExtensionList extends ExtensionList {
   ];
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The profile list needed by this module list.
-   *
-   * @var \Drupal\Core\Extension\ExtensionList
-   */
-  protected $profileList;
-
-  /**
    * Constructs a new ModuleExtensionList instance.
    *
    * @param string $root
@@ -61,20 +47,28 @@ class ModuleExtensionList extends ExtensionList {
    *   The module handler.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
-   * @param \Drupal\Core\Extension\ExtensionList $profile_list
+   * @param \Drupal\Core\Extension\ExtensionList $profileList
    *   The site profile listing.
    * @param string $install_profile
    *   The install profile used by the site.
    * @param array[] $container_modules_info
    *   (optional) The module locations coming from the compiled container.
    */
-  public function __construct($root, $type, CacheBackendInterface $cache, InfoParserInterface $info_parser, ModuleHandlerInterface $module_handler, StateInterface $state, ConfigFactoryInterface $config_factory, ExtensionList $profile_list, $install_profile, array $container_modules_info = []) {
+  public function __construct(
+    $root,
+    $type,
+    CacheBackendInterface $cache,
+    InfoParserInterface $info_parser,
+    ModuleHandlerInterface $module_handler,
+    StateInterface $state,
+    protected ConfigFactoryInterface $configFactory,
+    protected ExtensionList $profileList,
+    $install_profile,
+    array $container_modules_info = [],
+  ) {
     parent::__construct($root, $type, $cache, $info_parser, $module_handler, $state, $install_profile);
-
-    $this->configFactory = $config_factory;
-    $this->profileList = $profile_list;
 
     // Use the information from the container. This is an optimization.
     foreach ($container_modules_info as $module_name => $info) {

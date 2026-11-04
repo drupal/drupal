@@ -18,20 +18,14 @@ use Symfony\Component\Routing\Route;
 class LatestRevisionCheck implements AccessInterface {
 
   /**
-   * The moderation information service.
-   *
-   * @var \Drupal\content_moderation\ModerationInformationInterface
-   */
-  protected $moderationInfo;
-
-  /**
    * Constructs a new LatestRevisionCheck.
    *
-   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInfo
    *   The moderation information service.
    */
-  public function __construct(ModerationInformationInterface $moderation_information) {
-    $this->moderationInfo = $moderation_information;
+  public function __construct(
+    protected ModerationInformationInterface $moderationInfo,
+  ) {
   }
 
   /**

@@ -15,21 +15,15 @@ namespace Drupal\Core\Ajax;
 class AddCssCommand implements CommandInterface {
 
   /**
-   * Arrays containing attributes of the stylesheets to be added to the page.
-   *
-   * @var string[][]
-   */
-  protected $styles;
-
-  /**
    * Constructs an AddCssCommand.
    *
    * @param string[][] $styles
    *   Arrays containing attributes of the stylesheets to be added to the page.
    *   i.e. `['href' => 'someURL']` becomes `<link href="someURL">`.
    */
-  public function __construct(array $styles) {
-    $this->styles = $styles;
+  public function __construct(
+    protected array $styles,
+  ) {
   }
 
   /**

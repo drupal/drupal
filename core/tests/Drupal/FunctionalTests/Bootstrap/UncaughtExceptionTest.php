@@ -95,7 +95,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   public function testUncaughtFatalError(): void {
     $this->drupalGet('error-test/generate-fatal-errors');
     $this->assertSession()->statusCodeEquals(500);
-    $message = '@<em class="placeholder">TypeError</em>: Drupal\\\error_test\\\Controller\\\ErrorTestController::{closure:Drupal\\\error_test\\\Controller\\\ErrorTestController::generateFatalErrors\(\):64}\(\): Argument #1 \(\$test\) must be of type array, string given, called in .*core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 67 in <em class="placeholder">Drupal\\\error_test\\\Controller\\\ErrorTestController-&gt;{closure:Drupal\\\error_test\\\Controller\\\ErrorTestController::generateFatalErrors\(\):64}\(\)</em>@';
+    $message = '@<em class="placeholder">TypeError</em>: Drupal\\\error_test\\\Controller\\\ErrorTestController::{closure:Drupal\\\error_test\\\Controller\\\ErrorTestController::generateFatalErrors\(\):58}\(\): Argument #1 \(\$test\) must be of type array, string given, called in .*core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 61 in <em class="placeholder">Drupal\\\error_test\\\Controller\\\ErrorTestController-&gt;{closure:Drupal\\\error_test\\\Controller\\\ErrorTestController::generateFatalErrors\(\):58}\(\)</em>@';
     $this->drupalGet('error-test/generate-fatal-errors');
     $this->assertSession()->responseMatches($message);
     $this->assertSession()->responseContains('<pre class="backtrace">');
@@ -240,7 +240,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->assertStringContainsString('Failed to log error', $errors[0], 'The error handling logs when an error could not be logged to the logger.');
 
     $expected_path = \Drupal::root() . '/core/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php';
-    $expected_line = 69;
+    $expected_line = 58;
     $expected_entry = "Failed to log error: Exception: Deforestation in Drupal\\error_service_test\\MonkeysInTheControlRoom->handle() (line {$expected_line} of {$expected_path})";
     $this->assertStringContainsString($expected_entry, $errors[0], 'Original error logged to the PHP error log when an exception is thrown by a logger');
 

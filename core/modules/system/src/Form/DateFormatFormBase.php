@@ -15,30 +15,17 @@ use Drupal\Core\Entity\EntityForm;
 abstract class DateFormatFormBase extends EntityForm {
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
-   * The date format storage.
-   *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
-   */
-  protected $dateFormatStorage;
-
-  /**
    * Constructs a new date format form.
    *
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date service.
-   * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $date_format_storage
+   * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $dateFormatStorage
    *   The date format storage.
    */
-  public function __construct(DateFormatterInterface $date_formatter, ConfigEntityStorageInterface $date_format_storage) {
-    $this->dateFormatter = $date_formatter;
-    $this->dateFormatStorage = $date_format_storage;
+  public function __construct(
+    protected DateFormatterInterface $dateFormatter,
+    protected ConfigEntityStorageInterface $dateFormatStorage,
+  ) {
   }
 
   /**

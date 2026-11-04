@@ -12,20 +12,14 @@ use Drupal\Component\EventDispatcher\Event;
 class LanguageConfigOverrideCrudEvent extends Event {
 
   /**
-   * Configuration object.
-   *
-   * @var \Drupal\language\Config\LanguageConfigOverride
-   */
-  protected $override;
-
-  /**
    * Constructs a configuration event object.
    *
    * @param \Drupal\language\Config\LanguageConfigOverride $override
    *   Configuration object.
    */
-  public function __construct(LanguageConfigOverride $override) {
-    $this->override = $override;
+  public function __construct(
+    protected LanguageConfigOverride $override,
+  ) {
   }
 
   /**

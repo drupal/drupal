@@ -12,25 +12,11 @@ use Drupal\Component\EventDispatcher\Event;
 class ConfigModuleOverridesEvent extends Event {
 
   /**
-   * Configuration names.
-   *
-   * @var array
-   */
-  protected $names;
-
-  /**
    * Configuration overrides.
    *
    * @var array
    */
   protected $overrides;
-
-  /**
-   * The Language object used to override configuration data.
-   *
-   * @var \Drupal\Core\Language\LanguageInterface
-   */
-  protected $language;
 
   /**
    * Constructs a configuration overrides event object.
@@ -40,9 +26,10 @@ class ConfigModuleOverridesEvent extends Event {
    * @param \Drupal\Core\Language\LanguageInterface $language
    *   (optional) The language for this configuration.
    */
-  public function __construct(array $names, ?LanguageInterface $language = NULL) {
-    $this->names = $names;
-    $this->language = $language;
+  public function __construct(
+    protected array $names,
+    protected ?LanguageInterface $language = NULL,
+  ) {
     $this->overrides = [];
   }
 

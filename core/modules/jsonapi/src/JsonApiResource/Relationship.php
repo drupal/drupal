@@ -22,39 +22,6 @@ use Drupal\jsonapi\Routing\Routes;
 class Relationship implements TopLevelDataInterface {
 
   /**
-   * The context resource object of the relationship.
-   *
-   * A relationship object represents references from a resource object in
-   * which it’s defined to other resource objects. Respectively, the "context"
-   * of the relationship and the "target(s)" of the relationship.
-   *
-   * A relationship object's context either comes from the resource object that
-   * contains it or, in the case that the relationship object is accessed
-   * directly via a relationship URL, from its `self` URL, which should identify
-   * the resource to which it belongs.
-   *
-   * @var \Drupal\jsonapi\JsonApiResource\ResourceObject
-   *
-   * @see https://jsonapi.org/format/#document-resource-object-relationships
-   * @see https://jsonapi.org/recommendations/#urls-relationships
-   */
-  protected $context;
-
-  /**
-   * The data of the relationship object.
-   *
-   * @var \Drupal\jsonapi\JsonApiResource\RelationshipData
-   */
-  protected $data;
-
-  /**
-   * The relationship's public field name.
-   *
-   * @var string
-   */
-  protected $fieldName;
-
-  /**
    * The relationship object's links.
    *
    * @var \Drupal\jsonapi\JsonApiResource\LinkCollection
@@ -62,19 +29,12 @@ class Relationship implements TopLevelDataInterface {
   protected $links;
 
   /**
-   * The relationship object's meta member.
-   *
-   * @var array
-   */
-  protected $meta;
-
-  /**
    * Relationship constructor.
    *
    * This constructor is protected by design. To create a new relationship, use
    * static::createFromEntityReferenceField().
    *
-   * @param string $public_field_name
+   * @param string $fieldName
    *   The public field name of the relationship field.
    * @param \Drupal\jsonapi\JsonApiResource\RelationshipData $data
    *   The relationship data.
@@ -90,12 +50,14 @@ class Relationship implements TopLevelDataInterface {
    *
    * @see \Drupal\jsonapi\JsonApiResource\Relationship::createFromEntityReferenceField()
    */
-  protected function __construct($public_field_name, RelationshipData $data, LinkCollection $links, array $meta, ResourceObject $context) {
-    $this->fieldName = $public_field_name;
-    $this->data = $data;
+  protected function __construct(
+    protected $fieldName,
+    protected RelationshipData $data,
+    LinkCollection $links,
+    protected array $meta,
+    protected ResourceObject $context,
+  ) {
     $this->links = $links->withContext($this);
-    $this->meta = $meta;
-    $this->context = $context;
   }
 
   /**

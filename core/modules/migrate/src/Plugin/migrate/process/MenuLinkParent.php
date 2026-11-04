@@ -93,34 +93,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MenuLinkParent extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The menu link plugin manager.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
-   */
-  protected $menuLinkManager;
-
-  /**
-   * The currently running migration.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
-   * The migrate lookup service.
-   *
-   * @var \Drupal\migrate\MigrateLookupInterface
-   */
-  protected $migrateLookup;
-
-  /**
-   * The menu link entity storage handler.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $menuLinkStorage;
-
-  /**
    * The migration IDs to use for looking up the parent link.
    *
    * @var string[]
@@ -136,22 +108,25 @@ class MenuLinkParent extends ProcessPluginBase implements ContainerFactoryPlugin
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\migrate\MigrateLookupInterface $migrate_lookup
+   * @param \Drupal\migrate\MigrateLookupInterface $migrateLookup
    *   The migrate lookup service.
-   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
    *   The menu link manager.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $menu_link_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $menuLinkStorage
    *   The menu link storage object.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The currently running migration.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrateLookupInterface $migrate_lookup, MenuLinkManagerInterface $menu_link_manager, EntityStorageInterface $menu_link_storage, MigrationInterface $migration) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected MigrateLookupInterface $migrateLookup,
+    protected MenuLinkManagerInterface $menuLinkManager,
+    protected EntityStorageInterface $menuLinkStorage,
+    protected MigrationInterface $migration,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->migration = $migration;
-    $this->migrateLookup = $migrate_lookup;
-    $this->menuLinkManager = $menu_link_manager;
-    $this->menuLinkStorage = $menu_link_storage;
     $this->lookupMigrations = $this->configuration['lookup_migrations'] ?? [$this->migration->id()];
   }
 

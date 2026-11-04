@@ -19,27 +19,6 @@ class DatabaseStorage extends StorageBase {
   use DependencySerializationTrait;
 
   /**
-   * The serialization class to use.
-   *
-   * @var \Drupal\Component\Serialization\SerializationInterface
-   */
-  protected $serializer;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The name of the SQL table to use.
-   *
-   * @var string
-   */
-  protected $table;
-
-  /**
    * Overrides Drupal\Core\KeyValueStore\StorageBase::__construct().
    *
    * @param string $collection
@@ -51,11 +30,13 @@ class DatabaseStorage extends StorageBase {
    * @param string $table
    *   The name of the SQL table to use, defaults to key_value.
    */
-  public function __construct($collection, SerializationInterface $serializer, Connection $connection, $table = 'key_value') {
+  public function __construct(
+    $collection,
+    protected SerializationInterface $serializer,
+    protected Connection $connection,
+    protected $table = 'key_value',
+  ) {
     parent::__construct($collection);
-    $this->serializer = $serializer;
-    $this->connection = $connection;
-    $this->table = $table;
   }
 
   /**

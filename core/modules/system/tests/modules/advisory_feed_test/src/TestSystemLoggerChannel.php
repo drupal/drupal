@@ -15,30 +15,17 @@ use Psr\Log\LogLevel;
 final class TestSystemLoggerChannel extends LoggerChannel {
 
   /**
-   * The decorated logger.channel.system service.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelInterface
-   */
-  protected $innerLogger;
-
-  /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Constructs an AdvisoriesTestHttpClient object.
    *
-   * @param \Drupal\Core\Logger\LoggerChannelInterface $inner_logger
+   * @param \Drupal\Core\Logger\LoggerChannelInterface $innerLogger
    *   The decorated logger.channel.system service.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    */
-  public function __construct(LoggerChannelInterface $inner_logger, StateInterface $state) {
-    $this->innerLogger = $inner_logger;
-    $this->state = $state;
+  public function __construct(
+    protected LoggerChannelInterface $innerLogger,
+    protected StateInterface $state,
+  ) {
   }
 
   /**

@@ -11,20 +11,14 @@ use Symfony\Component\Routing\RouteCollection;
 class RouteBuildEvent extends Event {
 
   /**
-   * The route collection.
-   *
-   * @var \Symfony\Component\Routing\RouteCollection
-   */
-  protected $routeCollection;
-
-  /**
    * Constructs a RouteBuildEvent object.
    *
-   * @param \Symfony\Component\Routing\RouteCollection $route_collection
+   * @param \Symfony\Component\Routing\RouteCollection $routeCollection
    *   The route collection.
    */
-  public function __construct(RouteCollection $route_collection) {
-    $this->routeCollection = $route_collection;
+  public function __construct(
+    protected RouteCollection $routeCollection,
+  ) {
   }
 
   /**

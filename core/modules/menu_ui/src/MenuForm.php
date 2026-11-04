@@ -29,34 +29,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MenuForm extends EntityForm {
 
   /**
-   * The menu link manager.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
-   */
-  protected $menuLinkManager;
-
-  /**
-   * The menu tree service.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
-   */
-  protected $menuTree;
-
-  /**
-   * The link generator.
-   *
-   * @var \Drupal\Core\Utility\LinkGeneratorInterface
-   */
-  protected $linkGenerator;
-
-  /**
-   * The menu_link_content storage handler.
-   *
-   * @var \Drupal\menu_link_content\MenuLinkContentStorageInterface
-   */
-  protected $menuLinkContentStorage;
-
-  /**
    * The overview tree form.
    *
    * @var array
@@ -66,20 +38,21 @@ class MenuForm extends EntityForm {
   /**
    * Constructs a MenuForm object.
    *
-   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
    *   The menu link manager.
-   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menuTree
    *   The menu tree service.
-   * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
+   * @param \Drupal\Core\Utility\LinkGeneratorInterface $linkGenerator
    *   The link generator.
-   * @param \Drupal\menu_link_content\MenuLinkContentStorageInterface $menu_link_content_storage
+   * @param \Drupal\menu_link_content\MenuLinkContentStorageInterface $menuLinkContentStorage
    *   The menu link content storage handler.
    */
-  public function __construct(MenuLinkManagerInterface $menu_link_manager, MenuLinkTreeInterface $menu_tree, LinkGeneratorInterface $link_generator, MenuLinkContentStorageInterface $menu_link_content_storage) {
-    $this->menuLinkManager = $menu_link_manager;
-    $this->menuTree = $menu_tree;
-    $this->linkGenerator = $link_generator;
-    $this->menuLinkContentStorage = $menu_link_content_storage;
+  public function __construct(
+    protected MenuLinkManagerInterface $menuLinkManager,
+    protected MenuLinkTreeInterface $menuTree,
+    protected LinkGeneratorInterface $linkGenerator,
+    protected MenuLinkContentStorageInterface $menuLinkContentStorage,
+  ) {
   }
 
   /**

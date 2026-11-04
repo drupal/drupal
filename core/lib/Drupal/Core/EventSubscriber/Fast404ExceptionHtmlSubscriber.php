@@ -34,30 +34,17 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 class Fast404ExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
    * Constructs a new Fast404ExceptionHtmlSubscriber.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
    *   The cache tags invalidator.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, CacheTagsInvalidatorInterface $cache_tags_invalidator) {
-    $this->configFactory = $config_factory;
-    $this->cacheTagsInvalidator = $cache_tags_invalidator;
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory,
+    protected CacheTagsInvalidatorInterface $cacheTagsInvalidator,
+  ) {
   }
 
   /**

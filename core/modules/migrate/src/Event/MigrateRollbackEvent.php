@@ -11,20 +11,14 @@ use Drupal\Component\EventDispatcher\Event;
 class MigrateRollbackEvent extends Event {
 
   /**
-   * Migration entity.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationInterface
-   */
-  protected $migration;
-
-  /**
    * Constructs a rollback event object.
    *
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   Migration entity.
    */
-  public function __construct(MigrationInterface $migration) {
-    $this->migration = $migration;
+  public function __construct(
+    protected MigrationInterface $migration,
+  ) {
   }
 
   /**

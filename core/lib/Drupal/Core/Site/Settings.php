@@ -14,13 +14,6 @@ use Drupal\DrupalInstalled;
 final class Settings {
 
   /**
-   * Array with the settings.
-   *
-   * @var array
-   */
-  private $storage = [];
-
-  /**
    * Singleton instance.
    *
    * @var \Drupal\Core\Site\Settings
@@ -43,11 +36,12 @@ final class Settings {
   /**
    * Constructor.
    *
-   * @param array $settings
+   * @param array $storage
    *   Array with the settings.
    */
-  public function __construct(array $settings) {
-    $this->storage = $settings;
+  public function __construct(
+    private array $storage,
+  ) {
     self::$instance = $this;
   }
 

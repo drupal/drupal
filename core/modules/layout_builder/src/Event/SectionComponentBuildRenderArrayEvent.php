@@ -20,32 +20,11 @@ class SectionComponentBuildRenderArrayEvent extends Event {
   use CacheableResponseTrait;
 
   /**
-   * The section component whose render array is being built.
-   *
-   * @var \Drupal\layout_builder\SectionComponent
-   */
-  protected $component;
-
-  /**
-   * The available contexts.
-   *
-   * @var \Drupal\Core\Plugin\Context\ContextInterface[]
-   */
-  protected $contexts;
-
-  /**
    * The plugin for the section component being built.
    *
    * @var \Drupal\Component\Plugin\PluginInspectionInterface
    */
   protected $plugin;
-
-  /**
-   * Whether the component is in preview mode or not.
-   *
-   * @var bool
-   */
-  protected $inPreview;
 
   /**
    * The render array built by the event subscribers.
@@ -61,17 +40,18 @@ class SectionComponentBuildRenderArrayEvent extends Event {
    *   The section component whose render array is being built.
    * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
    *   The available contexts.
-   * @param bool $in_preview
+   * @param bool $inPreview
    *   (optional) Whether the component is in preview mode or not.
    */
-  public function __construct(SectionComponent $component, array $contexts, $in_preview = FALSE) {
-    $this->component = $component;
-    $this->contexts = $contexts;
-    $this->plugin = $component->getPlugin($contexts);
-    $this->inPreview = $in_preview;
+  public function __construct(
+    protected SectionComponent $component,
+    protected array $contexts,
+    protected $inPreview = FALSE,
+  ) {
+    $this->plugin = $this->component->getPlugin($this->contexts);
 
     if ($this->plugin instanceof PreviewAwarePluginInterface) {
-      $this->plugin->setInPreview($in_preview);
+      $this->plugin->setInPreview($this->inPreview);
     }
   }
 

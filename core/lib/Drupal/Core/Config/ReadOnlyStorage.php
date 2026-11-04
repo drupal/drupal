@@ -8,20 +8,14 @@ namespace Drupal\Core\Config;
 class ReadOnlyStorage implements StorageInterface {
 
   /**
-   * The config storage that we are decorating.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $storage;
-
-  /**
    * Create a ReadOnlyStorage decorating another storage.
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
    *   The decorated storage.
    */
-  public function __construct(StorageInterface $storage) {
-    $this->storage = $storage;
+  public function __construct(
+    protected StorageInterface $storage,
+  ) {
   }
 
   /**

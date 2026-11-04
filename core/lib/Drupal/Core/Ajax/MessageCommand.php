@@ -70,52 +70,25 @@ use Drupal\Core\Asset\AttachedAssets;
 class MessageCommand implements CommandInterface, CommandWithAttachedAssetsInterface {
 
   /**
-   * The message text.
-   *
-   * @var string|\Drupal\Component\Render\MarkupInterface
-   */
-  protected $message;
-
-  /**
-   * Whether to clear previous messages.
-   *
-   * @var bool
-   */
-  protected $clearPrevious;
-
-  /**
-   * The query selector for the element the message will appear in.
-   *
-   * @var string
-   */
-  protected $wrapperQuerySelector;
-
-  /**
-   * The options passed to Drupal.message().add().
-   *
-   * @var array
-   */
-  protected $options;
-
-  /**
    * Constructs a MessageCommand object.
    *
    * @param string|\Drupal\Component\Render\MarkupInterface $message
    *   The text of the message.
-   * @param string|null $wrapper_query_selector
+   * @param string|null $wrapperQuerySelector
    *   The query selector of the element to display messages in when they
    *   should be displayed somewhere other than the default.
    *   @see Drupal.Message.defaultWrapper()
    * @param array $options
    *   The options passed to Drupal.message().add().
-   * @param bool $clear_previous
+   * @param bool $clearPrevious
    *   If TRUE, previous messages will be cleared first.
    */
-  public function __construct($message, $wrapper_query_selector = NULL, array $options = [], $clear_previous = TRUE) {
-    $this->message = $message;
-    $this->wrapperQuerySelector = $wrapper_query_selector;
-    $this->options = $options;
-    $this->clearPrevious = $clear_previous;
+  public function __construct(
+    protected $message,
+    protected $wrapperQuerySelector = NULL,
+    protected array $options = [],
+    protected $clearPrevious = TRUE,
+  ) {
   }
 
   /**

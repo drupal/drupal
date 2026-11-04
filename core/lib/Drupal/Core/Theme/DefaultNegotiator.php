@@ -11,20 +11,14 @@ use Drupal\Core\Routing\RouteMatchInterface;
 class DefaultNegotiator implements ThemeNegotiatorInterface {
 
   /**
-   * The system theme config object.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Constructs a DefaultNegotiator object.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
-    $this->configFactory = $config_factory;
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory,
+  ) {
   }
 
   /**

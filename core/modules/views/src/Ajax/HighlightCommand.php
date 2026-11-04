@@ -12,20 +12,14 @@ use Drupal\Core\Ajax\CommandInterface;
 class HighlightCommand implements CommandInterface {
 
   /**
-   * A CSS selector string.
-   *
-   * @var string
-   */
-  protected $selector;
-
-  /**
    * Constructs a \Drupal\views\Ajax\HighlightCommand object.
    *
    * @param string $selector
    *   A CSS selector.
    */
-  public function __construct($selector) {
-    $this->selector = $selector;
+  public function __construct(
+    protected $selector,
+  ) {
   }
 
   /**

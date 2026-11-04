@@ -20,13 +20,6 @@ class FileTestSaveUploadFromForm extends FormBase {
   use FileTestFormTrait;
 
   /**
-   * Stores the state storage service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * The messenger.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
@@ -41,8 +34,10 @@ class FileTestSaveUploadFromForm extends FormBase {
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
-  public function __construct(StateInterface $state, MessengerInterface $messenger) {
-    $this->state = $state;
+  public function __construct(
+    protected StateInterface $state,
+    MessengerInterface $messenger,
+  ) {
     $this->messenger = $messenger;
   }
 

@@ -24,20 +24,14 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 class ResourceIdentifierNormalizer extends NormalizerBase implements DenormalizerInterface {
 
   /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $fieldManager;
-
-  /**
    * RelationshipNormalizer constructor.
    *
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $fieldManager
    *   The entity field manager.
    */
-  public function __construct(EntityFieldManagerInterface $field_manager) {
-    $this->fieldManager = $field_manager;
+  public function __construct(
+    protected EntityFieldManagerInterface $fieldManager,
+  ) {
   }
 
   /**

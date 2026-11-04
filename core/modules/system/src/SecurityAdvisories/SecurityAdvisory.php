@@ -20,48 +20,6 @@ use Symfony\Component\Validator\Validation;
 final class SecurityAdvisory {
 
   /**
-   * The title of the advisory.
-   *
-   * @var string
-   */
-  protected $title;
-
-  /**
-   * The project name for the advisory.
-   *
-   * @var string
-   */
-  protected $project;
-
-  /**
-   * The project type for the advisory.
-   *
-   * @var string
-   */
-  protected $type;
-
-  /**
-   * Whether this advisory is a PSA instead of another type of advisory.
-   *
-   * @var bool
-   */
-  protected $isPsa;
-
-  /**
-   * The currently insecure versions of the project.
-   *
-   * @var string[]
-   */
-  protected $insecureVersions;
-
-  /**
-   * The URL to the advisory.
-   *
-   * @var string
-   */
-  protected $url;
-
-  /**
    * Constructs a SecurityAdvisories object.
    *
    * @param string $title
@@ -70,22 +28,23 @@ final class SecurityAdvisory {
    *   The project name.
    * @param string $type
    *   The project type.
-   * @param bool $is_psa
+   * @param bool $isPsa
    *   Whether this advisory is a public service announcement.
    * @param string $url
    *   The URL to the advisory.
-   * @param string[] $insecure_versions
+   * @param string[] $insecureVersions
    *   The versions of the project that are currently insecure. For public
    *   service announcements this list does not include versions that will be
    *   marked as insecure when the new security release is published.
    */
-  private function __construct(string $title, string $project, string $type, bool $is_psa, string $url, array $insecure_versions) {
-    $this->title = $title;
-    $this->project = $project;
-    $this->type = $type;
-    $this->isPsa = $is_psa;
-    $this->url = $url;
-    $this->insecureVersions = $insecure_versions;
+  private function __construct(
+    protected string $title,
+    protected string $project,
+    protected string $type,
+    protected bool $isPsa,
+    protected string $url,
+    protected array $insecureVersions,
+  ) {
   }
 
   /**

@@ -13,20 +13,6 @@ use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 class EntityLastInstalledSchemaRepository implements EntityLastInstalledSchemaRepositoryInterface {
 
   /**
-   * The key-value factory.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
-   */
-  protected $keyValueFactory;
-
-  /**
-   * The cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * The loaded installed entity type definitions.
    *
    * @var array|null
@@ -43,14 +29,15 @@ class EntityLastInstalledSchemaRepository implements EntityLastInstalledSchemaRe
   /**
    * Constructs a new EntityLastInstalledSchemaRepository.
    *
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $keyValueFactory
    *   The key-value factory.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cacheBackend
    *   The cache backend.
    */
-  public function __construct(KeyValueFactoryInterface $key_value_factory, CacheBackendInterface $cache) {
-    $this->keyValueFactory = $key_value_factory;
-    $this->cacheBackend = $cache;
+  public function __construct(
+    protected KeyValueFactoryInterface $keyValueFactory,
+    protected CacheBackendInterface $cacheBackend,
+  ) {
   }
 
   /**

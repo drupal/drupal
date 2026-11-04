@@ -14,13 +14,6 @@ use Drupal\workflows\WorkflowInterface;
 class StateTransitionValidation implements StateTransitionValidationInterface {
 
   /**
-   * The moderation information service.
-   *
-   * @var \Drupal\content_moderation\ModerationInformationInterface
-   */
-  protected $moderationInfo;
-
-  /**
    * Stores the possible state transitions.
    *
    * @var array
@@ -30,11 +23,12 @@ class StateTransitionValidation implements StateTransitionValidationInterface {
   /**
    * Constructs a new StateTransitionValidation.
    *
-   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_info
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInfo
    *   The moderation information service.
    */
-  public function __construct(ModerationInformationInterface $moderation_info) {
-    $this->moderationInfo = $moderation_info;
+  public function __construct(
+    protected ModerationInformationInterface $moderationInfo,
+  ) {
   }
 
   /**

@@ -8,13 +8,6 @@ namespace Drupal\Component\Plugin\Discovery;
 class StaticDiscoveryDecorator extends StaticDiscovery {
 
   /**
-   * The Discovery object being decorated.
-   *
-   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface
-   */
-  protected $decorated;
-
-  /**
    * A callback or closure used for registering additional definitions.
    *
    * @var callable
@@ -30,8 +23,10 @@ class StaticDiscoveryDecorator extends StaticDiscovery {
    *   (optional) A callback or closure used for registering additional
    *   definitions.
    */
-  public function __construct(DiscoveryInterface $decorated, $registerDefinitions = NULL) {
-    $this->decorated = $decorated;
+  public function __construct(
+    protected DiscoveryInterface $decorated,
+    $registerDefinitions = NULL,
+  ) {
     $this->registerDefinitions = $registerDefinitions;
   }
 

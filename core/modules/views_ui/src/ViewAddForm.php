@@ -20,13 +20,6 @@ class ViewAddForm extends ViewFormBase {
   use ViewsFormAjaxHelperTrait;
 
   /**
-   * The wizard plugin manager.
-   *
-   * @var \Drupal\views\Plugin\ViewsPluginManager
-   */
-  protected $wizardManager;
-
-  /**
    * The module handler service.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -36,13 +29,15 @@ class ViewAddForm extends ViewFormBase {
   /**
    * Constructs a new ViewAddForm object.
    *
-   * @param \Drupal\views\Plugin\ViewsPluginManager $wizard_manager
+   * @param \Drupal\views\Plugin\ViewsPluginManager $wizardManager
    *   The wizard plugin manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    */
-  public function __construct(ViewsPluginManager $wizard_manager, ModuleHandlerInterface $module_handler) {
-    $this->wizardManager = $wizard_manager;
+  public function __construct(
+    protected ViewsPluginManager $wizardManager,
+    ModuleHandlerInterface $module_handler,
+  ) {
     $this->moduleHandler = $module_handler;
   }
 

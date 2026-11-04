@@ -16,21 +16,15 @@ class CustomStrings extends StaticTranslation {
   use DependencySerializationTrait;
 
   /**
-   * The settings read only object.
-   *
-   * @var \Drupal\Core\Site\Settings
-   */
-  protected $settings;
-
-  /**
    * Constructs a CustomStrings object.
    *
    * @param \Drupal\Core\Site\Settings $settings
    *   The settings read only object.
    */
-  public function __construct(Settings $settings) {
+  public function __construct(
+    protected Settings $settings,
+  ) {
     parent::__construct();
-    $this->settings = $settings;
   }
 
   /**

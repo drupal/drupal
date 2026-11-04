@@ -21,20 +21,6 @@ class EntitySchemaSubscriber implements EntityTypeListenerInterface, EventSubscr
   use EntityTypeEventSubscriberTrait;
 
   /**
-   * The entity definition update manager.
-   *
-   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
-   */
-  protected $entityDefinitionUpdateManager;
-
-  /**
-   * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Constructs a new EntitySchemaSubscriber.
    *
    * @param \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager
@@ -42,9 +28,10 @@ class EntitySchemaSubscriber implements EntityTypeListenerInterface, EventSubscr
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
    */
-  public function __construct(EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager, StateInterface $state) {
-    $this->entityDefinitionUpdateManager = $entityDefinitionUpdateManager;
-    $this->state = $state;
+  public function __construct(
+    protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager,
+    protected StateInterface $state,
+  ) {
   }
 
   /**

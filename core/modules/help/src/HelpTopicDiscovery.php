@@ -31,16 +31,6 @@ class HelpTopicDiscovery implements DiscoveryInterface {
   const FILE_KEY = '_discovered_file_path';
 
   /**
-   * An array of directories to scan, keyed by the provider.
-   *
-   * The value can either be a string or an array of strings. The string values
-   * should be the path of a directory to scan.
-   *
-   * @var array
-   */
-  protected $directories = [];
-
-  /**
    * Constructs a HelpTopicDiscovery object.
    *
    * @param array $directories
@@ -48,8 +38,9 @@ class HelpTopicDiscovery implements DiscoveryInterface {
    *   either be a string or an array of strings. The string values should be
    *   the path of a directory to scan.
    */
-  public function __construct(array $directories) {
-    $this->directories = $directories;
+  public function __construct(
+    protected array $directories,
+  ) {
   }
 
   /**

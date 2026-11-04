@@ -13,24 +13,14 @@ use Drupal\Component\EventDispatcher\Event;
 class StorageTransformEvent extends Event {
 
   /**
-   * The configuration storage which is transformed.
-   *
-   * This storage can be interacted with by event subscribers and will be
-   * used instead of the original storage after all event subscribers have been
-   * called.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $storage;
-
-  /**
    * StorageTransformEvent constructor.
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
    *   The storage with the configuration to transform.
    */
-  public function __construct(StorageInterface $storage) {
-    $this->storage = $storage;
+  public function __construct(
+    protected StorageInterface $storage,
+  ) {
   }
 
   /**

@@ -63,20 +63,14 @@ final class ResourceVersionRouteEnhancer implements EnhancerInterface {
   const VERSION_IDENTIFIER_VALIDATOR = '/^[a-z]+[a-z_]*[a-z]+:[a-zA-Z0-9\-]+(:[a-zA-Z0-9\-]+)*$/';
 
   /**
-   * The revision ID negotiator.
-   *
-   * @var \Drupal\jsonapi\Revisions\VersionNegotiator
-   */
-  protected $versionNegotiator;
-
-  /**
    * ResourceVersionRouteEnhancer constructor.
    *
-   * @param \Drupal\jsonapi\Revisions\VersionNegotiator $version_negotiator_manager
+   * @param \Drupal\jsonapi\Revisions\VersionNegotiator $versionNegotiator
    *   The version negotiator.
    */
-  public function __construct(VersionNegotiator $version_negotiator_manager) {
-    $this->versionNegotiator = $version_negotiator_manager;
+  public function __construct(
+    protected VersionNegotiator $versionNegotiator,
+  ) {
   }
 
   /**

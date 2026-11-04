@@ -19,20 +19,6 @@ class AccountSwitcher implements AccountSwitcherInterface {
   protected $accountStack = [];
 
   /**
-   * The current user service.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected $currentUser = [];
-
-  /**
-   * The write-safe session handler.
-   *
-   * @var \Drupal\Core\Session\WriteSafeSessionHandlerInterface
-   */
-  protected $writeSafeHandler;
-
-  /**
    * The original state of session saving prior to account switching.
    *
    * @var bool
@@ -42,14 +28,15 @@ class AccountSwitcher implements AccountSwitcherInterface {
   /**
    * Constructs a new AccountSwitcher.
    *
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The current user service.
-   * @param \Drupal\Core\Session\WriteSafeSessionHandlerInterface $write_safe_handler
+   * @param \Drupal\Core\Session\WriteSafeSessionHandlerInterface $writeSafeHandler
    *   The write-safe session handler.
    */
-  public function __construct(AccountProxyInterface $current_user, WriteSafeSessionHandlerInterface $write_safe_handler) {
-    $this->currentUser = $current_user;
-    $this->writeSafeHandler = $write_safe_handler;
+  public function __construct(
+    protected AccountProxyInterface $currentUser,
+    protected WriteSafeSessionHandlerInterface $writeSafeHandler,
+  ) {
   }
 
   /**

@@ -16,20 +16,14 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 class PagerTestController extends ControllerBase implements TrustedCallbackInterface {
 
   /**
-   * The pager request service.
-   *
-   * @var \Drupal\Core\Pager\PagerParametersInterface
-   */
-  protected $pagerParams;
-
-  /**
    * Construct a new PagerTestController object.
    *
-   * @param \Drupal\Core\Pager\PagerParametersInterface $pager_params
+   * @param \Drupal\Core\Pager\PagerParametersInterface $pagerParams
    *   The pager parameters.
    */
-  public function __construct(PagerParametersInterface $pager_params) {
-    $this->pagerParams = $pager_params;
+  public function __construct(
+    protected PagerParametersInterface $pagerParams,
+  ) {
   }
 
   /**

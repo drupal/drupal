@@ -16,60 +16,26 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
   use StringTranslationTrait;
 
   /**
-   * The entity field manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The entity type listener service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeListenerInterface
-   */
-  protected $entityTypeListener;
-
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The field storage definition listener service.
-   *
-   * @var \Drupal\Core\Field\FieldStorageDefinitionListenerInterface
-   */
-  protected $fieldStorageDefinitionListener;
-
-  /**
-   * The last installed schema repository.
-   *
-   * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface
-   */
-  protected $entityLastInstalledSchemaRepository;
-
-  /**
    * Constructs a new EntityDefinitionUpdateManager.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
-   * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
+   * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entityLastInstalledSchemaRepository
    *   The last installed schema repository service.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager service.
-   * @param \Drupal\Core\Entity\EntityTypeListenerInterface $entity_type_listener
+   * @param \Drupal\Core\Entity\EntityTypeListenerInterface $entityTypeListener
    *   The entity type listener interface.
-   * @param \Drupal\Core\Field\FieldStorageDefinitionListenerInterface $field_storage_definition_listener
+   * @param \Drupal\Core\Field\FieldStorageDefinitionListenerInterface $fieldStorageDefinitionListener
    *   The field storage definition listener service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository, EntityFieldManagerInterface $entity_field_manager, EntityTypeListenerInterface $entity_type_listener, FieldStorageDefinitionListenerInterface $field_storage_definition_listener) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityLastInstalledSchemaRepository = $entity_last_installed_schema_repository;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->entityTypeListener = $entity_type_listener;
-    $this->fieldStorageDefinitionListener = $field_storage_definition_listener;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityLastInstalledSchemaRepositoryInterface $entityLastInstalledSchemaRepository,
+    protected EntityFieldManagerInterface $entityFieldManager,
+    protected EntityTypeListenerInterface $entityTypeListener,
+    protected FieldStorageDefinitionListenerInterface $fieldStorageDefinitionListener,
+  ) {
   }
 
   /**

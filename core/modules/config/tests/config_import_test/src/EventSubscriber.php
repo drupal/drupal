@@ -17,20 +17,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class EventSubscriber implements EventSubscriberInterface {
 
   /**
-   * The key value store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Constructs the event subscriber.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The key value store.
    */
-  public function __construct(StateInterface $state) {
-    $this->state = $state;
+  public function __construct(
+    protected StateInterface $state,
+  ) {
   }
 
   /**

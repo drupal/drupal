@@ -12,11 +12,6 @@ use Drupal\Component\EventDispatcher\Event;
 abstract class WorkspacePublishEvent extends Event {
 
   /**
-   * The IDs of the entities that are being published.
-   */
-  protected readonly array $publishedRevisionIds;
-
-  /**
    * Whether an event subscriber requested the publishing to be stopped.
    */
   protected bool $publishingStopped = FALSE;
@@ -31,14 +26,13 @@ abstract class WorkspacePublishEvent extends Event {
    *
    * @param \Drupal\workspaces\WorkspaceInterface $workspace
    *   The workspace.
-   * @param array $published_revision_ids
+   * @param array $publishedRevisionIds
    *   The IDs of the entities that are being published.
    */
   public function __construct(
     protected readonly WorkspaceInterface $workspace,
-    array $published_revision_ids,
+    protected readonly array $publishedRevisionIds,
   ) {
-    $this->publishedRevisionIds = $published_revision_ids;
   }
 
   /**

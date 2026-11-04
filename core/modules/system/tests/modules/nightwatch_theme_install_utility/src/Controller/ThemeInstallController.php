@@ -14,23 +14,18 @@ use Drupal\Core\Extension\ThemeInstallerInterface;
 class ThemeInstallController extends ControllerBase {
 
   /**
-   * The theme installer service.
-   *
-   * @var \Drupal\Core\Extension\ThemeInstallerInterface
-   */
-  protected $themeInstaller;
-
-  /**
    * Constructs a new ThemeInstallController.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer
+   * @param \Drupal\Core\Extension\ThemeInstallerInterface $themeInstaller
    *   The theme installer.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ThemeInstallerInterface $theme_installer) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    protected ThemeInstallerInterface $themeInstaller,
+  ) {
     $this->configFactory = $config_factory;
-    $this->themeInstaller = $theme_installer;
   }
 
   /**

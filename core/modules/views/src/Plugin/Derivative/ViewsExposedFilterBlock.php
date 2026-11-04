@@ -24,30 +24,17 @@ class ViewsExposedFilterBlock implements ContainerDeriverInterface {
   protected $derivatives = [];
 
   /**
-   * The view storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $viewStorage;
-
-  /**
-   * The base plugin ID that the derivative is for.
-   *
-   * @var string
-   */
-  protected $basePluginId;
-
-  /**
    * Constructs a ViewsExposedFilterBlock object.
    *
-   * @param string $base_plugin_id
+   * @param string $basePluginId
    *   The base plugin ID.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $view_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $viewStorage
    *   The entity storage to load views.
    */
-  public function __construct($base_plugin_id, EntityStorageInterface $view_storage) {
-    $this->basePluginId = $base_plugin_id;
-    $this->viewStorage = $view_storage;
+  public function __construct(
+    protected $basePluginId,
+    protected EntityStorageInterface $viewStorage,
+  ) {
   }
 
   /**

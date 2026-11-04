@@ -25,20 +25,6 @@ class MediaLibraryUiBuilder {
   use StringTranslationTrait;
 
   /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The currently active request object.
    *
    * @var \Symfony\Component\HttpFoundation\Request
@@ -46,39 +32,27 @@ class MediaLibraryUiBuilder {
   protected $request;
 
   /**
-   * The views executable factory.
-   *
-   * @var \Drupal\views\ViewExecutableFactory
-   */
-  protected $viewsExecutableFactory;
-
-  /**
-   * The media library opener resolver.
-   *
-   * @var \Drupal\media_library\OpenerResolverInterface
-   */
-  protected $openerResolver;
-
-  /**
    * Constructs a MediaLibraryUiBuilder instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
-   * @param \Drupal\views\ViewExecutableFactory $views_executable_factory
+   * @param \Drupal\views\ViewExecutableFactory $viewsExecutableFactory
    *   The views executable factory.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   * @param \Drupal\Core\Form\FormBuilderInterface $formBuilder
    *   The currently active request object.
-   * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
+   * @param \Drupal\media_library\OpenerResolverInterface $openerResolver
    *   The opener resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RequestStack $request_stack, ViewExecutableFactory $views_executable_factory, FormBuilderInterface $form_builder, OpenerResolverInterface $opener_resolver) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    RequestStack $request_stack,
+    protected ViewExecutableFactory $viewsExecutableFactory,
+    protected FormBuilderInterface $formBuilder,
+    protected OpenerResolverInterface $openerResolver,
+  ) {
     $this->request = $request_stack->getCurrentRequest();
-    $this->viewsExecutableFactory = $views_executable_factory;
-    $this->formBuilder = $form_builder;
-    $this->openerResolver = $opener_resolver;
   }
 
   /**

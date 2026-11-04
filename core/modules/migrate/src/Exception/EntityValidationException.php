@@ -25,21 +25,14 @@ class EntityValidationException extends MigrateException {
   const MESSAGES_SEPARATOR = '||';
 
   /**
-   * The list of violations generated during the entity validation.
-   *
-   * @var \Drupal\Core\Entity\EntityConstraintViolationListInterface
-   */
-  protected $violations;
-
-  /**
    * EntityValidationException constructor.
    *
    * @param \Drupal\Core\Entity\EntityConstraintViolationListInterface $violations
    *   The list of violations generated during the entity validation.
    */
-  public function __construct(EntityConstraintViolationListInterface $violations) {
-    $this->violations = $violations;
-
+  public function __construct(
+    protected EntityConstraintViolationListInterface $violations,
+  ) {
     $entity = $this->violations->getEntity();
     $locator = $entity->getEntityTypeId();
 

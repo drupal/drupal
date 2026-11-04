@@ -16,20 +16,6 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
   use DependencySerializationTrait;
 
   /**
-   * The configuration storage to be cached.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $storage;
-
-  /**
-   * The instantiated Cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
    * List of listAll() prefixes with their results.
    *
    * @var array
@@ -44,9 +30,10 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   A cache backend used to store configuration.
    */
-  public function __construct(StorageInterface $storage, CacheBackendInterface $cache) {
-    $this->storage = $storage;
-    $this->cache = $cache;
+  public function __construct(
+    protected StorageInterface $storage,
+    protected CacheBackendInterface $cache,
+  ) {
   }
 
   /**

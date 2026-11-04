@@ -15,30 +15,17 @@ use Symfony\Component\Routing\RouteCollection;
 class NodeAdminRouteSubscriber extends RouteSubscriberBase {
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The router builder.
-   *
-   * @var \Drupal\Core\Routing\RouteBuilderInterface
-   */
-  protected $routerBuilder;
-
-  /**
    * Constructs a new NodeAdminRouteSubscriber.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
-   * @param \Drupal\Core\Routing\RouteBuilderInterface $router_builder
+   * @param \Drupal\Core\Routing\RouteBuilderInterface $routerBuilder
    *   The router builder service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, RouteBuilderInterface $router_builder) {
-    $this->configFactory = $config_factory;
-    $this->routerBuilder = $router_builder;
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory,
+    protected RouteBuilderInterface $routerBuilder,
+  ) {
   }
 
   /**

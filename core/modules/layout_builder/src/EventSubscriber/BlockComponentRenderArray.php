@@ -28,20 +28,14 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
   use StringTranslationTrait;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Creates a BlockComponentRenderArray object.
    *
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
-  public function __construct(AccountInterface $current_user) {
-    $this->currentUser = $current_user;
+  public function __construct(
+    protected AccountInterface $currentUser,
+  ) {
   }
 
   /**

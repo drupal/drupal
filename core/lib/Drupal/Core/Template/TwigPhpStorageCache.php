@@ -25,13 +25,6 @@ class TwigPhpStorageCache implements CacheInterface {
   const SUFFIX_SUBSTRING_LENGTH = 25;
 
   /**
-   * The cache object used for auto-refresh via mtime.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cache;
-
-  /**
    * The PhpStorage object used for storing the templates.
    *
    * @var \Drupal\Component\PhpStorage\PhpStorageInterface
@@ -39,23 +32,17 @@ class TwigPhpStorageCache implements CacheInterface {
   protected $storage;
 
   /**
-   * The template cache filename prefix.
-   *
-   * @var string
-   */
-  protected $templateCacheFilenamePrefix;
-
-  /**
    * Store cache backend and other information internally.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache bin.
-   * @param string $twig_cache_prefix
+   * @param string $templateCacheFilenamePrefix
    *   A Twig cache file prefix that changes when Twig extensions change.
    */
-  public function __construct(CacheBackendInterface $cache, $twig_cache_prefix) {
-    $this->cache = $cache;
-    $this->templateCacheFilenamePrefix = $twig_cache_prefix;
+  public function __construct(
+    protected CacheBackendInterface $cache,
+    protected $templateCacheFilenamePrefix,
+  ) {
   }
 
   /**

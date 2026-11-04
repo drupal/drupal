@@ -35,25 +35,11 @@ use Drupal\layout_builder\Plugin\Derivative\ExtraFieldBlockDeriver;
 class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, ContainerFactoryPluginInterface {
 
   /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
    * The field name.
    *
    * @var string
    */
   protected $fieldName;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
 
   /**
    * Constructs a new ExtraFieldBlock.
@@ -64,14 +50,18 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityFieldManager = $entity_field_manager;
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityFieldManagerInterface $entityFieldManager,
+  ) {
     // Get field name from the plugin ID.
     [, , , $field_name] = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 4);
     assert(!empty($field_name));

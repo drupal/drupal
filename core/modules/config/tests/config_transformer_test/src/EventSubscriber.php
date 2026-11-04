@@ -21,27 +21,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class EventSubscriber implements EventSubscriberInterface {
 
   /**
-   * The active config storage.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $active;
-
-  /**
-   * The sync config storage.
-   *
-   * @var \Drupal\Core\Config\StorageInterface
-   */
-  protected $sync;
-
-  /**
-   * The Drupal state.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * EventSubscriber constructor.
    *
    * @param \Drupal\Core\Config\StorageInterface $active
@@ -51,10 +30,11 @@ class EventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\State\StateInterface $state
    *   The Drupal state.
    */
-  public function __construct(StorageInterface $active, StorageInterface $sync, StateInterface $state) {
-    $this->active = $active;
-    $this->sync = $sync;
-    $this->state = $state;
+  public function __construct(
+    protected StorageInterface $active,
+    protected StorageInterface $sync,
+    protected StateInterface $state,
+  ) {
   }
 
   /**

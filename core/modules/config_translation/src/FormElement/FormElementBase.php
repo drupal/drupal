@@ -17,13 +17,6 @@ abstract class FormElementBase implements ElementInterface {
   use StringTranslationTrait;
 
   /**
-   * The schema element this form is for.
-   *
-   * @var \Drupal\Core\TypedData\TypedDataInterface
-   */
-  protected $element;
-
-  /**
    * The data definition of the element this form element is for.
    *
    * @var \Drupal\Core\TypedData\DataDefinitionInterface
@@ -36,9 +29,10 @@ abstract class FormElementBase implements ElementInterface {
    * @param \Drupal\Core\TypedData\TypedDataInterface $element
    *   The schema element this form element is for.
    */
-  public function __construct(TypedDataInterface $element) {
-    $this->element = $element;
-    $this->definition = $element->getDataDefinition();
+  public function __construct(
+    protected TypedDataInterface $element,
+  ) {
+    $this->definition = $this->element->getDataDefinition();
   }
 
   /**

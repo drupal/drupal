@@ -20,31 +20,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ViewsExposedForm extends FormBase implements WorkspaceSafeFormInterface {
 
   /**
-   * The exposed form cache.
-   *
-   * @var \Drupal\views\ExposedFormCache
-   */
-  protected $exposedFormCache;
-
-
-  /**
-   * The current path stack.
-   *
-   * @var \Drupal\Core\Path\CurrentPathStack
-   */
-  protected $currentPathStack;
-
-  /**
    * Constructs a new ViewsExposedForm.
    *
-   * @param \Drupal\views\ExposedFormCache $exposed_form_cache
+   * @param \Drupal\views\ExposedFormCache $exposedFormCache
    *   The exposed form cache.
-   * @param \Drupal\Core\Path\CurrentPathStack $current_path_stack
+   * @param \Drupal\Core\Path\CurrentPathStack $currentPathStack
    *   The current path stack.
    */
-  public function __construct(ExposedFormCache $exposed_form_cache, CurrentPathStack $current_path_stack) {
-    $this->exposedFormCache = $exposed_form_cache;
-    $this->currentPathStack = $current_path_stack;
+  public function __construct(
+    protected ExposedFormCache $exposedFormCache,
+    protected CurrentPathStack $currentPathStack,
+  ) {
   }
 
   /**

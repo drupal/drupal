@@ -20,30 +20,17 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class TimeZoneResolver implements EventSubscriberInterface {
 
   /**
-   * The config.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  private $currentUser;
-
-  /**
    * TimeZoneResolver constructor.
    *
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
    */
-  public function __construct(AccountInterface $current_user, ConfigFactoryInterface $config_factory) {
-    $this->configFactory = $config_factory;
-    $this->currentUser = $current_user;
+  public function __construct(
+    private AccountInterface $currentUser,
+    protected ConfigFactoryInterface $configFactory,
+  ) {
   }
 
   /**

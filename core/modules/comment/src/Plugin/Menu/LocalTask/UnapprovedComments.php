@@ -16,13 +16,6 @@ class UnapprovedComments extends LocalTaskDefault implements ContainerFactoryPlu
   use StringTranslationTrait;
 
   /**
-   * The comment storage service.
-   *
-   * @var \Drupal\comment\CommentStorageInterface
-   */
-  protected $commentStorage;
-
-  /**
    * Construct the UnapprovedComments object.
    *
    * @param array $configuration
@@ -31,12 +24,16 @@ class UnapprovedComments extends LocalTaskDefault implements ContainerFactoryPlu
    *   The plugin ID for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\comment\CommentStorageInterface $comment_storage
+   * @param \Drupal\comment\CommentStorageInterface $commentStorage
    *   The comment storage service.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, CommentStorageInterface $comment_storage) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    array $plugin_definition,
+    protected CommentStorageInterface $commentStorage,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->commentStorage = $comment_storage;
   }
 
   /**

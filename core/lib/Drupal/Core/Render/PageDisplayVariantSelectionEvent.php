@@ -24,25 +24,11 @@ class PageDisplayVariantSelectionEvent extends Event implements RefinableCacheab
   use RefinableCacheableDependencyTrait;
 
   /**
-   * The selected page display variant plugin ID.
-   *
-   * @var string
-   */
-  protected $pluginId;
-
-  /**
    * The configuration for the selected page display variant.
    *
    * @var array
    */
   protected $pluginConfiguration = [];
-
-  /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
 
   /**
    * An array of collected contexts to pass to the page display variant.
@@ -54,14 +40,15 @@ class PageDisplayVariantSelectionEvent extends Event implements RefinableCacheab
   /**
    * Constructs the page display variant plugin selection event.
    *
-   * @param string $plugin_id
+   * @param string $pluginId
    *   The ID of the page display variant plugin to use by default.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The current route match, for context.
    */
-  public function __construct($plugin_id, RouteMatchInterface $route_match) {
-    $this->pluginId = $plugin_id;
-    $this->routeMatch = $route_match;
+  public function __construct(
+    protected $pluginId,
+    protected RouteMatchInterface $routeMatch,
+  ) {
   }
 
   /**

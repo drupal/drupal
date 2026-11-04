@@ -14,20 +14,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 class ValidPathConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The path validator.
-   *
-   * @var \Drupal\Core\Path\PathValidatorInterface
-   */
-  protected $pathValidator;
-
-  /**
    * Creates a new ValidPathConstraintValidator instance.
    *
-   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
+   * @param \Drupal\Core\Path\PathValidatorInterface $pathValidator
    *   The path validator.
    */
-  public function __construct(PathValidatorInterface $path_validator) {
-    $this->pathValidator = $path_validator;
+  public function __construct(
+    protected PathValidatorInterface $pathValidator,
+  ) {
   }
 
   /**

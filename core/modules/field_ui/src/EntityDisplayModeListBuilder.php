@@ -20,28 +20,24 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityDisplayModeListBuilder extends ConfigEntityListBuilder {
 
   /**
-   * All entity types.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface[]
-   */
-  protected $entityTypes;
-
-  /**
    * Constructs a new EntityDisplayModeListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage class.
-   * @param \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
+   * @param \Drupal\Core\Entity\EntityTypeInterface[] $entityTypes
    *   List of all entity types.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, array $entity_types) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    EntityStorageInterface $storage,
+    protected array $entityTypes,
+  ) {
     parent::__construct($entity_type, $storage);
 
     // Override the default limit (50) in order to display all view modes.
     $this->limit = FALSE;
-    $this->entityTypes = $entity_types;
   }
 
   /**

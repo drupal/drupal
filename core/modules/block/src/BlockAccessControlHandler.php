@@ -28,20 +28,6 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
   use ConditionAccessResolverTrait;
 
   /**
-   * The plugin context handler.
-   *
-   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface
-   */
-  protected $contextHandler;
-
-  /**
-   * The context manager service.
-   *
-   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
-   */
-  protected $contextRepository;
-
-  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
@@ -57,15 +43,17 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Plugin\Context\ContextHandlerInterface $context_handler
+   * @param \Drupal\Core\Plugin\Context\ContextHandlerInterface $contextHandler
    *   The ContextHandler for applying contexts to conditions properly.
-   * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
+   * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $contextRepository
    *   The lazy context repository service.
    */
-  public function __construct(EntityTypeInterface $entity_type, ContextHandlerInterface $context_handler, ContextRepositoryInterface $context_repository) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    protected ContextHandlerInterface $contextHandler,
+    protected ContextRepositoryInterface $contextRepository,
+  ) {
     parent::__construct($entity_type);
-    $this->contextHandler = $context_handler;
-    $this->contextRepository = $context_repository;
   }
 
   /**

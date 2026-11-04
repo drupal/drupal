@@ -22,20 +22,6 @@ namespace Drupal\Core\Ajax;
 class UpdateBuildIdCommand implements CommandInterface {
 
   /**
-   * Old build id.
-   *
-   * @var string
-   */
-  protected $old;
-
-  /**
-   * New build id.
-   *
-   * @var string
-   */
-  protected $new;
-
-  /**
    * Constructs an UpdateBuildIdCommand object.
    *
    * @param string $old
@@ -43,9 +29,10 @@ class UpdateBuildIdCommand implements CommandInterface {
    * @param string $new
    *   The new build_id.
    */
-  public function __construct($old, $new) {
-    $this->old = $old;
-    $this->new = $new;
+  public function __construct(
+    protected $old,
+    protected $new,
+  ) {
   }
 
   /**

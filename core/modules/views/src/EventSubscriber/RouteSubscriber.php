@@ -37,13 +37,6 @@ class RouteSubscriber extends RouteSubscriberBase {
   protected $viewStorage;
 
   /**
-   * The state key value store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Stores an array of route names keyed by view_id.display_id.
    *
    * @var array
@@ -58,9 +51,11 @@ class RouteSubscriber extends RouteSubscriberBase {
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, StateInterface $state) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    protected StateInterface $state,
+  ) {
     $this->viewStorage = $entity_type_manager->getStorage('view');
-    $this->state = $state;
   }
 
   /**

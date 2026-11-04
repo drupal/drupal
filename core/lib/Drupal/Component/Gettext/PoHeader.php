@@ -23,13 +23,6 @@ namespace Drupal\Component\Gettext;
 class PoHeader {
 
   /**
-   * Language code.
-   *
-   * @var string
-   */
-  protected $langcode;
-
-  /**
    * Formula for the plural form.
    *
    * @var string
@@ -70,8 +63,9 @@ class PoHeader {
    * @param string $langcode
    *   Language code.
    */
-  public function __construct($langcode = NULL) {
-    $this->langcode = $langcode;
+  public function __construct(
+    protected $langcode = NULL,
+  ) {
     // Ignore errors when run during site installation before
     // date_default_timezone_set() is called.
     $this->poDate = @date("Y-m-d H:iO");

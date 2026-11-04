@@ -44,27 +44,6 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   protected $handlers = [];
 
   /**
-   * The string translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $stringTranslation;
-
-  /**
-   * The class resolver.
-   *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
-   */
-  protected $classResolver;
-
-  /**
-   * The entity last installed schema repository.
-   *
-   * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface
-   */
-  protected $entityLastInstalledSchemaRepository;
-
-  /**
    * Constructs a new Entity plugin manager.
    *
    * @param \Traversable $namespaces
@@ -74,25 +53,30 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    *   The module handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend to use.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $stringTranslation
    *   The string translation.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $classResolver
    *   The class resolver.
-   * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
+   * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entityLastInstalledSchemaRepository
    *   The entity last installed schema repository.
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The service container.
    */
-  public function __construct(\Traversable $namespaces, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, TranslationInterface $string_translation, ClassResolverInterface $class_resolver, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository, protected ContainerInterface $container) {
+  public function __construct(
+    \Traversable $namespaces,
+    ModuleHandlerInterface $module_handler,
+    CacheBackendInterface $cache,
+    protected TranslationInterface $stringTranslation,
+    protected ClassResolverInterface $classResolver,
+    protected EntityLastInstalledSchemaRepositoryInterface $entityLastInstalledSchemaRepository,
+    protected ContainerInterface $container,
+  ) {
     parent::__construct('Entity', $namespaces, $module_handler, EntityInterface::class);
 
     $this->setCacheBackend($cache, 'entity_type', ['entity_types']);
     $this->alterInfo('entity_type');
 
     $this->discovery = new AttributeDiscoveryWithAnnotations($this->subdir, $this->namespaces, EntityType::class, 'Drupal\Core\Entity\Annotation\EntityType');
-    $this->stringTranslation = $string_translation;
-    $this->classResolver = $class_resolver;
-    $this->entityLastInstalledSchemaRepository = $entity_last_installed_schema_repository;
   }
 
   /**

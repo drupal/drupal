@@ -13,20 +13,14 @@ use Drupal\Core\File\FileSystemInterface;
 class AssetDumper implements AssetDumperUriInterface {
 
   /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
    * AssetDumper constructor.
    *
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
    *   The file handler.
    */
-  public function __construct(FileSystemInterface $file_system) {
-    $this->fileSystem = $file_system;
+  public function __construct(
+    protected FileSystemInterface $fileSystem,
+  ) {
   }
 
   /**

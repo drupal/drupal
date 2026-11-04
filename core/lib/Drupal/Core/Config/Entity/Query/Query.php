@@ -21,20 +21,6 @@ class Query extends QueryBase implements QueryInterface {
   protected $entityType;
 
   /**
-   * The config factory used by the config entity query.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The key value factory.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
-   */
-  protected $keyValueFactory;
-
-  /**
    * Constructs a Query object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -42,17 +28,21 @@ class Query extends QueryBase implements QueryInterface {
    * @param string $conjunction
    *   - AND: all of the conditions on the query need to match.
    *   - OR: at least one of the conditions on the query need to match.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $keyValueFactory
    *   The key value factory.
    * @param array $namespaces
    *   List of potential namespaces of the classes belonging to this query.
    */
-  public function __construct(EntityTypeInterface $entity_type, $conjunction, ConfigFactoryInterface $config_factory, KeyValueFactoryInterface $key_value_factory, array $namespaces) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    $conjunction,
+    protected ConfigFactoryInterface $configFactory,
+    protected KeyValueFactoryInterface $keyValueFactory,
+    array $namespaces,
+  ) {
     parent::__construct($entity_type, $conjunction, $namespaces);
-    $this->configFactory = $config_factory;
-    $this->keyValueFactory = $key_value_factory;
   }
 
   /**

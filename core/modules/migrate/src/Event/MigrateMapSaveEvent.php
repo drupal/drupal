@@ -11,20 +11,6 @@ use Drupal\Component\EventDispatcher\Event;
 class MigrateMapSaveEvent extends Event {
 
   /**
-   * Map plugin.
-   *
-   * @var \Drupal\migrate\Plugin\MigrateIdMapInterface
-   */
-  protected $map;
-
-  /**
-   * Array of fields being saved to the map, keyed by field name.
-   *
-   * @var array
-   */
-  protected $fields;
-
-  /**
    * Constructs a migration map event object.
    *
    * @param \Drupal\migrate\Plugin\MigrateIdMapInterface $map
@@ -32,9 +18,10 @@ class MigrateMapSaveEvent extends Event {
    * @param array $fields
    *   Array of fields being saved to the map.
    */
-  public function __construct(MigrateIdMapInterface $map, array $fields) {
-    $this->map = $map;
-    $this->fields = $fields;
+  public function __construct(
+    protected MigrateIdMapInterface $map,
+    protected array $fields,
+  ) {
   }
 
   /**

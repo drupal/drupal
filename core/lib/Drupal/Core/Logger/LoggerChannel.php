@@ -35,13 +35,6 @@ class LoggerChannel implements LoggerChannelInterface {
   protected $callDepth = 0;
 
   /**
-   * The name of the channel of this logger instance.
-   *
-   * @var string
-   */
-  protected $channel;
-
-  /**
    * Map of PSR3 log constants to RFC 5424 log constants.
    *
    * @var array
@@ -84,8 +77,9 @@ class LoggerChannel implements LoggerChannelInterface {
    * @param string $channel
    *   The channel name for this instance.
    */
-  public function __construct($channel) {
-    $this->channel = $channel;
+  public function __construct(
+    protected $channel,
+  ) {
   }
 
   /**

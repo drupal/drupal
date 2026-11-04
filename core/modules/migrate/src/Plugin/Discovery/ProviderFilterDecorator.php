@@ -19,13 +19,6 @@ class ProviderFilterDecorator implements DiscoveryInterface {
   use DiscoveryTrait;
 
   /**
-   * The Discovery object being decorated.
-   *
-   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface
-   */
-  protected $decorated;
-
-  /**
    * A callable for testing if a provider exists.
    *
    * @var callable
@@ -41,8 +34,10 @@ class ProviderFilterDecorator implements DiscoveryInterface {
    *   A callable, gets passed a provider name, should return TRUE if the
    *   provider exists and FALSE if not.
    */
-  public function __construct(DiscoveryInterface $decorated, callable $provider_exists) {
-    $this->decorated = $decorated;
+  public function __construct(
+    protected DiscoveryInterface $decorated,
+    callable $provider_exists,
+  ) {
     $this->providerExists = $provider_exists;
   }
 

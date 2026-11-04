@@ -14,20 +14,14 @@ use Symfony\Component\HttpFoundation\Request;
 class AliasPathProcessor implements InboundPathProcessorInterface, OutboundPathProcessorInterface {
 
   /**
-   * An alias manager for looking up the system path.
-   *
-   * @var \Drupal\path_alias\AliasManagerInterface
-   */
-  protected $aliasManager;
-
-  /**
    * Constructs a AliasPathProcessor object.
    *
-   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
+   * @param \Drupal\path_alias\AliasManagerInterface $aliasManager
    *   An alias manager for looking up the system path.
    */
-  public function __construct(AliasManagerInterface $alias_manager) {
-    $this->aliasManager = $alias_manager;
+  public function __construct(
+    protected AliasManagerInterface $aliasManager,
+  ) {
   }
 
   /**

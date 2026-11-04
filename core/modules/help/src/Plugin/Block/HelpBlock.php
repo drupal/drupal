@@ -22,27 +22,6 @@ use Symfony\Component\HttpFoundation\Request;
 class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
    * Creates a HelpBlock instance.
    *
    * @param array $configuration
@@ -53,17 +32,20 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
    *   The plugin implementation definition.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The current route match.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Request $request, ModuleHandlerInterface $module_handler, RouteMatchInterface $route_match) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected Request $request,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected RouteMatchInterface $routeMatch,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->request = $request;
-    $this->moduleHandler = $module_handler;
-    $this->routeMatch = $route_match;
   }
 
   /**

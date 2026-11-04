@@ -25,20 +25,6 @@ use Drupal\system\Plugin\Derivative\SystemMenuBlock as SystemMenuBlockDeriver;
 class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The menu link tree service.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
-   */
-  protected $menuTree;
-
-  /**
-   * The active menu trail service.
-   *
-   * @var \Drupal\Core\Menu\MenuActiveTrailInterface
-   */
-  protected $menuActiveTrail;
-
-  /**
    * Constructs a new SystemMenuBlock.
    *
    * @param array $configuration
@@ -47,15 +33,19 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
    *   The plugin ID for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree
+   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menuTree
    *   The menu tree service.
-   * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menu_active_trail
+   * @param \Drupal\Core\Menu\MenuActiveTrailInterface $menuActiveTrail
    *   The active menu trail service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MenuLinkTreeInterface $menu_tree, MenuActiveTrailInterface $menu_active_trail) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected MenuLinkTreeInterface $menuTree,
+    protected MenuActiveTrailInterface $menuActiveTrail,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->menuTree = $menu_tree;
-    $this->menuActiveTrail = $menu_active_trail;
   }
 
   /**

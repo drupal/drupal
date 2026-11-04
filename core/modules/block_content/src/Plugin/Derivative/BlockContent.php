@@ -13,20 +13,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BlockContent extends DeriverBase implements ContainerDeriverInterface {
 
   /**
-   * The content block storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $blockContentStorage;
-
-  /**
    * Constructs a BlockContent object.
    *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $block_content_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $blockContentStorage
    *   The content block storage.
    */
-  public function __construct(EntityStorageInterface $block_content_storage) {
-    $this->blockContentStorage = $block_content_storage;
+  public function __construct(
+    protected EntityStorageInterface $blockContentStorage,
+  ) {
   }
 
   /**

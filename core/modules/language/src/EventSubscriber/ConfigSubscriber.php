@@ -19,34 +19,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ConfigSubscriber implements EventSubscriberInterface {
 
   /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The default language.
-   *
-   * @var \Drupal\Core\Language\LanguageDefault
-   */
-  protected $languageDefault;
-
-  /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The language negotiator.
-   *
-   * @var \Drupal\language\LanguageNegotiatorInterface
-   */
-  protected $languageNegotiator;
-
-  /**
    * The language path processor.
    *
    * @var \Drupal\language\HttpKernel\PathProcessorLanguage
@@ -56,20 +28,21 @@ class ConfigSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a new class object.
    *
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
-   * @param \Drupal\Core\Language\LanguageDefault $language_default
+   * @param \Drupal\Core\Language\LanguageDefault $languageDefault
    *   The default language.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory.
-   * @param \Drupal\language\LanguageNegotiatorInterface $language_negotiator
+   * @param \Drupal\language\LanguageNegotiatorInterface $languageNegotiator
    *   The language negotiator.
    */
-  public function __construct(LanguageManagerInterface $language_manager, LanguageDefault $language_default, ConfigFactoryInterface $config_factory, LanguageNegotiatorInterface $language_negotiator) {
-    $this->languageManager = $language_manager;
-    $this->languageDefault = $language_default;
-    $this->configFactory = $config_factory;
-    $this->languageNegotiator = $language_negotiator;
+  public function __construct(
+    protected LanguageManagerInterface $languageManager,
+    protected LanguageDefault $languageDefault,
+    protected ConfigFactoryInterface $configFactory,
+    protected LanguageNegotiatorInterface $languageNegotiator,
+  ) {
   }
 
   /**

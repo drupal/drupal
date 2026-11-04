@@ -43,13 +43,6 @@ class EntityReference extends DisplayPluginBase {
   protected $usesAttachments = FALSE;
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * The id field alias.
    */
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
@@ -67,9 +60,13 @@ class EntityReference extends DisplayPluginBase {
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $connection) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected Connection $connection,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->connection = $connection;
   }
 
   /**

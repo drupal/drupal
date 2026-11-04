@@ -10,20 +10,14 @@ use Drupal\Component\Graph\Graph;
 class LibraryDependencyResolver implements LibraryDependencyResolverInterface {
 
   /**
-   * The library discovery service.
-   *
-   * @var \Drupal\Core\Asset\LibraryDiscoveryInterface
-   */
-  protected $libraryDiscovery;
-
-  /**
    * Constructs a new LibraryDependencyResolver instance.
    *
-   * @param \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery
+   * @param \Drupal\Core\Asset\LibraryDiscoveryInterface $libraryDiscovery
    *   The library discovery service.
    */
-  public function __construct(LibraryDiscoveryInterface $library_discovery) {
-    $this->libraryDiscovery = $library_discovery;
+  public function __construct(
+    protected LibraryDiscoveryInterface $libraryDiscovery,
+  ) {
   }
 
   /**

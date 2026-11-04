@@ -14,13 +14,6 @@ class Delete extends Query implements ConditionInterface {
   use QueryConditionTrait;
 
   /**
-   * The table from which to delete.
-   *
-   * @var string
-   */
-  protected $table;
-
-  /**
    * Constructs a Delete object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -30,9 +23,12 @@ class Delete extends Query implements ConditionInterface {
    * @param array $options
    *   Array of database options.
    */
-  public function __construct(Connection $connection, $table, array $options = []) {
+  public function __construct(
+    Connection $connection,
+    protected $table,
+    array $options = [],
+  ) {
     parent::__construct($connection, $options);
-    $this->table = $table;
 
     $this->condition = $this->connection->condition('AND');
   }

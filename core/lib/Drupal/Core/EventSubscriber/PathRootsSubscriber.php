@@ -23,20 +23,14 @@ class PathRootsSubscriber implements EventSubscriberInterface {
   protected $pathRoots = [];
 
   /**
-   * The state key value store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * Constructs a new PathRootsSubscriber instance.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
    */
-  public function __construct(StateInterface $state) {
-    $this->state = $state;
+  public function __construct(
+    protected StateInterface $state,
+  ) {
   }
 
   /**

@@ -83,34 +83,6 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   protected $formatterOptions;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
-   * The field formatter plugin manager.
-   *
-   * @var \Drupal\Core\Field\FormatterPluginManager
-   */
-  protected $formatterPluginManager;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
    * The renderer.
    *
    * @var \Drupal\Core\Render\RendererInterface
@@ -118,25 +90,11 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
   protected $renderer;
 
   /**
-   * The field type plugin manager.
-   *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
-   */
-  protected $fieldTypePluginManager;
-
-  /**
    * Static cache for ::getEntityFieldRenderer().
    *
    * @var \Drupal\views\Entity\Render\EntityFieldRenderer
    */
   protected $entityFieldRenderer;
-
-  /**
-   * The entity type bundle info service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
 
   /**
    * The fields that we are actually grouping on.
@@ -153,47 +111,40 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Field\FormatterPluginManager $formatter_plugin_manager
+   * @param \Drupal\Core\Field\FormatterPluginManager $formatterPluginManager
    *   The field formatter plugin manager.
-   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_plugin_manager
+   * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $fieldTypePluginManager
    *   The field plugin type manager.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entityTypeBundleInfo
    *   The entity type bundle info service.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager,
+    protected EntityTypeManagerInterface $entityTypeManager,
     #[Autowire(service: 'plugin.manager.field.formatter')]
-    FormatterPluginManager $formatter_plugin_manager,
-    FieldTypePluginManagerInterface $field_type_plugin_manager,
-    LanguageManagerInterface $language_manager,
+    protected FormatterPluginManager $formatterPluginManager,
+    protected FieldTypePluginManagerInterface $fieldTypePluginManager,
+    protected LanguageManagerInterface $languageManager,
     RendererInterface $renderer,
-    EntityRepositoryInterface $entity_repository,
+    protected EntityRepositoryInterface $entityRepository,
     EntityFieldManagerInterface $entity_field_manager,
-    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->entityTypeManager = $entity_type_manager;
-    $this->formatterPluginManager = $formatter_plugin_manager;
-    $this->fieldTypePluginManager = $field_type_plugin_manager;
-    $this->languageManager = $language_manager;
     $this->renderer = $renderer;
-    $this->entityRepository = $entity_repository;
     $this->entityFieldManager = $entity_field_manager;
-    $this->entityTypeBundleInfo = $entity_type_bundle_info;
 
     // @todo Unify 'entity field'/'field_name' instead of converting back and
     //   forth. https://www.drupal.org/node/2410779

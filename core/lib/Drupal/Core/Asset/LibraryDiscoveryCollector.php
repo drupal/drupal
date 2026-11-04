@@ -16,36 +16,24 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 class LibraryDiscoveryCollector extends CacheCollector implements LibraryDiscoveryInterface {
 
   /**
-   * The library discovery parser.
-   *
-   * @var \Drupal\Core\Asset\LibraryDiscoveryParser
-   */
-  protected $discoveryParser;
-
-  /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
    * Constructs a CacheCollector object.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
-   * @param \Drupal\Core\Asset\LibraryDiscoveryParser $discovery_parser
+   * @param \Drupal\Core\Asset\LibraryDiscoveryParser $discoveryParser
    *   The library discovery parser.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
    *   The theme manager.
    */
-  public function __construct(CacheBackendInterface $cache, LockBackendInterface $lock, LibraryDiscoveryParser $discovery_parser, ThemeManagerInterface $theme_manager) {
-    $this->themeManager = $theme_manager;
+  public function __construct(
+    CacheBackendInterface $cache,
+    LockBackendInterface $lock,
+    protected LibraryDiscoveryParser $discoveryParser,
+    protected ThemeManagerInterface $themeManager,
+  ) {
     parent::__construct(NULL, $cache, $lock, ['library_info']);
-
-    $this->discoveryParser = $discovery_parser;
   }
 
   /**

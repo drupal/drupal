@@ -8,20 +8,14 @@ namespace Drupal\system\PhpStorage;
 class MockPhpStorage {
 
   /**
-   * The storage configuration.
-   *
-   * @var array
-   */
-  protected $configuration;
-
-  /**
    * Constructs a MockPhpStorage object.
    *
    * @param array $configuration
    *   The storage configuration.
    */
-  public function __construct(array $configuration) {
-    $this->configuration = $configuration;
+  public function __construct(
+    protected array $configuration,
+  ) {
   }
 
   /**

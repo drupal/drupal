@@ -62,20 +62,14 @@ class LinkCollectionNormalizer extends NormalizerBase {
   protected $hashSalt;
 
   /**
-   * The current user making the request.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * LinkCollectionNormalizer constructor.
    *
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
-  public function __construct(AccountInterface $current_user) {
-    $this->currentUser = $current_user;
+  public function __construct(
+    protected AccountInterface $currentUser,
+  ) {
   }
 
   /**

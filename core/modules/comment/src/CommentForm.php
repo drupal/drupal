@@ -27,20 +27,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CommentForm extends ContentEntityForm {
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * The entity field manager.
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
@@ -66,7 +52,7 @@ class CommentForm extends ContentEntityForm {
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
@@ -79,15 +65,13 @@ class CommentForm extends ContentEntityForm {
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
-    AccountInterface $current_user,
-    RendererInterface $renderer,
+    protected AccountInterface $currentUser,
+    protected RendererInterface $renderer,
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     TimeInterface $time,
     ?EntityFieldManagerInterface $entity_field_manager = NULL,
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
-    $this->currentUser = $current_user;
-    $this->renderer = $renderer;
     $this->entityFieldManager = $entity_field_manager ?: \Drupal::service('entity_field.manager');
   }
 

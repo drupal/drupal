@@ -46,20 +46,6 @@ class Page extends PathPluginBase {
   protected $usesAttachments = TRUE;
 
   /**
-   * The menu storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $menuStorage;
-
-  /**
-   * The parent form selector service.
-   *
-   * @var \Drupal\Core\Menu\MenuParentFormSelectorInterface
-   */
-  protected $parentFormSelector;
-
-  /**
    * Constructs a Page object.
    *
    * @param array $configuration
@@ -72,15 +58,21 @@ class Page extends PathPluginBase {
    *   The route provider.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $menu_storage
+   * @param \Drupal\Core\Entity\EntityStorageInterface $menuStorage
    *   The menu storage.
-   * @param \Drupal\Core\Menu\MenuParentFormSelectorInterface $parent_form_selector
+   * @param \Drupal\Core\Menu\MenuParentFormSelectorInterface $parentFormSelector
    *   The parent form selector service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, EntityStorageInterface $menu_storage, MenuParentFormSelectorInterface $parent_form_selector) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    RouteProviderInterface $route_provider,
+    StateInterface $state,
+    protected EntityStorageInterface $menuStorage,
+    protected MenuParentFormSelectorInterface $parentFormSelector,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
-    $this->menuStorage = $menu_storage;
-    $this->parentFormSelector = $parent_form_selector;
   }
 
   /**

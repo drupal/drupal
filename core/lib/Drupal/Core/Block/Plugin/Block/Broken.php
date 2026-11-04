@@ -26,13 +26,6 @@ class Broken extends PluginBase implements BlockPluginInterface, ContainerFactor
   use CacheableDependencyTrait;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Creates a Broken Block instance.
    *
    * @param array $configuration
@@ -41,17 +34,16 @@ class Broken extends PluginBase implements BlockPluginInterface, ContainerFactor
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    AccountInterface $current_user,
+    protected AccountInterface $currentUser,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->currentUser = $current_user;
   }
 
   /**

@@ -16,30 +16,17 @@ class ViewsData {
   use StringTranslationTrait;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The moderation information.
-   *
-   * @var \Drupal\content_moderation\ModerationInformationInterface
-   */
-  protected $moderationInformation;
-
-  /**
    * Creates a new ViewsData instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInformation
    *   The moderation information.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModerationInformationInterface $moderation_information) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->moderationInformation = $moderation_information;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected ModerationInformationInterface $moderationInformation,
+  ) {
   }
 
   /**

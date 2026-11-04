@@ -17,20 +17,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class WorkflowAddForm extends EntityForm {
 
   /**
-   * The workflow type plugin manager.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $workflowTypePluginManager;
-
-  /**
    * WorkflowAddForm constructor.
    *
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $workflow_type_plugin_manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $workflowTypePluginManager
    *   The workflow type plugin manager.
    */
-  public function __construct(PluginManagerInterface $workflow_type_plugin_manager) {
-    $this->workflowTypePluginManager = $workflow_type_plugin_manager;
+  public function __construct(
+    protected PluginManagerInterface $workflowTypePluginManager,
+  ) {
   }
 
   /**

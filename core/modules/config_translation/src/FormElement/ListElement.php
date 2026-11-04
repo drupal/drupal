@@ -19,20 +19,14 @@ class ListElement implements ElementInterface {
   use StringTranslationTrait;
 
   /**
-   * The schema element this form is for.
-   *
-   * @var \Drupal\Core\TypedData\TraversableTypedDataInterface
-   */
-  protected $element;
-
-  /**
    * Constructs a ListElement.
    *
    * @param \Drupal\Core\TypedData\TraversableTypedDataInterface $element
    *   The schema element this form element is for.
    */
-  public function __construct(TraversableTypedDataInterface $element) {
-    $this->element = $element;
+  public function __construct(
+    protected TraversableTypedDataInterface $element,
+  ) {
   }
 
   /**

@@ -12,15 +12,6 @@ namespace Drupal\media\OEmbed;
 class ProviderException extends \Exception {
 
   /**
-   * Information about the oEmbed provider which caused the exception.
-   *
-   * @var \Drupal\media\OEmbed\Provider
-   *
-   * @see \Drupal\media\OEmbed\ProviderRepositoryInterface::get()
-   */
-  protected $provider;
-
-  /**
    * ProviderException constructor.
    *
    * @param string $message
@@ -31,9 +22,12 @@ class ProviderException extends \Exception {
    * @param \Throwable $previous
    *   (optional) The previous exception, if any.
    */
-  public function __construct($message, ?Provider $provider = NULL, ?\Throwable $previous = NULL) {
-    $this->provider = $provider;
-    $message = str_replace('@name', $provider ? $provider->getName() : '<unknown>', $message);
+  public function __construct(
+    $message,
+    protected ?Provider $provider = NULL,
+    ?\Throwable $previous = NULL,
+  ) {
+    $message = str_replace('@name', $this->provider ? $this->provider->getName() : '<unknown>', $message);
     parent::__construct($message, 0, $previous);
   }
 

@@ -16,30 +16,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MenuDeleteForm extends EntityDeleteForm {
 
   /**
-   * The menu link manager.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkManagerInterface
-   */
-  protected $menuLinkManager;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs a new MenuDeleteForm.
    *
-   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager
+   * @param \Drupal\Core\Menu\MenuLinkManagerInterface $menuLinkManager
    *   The menu link manager.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(MenuLinkManagerInterface $menu_link_manager, Connection $connection) {
-    $this->menuLinkManager = $menu_link_manager;
-    $this->connection = $connection;
+  public function __construct(
+    protected MenuLinkManagerInterface $menuLinkManager,
+    protected Connection $connection,
+  ) {
   }
 
   /**

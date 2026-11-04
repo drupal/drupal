@@ -14,20 +14,14 @@ use Drupal\Core\Language\LanguageInterface;
 class AliasRepository implements AliasRepositoryInterface {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * Constructs an AliasRepository object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   A database connection for reading and writing path aliases.
    */
-  public function __construct(Connection $connection) {
-    $this->connection = $connection;
+  public function __construct(
+    protected Connection $connection,
+  ) {
   }
 
   /**

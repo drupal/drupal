@@ -17,20 +17,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 class ConfigExistsConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The config factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected ConfigFactoryInterface $configFactory;
-
-  /**
    * Constructs a ConfigExistsConstraintValidator object.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
-    $this->configFactory = $config_factory;
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory,
+  ) {
   }
 
   /**

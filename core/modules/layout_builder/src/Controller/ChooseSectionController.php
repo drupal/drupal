@@ -27,20 +27,14 @@ class ChooseSectionController implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   /**
-   * The layout manager.
-   *
-   * @var \Drupal\Core\Layout\LayoutPluginManagerInterface
-   */
-  protected $layoutManager;
-
-  /**
    * ChooseSectionController constructor.
    *
-   * @param \Drupal\Core\Layout\LayoutPluginManagerInterface $layout_manager
+   * @param \Drupal\Core\Layout\LayoutPluginManagerInterface $layoutManager
    *   The layout manager.
    */
-  public function __construct(LayoutPluginManagerInterface $layout_manager) {
-    $this->layoutManager = $layout_manager;
+  public function __construct(
+    protected LayoutPluginManagerInterface $layoutManager,
+  ) {
   }
 
   /**

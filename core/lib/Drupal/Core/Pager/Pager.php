@@ -8,13 +8,6 @@ namespace Drupal\Core\Pager;
 class Pager {
 
   /**
-   * The total number of items .
-   *
-   * @var int
-   */
-  protected $totalItems;
-
-  /**
    * The total number of pages.
    *
    * @var int
@@ -29,13 +22,6 @@ class Pager {
   protected $currentPage;
 
   /**
-   * The maximum number of items per page.
-   *
-   * @var int
-   */
-  protected $limit;
-
-  /**
    * Pager constructor.
    *
    * @param int $totalItems
@@ -45,10 +31,12 @@ class Pager {
    * @param int $currentPage
    *   The current page.
    */
-  public function __construct($totalItems, $limit, $currentPage = 0) {
-    $this->totalItems = $totalItems;
-    $this->limit = $limit;
-    $this->setTotalPages($totalItems, $limit);
+  public function __construct(
+    protected $totalItems,
+    protected $limit,
+    $currentPage = 0,
+  ) {
+    $this->setTotalPages($this->totalItems, $this->limit);
     $this->setCurrentPage($currentPage);
   }
 

@@ -20,23 +20,9 @@ use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 class CustomPageExceptionHtmlSubscriber extends DefaultExceptionHtmlSubscriber {
 
   /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The access manager.
-   *
-   * @var \Drupal\Core\Access\AccessManagerInterface
-   */
-  protected $accessManager;
-
-  /**
    * Constructs a new CustomPageExceptionHtmlSubscriber.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory.
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The HTTP Kernel service.
@@ -46,13 +32,18 @@ class CustomPageExceptionHtmlSubscriber extends DefaultExceptionHtmlSubscriber {
    *   The redirect destination service.
    * @param \Symfony\Component\Routing\Matcher\UrlMatcherInterface $access_unaware_router
    *   A router implementation which does not check access.
-   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $accessManager
    *   The access manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, HttpKernelInterface $http_kernel, LoggerInterface $logger, RedirectDestinationInterface $redirect_destination, UrlMatcherInterface $access_unaware_router, AccessManagerInterface $access_manager) {
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory,
+    HttpKernelInterface $http_kernel,
+    LoggerInterface $logger,
+    RedirectDestinationInterface $redirect_destination,
+    UrlMatcherInterface $access_unaware_router,
+    protected AccessManagerInterface $accessManager,
+  ) {
     parent::__construct($http_kernel, $logger, $redirect_destination, $access_unaware_router);
-    $this->configFactory = $config_factory;
-    $this->accessManager = $access_manager;
   }
 
   /**

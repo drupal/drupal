@@ -20,50 +20,23 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 class BasicAuth implements AuthenticationProviderInterface, AuthenticationProviderChallengeInterface {
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
-   * The user auth service.
-   *
-   * @var \Drupal\user\UserAuthenticationInterface
-   */
-  protected $userAuth;
-
-  /**
-   * The flood service.
-   *
-   * @var \Drupal\Core\Flood\FloodInterface
-   */
-  protected $flood;
-
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a HTTP basic authentication provider object.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.
-   * @param \Drupal\user\UserAuthenticationInterface $user_auth
+   * @param \Drupal\user\UserAuthenticationInterface $userAuth
    *   The user authentication service.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, UserAuthenticationInterface $user_auth, FloodInterface $flood, EntityTypeManagerInterface $entity_type_manager) {
-    $this->configFactory = $config_factory;
-    $this->userAuth = $user_auth;
-    $this->flood = $flood;
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory,
+    protected UserAuthenticationInterface $userAuth,
+    protected FloodInterface $flood,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
   }
 
   /**

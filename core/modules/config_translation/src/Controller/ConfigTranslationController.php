@@ -27,41 +27,6 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 class ConfigTranslationController extends ControllerBase {
 
   /**
-   * The configuration mapper manager.
-   *
-   * @var \Drupal\config_translation\ConfigMapperManagerInterface
-   */
-  protected $configMapperManager;
-
-  /**
-   * The menu link access service.
-   *
-   * @var \Drupal\Core\Access\AccessManagerInterface
-   */
-  protected $accessManager;
-
-  /**
-   * The dynamic router service.
-   *
-   * @var \Symfony\Component\Routing\Matcher\RequestMatcherInterface
-   */
-  protected $router;
-
-  /**
-   * The path processor service.
-   *
-   * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface
-   */
-  protected $pathProcessor;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
    * The language manager.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
@@ -69,22 +34,15 @@ class ConfigTranslationController extends ControllerBase {
   protected $languageManager;
 
   /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
    * Constructs a ConfigTranslationController.
    *
-   * @param \Drupal\config_translation\ConfigMapperManagerInterface $config_mapper_manager
+   * @param \Drupal\config_translation\ConfigMapperManagerInterface $configMapperManager
    *   The configuration mapper manager.
-   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $accessManager
    *   The menu link access service.
    * @param \Symfony\Component\Routing\Matcher\RequestMatcherInterface $router
    *   The dynamic router service.
-   * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
+   * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $pathProcessor
    *   The inbound path processor.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
@@ -94,22 +52,16 @@ class ConfigTranslationController extends ControllerBase {
    *   The renderer.
    */
   public function __construct(
-    ConfigMapperManagerInterface $config_mapper_manager,
-    AccessManagerInterface $access_manager,
+    protected ConfigMapperManagerInterface $configMapperManager,
+    protected AccessManagerInterface $accessManager,
     #[Autowire(service: 'router')]
-    RequestMatcherInterface $router,
-    InboundPathProcessorInterface $path_processor,
-    AccountInterface $account,
+    protected RequestMatcherInterface $router,
+    protected InboundPathProcessorInterface $pathProcessor,
+    protected AccountInterface $account,
     LanguageManagerInterface $language_manager,
-    RendererInterface $renderer,
+    protected RendererInterface $renderer,
   ) {
-    $this->configMapperManager = $config_mapper_manager;
-    $this->accessManager = $access_manager;
-    $this->router = $router;
-    $this->pathProcessor = $path_processor;
-    $this->account = $account;
     $this->languageManager = $language_manager;
-    $this->renderer = $renderer;
   }
 
   /**

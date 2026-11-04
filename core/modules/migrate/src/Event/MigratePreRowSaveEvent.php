@@ -12,13 +12,6 @@ use Drupal\migrate\Row;
 class MigratePreRowSaveEvent extends EventBase {
 
   /**
-   * Row object.
-   *
-   * @var \Drupal\migrate\Row
-   */
-  protected $row;
-
-  /**
    * Constructs a pre-save event object.
    *
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
@@ -28,9 +21,12 @@ class MigratePreRowSaveEvent extends EventBase {
    * @param \Drupal\migrate\Row $row
    *   The current row.
    */
-  public function __construct(MigrationInterface $migration, MigrateMessageInterface $message, Row $row) {
+  public function __construct(
+    MigrationInterface $migration,
+    MigrateMessageInterface $message,
+    protected Row $row,
+  ) {
     parent::__construct($migration, $message);
-    $this->row = $row;
   }
 
   /**

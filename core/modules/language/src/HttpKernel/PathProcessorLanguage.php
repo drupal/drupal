@@ -19,27 +19,6 @@ use Drupal\Core\Session\AccountInterface;
 class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPathProcessorInterface {
 
   /**
-   * A config factory for retrieving required config settings.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $config;
-
-  /**
-   * Language manager for retrieving the URL language type.
-   *
-   * @var \Drupal\language\ConfigurableLanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The language negotiator.
-   *
-   * @var \Drupal\language\LanguageNegotiatorInterface
-   */
-  protected $negotiator;
-
-  /**
    * Local cache for language path processors.
    *
    * @var array
@@ -54,32 +33,27 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
   protected $multilingual;
 
   /**
-   * The language configuration event subscriber.
-   *
-   * @var \Drupal\language\EventSubscriber\ConfigSubscriber
-   */
-  protected $configSubscriber;
-
-  /**
    * Constructs a PathProcessorLanguage object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   A config factory object for retrieving configuration settings.
-   * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
+   * @param \Drupal\language\ConfigurableLanguageManagerInterface $languageManager
    *   The configurable language manager.
    * @param \Drupal\language\LanguageNegotiatorInterface $negotiator
    *   The language negotiator.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current active user.
-   * @param \Drupal\language\EventSubscriber\ConfigSubscriber $config_subscriber
+   * @param \Drupal\language\EventSubscriber\ConfigSubscriber $configSubscriber
    *   The language configuration event subscriber.
    */
-  public function __construct(ConfigFactoryInterface $config, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, AccountInterface $current_user, ConfigSubscriber $config_subscriber) {
-    $this->config = $config;
-    $this->languageManager = $language_manager;
-    $this->negotiator = $negotiator;
+  public function __construct(
+    protected ConfigFactoryInterface $config,
+    protected ConfigurableLanguageManagerInterface $languageManager,
+    protected LanguageNegotiatorInterface $negotiator,
+    AccountInterface $current_user,
+    protected ConfigSubscriber $configSubscriber,
+  ) {
     $this->negotiator->setCurrentUser($current_user);
-    $this->configSubscriber = $config_subscriber;
   }
 
   /**

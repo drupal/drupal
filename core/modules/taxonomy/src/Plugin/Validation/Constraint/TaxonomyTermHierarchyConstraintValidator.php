@@ -15,20 +15,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 class TaxonomyTermHierarchyConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  private $entityTypeManager;
-
-  /**
    * Creates a new TaxonomyTermHierarchyConstraintValidator instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    private EntityTypeManagerInterface $entityTypeManager,
+  ) {
   }
 
   /**

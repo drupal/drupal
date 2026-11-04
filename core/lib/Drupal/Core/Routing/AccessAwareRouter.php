@@ -21,40 +21,20 @@ use Symfony\Component\Routing\RouterInterface;
 class AccessAwareRouter implements AccessAwareRouterInterface {
 
   /**
-   * The router doing the actual routing.
-   *
-   * @var \Symfony\Component\Routing\RouterInterface
-   */
-  protected $router;
-
-  /**
-   * The access manager.
-   *
-   * @var \Drupal\Core\Access\AccessManagerInterface
-   */
-  protected $accessManager;
-
-  /**
-   * The account to use in access checks.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $account;
-
-  /**
    * Constructs a router for Drupal with access check and upcasting.
    *
    * @param \Symfony\Component\Routing\RouterInterface $router
    *   The router doing the actual routing.
-   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   * @param \Drupal\Core\Access\AccessManagerInterface $accessManager
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The account to use in access checks.
    */
-  public function __construct(RouterInterface $router, AccessManagerInterface $access_manager, AccountInterface $account) {
-    $this->router = $router;
-    $this->accessManager = $access_manager;
-    $this->account = $account;
+  public function __construct(
+    protected RouterInterface $router,
+    protected AccessManagerInterface $accessManager,
+    protected AccountInterface $account,
+  ) {
   }
 
   /**

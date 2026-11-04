@@ -10,20 +10,14 @@ use Drupal\Component\EventDispatcher\Event;
 class ConfigCrudEvent extends Event {
 
   /**
-   * Configuration object.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $config;
-
-  /**
    * Constructs a configuration event object.
    *
    * @param \Drupal\Core\Config\StorableConfigBase $config
    *   Configuration object.
    */
-  public function __construct(StorableConfigBase $config) {
-    $this->config = $config;
+  public function __construct(
+    protected StorableConfigBase $config,
+  ) {
   }
 
   /**

@@ -27,25 +27,11 @@ class VocabularyListBuilder extends DraggableListBuilder {
   protected $entitiesKey = 'vocabularies';
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
-
-  /**
-   * The renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
 
   /**
    * The messenger.
@@ -59,7 +45,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
@@ -70,16 +56,13 @@ class VocabularyListBuilder extends DraggableListBuilder {
    */
   public function __construct(
     EntityTypeInterface $entity_type,
-    AccountInterface $current_user,
+    protected AccountInterface $currentUser,
     EntityTypeManagerInterface $entity_type_manager,
-    RendererInterface $renderer,
+    protected RendererInterface $renderer,
     MessengerInterface $messenger,
   ) {
     parent::__construct($entity_type, $entity_type_manager->getStorage($entity_type->id()));
-
-    $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
-    $this->renderer = $renderer;
     $this->messenger = $messenger;
   }
 

@@ -21,20 +21,6 @@ use Drupal\Core\Render\Element;
 class Section implements ThirdPartySettingsInterface {
 
   /**
-   * The layout plugin ID.
-   *
-   * @var string
-   */
-  protected $layoutId;
-
-  /**
-   * The layout plugin settings.
-   *
-   * @var array
-   */
-  protected $layoutSettings = [];
-
-  /**
    * An array of components, keyed by UUID.
    *
    * @var \Drupal\layout_builder\SectionComponent[]
@@ -42,33 +28,26 @@ class Section implements ThirdPartySettingsInterface {
   protected $components = [];
 
   /**
-   * Third party settings.
-   *
-   * An array of key/value pairs keyed by provider.
-   *
-   * @var array[]
-   */
-  protected $thirdPartySettings = [];
-
-  /**
    * Constructs a new Section.
    *
-   * @param string $layout_id
+   * @param string $layoutId
    *   The layout plugin ID.
-   * @param array $layout_settings
+   * @param array $layoutSettings
    *   (optional) The layout plugin settings.
    * @param \Drupal\layout_builder\SectionComponent[] $components
    *   (optional) The components.
-   * @param array[] $third_party_settings
+   * @param array[] $thirdPartySettings
    *   (optional) Any third party settings.
    */
-  public function __construct($layout_id, array $layout_settings = [], array $components = [], array $third_party_settings = []) {
-    $this->layoutId = $layout_id;
-    $this->layoutSettings = $layout_settings;
+  public function __construct(
+    protected $layoutId,
+    protected array $layoutSettings = [],
+    array $components = [],
+    protected array $thirdPartySettings = [],
+  ) {
     foreach ($components as $component) {
       $this->setComponent($component);
     }
-    $this->thirdPartySettings = $third_party_settings;
   }
 
   /**

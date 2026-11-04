@@ -26,13 +26,6 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
   const CONFIG_LOOKUP_PREFIX = 'config.entity.key_store.';
 
   /**
-   * The config factory used by the config entity query.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * The namespace of this class, the parent class etc.
    *
    * @var array
@@ -40,29 +33,20 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
   protected $namespaces;
 
   /**
-   * The key value factory.
-   */
-  protected KeyValueFactoryInterface $keyValueFactory;
-
-  /**
-   * The configuration manager.
-   */
-  protected ConfigManagerInterface $configManager;
-
-  /**
    * Constructs a QueryFactory object.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config storage used by the config entity query.
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $keyValueFactory
    *   The key value factory.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
+   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
    *   The configuration manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, KeyValueFactoryInterface $key_value, ConfigManagerInterface $config_manager) {
-    $this->configFactory = $config_factory;
-    $this->keyValueFactory = $key_value;
-    $this->configManager = $config_manager;
+  public function __construct(
+    protected ConfigFactoryInterface $configFactory,
+    protected KeyValueFactoryInterface $keyValueFactory,
+    protected ConfigManagerInterface $configManager,
+  ) {
     $this->namespaces = QueryBase::getNamespaces($this);
   }
 
