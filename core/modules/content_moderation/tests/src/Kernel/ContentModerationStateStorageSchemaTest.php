@@ -60,7 +60,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
   /**
    * Tests the ContentModerationState unique keys.
    *
-   * @legacy-covers ::getEntitySchema
+   * @see ::getEntitySchema
    */
   public function testUniqueKeys(): void {
     // Create a node which will create a new ContentModerationState entity.

@@ -24,8 +24,8 @@ class InstalledPackagesListTest extends PackageManagerKernelTestBase {
   /**
    * Tests package by drupal project name.
    *
-   * @legacy-covers \Drupal\package_manager\InstalledPackage::getProjectName
-   * @legacy-covers ::getPackageByDrupalProjectName
+   * @see \Drupal\package_manager\InstalledPackage::getProjectName
+   * @see ::getPackageByDrupalProjectName
    */
   public function testPackageByDrupalProjectName(): void {
     // In getPackageByDrupalProjectName(), we don't expect that projects will be

@@ -42,7 +42,7 @@ class EntityResourceValidationTraitTest extends UnitTestCase {
   /**
    * Tests failed validate.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testFailedValidate(): void {
     $violation1 = $this->prophesize(ConstraintViolationInterface::class);

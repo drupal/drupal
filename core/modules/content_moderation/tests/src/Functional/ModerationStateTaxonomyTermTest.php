@@ -39,8 +39,8 @@ class ModerationStateTaxonomyTermTest extends ModerationStateTestBase {
   /**
    * Tests the taxonomy term moderation handler alters the forms as intended.
    *
-   * @legacy-covers \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsEntityFormAlter
-   * @legacy-covers \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsBundleFormAlter
+   * @see \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsEntityFormAlter
+   * @see \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsBundleFormAlter
    */
   public function testEnforceRevisionsEntityFormAlter(): void {
     $this->drupalLogin($this->adminUser);

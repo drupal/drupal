@@ -59,7 +59,7 @@ class KernelTestBaseDatabaseDriverModuleTest extends KernelTestBase {
   /**
    * Tests database driver module enabled.
    *
-   * @legacy-covers ::bootEnvironment
+   * @see ::bootEnvironment
    */
   public function testDatabaseDriverModuleEnabled(): void {
     $driver = Database::getConnection()->driver();

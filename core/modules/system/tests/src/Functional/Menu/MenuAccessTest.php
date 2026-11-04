@@ -78,8 +78,8 @@ class MenuAccessTest extends BrowserTestBase {
   /**
    * Test routes implementing _access_admin_menu_block_page.
    *
-   * @legacy-covers \Drupal\system\EventSubscriber\AccessRouteAlterSubscriber::accessAdminMenuBlockPage
-   * @legacy-covers \Drupal\system\Access\SystemAdminMenuBlockAccessCheck::access
+   * @see \Drupal\system\EventSubscriber\AccessRouteAlterSubscriber::accessAdminMenuBlockPage
+   * @see \Drupal\system\Access\SystemAdminMenuBlockAccessCheck::access
    */
   public function testSystemAdminMenuBlockAccessCheck(): void {
     // Create an admin user.

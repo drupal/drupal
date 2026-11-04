@@ -23,7 +23,7 @@ class FriendsTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::phoebe
+   * @annotation ::phoebe
    */
   #[Group('Ross')]
   public function testWithAttributeAndAllowedAnnotation(): void {
@@ -71,7 +71,7 @@ trait FriendsTrait {
   }
 
   /**
-   * @legacy-covers ::phoebe
+   * @annotation ::phoebe
    */
   #[Group('Ross')]
   public function testInTraitWithAttributeAndAllowedAnnotation(): void {

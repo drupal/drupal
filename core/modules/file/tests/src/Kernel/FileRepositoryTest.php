@@ -42,7 +42,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests the writeData() method.
    *
-   * @legacy-covers ::writeData
+   * @see ::writeData
    */
   public function testWithFilename(): void {
     $contents = $this->randomMachineName();
@@ -72,7 +72,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests writeData() when renaming around an existing file.
    *
-   * @legacy-covers ::writeData
+   * @see ::writeData
    */
   public function testExistingRename(): void {
     // Setup a file to overwrite.
@@ -104,7 +104,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests writeData() when replacing an existing file.
    *
-   * @legacy-covers ::writeData
+   * @see ::writeData
    */
   public function testExistingReplace(): void {
     // Setup a file to overwrite.
@@ -135,7 +135,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests that writeData() fails overwriting an existing file.
    *
-   * @legacy-covers ::writeData
+   * @see ::writeData
    */
   public function testExistingError(): void {
     $contents = $this->randomMachineName();
@@ -162,7 +162,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests for an invalid stream wrapper.
    *
-   * @legacy-covers ::writeData
+   * @see ::writeData
    */
   public function testInvalidStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
@@ -173,7 +173,7 @@ class FileRepositoryTest extends FileManagedUnitTestBase {
   /**
    * Tests for entity storage exception.
    *
-   * @legacy-covers ::writeData
+   * @see ::writeData
    */
   public function testEntityStorageException(): void {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entityTypeManager */

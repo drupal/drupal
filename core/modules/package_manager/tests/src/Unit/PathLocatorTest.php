@@ -23,7 +23,7 @@ class PathLocatorTest extends UnitTestCase {
   /**
    * Tests staging root.
    *
-   * @legacy-covers ::getStagingRoot
+   * @see ::getStagingRoot
    */
   public function testStagingRoot(): void {
     $config_factory = $this->getConfigFactoryStub([
@@ -108,7 +108,7 @@ class PathLocatorTest extends UnitTestCase {
    * @param string $expected_web_root
    *   The value expected from getWebRoot().
    *
-   * @legacy-covers ::getWebRoot
+   * @see ::getWebRoot
    */
   #[DataProvider('providerWebRoot')]
   public function testWebRoot(string $app_root, string $project_root, string $expected_web_root): void {

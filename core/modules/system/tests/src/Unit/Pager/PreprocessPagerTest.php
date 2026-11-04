@@ -66,7 +66,7 @@ class PreprocessPagerTest extends UnitTestCase {
   /**
    * Tests when an empty #quantity is passed.
    *
-   * @legacy-covers ::preprocessPager
+   * @see ::preprocessPager
    */
   public function testQuantityNotSet(): void {
     $variables = [
@@ -86,7 +86,7 @@ class PreprocessPagerTest extends UnitTestCase {
   /**
    * Tests when a #quantity value is passed.
    *
-   * @legacy-covers ::preprocessPager
+   * @see ::preprocessPager
    */
   public function testQuantitySet(): void {
     $variables = [
@@ -110,7 +110,7 @@ class PreprocessPagerTest extends UnitTestCase {
   /**
    * Tests when an empty #pagination_heading_level value is passed.
    *
-   * @legacy-covers ::preprocessPager
+   * @see ::preprocessPager
    */
   public function testEmptyPaginationHeadingLevelSet(): void {
     $variables = [
@@ -131,7 +131,7 @@ class PreprocessPagerTest extends UnitTestCase {
   /**
    * Tests when no #pagination_heading_level is passed.
    *
-   * @legacy-covers ::preprocessPager
+   * @see ::preprocessPager
    */
   public function testPaginationHeadingLevelNotSet(): void {
     $variables = [
@@ -151,7 +151,7 @@ class PreprocessPagerTest extends UnitTestCase {
   /**
    * Tests when a #pagination_heading_level value is passed.
    *
-   * @legacy-covers ::preprocessPager
+   * @see ::preprocessPager
    */
   public function testPaginationHeadingLevelSet(): void {
     $variables = [
@@ -172,7 +172,7 @@ class PreprocessPagerTest extends UnitTestCase {
   /**
    * Test with an invalid #pagination_heading_level.
    *
-   * @legacy-covers ::preprocessPager
+   * @see ::preprocessPager
    */
   public function testPaginationHeadingLevelInvalid(): void {
     $variables = [

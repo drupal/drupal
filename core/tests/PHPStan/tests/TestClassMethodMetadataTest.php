@@ -49,12 +49,20 @@ class TestClassMethodMetadataTest extends RuleTestCase {
           35,
         ],
         [
+          'Test method testWithLegacyCoversAnnotation must not add annotation @legacy-covers.',
+          49,
+        ],
+        [
           'Test method testInTraitWithAttributeAndForbiddenAnnotation must not add annotation @group.',
           69,
         ],
         [
           'Test method testInTraitWithForbiddenAnnotation must not add annotation @group.',
           83,
+        ],
+        [
+          'Test method testInTraitWithLegacyCoversAnnotation must not add annotation @legacy-covers.',
+          97,
         ],
       ],
     );

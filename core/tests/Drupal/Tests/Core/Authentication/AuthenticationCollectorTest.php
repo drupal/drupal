@@ -21,10 +21,10 @@ class AuthenticationCollectorTest extends UnitTestCase {
   /**
    * Tests adding, getting, and order of priorities.
    *
-   * @legacy-covers ::addProvider
-   * @legacy-covers ::getSortedProviders
-   * @legacy-covers ::getProvider
-   * @legacy-covers ::isGlobal
+   * @see ::addProvider
+   * @see ::getSortedProviders
+   * @see ::getProvider
+   * @see ::isGlobal
    */
   public function testAuthenticationCollector(): void {
     $providers = [];

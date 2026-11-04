@@ -33,7 +33,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests cases where the validation passes for entities with string IDs.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   protected function setUp(): void {
     parent::setUp();
@@ -49,7 +49,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testValidation(): void {
     // Create entity with two values for the testing field.
@@ -117,7 +117,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testValidationReference(): void {
 
@@ -193,7 +193,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testValidationOwn(): void {
     // Create new entity with two identical values for the testing field.
@@ -242,7 +242,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testValidationMultiple(): void {
     // Create entity with two different values for the testing field.
@@ -305,7 +305,7 @@ class UniqueValuesConstraintValidatorTest extends KernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testValidationCaseInsensitive(): void {
     // Create entity with two values for the testing field.

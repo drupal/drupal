@@ -67,7 +67,7 @@ class FakeSiteFixtureTest extends PackageManagerKernelTestBase {
   /**
    * Tests if `removePackage` can be called on all packages in the fixture.
    *
-   * @legacy-covers \Drupal\fixture_manipulator\FixtureManipulator::removePackage
+   * @see \Drupal\fixture_manipulator\FixtureManipulator::removePackage
    */
   public function testCallToRemovePackage(): void {
     /** @var \Drupal\package_manager\ComposerInspector $inspector */

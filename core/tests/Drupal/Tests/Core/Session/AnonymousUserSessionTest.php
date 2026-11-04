@@ -21,7 +21,7 @@ class AnonymousUserSessionTest extends UnitTestCase {
    * Tests the method getRoles exclude or include locked roles based in param.
    *
    * @todo Move roles constants to a class/interface
-   * @legacy-covers ::getRoles
+   * @see ::getRoles
    */
   public function testUserGetRoles(): void {
     $anonymous_user = new AnonymousUserSession();

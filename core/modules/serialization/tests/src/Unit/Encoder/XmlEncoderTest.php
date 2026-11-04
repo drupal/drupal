@@ -95,7 +95,7 @@ class XmlEncoderTest extends UnitTestCase {
   /**
    * Tests default encoder has serializer.
    *
-   * @legacy-covers ::getBaseEncoder
+   * @see ::getBaseEncoder
    */
   public function testDefaultEncoderHasSerializer(): void {
     // The serializer should be set on the Drupal encoder, which should then

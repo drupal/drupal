@@ -187,10 +187,10 @@ class ConfigTest extends UnitTestCase {
   /**
    * Tests override data.
    *
-   * @legacy-covers ::setModuleOverride
-   * @legacy-covers ::setSettingsOverride
-   * @legacy-covers ::getOriginal
-   * @legacy-covers ::hasOverrides
+   * @see ::setModuleOverride
+   * @see ::setSettingsOverride
+   * @see ::getOriginal
+   * @see ::hasOverrides
    */
   #[DataProvider('overrideDataProvider')]
   public function testOverrideData(array $data, array $module_data, array $setting_data): void {
@@ -331,7 +331,7 @@ class ConfigTest extends UnitTestCase {
   /**
    * Tests nested clear.
    *
-   * @legacy-covers ::clear
+   * @see ::clear
    */
   #[DataProvider('nestedDataProvider')]
   public function testNestedClear(array $data): void {
@@ -626,9 +626,9 @@ class ConfigTest extends UnitTestCase {
   /**
    * Tests safe string handling.
    *
-   * @legacy-covers ::setData
-   * @legacy-covers ::set
-   * @legacy-covers ::initWithData
+   * @see ::setData
+   * @see ::set
+   * @see ::initWithData
    */
   public function testSafeStringHandling(): void {
     // Safe strings are cast when using ::set().

@@ -196,7 +196,7 @@ class EntityDefinitionUpdateMultipleTypesTest extends EntityKernelTestBase {
   /**
    * Tests uninstalling a revisionable entity type that doesn't exist in code.
    *
-   * @legacy-covers ::uninstallEntityType
+   * @see ::uninstallEntityType
    */
   public function testUninstallRevisionableEntityTypeWithoutInCodeDefinition(): void {
     $this->updateEntityTypeToRevisionable(TRUE);

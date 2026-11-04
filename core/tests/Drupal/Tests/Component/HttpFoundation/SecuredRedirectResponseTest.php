@@ -21,8 +21,8 @@ class SecuredRedirectResponseTest extends TestCase {
   /**
    * Tests copying of redirect response.
    *
-   * @legacy-covers ::createFromRedirectResponse
-   * @legacy-covers ::fromResponse
+   * @see ::createFromRedirectResponse
+   * @see ::fromResponse
    */
   public function testRedirectCopy(): void {
     $redirect = new RedirectResponse('/magic_redirect_url', 301, ['x-cache-foobar' => 123]);

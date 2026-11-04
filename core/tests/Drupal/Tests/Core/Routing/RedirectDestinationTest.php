@@ -124,8 +124,8 @@ class RedirectDestinationTest extends UnitTestCase {
   /**
    * Tests set before get call.
    *
-   * @legacy-covers ::set
-   * @legacy-covers ::get
+   * @see ::set
+   * @see ::get
    */
   public function testSetBeforeGetCall(): void {
     $this->redirectDestination->set('/example');
@@ -135,8 +135,8 @@ class RedirectDestinationTest extends UnitTestCase {
   /**
    * Tests set after get call.
    *
-   * @legacy-covers ::set
-   * @legacy-covers ::get
+   * @see ::set
+   * @see ::get
    */
   public function testSetAfterGetCall(): void {
     $request = Request::create('/');

@@ -291,8 +291,8 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * Tests is new revision.
    *
-   * @legacy-covers ::isNewRevision
-   * @legacy-covers ::setNewRevision
+   * @see ::isNewRevision
+   * @see ::setNewRevision
    */
   public function testIsNewRevision(): void {
     $this->commonSetUp(1, 2);
@@ -457,7 +457,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * Tests each condition in EntityBase::getTypedData().
    *
-   * @legacy-covers ::getTypedData
+   * @see ::getTypedData
    */
   #[DataProvider('providerTestTypedData')]
   public function testTypedData(bool $bundle_typed_data_definition, bool $entity_type_typed_data_definition): void {
@@ -518,11 +518,11 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * Tests required validation.
    *
-   * @legacy-covers ::validate
-   * @legacy-covers ::isValidationRequired
-   * @legacy-covers ::setValidationRequired
-   * @legacy-covers ::save
-   * @legacy-covers ::preSave
+   * @see ::validate
+   * @see ::isValidationRequired
+   * @see ::setValidationRequired
+   * @see ::save
+   * @see ::preSave
    */
   public function testRequiredValidation(): void {
     $this->commonSetUp(0, 2);

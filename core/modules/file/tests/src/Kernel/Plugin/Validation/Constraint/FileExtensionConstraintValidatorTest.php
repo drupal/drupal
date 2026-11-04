@@ -30,7 +30,7 @@ class FileExtensionConstraintValidatorTest extends FileValidatorTestBase {
    * @param string[] $expected_errors
    *   The expected error messages as string.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   #[DataProvider('providerTestFileValidateExtensionsOnUri')]
   public function testFileExtensionOnUri(array $file_properties, array $extensions, array $expected_errors): void {

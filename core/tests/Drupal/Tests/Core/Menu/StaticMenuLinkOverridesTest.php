@@ -34,8 +34,8 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
   /**
    * Tests the loadOverride method.
    *
-   * @legacy-covers ::loadOverride
-   * @legacy-covers ::getConfig
+   * @see ::loadOverride
+   * @see ::getConfig
    */
   #[DataProvider('providerTestLoadOverride')]
   public function testLoadOverride($overrides, $id, $expected): void {
@@ -63,8 +63,8 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
   /**
    * Tests the loadMultipleOverrides method.
    *
-   * @legacy-covers ::loadMultipleOverrides
-   * @legacy-covers ::getConfig
+   * @see ::loadMultipleOverrides
+   * @see ::getConfig
    */
   public function testLoadMultipleOverrides(): void {
     $overrides = [];
@@ -87,9 +87,9 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
   /**
    * Tests the saveOverride method.
    *
-   * @legacy-covers ::saveOverride
-   * @legacy-covers ::loadOverride
-   * @legacy-covers ::getConfig
+   * @see ::saveOverride
+   * @see ::loadOverride
+   * @see ::getConfig
    */
   public function testSaveOverride(): void {
     $config = $this->getMockBuilder('Drupal\Core\Config\Config')

@@ -40,8 +40,8 @@ class AttributeClassDiscoveryTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getPluginNamespaces
+   * @see ::__construct
+   * @see ::getPluginNamespaces
    */
   public function testGetPluginNamespaces(): void {
     // Path to the classes which we'll discover and parse annotation.
@@ -54,8 +54,8 @@ class AttributeClassDiscoveryTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getDefinitions
-   * @legacy-covers ::prepareAttributeDefinition
+   * @see ::getDefinitions
+   * @see ::prepareAttributeDefinition
    */
   public function testGetDefinitions(): void {
     $discovery = new AttributeClassDiscovery(['com\example' => [__DIR__ . "/../../../../../fixtures/plugins/Plugin"]]);

@@ -29,7 +29,7 @@ class SectionDataTest extends KernelTestBase {
   /**
    * Tests set array value.
    *
-   * @legacy-covers ::setValue
+   * @see ::setValue
    */
   public function testSetArrayValue(): void {
     $definition = DataDefinition::create('layout_section');

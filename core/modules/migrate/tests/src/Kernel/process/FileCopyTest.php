@@ -176,7 +176,7 @@ class FileCopyTest extends FileTestBase {
   /**
    * Tests that non-writable destination throw an exception.
    *
-   * @legacy-covers ::transform
+   * @see ::transform
    */
   public function testNonWritableDestination(): void {
     $source = $this->createUri('file.txt', NULL, 'temporary');

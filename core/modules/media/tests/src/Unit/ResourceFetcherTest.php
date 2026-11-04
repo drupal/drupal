@@ -58,7 +58,7 @@ class ResourceFetcherTest extends UnitTestCase {
   /**
    * Tests how the resource fetcher handles unknown Content-Type headers.
    *
-   * @legacy-covers ::fetchResource
+   * @see ::fetchResource
    */
   public function testUnknownContentTypeHeader(): void {
     $headers = [

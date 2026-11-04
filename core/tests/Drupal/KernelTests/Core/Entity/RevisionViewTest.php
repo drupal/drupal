@@ -60,7 +60,7 @@ class RevisionViewTest extends KernelTestBase {
    * @param string $expectedPageTitle
    *   Expected page title.
    *
-   * @legacy-covers ::__invoke
+   * @see ::__invoke
    */
   #[DataProvider('providerRevisionPage')]
   public function testRevisionPage(string $entityTypeId, string $expectedPageTitle): void {

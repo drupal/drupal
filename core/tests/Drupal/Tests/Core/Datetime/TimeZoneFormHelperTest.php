@@ -31,8 +31,8 @@ class TimeZoneFormHelperTest extends UnitTestCase {
   /**
    * Tests get list.
    *
-   * @legacy-covers ::getOptionsList
-   * @legacy-covers ::getOptionsListByRegion
+   * @see ::getOptionsList
+   * @see ::getOptionsListByRegion
    */
   public function testGetList(): void {
     // Test the default parameters for getOptionsList().
@@ -55,7 +55,7 @@ class TimeZoneFormHelperTest extends UnitTestCase {
   /**
    * Tests get grouped list.
    *
-   * @legacy-covers ::getOptionsListByRegion
+   * @see ::getOptionsListByRegion
    */
   public function testGetGroupedList(): void {
     // Tests time zone grouping.

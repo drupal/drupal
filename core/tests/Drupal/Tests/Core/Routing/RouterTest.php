@@ -27,7 +27,7 @@ class RouterTest extends UnitTestCase {
   /**
    * Tests matches with different fit order.
    *
-   * @legacy-covers ::applyFitOrder
+   * @see ::applyFitOrder
    */
   public function testMatchesWithDifferentFitOrder(): void {
     $route_provider = $this->prophesize(RouteProviderInterface::class);

@@ -40,9 +40,9 @@ class DatabaseEventsTest extends UnitTestCase {
   /**
    * Tests event enabling and disabling.
    *
-   * @legacy-covers ::isEventEnabled
-   * @legacy-covers ::enableEvents
-   * @legacy-covers ::disableEvents
+   * @see ::isEventEnabled
+   * @see ::enableEvents
+   * @see ::disableEvents
    */
   public function testEventEnablingAndDisabling(): void {
     $this->connection->enableEvents(StatementEvent::all());
@@ -64,7 +64,7 @@ class DatabaseEventsTest extends UnitTestCase {
   /**
    * Tests enable invalid event.
    *
-   * @legacy-covers ::enableEvents
+   * @see ::enableEvents
    */
   public function testEnableInvalidEvent(): void {
     $this->expectException(\AssertionError::class);
@@ -75,7 +75,7 @@ class DatabaseEventsTest extends UnitTestCase {
   /**
    * Tests disable invalid event.
    *
-   * @legacy-covers ::disableEvents
+   * @see ::disableEvents
    */
   public function testDisableInvalidEvent(): void {
     $this->expectException(\AssertionError::class);
@@ -86,7 +86,7 @@ class DatabaseEventsTest extends UnitTestCase {
   /**
    * Tests event dispatching when no container available.
    *
-   * @legacy-covers ::dispatchEvent
+   * @see ::dispatchEvent
    */
   public function testEventDispatchingWhenNoContainerAvailable(): void {
     $this->expectException(EventException::class);

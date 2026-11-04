@@ -72,10 +72,10 @@ class PermissionHandlerTest extends UnitTestCase {
   /**
    * Tests permissions provided by YML files.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getPermissions
-   * @legacy-covers ::buildPermissionsYaml
-   * @legacy-covers ::moduleProvidesPermissions
+   * @see ::__construct
+   * @see ::getPermissions
+   * @see ::buildPermissionsYaml
+   * @see ::moduleProvidesPermissions
    */
   public function testBuildPermissionsYaml(): void {
     vfsStreamWrapper::register();
@@ -137,10 +137,10 @@ EOF
   /**
    * Tests permissions sort inside a module.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getPermissions
-   * @legacy-covers ::buildPermissionsYaml
-   * @legacy-covers ::sortPermissions
+   * @see ::__construct
+   * @see ::getPermissions
+   * @see ::buildPermissionsYaml
+   * @see ::sortPermissions
    */
   public function testBuildPermissionsSortPerModule(): void {
     $this->callableResolver->expects($this->never())
@@ -197,9 +197,9 @@ EOF
   /**
    * Tests dynamic callback permissions provided by YML files.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getPermissions
-   * @legacy-covers ::buildPermissionsYaml
+   * @see ::__construct
+   * @see ::getPermissions
+   * @see ::buildPermissionsYaml
    */
   public function testBuildPermissionsYamlCallback(): void {
     vfsStreamWrapper::register();

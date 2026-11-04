@@ -65,7 +65,7 @@ class UserLocalTaskTest extends UnitTestCase {
   /**
    * Tests the derivatives generated for local tasks.
    *
-   * @legacy-covers \Drupal\user\Plugin\Derivative\UserLocalTask::getDerivativeDefinitions
+   * @see \Drupal\user\Plugin\Derivative\UserLocalTask::getDerivativeDefinitions
    */
   public function testGetDerivativeDefinitions(): void {
     $expected = [

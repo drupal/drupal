@@ -67,7 +67,7 @@ REGEXP
   /**
    * Tests that an exception is thrown if the marker file contains invalid YAML.
    *
-   * @legacy-covers ::assertNotExists
+   * @see ::assertNotExists
    */
   public function testExceptionForInvalidYaml(): void {
     $failure_marker = $this->container->get(FailureMarker::class);
@@ -94,8 +94,8 @@ REGEXP
   /**
    * Tests marker file is excluded.
    *
-   * @legacy-covers ::getSubscribedEvents
-   * @legacy-covers ::excludeMarkerFile
+   * @see ::getSubscribedEvents
+   * @see ::excludeMarkerFile
    */
   public function testMarkerFileIsExcluded(): void {
     $event = new CollectPathsToExcludeEvent(

@@ -133,7 +133,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
    *
    * @phpstan-param class-string<\Drupal\Core\Access\AccessResultInterface>|null $parent_access
    * @phpstan-param class-string<\Drupal\Core\Access\AccessResultInterface> $expected_access
-   * @legacy-covers ::checkAccess
+   * @see ::checkAccess
    */
   #[DataProvider('providerTestAccess')]
   public function testAccess(string $operation, bool $published, bool $reusable, array $permissions, bool $isLatest, ?string $parent_access, string $expected_access, ?string $expected_access_message = NULL): void {

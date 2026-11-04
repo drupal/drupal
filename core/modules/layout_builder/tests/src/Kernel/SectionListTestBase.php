@@ -167,7 +167,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   /**
    * Tests remove multiple sections.
    *
-   * @legacy-covers ::removeSection
+   * @see ::removeSection
    */
   public function testRemoveMultipleSections(): void {
     $expected = [

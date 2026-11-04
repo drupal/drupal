@@ -42,7 +42,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   /**
    * Tests the getContentType() method with AJAX iframe upload.
    *
-   * @legacy-covers ::getContentType
+   * @see ::getContentType
    */
   public function testAjaxIframeUpload(): void {
     $request = new Request();
@@ -54,7 +54,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   /**
    * Tests the specifying a format via query parameters gets used.
    *
-   * @legacy-covers ::getContentType
+   * @see ::getContentType
    */
   public function testFormatViaQueryParameter(): void {
     $request = new Request();
@@ -66,7 +66,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   /**
    * Tests the getContentType() method when no priority format is found.
    *
-   * @legacy-covers ::getContentType
+   * @see ::getContentType
    */
   public function testUnknownContentTypeReturnsNull(): void {
     $request = new Request();
@@ -77,7 +77,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   /**
    * Tests the getContentType() method when no priority format is found but it's an AJAX request.
    *
-   * @legacy-covers ::getContentType
+   * @see ::getContentType
    */
   public function testUnknownContentTypeButAjaxRequest(): void {
     $request = new Request();
@@ -116,7 +116,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   /**
    * Tests set format.
    *
-   * @legacy-covers ::registerFormat
+   * @see ::registerFormat
    */
   public function testSetFormat(): void {
     $httpKernel = $this->createMock(HttpKernelInterface::class);

@@ -20,7 +20,7 @@ class InstalledPackageTest extends UnitTestCase {
   /**
    * Tests path resolution.
    *
-   * @legacy-covers ::createFromArray
+   * @see ::createFromArray
    */
   #[Depends('testMetapackageWithAPath')]
   public function testPathResolution(): void {
@@ -56,7 +56,7 @@ class InstalledPackageTest extends UnitTestCase {
   /**
    * Tests metapackage with a path.
    *
-   * @legacy-covers ::createFromArray
+   * @see ::createFromArray
    */
   public function testMetapackageWithAPath(): void {
     $this->expectException(\AssertionError::class);

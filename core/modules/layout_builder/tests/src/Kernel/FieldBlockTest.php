@@ -148,8 +148,8 @@ class FieldBlockTest extends EntityKernelTestBase {
   /**
    * Tests populated vs empty build.
    *
-   * @legacy-covers ::blockAccess
-   * @legacy-covers ::build
+   * @see ::blockAccess
+   * @see ::build
    */
   #[DataProvider('providerTestBlockAccessEntityAllowedFieldHasValue')]
   public function testBlockAccessEntityAllowedFieldHasValue($expected, $is_empty, $default_value): void {

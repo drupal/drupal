@@ -500,7 +500,7 @@ class XssTest extends TestCase {
   /**
    * Check that strings in HTML attributes are correctly processed.
    *
-   * @legacy-covers ::attributes
+   * @see ::attributes
    */
   #[DataProvider('providerTestAttributes')]
   public function testAttribute(string $value, string $expected_non_normalized, string $expected_normalized, string $message, ?array $allowed_tags = NULL): void {

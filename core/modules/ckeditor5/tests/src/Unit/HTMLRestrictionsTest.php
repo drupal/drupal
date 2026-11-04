@@ -22,7 +22,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
   /**
    * Tests constructor.
    *
-   * @legacy-covers ::__construct
+   * @see ::__construct
    */
   #[DataProvider('providerConstruct')]
   public function testConstructor(array $elements, ?string $expected_exception_message): void {
@@ -166,8 +166,8 @@ class HTMLRestrictionsTest extends UnitTestCase {
   /**
    * Tests counting.
    *
-   * @legacy-covers ::allowsNothing
-   * @legacy-covers ::getAllowedElements
+   * @see ::allowsNothing
+   * @see ::getAllowedElements
    */
   #[DataProvider('providerCounting')]
   public function testCounting(array $elements, bool $expected_is_empty, int $expected_concrete_only_count, int $expected_concrete_plus_wildcard_count): void {
@@ -235,9 +235,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
   /**
    * Tests convenience constructors.
    *
-   * @legacy-covers ::fromString
-   * @legacy-covers ::fromTextFormat
-   * @legacy-covers ::fromFilterPluginInstance
+   * @see ::fromString
+   * @see ::fromTextFormat
+   * @see ::fromFilterPluginInstance
    */
   #[DataProvider('providerConvenienceConstructors')]
   public function testConvenienceConstructors(string $input, array $expected, ?array $expected_raw = NULL): void {
@@ -649,9 +649,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
   /**
    * Tests representations.
    *
-   * @legacy-covers ::toCKEditor5ElementsArray
-   * @legacy-covers ::toFilterHtmlAllowedTagsString
-   * @legacy-covers ::toGeneralHtmlSupportConfig
+   * @see ::toCKEditor5ElementsArray
+   * @see ::toFilterHtmlAllowedTagsString
+   * @see ::toGeneralHtmlSupportConfig
    */
   #[DataProvider('providerRepresentations')]
   public function testRepresentations(HTMLRestrictions $restrictions, array $expected_elements_array, string $expected_allowed_html_string, array $expected_ghs_config): void {
@@ -929,9 +929,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
   /**
    * Tests operations.
    *
-   * @legacy-covers ::diff
-   * @legacy-covers ::intersect
-   * @legacy-covers ::merge
+   * @see ::diff
+   * @see ::intersect
+   * @see ::merge
    */
   #[DataProvider('providerOperands')]
   public function testOperations(HTMLRestrictions $a, HTMLRestrictions $b, string|HTMLRestrictions $expected_diff, string|HTMLRestrictions $expected_intersection, string|HTMLRestrictions $expected_union): void {
@@ -1712,10 +1712,10 @@ class HTMLRestrictionsTest extends UnitTestCase {
   /**
    * Tests subsets.
    *
-   * @legacy-covers ::getWildcardSubset
-   * @legacy-covers ::getConcreteSubset
-   * @legacy-covers ::getPlainTagsSubset
-   * @legacy-covers ::extractPlainTagsSubset
+   * @see ::getWildcardSubset
+   * @see ::getConcreteSubset
+   * @see ::getPlainTagsSubset
+   * @see ::extractPlainTagsSubset
    */
   #[DataProvider('providerSubsets')]
   public function testSubsets(HTMLRestrictions $input, HTMLRestrictions $expected_wildcard_subset, HTMLRestrictions $expected_concrete_subset, HTMLRestrictions $expected_plain_tags_subset, HTMLRestrictions $expected_extracted_plain_tags_subset): void {

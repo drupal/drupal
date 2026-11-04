@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class UnsupportedRouteAttributePropertiesTest extends UnitTestCase {
 
   /**
-   * @legacy-covers ::createRouteCollection
+   * @see ::createRouteCollection
    */
   #[DataProvider('providerTestException')]
   public function testException(string $class, string $message, bool $isForm = FALSE): void {

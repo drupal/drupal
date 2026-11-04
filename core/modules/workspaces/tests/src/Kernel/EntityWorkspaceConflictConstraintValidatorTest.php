@@ -58,7 +58,7 @@ class EntityWorkspaceConflictConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests new entities allowed in default workspace.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testNewEntitiesAllowedInDefaultWorkspace(): void {
     // Create two top-level workspaces and a second-level one.

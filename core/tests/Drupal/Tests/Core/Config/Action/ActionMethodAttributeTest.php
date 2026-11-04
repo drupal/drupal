@@ -20,7 +20,7 @@ class ActionMethodAttributeTest extends UnitTestCase {
   /**
    * Tests invalid function name.
    *
-   * @legacy-covers ::__construct
+   * @see ::__construct
    */
   public function testInvalidFunctionName(): void {
     $name = "hello Goodbye";

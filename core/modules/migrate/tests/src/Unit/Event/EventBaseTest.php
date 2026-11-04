@@ -19,8 +19,8 @@ class EventBaseTest extends UnitTestCase {
   /**
    * Tests getMigration method.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getMigration
+   * @see ::__construct
+   * @see ::getMigration
    */
   public function testGetMigration(): void {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();
@@ -32,8 +32,8 @@ class EventBaseTest extends UnitTestCase {
   /**
    * Tests logging a message.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::logMessage
+   * @see ::__construct
+   * @see ::logMessage
    */
   public function testLogMessage(): void {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();

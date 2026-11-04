@@ -173,7 +173,7 @@ class WebAssertTest extends UnitTestCase {
   /**
    * Tests linkExists() with pipe character (|) in locator.
    *
-   * @legacy-covers ::linkExists
+   * @see ::linkExists
    */
   public function testPipeCharInLocator(): void {
     $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
@@ -193,7 +193,7 @@ class WebAssertTest extends UnitTestCase {
   /**
    * Tests linkExistsExact() functionality fail.
    *
-   * @legacy-covers ::linkExistsExact
+   * @see ::linkExistsExact
    */
   public function testInvalidLinkExistsExact(): void {
     $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
@@ -214,7 +214,7 @@ class WebAssertTest extends UnitTestCase {
   /**
    * Tests linkNotExistsExact() functionality fail.
    *
-   * @legacy-covers ::linkNotExistsExact
+   * @see ::linkNotExistsExact
    */
   public function testInvalidLinkNotExistsExact(): void {
     $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
@@ -239,7 +239,7 @@ class WebAssertTest extends UnitTestCase {
   /**
    * Tests linkExistsByHref() functionality fail.
    *
-   * @legacy-covers ::linkByHrefExists
+   * @see ::linkByHrefExists
    */
   public function testInvalidLinkByHrefExists(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
@@ -260,7 +260,7 @@ class WebAssertTest extends UnitTestCase {
   /**
    * Tests LinkByHrefNotExists() functionality fail partial match.
    *
-   * @legacy-covers ::linkByHrefNotExists
+   * @see ::linkByHrefNotExists
    */
   public function testInvalidLinkByHrefNotExistsPartial(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
@@ -272,7 +272,7 @@ class WebAssertTest extends UnitTestCase {
   /**
    * Tests LinkByHrefNotExists() functionality fail full match.
    *
-   * @legacy-covers ::linkByHrefNotExists
+   * @see ::linkByHrefNotExists
    */
   public function testInvalidLinkByHrefNotExistsFull(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
@@ -292,7 +292,7 @@ class WebAssertTest extends UnitTestCase {
   /**
    * Tests linkByHrefExistsExact() functionality fail.
    *
-   * @legacy-covers ::linkByHrefExistsExact
+   * @see ::linkByHrefExistsExact
    */
   public function testInvalidLinkByHrefExistsExact(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
@@ -312,7 +312,7 @@ class WebAssertTest extends UnitTestCase {
   /**
    * Tests linkByHrefNotExistsExact() functionality fail.
    *
-   * @legacy-covers ::linkByHrefNotExistsExact
+   * @see ::linkByHrefNotExistsExact
    */
   public function testInvalidLinkByHrefNotExistsExact(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
@@ -323,8 +323,8 @@ class WebAssertTest extends UnitTestCase {
   /**
    * Tests legacy text asserts.
    *
-   * @legacy-covers ::responseContains
-   * @legacy-covers ::responseNotContains
+   * @see ::responseContains
+   * @see ::responseNotContains
    */
   public function testTextAsserts(): void {
     $this->visit('', 'Bad html &lt;script&gt;alert(123);&lt;/script&gt;');
@@ -338,8 +338,8 @@ class WebAssertTest extends UnitTestCase {
   /**
    * Tests legacy field asserts for button field type.
    *
-   * @legacy-covers ::buttonExists
-   * @legacy-covers ::buttonNotExists
+   * @see ::buttonExists
+   * @see ::buttonNotExists
    */
   public function testFieldAssertsForButton(): void {
     $this->visit('', <<<HTML
@@ -401,8 +401,8 @@ HTML);
   /**
    * Tests assertEscaped() and assertUnescaped().
    *
-   * @legacy-covers ::assertNoEscaped
-   * @legacy-covers ::assertEscaped
+   * @see ::assertNoEscaped
+   * @see ::assertEscaped
    */
   public function testEscapingAssertions(): void {
     $assert = $this->assertSession();

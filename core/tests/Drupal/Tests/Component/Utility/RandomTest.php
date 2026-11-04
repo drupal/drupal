@@ -28,7 +28,7 @@ class RandomTest extends TestCase {
   /**
    * Tests unique random string generation.
    *
-   * @legacy-covers ::string
+   * @see ::string
    */
   public function testRandomStringUniqueness(): void {
     $strings = [];
@@ -43,7 +43,7 @@ class RandomTest extends TestCase {
   /**
    * Tests unique random name generation.
    *
-   * @legacy-covers ::name
+   * @see ::name
    */
   public function testRandomNamesUniqueness(): void {
     $names = [];
@@ -58,7 +58,7 @@ class RandomTest extends TestCase {
   /**
    * Tests infinite loop prevention whilst generating random names.
    *
-   * @legacy-covers ::name
+   * @see ::name
    */
   public function testRandomNameException(): void {
     // There are fewer than 100 possibilities so an exception should occur to
@@ -74,7 +74,7 @@ class RandomTest extends TestCase {
   /**
    * Tests infinite loop prevention whilst generating random strings.
    *
-   * @legacy-covers ::string
+   * @see ::string
    */
   public function testRandomStringException(): void {
     // There are fewer than 100 possibilities so an exception should occur to
@@ -90,7 +90,7 @@ class RandomTest extends TestCase {
   /**
    * Tests random name generation if uniqueness is not enforced.
    *
-   * @legacy-covers ::name
+   * @see ::name
    */
   public function testRandomNameNonUnique(): void {
     // There are fewer than 100 possibilities if we were forcing uniqueness so
@@ -105,7 +105,7 @@ class RandomTest extends TestCase {
   /**
    * Tests random string if uniqueness is not enforced.
    *
-   * @legacy-covers ::string
+   * @see ::string
    */
   public function testRandomStringNonUnique(): void {
     // There are fewer than 100 possibilities if we were forcing uniqueness so
@@ -120,7 +120,7 @@ class RandomTest extends TestCase {
   /**
    * Tests unique random name generation.
    *
-   * @legacy-covers ::machineName
+   * @see ::machineName
    */
   public function testRandomMachineNamesUniqueness(): void {
     $names = [];
@@ -135,7 +135,7 @@ class RandomTest extends TestCase {
   /**
    * Tests infinite loop prevention whilst generating random names.
    *
-   * @legacy-covers ::machineName
+   * @see ::machineName
    */
   public function testRandomMachineNameException(): void {
     // There are fewer than 100 possibilities so an exception should occur to
@@ -150,7 +150,7 @@ class RandomTest extends TestCase {
   /**
    * Tests random name generation if uniqueness is not enforced.
    *
-   * @legacy-covers ::machineName
+   * @see ::machineName
    */
   public function testRandomMachineNameNonUnique(): void {
     // There are fewer than 100 possibilities meaning if uniqueness was
@@ -165,7 +165,7 @@ class RandomTest extends TestCase {
   /**
    * Tests random object generation to ensure the expected number of properties.
    *
-   * @legacy-covers ::object
+   * @see ::object
    */
   public function testRandomObject(): void {
     // For values of 0 and 1 \Drupal\Component\Utility\Random::object() will
@@ -180,7 +180,7 @@ class RandomTest extends TestCase {
   /**
    * Tests random string validation callbacks.
    *
-   * @legacy-covers ::string
+   * @see ::string
    */
   public function testRandomStringValidator(): void {
     $random = new Random();
@@ -192,7 +192,7 @@ class RandomTest extends TestCase {
   /**
    * Tests random word.
    *
-   * @legacy-covers ::word
+   * @see ::word
    */
   public function testRandomWordValidator(): void {
     $random = new Random();

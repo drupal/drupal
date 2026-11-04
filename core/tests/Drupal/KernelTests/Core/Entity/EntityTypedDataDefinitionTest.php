@@ -187,7 +187,7 @@ class EntityTypedDataDefinitionTest extends KernelTestBase {
   /**
    * Tests the ContentEntityType::hasIntegerId() method.
    *
-   * @legacy-covers \Drupal\Core\Entity\ContentEntityType::hasIntegerId
+   * @see \Drupal\Core\Entity\ContentEntityType::hasIntegerId
    */
   public function testHasIntegerId(): void {
     $manager = $this->container->get('entity_type.manager');

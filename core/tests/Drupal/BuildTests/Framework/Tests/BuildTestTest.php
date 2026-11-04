@@ -205,7 +205,7 @@ class BuildTestTest extends BuildTestBase {
   }
 
   /**
-   * @legacy-covers ::findAvailablePort
+   * @see ::findAvailablePort
    */
   public function testPortMany(): void {
     $iterator = (new Finder())->in($this->getDrupalRoot())

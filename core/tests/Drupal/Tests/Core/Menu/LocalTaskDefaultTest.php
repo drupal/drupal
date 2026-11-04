@@ -227,8 +227,8 @@ class LocalTaskDefaultTest extends UnitTestCase {
   /**
    * Tests active.
    *
-   * @legacy-covers ::getActive
-   * @legacy-covers ::setActive
+   * @see ::getActive
+   * @see ::setActive
    */
   public function testActive(): void {
     $this->setupLocalTaskDefault();
@@ -313,9 +313,9 @@ class LocalTaskDefaultTest extends UnitTestCase {
   /**
    * Tests cacheability metadata.
    *
-   * @legacy-covers ::getCacheContexts
-   * @legacy-covers ::getCacheTags
-   * @legacy-covers ::getCacheMaxAge
+   * @see ::getCacheContexts
+   * @see ::getCacheTags
+   * @see ::getCacheMaxAge
    */
   public function testCacheabilityMetadata(): void {
     $this->pluginDefinition['cache_contexts'] = ['route'];

@@ -245,7 +245,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * Tests context aware block.
    *
-   * @legacy-covers ::toRenderArray
+   * @see ::toRenderArray
    */
   public function testContextAwareBlock(): void {
     $block_content = ['#markup' => 'The block content.'];

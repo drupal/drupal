@@ -92,7 +92,7 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
   /**
    * Checks we have no errors on form submit.
    *
-   * @legacy-covers ::validateDatetime
+   * @see ::validateDatetime
    */
   public function testNoErrorMetOnFormSubmit(): void {
     // No error expected when form elements have no value.
@@ -113,7 +113,7 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
    *
    * Test only applied to 'datetime-local' date element.
    *
-   * @legacy-covers ::valueCallback
+   * @see ::valueCallback
    */
   public function testDatetimeLocalValueCallback(): void {
     $element = [
@@ -143,7 +143,7 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
    *
    * Test only applied to 'datetime-local' date element.
    *
-   * @legacy-covers ::processDatetime
+   * @see ::processDatetime
    */
   public function testDatetimeLocalProcessDatetime(): void {
     $form = [
@@ -189,7 +189,7 @@ class DatetimeFormElementTest extends EntityKernelTestBase implements FormInterf
    *
    * Test only applied to time-only datetime element.
    *
-   * @legacy-covers ::valueCallback
+   * @see ::valueCallback
    */
   public function testDatetimeTimeOnlyValueCallback(): void {
     $element = [

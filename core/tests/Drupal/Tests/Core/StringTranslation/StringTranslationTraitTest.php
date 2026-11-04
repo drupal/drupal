@@ -43,7 +43,7 @@ class StringTranslationTraitTest extends UnitTestCase {
   /**
    * Tests t().
    *
-   * @legacy-covers ::t
+   * @see ::t
    */
   public function testT(): void {
     $invokableT = new \ReflectionMethod($this->testObject, 't');
@@ -55,7 +55,7 @@ class StringTranslationTraitTest extends UnitTestCase {
   /**
    * Tests formatPlural().
    *
-   * @legacy-covers ::formatPlural
+   * @see ::formatPlural
    */
   public function testFormatPlural(): void {
     $invokableFormatPlural = new \ReflectionMethod($this->testObject, 'formatPlural');

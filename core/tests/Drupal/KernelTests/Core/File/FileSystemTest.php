@@ -41,7 +41,7 @@ class FileSystemTest extends KernelTestBase {
   /**
    * Tests ensure file exists before copy.
    *
-   * @legacy-covers ::copy
+   * @see ::copy
    */
   public function testEnsureFileExistsBeforeCopy(): void {
     // We need to compute the exception message here because it will include
@@ -55,7 +55,7 @@ class FileSystemTest extends KernelTestBase {
   /**
    * Tests destination directory failure on copy.
    *
-   * @legacy-covers ::copy
+   * @see ::copy
    */
   public function testDestinationDirectoryFailureOnCopy(): void {
     $this->expectException(DirectoryNotReadyException::class);
@@ -102,7 +102,7 @@ class FileSystemTest extends KernelTestBase {
   /**
    * Tests successful copy.
    *
-   * @legacy-covers ::copy
+   * @see ::copy
    */
   public function testSuccessfulCopy(): void {
     touch('public://test.txt');

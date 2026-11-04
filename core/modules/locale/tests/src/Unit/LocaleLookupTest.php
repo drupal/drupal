@@ -307,7 +307,7 @@ class LocaleLookupTest extends UnitTestCase {
    * @param bool $is_fix
    *   The flag about expected fix translation.
    *
-   * @legacy-covers ::resolveCacheMiss
+   * @see ::resolveCacheMiss
    */
   #[DataProvider('providerFixOldPluralTranslationProvider')]
   public function testFixOldPluralStyleTranslations(array $translations, string $langcode, string $string, bool $is_fix): void {

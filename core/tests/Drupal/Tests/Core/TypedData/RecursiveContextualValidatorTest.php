@@ -111,7 +111,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   /**
    * Tests basic validate without constraints.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testBasicValidateWithoutConstraints(): void {
     $typed_data = $this->typedDataManager->create(DataDefinition::create('string'));
@@ -122,7 +122,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   /**
    * Tests basic validate with constraint.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testBasicValidateWithConstraint(): void {
     $typed_data = $this->typedDataManager->create(
@@ -144,7 +144,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   /**
    * Tests basic validate with multiple constraints.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testBasicValidateWithMultipleConstraints(): void {
     $options = [
@@ -164,7 +164,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   /**
    * Tests properties validate with multiple levels.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testPropertiesValidateWithMultipleLevels(): void {
 
@@ -270,7 +270,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   /**
    * Tests validate property.
    *
-   * @legacy-covers ::validateProperty
+   * @see ::validateProperty
    */
   public function testValidateProperty(): void {
     $typed_data = $this->buildExampleTypedDataWithProperties();
@@ -290,7 +290,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   /**
    * Tests validate property value with invalid objects.
    *
-   * @legacy-covers ::validatePropertyValue
+   * @see ::validatePropertyValue
    */
   #[DataProvider('providerTestValidatePropertyWithInvalidObjects')]
   public function testValidatePropertyValueWithInvalidObjects(object $object): void {
@@ -301,7 +301,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   /**
    * Tests validate property value.
    *
-   * @legacy-covers ::validatePropertyValue
+   * @see ::validatePropertyValue
    */
   public function testValidatePropertyValue(): void {
     $typed_data = $this->buildExampleTypedDataWithProperties(['subkey1' => 'subvalue11', 'subkey2' => 'subvalue22']);

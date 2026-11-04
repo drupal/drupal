@@ -55,7 +55,7 @@ class SerializerTest extends UnitTestCase {
   /**
    * Tests that the symfony serializer receives style plugin from the render() method.
    *
-   * @legacy-covers ::render
+   * @see ::render
    */
   public function testSerializerReceivesOptions(): void {
     $mock_serializer = $this->prophesize(SerializerInterface::class);

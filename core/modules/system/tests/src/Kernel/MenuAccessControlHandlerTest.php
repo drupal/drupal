@@ -53,8 +53,8 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
   /**
    * Tests access.
    *
-   * @legacy-covers ::checkAccess
-   * @legacy-covers ::checkCreateAccess
+   * @see ::checkAccess
+   * @see ::checkCreateAccess
    */
   #[DataProvider('providerTestAccess')]
   public function testAccess($permissions, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result): void {

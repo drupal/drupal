@@ -503,8 +503,8 @@ class ModerationFormTest extends ModerationStateTestBase {
   /**
    * Tests that workflows and states can not be deleted if they are in use.
    *
-   * @legacy-covers \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowHasData
-   * @legacy-covers \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowStateHasData
+   * @see \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowHasData
+   * @see \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowStateHasData
    */
   public function testWorkflowInUse(): void {
     $user = $this->createUser([

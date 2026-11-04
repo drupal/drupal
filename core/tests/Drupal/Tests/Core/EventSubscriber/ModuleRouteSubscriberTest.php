@@ -55,7 +55,7 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
    * @param bool $removed
    *   Whether or not the route is expected to be removed from the collection.
    *
-   * @legacy-covers ::onAlterRoutes
+   * @see ::onAlterRoutes
    */
   #[DataProvider('providerTestRemoveRoute')]
   public function testRemoveRoute(string $route_name, array $requirements, bool $removed): void {

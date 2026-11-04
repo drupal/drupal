@@ -224,7 +224,7 @@ class CronQueueTest extends KernelTestBase {
    * Tests suspend queue exception is handled properly.
    *
    * @see \Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestSuspendQueue
-   * @legacy-covers \Drupal\Core\Queue\SuspendQueueException
+   * @see \Drupal\Core\Queue\SuspendQueueException
    */
   public function testSuspendQueueException(): void {
     $this->logger->log(
@@ -268,7 +268,7 @@ class CronQueueTest extends KernelTestBase {
    * Tests requeue exception is handled properly.
    *
    * @see \Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestRequeueException
-   * @legacy-covers \Drupal\Core\Queue\RequeueException
+   * @see \Drupal\Core\Queue\RequeueException
    */
   public function testRequeueException(): void {
     // Test the requeueing functionality.

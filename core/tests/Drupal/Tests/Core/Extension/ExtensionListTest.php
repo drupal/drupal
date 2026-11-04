@@ -92,8 +92,8 @@ class ExtensionListTest extends UnitTestCase {
   /**
    * Tests get extension info.
    *
-   * @legacy-covers ::getExtensionInfo
-   * @legacy-covers ::getAllInstalledInfo
+   * @see ::getExtensionInfo
+   * @see ::getAllInstalledInfo
    */
   public function testGetExtensionInfo(): void {
     $test_extension_list = $this->setupTestExtensionList();
@@ -168,8 +168,8 @@ class ExtensionListTest extends UnitTestCase {
   /**
    * Tests set pathname.
    *
-   * @legacy-covers ::setPathname
-   * @legacy-covers ::getPathname
+   * @see ::setPathname
+   * @see ::getPathname
    */
   #[IgnoreDeprecations]
   public function testSetPathname(): void {
@@ -183,9 +183,9 @@ class ExtensionListTest extends UnitTestCase {
   /**
    * Tests that set pathname survives reset.
    *
-   * @legacy-covers ::setPathname
-   * @legacy-covers ::getPathname
-   * @legacy-covers ::reset
+   * @see ::setPathname
+   * @see ::getPathname
+   * @see ::reset
    */
   #[IgnoreDeprecations]
   public function testSetPathnameSurvivesReset(): void {

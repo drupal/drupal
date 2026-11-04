@@ -52,7 +52,7 @@ class SimplePageVariantTest extends UnitTestCase {
   /**
    * Tests the build method.
    *
-   * @legacy-covers ::build
+   * @see ::build
    */
   public function testBuild(): void {
     $title = $this->randomString();
@@ -93,7 +93,7 @@ class SimplePageVariantTest extends UnitTestCase {
   /**
    * Tests that cache metadata in the plugin are present in the build.
    *
-   * @legacy-covers ::build
+   * @see ::build
    */
   public function testCacheMetadataFromPlugin(): void {
     $display_variant = $this->setUpDisplayVariant();

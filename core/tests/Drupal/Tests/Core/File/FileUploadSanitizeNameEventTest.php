@@ -21,8 +21,8 @@ class FileUploadSanitizeNameEventTest extends UnitTestCase {
   /**
    * Tests set filename.
    *
-   * @legacy-covers ::setFilename
-   * @legacy-covers ::getFilename
+   * @see ::setFilename
+   * @see ::getFilename
    */
   public function testSetFilename(): void {
     $event = new FileUploadSanitizeNameEvent('foo.txt', '');
@@ -45,8 +45,8 @@ class FileUploadSanitizeNameEventTest extends UnitTestCase {
   /**
    * Tests constructor exception.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::setFilename
+   * @see ::__construct
+   * @see ::setFilename
    */
   public function testConstructorException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -57,7 +57,7 @@ class FileUploadSanitizeNameEventTest extends UnitTestCase {
   /**
    * Tests allowed extensions.
    *
-   * @legacy-covers ::getAllowedExtensions
+   * @see ::getAllowedExtensions
    */
   public function testAllowedExtensions(): void {
     $event = new FileUploadSanitizeNameEvent('foo.txt', '');
@@ -73,8 +73,8 @@ class FileUploadSanitizeNameEventTest extends UnitTestCase {
    * @param string $filename
    *   The filename to test.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getFilename
+   * @see ::__construct
+   * @see ::getFilename
    */
   #[DataProvider('provideFilenames')]
   public function testEventFilenameFunctions(string $filename): void {

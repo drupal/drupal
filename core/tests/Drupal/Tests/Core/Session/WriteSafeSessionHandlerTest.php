@@ -51,9 +51,9 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
   /**
    * Tests creating a WriteSafeSessionHandler with default arguments.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::isSessionWritable
-   * @legacy-covers ::write
+   * @see ::__construct
+   * @see ::isSessionWritable
+   * @see ::write
    */
   public function testConstructWriteSafeSessionHandlerDefaultArgs(): void {
     $this->setUpMockWrappedSessionHandler();
@@ -78,9 +78,9 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
   /**
    * Tests creating a WriteSafeSessionHandler with session writing disabled.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::isSessionWritable
-   * @legacy-covers ::write
+   * @see ::__construct
+   * @see ::isSessionWritable
+   * @see ::write
    */
   public function testConstructWriteSafeSessionHandlerDisableWriting(): void {
     $session_id = 'some-id';
@@ -98,8 +98,8 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
   /**
    * Tests using setSessionWritable to enable/disable session writing.
    *
-   * @legacy-covers ::setSessionWritable
-   * @legacy-covers ::write
+   * @see ::setSessionWritable
+   * @see ::write
    */
   public function testSetSessionWritable(): void {
     $this->setUpMockWrappedSessionHandler();
@@ -139,12 +139,12 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
   /**
    * Tests that other invocations are passed unmodified to the wrapped handler.
    *
-   * @legacy-covers ::setSessionWritable
-   * @legacy-covers ::open
-   * @legacy-covers ::read
-   * @legacy-covers ::close
-   * @legacy-covers ::destroy
-   * @legacy-covers ::gc
+   * @see ::setSessionWritable
+   * @see ::open
+   * @see ::read
+   * @see ::close
+   * @see ::destroy
+   * @see ::gc
    */
   #[DataProvider('providerTestOtherMethods')]
   public function testOtherMethods(string $method, bool|string|int $expected_result, array $args): void {

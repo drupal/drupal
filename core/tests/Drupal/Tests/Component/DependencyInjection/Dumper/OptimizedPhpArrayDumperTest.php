@@ -94,9 +94,9 @@ class OptimizedPhpArrayDumperTest extends TestCase {
   /**
    * Tests that an empty container works properly.
    *
-   * @legacy-covers ::dump
-   * @legacy-covers ::getArray
-   * @legacy-covers ::supportsMachineFormat
+   * @see ::dump
+   * @see ::getArray
+   * @see ::supportsMachineFormat
    */
   public function testDumpForEmptyContainer(): void {
     $serialized_definition = $this->dumper->dump();
@@ -138,11 +138,11 @@ class OptimizedPhpArrayDumperTest extends TestCase {
   /**
    * Tests that parameter processing works properly.
    *
-   * @legacy-covers ::getParameters
-   * @legacy-covers ::prepareParameters
-   * @legacy-covers ::escape
-   * @legacy-covers ::dumpValue
-   * @legacy-covers ::getReferenceCall
+   * @see ::getParameters
+   * @see ::prepareParameters
+   * @see ::escape
+   * @see ::dumpValue
+   * @see ::getReferenceCall
    */
   #[DataProvider('getParametersDataProvider')]
   public function testGetParameters(array $parameters, array $definition_parameters, bool $is_frozen): void {
@@ -194,17 +194,17 @@ class OptimizedPhpArrayDumperTest extends TestCase {
   /**
    * Tests that service processing works properly.
    *
-   * @legacy-covers ::getServiceDefinitions
-   * @legacy-covers ::getServiceDefinition
-   * @legacy-covers ::dumpMethodCalls
-   * @legacy-covers ::dumpCollection
-   * @legacy-covers ::dumpCallable
-   * @legacy-covers ::dumpValue
-   * @legacy-covers ::getPrivateServiceCall
-   * @legacy-covers ::getReferenceCall
-   * @legacy-covers ::getServiceCall
-   * @legacy-covers ::getServiceClosureCall
-   * @legacy-covers ::getParameterCall
+   * @see ::getServiceDefinitions
+   * @see ::getServiceDefinition
+   * @see ::dumpMethodCalls
+   * @see ::dumpCollection
+   * @see ::dumpCallable
+   * @see ::dumpValue
+   * @see ::getPrivateServiceCall
+   * @see ::getReferenceCall
+   * @see ::getServiceCall
+   * @see ::getServiceClosureCall
+   * @see ::getParameterCall
    */
   #[DataProvider('getDefinitionsDataProvider')]
   public function testGetServiceDefinitions($services, $definition_services): void {
@@ -496,7 +496,7 @@ class OptimizedPhpArrayDumperTest extends TestCase {
   /**
    * Tests that references to aliases work correctly.
    *
-   * @legacy-covers ::getReferenceCall
+   * @see ::getReferenceCall
    */
   #[DataProvider('publicPrivateDataProvider')]
   public function testGetServiceDefinitionWithReferenceToAlias(bool $public): void {
@@ -570,7 +570,7 @@ class OptimizedPhpArrayDumperTest extends TestCase {
   /**
    * Tests that the correct RuntimeException is thrown for expressions.
    *
-   * @legacy-covers ::dumpValue
+   * @see ::dumpValue
    */
   public function testGetServiceDefinitionForExpression(): void {
     $expression = new Expression('');
@@ -588,7 +588,7 @@ class OptimizedPhpArrayDumperTest extends TestCase {
   /**
    * Tests that the correct RuntimeException is thrown for dumping an object.
    *
-   * @legacy-covers ::dumpValue
+   * @see ::dumpValue
    */
   public function testGetServiceDefinitionForObject(): void {
     $service = new \stdClass();
@@ -606,7 +606,7 @@ class OptimizedPhpArrayDumperTest extends TestCase {
   /**
    * Tests that the correct RuntimeException is thrown for dumping a resource.
    *
-   * @legacy-covers ::dumpValue
+   * @see ::dumpValue
    */
   public function testGetServiceDefinitionForResource(): void {
     $resource = fopen('php://memory', 'r');

@@ -174,7 +174,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
   /**
    * Tests set new revision.
    *
-   * @legacy-covers \Drupal\Core\Entity\ContentEntityBase::setNewRevision
+   * @see \Drupal\Core\Entity\ContentEntityBase::setNewRevision
    */
   public function testSetNewRevision(): void {
     $user = $this->createUser();
@@ -206,7 +206,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
   /**
    * Tests that revision translations are correctly detected.
    *
-   * @legacy-covers \Drupal\Core\Entity\ContentEntityStorageBase::isAnyStoredRevisionTranslated
+   * @see \Drupal\Core\Entity\ContentEntityStorageBase::isAnyStoredRevisionTranslated
    */
   public function testIsAnyStoredRevisionTranslated(): void {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */

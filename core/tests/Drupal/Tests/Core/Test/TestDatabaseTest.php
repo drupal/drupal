@@ -22,7 +22,7 @@ class TestDatabaseTest extends UnitTestCase {
   /**
    * Tests constructor exception.
    *
-   * @legacy-covers ::__construct
+   * @see ::__construct
    */
   public function testConstructorException(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -33,10 +33,10 @@ class TestDatabaseTest extends UnitTestCase {
   /**
    * Tests constructor.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getDatabasePrefix
-   * @legacy-covers ::getTestSitePath
-   * @legacy-covers ::getPhpErrorLogPath
+   * @see ::__construct
+   * @see ::getDatabasePrefix
+   * @see ::getTestSitePath
+   * @see ::getPhpErrorLogPath
    */
   #[DataProvider('providerTestConstructor')]
   public function testConstructor(string $db_prefix, string $expected_db_prefix, string $expected_site_path): void {
@@ -59,10 +59,10 @@ class TestDatabaseTest extends UnitTestCase {
   /**
    * Verify that a test lock is generated if there is no provided prefix.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getDatabasePrefix
-   * @legacy-covers ::getTestSitePath
-   * @legacy-covers ::getPhpErrorLogPath
+   * @see ::__construct
+   * @see ::getDatabasePrefix
+   * @see ::getTestSitePath
+   * @see ::getPhpErrorLogPath
    */
   public function testConstructorNullPrefix(): void {
     // We use a stub class here because we can't mock getTestLock() so that it's

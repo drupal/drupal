@@ -196,7 +196,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
   /**
    * Tests an entity route parameter having 'bundle' definition property.
    *
-   * @legacy-covers ::convert
+   * @see ::convert
    */
   public function testRouteParamWithBundleDefinition(): void {
     $entity1 = EntityTestMulRev::create([

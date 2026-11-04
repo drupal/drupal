@@ -41,7 +41,7 @@ class CommandLineOrUnsafeMethodTest extends UnitTestCase {
   /**
    * Asserts that check() returns DENY for unsafe HTTP methods.
    *
-   * @legacy-covers ::check
+   * @see ::check
    */
   #[DataProvider('providerTestHttpMethod')]
   public function testHttpMethod(?string $expected_result, string $method): void {
@@ -76,7 +76,7 @@ class CommandLineOrUnsafeMethodTest extends UnitTestCase {
   /**
    * Asserts that check() returns DENY if running from the command line.
    *
-   * @legacy-covers ::check
+   * @see ::check
    */
   public function testIsCli(): void {
     $this->policy->expects($this->once())

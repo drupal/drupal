@@ -31,7 +31,7 @@ class FileEncodingConstraintValidatorTest extends FileValidatorTestBase {
    * @param string[] $expected_errors
    *   The expected error messages as string.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   #[DataProvider('providerTestFileValidateEncodings')]
   public function testFileEncodings(array $file_properties, array $encodings, array $expected_errors): void {

@@ -86,8 +86,8 @@ class WorkspaceTrackerTest extends KernelTestBase {
    * @param array $entity_values
    *   An array of values for the entities created in this test.
    *
-   * @legacy-covers ::getTrackedEntities
-   * @legacy-covers ::getAssociatedRevisions
+   * @see ::getTrackedEntities
+   * @see ::getAssociatedRevisions
    */
   #[DataProvider('getEntityTypeIds')]
   public function testWorkspaceAssociation(string $entity_type_id, array $entity_values): void {
@@ -205,7 +205,7 @@ class WorkspaceTrackerTest extends KernelTestBase {
   /**
    * Tests the count of revisions returned for tracked entities listing.
    *
-   * @legacy-covers ::getTrackedEntitiesForListing
+   * @see ::getTrackedEntitiesForListing
    */
   public function testWorkspaceAssociationForListing(): void {
     $this->switchToWorkspace($this->workspaces['stage']->id());
@@ -344,7 +344,7 @@ class WorkspaceTrackerTest extends KernelTestBase {
   /**
    * Tests moving all tracked entities of all types between workspaces.
    *
-   * @legacy-covers ::moveTrackedEntities
+   * @see ::moveTrackedEntities
    */
   public function testMoveAllTrackedEntities(): void {
     $entity_type_id = 'entity_test_mulrevpub';

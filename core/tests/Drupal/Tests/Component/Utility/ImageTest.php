@@ -164,7 +164,7 @@ class ImageTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getKeywordOffset
+   * @see ::getKeywordOffset
    */
   public function testInvalidGetKeywordOffset(): void {
     $this->expectException(\InvalidArgumentException::class);

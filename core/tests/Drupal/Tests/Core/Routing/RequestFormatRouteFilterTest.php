@@ -79,7 +79,7 @@ class RequestFormatRouteFilterTest extends UnitTestCase {
   /**
    * Tests no route found.
    *
-   * @legacy-covers ::filter
+   * @see ::filter
    */
   public function testNoRouteFound(): void {
     $url = $this->prophesize(GeneratedUrl::class);
@@ -107,7 +107,7 @@ class RequestFormatRouteFilterTest extends UnitTestCase {
   /**
    * Tests no route found when no request format and single route with multiple formats.
    *
-   * @legacy-covers ::filter
+   * @see ::filter
    */
   public function testNoRouteFoundWhenNoRequestFormatAndSingleRouteWithMultipleFormats(): void {
     $this->expectException(NotAcceptableHttpException::class);

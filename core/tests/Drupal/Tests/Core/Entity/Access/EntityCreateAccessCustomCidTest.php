@@ -115,7 +115,7 @@ class EntityCreateAccessCustomCidTest extends UnitTestCase {
    * @param bool $cacheable
    *   If the test createAccess() check should be cacheable.
    *
-   * @legacy-covers ::buildCreateAccessCid
+   * @see ::buildCreateAccessCid
    */
   #[DataProvider('providerTestDefaultCid')]
   public function testDefaultCid(array $context, bool $in_cache, bool $cacheable): void {
@@ -203,7 +203,7 @@ class EntityCreateAccessCustomCidTest extends UnitTestCase {
    * @param bool $in_cache
    *   Whether there is already a cached createAccess() check for the cache ID.
    *
-   * @legacy-covers ::buildCreateAccessCid
+   * @see ::buildCreateAccessCid
    */
   #[DataProvider('providerTestCustomCid')]
   public function testCustomCid(string $bundle, array $context, string $cid, bool $in_cache): void {

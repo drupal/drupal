@@ -24,8 +24,8 @@ class HookCollectorPassTest extends UnitTestCase {
   /**
    * Tests collect all hook implementations.
    *
-   * @legacy-covers ::collectAllHookImplementations
-   * @legacy-covers ::getHookFileIterator
+   * @see ::collectAllHookImplementations
+   * @see ::getHookFileIterator
    */
   public function testCollectAllHookImplementations(): void {
     vfsStream::setup('drupal_root');
@@ -117,8 +117,8 @@ __EOF__
   /**
    * Tests prefix ownership of procedural hooks.
    *
-   * @legacy-covers ::process
-   * @legacy-covers ::collectModuleHookImplementations
+   * @see ::process
+   * @see ::collectModuleHookImplementations
    */
   public function testPrefixOwnership(): void {
     vfsStream::setup('drupal_root');

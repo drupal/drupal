@@ -221,7 +221,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   /**
    * Tests introspect index schema.
    *
-   * @legacy-covers \Drupal\mysql\Driver\Database\mysql\Schema::introspectIndexSchema
+   * @see \Drupal\mysql\Driver\Database\mysql\Schema::introspectIndexSchema
    */
   public function testIntrospectIndexSchema(): void {
     $table_specification = [

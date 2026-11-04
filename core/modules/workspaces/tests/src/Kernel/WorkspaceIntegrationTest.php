@@ -399,10 +399,10 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   /**
    * Tests the workspace association data integrity for entity CRUD operations.
    *
-   * @legacy-covers \Drupal\workspaces\Hook\EntityOperations::entityPresave
-   * @legacy-covers \Drupal\workspaces\Hook\EntityOperations::entityInsert
-   * @legacy-covers \Drupal\workspaces\Hook\EntityOperations::entityDelete
-   * @legacy-covers \Drupal\workspaces\Hook\EntityOperations::entityRevisionDelete
+   * @see \Drupal\workspaces\Hook\EntityOperations::entityPresave
+   * @see \Drupal\workspaces\Hook\EntityOperations::entityInsert
+   * @see \Drupal\workspaces\Hook\EntityOperations::entityDelete
+   * @see \Drupal\workspaces\Hook\EntityOperations::entityRevisionDelete
    */
   public function testWorkspaceAssociationDataIntegrity(): void {
     $this->initializeWorkspacesModule();
@@ -812,7 +812,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   /**
    * Tests execute in workspace context.
    *
-   * @legacy-covers \Drupal\workspaces\WorkspaceManager::executeInWorkspace
+   * @see \Drupal\workspaces\WorkspaceManager::executeInWorkspace
    */
   public function testExecuteInWorkspaceContext(): void {
     $this->initializeWorkspacesModule();

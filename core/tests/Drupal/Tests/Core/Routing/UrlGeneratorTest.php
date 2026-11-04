@@ -268,7 +268,7 @@ class UrlGeneratorTest extends UnitTestCase {
   /**
    * Tests url generation with disabled path processing.
    *
-   * @legacy-covers ::generateFromRoute
+   * @see ::generateFromRoute
    */
   public function testUrlGenerationWithDisabledPathProcessing(): void {
     $path_processor = $this->prophesize(OutboundPathProcessorInterface::class);
@@ -287,7 +287,7 @@ class UrlGeneratorTest extends UnitTestCase {
   /**
    * Tests url generation with disabled path processing by route.
    *
-   * @legacy-covers ::generateFromRoute
+   * @see ::generateFromRoute
    */
   public function testUrlGenerationWithDisabledPathProcessingByRoute(): void {
     $path_processor = $this->prophesize(OutboundPathProcessorInterface::class);
@@ -309,7 +309,7 @@ class UrlGeneratorTest extends UnitTestCase {
   /**
    * Tests url generation with disabled path processing by route and opted in path processing.
    *
-   * @legacy-covers ::generateFromRoute
+   * @see ::generateFromRoute
    */
   public function testUrlGenerationWithDisabledPathProcessingByRouteAndOptedInPathProcessing(): void {
     $path_processor = $this->prophesize(OutboundPathProcessorInterface::class);
@@ -528,7 +528,7 @@ class UrlGeneratorTest extends UnitTestCase {
    * @param string $expected_url
    *   The expected relative URL.
    *
-   * @legacy-covers ::generateFromRoute
+   * @see ::generateFromRoute
    */
   #[DataProvider('providerTestNoPath')]
   public function testNoPath(array $options, string $expected_url): void {
@@ -559,7 +559,7 @@ class UrlGeneratorTest extends UnitTestCase {
   /**
    * Tests generate with path processor changing options.
    *
-   * @legacy-covers \Drupal\Core\Routing\UrlGenerator::generateFromRoute
+   * @see \Drupal\Core\Routing\UrlGenerator::generateFromRoute
    */
   public function testGenerateWithPathProcessorChangingOptions(): void {
     $path_processor = $this->createMock(OutboundPathProcessorInterface::CLASS);
@@ -626,7 +626,7 @@ class UrlGeneratorTest extends UnitTestCase {
   /**
    * Tests that route name and parameters are passed to path processors.
    *
-   * @legacy-covers ::generateFromRoute
+   * @see ::generateFromRoute
    */
   public function testGenerateWithRouteNameInOptions(): void {
     $path_processor = $this->createMock(OutboundPathProcessorInterface::class);

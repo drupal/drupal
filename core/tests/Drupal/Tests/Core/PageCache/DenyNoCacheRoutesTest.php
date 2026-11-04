@@ -65,7 +65,7 @@ class DenyNoCacheRoutesTest extends UnitTestCase {
   /**
    * Asserts that caching is denied on the node preview route.
    *
-   * @legacy-covers ::check
+   * @see ::check
    */
   #[DataProvider('providerDenyNoCacheRoutesPolicy')]
   public function testDenyNoCacheRoutesPolicy(?string $expected_result, ?Route $route): void {

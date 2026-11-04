@@ -121,7 +121,7 @@ class InspectorTest extends TestCase {
   /**
    * Tests asserting all members are callable.
    *
-   * @legacy-covers ::assertAllCallable
+   * @see ::assertAllCallable
    */
   public function testAllCallable(): void {
     $this->assertTrue(Inspector::assertAllCallable([
@@ -147,7 +147,7 @@ class InspectorTest extends TestCase {
   /**
    * Tests asserting all members are !empty().
    *
-   * @legacy-covers ::assertAllNotEmpty
+   * @see ::assertAllNotEmpty
    */
   public function testAllNotEmpty(): void {
     $this->assertTrue(Inspector::assertAllNotEmpty([1, 'two']));

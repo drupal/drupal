@@ -20,7 +20,7 @@ class NullCoalesceTest extends MigrateProcessTestCase {
   /**
    * Tests that an exception is thrown for a non-array value.
    *
-   * @legacy-covers ::transform
+   * @see ::transform
    */
   public function testExceptionOnInvalidValue(): void {
     $this->expectException(MigrateException::class);

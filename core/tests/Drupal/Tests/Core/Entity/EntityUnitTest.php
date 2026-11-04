@@ -163,8 +163,8 @@ class EntityUnitTest extends UnitTestCase {
   /**
    * Tests is new.
    *
-   * @legacy-covers ::isNew
-   * @legacy-covers ::enforceIsNew
+   * @see ::isNew
+   * @see ::enforceIsNew
    */
   public function testIsNew(): void {
     $this->setUpEntity(0, 0, 0);
@@ -578,9 +578,9 @@ class EntityUnitTest extends UnitTestCase {
   /**
    * Tests cache tags.
    *
-   * @legacy-covers ::getCacheTags
-   * @legacy-covers ::getCacheTagsToInvalidate
-   * @legacy-covers ::addCacheTags
+   * @see ::getCacheTags
+   * @see ::getCacheTagsToInvalidate
+   * @see ::addCacheTags
    */
   public function testCacheTags(): void {
     $this->setUpEntity(0, 0, 0);
@@ -602,8 +602,8 @@ class EntityUnitTest extends UnitTestCase {
   /**
    * Tests cache contexts.
    *
-   * @legacy-covers ::getCacheContexts
-   * @legacy-covers ::addCacheContexts
+   * @see ::getCacheContexts
+   * @see ::addCacheContexts
    */
   public function testCacheContexts(): void {
     $this->setUpEntity(0, 0, 0);
@@ -625,8 +625,8 @@ class EntityUnitTest extends UnitTestCase {
   /**
    * Tests cache max age.
    *
-   * @legacy-covers ::getCacheMaxAge
-   * @legacy-covers ::mergeCacheMaxAge
+   * @see ::getCacheMaxAge
+   * @see ::mergeCacheMaxAge
    */
   public function testCacheMaxAge(): void {
     $this->setUpEntity(0, 0, 0);

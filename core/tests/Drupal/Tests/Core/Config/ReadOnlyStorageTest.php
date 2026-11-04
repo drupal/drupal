@@ -52,10 +52,10 @@ class ReadOnlyStorageTest extends UnitTestCase {
   /**
    * Tests read operations.
    *
-   * @legacy-covers ::exists
-   * @legacy-covers ::read
-   * @legacy-covers ::readMultiple
-   * @legacy-covers ::listAll
+   * @see ::exists
+   * @see ::read
+   * @see ::readMultiple
+   * @see ::listAll
    */
   #[DataProvider('readMethodsProvider')]
   public function testReadOperations($method, $arguments, $fixture): void {
@@ -93,10 +93,10 @@ class ReadOnlyStorageTest extends UnitTestCase {
   /**
    * Tests write operations.
    *
-   * @legacy-covers ::write
-   * @legacy-covers ::delete
-   * @legacy-covers ::rename
-   * @legacy-covers ::deleteAll
+   * @see ::write
+   * @see ::delete
+   * @see ::rename
+   * @see ::deleteAll
    */
   #[DataProvider('writeMethodsProvider')]
   public function testWriteOperations(string $method, $arguments, $fixture): void {
@@ -147,9 +147,9 @@ class ReadOnlyStorageTest extends UnitTestCase {
   /**
    * Tests collections.
    *
-   * @legacy-covers ::getAllCollectionNames
-   * @legacy-covers ::getCollectionName
-   * @legacy-covers ::createCollection
+   * @see ::getAllCollectionNames
+   * @see ::getCollectionName
+   * @see ::createCollection
    */
   public function testCollections(): void {
     $fixture = [
@@ -172,8 +172,8 @@ class ReadOnlyStorageTest extends UnitTestCase {
   /**
    * Tests encode decode.
    *
-   * @legacy-covers ::encode
-   * @legacy-covers ::decode
+   * @see ::encode
+   * @see ::decode
    */
   public function testEncodeDecode(): void {
     $array = (array) $this->getRandomGenerator()->object();

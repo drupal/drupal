@@ -233,7 +233,7 @@ class BundleClassTest extends EntityKernelTestBase {
   /**
    * Checks exception is thrown if two bundles share the same bundle class.
    *
-   * @legacy-covers Drupal\Core\Entity\ContentEntityStorageBase::create
+   * @see Drupal\Core\Entity\ContentEntityStorageBase::create
    */
   public function testAmbiguousBundleClassExceptionCreate(): void {
     $this->container->get('state')->set('entity_test_bundle_class_enable_ambiguous_entity_types', TRUE);
@@ -250,7 +250,7 @@ class BundleClassTest extends EntityKernelTestBase {
   /**
    * Checks exception is thrown if two entity types share the same bundle class.
    *
-   * @legacy-covers Drupal\Core\Entity\EntityTypeRepository::getEntityTypeFromClass
+   * @see Drupal\Core\Entity\EntityTypeRepository::getEntityTypeFromClass
    */
   public function testAmbiguousBundleClassExceptionEntityTypeRepository(): void {
     $this->container->get('state')->set('entity_test_bundle_class_enable_ambiguous_entity_types', TRUE);
@@ -265,7 +265,7 @@ class BundleClassTest extends EntityKernelTestBase {
   /**
    * Checks that no exception is thrown when two bundles share an entity class.
    *
-   * @legacy-covers Drupal\Core\Entity\EntityTypeRepository::getEntityTypeFromClass
+   * @see Drupal\Core\Entity\EntityTypeRepository::getEntityTypeFromClass
    */
   public function testNoAmbiguousBundleClassExceptionSharingEntityClass(): void {
     $shared_type_a = $this->container->get('entity_type.repository')->getEntityTypeFromClass(SharedEntityTestBundleClassA::class);

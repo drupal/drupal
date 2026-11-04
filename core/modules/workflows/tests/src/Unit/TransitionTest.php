@@ -21,9 +21,9 @@ class TransitionTest extends UnitTestCase {
   /**
    * Tests getters.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::id
-   * @legacy-covers ::label
+   * @see ::__construct
+   * @see ::id
+   * @see ::label
    */
   public function testGetters(): void {
     $state = new Transition(
@@ -40,8 +40,8 @@ class TransitionTest extends UnitTestCase {
   /**
    * Tests from and to.
    *
-   * @legacy-covers ::from
-   * @legacy-covers ::to
+   * @see ::from
+   * @see ::to
    */
   public function testFromAndTo(): void {
     $workflow = new TestType([], '', []);

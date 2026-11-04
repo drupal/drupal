@@ -57,7 +57,7 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    *
-   * @legacy-covers ::__construct
+   * @see ::__construct
    */
   protected function setUp(): void {
     parent::setUp();
@@ -74,8 +74,8 @@ class EntityResolverManagerTest extends UnitTestCase {
    *
    * We don't have any entity type involved, so we don't need any upcasting.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
    */
   #[DataProvider('providerTestSetRouteOptionsWithStandardRoute')]
   public function testSetRouteOptionsWithStandardRoute(string $controller): void {
@@ -102,8 +102,8 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with a controller with a non entity argument.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
    */
   #[DataProvider('providerTestSetRouteOptionsWithStandardRouteWithArgument')]
   public function testSetRouteOptionsWithStandardRouteWithArgument(string $controller): void {
@@ -131,8 +131,8 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with a _content default.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
    */
   #[DataProvider('providerTestSetRouteOptionsWithContentController')]
   public function testSetRouteOptionsWithContentController(string $controller): void {
@@ -160,10 +160,10 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with an entity type parameter.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers ::setParametersFromReflection
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
+   * @see ::getEntityTypes
+   * @see ::setParametersFromReflection
    */
   #[DataProvider('providerTestSetRouteOptionsWithEntityTypeNoUpcasting')]
   public function testSetRouteOptionsWithEntityTypeNoUpcasting(string $controller): void {
@@ -192,10 +192,10 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with an entity type parameter, upcasting.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers ::setParametersFromReflection
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
+   * @see ::getEntityTypes
+   * @see ::setParametersFromReflection
    */
   #[DataProvider('providerTestSetRouteOptionsWithEntityTypeUpcasting')]
   public function testSetRouteOptionsWithEntityTypeUpcasting(string $controller): void {
@@ -225,10 +225,10 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with an entity union type.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers ::setParametersFromReflection
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
+   * @see ::getEntityTypes
+   * @see ::setParametersFromReflection
    */
   #[DataProvider('providerTestSetRouteOptionsWithUnionEntityType')]
   public function testSetRouteOptionsWithUnionEntityType(string $controller): void {
@@ -259,10 +259,10 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with an entity type parameter form.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers ::setParametersFromReflection
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
+   * @see ::getEntityTypes
+   * @see ::setParametersFromReflection
    */
   public function testSetRouteOptionsWithEntityFormUpcasting(): void {
     $this->setupEntityTypes();
@@ -281,10 +281,10 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with entity form upcasting, no create method.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers ::setParametersFromReflection
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
+   * @see ::getEntityTypes
+   * @see ::setParametersFromReflection
    */
   public function testSetRouteOptionsWithEntityUpcastingNoCreate(): void {
     $this->setupEntityTypes();
@@ -303,10 +303,10 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with a form parameter without interface.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers ::setParametersFromReflection
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
+   * @see ::getEntityTypes
+   * @see ::setParametersFromReflection
    */
   public function testSetRouteOptionsWithEntityFormNoUpcasting(): void {
     $this->setupEntityTypes();
@@ -324,11 +324,11 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with an _entity_view route.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers ::setParametersFromReflection
-   * @legacy-covers ::setParametersFromEntityInformation
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
+   * @see ::getEntityTypes
+   * @see ::setParametersFromReflection
+   * @see ::setParametersFromEntityInformation
    */
   public function testSetRouteOptionsWithEntityViewRouteAndManualParameters(): void {
     $this->setupEntityTypes();
@@ -356,11 +356,11 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with an _entity_view route.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers ::setParametersFromReflection
-   * @legacy-covers ::setParametersFromEntityInformation
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
+   * @see ::getEntityTypes
+   * @see ::setParametersFromReflection
+   * @see ::setParametersFromEntityInformation
    */
   public function testSetRouteOptionsWithEntityViewRoute(): void {
     $this->setupEntityTypes();
@@ -378,11 +378,11 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with an _entity_list route.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers ::setParametersFromReflection
-   * @legacy-covers ::setParametersFromEntityInformation
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
+   * @see ::getEntityTypes
+   * @see ::setParametersFromReflection
+   * @see ::setParametersFromEntityInformation
    */
   public function testSetRouteOptionsWithEntityListRoute(): void {
     $this->setupEntityTypes();
@@ -400,11 +400,11 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with an _entity_form route.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers ::setParametersFromReflection
-   * @legacy-covers ::setParametersFromEntityInformation
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
+   * @see ::getEntityTypes
+   * @see ::setParametersFromReflection
+   * @see ::setParametersFromEntityInformation
    */
   public function testSetRouteOptionsWithEntityFormRoute(): void {
     $this->setupEntityTypes();
@@ -425,11 +425,11 @@ class EntityResolverManagerTest extends UnitTestCase {
    * The {argument} preceding {entity_test} in route path, is upcasting with a
    * custom param converter.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers ::setParametersFromReflection
-   * @legacy-covers ::setParametersFromEntityInformation
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
+   * @see ::getEntityTypes
+   * @see ::setParametersFromReflection
+   * @see ::setParametersFromEntityInformation
    */
   public function testSetRouteOptionsWithEntityFormRouteAndArgument(): void {
     $this->setupEntityTypes();
@@ -454,11 +454,11 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Tests setRouteOptions() with an _entity_form route for an add form.
    *
-   * @legacy-covers ::setRouteOptions
-   * @legacy-covers ::getControllerClass
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers ::setParametersFromReflection
-   * @legacy-covers ::setParametersFromEntityInformation
+   * @see ::setRouteOptions
+   * @see ::getControllerClass
+   * @see ::getEntityTypes
+   * @see ::setParametersFromReflection
+   * @see ::setParametersFromEntityInformation
    */
   public function testSetRouteOptionsWithEntityAddFormRoute(): void {
     $this->setupEntityTypes();

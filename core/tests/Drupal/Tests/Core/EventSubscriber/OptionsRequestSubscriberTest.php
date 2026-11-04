@@ -26,7 +26,7 @@ class OptionsRequestSubscriberTest extends UnitTestCase {
   /**
    * Tests with non option request.
    *
-   * @legacy-covers ::onRequest
+   * @see ::onRequest
    */
   public function testWithNonOptionRequest(): void {
     $kernel = $this->prophesize(HttpKernelInterface::class);
@@ -45,7 +45,7 @@ class OptionsRequestSubscriberTest extends UnitTestCase {
   /**
    * Tests without matching routes.
    *
-   * @legacy-covers ::onRequest
+   * @see ::onRequest
    */
   public function testWithoutMatchingRoutes(): void {
     $kernel = $this->prophesize(HttpKernelInterface::class);
@@ -64,7 +64,7 @@ class OptionsRequestSubscriberTest extends UnitTestCase {
   /**
    * Tests with options request.
    *
-   * @legacy-covers ::onRequest
+   * @see ::onRequest
    */
   #[DataProvider('providerTestOnRequestWithOptionsRequest')]
   public function testWithOptionsRequest(RouteCollection $collection, $expected_header): void {

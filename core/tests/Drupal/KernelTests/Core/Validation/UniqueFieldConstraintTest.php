@@ -35,7 +35,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
   /**
    * Tests cases where the validation passes for entities with string IDs.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testEntityWithStringId(): void {
     $this->installEntitySchema('entity_test_string_id');
@@ -69,7 +69,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
    * @param string|int|null $id
    *   The entity ID.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   #[DataProvider('providerTestEntityWithStringIdWithViolation')]
   public function testEntityWithStringIdWithViolation(string|int|null $id): void {
@@ -121,7 +121,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
    * The unique_field_constraint_test_entity_test_access() function
    * forbids 'view' access to entity_test entities.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testViolationDespiteNoAccess(): void {
     $this->installEntitySchema('entity_test');

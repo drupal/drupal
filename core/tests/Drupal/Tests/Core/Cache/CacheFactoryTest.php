@@ -22,8 +22,8 @@ class CacheFactoryTest extends UnitTestCase {
   /**
    * Tests that the cache factory falls back to the built-in default service.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::get
+   * @see ::__construct
+   * @see ::get
    */
   public function testCacheFactoryWithDefaultSettings(): void {
     $settings = new Settings([]);
@@ -48,8 +48,8 @@ class CacheFactoryTest extends UnitTestCase {
   /**
    * Tests that the cache factory falls back to customized default service.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::get
+   * @see ::__construct
+   * @see ::get
    */
   public function testCacheFactoryWithCustomizedDefaultBackend(): void {
     $settings = new Settings([
@@ -78,8 +78,8 @@ class CacheFactoryTest extends UnitTestCase {
   /**
    * Tests that the cache factory uses the correct default bin backend.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::get
+   * @see ::__construct
+   * @see ::get
    */
   public function testCacheFactoryWithDefaultBinBackend(): void {
     // Ensure the default bin backends are used before the configured default.
@@ -114,8 +114,8 @@ class CacheFactoryTest extends UnitTestCase {
   /**
    * Tests that the cache factory picks the correct per-bin service.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::get
+   * @see ::__construct
+   * @see ::get
    */
   public function testCacheFactoryWithSpecifiedPerBinBackend(): void {
     // Ensure the per-bin configuration is used before the configured default

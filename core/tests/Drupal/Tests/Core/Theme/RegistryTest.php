@@ -241,9 +241,9 @@ class RegistryTest extends UnitTestCase {
    * @param array $expected
    *   The expected results.
    *
-   * @legacy-covers ::postProcessExtension
-   * @legacy-covers ::completeSuggestion
-   * @legacy-covers ::mergePreprocessFunctions
+   * @see ::postProcessExtension
+   * @see ::completeSuggestion
+   * @see ::mergePreprocessFunctions
    */
   #[DataProvider('providerTestPostProcessExtension')]
   public function testPostProcessExtension($defined_functions, $hooks, $expected): void {

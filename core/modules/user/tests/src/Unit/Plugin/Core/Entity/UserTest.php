@@ -47,7 +47,7 @@ class UserTest extends UnitTestCase {
    * Tests the method getRoles exclude or include locked roles based in param.
    *
    * @see \Drupal\user\Entity\User::getRoles()
-   * @legacy-covers ::getRoles
+   * @see ::getRoles
    */
   public function testUserGetRoles(): void {
     // Anonymous user.

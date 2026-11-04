@@ -23,7 +23,7 @@ class StreamWrapperManagerTest extends KernelTestBase {
   /**
    * Tests uri scheme.
    *
-   * @legacy-covers ::getScheme
+   * @see ::getScheme
    */
   #[DataProvider('providerTestUriScheme')]
   public function testUriScheme($uri, $expected): void {

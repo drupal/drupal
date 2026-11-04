@@ -31,8 +31,8 @@ class SqlTest extends UnitTestCase {
   /**
    * Tests get cache tags.
    *
-   * @legacy-covers ::getCacheTags
-   * @legacy-covers ::getAllEntities
+   * @see ::getCacheTags
+   * @see ::getAllEntities
    */
   public function testGetCacheTags(): void {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
@@ -81,8 +81,8 @@ class SqlTest extends UnitTestCase {
   /**
    * Tests get cache max age.
    *
-   * @legacy-covers ::getCacheTags
-   * @legacy-covers ::getAllEntities
+   * @see ::getCacheTags
+   * @see ::getAllEntities
    */
   public function testGetCacheMaxAge(): void {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
@@ -254,8 +254,8 @@ class SqlTest extends UnitTestCase {
   /**
    * Tests load entities with empty result.
    *
-   * @legacy-covers ::loadEntities
-   * @legacy-covers ::assignEntitiesToResult
+   * @see ::loadEntities
+   * @see ::assignEntitiesToResult
    */
   public function testLoadEntitiesWithEmptyResult(): void {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
@@ -280,8 +280,8 @@ class SqlTest extends UnitTestCase {
   /**
    * Tests load entities with no relationship and no revision.
    *
-   * @legacy-covers ::loadEntities
-   * @legacy-covers ::assignEntitiesToResult
+   * @see ::loadEntities
+   * @see ::assignEntitiesToResult
    */
   public function testLoadEntitiesWithNoRelationshipAndNoRevision(): void {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
@@ -340,8 +340,8 @@ class SqlTest extends UnitTestCase {
   /**
    * Tests load entities with relationship.
    *
-   * @legacy-covers ::loadEntities
-   * @legacy-covers ::assignEntitiesToResult
+   * @see ::loadEntities
+   * @see ::assignEntitiesToResult
    */
   public function testLoadEntitiesWithRelationship(): void {
     // We don't use prophecy, because prophecy enforces methods.
@@ -402,8 +402,8 @@ class SqlTest extends UnitTestCase {
   /**
    * Tests load entities with non entity relationship.
    *
-   * @legacy-covers ::loadEntities
-   * @legacy-covers ::assignEntitiesToResult
+   * @see ::loadEntities
+   * @see ::assignEntitiesToResult
    */
   public function testLoadEntitiesWithNonEntityRelationship(): void {
     // We don't use prophecy, because prophecy enforces methods.
@@ -455,8 +455,8 @@ class SqlTest extends UnitTestCase {
   /**
    * Tests load entities with revision.
    *
-   * @legacy-covers ::loadEntities
-   * @legacy-covers ::assignEntitiesToResult
+   * @see ::loadEntities
+   * @see ::assignEntitiesToResult
    */
   public function testLoadEntitiesWithRevision(): void {
     // We don't use prophecy, because prophecy enforces methods.
@@ -502,8 +502,8 @@ class SqlTest extends UnitTestCase {
   /**
    * Tests load entities with revision of same entity type.
    *
-   * @legacy-covers ::loadEntities
-   * @legacy-covers ::assignEntitiesToResult
+   * @see ::loadEntities
+   * @see ::assignEntitiesToResult
    */
   public function testLoadEntitiesWithRevisionOfSameEntityType(): void {
     // We don't use prophecy, because prophecy enforces methods.
@@ -564,8 +564,8 @@ class SqlTest extends UnitTestCase {
   /**
    * Tests load entities with relationship and revision.
    *
-   * @legacy-covers ::loadEntities
-   * @legacy-covers ::assignEntitiesToResult
+   * @see ::loadEntities
+   * @see ::assignEntitiesToResult
    */
   public function testLoadEntitiesWithRelationshipAndRevision(): void {
     // We don't use prophecy, because prophecy enforces methods.

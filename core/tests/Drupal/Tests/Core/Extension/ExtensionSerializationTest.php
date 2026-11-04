@@ -43,8 +43,8 @@ class ExtensionSerializationTest extends UnitTestCase {
    * container's app.root and not the DRUPAL_ROOT constant if the service
    * container app.root is available.
    *
-   * @legacy-covers ::__sleep
-   * @legacy-covers ::__wakeup
+   * @see ::__sleep
+   * @see ::__wakeup
    */
   public function testServiceAppRouteUsage(): void {
     $container = new ContainerBuilder();
@@ -68,8 +68,8 @@ class ExtensionSerializationTest extends UnitTestCase {
   /**
    * Tests dynamically assigned public properties kept when serialized.
    *
-   * @legacy-covers ::__sleep
-   * @legacy-covers ::__wakeup
+   * @see ::__sleep
+   * @see ::__wakeup
    */
   public function testPublicProperties(): void {
     $container = new ContainerBuilder();

@@ -123,7 +123,7 @@ class FormStateTest extends UnitTestCase {
   /**
    * Tests that form errors during submission throw an exception.
    *
-   * @legacy-covers ::setErrorByName
+   * @see ::setErrorByName
    */
   public function testFormErrorsDuringSubmission(): void {
     $form_state = new FormState();
@@ -317,8 +317,8 @@ class FormStateTest extends UnitTestCase {
   /**
    * Tests is method type.
    *
-   * @legacy-covers ::isMethodType
-   * @legacy-covers ::setMethod
+   * @see ::isMethodType
+   * @see ::setMethod
    */
   #[DataProvider('providerTestIsMethodType')]
   public function testIsMethodType($set_method_type, $input, $expected): void {
@@ -358,9 +358,9 @@ class FormStateTest extends UnitTestCase {
   /**
    * Tests temporary value.
    *
-   * @legacy-covers ::getTemporaryValue
-   * @legacy-covers ::hasTemporaryValue
-   * @legacy-covers ::setTemporaryValue
+   * @see ::getTemporaryValue
+   * @see ::hasTemporaryValue
+   * @see ::setTemporaryValue
    */
   public function testTemporaryValue(): void {
     $form_state = new FormState();
@@ -416,8 +416,8 @@ class FormStateTest extends UnitTestCase {
   /**
    * Tests get values.
    *
-   * @legacy-covers ::setValues
-   * @legacy-covers ::getValues
+   * @see ::setValues
+   * @see ::getValues
    */
   public function testGetValues(): void {
     $values = [

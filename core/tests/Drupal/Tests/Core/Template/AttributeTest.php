@@ -267,8 +267,8 @@ class AttributeTest extends UnitTestCase {
   /**
    * Tests removing class attributes with the Attribute helper methods.
    *
-   * @legacy-covers ::removeClass
-   * @legacy-covers ::addClass
+   * @see ::removeClass
+   * @see ::addClass
    */
   public function testChainAddRemoveClasses(): void {
     $attribute = new Attribute(
@@ -286,8 +286,8 @@ class AttributeTest extends UnitTestCase {
   /**
    * Tests the twig calls to the Attribute.
    *
-   * @legacy-covers ::removeClass
-   * @legacy-covers ::addClass
+   * @see ::removeClass
+   * @see ::addClass
    */
   #[DataProvider('providerTestAttributeClassHelpers')]
   public function testTwigAddRemoveClasses(string $template, string $expected, array $seed_attributes = []): void {
@@ -383,7 +383,7 @@ class AttributeTest extends UnitTestCase {
   /**
    * Tests attribute values.
    *
-   * @legacy-covers ::createAttributeValue
+   * @see ::createAttributeValue
    */
   #[DataProvider('providerTestAttributeValues')]
   public function testAttributeValues(array $attributes, $expected): void {

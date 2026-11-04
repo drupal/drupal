@@ -68,7 +68,7 @@ class PhpRequirementsTest extends UnitTestCase {
    * @param string $expected_php_version
    *   The PHP version the test should recommend.
    *
-   * @legacy-covers ::getMinimumSupportedPhp
+   * @see ::getMinimumSupportedPhp
    */
   #[DataProvider('providerMinimumSupportedPhp')]
   public function testMinimumSupportedPhp(string $date_string, string $drupal_minimum_php, array $php_eol_dates, string $expected_php_version): void {

@@ -26,7 +26,7 @@ class MenuLinkContentEntityAccessTest extends UnitTestCase {
   /**
    * Tests an operation not implemented by the access control handler.
    *
-   * @legacy-covers ::checkAccess
+   * @see ::checkAccess
    */
   public function testUnrecognizedOperation(): void {
     $entityType = $this->createStub(EntityTypeInterface::class);

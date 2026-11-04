@@ -204,7 +204,7 @@ class WorkspacePublisherTest extends KernelTestBase {
   /**
    * Tests submit form with exception.
    *
-   * @legacy-covers \Drupal\workspaces\Form\WorkspacePublishForm::submitForm
+   * @see \Drupal\workspaces\Form\WorkspacePublishForm::submitForm
    */
   public function testSubmitFormWithException(): void {
     /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */

@@ -17,8 +17,8 @@ use PHPUnit\Framework\TestCase;
 class AnnotationBaseTest extends TestCase {
 
   /**
-   * @legacy-covers ::getProvider
-   * @legacy-covers ::setProvider
+   * @see ::getProvider
+   * @see ::setProvider
    */
   public function testSetProvider(): void {
     $plugin = new AnnotationBaseStub();
@@ -37,8 +37,8 @@ class AnnotationBaseTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getClass
-   * @legacy-covers ::setClass
+   * @see ::getClass
+   * @see ::setClass
    */
   public function testSetClass(): void {
     $plugin = new AnnotationBaseStub();

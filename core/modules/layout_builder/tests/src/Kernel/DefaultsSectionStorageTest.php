@@ -229,7 +229,7 @@ class DefaultsSectionStorageTest extends KernelTestBase {
   }
 
   /**
-   * @legacy-covers ::isSupported
+   * @see ::isSupported
    */
   public function testIsSupported(): void {
     $display = LayoutBuilderEntityViewDisplay::create([

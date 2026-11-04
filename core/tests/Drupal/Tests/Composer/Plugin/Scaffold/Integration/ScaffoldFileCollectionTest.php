@@ -22,7 +22,7 @@ class ScaffoldFileCollectionTest extends TestCase {
   /**
    * Tests create.
    *
-   * @legacy-covers ::__construct
+   * @see ::__construct
    */
   public function testCreate(): void {
     $fixtures = new Fixtures();

@@ -210,7 +210,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
   /**
    * Tests overrides alt and title.
    *
-   * @legacy-covers ::applyPerEmbedMediaOverrides
+   * @see ::applyPerEmbedMediaOverrides
    */
   #[DataProvider('providerOverridesAltAndTitle')]
   public function testOverridesAltAndTitle(bool $title_field_property_enabled, array $expected_title_attributes): void {
@@ -400,8 +400,8 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
   /**
    * Tests filter integration.
    *
-   * @legacy-covers \Drupal\filter\Plugin\Filter\FilterAlign
-   * @legacy-covers \Drupal\filter\Plugin\Filter\FilterCaption
+   * @see \Drupal\filter\Plugin\Filter\FilterAlign
+   * @see \Drupal\filter\Plugin\Filter\FilterCaption
    */
   #[DataProvider('providerFilterIntegration')]
   public function testFilterIntegration(array $filter_ids, array $additional_attributes, string $verification_selector, $expected_verification_success, array $expected_asset_libraries = [], string $prefix = '', string $suffix = ''): void {

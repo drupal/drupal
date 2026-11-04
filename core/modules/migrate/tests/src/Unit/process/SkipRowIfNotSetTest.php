@@ -19,7 +19,7 @@ class SkipRowIfNotSetTest extends MigrateProcessTestCase {
   /**
    * Tests that a skip row exception without a message is raised.
    *
-   * @legacy-covers ::transform
+   * @see ::transform
    */
   public function testRowSkipWithoutMessage(): void {
     $configuration = [
@@ -33,7 +33,7 @@ class SkipRowIfNotSetTest extends MigrateProcessTestCase {
   /**
    * Tests that a skip row exception with a message is raised.
    *
-   * @legacy-covers ::transform
+   * @see ::transform
    */
   public function testRowSkipWithMessage(): void {
     $configuration = [

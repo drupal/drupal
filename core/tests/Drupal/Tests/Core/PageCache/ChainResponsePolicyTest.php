@@ -55,7 +55,7 @@ class ChainResponsePolicyTest extends UnitTestCase {
   /**
    * Asserts that check() returns NULL if the chain is empty.
    *
-   * @legacy-covers ::check
+   * @see ::check
    */
   public function testEmptyChain(): void {
     $result = $this->policy->check($this->response, $this->request);
@@ -65,7 +65,7 @@ class ChainResponsePolicyTest extends UnitTestCase {
   /**
    * Asserts that check() returns NULL if a rule returns NULL.
    *
-   * @legacy-covers ::check
+   * @see ::check
    */
   public function testNullRuleChain(): void {
     $rule = $this->createMock('Drupal\Core\PageCache\ResponsePolicyInterface');
@@ -83,7 +83,7 @@ class ChainResponsePolicyTest extends UnitTestCase {
   /**
    * Asserts that check() throws an exception if a rule returns an invalid value.
    *
-   * @legacy-covers ::check
+   * @see ::check
    */
   #[DataProvider('providerChainExceptionOnInvalidReturnValue')]
   public function testChainExceptionOnInvalidReturnValue(bool|int|\stdClass|array $return_value): void {

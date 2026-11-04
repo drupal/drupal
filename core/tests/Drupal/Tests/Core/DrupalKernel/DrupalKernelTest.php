@@ -25,7 +25,7 @@ class DrupalKernelTest extends UnitTestCase {
   /**
    * Tests hostname validation with settings.
    *
-   * @legacy-covers ::setupTrustedHosts
+   * @see ::setupTrustedHosts
    */
   #[DataProvider('providerTestTrustedHosts')]
   public function testTrustedHosts($host, $server_name, string $message, $expected = FALSE): void {
@@ -145,7 +145,7 @@ EOD;
   /**
    * Tests un booted terminate.
    *
-   * @legacy-covers ::terminate
+   * @see ::terminate
    */
   #[RunInSeparateProcess]
   public function testUnBootedTerminate(): void {

@@ -48,8 +48,8 @@ class ContentModerationStateAccessControlHandlerTest extends KernelTestBase {
   /**
    * Tests handler.
    *
-   * @legacy-covers ::checkAccess
-   * @legacy-covers ::checkCreateAccess
+   * @see ::checkAccess
+   * @see ::checkCreateAccess
    */
   public function testHandler(): void {
     $entity = ContentModerationState::create([]);

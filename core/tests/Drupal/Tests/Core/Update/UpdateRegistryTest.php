@@ -651,7 +651,7 @@ EOS;
   /**
    * Tests get pending custom update functions.
    *
-   * @legacy-covers ::getPendingUpdateFunctions
+   * @see ::getPendingUpdateFunctions
    */
   public function testGetPendingCustomUpdateFunctions(): void {
     // Set up a simplified module structure with custom update hooks.

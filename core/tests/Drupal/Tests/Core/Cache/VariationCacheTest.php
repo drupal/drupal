@@ -185,8 +185,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests a cache item that has no variations.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @see ::get
+   * @see ::set
    */
   public function testNoVariations(): void {
     $data = 'You have a nice house!';
@@ -199,8 +199,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests a cache item that only ever varies by one context.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @see ::get
+   * @see ::set
    */
   public function testSingleVariation(): void {
     $cacheability = $this->housingTypeCacheability;
@@ -222,8 +222,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests a cache item that has nested variations.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @see ::get
+   * @see ::set
    */
   public function testNestedVariations(): void {
     // We are running this scenario in the best possible outcome: The redirects
@@ -272,8 +272,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests a cache item that has nested variations that trigger self-healing.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @see ::get
+   * @see ::set
    */
   #[Depends('testNestedVariations')]
   public function testNestedVariationsSelfHealing(): void {
@@ -330,8 +330,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests self-healing for a cache item that has split variations.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @see ::get
+   * @see ::set
    */
   public function testSplitVariationsSelfHealing(): void {
     // This is an edge case. Something varies by AB where some values of B
@@ -402,8 +402,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests exception for a cache item that has incomplete variations.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @see ::get
+   * @see ::set
    */
   public function testIncompleteVariationsException(): void {
     // This should never happen. When someone first stores something in the
@@ -428,8 +428,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests exception for a cache item that has an incomplete redirect.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @see ::get
+   * @see ::set
    */
   public function testIncompleteRedirectException(): void {
     // This should never happen. When we have a cache redirect at address A,
@@ -460,8 +460,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests exception for a cache item that has incompatible cache redirects.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @see ::get
+   * @see ::set
    */
   public function testIncompatibleRedirectsException(): void {
     // This should never happen. When someone first triggers the storing of a
@@ -491,8 +491,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests the same as above, but with more redirects.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @see ::get
+   * @see ::set
    */
   #[Depends('testIncompatibleRedirectsException')]
   public function testIncompatibleChainedRedirectsException(): void {
@@ -528,8 +528,8 @@ class VariationCacheTest extends UnitTestCase {
   /**
    * Tests the same as above, but even more complex.
    *
-   * @legacy-covers ::get
-   * @legacy-covers ::set
+   * @see ::get
+   * @see ::set
    */
   #[Depends('testIncompatibleChainedRedirectsException')]
   public function testIncompatibleChainedRedirectsComplexException(): void {

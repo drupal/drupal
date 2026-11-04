@@ -76,7 +76,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
   /**
    * Finish subscriber should set some default header values.
    *
-   * @legacy-covers ::onRespond
+   * @see ::onRespond
    */
   public function testDefaultHeaders(): void {
     $finishSubscriber = new FinishResponseSubscriber(
@@ -106,7 +106,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
   /**
    * Finish subscriber should not overwrite existing header values.
    *
-   * @legacy-covers ::onRespond
+   * @see ::onRespond
    */
   public function testExistingHeaders(): void {
     $finishSubscriber = new FinishResponseSubscriber(

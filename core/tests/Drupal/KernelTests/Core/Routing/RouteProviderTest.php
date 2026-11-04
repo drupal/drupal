@@ -750,7 +750,7 @@ class RouteProviderTest extends KernelTestBase {
   /**
    * Tests route aliases.
    *
-   * @legacy-covers \Drupal\Core\Routing\RouteProvider::getRouteAliases
+   * @see \Drupal\Core\Routing\RouteProvider::getRouteAliases
    */
   public function testRouteAliases(): void {
     $connection = Database::getConnection();

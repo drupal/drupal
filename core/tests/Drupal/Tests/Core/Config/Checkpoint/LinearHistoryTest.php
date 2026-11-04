@@ -37,10 +37,10 @@ class LinearHistoryTest extends UnitTestCase {
   /**
    * Tests add.
    *
-   * @legacy-covers ::add
-   * @legacy-covers ::count
-   * @legacy-covers ::getActiveCheckpoint
-   * @legacy-covers \Drupal\Core\Config\Checkpoint\Checkpoint
+   * @see ::add
+   * @see ::count
+   * @see ::getActiveCheckpoint
+   * @see \Drupal\Core\Config\Checkpoint\Checkpoint
    */
   public function testAdd(): void {
     $state = $this->prophesize(StateInterface::class);

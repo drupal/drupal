@@ -38,7 +38,7 @@ class SyslogTest extends KernelTestBase {
   /**
    * Tests syslog writing.
    *
-   * @legacy-covers ::log
+   * @see ::log
    */
   public function testSyslogWriting(): void {
 
@@ -80,7 +80,7 @@ class SyslogTest extends KernelTestBase {
   /**
    * Tests that missing facility prevents writing to the syslog.
    *
-   * @legacy-covers ::openConnection
+   * @see ::openConnection
    */
   public function testSyslogMissingFacility(): void {
     $config = $this->container->get('config.factory')->getEditable('syslog.settings');
@@ -94,7 +94,7 @@ class SyslogTest extends KernelTestBase {
   /**
    * Tests severity level logging.
    *
-   * @legacy-covers ::log
+   * @see ::log
    */
   public function testSyslogSeverity(): void {
     /** @var \Drupal\Core\Config\Config $config */

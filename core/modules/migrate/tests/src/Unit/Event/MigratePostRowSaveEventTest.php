@@ -18,8 +18,8 @@ class MigratePostRowSaveEventTest extends EventBaseTest {
   /**
    * Tests getDestinationIdValues method.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getDestinationIdValues
+   * @see ::__construct
+   * @see ::getDestinationIdValues
    */
   public function testGetDestinationIdValues(): void {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();
@@ -32,8 +32,8 @@ class MigratePostRowSaveEventTest extends EventBaseTest {
   /**
    * Tests getRow method.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getRow
+   * @see ::__construct
+   * @see ::getRow
    */
   public function testGetRow(): void {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();

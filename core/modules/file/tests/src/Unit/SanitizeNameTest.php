@@ -38,8 +38,8 @@ class SanitizeNameTest extends UnitTestCase {
    * @param string $language_id
    *   Optional language code for transliteration. Defaults to 'en'.
    *
-   * @legacy-covers \Drupal\file\EventSubscriber\FileEventSubscriber::sanitizeFilename
-   * @legacy-covers \Drupal\Core\File\Event\FileUploadSanitizeNameEvent::__construct
+   * @see \Drupal\file\EventSubscriber\FileEventSubscriber::sanitizeFilename
+   * @see \Drupal\Core\File\Event\FileUploadSanitizeNameEvent::__construct
    */
   #[DataProvider('provideFilenames')]
   public function testFileNameTransliteration(string $original, string $expected, array $options, string $language_id = 'en'): void {

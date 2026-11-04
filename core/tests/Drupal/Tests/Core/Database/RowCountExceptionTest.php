@@ -38,7 +38,7 @@ class RowCountExceptionTest extends UnitTestCase {
   /**
    * Tests exception message.
    *
-   * @legacy-covers ::__construct
+   * @see ::__construct
    */
   #[DataProvider('providerTestExceptionMessage')]
   public function testExceptionMessage(string $expected, string $message): void {

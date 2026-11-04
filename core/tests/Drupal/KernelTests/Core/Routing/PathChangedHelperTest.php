@@ -30,10 +30,10 @@ class PathChangedHelperTest extends KernelTestBase {
   /**
    * Tests creating a PathChangedHelper object and getting paths.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::oldPath
-   * @legacy-covers ::newPath
-   * @legacy-covers ::redirect
+   * @see ::__construct
+   * @see ::oldPath
+   * @see ::newPath
+   * @see ::redirect
    */
   public function testPathChangedHelper(): void {
     $route = \Drupal::service('router.route_provider')->getRouteByName('path.changed.bc');

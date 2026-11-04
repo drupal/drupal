@@ -35,9 +35,9 @@ class ProxyBuilderTest extends UnitTestCase {
   /**
    * Tests build complex method.
    *
-   * @legacy-covers ::buildMethod
-   * @legacy-covers ::buildParameter
-   * @legacy-covers ::buildMethodBody
+   * @see ::buildMethod
+   * @see ::buildParameter
+   * @see ::buildMethodBody
    */
   public function testBuildComplexMethod(): void {
     $class = 'Drupal\Tests\Core\ProxyBuilder\TestServiceComplexMethod';

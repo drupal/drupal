@@ -66,7 +66,7 @@ class DiffFormatterTest extends TestCase {
   /**
    * Tests whether op classes returned by DiffEngine::diff() match expectations.
    *
-   * @legacy-covers ::format
+   * @see ::format
    */
   #[DataProvider('provideTestDiff')]
   public function testDiff(string $expected, array $from, array $to): void {

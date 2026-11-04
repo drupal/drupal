@@ -286,7 +286,7 @@ class EntityTypeManagerTest extends UnitTestCase {
   /**
    * Tests the getFormObject() method with an invalid class.
    *
-   * @legacy-covers ::getFormObject
+   * @see ::getFormObject
    */
   public function testGetFormObjectInvalidClass(): void {
     $donkey = $this->prophesize(EntityTypeInterface::class);

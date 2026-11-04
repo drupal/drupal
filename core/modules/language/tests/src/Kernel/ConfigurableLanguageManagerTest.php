@@ -53,7 +53,7 @@ class ConfigurableLanguageManagerTest extends LanguageTestBase {
   /**
    * Tests language switch links.
    *
-   * @legacy-covers ::getLanguageSwitchLinks
+   * @see ::getLanguageSwitchLinks
    */
   public function testLanguageSwitchLinks(): void {
     $this->languageNegotiator->setCurrentUser($this->prophesize('Drupal\Core\Session\AccountInterface')->reveal());

@@ -87,7 +87,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
   /**
    * Tests csrf token invalid.
    *
-   * @legacy-covers ::access
+   * @see ::access
    */
   public function testCsrfTokenInvalid(): void {
     $this->csrfToken->expects($this->once())
@@ -112,7 +112,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
   /**
    * Tests csrf token missing.
    *
-   * @legacy-covers ::access
+   * @see ::access
    */
   public function testCsrfTokenMissing(): void {
     $this->csrfToken->expects($this->once())

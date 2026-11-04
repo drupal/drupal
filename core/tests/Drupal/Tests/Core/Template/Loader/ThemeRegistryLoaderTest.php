@@ -19,7 +19,7 @@ class ThemeRegistryLoaderTest extends UnitTestCase {
   /**
    * Tests loader returns false for exists on nonexistent.
    *
-   * @legacy-covers ::findTemplate
+   * @see ::findTemplate
    */
   public function testLoaderReturnsFalseForExistsOnNonexistent(): void {
     $registry = $this->prophesize('Drupal\Core\Theme\Registry');

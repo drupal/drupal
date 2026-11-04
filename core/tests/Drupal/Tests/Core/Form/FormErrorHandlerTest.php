@@ -56,8 +56,8 @@ class FormErrorHandlerTest extends UnitTestCase {
   /**
    * Tests display error messages.
    *
-   * @legacy-covers ::handleFormErrors
-   * @legacy-covers ::displayErrorMessages
+   * @see ::handleFormErrors
+   * @see ::displayErrorMessages
    */
   public function testDisplayErrorMessages(): void {
     $this->setUpMockMessenger();
@@ -136,8 +136,8 @@ class FormErrorHandlerTest extends UnitTestCase {
   /**
    * Tests set element errors from form state.
    *
-   * @legacy-covers ::handleFormErrors
-   * @legacy-covers ::setElementErrorsFromFormState
+   * @see ::handleFormErrors
+   * @see ::setElementErrorsFromFormState
    */
   public function testSetElementErrorsFromFormState(): void {
     $form = [

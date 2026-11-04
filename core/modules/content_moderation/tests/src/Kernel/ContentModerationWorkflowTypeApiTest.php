@@ -45,9 +45,9 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
   /**
    * Tests get bundles for entity type.
    *
-   * @legacy-covers ::getBundlesForEntityType
-   * @legacy-covers ::addEntityTypeAndBundle
-   * @legacy-covers ::removeEntityTypeAndBundle
+   * @see ::getBundlesForEntityType
+   * @see ::addEntityTypeAndBundle
+   * @see ::removeEntityTypeAndBundle
    */
   public function testGetBundlesForEntityType(): void {
     /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */
@@ -65,9 +65,9 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
   /**
    * Tests applies to entity type and bundle.
    *
-   * @legacy-covers ::appliesToEntityTypeAndBundle
-   * @legacy-covers ::addEntityTypeAndBundle
-   * @legacy-covers ::removeEntityTypeAndBundle
+   * @see ::appliesToEntityTypeAndBundle
+   * @see ::addEntityTypeAndBundle
+   * @see ::removeEntityTypeAndBundle
    */
   public function testAppliesToEntityTypeAndBundle(): void {
     /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */
@@ -108,8 +108,8 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
   /**
    * Tests remove entity type and bundle.
    *
-   * @legacy-covers ::addEntityTypeAndBundle
-   * @legacy-covers ::removeEntityTypeAndBundle
+   * @see ::addEntityTypeAndBundle
+   * @see ::removeEntityTypeAndBundle
    */
   public function testRemoveEntityTypeAndBundle(): void {
     /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */

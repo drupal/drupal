@@ -20,7 +20,7 @@ class RectangleTest extends TestCase {
   /**
    * Tests wrong rectangle width.
    *
-   * @legacy-covers ::rotate
+   * @see ::rotate
    */
   public function testWrongWidth(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -30,7 +30,7 @@ class RectangleTest extends TestCase {
   /**
    * Tests wrong rectangle height.
    *
-   * @legacy-covers ::rotate
+   * @see ::rotate
    */
   public function testWrongHeight(): void {
     $this->expectException(\InvalidArgumentException::class);
@@ -51,9 +51,9 @@ class RectangleTest extends TestCase {
    * @param int $exp_height
    *   The expected height of the rotated rectangle.
    *
-   * @legacy-covers ::rotate
-   * @legacy-covers ::getBoundingWidth
-   * @legacy-covers ::getBoundingHeight
+   * @see ::rotate
+   * @see ::getBoundingWidth
+   * @see ::getBoundingHeight
    */
   #[DataProvider('providerPhp55RotateDimensions')]
   public function testRotateDimensions($width, $height, $angle, $exp_width, $exp_height): void {
