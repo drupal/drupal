@@ -84,7 +84,7 @@ class SymfonyMailerTest extends UnitTestCase {
    *     - to
    *     - subject.
    *
-   * @legacy-covers ::mail
+   * @see ::mail
    */
   #[DataProvider('providerMail')]
   public function testMail(array $message, array $expected): void {

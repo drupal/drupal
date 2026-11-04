@@ -76,7 +76,7 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check.
    *
-   * @legacy-covers ::onAlterRoutes
+   * @see ::onAlterRoutes
    */
   #[DataProvider('providerTestOnRouteBuildingValidVariables')]
   public function testOnRouteBuildingValidVariables(Route $route): void {
@@ -94,7 +94,7 @@ class SpecialAttributesRouteSubscriberTest extends UnitTestCase {
    * @param \Symfony\Component\Routing\Route $route
    *   The route to check.
    *
-   * @legacy-covers ::onAlterRoutes
+   * @see ::onAlterRoutes
    */
   #[DataProvider('providerTestOnRouteBuildingInvalidVariables')]
   public function testOnRouteBuildingInvalidVariables(Route $route): void {

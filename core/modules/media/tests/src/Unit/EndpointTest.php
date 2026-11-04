@@ -32,7 +32,7 @@ class EndpointTest extends UnitTestCase {
   /**
    * Tests case sensitive match.
    *
-   * @legacy-covers ::matchUrl
+   * @see ::matchUrl
    */
   public function testCaseSensitiveMatch(): void {
     $endpoint = new Endpoint(

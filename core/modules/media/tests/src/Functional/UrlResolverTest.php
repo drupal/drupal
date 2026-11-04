@@ -75,8 +75,8 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    * @param string $resource_url
    *   The expected oEmbed resource URL of the asset.
    *
-   * @legacy-covers ::getProviderByUrl
-   * @legacy-covers ::getResourceUrl
+   * @see ::getProviderByUrl
+   * @see ::getResourceUrl
    */
   #[DataProvider('providerEndpointMatching')]
   public function testEndpointMatching(string $url, string $resource_url): void {
@@ -131,9 +131,9 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    * @param string $resource_url
    *   The expected oEmbed resource URL of the asset.
    *
-   * @legacy-covers ::discoverResourceUrl
-   * @legacy-covers ::getProviderByUrl
-   * @legacy-covers ::getResourceUrl
+   * @see ::discoverResourceUrl
+   * @see ::getProviderByUrl
+   * @see ::getResourceUrl
    */
   #[DataProvider('providerUrlDiscovery')]
   public function testUrlDiscovery(string $url, string $resource_url): void {

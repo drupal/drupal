@@ -22,7 +22,7 @@ class MediaEmbedFilterConfigurationUiEditTest extends MediaEmbedFilterTestBase {
   /**
    * Tests validation when editing.
    *
-   * @legacy-covers \Drupal\media\Hook\MediaHooks::formFilterFormatEditFormAlter
+   * @see \Drupal\media\Hook\MediaHooks::formFilterFormatEditFormAlter
    */
   #[DataProvider('providerTestValidations')]
   public function testValidationWhenEditing($filter_html_status, $filter_align_status, $filter_caption_status, $filter_html_image_secure_status, $media_embed, $allowed_html, $expected_error_message): void {

@@ -262,7 +262,7 @@ class StorageComparerTest extends UnitTestCase {
   /**
    * Tests different collections.
    *
-   * @legacy-covers ::createChangelist
+   * @see ::createChangelist
    */
   public function testDifferentCollections(): void {
     $source = new MemoryStorage();
@@ -293,7 +293,7 @@ class StorageComparerTest extends UnitTestCase {
   }
 
   /**
-   * @legacy-covers ::createChangelist
+   * @see ::createChangelist
    */
   public function testChangelistUuidMissMatch(): void {
     $target_data = $source_data = $this->getConfigData();

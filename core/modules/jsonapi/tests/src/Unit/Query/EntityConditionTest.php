@@ -78,7 +78,7 @@ class EntityConditionTest extends UnitTestCase {
   /**
    * Tests validation.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   #[DataProvider('validationProvider')]
   public function testValidation(array $input, ?BadRequestHttpException $exception): void {

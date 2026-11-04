@@ -57,7 +57,7 @@ class PoStreamWriterTest extends TestCase {
   }
 
   /**
-   * @legacy-covers ::getURI
+   * @see ::getURI
    */
   public function testGetUriException(): void {
     $this->expectException(\Exception::class);

@@ -46,7 +46,7 @@ class ServiceDeprecationTest extends BrowserTestBase {
   /**
    * Tests get deprecated service via the alias.
    *
-   * @legacy-covers ::get
+   * @see ::get
    */
   #[IgnoreDeprecations]
   public function testGetDeprecatedAlias(): void {

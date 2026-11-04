@@ -134,7 +134,7 @@ class DiffOpOutputBuilderTest extends TestCase {
   /**
    * Tests that two files can be successfully diffed.
    *
-   * @legacy-covers ::toOpsArray
+   * @see ::toOpsArray
    */
   public function testDiffInfiniteLoop(): void {
     $from = explode("\n", file_get_contents(__DIR__ . '/Engine/fixtures/file1.txt'));

@@ -51,8 +51,8 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
   /**
    * Tests metadata.
    *
-   * @legacy-covers ::getMetadata
-   * @legacy-covers ::setMetadata
+   * @see ::getMetadata
+   * @see ::setMetadata
    */
   public function testMetadata(): void {
     $stage = $this->createStage();
@@ -295,7 +295,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
   /**
    * Tests stage directory exists.
    *
-   * @legacy-covers ::sandboxDirectoryExists
+   * @see ::sandboxDirectoryExists
    */
   public function testStageDirectoryExists(): void {
     // Ensure that sandboxDirectoryExists() returns an accurate result during
@@ -326,8 +326,8 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
   /**
    * Tests that destroyed stage directories are actually deleted during cron.
    *
-   * @legacy-covers ::destroy
-   * @legacy-covers \Drupal\package_manager\Hook\CronHook
+   * @see ::destroy
+   * @see \Drupal\package_manager\Hook\CronHook
    */
   public function testStageDirectoryDeletedDuringCron(): void {
     $stage = $this->createStage();
@@ -358,9 +358,9 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
    * The long-lived sandbox directory should survive destroy() and be reused
    * across create/destroy cycles.
    *
-   * @legacy-covers ::getSandboxDirectory
-   * @legacy-covers ::destroy
-   * @legacy-covers ::create
+   * @see ::getSandboxDirectory
+   * @see ::destroy
+   * @see ::create
    */
   public function testSandboxDirectoryPersistsAndIsReused(): void {
     $stage = $this->createStage();
@@ -392,7 +392,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
    * creating or claiming the stage, since other components (CronHook,
    * LongLivedSandboxSubscriber) need to check the path for cleanup decisions.
    *
-   * @legacy-covers ::getSandboxDirectory
+   * @see ::getSandboxDirectory
    */
   public function testGetSandboxDirectoryWithoutLock(): void {
     $stage = $this->createStage();
@@ -412,7 +412,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
    * it should NOT cache the staging root in the shared tempstore, since that
    * would pollute state visible to other stage operations.
    *
-   * @legacy-covers ::getSandboxDirectory
+   * @see ::getSandboxDirectory
    */
   public function testGetStagingRootDoesNotPolluteTempstore(): void {
     $stage = $this->createStage();
@@ -434,7 +434,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
   /**
    * Tests that LongLivedSandboxSubscriber tracks the create event time.
    *
-   * @legacy-covers \Drupal\package_manager\EventSubscriber\LongLivedSandboxSubscriber
+   * @see \Drupal\package_manager\EventSubscriber\LongLivedSandboxSubscriber
    */
   public function testLongLivedSandboxSubscriberTracksTime(): void {
     $state = $this->container->get('state');
@@ -464,7 +464,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
    * If there's no recorded create event in state (e.g. state was cleared),
    * cron should not attempt to delete the sandbox directory even if it exists.
    *
-   * @legacy-covers \Drupal\package_manager\Hook\CronHook
+   * @see \Drupal\package_manager\Hook\CronHook
    */
   public function testCronDoesNotDeleteWithoutCreateEvent(): void {
     $stage = $this->createStage();
@@ -488,7 +488,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
    * sandbox directory should be deleted directly to ensure unknown files
    * from a previous sync are not retained.
    *
-   * @legacy-covers \Drupal\package_manager\EventSubscriber\LongLivedSandboxSubscriber
+   * @see \Drupal\package_manager\EventSubscriber\LongLivedSandboxSubscriber
    */
   public function testConfigChangeDeletesSandbox(): void {
     $stage = $this->createStage();
@@ -520,7 +520,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
    * If a stage is in use (locked), the sandbox should not be deleted even if
    * the config setting changes.
    *
-   * @legacy-covers \Drupal\package_manager\EventSubscriber\LongLivedSandboxSubscriber
+   * @see \Drupal\package_manager\EventSubscriber\LongLivedSandboxSubscriber
    */
   public function testConfigChangeDoesNotDeleteWhileStageIsActive(): void {
     $stage = $this->createStage();
@@ -550,7 +550,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
    * If the stage is locked (not available), cron should not delete the sandbox
    * directory even if it is older than the configured maximum age.
    *
-   * @legacy-covers \Drupal\package_manager\Hook\CronHook
+   * @see \Drupal\package_manager\Hook\CronHook
    */
   public function testCronDoesNotDeleteWhileStageIsActive(): void {
     $stage = $this->createStage();
@@ -577,7 +577,7 @@ class SandboxManagerBaseTest extends PackageManagerKernelTestBase {
    * When 'include_unknown_files_in_project_root' is changed to FALSE but no
    * sandbox directory exists on disk, the subscriber should do nothing.
    *
-   * @legacy-covers \Drupal\package_manager\EventSubscriber\LongLivedSandboxSubscriber
+   * @see \Drupal\package_manager\EventSubscriber\LongLivedSandboxSubscriber
    */
   public function testConfigChangeNoOpWithoutSandboxDirectory(): void {
     $stage = $this->createStage();

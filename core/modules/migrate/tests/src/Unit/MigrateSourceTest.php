@@ -150,7 +150,7 @@ class MigrateSourceTest extends MigrateTestCase {
   /**
    * Tests highwater track changes incompatible.
    *
-   * @legacy-covers ::__construct
+   * @see ::__construct
    */
   public function testHighwaterTrackChangesIncompatible(): void {
     $source_config = ['track_changes' => TRUE, 'high_water_property' => ['name' => 'something']];

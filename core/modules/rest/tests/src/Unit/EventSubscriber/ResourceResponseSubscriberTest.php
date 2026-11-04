@@ -38,7 +38,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   /**
    * Tests serialization.
    *
-   * @legacy-covers ::onResponse
+   * @see ::onResponse
    */
   #[DataProvider('providerTestSerialization')]
   public function testSerialization(string|bool|array|null $data, string|false $expected_response = FALSE): void {
@@ -85,7 +85,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    * accepted by the server, because the routing system would have already
    * prevented those from reaching the controller.
    *
-   * @legacy-covers ::getResponseFormat
+   * @see ::getResponseFormat
    */
   #[DataProvider('providerTestResponseFormat')]
   public function testResponseFormat($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
@@ -120,10 +120,10 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   /**
    * Tests on response with cacheable response.
    *
-   * @legacy-covers ::onResponse
-   * @legacy-covers ::getResponseFormat
-   * @legacy-covers ::renderResponseBody
-   * @legacy-covers ::flattenResponse
+   * @see ::onResponse
+   * @see ::getResponseFormat
+   * @see ::renderResponseBody
+   * @see ::flattenResponse
    */
   #[DataProvider('providerTestResponseFormat')]
   public function testOnResponseWithCacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
@@ -171,10 +171,10 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   /**
    * Tests on response with uncacheable response.
    *
-   * @legacy-covers ::onResponse
-   * @legacy-covers ::getResponseFormat
-   * @legacy-covers ::renderResponseBody
-   * @legacy-covers ::flattenResponse
+   * @see ::onResponse
+   * @see ::getResponseFormat
+   * @see ::renderResponseBody
+   * @see ::flattenResponse
    */
   #[DataProvider('providerTestResponseFormat')]
   public function testOnResponseWithUncacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {

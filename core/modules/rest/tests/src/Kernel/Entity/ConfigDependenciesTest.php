@@ -44,9 +44,9 @@ class ConfigDependenciesTest extends KernelTestBase {
   /**
    * Tests on dependency removal remove unrelated dependency.
    *
-   * @legacy-covers ::onDependencyRemoval
-   * @legacy-covers ::onDependencyRemovalForMethodGranularity
-   * @legacy-covers ::onDependencyRemovalForResourceGranularity
+   * @see ::onDependencyRemoval
+   * @see ::onDependencyRemovalForMethodGranularity
+   * @see ::onDependencyRemovalForResourceGranularity
    */
   #[DataProvider('providerBasicDependencies')]
   public function testOnDependencyRemovalRemoveUnrelatedDependency(array $configuration): void {
@@ -98,8 +98,8 @@ class ConfigDependenciesTest extends KernelTestBase {
   /**
    * Tests on dependency removal remove auth.
    *
-   * @legacy-covers ::onDependencyRemoval
-   * @legacy-covers ::onDependencyRemovalForMethodGranularity
+   * @see ::onDependencyRemoval
+   * @see ::onDependencyRemovalForMethodGranularity
    */
   public function testOnDependencyRemovalRemoveAuth(): void {
     $config_dependencies = new ConfigDependencies(['json' => 'serialization'], ['basic_auth' => 'basic_auth']);
@@ -136,8 +136,8 @@ class ConfigDependenciesTest extends KernelTestBase {
   /**
    * Tests on dependency removal for resource granularity.
    *
-   * @legacy-covers ::onDependencyRemoval
-   * @legacy-covers ::onDependencyRemovalForResourceGranularity
+   * @see ::onDependencyRemoval
+   * @see ::onDependencyRemovalForResourceGranularity
    */
   #[DataProvider('providerOnDependencyRemovalForResourceGranularity')]
   public function testOnDependencyRemovalForResourceGranularity(array $configuration, string $module, bool|array $expected_configuration): void {

@@ -121,7 +121,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   /**
    * Tests target entity type id.
    *
-   * @legacy-covers ::getTargetEntityTypeId
+   * @see ::getTargetEntityTypeId
    */
   public function testTargetEntityTypeId(): void {
     $config = new ContentLanguageSettings([
@@ -134,7 +134,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   /**
    * Tests target bundle.
    *
-   * @legacy-covers ::getTargetBundle
+   * @see ::getTargetBundle
    */
   public function testTargetBundle(): void {
     $config = new ContentLanguageSettings([
@@ -147,8 +147,8 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   /**
    * Tests default langcode.
    *
-   * @legacy-covers ::getDefaultLangcode
-   * @legacy-covers ::setDefaultLangcode
+   * @see ::getDefaultLangcode
+   * @see ::setDefaultLangcode
    */
   #[DataProvider('providerDefaultLangcode')]
   public function testDefaultLangcode(ContentLanguageSettings $config, string $expected): void {
@@ -180,8 +180,8 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   /**
    * Tests language alterable.
    *
-   * @legacy-covers ::setLanguageAlterable
-   * @legacy-covers ::isLanguageAlterable
+   * @see ::setLanguageAlterable
+   * @see ::isLanguageAlterable
    */
   #[DataProvider('providerLanguageAlterable')]
   public function testLanguageAlterable(ContentLanguageSettings $config, bool $expected): void {

@@ -30,7 +30,7 @@ class UrlConversionTest extends UnitTestCase {
   /**
    * Tests db url to connection conversion.
    *
-   * @legacy-covers ::convertDbUrlToConnectionInfo
+   * @see ::convertDbUrlToConnectionInfo
    */
   #[DataProvider('providerConvertDbUrlToConnectionInfo')]
   public function testDbUrlToConnectionConversion(string $url, array $database_array, bool $include_test_drivers): void {
@@ -477,7 +477,7 @@ class UrlConversionTest extends UnitTestCase {
    * @param string $expected_exception_message
    *   The expected exception message.
    *
-   * @legacy-covers ::getConnectionInfoAsUrl
+   * @see ::getConnectionInfoAsUrl
    */
   #[DataProvider('providerInvalidArgumentGetConnectionInfoAsUrl')]
   public function testGetInvalidArgumentGetConnectionInfoAsUrl(array $connection_options, string $expected_exception_message): void {
@@ -512,7 +512,7 @@ class UrlConversionTest extends UnitTestCase {
   /**
    * Tests driver module does not exist.
    *
-   * @legacy-covers ::convertDbUrlToConnectionInfo
+   * @see ::convertDbUrlToConnectionInfo
    */
   public function testDriverModuleDoesNotExist(): void {
     $url = 'foo_bar_mysql://test_user:test_pass@test_host:3306/test_database?module=foo_bar';
@@ -524,7 +524,7 @@ class UrlConversionTest extends UnitTestCase {
   /**
    * Tests module driver does not exist.
    *
-   * @legacy-covers ::convertDbUrlToConnectionInfo
+   * @see ::convertDbUrlToConnectionInfo
    */
   public function testModuleDriverDoesNotExist(): void {
     $url = 'driver_test_mysql://test_user:test_pass@test_host:3306/test_database?module=driver_test';

@@ -102,7 +102,7 @@ class UpdateHookRegistryTest extends UnitTestCase {
   /**
    * Tests get versions.
    *
-   * @legacy-covers ::getAvailableUpdates
+   * @see ::getAvailableUpdates
    */
   public function testGetVersions(): void {
     $module_name = 'drupal\tests\core\update\under_test';
@@ -119,10 +119,10 @@ class UpdateHookRegistryTest extends UnitTestCase {
   /**
    * Tests get installed version.
    *
-   * @legacy-covers ::getInstalledVersion
-   * @legacy-covers ::getAllInstalledVersions
-   * @legacy-covers ::setInstalledVersion
-   * @legacy-covers ::deleteInstalledVersion
+   * @see ::getInstalledVersion
+   * @see ::getAllInstalledVersions
+   * @see ::setInstalledVersion
+   * @see ::deleteInstalledVersion
    */
   public function testGetInstalledVersion(): void {
     $versions = [

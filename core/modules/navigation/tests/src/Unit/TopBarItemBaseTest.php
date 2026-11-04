@@ -22,9 +22,9 @@ class TopBarItemBaseTest extends UnitTestCase {
   /**
    * Tests top bar item base.
    *
-   * @legacy-covers ::label
-   * @legacy-covers ::region
-   * @legacy-covers ::weight
+   * @see ::label
+   * @see ::region
+   * @see ::weight
    */
   public function testTopBarItemBase(): void {
     $definition = [

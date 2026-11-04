@@ -26,7 +26,7 @@ class ExtensionPathResolverTest extends KernelTestBase {
   /**
    * Tests extension path resolving.
    *
-   * @legacy-covers ::getPathname
+   * @see ::getPathname
    */
   public function testExtensionPathResolving(): void {
     // Retrieving the location of a module.
@@ -47,7 +47,7 @@ class ExtensionPathResolverTest extends KernelTestBase {
   /**
    * Tests extension path resolving path.
    *
-   * @legacy-covers ::getPath
+   * @see ::getPath
    */
   public function testExtensionPathResolvingPath(): void {
     $this->assertSame('core/modules/system/tests/modules/driver_test', \Drupal::service('extension.list.module')
@@ -57,7 +57,7 @@ class ExtensionPathResolverTest extends KernelTestBase {
   /**
    * Tests extension path resolving with non existing module.
    *
-   * @legacy-covers ::getPathname
+   * @see ::getPathname
    */
   public function testExtensionPathResolvingWithNonExistingModule(): void {
     $this->expectException(UnknownExtensionException::class);
@@ -69,7 +69,7 @@ class ExtensionPathResolverTest extends KernelTestBase {
   /**
    * Tests extension path resolving with non existing theme.
    *
-   * @legacy-covers ::getPathname
+   * @see ::getPathname
    */
   public function testExtensionPathResolvingWithNonExistingTheme(): void {
     $this->expectException(UnknownExtensionException::class);
@@ -81,7 +81,7 @@ class ExtensionPathResolverTest extends KernelTestBase {
   /**
    * Tests extension path resolving with non existing profile.
    *
-   * @legacy-covers ::getPathname
+   * @see ::getPathname
    */
   public function testExtensionPathResolvingWithNonExistingProfile(): void {
     $this->expectException(UnknownExtensionException::class);

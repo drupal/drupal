@@ -54,7 +54,7 @@ class FilterFormatRepositoryTest extends KernelTestBase {
   }
 
   /**
-   * @legacy-covers ::getAllFormats
+   * @see ::getAllFormats
    */
   public function testGetAllFormats(): void {
     // The 'plain_text' format weight is 10.
@@ -62,7 +62,7 @@ class FilterFormatRepositoryTest extends KernelTestBase {
   }
 
   /**
-   * @legacy-covers ::getFormatsForAccount
+   * @see ::getFormatsForAccount
    */
   public function testGetFormatsForAccount(): void {
     $account = $this->createUser(['use text format foo']);
@@ -74,7 +74,7 @@ class FilterFormatRepositoryTest extends KernelTestBase {
   }
 
   /**
-   * @legacy-covers ::getFormatsByRole
+   * @see ::getFormatsByRole
    */
   public function testGetFormatsByRole(): void {
     Role::create([
@@ -88,7 +88,7 @@ class FilterFormatRepositoryTest extends KernelTestBase {
   }
 
   /**
-   * @legacy-covers ::getDefaultFormat
+   * @see ::getDefaultFormat
    */
   public function testGetDefaultFormatWithAccount(): void {
     $account = $this->createUser(['use text format foo', 'use text format bar']);
@@ -97,7 +97,7 @@ class FilterFormatRepositoryTest extends KernelTestBase {
   }
 
   /**
-   * @legacy-covers ::getFallbackFormatId
+   * @see ::getFallbackFormatId
    */
   public function testGetFallbackFormatId(): void {
     $this->config('filter.settings')->set('fallback_format', 'bar')->save();

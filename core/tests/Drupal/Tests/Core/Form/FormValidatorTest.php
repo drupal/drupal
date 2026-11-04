@@ -60,8 +60,8 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * Tests the 'validation_complete' $form_state flag.
    *
-   * @legacy-covers ::validateForm
-   * @legacy-covers ::finalizeValidation
+   * @see ::validateForm
+   * @see ::finalizeValidation
    */
   public function testValidationComplete(): void {
     $form_validator = new FormValidator(
@@ -83,7 +83,7 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * Tests the 'must_validate' $form_state flag.
    *
-   * @legacy-covers ::validateForm
+   * @see ::validateForm
    */
   public function testPreventDuplicateValidation(): void {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
@@ -110,7 +110,7 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * Tests the 'must_validate' $form_state flag.
    *
-   * @legacy-covers ::validateForm
+   * @see ::validateForm
    */
   public function testMustValidate(): void {
     $this->formErrorHandler = $this->createMock(FormErrorHandlerInterface::class);
@@ -140,7 +140,7 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * Tests validate invalid form token.
    *
-   * @legacy-covers ::validateForm
+   * @see ::validateForm
    */
   public function testValidateInvalidFormToken(): void {
     $request_stack = new RequestStack();
@@ -180,7 +180,7 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * Tests validate valid form token.
    *
-   * @legacy-covers ::validateForm
+   * @see ::validateForm
    */
   public function testValidateValidFormToken(): void {
     $request_stack = new RequestStack();
@@ -347,7 +347,7 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * Tests required error message.
    *
-   * @legacy-covers ::doValidateForm
+   * @see ::doValidateForm
    */
   #[DataProvider('providerTestRequiredErrorMessage')]
   public function testRequiredErrorMessage(array $element, string $expected_message): void {
@@ -405,7 +405,7 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * Tests element validate.
    *
-   * @legacy-covers ::doValidateForm
+   * @see ::doValidateForm
    */
   public function testElementValidate(): void {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')

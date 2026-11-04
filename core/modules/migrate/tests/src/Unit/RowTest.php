@@ -214,8 +214,8 @@ class RowTest extends UnitTestCase {
   /**
    * Tests getting/setting the ID Map.
    *
-   * @legacy-covers ::setIdMap
-   * @legacy-covers ::getIdMap
+   * @see ::setIdMap
+   * @see ::getIdMap
    */
   public function testGetSetIdMap(): void {
     $row = new Row($this->testValues, $this->testSourceIds);
@@ -296,8 +296,8 @@ class RowTest extends UnitTestCase {
   /**
    * Tests checking for and removing destination properties that may be empty.
    *
-   * @legacy-covers ::hasEmptyDestinationProperty
-   * @legacy-covers ::removeEmptyDestinationProperty
+   * @see ::hasEmptyDestinationProperty
+   * @see ::removeEmptyDestinationProperty
    */
   public function testDestinationOrEmptyProperty(): void {
     $row = new Row($this->testValues, $this->testSourceIds);

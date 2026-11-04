@@ -120,7 +120,7 @@ class DateFormatterTest extends KernelTestBase {
    *
    * @see http://www.faqs.org/rfcs/rfc2822.html
    *
-   * @legacy-covers ::format
+   * @see ::format
    */
   public function testRfc2822DateFormat(): void {
     $days_of_week_abbr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

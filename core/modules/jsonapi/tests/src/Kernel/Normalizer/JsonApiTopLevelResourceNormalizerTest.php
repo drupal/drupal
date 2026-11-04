@@ -854,8 +854,8 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
   /**
    * Test the generated resource object normalization against the schema.
    *
-   * @legacy-covers \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::normalize
-   * @legacy-covers \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::getNormalizationSchema
+   * @see \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::normalize
+   * @see \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::getNormalizationSchema
    */
   public function testResourceObjectSchema(): void {
     [, $resource_object] = $this->getTestContentEntityResource();
@@ -877,8 +877,8 @@ class JsonApiTopLevelResourceNormalizerTest extends JsonapiKernelTestBase {
   /**
    * Test the generated config resource object normalization against the schema.
    *
-   * @legacy-covers \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::normalize
-   * @legacy-covers \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::getNormalizationSchema
+   * @see \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::normalize
+   * @see \Drupal\jsonapi\Normalizer\ResourceObjectNormalizer::getNormalizationSchema
    */
   public function testConfigEntityResourceObjectSchema(): void {
     [, $resource_object] = $this->getTestConfigEntityResource();

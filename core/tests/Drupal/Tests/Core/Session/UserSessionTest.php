@@ -58,7 +58,7 @@ class UserSessionTest extends UnitTestCase {
    * Tests the method getRoles exclude or include locked roles based in param.
    *
    * @todo Move roles constants to a class/interface
-   * @legacy-covers ::getRoles
+   * @see ::getRoles
    */
   public function testUserGetRoles(): void {
     $user = $this->createUserSession(['role_two'], TRUE);
@@ -85,7 +85,7 @@ class UserSessionTest extends UnitTestCase {
   /**
    * Tests that ::getLastAccessedTime() returns an integer.
    *
-   * @legacy-covers ::getLastAccessedTime
+   * @see ::getLastAccessedTime
    */
   public function testGetLastAccessedTime(): void {
     $user = new UserSession([

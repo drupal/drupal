@@ -130,8 +130,8 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests has image style mappings.
    *
-   * @legacy-covers ::addImageStyleMapping
-   * @legacy-covers ::hasImageStyleMappings
+   * @see ::addImageStyleMapping
+   * @see ::hasImageStyleMappings
    */
   public function testHasImageStyleMappings(): void {
     $entity = new ResponsiveImageStyle([]);
@@ -183,8 +183,8 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests get image style mapping.
    *
-   * @legacy-covers ::addImageStyleMapping
-   * @legacy-covers ::getImageStyleMapping
+   * @see ::addImageStyleMapping
+   * @see ::getImageStyleMapping
    */
   public function testGetImageStyleMapping(): void {
     $entity = new ResponsiveImageStyle(['']);
@@ -205,8 +205,8 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests get keyed image style mappings.
    *
-   * @legacy-covers ::addImageStyleMapping
-   * @legacy-covers ::getKeyedImageStyleMappings
+   * @see ::addImageStyleMapping
+   * @see ::getKeyedImageStyleMappings
    */
   public function testGetKeyedImageStyleMappings(): void {
     $entity = new ResponsiveImageStyle(['']);
@@ -299,8 +299,8 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests get image style mappings.
    *
-   * @legacy-covers ::addImageStyleMapping
-   * @legacy-covers ::getImageStyleMappings
+   * @see ::addImageStyleMapping
+   * @see ::getImageStyleMappings
    */
   public function testGetImageStyleMappings(): void {
     $entity = new ResponsiveImageStyle(['']);
@@ -353,8 +353,8 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests remove image style mappings.
    *
-   * @legacy-covers ::addImageStyleMapping
-   * @legacy-covers ::removeImageStyleMappings
+   * @see ::addImageStyleMapping
+   * @see ::removeImageStyleMappings
    */
   public function testRemoveImageStyleMappings(): void {
     $entity = new ResponsiveImageStyle(['']);
@@ -386,8 +386,8 @@ class ResponsiveImageStyleConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests set breakpoint group.
    *
-   * @legacy-covers ::setBreakpointGroup
-   * @legacy-covers ::getBreakpointGroup
+   * @see ::setBreakpointGroup
+   * @see ::getBreakpointGroup
    */
   public function testSetBreakpointGroup(): void {
     $entity = new ResponsiveImageStyle(['breakpoint_group' => 'test_group']);

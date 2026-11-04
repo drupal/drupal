@@ -39,9 +39,9 @@ class MessengerTest extends KernelTestBase {
   /**
    * Tests remove single message.
    *
-   * @legacy-covers ::addStatus
-   * @legacy-covers ::deleteByType
-   * @legacy-covers ::messagesByType
+   * @see ::addStatus
+   * @see ::deleteByType
+   * @see ::messagesByType
    */
   public function testRemoveSingleMessage(): void {
 
@@ -66,12 +66,12 @@ class MessengerTest extends KernelTestBase {
   /**
    * Tests we don't add duplicates.
    *
-   * @legacy-covers ::all
-   * @legacy-covers ::addStatus
-   * @legacy-covers ::addWarning
-   * @legacy-covers ::addError
-   * @legacy-covers ::deleteByType
-   * @legacy-covers ::deleteAll
+   * @see ::all
+   * @see ::addStatus
+   * @see ::addWarning
+   * @see ::addError
+   * @see ::deleteByType
+   * @see ::deleteAll
    */
   public function testAddNoDuplicates(): void {
 
@@ -109,10 +109,10 @@ class MessengerTest extends KernelTestBase {
   /**
    * Tests we do add duplicates with repeat flag.
    *
-   * @legacy-covers ::addStatus
-   * @legacy-covers ::addWarning
-   * @legacy-covers ::addError
-   * @legacy-covers ::deleteByType
+   * @see ::addStatus
+   * @see ::addWarning
+   * @see ::addError
+   * @see ::deleteByType
    */
   public function testAddWithDuplicates(): void {
 
@@ -136,9 +136,9 @@ class MessengerTest extends KernelTestBase {
   /**
    * Tests adding markup.
    *
-   * @legacy-covers ::addStatus
-   * @legacy-covers ::deleteByType
-   * @legacy-covers ::messagesByType
+   * @see ::addStatus
+   * @see ::deleteByType
+   * @see ::messagesByType
    */
   public function testAddMarkup(): void {
 

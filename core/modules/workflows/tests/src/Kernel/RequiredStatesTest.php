@@ -28,8 +28,8 @@ class RequiredStatesTest extends KernelTestBase {
   /**
    * Tests get required states.
    *
-   * @legacy-covers ::getRequiredStates
-   * @legacy-covers ::__construct
+   * @see ::getRequiredStates
+   * @see ::__construct
    */
   public function testGetRequiredStates(): void {
     $workflow = Workflow::create([
@@ -50,7 +50,7 @@ class RequiredStatesTest extends KernelTestBase {
   /**
    * Tests delete required state API.
    *
-   * @legacy-covers \Drupal\workflows\Entity\Workflow::preSave
+   * @see \Drupal\workflows\Entity\Workflow::preSave
    */
   public function testDeleteRequiredStateAPI(): void {
     $workflow = Workflow::create([
@@ -69,7 +69,7 @@ class RequiredStatesTest extends KernelTestBase {
   /**
    * Tests no states required state API.
    *
-   * @legacy-covers \Drupal\workflows\Entity\Workflow::preSave
+   * @see \Drupal\workflows\Entity\Workflow::preSave
    */
   public function testNoStatesRequiredStateAPI(): void {
     $workflow = Workflow::create([

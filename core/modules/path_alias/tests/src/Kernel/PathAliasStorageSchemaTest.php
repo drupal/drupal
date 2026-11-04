@@ -34,7 +34,7 @@ class PathAliasStorageSchemaTest extends KernelTestBase {
   /**
    * Tests that the path_alias__status index is removed.
    *
-   * @legacy-covers ::getEntitySchema
+   * @see ::getEntitySchema
    */
   public function testPathAliasStatusIndexRemoved(): void {
     $schema = \Drupal::database()->schema();

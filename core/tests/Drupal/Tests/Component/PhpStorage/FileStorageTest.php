@@ -42,10 +42,10 @@ class FileStorageTest extends PhpStorageTestBase {
   /**
    * Tests basic load/save/delete operations.
    *
-   * @legacy-covers ::load
-   * @legacy-covers ::save
-   * @legacy-covers ::exists
-   * @legacy-covers ::delete
+   * @see ::load
+   * @see ::save
+   * @see ::exists
+   * @see ::delete
    */
   public function testCRUD(): void {
     $php = new FileStorage($this->standardSettings);

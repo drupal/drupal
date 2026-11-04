@@ -46,6 +46,7 @@ final class TestClassMethodMetadata implements Rule {
     '@doesNotPerformAssertions',
     '@group',
     '@large',
+    '@legacy-covers',
     '@medium',
     '@postCondition',
     '@preCondition',

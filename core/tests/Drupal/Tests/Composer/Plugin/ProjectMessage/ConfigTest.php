@@ -62,7 +62,7 @@ class ConfigTest extends TestCase {
   /**
    * Tests get message text.
    *
-   * @legacy-covers ::getText
+   * @see ::getText
    */
   #[DataProvider('provideGetMessageText')]
   public function testGetMessageText(array $expected, array $config): void {
@@ -80,7 +80,7 @@ class ConfigTest extends TestCase {
   /**
    * Tests default file.
    *
-   * @legacy-covers ::getText
+   * @see ::getText
    */
   public function testDefaultFile(): void {
     // Root package has no extra field.

@@ -55,7 +55,7 @@ class ConfigEntityStorageTest extends KernelTestBase {
   /**
    * Tests the hasData() method for config entity storage.
    *
-   * @legacy-covers \Drupal\Core\Config\Entity\ConfigEntityStorage::hasData
+   * @see \Drupal\Core\Config\Entity\ConfigEntityStorage::hasData
    */
   public function testHasData(): void {
     $storage = \Drupal::entityTypeManager()->getStorage('config_test');

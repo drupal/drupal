@@ -64,7 +64,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Tests installing an additional base field while installing an entity type.
    *
-   * @legacy-covers ::installFieldableEntityType
+   * @see ::installFieldableEntityType
    */
   public function testInstallAdditionalBaseFieldDuringFieldableEntityTypeInstallation(): void {
     $entity_type = clone $this->entityTypeManager->getDefinition('entity_test_update');

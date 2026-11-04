@@ -32,7 +32,7 @@ class TextItemBaseTest extends KernelTestBase {
   /**
    * Tests creation of sample values.
    *
-   * @legacy-covers ::generateSampleValue
+   * @see ::generateSampleValue
    */
   #[DataProvider('providerTextFieldSampleValue')]
   public function testTextFieldSampleValue(int $max_length, array $formats, string $expected_format): void {
@@ -107,7 +107,7 @@ class TextItemBaseTest extends KernelTestBase {
   /**
    * Tests applyDefaultValue respects allowed_formats.
    *
-   * @legacy-covers ::applyDefaultValue
+   * @see ::applyDefaultValue
    */
   #[DataProvider('providerApplyDefaultValueFormat')]
   public function testApplyDefaultValueFormat(array $formats, string $expected_format): void {

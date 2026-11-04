@@ -111,7 +111,7 @@ class UserEntityTest extends KernelTestBase {
   /**
    * Tests that ::getLastAccessedTime() returns an integer for a loaded user.
    *
-   * @legacy-covers ::getLastAccessedTime
+   * @see ::getLastAccessedTime
    */
   public function testGetLastAccessedTime(): void {
     $access = 100;

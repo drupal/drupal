@@ -126,7 +126,7 @@ class SandboxManagerBaseTest extends UnitTestCase {
   /**
    * Tests type must be explicitly overridden.
    *
-   * @legacy-covers ::getType
+   * @see ::getType
    */
   public function testTypeMustBeExplicitlyOverridden(): void {
     $good_grandchild = new class () extends ChildSandboxManager {

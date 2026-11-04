@@ -75,8 +75,8 @@ class DefaultsSectionStorageTest extends UnitTestCase {
   /**
    * Tests third party settings.
    *
-   * @legacy-covers ::getThirdPartySetting
-   * @legacy-covers ::setThirdPartySetting
+   * @see ::getThirdPartySetting
+   * @see ::setThirdPartySetting
    */
   public function testThirdPartySettings(): void {
     $this->entityTypeManager->getDefinition('entity_view_display')->willReturn(new EntityType(['id' => 'entity_view_display']));
@@ -222,9 +222,9 @@ class DefaultsSectionStorageTest extends UnitTestCase {
   /**
    * Tests build routes.
    *
-   * @legacy-covers ::buildRoutes
-   * @legacy-covers ::getEntityTypes
-   * @legacy-covers \Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::buildLayoutRoutes
+   * @see ::buildRoutes
+   * @see ::getEntityTypes
+   * @see \Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::buildLayoutRoutes
    */
   public function testBuildRoutes(): void {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);

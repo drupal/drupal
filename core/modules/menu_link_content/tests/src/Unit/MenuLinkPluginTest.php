@@ -19,7 +19,7 @@ class MenuLinkPluginTest extends UnitTestCase {
   /**
    * Tests get instance reflection.
    *
-   * @legacy-covers ::getUuid
+   * @see ::getUuid
    */
   public function testGetInstanceReflection(): void {
     /** @var \Drupal\menu_link_content\Plugin\Menu\MenuLinkContent $menu_link_content_plugin */

@@ -20,7 +20,7 @@ class ProjectCoreCompatibilityTest extends UnitTestCase {
   /**
    * Tests set project core compatibility ranges.
    *
-   * @legacy-covers ::setReleaseMessage
+   * @see ::setReleaseMessage
    */
   #[DataProvider('providerSetProjectCoreCompatibilityRanges')]
   public function testSetProjectCoreCompatibilityRanges(array $project_data, $core_data, array $supported_branches, array $core_releases, array $expected_releases, array $expected_security_updates): void {

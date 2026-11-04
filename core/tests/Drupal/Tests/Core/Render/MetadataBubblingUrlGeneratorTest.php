@@ -79,7 +79,7 @@ class MetadataBubblingUrlGeneratorTest extends UrlGeneratorTest {
    * @param array $options
    *   The URL options.
    *
-   * @legacy-covers ::bubble
+   * @see ::bubble
    */
   #[DataProvider('providerUrlBubbleableMetadataBubbling')]
   public function testUrlBubbleableMetadataBubbling(bool $collect_bubbleable_metadata, int $invocations, array $options): void {

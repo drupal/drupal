@@ -25,9 +25,9 @@ class SecurityAdvisoryTest extends UnitTestCase {
    * @param mixed[] $expected
    *   The expected changes for the object methods.
    *
-   * @legacy-covers ::createFromArray
-   * @legacy-covers ::isCoreAdvisory
-   * @legacy-covers ::isPsa
+   * @see ::createFromArray
+   * @see ::isCoreAdvisory
+   * @see ::isPsa
    */
   #[DataProvider('providerCreateFromArray')]
   public function testCreateFromArray(array $changes, array $expected = []): void {

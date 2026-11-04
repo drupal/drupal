@@ -19,7 +19,7 @@ class DefaultValueTest extends MigrateProcessTestCase {
   /**
    * Tests the default_value process plugin.
    *
-   * @legacy-covers ::transform
+   * @see ::transform
    */
   #[DataProvider('defaultValueDataProvider')]
   public function testDefaultValue(array $configuration, string|bool|int|array $expected_value, string|bool|int|array|null $value): void {

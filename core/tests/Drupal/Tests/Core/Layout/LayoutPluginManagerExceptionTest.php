@@ -26,7 +26,7 @@ class LayoutPluginManagerExceptionTest extends UnitTestCase {
   /**
    * Tests ::processDefinition() with a layout that doesn't have a label.
    *
-   * @legacy-covers ::processDefinition
+   * @see ::processDefinition
    */
   public function testProcessDefinitionWithMissingLayoutLabel(): void {
     $this->expectException(InvalidPluginDefinitionException::class);

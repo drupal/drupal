@@ -105,8 +105,8 @@ class JsonApiSpecTest extends UnitTestCase {
   /**
    * Provides test cases.
    *
-   * @legacy-covers ::isValidCustomQueryParameter
-   * @legacy-covers ::isValidMemberName
+   * @see ::isValidCustomQueryParameter
+   * @see ::isValidMemberName
    */
   #[DataProvider('providerTestIsValidCustomQueryParameter')]
   public function testIsValidCustomQueryParameter($custom_query_parameter, $expected): void {

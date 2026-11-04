@@ -62,7 +62,7 @@ class ServiceDestructionTest extends KernelTestBase {
   /**
    * Tests destructable services order.
    *
-   * @legacy-covers \Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass::process
+   * @see \Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass::process
    */
   public function testDestructableServicesOrder(): void {
     // Destructable services before the module is enabled.

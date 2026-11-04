@@ -51,8 +51,8 @@ class FrontMatterTest extends TestCase {
   /**
    * Tests when a passed serializer doesn't implement the proper interface.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::create
+   * @see ::__construct
+   * @see ::create
    */
   public function testFrontMatterSerializerException(): void {
     $this->expectException(\AssertionError::class);
@@ -63,10 +63,10 @@ class FrontMatterTest extends TestCase {
   /**
    * Tests broken front matter.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::create
-   * @legacy-covers ::parse
-   * @legacy-covers \Drupal\Component\FrontMatter\Exception\FrontMatterParseException
+   * @see ::__construct
+   * @see ::create
+   * @see ::parse
+   * @see \Drupal\Component\FrontMatter\Exception\FrontMatterParseException
    */
   public function testFrontMatterBroken(): void {
     $this->expectException(FrontMatterParseException::class);
@@ -85,12 +85,12 @@ class FrontMatterTest extends TestCase {
    * @param string $content
    *   The content to use for testing purposes.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getContent
-   * @legacy-covers ::getData
-   * @legacy-covers ::getLine
-   * @legacy-covers ::create
-   * @legacy-covers ::parse
+   * @see ::__construct
+   * @see ::getContent
+   * @see ::getData
+   * @see ::getLine
+   * @see ::create
+   * @see ::parse
    */
   #[DataProvider('providerFrontMatterData')]
   public function testFrontMatterData(?array $yaml, $line, $content = self::SOURCE): void {

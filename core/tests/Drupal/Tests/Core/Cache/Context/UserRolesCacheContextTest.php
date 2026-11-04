@@ -20,7 +20,7 @@ class UserRolesCacheContextTest extends UnitTestCase {
   /**
    * Tests calculated role.
    *
-   * @legacy-covers ::getContext
+   * @see ::getContext
    */
   public function testCalculatedRole(): void {
     $current_user = $this->prophesize(AccountInterface::class);

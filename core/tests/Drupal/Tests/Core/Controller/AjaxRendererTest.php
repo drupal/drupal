@@ -94,7 +94,7 @@ class AjaxRendererTest extends UnitTestCase {
   /**
    * Tests the content method.
    *
-   * @legacy-covers ::renderResponse
+   * @see ::renderResponse
    */
   public function testRenderWithFragmentObject(): void {
     $main_content = ['#markup' => 'example content'];

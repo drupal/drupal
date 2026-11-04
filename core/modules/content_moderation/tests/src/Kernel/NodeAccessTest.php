@@ -71,7 +71,7 @@ class NodeAccessTest extends KernelTestBase {
   /**
    * Tests get default revision id.
    *
-   * @legacy-covers \Drupal\content_moderation\ModerationInformation::getDefaultRevisionId
+   * @see \Drupal\content_moderation\ModerationInformation::getDefaultRevisionId
    */
   public function testGetDefaultRevisionId(): void {
     // Create an admin user.

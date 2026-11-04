@@ -20,7 +20,7 @@ class SettingsRewriteTest extends KernelTestBase {
   /**
    * Tests drupal rewrite settings.
    *
-   * @legacy-covers \Drupal\Core\Site\SettingsEditor::rewrite
+   * @see \Drupal\Core\Site\SettingsEditor::rewrite
    */
   public function testDrupalRewriteSettings(): void {
     include_once $this->root . '/core/includes/install.inc';

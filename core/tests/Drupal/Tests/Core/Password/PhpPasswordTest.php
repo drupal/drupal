@@ -46,8 +46,8 @@ class PhpPasswordTest extends UnitTestCase {
   /**
    * Tests a password needs update.
    *
-   * @legacy-covers ::hash
-   * @legacy-covers ::needsRehash
+   * @see ::hash
+   * @see ::needsRehash
    */
   public function testPasswordNeedsUpdate(): void {
     $weakHash = (new PhpPassword(PASSWORD_BCRYPT, ['cost' => 4]))->hash($this->password);
@@ -57,8 +57,8 @@ class PhpPasswordTest extends UnitTestCase {
   /**
    * Tests password hashing.
    *
-   * @legacy-covers ::check
-   * @legacy-covers ::needsRehash
+   * @see ::check
+   * @see ::needsRehash
    */
   public function testPasswordChecking(): void {
     $this->assertTrue($this->passwordHasher->check($this->password, $this->passwordHash), 'Password check succeeds.');
@@ -68,9 +68,9 @@ class PhpPasswordTest extends UnitTestCase {
   /**
    * Tests password rehashing.
    *
-   * @legacy-covers ::hash
-   * @legacy-covers ::check
-   * @legacy-covers ::needsRehash
+   * @see ::hash
+   * @see ::check
+   * @see ::needsRehash
    */
   public function testPasswordRehashing(): void {
     // Increment the cost by one.
@@ -89,7 +89,7 @@ class PhpPasswordTest extends UnitTestCase {
   /**
    * Verifies that passwords longer than 512 bytes are not hashed.
    *
-   * @legacy-covers ::hash
+   * @see ::hash
    */
   #[DataProvider('providerLongPasswords')]
   public function testLongPassword($password, $allowed): void {
@@ -130,7 +130,7 @@ class PhpPasswordTest extends UnitTestCase {
   /**
    * Tests password check in case provided hash is NULL.
    *
-   * @legacy-covers ::check
+   * @see ::check
    */
   public function testEmptyHash(): void {
     $this->assertFalse($this->passwordHasher->check($this->password, NULL));

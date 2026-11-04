@@ -28,7 +28,7 @@ class FileAudioFormatterTest extends FileMediaFormatterTestBase {
   /**
    * Tests render.
    *
-   * @legacy-covers ::viewElements
+   * @see ::viewElements
    */
   #[DataProvider('dataProvider')]
   public function testRender(int $tag_count, array $formatter_settings): void {

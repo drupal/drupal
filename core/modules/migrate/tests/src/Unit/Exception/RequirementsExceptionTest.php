@@ -30,7 +30,7 @@ class RequirementsExceptionTest extends UnitTestCase {
   /**
    * Tests get exception string.
    *
-   * @legacy-covers ::getRequirementsString
+   * @see ::getRequirementsString
    */
   #[DataProvider('getRequirementsProvider')]
   public function testGetExceptionString(string $expected, string $message, array $requirements): void {

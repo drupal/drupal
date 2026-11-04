@@ -91,7 +91,7 @@ class FilterTest extends JsonapiKernelTestBase {
   /**
    * Tests invalid filter path due to missing property name.
    *
-   * @legacy-covers ::queryCondition
+   * @see ::queryCondition
    */
   public function testInvalidFilterPathDueToMissingPropertyName(): void {
     $this->expectException(CacheableBadRequestHttpException::class);
@@ -103,7 +103,7 @@ class FilterTest extends JsonapiKernelTestBase {
   /**
    * Tests invalid filter path due to missing property name reference field with meta properties.
    *
-   * @legacy-covers ::queryCondition
+   * @see ::queryCondition
    */
   public function testInvalidFilterPathDueToMissingPropertyNameReferenceFieldWithMetaProperties(): void {
     $this->expectException(CacheableBadRequestHttpException::class);
@@ -115,7 +115,7 @@ class FilterTest extends JsonapiKernelTestBase {
   /**
    * Tests invalid filter path due missing meta prefix reference field with meta properties.
    *
-   * @legacy-covers ::queryCondition
+   * @see ::queryCondition
    */
   public function testInvalidFilterPathDueMissingMetaPrefixReferenceFieldWithMetaProperties(): void {
     $this->expectException(CacheableBadRequestHttpException::class);
@@ -127,7 +127,7 @@ class FilterTest extends JsonapiKernelTestBase {
   /**
    * Tests invalid filter path due to missing property name reference field without meta properties.
    *
-   * @legacy-covers ::queryCondition
+   * @see ::queryCondition
    */
   public function testInvalidFilterPathDueToMissingPropertyNameReferenceFieldWithoutMetaProperties(): void {
     $this->expectException(CacheableBadRequestHttpException::class);
@@ -139,7 +139,7 @@ class FilterTest extends JsonapiKernelTestBase {
   /**
    * Tests invalid filter path due to nonexistent property.
    *
-   * @legacy-covers ::queryCondition
+   * @see ::queryCondition
    */
   public function testInvalidFilterPathDueToNonexistentProperty(): void {
     $this->expectException(CacheableBadRequestHttpException::class);
@@ -151,7 +151,7 @@ class FilterTest extends JsonapiKernelTestBase {
   /**
    * Tests invalid filter path due to elided sole property.
    *
-   * @legacy-covers ::queryCondition
+   * @see ::queryCondition
    */
   public function testInvalidFilterPathDueToElidedSoleProperty(): void {
     $this->expectException(CacheableBadRequestHttpException::class);

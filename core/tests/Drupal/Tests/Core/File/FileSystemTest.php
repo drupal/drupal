@@ -156,7 +156,7 @@ class FileSystemTest extends UnitTestCase {
   /**
    * Tests that invalid UTF-8 results in an exception.
    *
-   * @legacy-covers ::createFilename
+   * @see ::createFilename
    */
   public function testInvalidUTF8(): void {
     vfsStream::setup('dir');

@@ -420,8 +420,8 @@ class ConfigDependencyTest extends EntityKernelTestBase {
   /**
    * Tests config entity uninstall third party.
    *
-   * @legacy-covers ::uninstall
-   * @legacy-covers ::getConfigEntitiesToChangeOnDependencyRemoval
+   * @see ::uninstall
+   * @see ::getConfigEntitiesToChangeOnDependencyRemoval
    */
   public function testConfigEntityUninstallThirdParty(): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */

@@ -26,8 +26,8 @@ class AuthenticationManagerTest extends UnitTestCase {
   /**
    * Tests default filter.
    *
-   * @legacy-covers ::defaultFilter
-   * @legacy-covers ::applyFilter
+   * @see ::defaultFilter
+   * @see ::applyFilter
    */
   #[DataProvider('providerTestDefaultFilter')]
   public function testDefaultFilter($applies, $has_route, $auth_option, $provider_id, $global): void {

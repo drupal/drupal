@@ -71,8 +71,8 @@ class WorkspaceEntityRepositoryTest extends KernelTestBase {
   /**
    * Tests retrieving active variants in a workspace.
    *
-   * @legacy-covers \Drupal\Core\Entity\EntityRepository::getActive
-   * @legacy-covers \Drupal\Core\Entity\EntityRepository::getActiveMultiple
+   * @see \Drupal\Core\Entity\EntityRepository::getActive
+   * @see \Drupal\Core\Entity\EntityRepository::getActiveMultiple
    */
   public function testGetActive(): void {
     $en_contexts = ['langcode' => 'en'];

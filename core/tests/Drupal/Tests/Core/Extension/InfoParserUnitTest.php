@@ -45,7 +45,7 @@ class InfoParserUnitTest extends UnitTestCase {
   /**
    * Tests the functionality of the infoParser object.
    *
-   * @legacy-covers ::parse
+   * @see ::parse
    */
   public function testInfoParserNonExisting(): void {
     vfsStream::setup('modules');
@@ -138,7 +138,7 @@ YML,
   /**
    * Tests that the correct exception is thrown for a broken info file.
    *
-   * @legacy-covers ::parse
+   * @see ::parse
    */
   public function testInfoParserBroken(): void {
     $broken_info = <<<BROKEN_INFO
@@ -168,7 +168,7 @@ BROKEN_INFO;
   /**
    * Tests that Testing package modules use a default core_version_requirement.
    *
-   * @legacy-covers ::parse
+   * @see ::parse
    */
   public function testTestingPackageMissingCoreVersionRequirement(): void {
     $missing_core_version_requirement = <<<MISSING_CORE_VERSION_REQUIREMENT
@@ -192,7 +192,7 @@ MISSING_CORE_VERSION_REQUIREMENT;
   /**
    * Tests a version string that looks like a float.
    *
-   * @legacy-covers ::parse
+   * @see ::parse
    */
   public function testFloatLikeVersion(): void {
     $float_like_version = <<<VERSION_TEST
@@ -215,7 +215,7 @@ VERSION_TEST;
   /**
    * Tests a version string that is a float.
    *
-   * @legacy-covers ::parse
+   * @see ::parse
    */
   #[IgnoreDeprecations]
   public function testFloatVersion(): void {
@@ -241,7 +241,7 @@ VERSION_TEST;
   /**
    * Tests common info file.
    *
-   * @legacy-covers ::parse
+   * @see ::parse
    */
   public function testInfoParserCommonInfo(): void {
     $common = <<<COMMON
@@ -274,7 +274,7 @@ COMMON;
   /**
    * Tests common info file.
    *
-   * @legacy-covers ::parse
+   * @see ::parse
    */
   public function testInfoParserCoreInfo(): void {
     $common = <<<CORE
@@ -301,7 +301,7 @@ CORE;
   /**
    * Tests core incompatibility.
    *
-   * @legacy-covers ::parse
+   * @see ::parse
    */
   #[DataProvider('providerCoreIncompatibility')]
   public function testCoreIncompatibility(string $test_case, string $constraint, bool $expected): void {
@@ -386,7 +386,7 @@ PROFILE_TEST;
   /**
    * Tests the exception for an unparsable 'core_version_requirement' value.
    *
-   * @legacy-covers ::parse
+   * @see ::parse
    */
   public function testUnparsableCoreVersionRequirement(): void {
     $unparsable_core_version_requirement = <<<UNPARSABLE_CORE_VERSION_REQUIREMENT
@@ -413,7 +413,7 @@ UNPARSABLE_CORE_VERSION_REQUIREMENT;
   /**
    * Tests an info file with valid lifecycle values.
    *
-   * @legacy-covers ::parse
+   * @see ::parse
    */
   #[DataProvider('providerValidLifecycle')]
   public function testValidLifecycle(string $lifecycle, string $expected): void {
@@ -472,7 +472,7 @@ INFO;
   /**
    * Tests an info file with invalid lifecycle values.
    *
-   * @legacy-covers ::parse
+   * @see ::parse
    */
   #[DataProvider('providerInvalidLifecycle')]
   public function testInvalidLifecycle(string $lifecycle, string $exception_message): void {
@@ -520,7 +520,7 @@ INFO;
   /**
    * Tests an info file's lifecycle_link values.
    *
-   * @legacy-covers ::parse
+   * @see ::parse
    */
   #[DataProvider('providerLifecycleLink')]
   public function testLifecycleLink(string $lifecycle, ?string $lifecycle_link = NULL, ?string $exception_message = NULL): void {

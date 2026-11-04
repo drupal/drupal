@@ -86,7 +86,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   /**
    * Tests introspect index schema.
    *
-   * @legacy-covers \Drupal\pgsql\Driver\Database\pgsql\Schema::introspectIndexSchema
+   * @see \Drupal\pgsql\Driver\Database\pgsql\Schema::introspectIndexSchema
    */
   public function testIntrospectIndexSchema(): void {
     $table_specification = [
@@ -261,7 +261,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   /**
    * Tests pgsql extension exists.
    *
-   * @legacy-covers \Drupal\pgsql\Driver\Database\pgsql\Schema::extensionExists
+   * @see \Drupal\pgsql\Driver\Database\pgsql\Schema::extensionExists
    */
   public function testPgsqlExtensionExists(): void {
     // Test the method for a non existing extension.

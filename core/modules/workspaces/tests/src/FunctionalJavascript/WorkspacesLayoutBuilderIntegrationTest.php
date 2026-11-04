@@ -193,7 +193,7 @@ class WorkspacesLayoutBuilderIntegrationTest extends InlineBlockTestBase {
   /**
    * Tests workspace specific layout tempstore data.
    *
-   * @legacy-covers \Drupal\workspaces\WorkspacesLayoutTempstoreRepository::getKey
+   * @see \Drupal\workspaces\WorkspacesLayoutTempstoreRepository::getKey
    */
   public function testWorkspacesLayoutTempstore(): void {
     $assert_session = $this->assertSession();

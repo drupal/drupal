@@ -222,7 +222,7 @@ class PhpTransliterationTest extends TestCase {
   /**
    * Tests inclusion is safe.
    *
-   * @legacy-covers ::readLanguageOverrides
+   * @see ::readLanguageOverrides
    */
   public function testSafeInclude(): void {
     // The overrides in the transliteration data directory transliterates 0x82

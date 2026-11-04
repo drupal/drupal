@@ -202,9 +202,9 @@ class EntityRevisionsTest extends EntityKernelTestBase {
    * The latest revision affecting a particular translation behaves as the
    * latest revision for monolingual entities.
    *
-   * @legacy-covers ::isLatestTranslationAffectedRevision
-   * @legacy-covers \Drupal\Core\Entity\ContentEntityStorageBase::getLatestRevisionId
-   * @legacy-covers \Drupal\Core\Entity\ContentEntityStorageBase::getLatestTranslationAffectedRevisionId
+   * @see ::isLatestTranslationAffectedRevision
+   * @see \Drupal\Core\Entity\ContentEntityStorageBase::getLatestRevisionId
+   * @see \Drupal\Core\Entity\ContentEntityStorageBase::getLatestTranslationAffectedRevisionId
    */
   public function testIsLatestAffectedRevisionTranslation(): void {
     ConfigurableLanguage::createFromLangcode('it')->save();
@@ -261,7 +261,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
   /**
    * Tests the automatic handling of the "revision_default" flag.
    *
-   * @legacy-covers \Drupal\Core\Entity\ContentEntityStorageBase::doSave
+   * @see \Drupal\Core\Entity\ContentEntityStorageBase::doSave
    */
   public function testDefaultRevisionFlag(): void {
     // Create a basic EntityTestMulRev entity and save it.

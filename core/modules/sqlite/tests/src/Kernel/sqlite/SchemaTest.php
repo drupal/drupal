@@ -84,7 +84,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   /**
    * Tests introspect index schema.
    *
-   * @legacy-covers \Drupal\sqlite\Driver\Database\sqlite\Schema::introspectIndexSchema
+   * @see \Drupal\sqlite\Driver\Database\sqlite\Schema::introspectIndexSchema
    */
   public function testIntrospectIndexSchema(): void {
     $table_specification = [

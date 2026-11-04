@@ -60,8 +60,8 @@ class HelpTopicTwigTest extends UnitTestCase {
   /**
    * Tests text.
    *
-   * @legacy-covers ::getBody
-   * @legacy-covers ::getLabel
+   * @see ::getBody
+   * @see ::getLabel
    */
   public function testText(): void {
     $this->assertEquals($this->helpTopic->getBody(),
@@ -73,9 +73,9 @@ class HelpTopicTwigTest extends UnitTestCase {
   /**
    * Tests definition.
    *
-   * @legacy-covers ::getProvider
-   * @legacy-covers ::isTopLevel
-   * @legacy-covers ::getRelated
+   * @see ::getProvider
+   * @see ::isTopLevel
+   * @see ::getRelated
    */
   public function testDefinition(): void {
     $this->assertEquals($this->helpTopic->getProvider(),
@@ -89,9 +89,9 @@ class HelpTopicTwigTest extends UnitTestCase {
   /**
    * Tests cache info.
    *
-   * @legacy-covers ::getCacheContexts
-   * @legacy-covers ::getCacheTags
-   * @legacy-covers ::getCacheMaxAge
+   * @see ::getCacheContexts
+   * @see ::getCacheTags
+   * @see ::getCacheMaxAge
    */
   public function testCacheInfo(): void {
     $this->assertEquals([], $this->helpTopic->getCacheContexts());

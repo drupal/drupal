@@ -139,7 +139,7 @@ class PluginBaseTest extends UnitTestCase {
    * @param array $expected
    *   The expected array after unpacking.
    *
-   * @legacy-covers ::setOptionDefaults
+   * @see ::setOptionDefaults
    */
   #[DataProvider('providerTestSetOptionDefault')]
   public function testSetOptionDefault($storage, $definition, $expected): void {

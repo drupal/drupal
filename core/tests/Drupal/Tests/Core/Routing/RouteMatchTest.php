@@ -30,8 +30,8 @@ class RouteMatchTest extends RouteMatchTestBase {
   /**
    * Tests route match from request.
    *
-   * @legacy-covers ::createFromRequest
-   * @legacy-covers ::__construct
+   * @see ::createFromRequest
+   * @see ::__construct
    */
   public function testRouteMatchFromRequest(): void {
     $request = new Request();

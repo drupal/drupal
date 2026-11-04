@@ -22,7 +22,7 @@ class ExtensionDiscoveryTest extends UnitTestCase {
   /**
    * Tests extension discovery in a virtual filesystem with vfsStream.
    *
-   * @legacy-covers ::scan
+   * @see ::scan
    */
   public function testExtensionDiscoveryVfs(): void {
 
@@ -64,7 +64,7 @@ class ExtensionDiscoveryTest extends UnitTestCase {
   /**
    * Tests finding modules that have a trailing comment on the type property.
    *
-   * @legacy-covers ::scan
+   * @see ::scan
    */
   public function testExtensionDiscoveryTypeComment(): void {
     $extension_discovery = new ExtensionDiscovery($this->root, TRUE, [], 'sites/default');

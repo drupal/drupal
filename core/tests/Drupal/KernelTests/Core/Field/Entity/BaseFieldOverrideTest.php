@@ -89,10 +89,10 @@ class BaseFieldOverrideTest extends KernelTestBase {
   /**
    * Tests that some properties are inherited from the BaseFieldDefinition.
    *
-   * @legacy-covers ::isReadOnly
-   * @legacy-covers ::isComputed
-   * @legacy-covers ::isInternal
-   * @legacy-covers ::getUniqueIdentifier
+   * @see ::isReadOnly
+   * @see ::isComputed
+   * @see ::isInternal
+   * @see ::getUniqueIdentifier
    */
   public function testInheritedProperties(): void {
     $base_field = BaseFieldDefinition::create('string')

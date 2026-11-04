@@ -41,7 +41,7 @@ class SettingsTest extends UnitTestCase {
   /**
    * Tests set up.
    *
-   * @legacy-covers ::__construct
+   * @see ::__construct
    */
   protected function setUp(): void {
     parent::setUp();
@@ -117,7 +117,7 @@ class SettingsTest extends UnitTestCase {
   /**
    * Ensures settings cannot be serialized.
    *
-   * @legacy-covers ::__sleep
+   * @see ::__sleep
    */
   public function testSerialize(): void {
     $this->expectException(\LogicException::class);
@@ -173,8 +173,8 @@ class SettingsTest extends UnitTestCase {
    *
    * @see self::testRealDeprecatedSettings()
    * @see self::providerTestRealDeprecatedSettings()
-   * @legacy-covers ::handleDeprecations
-   * @legacy-covers ::initialize
+   * @see ::handleDeprecations
+   * @see ::initialize
    */
   #[DataProvider('providerTestFakeDeprecatedSettings')]
   #[IgnoreDeprecations]
@@ -277,7 +277,7 @@ class SettingsTest extends UnitTestCase {
   /**
    * Tests Settings::get() does not warn for a not configured no-replacement setting.
    *
-   * @legacy-covers ::get
+   * @see ::get
    */
   public function testGetNoDeprecationWhenNotConfiguredAndNoReplacement(): void {
     $deprecated_setting = [
@@ -297,7 +297,7 @@ class SettingsTest extends UnitTestCase {
   /**
    * Tests Settings::get() warns for configured settings with no replacement.
    *
-   * @legacy-covers ::get
+   * @see ::get
    */
   #[IgnoreDeprecations]
   public function testGetDeprecationWhenConfiguredAndNoReplacement(): void {

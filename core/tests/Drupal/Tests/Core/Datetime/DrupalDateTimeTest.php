@@ -179,7 +179,7 @@ class DrupalDateTimeTest extends UnitTestCase {
   /**
    * Tests that object methods are chainable.
    *
-   * @legacy-covers ::__call
+   * @see ::__call
    */
   public function testChainable(): void {
     $tz = new \DateTimeZone(date_default_timezone_get());
@@ -197,7 +197,7 @@ class DrupalDateTimeTest extends UnitTestCase {
   /**
    * Tests that non-chainable methods work.
    *
-   * @legacy-covers ::__call
+   * @see ::__call
    */
   public function testChainableNonChainable(): void {
     $tz = new \DateTimeZone(date_default_timezone_get());
@@ -211,7 +211,7 @@ class DrupalDateTimeTest extends UnitTestCase {
   /**
    * Tests that chained calls to non-existent functions throw an exception.
    *
-   * @legacy-covers ::__call
+   * @see ::__call
    */
   public function testChainableNonCallable(): void {
     $this->expectException(\BadMethodCallException::class);
@@ -251,7 +251,7 @@ class DrupalDateTimeTest extends UnitTestCase {
    *
    * @see http://www.faqs.org/rfcs/rfc2822.html
    *
-   * @legacy-covers ::format
+   * @see ::format
    */
   public function testRfc2822DateFormat(): void {
     $language_manager = $this->createStub(LanguageManager::class);

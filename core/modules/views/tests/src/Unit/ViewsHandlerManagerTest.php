@@ -91,8 +91,8 @@ class ViewsHandlerManagerTest extends UnitTestCase {
   /**
    * Tests that hook_views_plugins_TYPE_alter() is invoked for a handler type.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getDefinitions
+   * @see ::__construct
+   * @see ::getDefinitions
    */
   public function testAlterHookInvocation(): void {
     $this->setUpMockModuleHandler();

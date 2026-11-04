@@ -51,8 +51,8 @@ class EntityTypeTest extends UnitTestCase {
   /**
    * Tests set.
    *
-   * @legacy-covers ::set
-   * @legacy-covers ::get
+   * @see ::set
+   * @see ::get
    */
   #[DataProvider('providerTestSet')]
   public function testSet(string $key, ?string $value): void {
@@ -270,7 +270,7 @@ class EntityTypeTest extends UnitTestCase {
   /**
    * Tests id exceeds max length.
    *
-   * @legacy-covers ::__construct
+   * @see ::__construct
    */
   public function testIdExceedsMaxLength(): void {
     $id = $this->randomMachineName(33);
@@ -324,8 +324,8 @@ class EntityTypeTest extends UnitTestCase {
   /**
    * Tests get decorated classes through setClass.
    *
-   * @legacy-covers ::setClass
-   * @legacy-covers ::getDecoratedClasses
+   * @see ::setClass
+   * @see ::getDecoratedClasses
    */
   public function testGetDecoratedClassesSetClass(): void {
     $class_1 = $this->randomMachineName();
@@ -353,9 +353,9 @@ class EntityTypeTest extends UnitTestCase {
   /**
    * Tests get decorated classes through set.
    *
-   * @legacy-covers ::set
-   * @legacy-covers ::setClass
-   * @legacy-covers ::getDecoratedClasses
+   * @see ::set
+   * @see ::setClass
+   * @see ::getDecoratedClasses
    */
   public function testGetDecoratedClassesSet(): void {
     $class_1 = $this->randomMachineName();
@@ -541,9 +541,9 @@ class EntityTypeTest extends UnitTestCase {
   /**
    * Tests the constraint methods.
    *
-   * @legacy-covers ::getConstraints
-   * @legacy-covers ::setConstraints
-   * @legacy-covers ::addConstraint
+   * @see ::getConstraints
+   * @see ::setConstraints
+   * @see ::addConstraint
    */
   public function testConstraintMethods(): void {
     $definition = [

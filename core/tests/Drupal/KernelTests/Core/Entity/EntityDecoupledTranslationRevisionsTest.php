@@ -202,7 +202,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    *   An array with arrays of arguments for the ::doSaveNewRevision() method as
    *   values. Every child array corresponds to a method invocation.
    *
-   * @legacy-covers ::createRevision
+   * @see ::createRevision
    */
   #[DataProvider('dataTestDecoupledPendingRevisions')]
   public function testDecoupledPendingRevisions($sequence): void {
@@ -261,8 +261,8 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    *   Whether untranslatable field changes affect all revisions or only the
    *   default revision.
    *
-   * @legacy-covers ::createRevision
-   * @legacy-covers \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityUntranslatableFieldsConstraintValidator::validate
+   * @see ::createRevision
+   * @see \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityUntranslatableFieldsConstraintValidator::validate
    */
   #[DataProvider('dataTestUntranslatableFields')]
   public function testUntranslatableFields($sequence, $default_translation_affected): void {
@@ -496,8 +496,8 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
   /**
    * Checks that changes to multiple translations are handled correctly.
    *
-   * @legacy-covers ::createRevision
-   * @legacy-covers \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityUntranslatableFieldsConstraintValidator::validate
+   * @see ::createRevision
+   * @see \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityUntranslatableFieldsConstraintValidator::validate
    */
   public function testMultipleTranslationChanges(): void {
     // Configure the untranslatable fields edit mode.
@@ -556,7 +556,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
   /**
    * Tests that deleted translations are not accidentally restored.
    *
-   * @legacy-covers ::createRevision
+   * @see ::createRevision
    */
   public function testRemovedTranslations(): void {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */

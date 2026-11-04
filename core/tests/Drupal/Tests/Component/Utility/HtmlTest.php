@@ -91,7 +91,7 @@ class HtmlTest extends TestCase {
   /**
    * Tests that Html::getClass() cleans the class name properly.
    *
-   * @legacy-covers ::getClass
+   * @see ::getClass
    */
   public function testHtmlClass(): void {
     // Verify Drupal coding standards are enforced.
@@ -113,7 +113,7 @@ class HtmlTest extends TestCase {
    * @param bool $reset
    *   (optional) If TRUE, reset the list of seen IDs. Defaults to FALSE.
    *
-   * @legacy-covers ::getUniqueId
+   * @see ::getUniqueId
    */
   #[DataProvider('providerTestHtmlGetUniqueId')]
   public function testHtmlGetUniqueId(string $expected, string $source, bool $reset = FALSE): void {
@@ -155,7 +155,7 @@ class HtmlTest extends TestCase {
    * @param string $source
    *   The string being transformed to an ID.
    *
-   * @legacy-covers ::getUniqueId
+   * @see ::getUniqueId
    */
   #[DataProvider('providerTestHtmlGetUniqueIdWithAjaxIds')]
   public function testHtmlGetUniqueIdWithAjaxIds(string $expected, string $source): void {
@@ -198,7 +198,7 @@ class HtmlTest extends TestCase {
    * @param string $source
    *   The string being transformed to an ID.
    *
-   * @legacy-covers ::getId
+   * @see ::getId
    */
   #[DataProvider('providerTestHtmlGetId')]
   public function testHtmlGetId(string $expected, string $source): void {
@@ -303,8 +303,8 @@ class HtmlTest extends TestCase {
   /**
    * Tests relationship between escaping and decoding HTML entities.
    *
-   * @legacy-covers ::decodeEntities
-   * @legacy-covers ::escape
+   * @see ::decodeEntities
+   * @see ::escape
    */
   public function testDecodeEntitiesAndEscape(): void {
     $string = "<em>répét&eacute;</em>";

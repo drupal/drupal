@@ -19,8 +19,8 @@ class AccessResultForbiddenTest extends UnitTestCase {
   /**
    * Tests the construction of an AccessResultForbidden object.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getReason
+   * @see ::__construct
+   * @see ::getReason
    */
   public function testConstruction(): void {
 

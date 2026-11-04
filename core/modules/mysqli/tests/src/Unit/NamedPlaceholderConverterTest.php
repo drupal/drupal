@@ -20,9 +20,9 @@ class NamedPlaceholderConverterTest extends UnitTestCase {
   /**
    * Tests ::parse().
    *
-   * @legacy-covers ::parse
-   * @legacy-covers ::getConvertedSQL
-   * @legacy-covers ::getConvertedParameters
+   * @see ::parse
+   * @see ::getConvertedSQL
+   * @see ::getConvertedParameters
    */
   #[DataProvider('statementsWithParametersProvider')]
   public function testParse(string $sql, array $parameters, string $expectedSql, array $expectedParameters): void {
@@ -382,9 +382,9 @@ SQL,
   /**
    * Tests reusing the parser object.
    *
-   * @legacy-covers ::parse
-   * @legacy-covers ::getConvertedSQL
-   * @legacy-covers ::getConvertedParameters
+   * @see ::parse
+   * @see ::getConvertedSQL
+   * @see ::getConvertedParameters
    */
   public function testParseReuseObject(): void {
     $converter = new NamedPlaceholderConverter();

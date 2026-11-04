@@ -65,7 +65,7 @@ class LanguageNegotiationUrlTest extends BrowserTestBase {
   /**
    * Tests domain.
    *
-   * @legacy-covers ::processInbound
+   * @see ::processInbound
    */
   public function testDomain(): void {
     // Check if paths that contain language prefixes can be reached when

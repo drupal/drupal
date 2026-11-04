@@ -110,8 +110,8 @@ class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
   /**
    * Tests workspace query alter for views.
    *
-   * @legacy-covers \Drupal\workspaces\Hook\ViewsOperations::alterQueryForEntityType
-   * @legacy-covers \Drupal\workspaces\Hook\ViewsOperations::getRevisionTableJoin
+   * @see \Drupal\workspaces\Hook\ViewsOperations::alterQueryForEntityType
+   * @see \Drupal\workspaces\Hook\ViewsOperations::getRevisionTableJoin
    */
   public function testViewsQueryAlter(): void {
     // Create a test entity and two nodes.

@@ -24,7 +24,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
   /**
    * Tests the cancel link title.
    *
-   * @legacy-covers ::buildCancelLink
+   * @see ::buildCancelLink
    */
   public function testCancelLinkTitle(): void {
     $cancel_text = 'Cancel text';
@@ -41,7 +41,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
   /**
    * Tests a cancel link route.
    *
-   * @legacy-covers ::buildCancelLink
+   * @see ::buildCancelLink
    */
   public function testCancelLinkRoute(): void {
     $route_name = 'foo_bar';
@@ -58,7 +58,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
   /**
    * Tests a cancel link route with parameters.
    *
-   * @legacy-covers ::buildCancelLink
+   * @see ::buildCancelLink
    */
   public function testCancelLinkRouteWithParams(): void {
     $expected = Url::fromRoute('foo_bar.baz', ['baz' => 'banana'], ['absolute' => TRUE]);
@@ -74,7 +74,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
   /**
    * Tests a cancel link route with a URL object.
    *
-   * @legacy-covers ::buildCancelLink
+   * @see ::buildCancelLink
    */
   public function testCancelLinkRouteWithUrl(): void {
     $cancel_route = new Url(
@@ -97,7 +97,7 @@ class ConfirmFormHelperTest extends UnitTestCase {
   /**
    * Tests a cancel link provided by the destination.
    *
-   * @legacy-covers ::buildCancelLink
+   * @see ::buildCancelLink
    */
   #[DataProvider('providerTestCancelLinkDestination')]
   public function testCancelLinkDestination($destination): void {

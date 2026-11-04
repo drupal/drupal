@@ -34,7 +34,7 @@ class CacheableExceptionTest extends UnitTestCase {
   /**
    * Tests cacheable http exception.
    *
-   * @legacy-covers \Drupal\Core\Http\Exception\CacheableHttpException
+   * @see \Drupal\Core\Http\Exception\CacheableHttpException
    */
   public function testCacheableHttpException(): void {
     $exception = new CacheableHttpException((new CacheableMetadata())->setCacheContexts(['route']), 500, 'test message', NULL, ['X-Drupal-Exception' => 'Test'], 123);

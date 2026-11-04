@@ -50,7 +50,7 @@ class EntityConverterTest extends KernelTestBase {
   /**
    * Tests an entity route parameter having 'bundle' definition property.
    *
-   * @legacy-covers ::convert
+   * @see ::convert
    */
   public function testRouteParamWithBundleDefinition(): void {
     $converter = $this->container->get('paramconverter.entity');
@@ -113,7 +113,7 @@ class EntityConverterTest extends KernelTestBase {
   /**
    * Tests convert() for dynamic config entity types.
    *
-   * @legacy-covers ::convert
+   * @see ::convert
    */
   public function testConvertDynamicConfigEntityRejectsNonAscii(): void {
     $converter = $this->container->get('paramconverter.entity');

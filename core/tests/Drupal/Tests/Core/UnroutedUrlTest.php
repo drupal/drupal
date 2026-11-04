@@ -110,7 +110,7 @@ class UnroutedUrlTest extends UnitTestCase {
   /**
    * Tests the fromUri() method.
    *
-   * @legacy-covers ::fromUri
+   * @see ::fromUri
    */
   #[DataProvider('providerFromInvalidUri')]
   public function testFromInvalidUri(string $uri): void {

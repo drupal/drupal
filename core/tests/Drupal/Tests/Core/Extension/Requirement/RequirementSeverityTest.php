@@ -22,7 +22,7 @@ class RequirementSeverityTest extends UnitTestCase {
   /**
    * Tests get max severity.
    *
-   * @legacy-covers ::maxSeverityFromRequirements
+   * @see ::maxSeverityFromRequirements
    */
   #[DataProvider('requirementProvider')]
   public function testGetMaxSeverity(array $requirements, RequirementSeverity $expectedSeverity): void {

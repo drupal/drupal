@@ -70,9 +70,9 @@ class NodeViewBuilderTest extends EntityKernelTestBase {
   /**
    * Tests that node links are displayed correctly in pending revisions.
    *
-   * @legacy-covers ::buildComponents
-   * @legacy-covers ::renderLinks
-   * @legacy-covers ::buildLinks
+   * @see ::buildComponents
+   * @see ::renderLinks
+   * @see ::buildLinks
    */
   public function testPendingRevisionLinks(): void {
     $account = User::create([

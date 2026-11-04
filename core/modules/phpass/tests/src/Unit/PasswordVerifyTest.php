@@ -23,7 +23,7 @@ class PasswordVerifyTest extends UnitTestCase {
   /**
    * Tests that hash() is forwarded to corePassword instance.
    *
-   * @legacy-covers ::hash
+   * @see ::hash
    */
   public function testPasswordHash(): void {
     $samplePassword = $this->randomMachineName();
@@ -41,7 +41,7 @@ class PasswordVerifyTest extends UnitTestCase {
   /**
    * Tests that needsRehash() is forwarded to corePassword instance.
    *
-   * @legacy-covers ::needsRehash
+   * @see ::needsRehash
    */
   public function testPasswordNeedsRehash(): void {
     $sampleHash = $this->randomMachineName();
@@ -57,7 +57,7 @@ class PasswordVerifyTest extends UnitTestCase {
   /**
    * Tests that check() is forwarded to corePassword instance if hash settings are not recognized.
    *
-   * @legacy-covers ::check
+   * @see ::check
    */
   public function testPasswordCheckUnknownHash(): void {
     $samplePassword = $this->randomMachineName();
@@ -74,11 +74,11 @@ class PasswordVerifyTest extends UnitTestCase {
   /**
    * Tests that check() verifies passwords if hash settings are supported.
    *
-   * @legacy-covers ::check
-   * @legacy-covers ::crypt
-   * @legacy-covers ::getCountLog2
-   * @legacy-covers ::enforceLog2Boundaries
-   * @legacy-covers ::base64Encode
+   * @see ::check
+   * @see ::crypt
+   * @see ::getCountLog2
+   * @see ::enforceLog2Boundaries
+   * @see ::base64Encode
    */
   public function testPasswordCheckSupported(): void {
     $validPassword = 'valid password';
@@ -109,7 +109,7 @@ class PasswordVerifyTest extends UnitTestCase {
   /**
    * Tests the hash count boundaries are enforced.
    *
-   * @legacy-covers ::enforceLog2Boundaries
+   * @see ::enforceLog2Boundaries
    */
   public function testWithinBounds(): void {
     $hasher = new PhpassHashedPasswordLog2BoundariesDouble();
@@ -120,7 +120,7 @@ class PasswordVerifyTest extends UnitTestCase {
   /**
    * Verifies that passwords longer than 512 bytes are not hashed.
    *
-   * @legacy-covers ::crypt
+   * @see ::crypt
    */
   #[DataProvider('providerLongPasswords')]
   public function testLongPassword($password, $allowed): void {

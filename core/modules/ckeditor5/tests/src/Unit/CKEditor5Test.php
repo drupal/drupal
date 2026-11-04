@@ -58,7 +58,7 @@ class CKEditor5Test extends UnitTestCase {
   /**
    * Tests paths to form names.
    *
-   * @legacy-covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::mapViolationPropertyPathsToFormNames
+   * @see \Drupal\ckeditor5\Plugin\Editor\CKEditor5::mapViolationPropertyPathsToFormNames
    */
   #[DataProvider('providerPathsToFormNames')]
   public function testPathsToFormNames(string $property_path, string $expected_form_item_name, bool $expect_exception = FALSE): void {
@@ -122,7 +122,7 @@ class CKEditor5Test extends UnitTestCase {
   /**
    * Test the js_alter hook alters when expected.
    *
-   * @legacy-covers \Drupal\ckeditor5\Hook\Ckeditor5Hooks::jsAlter
+   * @see \Drupal\ckeditor5\Hook\Ckeditor5Hooks::jsAlter
    */
   public function testJsAlterHook(): void {
     $language_mapper = $this->createMock(LanguageMapper::class);

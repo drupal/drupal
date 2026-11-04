@@ -54,7 +54,7 @@ class MenuTreeParametersTest extends UnitTestCase {
   /**
    * Tests addExpandedParents().
    *
-   * @legacy-covers ::addExpandedParents
+   * @see ::addExpandedParents
    */
   public function testAddExpanded(): void {
     $parameters = new MenuTreeParameters();
@@ -143,8 +143,8 @@ class MenuTreeParametersTest extends UnitTestCase {
   /**
    * Tests serialize.
    *
-   * @legacy-covers ::serialize
-   * @legacy-covers ::unserialize
+   * @see ::serialize
+   * @see ::unserialize
    */
   public function testSerialize(): void {
     $parameters = new MenuTreeParameters();

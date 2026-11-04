@@ -43,8 +43,8 @@ class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase 
   /**
    * Tests disabled integrations.
    *
-   * @legacy-covers ::renderMedia
-   * @legacy-covers ::disableContextualLinks
+   * @see ::renderMedia
+   * @see ::disableContextualLinks
    */
   public function testDisabledIntegrations(): void {
     $text = $this->createEmbedCode([

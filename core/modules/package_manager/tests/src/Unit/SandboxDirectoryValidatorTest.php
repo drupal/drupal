@@ -38,7 +38,7 @@ class SandboxDirectoryValidatorTest extends UnitTestCase {
    * @param string $staging_root
    *   The staging root.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   #[DataProvider('providerTestCheckNotInActive')]
   public function testCheckNotInActive(array $expected, string $project_root, string $staging_root): void {

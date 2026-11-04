@@ -32,7 +32,7 @@ class SmartDefaultSettingsTest extends UnitTestCase {
   /**
    * Tests surplus score.
    *
-   * @legacy-covers ::computeSurplusScore
+   * @see ::computeSurplusScore
    */
   #[DataProvider('providerSurplusScore')]
   public function testSurplusScore(HTMLRestrictions $surplus, HTMLRestrictions $needed, int $expected): void {
@@ -90,8 +90,8 @@ class SmartDefaultSettingsTest extends UnitTestCase {
   /**
    * Tests candidates.
    *
-   * @legacy-covers ::getCandidates
-   * @legacy-covers ::selectCandidate
+   * @see ::getCandidates
+   * @see ::selectCandidate
    */
   #[DataProvider('providerCandidates')]
   public function testCandidates(HTMLRestrictions $provided, HTMLRestrictions $still_needed, array $disabled_plugin_definitions, array $expected_candidates, array $expected_selection = []): void {

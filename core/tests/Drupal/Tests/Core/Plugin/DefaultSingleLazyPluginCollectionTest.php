@@ -53,9 +53,9 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
   /**
    * Tests add instance id.
    *
-   * @legacy-covers ::addInstanceId
-   * @legacy-covers ::getConfiguration
-   * @legacy-covers ::setConfiguration
+   * @see ::addInstanceId
+   * @see ::getConfiguration
+   * @see ::setConfiguration
    */
   public function testAddInstanceId(): void {
     $this->setupPluginCollection($this->atLeastOnce());
@@ -84,7 +84,7 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
   /**
    * Tests configurable set configuration.
    *
-   * @legacy-covers ::setConfiguration
+   * @see ::setConfiguration
    */
   public function testConfigurableSetConfiguration(): void {
     $this->setupPluginCollection($this->atLeastOnce());

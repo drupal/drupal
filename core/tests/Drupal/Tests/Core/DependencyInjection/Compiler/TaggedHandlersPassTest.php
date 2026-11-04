@@ -61,8 +61,8 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests a required consumer with no handlers.
    *
-   * @legacy-covers ::process
-   * @legacy-covers ::processServiceIdCollectorPass
+   * @see ::process
+   * @see ::processServiceIdCollectorPass
    */
   public function testIdCollectorProcessRequiredHandlers(): void {
     $this->expectException(LogicException::class);
@@ -122,7 +122,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests one consumer and two handlers with service ID collection.
    *
-   * @legacy-covers ::process
+   * @see ::process
    */
   public function testServiceIdProcess(): void {
     $container = $this->buildContainer();
@@ -177,7 +177,7 @@ class TaggedHandlersPassTest extends UnitTestCase {
   /**
    * Tests handler priority sorting for service ID collection.
    *
-   * @legacy-covers ::process
+   * @see ::process
    */
   public function testServiceIdProcessPriority(): void {
     $container = $this->buildContainer();

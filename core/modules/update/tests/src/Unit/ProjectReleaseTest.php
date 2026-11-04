@@ -25,12 +25,12 @@ class ProjectReleaseTest extends UnitTestCase {
    * @param mixed[] $expected
    *   The values expected to be returned from the object methods.
    *
-   * @legacy-covers ::createFromArray
-   * @legacy-covers ::isInsecure
-   * @legacy-covers ::isSecurityRelease
-   * @legacy-covers ::isPublished
-   * @legacy-covers ::isUnsupported
-   * @legacy-covers ::isUnsupported
+   * @see ::createFromArray
+   * @see ::isInsecure
+   * @see ::isSecurityRelease
+   * @see ::isPublished
+   * @see ::isUnsupported
+   * @see ::isUnsupported
    */
   #[DataProvider('providerCreateFromArray')]
   public function testCreateFromArray(array $data, array $expected = []): void {
@@ -109,7 +109,7 @@ class ProjectReleaseTest extends UnitTestCase {
   /**
    * Tests that optional fields can be omitted.
    *
-   * @legacy-covers ::createFromArray
+   * @see ::createFromArray
    */
   public function testOptionalFields(): void {
     $data = $this->getValidData();

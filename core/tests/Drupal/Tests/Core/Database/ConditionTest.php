@@ -41,7 +41,7 @@ class ConditionTest extends UnitTestCase {
   /**
    * Tests simple condition.
    *
-   * @legacy-covers ::compile
+   * @see ::compile
    */
   #[DataProvider('providerSimpleCondition')]
   public function testSimpleCondition(string $expected, string $field_name): void {
@@ -185,7 +185,7 @@ class ConditionTest extends UnitTestCase {
   /**
    * Tests compile with an operator that appends a suffix to the field.
    *
-   * @legacy-covers ::compile
+   * @see ::compile
    */
   public function testCompileWithFieldSuffixOperator(): void {
     $connection = $this->createStub(Connection::class);

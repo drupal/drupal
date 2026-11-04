@@ -25,8 +25,8 @@ class ElementInfoManagerTest extends UnitTestCase {
   /**
    * Tests the getInfo() method when render element plugins are used.
    *
-   * @legacy-covers ::getInfo
-   * @legacy-covers ::buildInfo
+   * @see ::getInfo
+   * @see ::buildInfo
    */
   #[DataProvider('providerTestGetInfoElementPlugin')]
   public function testGetInfoElementPlugin(string $plugin_class, $expected_info): void {

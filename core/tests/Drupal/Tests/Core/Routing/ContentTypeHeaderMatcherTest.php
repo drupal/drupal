@@ -106,7 +106,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
   /**
    * Confirms that the matcher throws an exception for no-route.
    *
-   * @legacy-covers ::filter
+   * @see ::filter
    */
   public function testNoRouteFound(): void {
     $matcher = new ContentTypeHeaderMatcher();
@@ -122,7 +122,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
   /**
    * Confirms that the matcher throws an exception for missing request header.
    *
-   * @legacy-covers ::filter
+   * @see ::filter
    */
   public function testContentTypeRequestHeaderMissing(): void {
     $matcher = new ContentTypeHeaderMatcher();

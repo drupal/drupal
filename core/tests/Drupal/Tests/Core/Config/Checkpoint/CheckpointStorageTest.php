@@ -60,8 +60,8 @@ class CheckpointStorageTest extends UnitTestCase {
   /**
    * Tests checkpoint creation.
    *
-   * @legacy-covers ::checkpoint
-   * @legacy-covers \Drupal\Core\Config\Checkpoint\Checkpoint
+   * @see ::checkpoint
+   * @see \Drupal\Core\Config\Checkpoint\Checkpoint
    */
   public function testCheckpointCreation(): void {
     $checkpoint = $this->storage->checkpoint('Test');
@@ -115,10 +115,10 @@ class CheckpointStorageTest extends UnitTestCase {
   /**
    * Tests read operations.
    *
-   * @legacy-covers ::exists
-   * @legacy-covers ::read
-   * @legacy-covers ::readMultiple
-   * @legacy-covers ::listAll
+   * @see ::exists
+   * @see ::read
+   * @see ::readMultiple
+   * @see ::listAll
    */
   #[DataProvider('readMethodsProvider')]
   public function testReadOperations(string $method, array $arguments, array $fixture): void {
@@ -158,10 +158,10 @@ class CheckpointStorageTest extends UnitTestCase {
   /**
    * Tests write operations.
    *
-   * @legacy-covers ::write
-   * @legacy-covers ::delete
-   * @legacy-covers ::rename
-   * @legacy-covers ::deleteAll
+   * @see ::write
+   * @see ::delete
+   * @see ::rename
+   * @see ::deleteAll
    */
   #[DataProvider('writeMethodsProvider')]
   public function testWriteOperations(string $method, array $arguments, array $fixture): void {
@@ -212,9 +212,9 @@ class CheckpointStorageTest extends UnitTestCase {
   /**
    * Tests collections.
    *
-   * @legacy-covers ::getAllCollectionNames
-   * @legacy-covers ::getCollectionName
-   * @legacy-covers ::createCollection
+   * @see ::getAllCollectionNames
+   * @see ::getCollectionName
+   * @see ::createCollection
    */
   public function testCollections(): void {
     $ref_readFromCheckpoint = new \ReflectionProperty($this->storage, 'readFromCheckpoint');
@@ -265,8 +265,8 @@ class CheckpointStorageTest extends UnitTestCase {
   /**
    * Tests encode decode.
    *
-   * @legacy-covers ::encode
-   * @legacy-covers ::decode
+   * @see ::encode
+   * @see ::decode
    */
   public function testEncodeDecode(): void {
     $array = (array) $this->getRandomGenerator()->object();

@@ -112,7 +112,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests stored cardinality.
    *
-   * @legacy-covers ::getCardinality
+   * @see ::getCardinality
    */
   public function testStoredCardinality(): void {
     $this->fieldTypeManager->expects($this->atLeastOnce())
@@ -139,7 +139,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests enforced cardinality.
    *
-   * @legacy-covers ::getCardinality
+   * @see ::getCardinality
    */
   public function testEnforcedCardinality(): void {
     $this->fieldTypeManager->expects($this->atLeastOnce())
@@ -170,7 +170,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    * @param mixed $enforced_cardinality
    *   Enforced cardinality.
    *
-   * @legacy-covers ::getCardinality
+   * @see ::getCardinality
    */
   #[DataProvider('providerInvalidEnforcedCardinality')]
   public function testInvalidEnforcedCardinality(int|string $enforced_cardinality): void {

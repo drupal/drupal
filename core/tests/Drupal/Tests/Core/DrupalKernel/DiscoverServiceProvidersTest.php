@@ -21,7 +21,7 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
   /**
    * Tests discovery with user defined container yaml.
    *
-   * @legacy-covers ::discoverServiceProviders
+   * @see ::discoverServiceProviders
    */
   public function testDiscoverServiceCustom(): void {
     new Settings([

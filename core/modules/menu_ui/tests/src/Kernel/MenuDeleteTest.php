@@ -27,7 +27,7 @@ class MenuDeleteTest extends KernelTestBase {
   /**
    * Tests menu delete.
    *
-   * @legacy-covers \Drupal\menu_ui\Hook\MenuUiHooks::menuDelete
+   * @see \Drupal\menu_ui\Hook\MenuUiHooks::menuDelete
    */
   #[DataProvider('providerMenuDelete')]
   public function testMenuDelete(array $settings, array $expected): void {

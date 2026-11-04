@@ -50,7 +50,7 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
   /**
    * Tests the create access method.
    *
-   * @legacy-covers ::access
+   * @see ::access
    */
   public function testCreateAccess(): void {
     // Set the mock translation handler.

@@ -18,8 +18,8 @@ class MigratePreRowSaveEventTest extends EventBaseTest {
   /**
    * Tests getRow method.
    *
-   * @legacy-covers ::__construct
-   * @legacy-covers ::getRow
+   * @see ::__construct
+   * @see ::getRow
    */
   public function testGetRow(): void {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();

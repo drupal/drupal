@@ -111,7 +111,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
   /**
    * Test cannot revert latest default revision.
    *
-   * @legacy-covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
+   * @see \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   protected function testAccessRevertLatestDefault(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
@@ -130,7 +130,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
   /**
    * Ensures that forward revisions can be reverted.
    *
-   * @legacy-covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
+   * @see \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   protected function testAccessRevertLatestForwardRevision(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
@@ -154,7 +154,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
   /**
    * Test can revert non-latest revision.
    *
-   * @legacy-covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
+   * @see \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   protected function testAccessRevertNonLatest(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */

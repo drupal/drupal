@@ -95,7 +95,7 @@ final class MediaSourceValidationTest extends KernelTestBase {
   /**
    * Tests existing validation constraints are respected by Media::validate.
    *
-   * @legacy-covers \Drupal\media\Entity\Media::validate
+   * @see \Drupal\media\Entity\Media::validate
    */
   public function testValidation(): void {
     $history = [];

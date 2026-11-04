@@ -74,7 +74,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests field name methods.
    *
-   * @legacy-covers ::getName
+   * @see ::getName
    */
   public function testFieldName(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -86,7 +86,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests field label methods.
    *
-   * @legacy-covers ::getLabel
+   * @see ::getLabel
    */
   public function testFieldLabel(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -98,7 +98,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests field description methods.
    *
-   * @legacy-covers ::getDescription
+   * @see ::getDescription
    */
   public function testFieldDescription(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -110,7 +110,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests field type methods.
    *
-   * @legacy-covers ::getType
+   * @see ::getType
    */
   public function testFieldType(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -120,9 +120,9 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests field settings methods.
    *
-   * @legacy-covers ::getSetting
-   * @legacy-covers ::setSetting
-   * @legacy-covers ::getSettings
+   * @see ::getSetting
+   * @see ::setSetting
+   * @see ::getSettings
    */
   public function testFieldSettings(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -137,9 +137,9 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests the initialization of default field settings.
    *
-   * @legacy-covers ::getSetting
-   * @legacy-covers ::setSetting
-   * @legacy-covers ::getSettings
+   * @see ::getSetting
+   * @see ::setSetting
+   * @see ::getSettings
    */
   public function testDefaultFieldSettings(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -153,8 +153,8 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests field default value.
    *
-   * @legacy-covers ::getDefaultValue
-   * @legacy-covers ::setDefaultValue
+   * @see ::getDefaultValue
+   * @see ::setDefaultValue
    */
   public function testFieldDefaultValue(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -198,8 +198,8 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests field initial value.
    *
-   * @legacy-covers ::getInitialValue
-   * @legacy-covers ::setInitialValue
+   * @see ::getInitialValue
+   * @see ::setInitialValue
    */
   public function testFieldInitialValue(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -242,8 +242,8 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests field translatable methods.
    *
-   * @legacy-covers ::isTranslatable
-   * @legacy-covers ::setTranslatable
+   * @see ::isTranslatable
+   * @see ::setTranslatable
    */
   public function testFieldTranslatable(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -257,8 +257,8 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests field revisionable methods.
    *
-   * @legacy-covers ::isRevisionable
-   * @legacy-covers ::setRevisionable
+   * @see ::isRevisionable
+   * @see ::setRevisionable
    */
   public function testFieldRevisionable(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -272,8 +272,8 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests field cardinality.
    *
-   * @legacy-covers ::getCardinality
-   * @legacy-covers ::setCardinality
+   * @see ::getCardinality
+   * @see ::setCardinality
    */
   public function testFieldCardinality(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -287,8 +287,8 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests required.
    *
-   * @legacy-covers ::isRequired
-   * @legacy-covers ::setRequired
+   * @see ::isRequired
+   * @see ::setRequired
    */
   public function testFieldRequired(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -302,8 +302,8 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests storage required.
    *
-   * @legacy-covers ::isStorageRequired
-   * @legacy-covers ::setStorageRequired
+   * @see ::isStorageRequired
+   * @see ::setStorageRequired
    */
   public function testFieldStorageRequired(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -317,8 +317,8 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests provider.
    *
-   * @legacy-covers ::getProvider
-   * @legacy-covers ::setProvider
+   * @see ::getProvider
+   * @see ::setProvider
    */
   public function testFieldProvider(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -330,8 +330,8 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests custom storage.
    *
-   * @legacy-covers ::hasCustomStorage
-   * @legacy-covers ::setCustomStorage
+   * @see ::hasCustomStorage
+   * @see ::setCustomStorage
    */
   public function testCustomStorage(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -345,7 +345,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests default value callbacks.
    *
-   * @legacy-covers ::setDefaultValueCallback
+   * @see ::setDefaultValueCallback
    */
   public function testDefaultValueCallback(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -357,7 +357,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests invalid default value callbacks.
    *
-   * @legacy-covers ::setDefaultValueCallback
+   * @see ::setDefaultValueCallback
    */
   public function testInvalidDefaultValueCallback(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);
@@ -369,7 +369,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
   /**
    * Tests NULL default value callbacks.
    *
-   * @legacy-covers ::setDefaultValueCallback
+   * @see ::setDefaultValueCallback
    */
   public function testNullDefaultValueCallback(): void {
     $definition = BaseFieldDefinition::create($this->fieldType);

@@ -649,7 +649,7 @@ class ViewsDataTest extends UnitTestCase {
   /**
    * Tests the cache calls for multiple tables without warm caches.
    *
-   * @legacy-covers ::get
+   * @see ::get
    */
   public function testCacheCallsWithoutWarmCacheAndGetMultipleTables(): void {
     $this->setUpMockCacheBackend();

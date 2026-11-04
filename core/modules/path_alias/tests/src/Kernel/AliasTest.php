@@ -324,8 +324,8 @@ class AliasTest extends KernelTestBase {
   /**
    * Tests lookup path.
    *
-   * @legacy-covers \Drupal\path_alias\AliasManager::getPathByAlias
-   * @legacy-covers \Drupal\path_alias\AliasManager::getAliasByPath
+   * @see \Drupal\path_alias\AliasManager::getPathByAlias
+   * @see \Drupal\path_alias\AliasManager::getAliasByPath
    */
   public function testLookupPath(): void {
     // Create AliasManager and Path object.

@@ -65,7 +65,7 @@ class EntityDisplayRepositoryTest extends KernelTestBase {
   /**
    * Tests view display.
    *
-   * @legacy-covers ::getViewDisplay
+   * @see ::getViewDisplay
    */
   public function testViewDisplay(): void {
     $display = $this->displayRepository->getViewDisplay('user', 'user');
@@ -89,7 +89,7 @@ class EntityDisplayRepositoryTest extends KernelTestBase {
   /**
    * Tests form display.
    *
-   * @legacy-covers ::getFormDisplay
+   * @see ::getFormDisplay
    */
   public function testFormDisplay(): void {
     $display = $this->displayRepository->getFormDisplay('user', 'user');

@@ -169,7 +169,7 @@ class DateTest extends UnitTestCase {
   /**
    * Tests the getSampleDateFormats method.
    *
-   * @legacy-covers \Drupal\Core\Datetime\DateFormatter::getSampleDateFormats
+   * @see \Drupal\Core\Datetime\DateFormatter::getSampleDateFormats
    */
   public function testGetSampleDateFormats(): void {
     $timestamp = strtotime('2015-03-22 14:23:00');
@@ -498,9 +498,9 @@ class DateTest extends UnitTestCase {
   /**
    * Tests FormattedDateDiff.
    *
-   * @legacy-covers \Drupal\Core\Datetime\FormattedDateDiff::toRenderable
-   * @legacy-covers \Drupal\Core\Datetime\FormattedDateDiff::getString
-   * @legacy-covers \Drupal\Core\Datetime\FormattedDateDiff::getCacheMaxAge
+   * @see \Drupal\Core\Datetime\FormattedDateDiff::toRenderable
+   * @see \Drupal\Core\Datetime\FormattedDateDiff::getString
+   * @see \Drupal\Core\Datetime\FormattedDateDiff::getCacheMaxAge
    */
   public function testFormattedDateDiff(): void {
     $string = '10 minutes';
@@ -530,7 +530,7 @@ class DateTest extends UnitTestCase {
    *
    * @see http://www.faqs.org/rfcs/rfc2822.html
    *
-   * @legacy-covers ::format
+   * @see ::format
    */
   public function testRfc2822DateFormat(): void {
     $timestamp = 1549110600;

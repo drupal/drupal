@@ -304,7 +304,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Tests the escaping of objects implementing MarkupInterface.
    *
-   * @legacy-covers ::escapeFilter
+   * @see ::escapeFilter
    */
   public function testSafeStringEscaping(): void {
     $loader = new FilesystemLoader();
@@ -399,8 +399,8 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Tests escape with generated link.
    *
-   * @legacy-covers ::escapeFilter
-   * @legacy-covers ::bubbleArgMetadata
+   * @see ::escapeFilter
+   * @see ::bubbleArgMetadata
    */
   public function testEscapeWithGeneratedLink(): void {
     $this->setUpMockRenderer();
@@ -436,8 +436,8 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Tests render var with generated link.
    *
-   * @legacy-covers ::renderVar
-   * @legacy-covers ::bubbleArgMetadata
+   * @see ::renderVar
+   * @see ::bubbleArgMetadata
    */
   public function testRenderVarWithGeneratedLink(): void {
     $this->setUpMockRenderer();
@@ -519,7 +519,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Tests link with overridden attributes.
    *
-   * @legacy-covers ::getLink
+   * @see ::getLink
    */
   public function testLinkWithOverriddenAttributes(): void {
     $url = Url::fromRoute('<front>', [], ['attributes' => ['class' => ['foo']]]);
@@ -532,7 +532,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Tests Twig 'add_suggestion' filter.
    *
-   * @legacy-covers ::suggestThemeHook
+   * @see ::suggestThemeHook
    */
   #[DataProvider('providerTestTwigAddSuggestionFilter')]
   public function testTwigAddSuggestionFilter(?array $original_render_array, string $suggestion, ?array $expected_render_array): void {
@@ -649,7 +649,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Tests Twig 'add_class' filter.
    *
-   * @legacy-covers ::addClass
+   * @see ::addClass
    */
   #[DataProvider('providerTestTwigAddClass')]
   public function testTwigAddClass(array $element, string|array $classes, array $expected_result): void {
@@ -700,7 +700,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Tests Twig 'set_attribute' filter.
    *
-   * @legacy-covers ::setAttribute
+   * @see ::setAttribute
    */
   #[DataProvider('providerTestTwigSetAttribute')]
   public function testTwigSetAttribute(array $element, string $key, ?string $value, array $expected_result): void {

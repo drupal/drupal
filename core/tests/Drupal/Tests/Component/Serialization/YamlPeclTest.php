@@ -23,8 +23,8 @@ class YamlPeclTest extends YamlTestBase {
   /**
    * Tests encoding and decoding basic data structures.
    *
-   * @legacy-covers ::encode
-   * @legacy-covers ::decode
+   * @see ::encode
+   * @see ::decode
    */
   #[DataProvider('providerEncodeDecodeTests')]
   public function testEncodeDecode(array $data): void {
@@ -85,7 +85,7 @@ foo:
   /**
    * Tests that invalid YAML throws an exception.
    *
-   * @legacy-covers ::errorHandler
+   * @see ::errorHandler
    */
   public function testError(): void {
     $this->expectException(InvalidDataTypeException::class);

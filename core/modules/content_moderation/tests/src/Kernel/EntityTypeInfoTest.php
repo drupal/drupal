@@ -113,7 +113,7 @@ class EntityTypeInfoTest extends KernelTestBase {
   /**
    * Tests base field only added to moderated entity types.
    *
-   * @legacy-covers ::entityBaseFieldInfo
+   * @see ::entityBaseFieldInfo
    */
   public function testBaseFieldOnlyAddedToModeratedEntityTypes(): void {
     $definition = $this->entityTypeManager->getDefinition('entity_test_with_bundle');

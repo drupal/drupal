@@ -120,8 +120,8 @@ class LayoutPluginManagerTest extends UnitTestCase {
   /**
    * Tests get definitions.
    *
-   * @legacy-covers ::getDefinitions
-   * @legacy-covers ::providerExists
+   * @see ::getDefinitions
+   * @see ::providerExists
    */
   public function testGetDefinitions(): void {
     $expected = [
@@ -139,8 +139,8 @@ class LayoutPluginManagerTest extends UnitTestCase {
   /**
    * Tests get definition.
    *
-   * @legacy-covers ::getDefinition
-   * @legacy-covers ::processDefinition
+   * @see ::getDefinition
+   * @see ::processDefinition
    */
   public function testGetDefinition(): void {
     $layout_definition = $this->layoutPluginManager->getDefinition('theme_a_provided_layout');
@@ -286,7 +286,7 @@ EOS;
   /**
    * Tests ::processDefinition() with a layout that doesn't have a category.
    *
-   * @legacy-covers ::processDefinition
+   * @see ::processDefinition
    */
   public function testProcessDefinitionWithMissingLayoutCategory(): void {
     $module_a_category_less_layout = <<<'EOS'

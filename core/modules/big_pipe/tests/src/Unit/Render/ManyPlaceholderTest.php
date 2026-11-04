@@ -30,7 +30,7 @@ class ManyPlaceholderTest extends UnitTestCase {
   /**
    * Tests many no js place holders.
    *
-   * @legacy-covers \Drupal\big_pipe\Render\BigPipe::sendNoJsPlaceholders
+   * @see \Drupal\big_pipe\Render\BigPipe::sendNoJsPlaceholders
    */
   public function testManyNoJsPlaceHolders(): void {
     $session = $this->prophesize(SessionInterface::class);

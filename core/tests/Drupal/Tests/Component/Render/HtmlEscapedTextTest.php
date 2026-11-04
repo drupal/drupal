@@ -20,8 +20,8 @@ use Prophecy\Prophet;
 class HtmlEscapedTextTest extends TestCase {
 
   /**
-   * @legacy-covers ::__toString
-   * @legacy-covers ::jsonSerialize
+   * @see ::__toString
+   * @see ::jsonSerialize
    */
   #[DataProvider('providerToString')]
   public function testToString($text, $expected, string $message): void {

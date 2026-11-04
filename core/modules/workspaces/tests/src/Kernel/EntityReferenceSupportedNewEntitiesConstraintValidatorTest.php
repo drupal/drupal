@@ -60,7 +60,7 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
   /**
    * Tests new entities allowed in default workspace.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testNewEntitiesAllowedInDefaultWorkspace(): void {
     $entity = EntityTestMulRevPub::create([
@@ -77,7 +77,7 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
   /**
    * Tests new entities forbidden in non default workspace.
    *
-   * @legacy-covers ::validate
+   * @see ::validate
    */
   public function testNewEntitiesForbiddenInNonDefaultWorkspace(): void {
     $this->switchToWorkspace('stage');

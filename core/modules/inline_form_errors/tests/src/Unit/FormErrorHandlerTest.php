@@ -110,9 +110,9 @@ class FormErrorHandlerTest extends UnitTestCase {
   /**
    * Tests error messages inline.
    *
-   * @legacy-covers ::handleFormErrors
-   * @legacy-covers ::displayErrorMessages
-   * @legacy-covers ::setElementErrorsFromFormState
+   * @see ::handleFormErrors
+   * @see ::displayErrorMessages
+   * @see ::setElementErrorsFromFormState
    */
   public function testErrorMessagesInline(): void {
     $messages = [

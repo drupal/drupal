@@ -131,8 +131,8 @@ class FieldCrudTest extends FieldKernelTestBase {
   /**
    * Tests setting and adding property constraints to a configurable field.
    *
-   * @legacy-covers ::setPropertyConstraints
-   * @legacy-covers ::addPropertyConstraints
+   * @see ::setPropertyConstraints
+   * @see ::addPropertyConstraints
    */
   public function testFieldPropertyConstraints(): void {
     $field = FieldConfig::create($this->fieldDefinition);

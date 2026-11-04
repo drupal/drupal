@@ -175,9 +175,9 @@ class EntityTest extends UnitTestCase {
   /**
    * Tests render with id.
    *
-   * @legacy-covers ::render
-   * @legacy-covers ::defineOptions
-   * @legacy-covers ::init
+   * @see ::render
+   * @see ::defineOptions
+   * @see ::init
    */
   public function testRenderWithId(): void {
     $this->entityStorage = $this->createMock(EntityStorageInterface::class);
@@ -213,9 +213,9 @@ class EntityTest extends UnitTestCase {
   /**
    * Tests render with id and token.
    *
-   * @legacy-covers ::render
-   * @legacy-covers ::defineOptions
-   * @legacy-covers ::init
+   * @see ::render
+   * @see ::defineOptions
+   * @see ::init
    */
   #[DataProvider('providerTestTokens')]
   public function testRenderWithIdAndToken(string $token, int $id): void {
@@ -258,9 +258,9 @@ class EntityTest extends UnitTestCase {
   /**
    * Tests render with uuid.
    *
-   * @legacy-covers ::render
-   * @legacy-covers ::defineOptions
-   * @legacy-covers ::init
+   * @see ::render
+   * @see ::defineOptions
+   * @see ::init
    */
   public function testRenderWithUuid(): void {
     $this->entityStorage = $this->createMock(EntityStorageInterface::class);

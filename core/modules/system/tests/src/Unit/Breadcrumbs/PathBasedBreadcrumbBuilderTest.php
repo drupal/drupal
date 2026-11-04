@@ -91,7 +91,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    *
-   * @legacy-covers ::__construct
+   * @see ::__construct
    */
   protected function setUp(): void {
     parent::setUp();
@@ -167,8 +167,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * Tests the build method with two path elements.
    *
-   * @legacy-covers ::build
-   * @legacy-covers ::getRequestForPath
+   * @see ::build
+   * @see ::getRequestForPath
    */
   public function testBuildWithTwoPathElements(): void {
     $this->context
@@ -206,8 +206,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * Tests the build method with three path elements.
    *
-   * @legacy-covers ::build
-   * @legacy-covers ::getRequestForPath
+   * @see ::build
+   * @see ::getRequestForPath
    */
   public function testBuildWithThreePathElements(): void {
     $this->context
@@ -262,8 +262,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * Tests the build method with a NULL title route.
    *
-   * @legacy-covers ::build
-   * @legacy-covers ::getRequestForPath
+   * @see ::build
+   * @see ::getRequestForPath
    */
   public function testBuildWithNullTitle(): void {
     $this->context
@@ -317,8 +317,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * Tests that exceptions during request matching are caught.
    *
-   * @legacy-covers ::build
-   * @legacy-covers ::getRequestForPath
+   * @see ::build
+   * @see ::getRequestForPath
    */
   #[DataProvider('providerTestBuildWithException')]
   public function testBuildWithException(string $exception_class, string|array $exception_argument): void {
@@ -359,8 +359,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * Tests the build method with a non processed path.
    *
-   * @legacy-covers ::build
-   * @legacy-covers ::getRequestForPath
+   * @see ::build
+   * @see ::getRequestForPath
    */
   public function testBuildWithNonProcessedPath(): void {
     $this->context
@@ -383,8 +383,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * Tests the build method with an invalid path.
    *
-   * @legacy-covers ::build
-   * @legacy-covers ::getRequestForPath
+   * @see ::build
+   * @see ::getRequestForPath
    */
   public function testBuildWithInvalidPath(): void {
     // The parse_url() function returns FALSE for '/:123/foo' so the
@@ -412,8 +412,8 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * Tests the breadcrumb for a user path.
    *
-   * @legacy-covers ::build
-   * @legacy-covers ::getRequestForPath
+   * @see ::build
+   * @see ::getRequestForPath
    */
   public function testBuildWithUserPath(): void {
     $this->context

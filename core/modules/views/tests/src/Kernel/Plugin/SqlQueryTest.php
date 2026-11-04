@@ -95,7 +95,7 @@ class SqlQueryTest extends ViewsKernelTestBase {
    * \Drupal\Core\Database\Database::getConnection() which is a 'final' method
    * and therefore cannot be mocked.
    *
-   * @legacy-covers \Drupal\views\Plugin\views\query\Sql::getConnection
+   * @see \Drupal\views\Plugin\views\query\Sql::getConnection
    */
   public function testGetConnection(): void {
     $view = Views::getView('test_view');

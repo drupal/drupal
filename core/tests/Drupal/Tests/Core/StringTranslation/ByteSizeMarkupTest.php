@@ -23,7 +23,7 @@ class ByteSizeMarkupTest extends UnitTestCase {
   /**
    * Tests common format size.
    *
-   * @legacy-covers ::create
+   * @see ::create
    */
   #[DataProvider('providerTestCommonFormatSize')]
   public function testCommonFormatSize(string $expected, int|float $input): void {
@@ -73,7 +73,7 @@ class ByteSizeMarkupTest extends UnitTestCase {
   /**
    * Tests translatable markup object.
    *
-   * @legacy-covers ::create
+   * @see ::create
    */
   public function testTranslatableMarkupObject(): void {
     $result = ByteSizeMarkup::create(1, NULL, $this->getStringTranslationStub());

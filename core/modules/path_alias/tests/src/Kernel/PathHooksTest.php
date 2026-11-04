@@ -37,8 +37,8 @@ class PathHooksTest extends KernelTestBase {
   /**
    * Tests that the PathAlias entity clears caches correctly.
    *
-   * @legacy-covers ::postSave
-   * @legacy-covers ::postDelete
+   * @see ::postSave
+   * @see ::postDelete
    */
   public function testPathHooks(): void {
     $path_alias = PathAlias::create([

@@ -222,8 +222,8 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getBaseFieldDefinitions() method.
    *
-   * @legacy-covers ::getBaseFieldDefinitions
-   * @legacy-covers ::buildBaseFieldDefinitions
+   * @see ::getBaseFieldDefinitions
+   * @see ::buildBaseFieldDefinitions
    */
   public function testGetBaseFieldDefinitions(): void {
     $field_definition = $this->setUpEntityWithFieldDefinition();
@@ -235,8 +235,8 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getFieldDefinitions() method.
    *
-   * @legacy-covers ::getFieldDefinitions
-   * @legacy-covers ::buildBundleFieldDefinitions
+   * @see ::getFieldDefinitions
+   * @see ::buildBundleFieldDefinitions
    */
   public function testGetFieldDefinitions(): void {
     $this->entityTypeBundleInfo->getBundleInfo('test_entity_type')->willReturn([
@@ -299,8 +299,8 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getFieldStorageDefinitions() method.
    *
-   * @legacy-covers ::getFieldStorageDefinitions
-   * @legacy-covers ::buildFieldStorageDefinitions
+   * @see ::getFieldStorageDefinitions
+   * @see ::buildFieldStorageDefinitions
    */
   public function testGetFieldStorageDefinitions(): void {
     $field_definition = $this->setUpEntityWithFieldDefinition(TRUE);
@@ -341,8 +341,8 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getBaseFieldDefinitions() method with a translatable entity type.
    *
-   * @legacy-covers ::getBaseFieldDefinitions
-   * @legacy-covers ::buildBaseFieldDefinitions
+   * @see ::getBaseFieldDefinitions
+   * @see ::buildBaseFieldDefinitions
    */
   #[DataProvider('providerTestGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode')]
   public function testGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode(string $default_langcode_key): void {
@@ -380,8 +380,8 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getBaseFieldDefinitions() method with a translatable entity type.
    *
-   * @legacy-covers ::getBaseFieldDefinitions
-   * @legacy-covers ::buildBaseFieldDefinitions
+   * @see ::getBaseFieldDefinitions
+   * @see ::buildBaseFieldDefinitions
    */
   #[DataProvider('providerTestGetBaseFieldDefinitionsTranslatableEntityTypeLangcode')]
   public function testGetBaseFieldDefinitionsTranslatableEntityTypeLangcode(bool $provide_key, bool $provide_field, bool $translatable): void {
@@ -534,8 +534,8 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests the getBaseFieldDefinitions() method with an invalid definition.
    *
-   * @legacy-covers ::getBaseFieldDefinitions
-   * @legacy-covers ::buildBaseFieldDefinitions
+   * @see ::getBaseFieldDefinitions
+   * @see ::buildBaseFieldDefinitions
    */
   public function testGetBaseFieldDefinitionsInvalidDefinition(): void {
     $this->setUpEntityWithFieldDefinition(FALSE, 'langcode', ['langcode' => 'langcode']);
@@ -550,8 +550,8 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * Tests that getFieldDefinitions() method sets the 'provider' definition key.
    *
-   * @legacy-covers ::getFieldDefinitions
-   * @legacy-covers ::buildBundleFieldDefinitions
+   * @see ::getFieldDefinitions
+   * @see ::buildBundleFieldDefinitions
    */
   public function testGetFieldDefinitionsProvider(): void {
     $this->entityTypeBundleInfo->getBundleInfo('test_entity_type')->willReturn([

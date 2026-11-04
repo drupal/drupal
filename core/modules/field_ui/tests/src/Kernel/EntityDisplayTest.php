@@ -160,7 +160,7 @@ class EntityDisplayTest extends KernelTestBase {
   /**
    * Tests entity get display.
    *
-   * @legacy-covers \Drupal\Core\Entity\EntityDisplayRepository::getViewDisplay
+   * @see \Drupal\Core\Entity\EntityDisplayRepository::getViewDisplay
    */
   public function testEntityGetDisplay(): void {
     $display_repository = $this->container->get('entity_display.repository');

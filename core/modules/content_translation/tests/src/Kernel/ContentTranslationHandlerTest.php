@@ -94,8 +94,8 @@ class ContentTranslationHandlerTest extends KernelTestBase {
    * @param array $expected
    *   The expected altered element.
    *
-   * @legacy-covers ::entityFormSharedElements
-   * @legacy-covers ::addTranslatabilityClue
+   * @see ::entityFormSharedElements
+   * @see ::addTranslatabilityClue
    */
   #[DataProvider('providerTestEntityFormSharedElements')]
   public function testEntityFormSharedElements(array $element, $default_translation_affected, $default_translation, $translation_form, array $expected): void {

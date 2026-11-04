@@ -123,12 +123,12 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
   /**
    * Checks that field synchronization works as expected with revisions.
    *
-   * @legacy-covers \Drupal\content_translation\Plugin\Validation\Constraint\ContentTranslationSynchronizedFieldsConstraintValidator::create
-   * @legacy-covers \Drupal\content_translation\Plugin\Validation\Constraint\ContentTranslationSynchronizedFieldsConstraintValidator::validate
-   * @legacy-covers \Drupal\content_translation\Plugin\Validation\Constraint\ContentTranslationSynchronizedFieldsConstraintValidator::hasSynchronizedPropertyChanges
-   * @legacy-covers \Drupal\content_translation\FieldTranslationSynchronizer::getFieldSynchronizedProperties
-   * @legacy-covers \Drupal\content_translation\FieldTranslationSynchronizer::synchronizeFields
-   * @legacy-covers \Drupal\content_translation\FieldTranslationSynchronizer::synchronizeItems
+   * @see \Drupal\content_translation\Plugin\Validation\Constraint\ContentTranslationSynchronizedFieldsConstraintValidator::create
+   * @see \Drupal\content_translation\Plugin\Validation\Constraint\ContentTranslationSynchronizedFieldsConstraintValidator::validate
+   * @see \Drupal\content_translation\Plugin\Validation\Constraint\ContentTranslationSynchronizedFieldsConstraintValidator::hasSynchronizedPropertyChanges
+   * @see \Drupal\content_translation\FieldTranslationSynchronizer::getFieldSynchronizedProperties
+   * @see \Drupal\content_translation\FieldTranslationSynchronizer::synchronizeFields
+   * @see \Drupal\content_translation\FieldTranslationSynchronizer::synchronizeItems
    */
   public function testFieldSynchronizationAndValidation(): void {
     // Test that when untranslatable field widgets are displayed, synchronized

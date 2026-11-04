@@ -73,7 +73,7 @@ class TopBarItemManagerTest extends UnitTestCase {
   /**
    * Tests definitions.
    *
-   * @legacy-covers ::getDefinitions
+   * @see ::getDefinitions
    */
   public function testDefinitions(): void {
     $definitions = $this->manager->getDefinitions();

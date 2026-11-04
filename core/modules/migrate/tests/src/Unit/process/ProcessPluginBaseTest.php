@@ -19,9 +19,9 @@ class ProcessPluginBaseTest extends UnitTestCase {
   /**
    * Tests stopping the pipeline.
    *
-   * @legacy-covers ::isPipelineStopped
-   * @legacy-covers ::stopPipeline
-   * @legacy-covers ::reset
+   * @see ::isPipelineStopped
+   * @see ::stopPipeline
+   * @see ::reset
    */
   public function testStopPipeline(): void {
     $plugin = new ProcessPluginBase([], 'plugin_id', []);

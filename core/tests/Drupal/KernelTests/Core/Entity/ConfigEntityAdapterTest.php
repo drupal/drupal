@@ -55,7 +55,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
   /**
    * Tests entity deriver.
    *
-   * @legacy-covers \Drupal\Core\Entity\Plugin\DataType\Deriver\EntityDeriver::getDerivativeDefinitions
+   * @see \Drupal\Core\Entity\Plugin\DataType\Deriver\EntityDeriver::getDerivativeDefinitions
    */
   public function testEntityDeriver(): void {
     $definition = \Drupal::typedDataManager()->getDefinition('entity:config_test');

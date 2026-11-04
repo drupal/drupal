@@ -96,7 +96,7 @@ class WorkflowStateTransitionOperationsAccessCheckTest extends UnitTestCase {
   /**
    * Tests missing route params.
    *
-   * @legacy-covers ::access
+   * @see ::access
    */
   public function testMissingRouteParams(): void {
     $workflow = $this->prophesize(WorkflowInterface::class);
@@ -129,7 +129,7 @@ class WorkflowStateTransitionOperationsAccessCheckTest extends UnitTestCase {
   /**
    * Tests invalid operation name.
    *
-   * @legacy-covers ::access
+   * @see ::access
    */
   #[DataProvider('invalidOperationNameTestCases')]
   public function testInvalidOperationName(string $operation_name): void {

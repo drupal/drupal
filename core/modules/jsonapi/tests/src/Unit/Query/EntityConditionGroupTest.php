@@ -22,7 +22,7 @@ class EntityConditionGroupTest extends UnitTestCase {
   /**
    * Tests construct.
    *
-   * @legacy-covers ::__construct
+   * @see ::__construct
    */
   #[DataProvider('constructProvider')]
   public function testConstruct(array $case): void {
@@ -39,7 +39,7 @@ class EntityConditionGroupTest extends UnitTestCase {
   /**
    * Tests construct exception.
    *
-   * @legacy-covers ::__construct
+   * @see ::__construct
    */
   public function testConstructException(): void {
     $this->expectException(\InvalidArgumentException::class);
