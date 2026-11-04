@@ -23,9 +23,12 @@ require_once __DIR__ . '/../../autoload_runtime.php';
 return static function (array $context): Application {
   // We must check _composer_autoload_path before we use it, because legacy
   // callers that invoke this script directly, rather than using vendor/bin/dr,
-  // won't have that value set in $GLOBALS.
+  // won't have that value set in $GLOBALS. In that case, use the autoload.php
+  // file in the Drupal root. The vendor directory is not always in the Drupal
+  // root (for example, with a web/ docroot), but this file always points to
+  // the right place.
   // @see https://getcomposer.org/doc/articles/vendor-binaries.md#finding-the-composer-autoloader-from-a-binary
-  $autoload_path = $GLOBALS['_composer_autoload_path'] ?? __DIR__ . '/../../vendor/autoload.php';
+  $autoload_path = $GLOBALS['_composer_autoload_path'] ?? __DIR__ . '/../../autoload.php';
   $classloader = require $autoload_path;
   return new DrupalApplication($classloader, $context);
 };
