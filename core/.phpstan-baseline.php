@@ -35226,24 +35226,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/mysql/tests/src/Kernel/mysql/TemporaryQueryTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\mysql\\\\Driver\\\\Database\\\\mysql\\\\Install\\\\Tasks@anonymous/core/modules/mysql/tests/src/Unit/InstallTasksTest\\.php\\:31\\:\\:t\\(\\) should return Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup but returns string\\.$#',
-	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mysql/tests/src/Unit/InstallTasksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\mysql\\\\Driver\\\\Database\\\\mysql\\\\Install\\\\Tasks@anonymous/core/modules/mysql/tests/src/Unit/InstallTasksTest\\.php\\:73\\:\\:t\\(\\) should return Drupal\\\\Core\\\\StringTranslation\\\\TranslatableMarkup but returns string\\.$#',
-	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mysql/tests/src/Unit/InstallTasksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Return type \\(null\\) of method Drupal\\\\mysql\\\\Driver\\\\Database\\\\mysql\\\\Install\\\\Tasks@anonymous/core/modules/mysql/tests/src/Unit/InstallTasksTest\\.php\\:73\\:\\:getConnection\\(\\) should be compatible with return type \\(Drupal\\\\Core\\\\Database\\\\Connection\\) of method Drupal\\\\Core\\\\Database\\\\Install\\\\Tasks\\:\\:getConnection\\(\\)$#',
-	'identifier' => 'method.childReturnType',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mysql/tests/src/Unit/InstallTasksTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Database\\\\StatementInterface\\:\\:getClientStatement\\(\\)\\.$#',
 	'identifier' => 'method.notFound',
 	'count' => 1,
