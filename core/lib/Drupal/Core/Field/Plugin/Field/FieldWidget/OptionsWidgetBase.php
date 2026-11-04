@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldWidget;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldFilteredMarkup;
@@ -99,49 +98,32 @@ abstract class OptionsWidgetBase extends WidgetBase {
         $form_state->setError($element, new TranslatableMarkup('@name field is required.', ['@name' => $element['#title']]));
       }
     }
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function extractFormValues(FieldItemListInterface $items, array $form, FormStateInterface $form_state): void {
-    $field_name = $this->fieldDefinition->getName();
+    // Massage submitted form values.
+    // Drupal\Core\Field\WidgetBase::submit() expects values as
+    // an array of values keyed by delta first, then by column, while our
+    // widgets return the opposite.
 
-    // Normalize single-valued widgets (radios, single select) that return a
-    // scalar value to an array for consistent processing in massageFormValues.
-    $path = array_merge($form['#parents'], [$field_name]);
-    $key_exists = NULL;
-    $values = NestedArray::getValue($form_state->getValues(), $path, $key_exists);
-    if ($key_exists && !is_array($values)) {
-      $form_state->setValue($path, [$values]);
+    if (is_array($element['#value'])) {
+      $values = array_values($element['#value']);
+    }
+    else {
+      $values = [$element['#value']];
     }
 
-    parent::extractFormValues($items, $form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function massageFormValues(array $values, array $form, FormStateInterface $form_state): array {
-    // Check if values are already in delta => [column => value] format.
-    $first_value = reset($values);
-    if (is_array($first_value) && array_key_exists($this->column, $first_value)) {
-      return array_values(array_filter($values, fn($item) => $item[$this->column] !== '_none'));
-    }
-
-    // Filter out unchecked checkbox values (integer 0) and the '_none' option,
-    // then normalize to a sequential array. Use strict comparison because
+    // Filter out the 'none' option. Use a strict comparison, because
     // 0 == 'any string'.
-    $values = array_values(array_filter($values, fn($item) => $item !== 0 && $item !== '_none'));
+    $index = array_search('_none', $values, TRUE);
+    if ($index !== FALSE) {
+      unset($values[$index]);
+    }
 
-    // Drupal\Core\Field\WidgetBase::submit() expects values as an array of
-    // values keyed by delta first, then by column, while widgets return the
-    // opposite. Transpose selections from field => delta to delta => field.
+    // Transpose selections from field => delta to delta => field.
     $items = [];
     foreach ($values as $value) {
-      $items[] = [$this->column => $value];
+      $items[] = [$element['#key_column'] => $value];
     }
-    return $items;
+    $form_state->setValueForElement($element, $items);
   }
 
   /**
