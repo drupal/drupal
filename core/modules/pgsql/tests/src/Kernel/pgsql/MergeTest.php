@@ -59,7 +59,7 @@ class MergeTest extends DriverSpecificDatabaseTestBase {
   public function testMergeExecutesSingleStatement(): void {
     // Merge-insert: the key does not exist yet.
     $result = NULL;
-    $queries = $this->getLoggedQueries(function () use (&$result) {
+    $queries = $this->getLoggedQueries(function () use (&$result): void {
       $result = $this->connection->merge('test_people')
         ->key('job', 'Presenter')
         ->fields(['age' => 31, 'name' => 'Tiffany'])
@@ -70,7 +70,7 @@ class MergeTest extends DriverSpecificDatabaseTestBase {
     $this->assertStringContainsString('MERGE INTO', $queries[0]);
 
     // Merge-update: the same statement now matches the existing row.
-    $queries = $this->getLoggedQueries(function () use (&$result) {
+    $queries = $this->getLoggedQueries(function () use (&$result): void {
       $result = $this->connection->merge('test_people')
         ->key('job', 'Presenter')
         ->fields(['age' => 32, 'name' => 'Tiffany'])
@@ -90,7 +90,7 @@ class MergeTest extends DriverSpecificDatabaseTestBase {
    */
   public function testMergeMatchedWithoutUpdate(): void {
     $result = FALSE;
-    $queries = $this->getLoggedQueries(function () use (&$result) {
+    $queries = $this->getLoggedQueries(function () use (&$result): void {
       $result = $this->connection->merge('test_people')
         ->key('job', 'Speaker')
         ->execute();
@@ -181,7 +181,7 @@ class MergeTest extends DriverSpecificDatabaseTestBase {
    */
   public function testMergeSerialFieldFallback(): void {
     $result = NULL;
-    $queries = $this->getLoggedQueries(function () use (&$result) {
+    $queries = $this->getLoggedQueries(function () use (&$result): void {
       $result = $this->connection->merge('test')
         ->key('id', 999)
         ->fields(['name' => 'David', 'age' => 40, 'job' => 'Developer'])
@@ -208,7 +208,7 @@ class MergeTest extends DriverSpecificDatabaseTestBase {
    */
   public function testMergeWithoutInsertFieldsFallback(): void {
     $result = NULL;
-    $queries = $this->getLoggedQueries(function () use (&$result) {
+    $queries = $this->getLoggedQueries(function () use (&$result): void {
       $result = $this->connection->merge('test_people')
         ->condition('job', 'Speaker')
         ->updateFields(['age' => 31])

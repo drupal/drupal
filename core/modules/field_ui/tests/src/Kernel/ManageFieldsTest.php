@@ -51,8 +51,6 @@ class ManageFieldsTest extends KernelTestBase {
 
   /**
    * The ID of the custom content type created for testing.
-   *
-   * @var string
    */
   protected string $contentType;
 

@@ -9,15 +9,16 @@ use Drupal\Core\Form\FormState;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\node\Traits\PromotedContentViewTestTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use Drupal\taxonomy\Entity\Term;
-use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Entity\View;
+use Drupal\views\ResultRow;
 use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\workspaces\Entity\Workspace;
@@ -260,7 +261,7 @@ class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
 
     // The rendered value comes from the loaded entity, which is already the
     // pending revision, so read the selected column instead.
-    return array_map(fn ($row) => (string) $row->entity_test_revpub_name, $executable->result);
+    return array_map(fn (ResultRow $row): string => (string) $row->entity_test_revpub_name, $executable->result);
   }
 
   /**

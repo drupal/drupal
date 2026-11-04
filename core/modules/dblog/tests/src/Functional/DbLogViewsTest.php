@@ -36,7 +36,7 @@ class DbLogViewsTest extends DbLogTest {
   /**
    * {@inheritdoc}
    */
-  protected function getLogsEntriesTable() {
+  protected function getLogsEntriesTable(): array {
     return $this->getNodeElementsByXpath('.//div[contains(@class, "views-element-container")]//table/tbody/tr');
   }
 

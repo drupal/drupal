@@ -341,7 +341,7 @@ class TitleClosureCallback {
   #[RouteAttribute(
     path: '/test-route/{value}',
     name: 'title_resolver_test.closure',
-    title: static function (string $value) {
+    title: static function (string $value): TranslatableMarkup {
       return new TranslatableMarkup('Title for @value', ['@value' => $value]);
     },
   )]

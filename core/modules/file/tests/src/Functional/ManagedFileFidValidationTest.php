@@ -23,22 +23,16 @@ class ManagedFileFidValidationTest extends FileFieldTestBase {
 
   /**
    * File owner user.
-   *
-   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $fileOwner;
 
   /**
    * Another user with limited access.
-   *
-   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $anotherUser;
 
   /**
    * A private file owned by the file owner.
-   *
-   * @var \Drupal\file\Entity\File
    */
   protected File $ownerFile;
 

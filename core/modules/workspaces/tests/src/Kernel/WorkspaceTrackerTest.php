@@ -215,7 +215,7 @@ class WorkspaceTrackerTest extends KernelTestBase {
       $this->createEntity($entity_type_id, ['name' => "Test entity {$i}"]);
     }
 
-    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_association */
+    /** @var \Drupal\workspaces\WorkspaceTrackerInterface $workspace_tracker */
     $workspace_tracker = \Drupal::service('workspaces.tracker');
 
     // The default behavior uses a pager with 50 items per page.

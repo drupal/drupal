@@ -12,10 +12,8 @@ use Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
 use Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Entity\EntityViewMode;
-use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\filter\FilterFormatInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -703,11 +701,9 @@ class ValidatorsTest extends KernelTestBase {
       'enabled' => TRUE,
       'label' => 'View Mode 2',
     ])->save();
-    assert($text_editor instanceof EditorInterface);
     $text_format = FilterFormat::create([
       'filters' => $filters,
     ]);
-    assert($text_format instanceof FilterFormatInterface);
     // TRICKY: because we're validating using `editor.editor.*` as the config
     // name, TextEditorObjectDependentValidatorTrait will load the stored
     // filter format. That has not yet been updated at this point, so in order

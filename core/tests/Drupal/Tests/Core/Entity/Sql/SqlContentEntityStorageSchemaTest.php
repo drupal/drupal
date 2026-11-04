@@ -1677,19 +1677,4 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
  * Extends DefaultTableMapping to allow calling its protected methods.
  */
 class TestSqlContentDefaultTableMapping extends DefaultTableMapping {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setFieldNames($table_name, array $field_names) {
-    return parent::setFieldNames($table_name, $field_names);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setExtraColumns($table_name, array $column_names) {
-    return parent::setExtraColumns($table_name, $column_names);
-  }
-
 }

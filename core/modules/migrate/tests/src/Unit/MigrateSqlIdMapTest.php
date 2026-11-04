@@ -346,7 +346,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $id_map->saveMessage(['source_id_property' => 5], $message_default);
     $messages = $id_map->getMessages(['source_id_property' => 5]);
     $count = 0;
-    foreach ($messages as $key => $message_row) {
+    foreach ($messages as $message_row) {
       $count = 1;
       $this->assertEquals($message_default, $message_row->message);
       $this->assertEquals(MigrationInterface::MESSAGE_ERROR, $message_row->level);

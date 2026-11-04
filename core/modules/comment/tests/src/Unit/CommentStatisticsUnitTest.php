@@ -6,6 +6,7 @@ namespace Drupal\Tests\comment\Unit;
 
 use Drupal\comment\CommentStatistics;
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -14,6 +15,7 @@ use Drupal\sqlite\Driver\Database\sqlite\Statement;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\comment\CommentStatistics.
@@ -38,10 +40,8 @@ class CommentStatisticsUnitTest extends UnitTestCase {
 
   /**
    * Mock database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
+  protected Connection&MockObject $database;
 
   /**
    * CommentStatistics service under test.
@@ -82,9 +82,7 @@ class CommentStatisticsUnitTest extends UnitTestCase {
       ->method('execute')
       ->willReturn($this->statement);
 
-    $this->database = $this->getMockBuilder('Drupal\Core\Database\Connection')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $this->database = $this->createMock(Connection::class);
 
     $this->database->expects($this->once())
       ->method('select')

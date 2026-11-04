@@ -33,8 +33,6 @@ class DrupalTestBrowser extends AbstractBrowser {
    *
    * @param \GuzzleHttp\ClientInterface $client
    *   The Guzzle client.
-   *
-   * @return $this
    */
   public function setClient(ClientInterface $client): static {
     $this->client = $client;
@@ -158,10 +156,6 @@ class DrupalTestBrowser extends AbstractBrowser {
    *   Internal parameter used by recursive calls.
    */
   protected function addPostFiles(array $files, array &$multipart, ?string $array_name = ''): void {
-    if (empty($files)) {
-      return;
-    }
-
     foreach ($files as $name => $info) {
       if (!empty($array_name)) {
         $name = $array_name . '[' . $name . ']';

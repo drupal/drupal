@@ -8,6 +8,7 @@ use Drupal\field\FieldUninstallValidator;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\field\FieldUninstallValidator.
@@ -18,17 +19,15 @@ class FieldUninstallValidatorTest extends UnitTestCase {
 
   /**
    * The mock field uninstall validator.
-   *
-   * @var \Drupal\field\FieldUninstallValidator|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $fieldUninstallValidator;
+  protected FieldUninstallValidator&MockObject $fieldUninstallValidator;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->fieldUninstallValidator = $this->getMockBuilder('Drupal\field\FieldUninstallValidator')
+    $this->fieldUninstallValidator = $this->getMockBuilder(FieldUninstallValidator::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['getFieldStoragesByModule', 'getFieldTypeLabel'])
       ->getMock();

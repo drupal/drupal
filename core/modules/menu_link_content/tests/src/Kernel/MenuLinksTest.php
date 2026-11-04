@@ -502,7 +502,6 @@ class MenuLinksTest extends KernelTestBase {
     ];
     $link = MenuLinkContent::create($options);
     $link->save();
-    assert($link instanceof MenuLinkContent);
     $output = Link::fromTextAndUrl($link->getTitle(), $link->getUrlObject())->toString()->getGeneratedLink();
     $this->assertStringContainsString('<a href="https://www.drupal.org/" class="classy">', $output);
     $this->assertStringNotContainsString('onmouseover=', $output);

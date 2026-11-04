@@ -141,7 +141,6 @@ class CommentIntegrationTest extends KernelTestBase {
     // Check that the comment view display entity has been deleted too.
     $this->assertNull(EntityViewDisplay::load($comment_display_id));
 
-    /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display */
     $host_display = EntityViewDisplay::load($host_display_id);
 
     // Check that the field formatter has been disabled on host view display.

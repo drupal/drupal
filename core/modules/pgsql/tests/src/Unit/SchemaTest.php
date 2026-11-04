@@ -11,6 +11,7 @@ use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\Stub;
 
 /**
  * Tests Drupal\pgsql\Driver\Database\pgsql\Schema.
@@ -45,7 +46,7 @@ class SchemaTest extends UnitTestCase {
 
     $connection->expects($this->exactly(2))
       ->method('query')
-      ->willReturnCallback(function (string $query) use ($expected, $statement, $matched_statement) {
+      ->willReturnCallback(function (string $query) use ($expected, $statement, $matched_statement): StatementInterface&Stub {
         if ($query === 'SHOW max_identifier_length') {
           return $statement;
         }

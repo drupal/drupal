@@ -765,7 +765,7 @@ class DbLogTest extends BrowserTestBase {
    * @return \SimpleXMLElement[]
    *   The return value of a xpath search.
    */
-  protected function getLogsEntriesTable() {
+  protected function getLogsEntriesTable(): array {
     return $this->getNodeElementsByXpath('.//table[@id="admin-dblog"]/tbody/tr');
   }
 

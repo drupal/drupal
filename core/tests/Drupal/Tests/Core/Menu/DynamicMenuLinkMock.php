@@ -30,8 +30,6 @@ class DynamicMenuLinkMock extends MenuLinkMock {
    *
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
-   *
-   * @return $this
    */
   public function setCurrentUser(AccountInterface $current_user): static {
     $this->currentUser = $current_user;

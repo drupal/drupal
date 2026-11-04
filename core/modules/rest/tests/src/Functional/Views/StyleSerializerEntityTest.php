@@ -231,7 +231,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
   public function testRestRenderCaching(): void {
     $this->drupalLogin($this->adminUser);
 
-    /** @var \Drupal\Core\Cache\VariationCacheFactoryInterface $vc_factory */
+    /** @var \Drupal\Core\Cache\VariationCacheFactoryInterface $variation_cache_factory */
     $variation_cache_factory = \Drupal::service('variation_cache_factory');
     $variation_cache = $variation_cache_factory->get('render');
 

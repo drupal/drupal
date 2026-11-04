@@ -90,7 +90,7 @@ class NodePerformanceTest extends PerformanceTestBase {
     sleep(2);
 
     // Test promoted content page.
-    $performance_data = $this->collectPerformanceData(function () {
+    $performance_data = $this->collectPerformanceData(function (): void {
       $this->drupalGet('node');
     }, 'nodePromotedContentPage');
     $this->assertSame(0, $performance_data->getScriptBytes());
@@ -110,7 +110,7 @@ class NodePerformanceTest extends PerformanceTestBase {
     $this->drupalCreateNode(['type' => 'test_content', 'title' => 'new page 2']);
 
     // Visit the promoted content page again.
-    $performance_data = $this->collectPerformanceData(function () {
+    $performance_data = $this->collectPerformanceData(function (): void {
       $this->drupalGet('node');
     }, 'nodePromotedContentAfterInvalidation');
 

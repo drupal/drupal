@@ -40,13 +40,6 @@ class RouterTest extends KernelTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function tearDown(): void {
-    parent::tearDown();
-  }
-
-  /**
    * Tests the router request matching.
    */
   public function testMatchRequest(): void {

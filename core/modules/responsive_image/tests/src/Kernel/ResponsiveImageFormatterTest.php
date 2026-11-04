@@ -86,7 +86,6 @@ class ResponsiveImageFormatterTest extends FieldKernelTestBase {
       ],
     ])->save();
 
-    /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display */
     $this->display = EntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',

@@ -105,7 +105,6 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
 
       $expected_display = EntityViewDisplay::collectRenderDisplay($entity, 'full');
       $this->assertInstanceOf(EntityContext::class, $result['display']);
-      /** @var \Drupal\Core\Plugin\Context\EntityContext $display_entity_context */
       $display_entity_context = $result['display'];
 
       /** @var \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay $display_entity */
