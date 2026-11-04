@@ -50,9 +50,7 @@ class BaseThemeRequiredTest extends KernelTestBase {
   public function testWildWest(): void {
     $this->themeInstaller->install(['test_wild_west']);
     $this->config('system.theme')->set('default', 'test_wild_west')->save();
-    $theme = $this->themeManager->getActiveTheme();
-    /** @var \Drupal\Core\Theme\ActiveTheme $base_theme */
-    $base_themes = $theme->getBaseThemeExtensions();
+    $base_themes = $this->themeManager->getActiveTheme()->getBaseThemeExtensions();
     $this->assertEmpty($base_themes, 'No base theme is set when a theme has opted out of using Stable 9.');
   }
 

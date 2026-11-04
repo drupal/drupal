@@ -13,8 +13,10 @@ use Drupal\rest\Plugin\views\display\RestExport;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\access\None;
+use Drupal\views\Plugin\ViewsPluginManager;
 use Drupal\views\ViewExecutable;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -56,14 +58,10 @@ class CollectRoutesTest extends UnitTestCase {
     $view_executable->storage = $view;
     $view_executable->argument = [];
 
-    $display_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $display_manager = $this->createMock(ViewsPluginManager::class);
     $container->set('plugin.manager.views.display', $display_manager);
 
-    $access_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $access_manager = $this->createMock(ViewsPluginManager::class);
     $container->set('plugin.manager.views.access', $access_manager);
 
     $route_provider = $this->createStub(RouteProviderInterface::class);
@@ -74,16 +72,14 @@ class CollectRoutesTest extends UnitTestCase {
     $state = $this->createStub(StateInterface::class);
     $container->set('state', $state);
 
-    $style_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $style_manager = $this->createMock(ViewsPluginManager::class);
     $container->set('plugin.manager.views.style', $style_manager);
     $container->set('renderer', $this->createStub(RendererInterface::class));
 
     $locator = $this->createStub(ServiceLocator::class);
     $locator
       ->method('get')
-      ->willReturnCallback(fn($type) => match ($type) {
+      ->willReturnCallback(fn($type): ViewsPluginManager&MockObject => match ($type) {
         'access' => $access_manager,
         'display' => $display_manager,
         'style' => $style_manager,

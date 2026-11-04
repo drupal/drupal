@@ -362,8 +362,6 @@ class ComposerIntegrationTest extends UnitTestCase {
    * Returns the md5 hash of the sorted content of the composer file.
    *
    * @param string $composerFileContents The contents of the composer file.
-   *
-   * @return string
    */
   protected static function getContentHash($composerFileContents): string
   {

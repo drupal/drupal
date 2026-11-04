@@ -154,7 +154,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
 
     $entity = $storage->load($entity->id());
 
-    $fiber = new \Fiber(fn() => isset($entity->{$this->fieldName}->entity));
+    $fiber = new \Fiber(fn(): bool => isset($entity->{$this->fieldName}->entity));
     $fiber->start();
     $this->assertTrue(isset($entity->{$this->fieldName}->entity));
   }
@@ -178,7 +178,7 @@ class EntityReferenceFieldTest extends EntityKernelTestBase {
     $entity = $storage->load($entity->id());
     $field_item = $entity->get($this->fieldName)->first();
 
-    $fiber = new \Fiber(fn() => isset($field_item->entity));
+    $fiber = new \Fiber(fn(): bool => isset($field_item->entity));
     $fiber->start();
     $this->assertTrue(isset($field_item->entity));
   }

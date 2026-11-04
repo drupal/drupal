@@ -29,7 +29,6 @@ class FileFieldPathTest extends FileFieldTestBase {
     $field_name = $this->randomMachineName();
     $type_name = 'article';
     $this->createFileField($field_name, 'node', $type_name);
-    /** @var \Drupal\file\FileInterface $test_file */
     $test_file = $this->getTestFile('text');
 
     // Create a new node.

@@ -299,7 +299,7 @@ trait PerformanceTestTrait {
    *   The conditionally quoted query arguments.
    */
   protected static function quoteQueryArgs(array $args): array {
-    $conditionalQuote = function ($arg) {
+    $conditionalQuote = function ($arg): int|float|string {
       return is_int($arg) || is_float($arg) ? $arg : '"' . $arg . '"';
     };
     return array_map($conditionalQuote, $args);

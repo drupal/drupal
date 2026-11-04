@@ -17674,12 +17674,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/CommentFieldAccessTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$display in PHPDoc tag @var does not match assigned variable \\$host_display\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/CommentIntegrationTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$comment\\.$#',
 	'identifier' => 'property.notFound',
 	'count' => 1,
@@ -19812,12 +19806,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Property Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ContentModerationStateTest\\:\\:\\$entityTypeManager \\(Drupal\\\\Core\\\\Entity\\\\EntityTypeManager\\) does not accept Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\.$#',
 	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php',
 ];
@@ -22567,18 +22555,6 @@ $ignoreErrors[] = [
 	'message' => '#^Parameter \\#3 \\$field_definition of method Drupal\\\\Tests\\\\field\\\\Kernel\\\\FieldDefinitionIntegrityTest\\:\\:checkDisplayOption\\(\\) expects Drupal\\\\Core\\\\Field\\\\BaseFieldDefinition, Drupal\\\\Core\\\\Field\\\\FieldDefinitionInterface given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 2,
-	'path' => __DIR__ . '/modules/field/tests/src/Kernel/FieldDefinitionIntegrityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$field_type_manager in PHPDoc tag @var does not match assigned variable \\$field_formatter_manager\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Kernel/FieldDefinitionIntegrityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$field_type_manager in PHPDoc tag @var does not match assigned variable \\$field_widget_manager\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
 	'path' => __DIR__ . '/modules/field/tests/src/Kernel/FieldDefinitionIntegrityTest.php',
 ];
 $ignoreErrors[] = [
@@ -32374,12 +32350,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media/tests/src/Kernel/MediaAccessControlHandlerTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$entityStorage in PHPDoc tag @var does not match assigned variable \\$entity_storage\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Kernel/MediaAccessControlHandlerTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getSource\\(\\)\\.$#',
 	'identifier' => 'method.notFound',
 	'count' => 1,
@@ -38088,12 +38058,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/responsive_image/tests/src/Functional/Rest/ResponsiveImageStyleXmlCookieTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$display in PHPDoc tag @var does not exist\\.$#',
-	'identifier' => 'varTag.variableNotFound',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/responsive_image/tests/src/Kernel/ResponsiveImageFormatterTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\rest\\\\Entity\\\\ConfigDependencies\\:\\:create\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -38780,12 +38744,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Property Drupal\\\\Tests\\\\rest\\\\Functional\\\\Views\\\\StyleSerializerEntityTest\\:\\:\\$adminUser \\(Drupal\\\\user\\\\Entity\\\\User\\|false\\) does not accept Drupal\\\\user\\\\UserInterface\\.$#',
 	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$vc_factory in PHPDoc tag @var does not match assigned variable \\$variation_cache_factory\\.$#',
-	'identifier' => 'varTag.differentVariable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/rest/tests/src/Functional/Views/StyleSerializerEntityTest.php',
 ];
@@ -43054,12 +43012,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Property Drupal\\\\user\\\\UserInterface\\:\\:\\$name \\(Drupal\\\\Core\\\\Field\\\\FieldItemListInterface\\) does not accept string\\.$#',
 	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/EntityFilteringThemeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$theme_handler in PHPDoc tag @var does not match assigned variable \\$theme_data\\.$#',
-	'identifier' => 'varTag.differentVariable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/EntityFilteringThemeTest.php',
 ];
@@ -55075,12 +55027,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/CacheWebTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$vc_factory in PHPDoc tag @var does not match assigned variable \\$variation_cache_factory\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/CacheWebTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setTranslatable\\(\\)\\.$#',
 	'identifier' => 'method.notFound',
 	'count' => 1,
@@ -55102,12 +55048,6 @@ $ignoreErrors[] = [
 	'message' => '#^Parameter \\#2 \\$node of method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\DisplayFeedTranslationTest\\:\\:checkFeedResults\\(\\) expects Drupal\\\\node\\\\Entity\\\\Node, Drupal\\\\node\\\\NodeInterface given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 2,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayFeedTranslationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$languageManager in PHPDoc tag @var does not match assigned variable \\$language_manager\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayFeedTranslationTest.php',
 ];
 $ignoreErrors[] = [
@@ -58609,32 +58549,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityReferenceSupportedNewEntitiesConstraintValidatorTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityReferenceSupportedNewEntitiesConstraintValidatorTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$workspace of method Drupal\\\\workspaces\\\\WorkspaceManager\\:\\:setActiveWorkspace\\(\\) expects Drupal\\\\workspaces\\\\WorkspaceInterface, Drupal\\\\Core\\\\Entity\\\\EntityInterface\\|null given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityWorkspaceConflictConstraintValidatorTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityWorkspaceConflictConstraintValidatorTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$workspace of method Drupal\\\\workspaces\\\\WorkspaceManager\\:\\:setActiveWorkspace\\(\\) expects Drupal\\\\workspaces\\\\WorkspaceInterface, Drupal\\\\Core\\\\Entity\\\\EntityInterface\\|null given\\.$#',
 	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceCRUDTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceCRUDTest.php',
 ];
@@ -58669,32 +58591,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceContentTranslationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceContentTranslationTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$workspace of method Drupal\\\\workspaces\\\\WorkspaceManager\\:\\:setActiveWorkspace\\(\\) expects Drupal\\\\workspaces\\\\WorkspaceInterface, Drupal\\\\Core\\\\Entity\\\\EntityInterface\\|null given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceEntityDeleteTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceEntityDeleteTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$workspace of method Drupal\\\\workspaces\\\\WorkspaceManager\\:\\:setActiveWorkspace\\(\\) expects Drupal\\\\workspaces\\\\WorkspaceInterface, Drupal\\\\Core\\\\Entity\\\\EntityInterface\\|null given\\.$#',
 	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceEntityOperationsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceEntityOperationsTest.php',
 ];
@@ -58723,20 +58627,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceEntityRepositoryTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceEntityRepositoryTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$workspace of method Drupal\\\\workspaces\\\\WorkspaceManager\\:\\:setActiveWorkspace\\(\\) expects Drupal\\\\workspaces\\\\WorkspaceInterface, Drupal\\\\Core\\\\Entity\\\\EntityInterface\\|null given\\.$#',
 	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceFormPersistenceTest.php',
 ];
@@ -58779,12 +58671,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Property Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceInformationTest\\:\\:\\$workspaceInformation has unknown class Drupal\\\\wse\\\\Core\\\\WorkspaceInformationInterface as its type\\.$#',
 	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceInformationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceInformationTest.php',
 ];
@@ -58843,32 +58729,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$workspace of method Drupal\\\\workspaces\\\\WorkspaceManager\\:\\:setActiveWorkspace\\(\\) expects Drupal\\\\workspaces\\\\WorkspaceInterface, Drupal\\\\Core\\\\Entity\\\\EntityInterface\\|null given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceMergerTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceMergerTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$workspace of method Drupal\\\\workspaces\\\\WorkspaceManager\\:\\:setActiveWorkspace\\(\\) expects Drupal\\\\workspaces\\\\WorkspaceInterface, Drupal\\\\Core\\\\Entity\\\\EntityInterface\\|null given\\.$#',
 	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspacePublisherTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspacePublisherTest.php',
 ];
@@ -58921,12 +58789,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceTrackerTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceTrackerTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\views\\\\ResultRow\\:\\:\\$entity_test_revpub_name\\.$#',
 	'identifier' => 'property.notFound',
 	'count' => 1,
@@ -58945,20 +58807,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceViewsIntegrationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceViewsIntegrationTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#1 \\$workspace of method Drupal\\\\workspaces\\\\WorkspaceManager\\:\\:setActiveWorkspace\\(\\) expects Drupal\\\\workspaces\\\\WorkspaceInterface, Drupal\\\\Core\\\\Entity\\\\EntityInterface\\|null given\\.$#',
 	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspacesFileItemTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$workspace_association in PHPDoc tag @var does not match assigned variable \\$workspace_tracker\\.$#',
-	'identifier' => 'varTag.differentVariable',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspacesFileItemTest.php',
 ];
@@ -61005,12 +60855,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityDecoupledTranslationRevisionsTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @var above assignment does not specify variable name\\.$#',
-	'identifier' => 'varTag.noVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityDecoupledTranslationRevisionsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Property Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityDecoupledTranslationRevisionsTest\\:\\:\\$storage \\(Drupal\\\\Core\\\\Entity\\\\ContentEntityStorageInterface\\) does not accept Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\.$#',
 	'identifier' => 'assign.propertyType',
 	'count' => 1,
@@ -62421,12 +62265,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Test/Comparator/MarkupInterfaceComparatorTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$base_theme in PHPDoc tag @var does not match assigned variable \\$base_themes\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Theme/BaseThemeRequiredTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Theme\\\\Icon\\\\Plugin\\\\IconPackManagerInterface\\:\\:processDefinition\\(\\)\\.$#',
 	'identifier' => 'method.notFound',
 	'count' => 5,
@@ -62449,24 +62287,6 @@ $ignoreErrors[] = [
 	'identifier' => 'offsetAccess.notFound',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Theme/Icon/IconPackManagerKernelTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Path\\\\PathMatcherInterface\\:\\:reveal\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Theme/RegistryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot call method willReturn\\(\\) on bool\\.$#',
-	'identifier' => 'method.nonObject',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Theme/RegistryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @var with type Drupal\\\\Core\\\\Path\\\\PathMatcherInterface is not subtype of native type Prophecy\\\\Prophecy\\\\ObjectProphecy\\.$#',
-	'identifier' => 'varTag.nativeType',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Theme/RegistryTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Extension\\\\Extension\\:\\:\\$origin\\.$#',
@@ -64725,24 +64545,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Field/FieldItemListTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$fv in PHPDoc tag @var does not match assigned variable \\$field_item_b\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Field/FieldItemListTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$fv in PHPDoc tag @var does not match assigned variable \\$field_item_c\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Field/FieldItemListTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$fv in PHPDoc tag @var does not match assigned variable \\$first_field_item\\.$#',
-	'identifier' => 'varTag.differentVariable',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Field/FieldItemListTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Parameter \\#2 \\$threshold of method Drupal\\\\Core\\\\Flood\\\\MemoryBackend\\:\\:isAllowed\\(\\) expects int, string given\\.$#',
 	'identifier' => 'argument.type',
 	'count' => 2,
@@ -64753,12 +64555,6 @@ $ignoreErrors[] = [
 	'identifier' => 'argument.type',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Flood/MemoryBackendTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\Core\\\\Form\\\\ConfiguredTrait\\:\\:\\$configFactory \\(null\\) does not accept Drupal\\\\Core\\\\Config\\\\ConfigFactoryInterface&PHPUnit\\\\Framework\\\\MockObject\\\\Stub\\.$#',
-	'identifier' => 'assign.propertyType',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Form/ConfigFormBaseTraitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Property Drupal\\\\Tests\\\\Core\\\\Form\\\\EventSubscriber\\\\FormAjaxSubscriberTest\\:\\:\\$stringTranslation \\(Drupal\\\\Core\\\\StringTranslation\\\\TranslationInterface&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\) does not accept Drupal\\\\Core\\\\StringTranslation\\\\TranslationManager\\.$#',

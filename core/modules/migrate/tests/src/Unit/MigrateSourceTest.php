@@ -20,6 +20,7 @@ use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -77,7 +78,7 @@ class MigrateSourceTest extends MigrateTestCase {
    * @return \Drupal\migrate\Plugin\MigrateSourceInterface&\PHPUnit\Framework\MockObject\MockObject
    *   A mocked source plugin.
    */
-  protected function getSource(array $configuration = [], array $migrate_config = [], $status = MigrateIdMapInterface::STATUS_NEEDS_UPDATE, $high_water_value = NULL) {
+  protected function getSource(array $configuration = [], array $migrate_config = [], $status = MigrateIdMapInterface::STATUS_NEEDS_UPDATE, $high_water_value = NULL): MigrateSourceInterface&MockObject {
     $configuration += ['skip_count' => FALSE];
 
     $container = new ContainerBuilder();

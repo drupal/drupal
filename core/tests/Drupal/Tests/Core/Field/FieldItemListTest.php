@@ -95,13 +95,11 @@ class FieldItemListTest extends UnitTestCase {
     // Tests field item lists where both have the same value.
     $datasets[] = [TRUE, $field_item_a, $field_item_a];
 
-    /** @var \Drupal\Core\Field\FieldItemBase  $fv */
     $field_item_b = new FieldItemTestClass();
     $field_item_b->setValue([2]);
     // Tests field item lists where both have the different values.
     $datasets[] = [FALSE, $field_item_a, $field_item_b];
 
-    /** @var \Drupal\Core\Field\FieldItemBase  $fv */
     $field_item_c = new FieldItemTestClass();
     $field_item_c->setValue(['0' => 1, '1' => 2]);
     $field_item_d = new FieldItemTestClass();
@@ -230,7 +228,6 @@ class FieldItemListTest extends UnitTestCase {
    * Tests equals empty items.
    */
   public function testEqualsEmptyItems(): void {
-    /** @var \Drupal\Core\Field\FieldItemBase  $fv */
     $first_field_item = new FieldItemTestClass();
     $first_field_item->setValue(['0' => 1, '1' => 2]);
     $second_field_item = new FieldItemTestClass();

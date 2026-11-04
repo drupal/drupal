@@ -99,10 +99,10 @@ class FieldDefinitionIntegrityTest extends KernelTestBase {
       $this->modulesWithSubdirectory('src' . DIRECTORY_SEPARATOR . 'Entity')
     );
 
-    /** @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface $field_type_manager */
+    /** @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface $field_formatter_manager */
     $field_formatter_manager = $this->container->get('plugin.manager.field.formatter');
 
-    /** @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface $field_type_manager */
+    /** @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface $field_widget_manager */
     $field_widget_manager = $this->container->get('plugin.manager.field.widget');
 
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */

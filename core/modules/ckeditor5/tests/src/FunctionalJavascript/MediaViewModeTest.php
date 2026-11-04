@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\filter\Entity\FilterFormat;
@@ -19,7 +20,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @internal
  */
-#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::class)]
+#[CoversClass(Media::class)]
 #[Group('ckeditor5')]
 #[Group('#slow')]
 #[RunTestsInSeparateProcesses]

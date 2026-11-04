@@ -33,8 +33,6 @@ class KernelTestHttpRequestTest extends KernelTestBase {
 
   /**
    * Markup used in test controller response.
-   *
-   * @var string
    */
   protected string $testMarkup = '';
 

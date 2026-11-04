@@ -168,7 +168,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
 
     // Test editor_entity_insert(): increment.
     $this->createUser();
-    $node = $node = Node::create([
+    $node = Node::create([
       'type' => 'page',
       'title' => 'test',
       'body' => $body,

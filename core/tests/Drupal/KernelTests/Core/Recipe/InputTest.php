@@ -90,7 +90,7 @@ class InputTest extends KernelTestBase {
     $collector = $this->createMock(InputCollectorInterface::class);
     $collector->expects($this->atLeastOnce())
       ->method('collectValue')
-      ->willReturnCallback(function (string $name) {
+      ->willReturnCallback(function (string $name): string {
         return match ($name) {
           'create_node_type.node_type' => 'test',
           'input_test.owner' => 'hack',

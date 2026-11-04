@@ -81,7 +81,7 @@ class ConfiguredTrait {
   /**
    * The configuration factory.
    *
-   * @var null
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   public $configFactory;
 

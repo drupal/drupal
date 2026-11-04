@@ -16,7 +16,6 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\Plugin\Validation\Constraint\UserNameConstraint;
-use Drupal\user\RoleInterface;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -181,7 +180,6 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
       'label' => 'admin',
       'is_admin' => TRUE,
     ]);
-    assert($role instanceof RoleInterface);
     $role->grantPermission($filter_test_format->getPermissionName());
     $role->save();
     $admin_user = User::create([

@@ -8,6 +8,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Plugin\Context\ContextInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -16,6 +17,7 @@ use Drupal\views\ContextualLinksHelper;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Drupal\views\Plugin\views\display\Block;
+use Drupal\views\ViewExecutable;
 use Drupal\views\ViewExecutableFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -32,10 +34,8 @@ class ViewsBlockTest extends UnitTestCase {
 
   /**
    * The view executable.
-   *
-   * @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $executable;
+  protected ViewExecutable&MockObject $executable;
 
   /**
    * The view executable factory.
@@ -51,10 +51,8 @@ class ViewsBlockTest extends UnitTestCase {
 
   /**
    * The view storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $storage;
+  protected EntityStorageInterface&MockObject $storage;
 
   /**
    * The mocked user account.
@@ -100,7 +98,7 @@ class ViewsBlockTest extends UnitTestCase {
 
     \Drupal::setContainer($container);
 
-    $this->executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
+    $this->executable = $this->getMockBuilder(ViewExecutable::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['buildRenderable', 'setDisplay', 'setItemsPerPage', 'getShowAdminLinks'])
       ->getMock();

@@ -47,7 +47,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
    */
   #[DataProvider('providerAccess')]
   public function testAccess(array $permissions, array $entity_values, string $operation, AccessResultInterface $expected_result, array $expected_cache_contexts, array $expected_cache_tags, bool $is_latest_revision): void {
-    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entityStorage $entity_storage */
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entity_storage */
     $entity_storage = $this->container->get('entity_type.manager')->getStorage('media');
 
     // Set a fixed ID so the type specific permissions match.

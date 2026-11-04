@@ -776,7 +776,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     // Test validating an entity of the wrong type.
     $user = $this->createUser();
     $user->save();
-    $node = $node = Node::create([
+    $node = Node::create([
       'type' => 'page',
       'uid' => $user->id(),
       'title' => $this->randomString(),

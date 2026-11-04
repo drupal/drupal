@@ -34,7 +34,6 @@ class KernelTestCompilerPass implements CompilerPassInterface {
     foreach ($reflection_class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method_reflection) {
       foreach ($method_reflection->getAttributes(Hook::class, \ReflectionAttribute::IS_INSTANCEOF) as $attribute_reflection) {
         $hook = $attribute_reflection->newInstance();
-        assert($hook instanceof Hook);
         HookCollectorPass::checkForProceduralOnlyHooks($hook, static::class);
         $map['hook_list'][$hook->hook][$this->definition->getClass() . ':' . $method_reflection->getName()] = 'core';
       }

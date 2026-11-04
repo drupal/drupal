@@ -895,7 +895,7 @@ class TestLibraryDiscoveryParser extends LibraryDiscoveryParser {
    */
   protected array $validUris;
 
-  protected function fileValidUri($source): bool {
+  protected function fileValidUri(string $source): bool {
     return $this->validUris[$source] ?? FALSE;
   }
 

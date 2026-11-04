@@ -97,7 +97,6 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
     $definition = $this->container->get('plugin.manager.block')
       ->getDefinition('views_block:test_view_block_with_context-block_1');
     $this->assertInstanceOf(ContextDefinitionInterface::class, $definition['context_definitions']['nid']);
-    /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context */
     $context = $definition['context_definitions']['nid'];
     $this->assertEquals('entity:node', $context->getDataType(), 'Context definition data type is correct.');
     $this->assertEquals('Content: ID', $context->getLabel(), 'Context definition label is correct.');
@@ -144,21 +143,18 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
     $definition = $this->container->get('plugin.manager.block')
       ->getDefinition('views_block:test_view_block_with_context-block_2');
     $this->assertInstanceOf(ContextDefinitionInterface::class, $definition['context_definitions']['created']);
-    /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context */
     $context = $definition['context_definitions']['created'];
     $this->assertEquals('integer', $context->getDataType(), 'Context definition data type is correct.');
     $this->assertEquals('Content: Authored on', $context->getLabel(), 'Context definition label is correct.');
     $this->assertFalse($context->isRequired(), 'Context is not required.');
 
     $this->assertInstanceOf(ContextDefinitionInterface::class, $definition['context_definitions']['vid']);
-    /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context */
     $context = $definition['context_definitions']['vid'];
     $this->assertEquals('integer', $context->getDataType(), 'Context definition data type is correct.');
     $this->assertEquals('Content: Revision ID', $context->getLabel(), 'Context definition label is correct.');
     $this->assertFalse($context->isRequired(), 'Context is not required.');
 
     $this->assertInstanceOf(ContextDefinitionInterface::class, $definition['context_definitions']['title']);
-    /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context */
     $context = $definition['context_definitions']['title'];
     $this->assertEquals('string', $context->getDataType(), 'Context definition data type is correct.');
     $this->assertEquals('Content: Title', $context->getLabel(), 'Context definition label is correct.');

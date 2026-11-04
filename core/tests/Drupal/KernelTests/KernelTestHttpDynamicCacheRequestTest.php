@@ -6,8 +6,8 @@ namespace Drupal\KernelTests;
 
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Tests\HttpKernelUiHelperTrait;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\Traits\Core\Cache\PageCachePolicyTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -35,13 +35,6 @@ class KernelTestHttpDynamicCacheRequestTest extends KernelTestBase implements Se
     'system_test',
     'dynamic_page_cache',
   ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-  }
 
   /**
    * Tests a request is cached and retrieved.

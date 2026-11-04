@@ -146,7 +146,7 @@ class AssetControllerTest extends KernelTestBase {
     // External group delta: requesting an aggregate for a non-file group.
     $css_assets = $this->assetResolver->getCssAssets(AttachedAssets::createFromRenderArray(['#attached' => ['library' => ['common_test/external']]]), FALSE, $language);
     $groups = $this->container->get('asset.css.collection_grouper')->group($css_assets);
-    $external_groups = array_filter($groups, static fn($g) => $g['type'] === 'external');
+    $external_groups = array_filter($groups, static fn(array $g): bool => $g['type'] === 'external');
     $this->assertNotEmpty($external_groups, 'common_test/external must contain an external CSS group.');
     $external_delta = array_key_first($external_groups);
 
@@ -161,7 +161,7 @@ class AssetControllerTest extends KernelTestBase {
     // has preprocess disabled.
     $css_assets = $this->assetResolver->getCssAssets(AttachedAssets::createFromRenderArray(['#attached' => ['library' => ['common_test/no-preprocess']]]), FALSE, $language);
     $groups = $this->container->get('asset.css.collection_grouper')->group($css_assets);
-    $no_preprocess_groups = array_filter($groups, static fn($g) => $g['type'] === 'file' && $g['preprocess'] === FALSE);
+    $no_preprocess_groups = array_filter($groups, static fn(array $g): bool => $g['type'] === 'file' && $g['preprocess'] === FALSE);
     $this->assertNotEmpty($no_preprocess_groups, 'common_test/no-preprocess must contain a CSS group with preprocess disabled.');
     $no_preprocess_delta = array_key_first($no_preprocess_groups);
 

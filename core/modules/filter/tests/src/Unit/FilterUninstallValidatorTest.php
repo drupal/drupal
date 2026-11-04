@@ -10,6 +10,7 @@ use Drupal\filter\Plugin\FilterBase;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests Drupal\filter\FilterUninstallValidator.
@@ -20,17 +21,15 @@ class FilterUninstallValidatorTest extends UnitTestCase {
 
   /**
    * The filter uninstall validator.
-   *
-   * @var \Drupal\filter\FilterUninstallValidator|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $filterUninstallValidator;
+  protected FilterUninstallValidator&MockObject $filterUninstallValidator;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->filterUninstallValidator = $this->getMockBuilder('Drupal\filter\FilterUninstallValidator')
+    $this->filterUninstallValidator = $this->getMockBuilder(FilterUninstallValidator::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['getFilterDefinitionsByProvider', 'getEnabledFilterFormats'])
       ->getMock();

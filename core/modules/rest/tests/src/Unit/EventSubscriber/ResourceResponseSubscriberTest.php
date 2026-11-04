@@ -408,7 +408,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
 
     // Instantiate the ResourceResponseSubscriber we will test.
     $resource_response_subscriber = new ResourceResponseSubscriber(
-      fn () => new Serializer([], [new JsonEncoder(), new XmlEncoder()]),
+      fn (): Serializer => new Serializer([], [new JsonEncoder(), new XmlEncoder()]),
       $renderer->reveal(),
       $route_match
     );

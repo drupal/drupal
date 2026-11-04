@@ -128,7 +128,6 @@ abstract class LinksetControllerTestBase extends BrowserTestBase {
       $values['link'] = ['uri' => $values['link'], 'options' => $options];
     }
     $link_content = MenuLinkContent::create($values);
-    assert($link_content instanceof MenuLinkContentInterface);
     $link_content->save();
     return $link_content;
   }
