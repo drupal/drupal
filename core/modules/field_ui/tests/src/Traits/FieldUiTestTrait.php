@@ -130,6 +130,8 @@ trait FieldUiTestTrait {
     $this->assertSession()->linkExists('Re-use an existing field');
     $this->clickLink('Re-use an existing field');
     $this->assertSession()->elementExists('css', "input[value=Re-use][name=$existing_storage_name]");
+    // The accessible name starts with the visible label.
+    $this->assertSession()->elementAttributeContains('css', "input[value=Re-use][name=$existing_storage_name]", 'aria-label', "Re-use $existing_storage_name");
     $this->click("input[value=Re-use][name=$existing_storage_name]");
 
     // Set the main content to only the content region because the label can
