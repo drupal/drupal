@@ -164,7 +164,7 @@ class FieldStorageReuseForm extends FormBase {
               'button--small',
               'use-ajax',
             ],
-            'aria-label' => $this->t('Reuse @field_name', ['@field_name' => $field['field_name']]),
+            'aria-label' => $this->t('Re-use @field_name', ['@field_name' => $field['field_name']]),
             'data-dialog-type' => 'modal',
           ],
           '#submit' => [
