@@ -217,21 +217,16 @@ class DatabaseBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function setMultiple(array $items) {
-    $try_again = FALSE;
     try {
-      // The bin might not yet exist.
+      // The bin table can be missing.
       $this->doSetMultiple($items);
     }
-    catch (\Exception $e) {
-      // If there was an exception, try to create the bins.
-      if (!$try_again = $this->ensureBinExists()) {
-        // If the exception happened for other reason than the missing bin
-        // table, propagate the exception.
-        throw $e;
-      }
-    }
-    // Now that the bin has been created, try again if necessary.
-    if ($try_again) {
+    catch (\Exception) {
+      // If the query fails, make the bin table and do the query again. It is
+      // possible that another process made the table after the query failed.
+      // If the query fails for a different cause, it fails again and the
+      // exception goes to the caller.
+      $this->ensureBinExists();
       $this->doSetMultiple($items);
     }
   }
@@ -322,20 +317,32 @@ class DatabaseBackend implements CacheBackendInterface {
   public function deleteMultiple(array $cids) {
     $cids = array_values(array_map([$this, 'normalizeCid'], $cids));
     try {
-      // Delete in chunks when a large array is passed.
-      foreach (array_chunk($cids, 1000) as $cids_chunk) {
-        $this->connection->delete($this->bin)
-          ->condition('cid', $cids_chunk, 'IN')
-          ->execute();
+      $this->doDeleteMultiple($cids);
+    }
+    catch (\Exception) {
+      // Make the cache table. The new table is empty. During core
+      // installation, it is possible to clear a cache table before items are
+      // in it, for example {cache_render} and {cache_data}. If the table is
+      // already there, it is possible that another process made it after the
+      // query failed. In this condition, do the query again.
+      if (!$this->ensureBinExists()) {
+        $this->doDeleteMultiple($cids);
       }
     }
-    catch (\Exception $e) {
-      // Create the cache table, which will be empty. This fixes cases during
-      // core install where a cache table is cleared before it is set
-      // with {cache_render} and {cache_data}.
-      if (!$this->ensureBinExists()) {
-        $this->catchException($e);
-      }
+  }
+
+  /**
+   * Deletes items from the cache bin table.
+   *
+   * @param string[] $cids
+   *   An array of normalized cache IDs.
+   */
+  protected function doDeleteMultiple(array $cids): void {
+    // Delete the items in groups of 1000. This keeps each query small.
+    foreach (array_chunk($cids, 1000) as $cids_chunk) {
+      $this->connection->delete($this->bin)
+        ->condition('cid', $cids_chunk, 'IN')
+        ->execute();
     }
   }
 
@@ -346,12 +353,14 @@ class DatabaseBackend implements CacheBackendInterface {
     try {
       $this->connection->truncate($this->bin)->execute();
     }
-    catch (\Exception $e) {
-      // Create the cache table, which will be empty. This fixes cases during
-      // core install where a cache table is cleared before it is set
-      // with {cache_render} and {cache_data}.
+    catch (\Exception) {
+      // Make the cache table. The new table is empty. During core
+      // installation, it is possible to clear a cache table before items are
+      // in it, for example {cache_render} and {cache_data}. If the table is
+      // already there, it is possible that another process made it after the
+      // query failed. In this condition, do the query again.
       if (!$this->ensureBinExists()) {
-        $this->catchException($e);
+        $this->connection->truncate($this->bin)->execute();
       }
     }
   }
@@ -369,17 +378,32 @@ class DatabaseBackend implements CacheBackendInterface {
   public function invalidateMultiple(array $cids) {
     $cids = array_values(array_map([$this, 'normalizeCid'], $cids));
     try {
-      // Update in chunks when a large array is passed.
-      $requestTime = $this->time->getRequestTime();
-      foreach (array_chunk($cids, 1000) as $cids_chunk) {
-        $this->connection->update($this->bin)
-          ->fields(['expire' => $requestTime - 1])
-          ->condition('cid', $cids_chunk, 'IN')
-          ->execute();
+      $this->doInvalidateMultiple($cids);
+    }
+    catch (\Exception) {
+      // If the table is missing, there are no items to invalidate. If the
+      // table is there, it is possible that another process made it after the
+      // query failed. In this condition, do the query again.
+      if ($this->connection->schema()->tableExists($this->bin)) {
+        $this->doInvalidateMultiple($cids);
       }
     }
-    catch (\Exception $e) {
-      $this->catchException($e);
+  }
+
+  /**
+   * Marks items in the cache bin table as invalid.
+   *
+   * @param string[] $cids
+   *   An array of normalized cache IDs.
+   */
+  protected function doInvalidateMultiple(array $cids): void {
+    // Update the items in groups of 1000. This keeps each query small.
+    $requestTime = $this->time->getRequestTime();
+    foreach (array_chunk($cids, 1000) as $cids_chunk) {
+      $this->connection->update($this->bin)
+        ->fields(['expire' => $requestTime - 1])
+        ->condition('cid', $cids_chunk, 'IN')
+        ->execute();
     }
   }
 
