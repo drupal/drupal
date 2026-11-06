@@ -5,6 +5,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\menu_ui\Hook\MenuUiHooks;
 use Drupal\menu_ui\MenuUiUtility;
 use Drupal\node\NodeInterface;
@@ -23,6 +24,7 @@ use Drupal\node\NodeInterface;
  *
  * @see https://www.drupal.org/node/3566774
  */
+#[ExtensionFileIsConverted]
 function menu_ui_get_menu_link_defaults(NodeInterface $node) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use MenuUiUtility::getMenuLinkDefaults() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   return \Drupal::service(MenuUiUtility::class)->getMenuLinkDefaults($node);

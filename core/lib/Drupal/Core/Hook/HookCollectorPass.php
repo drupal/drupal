@@ -9,6 +9,7 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Core\Extension\ProceduralCall;
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\HookAttributeInterface;
 use Drupal\Core\Hook\Attribute\HookDependsOnModule;
@@ -96,6 +97,15 @@ class HookCollectorPass extends HookCollectorBase implements CompilerPassInterfa
   protected array $preprocessForSuggestions;
 
   /**
+   * Deprecated extension files.
+   *
+   * These are stored to allow emitting deprecation messages.
+   *
+   * @var array<string, array<string, true>>
+   */
+  protected array $deprecatedFiles = [];
+
+  /**
    * Constructor.
    *
    * @param list<string> $modules
@@ -143,6 +153,12 @@ class HookCollectorPass extends HookCollectorBase implements CompilerPassInterfa
       'preprocess_for_suggestions' => $this->preprocessForSuggestions ?? [],
       'packed_order_operations' => $packed_order_operations,
     ]);
+
+    foreach ($this->deprecatedFiles as $fileExtension => $deprecatedFiles) {
+      foreach ($this->deprecatedFiles[$fileExtension] ?? [] as $deprecatedFile => $v) {
+        @trigger_error('Code in ' . $deprecatedFile . '.' . $fileExtension . ' is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765', E_USER_DEPRECATED);
+      }
+    }
   }
 
   /**
@@ -328,20 +344,24 @@ class HookCollectorPass extends HookCollectorBase implements CompilerPassInterfa
    *   Skip the procedural check for the current module.
    */
   protected function collectModuleHookImplementations($dir, $module, $current_module_preg, $all_modules_preg, bool $skip_procedural): void {
-    $hook_file_cache = FileCacheFactory::get('hook_implementations');
+    $hook_file_cache = FileCacheFactory::get('hook_implementations:1');
     // List of modules must be included in the cache key to ensure rediscovery
     // takes place when a new module is installed. Some modules define hooks
     // on behalf of other modules and those hooks need to be found.
     // Hash to prevent massive key sizes.
-    $procedural_hook_file_cache = FileCacheFactory::get('procedural_hook_implementations:' . hash('xxh3', $all_modules_preg));
+    $procedural_hook_file_cache = FileCacheFactory::get('procedural_hook_implementations:1:' . hash('xxh3', $all_modules_preg));
 
     $procedural_files = array_map(fn (string $extension): string => "$module.$extension", $this->proceduralFileExtensions);
     foreach ($this->getHookFileIterator($dir, $procedural_files) as $fileinfo) {
       assert($fileinfo instanceof \SplFileInfo);
-      $extension = $fileinfo->getExtension();
+      $fileExtension = $fileinfo->getExtension();
       $filename = $fileinfo->getPathname();
 
-      if ($extension === 'php') {
+      if ($fileExtension === 'module' || $fileExtension === 'profile') {
+        $this->deprecatedFiles[$fileExtension][pathinfo($filename, PATHINFO_FILENAME)] = TRUE;
+      }
+
+      if ($fileExtension === 'php') {
         $cached = $hook_file_cache->get($filename);
         if ($cached) {
           $class = $cached['class'];
@@ -421,19 +441,43 @@ class HookCollectorPass extends HookCollectorBase implements CompilerPassInterfa
           }
         }
       }
-      elseif (!$skip_procedural) {
+      else {
         $implementations = $procedural_hook_file_cache->get($filename);
         if ($implementations === NULL) {
           $finder = MockFileFinder::create($filename);
           $parser = new StaticReflectionParser('', $finder);
-          $implementations = [];
+          $implementations = [
+            'hooks' => [],
+          ];
+          $hasNonLegacyTaggedFunction = FALSE;
+          $hasSkipAttribute = FALSE;
           foreach ($parser->getMethodAttributes() as $function => $attributes) {
-            if (StaticReflectionParser::hasAttribute($attributes, ProceduralHookScanStop::class)) {
+            if (StaticReflectionParser::hasAttribute($attributes, ExtensionFileIsConverted::class)) {
+              $implementations['@skip_extension_file_deprecation'] = TRUE;
               break;
             }
 
+            // We cannot skip deprecation when $skip_procedural is TRUE or
+            // ProceduralHookScanStop is set because we do not know if there
+            // are other api functions.
+            // Here we track if we hit a function that does not have a legacy
+            // attribute so we can auto suppress the deprecation.
             $legacy_attributes = [LegacyHook::class, LegacyRequirementsHook::class];
-            if (!static::hasAnyAttribute($attributes, $legacy_attributes) && (preg_match($current_module_preg, $function, $matches) || preg_match($all_modules_preg, $function, $matches))) {
+
+            if (static::hasAnyAttribute($attributes, $legacy_attributes)) {
+              continue;
+            }
+            $hasNonLegacyTaggedFunction = TRUE;
+
+            // If $skip_procedural is TRUE or ProceduralHookScanStop is set
+            // then we do not need to add any functions to the hook cache, but
+            // we continue scanning for non hook methods to emit the
+            // deprecation.
+            if ($skip_procedural || $hasSkipAttribute || StaticReflectionParser::hasAttribute($attributes, ProceduralHookScanStop::class)) {
+              $hasSkipAttribute = TRUE;
+              continue;
+            }
+            if ((preg_match($current_module_preg, $function, $matches) || preg_match($all_modules_preg, $function, $matches))) {
               // Skip hooks that are not supported by the new hook system, they
               // do not need to be added to the BC layer. Note that is different
               // from static::checkForProceduralOnlyHooks(). hook_requirements
@@ -456,12 +500,18 @@ class HookCollectorPass extends HookCollectorBase implements CompilerPassInterfa
               }
 
               assert($function === $matches['module'] . '_' . $matches['hook']);
-              $implementations[] = ['module' => $matches['module'], 'hook' => $matches['hook']];
+              $implementations['hooks'][] = ['module' => $matches['module'], 'hook' => $matches['hook']];
             }
+          }
+          if (!$hasNonLegacyTaggedFunction) {
+            $implementations['@skip_extension_file_deprecation'] = TRUE;
           }
           $procedural_hook_file_cache->set($filename, $implementations);
         }
-        foreach ($implementations as $implementation) {
+        if (isset($implementations['@skip_extension_file_deprecation'])) {
+          unset($this->deprecatedFiles[$fileExtension][pathinfo($filename, PATHINFO_FILENAME)]);
+        }
+        foreach ($implementations['hooks'] as $implementation) {
           $this->addProceduralImplementation($implementation['hook'], $implementation['module']);
         }
       }

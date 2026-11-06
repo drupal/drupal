@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\text\TextSummary;
 
 /**
@@ -33,6 +34,7 @@ use Drupal\text\TextSummary;
  *
  * @see https://www.drupal.org/node/3568389
  */
+#[ExtensionFileIsConverted]
 function text_summary($text, $format = NULL, $size = NULL) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(TextSummary::class)->generate() instead. See https://www.drupal.org/node/3568389', E_USER_DEPRECATED);
 

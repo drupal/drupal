@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\filter\FilterFormatInterface;
 
 /**
@@ -34,6 +35,7 @@ use Drupal\filter\FilterFormatInterface;
  * @see https://www.drupal.org/node/3568146
  * @see https://www.drupal.org/node/2099741
  */
+#[ExtensionFileIsConverted]
 function editor_filter_xss($html, ?FilterFormatInterface $format = NULL, ?FilterFormatInterface $original_format = NULL) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Instead, use the method ::filterXss() from the element.editor service. See https://www.drupal.org/node/3568146', E_USER_DEPRECATED);
   return \Drupal::service('element.editor')->filterXss($html, $format, $original_format);

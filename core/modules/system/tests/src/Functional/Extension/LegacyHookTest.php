@@ -6,6 +6,7 @@ namespace Drupal\Tests\system\Functional\Extension;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -28,7 +29,9 @@ class LegacyHookTest extends BrowserTestBase {
   /**
    * Tests the LegacyHook attribute.
    */
+  #[IgnoreDeprecations]
   public function testLegacyHook(): void {
+    $this->expectUserDeprecationMessage('Code in legacy_hook_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     // Calling legacy_hook_test1 leads to a fatal error so there's no need
     // for asserts to show it does not get called.
     \Drupal::moduleHandler()->invokeAll('test1');

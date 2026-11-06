@@ -18,6 +18,7 @@ use Drupal\ddd_hook_order_test\Hook\DHooks;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -93,7 +94,12 @@ class HookOrderTest extends KernelTestBase {
    * @see \ccc_hook_order_test_test_hook()
    * @see \ddd_hook_order_test_test_hook()
    */
+  #[IgnoreDeprecations]
   public function testHookOrder(): void {
+    $this->expectUserDeprecationMessage('Code in aaa_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in bbb_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in ccc_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in ddd_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     $this->assertSameCallList(
       [
         // Moved to first using the ReorderHook attribute.
@@ -133,7 +139,9 @@ class HookOrderTest extends KernelTestBase {
    * @see \Drupal\KernelTests\Core\Hook\HookAlterOrderTest::testReorderAlterMissingTarget()
    * @see \Drupal\xyz_hook_order_test\Hook\XyzMissingTargetHooks
    */
+  #[IgnoreDeprecations]
   public function testReorderMissingTarget(): void {
+    $this->expectUserDeprecationMessage('Code in ddd_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     // At the beginning, the xyz_hook_order_test is not installed, so no
     // reordering is applied.
     // This verifies that all implementations for this test are correctly
@@ -213,7 +221,9 @@ class HookOrderTest extends KernelTestBase {
    * @see \aaa_hook_order_test_sparse_test_hook()
    * @see \ccc_hook_order_test_sparse_test_hook()
    */
+  #[IgnoreDeprecations]
   public function testSparseHookOrder(): void {
+    $this->expectUserDeprecationMessage('Code in ddd_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     $this->assertSameCallList(
       [
         // OO and procedural listeners are correctly intermixed by module
@@ -250,7 +260,9 @@ class HookOrderTest extends KernelTestBase {
    * @see \Drupal\bbb_hook_order_test\Hook\BHooks::testBothParametersHook()
    * @see \Drupal\ccc_hook_order_test\Hook\CHooks::testBothParametersHook()
    */
+  #[IgnoreDeprecations]
   public function testBothParametersHookOrder(): void {
+    $this->expectUserDeprecationMessage('Code in ddd_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     $this->assertSameCallList(
       [
         BHooks::class . '::testBothParametersHook',
@@ -281,7 +293,9 @@ class HookOrderTest extends KernelTestBase {
    * @see \ccc_hook_order_test_test_procedural_reorder()
    * @see \Drupal\aaa_hook_order_test\Hook\AHooks::testProceduralReorder()
    */
+  #[IgnoreDeprecations]
   public function testHookReorderProcedural(): void {
+    $this->expectUserDeprecationMessage('Code in ccc_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     $this->assertSameCallList(
       [
         'bbb_hook_order_test_test_procedural_reorder',

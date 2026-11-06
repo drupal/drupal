@@ -6,6 +6,7 @@
 
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\options\OptionsAllowedValuesInterface;
 
 /**
@@ -33,6 +34,7 @@ use Drupal\options\OptionsAllowedValuesInterface;
  *
  * @see https://www.drupal.org/node/3572185
  */
+#[ExtensionFileIsConverted]
 function options_allowed_values(FieldStorageDefinitionInterface $definition, ?FieldableEntityInterface $entity = NULL) {
   @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\options\OptionsAllowedValuesInterface::allowedValues() instead. See https://www.drupal.org/node/3572185', E_USER_DEPRECATED);
   return \Drupal::service(OptionsAllowedValuesInterface::class)->getAllowedValues($definition, $entity);

@@ -7,6 +7,7 @@
 use Drupal\content_translation\ContentTranslationEnableTranslationPerBundle;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 
 /**
  * Access callback for the translation overview page.
@@ -22,6 +23,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @see https://www.drupal.org/node/3567484
  */
+#[ExtensionFileIsConverted]
 function content_translation_translate_access(EntityInterface $entity) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the access() method of the content_translation.manager service instead. See https://www.drupal.org/node/3567484', E_USER_DEPRECATED);
   return \Drupal::service('content_translation.manager')->access($entity);

@@ -5,6 +5,7 @@
  */
 
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 
 /**
  * Assigns an initial, default set of blocks for a theme.
@@ -22,6 +23,7 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
  *
  * @see https://www.drupal.org/node/3566783
  */
+#[ExtensionFileIsConverted]
 function block_theme_initialize($theme): void {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. No replacement is provided. See https://www.drupal.org/node/3566783', E_USER_DEPRECATED);
 

@@ -6,6 +6,7 @@
 
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\locale\CurrentImport;
 use Drupal\locale\LocaleDefaultOptions;
 use Drupal\locale\LocaleFetch;
@@ -212,6 +213,7 @@ const LOCALE_TRANSLATION_CURRENT = 'current';
  *
  * @see https://www.drupal.org/node/3616293
  */
+#[ExtensionFileIsConverted]
 function locale_translatable_language_list() {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(LocaleLanguages::class)->getTranslatableLanguages() instead. See https://www.drupal.org/node/3616293', E_USER_DEPRECATED);
   return \Drupal::service(LocaleLanguages::class)->getTranslatableLanguages();

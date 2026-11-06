@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\image\ImageDerivativeUtilities;
 
 /**
@@ -27,6 +28,7 @@ define('IMAGE_DERIVATIVE_TOKEN', 'itok');
  *
  * @see https://www.drupal.org/node/3567619
  */
+#[ExtensionFileIsConverted]
 function image_path_flush($path): void {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\image\ImageDerivativeUtilities::pathFlush() instead. See https://www.drupal.org/node/3567619', E_USER_DEPRECATED);
   \Drupal::service(ImageDerivativeUtilities::class)->pathFlush($path);

@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Functions to support deprecation testing.
+ */
+
+declare(strict_types=1);
+
+/**
+ * We need a function to trigger the deprecation.
+ */
+function _test_module_discovery_deprecation(): void {}

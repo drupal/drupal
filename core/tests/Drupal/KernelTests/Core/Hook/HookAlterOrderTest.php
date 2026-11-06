@@ -14,6 +14,7 @@ use Drupal\ccc_hook_order_test\Hook\CAlterHooks;
 use Drupal\ddd_hook_order_test\Hook\DAlterHooks;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -41,7 +42,12 @@ class HookAlterOrderTest extends KernelTestBase {
   /**
    * Test ordering alter calls.
    */
+  #[IgnoreDeprecations]
   public function testAlterOrder(): void {
+    $this->expectUserDeprecationMessage('Code in aaa_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in bbb_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in ccc_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in ddd_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     // The default ordering of test_alter hooks.
     $this->assertAlterCallOrder([
       CAlterHooks::class . '::testAlter',
@@ -103,7 +109,12 @@ class HookAlterOrderTest extends KernelTestBase {
   /**
    * Tests #[ReorderHook] targeting other hooks.
    */
+  #[IgnoreDeprecations]
   public function testReorderCrossHookAlter(): void {
+    $this->expectUserDeprecationMessage('Code in aaa_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in bbb_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in ccc_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in ddd_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     $this->assertAlterCallOrder(
       [
         // This method is reordered last only in combination with subtype hook.
@@ -186,7 +197,12 @@ class HookAlterOrderTest extends KernelTestBase {
    * @see \Drupal\KernelTests\Core\Hook\HookOrderTest::testReorderMissingTarget()
    * @see \Drupal\xyz_hook_order_test\Hook\XyzMissingTargetAlter
    */
+  #[IgnoreDeprecations]
   public function testReorderAlterMissingTarget(): void {
+    $this->expectUserDeprecationMessage('Code in aaa_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in bbb_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in ccc_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in ddd_hook_order_test.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     // At the beginning, the xyz_hook_order_test is not installed, so no
     // reordering is applied.
     // This verifies that all implementations for this test are correctly

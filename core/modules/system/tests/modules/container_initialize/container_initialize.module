@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Used to test bare container calls in .module files.
+ * Used to test bare container calls in .module files during hook collection.
  */
 
 declare(strict_types=1);

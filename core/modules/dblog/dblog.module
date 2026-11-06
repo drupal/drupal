@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\dblog\DbLogFilters;
 
 /**
@@ -15,6 +16,7 @@ use Drupal\dblog\DbLogFilters;
  * @deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\Drupal\dblog\DbLogFilters::class)->getMessageTypes() instead.
  * @see https://www.drupal.org/node/3560399
  */
+#[ExtensionFileIsConverted]
 function _dblog_get_message_types() {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal::service(\Drupal\dblog\DbLogFilters::class)->getMessageTypes() instead. See https://www.drupal.org/node/3560399', E_USER_DEPRECATED);
   return \Drupal::service(DbLogFilters::class)->getMessageTypes();

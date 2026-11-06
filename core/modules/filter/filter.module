@@ -6,6 +6,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\FilterFormatRepositoryInterface;
@@ -30,6 +31,7 @@ use Drupal\filter\FilterFormatRepositoryInterface;
  *
  * @see https://www.drupal.org/node/3035368
  */
+#[ExtensionFileIsConverted]
 function filter_formats(?AccountInterface $account = NULL) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use the Drupal\filter\FilterFormatRepositoryInterface service with the ::getAllFormats() method to get all formats, or with the ::getFormatsForAccount() method to get all formats that a user is able to access. See https://www.drupal.org/node/3035368', E_USER_DEPRECATED);
   $filter_format_repository = \Drupal::service(FilterFormatRepositoryInterface::class);

@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\FileInterface;
 use Drupal\file\Upload\ManagedFileElementHelper;
 use Drupal\file\Upload\FormFileUploader;
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 
 /**
  * Saves form file uploads.
@@ -48,6 +49,7 @@ use Drupal\file\Upload\FormFileUploader;
  * @see https://www.drupal.org/project/drupal/issues/3069020
  * @see https://www.drupal.org/project/drupal/issues/2482783
  */
+#[ExtensionFileIsConverted]
 function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, FileExists $fileExists = FileExists::Rename) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal::service(ManagedFileElementHelper::class)->saveFileUploads() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
   return \Drupal::service(ManagedFileElementHelper::class)->saveFileUploads($element, $form_state, $delta, $fileExists);
