@@ -185,11 +185,12 @@ default:
       CACHE_URL=https://git.drupalcode.org/api/v4/projects/project%2Fdrupal/jobs/artifacts/${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}/raw/${CACHE_FILE}?job=Write%20lint%20caches
     fi
   # Get the cache file from the artifacts of the latest successful job from the
-  # target branch. Allow the job to proceed and pass if the file doesn't exist.
+  # target branch, unless an earlier job in this pipeline already produced it.
+  # Allow the job to proceed and pass if the file doesn't exist.
   # Daily pipelines skip the download so the lint jobs do a full run and the
   # caches are rebuilt from scratch.
   - |
-    if [[ "$DAILY_TEST" != "1" ]]; then
+    if [[ "$DAILY_TEST" != "1" && ! -f "$CACHE_FILE" ]]; then
       echo Downloading $CACHE_URL
       curl --fail --location --create-dirs --output $CACHE_FILE "$CACHE_URL" || true
     fi
@@ -609,44 +610,6 @@ default:
 ################
 # Lint Jobs
 ################
-
-# Download the cache artifacts from the previous pipeline run to work around
-# https://gitlab.com/gitlab-org/gitlab/-/issues/458828 due to performance
-# testing. Note that this job must come before the lint jobs that create the
-# updated cache files. This ensures that their updated artifacts are used in the
-# 'Write lint caches' job.
-'Lint cache download':
-  stage: 🪄 Lint
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "parent_pipeline"
-      when: never
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
-    - if: ($CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Test lint cache warming/)
-    - if: $PERFORMANCE_TEST == "1"
-  script:
-    - CACHE_FILE=core/phpstan-tmp/resultCache.php
-    - *download-cache
-    - CACHE_FILE=core/.cspellcache
-    - *download-cache
-    - CACHE_FILE=core/.eslintcache
-    - *download-cache
-    - CACHE_FILE=core/.stylelintcache
-    - *download-cache
-    - CACHE_FILE=core/.phpcscache
-    - *download-cache
-    - CACHE_FILE=core/.twigcsfixercache
-    - *download-cache
-    - CACHE_FILE=vendor.tar.gz
-    - *download-cache
-  artifacts:
-    paths:
-      - core/phpstan-tmp/resultCache.php
-      - core/.cspellcache
-      - core/.eslintcache
-      - core/.stylelintcache
-      - core/.phpcscache
-      - core/.twigcsfixercache
-      - vendor.tar.gz
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
@@ -1096,6 +1059,25 @@ default:
     - if: $PERFORMANCE_TEST == "1"
   stage: ⚡️ Tests
   script:
+    # Lint jobs that did not run in this pipeline, such as in performance
+    # pipelines or through rules:changes, leave no cache file. Carry the previous
+    # one forward, because GitLab only keeps artifacts from jobs in the latest
+    # pipeline: https://gitlab.com/gitlab-org/gitlab/-/issues/458828
+    - CACHE_FILE=core/phpstan-tmp/resultCache.php
+    - *download-cache
+    - CACHE_FILE=core/.cspellcache
+    - *download-cache
+    - CACHE_FILE=core/.eslintcache
+    - *download-cache
+    - CACHE_FILE=core/.stylelintcache
+    - *download-cache
+    - CACHE_FILE=core/.phpcscache
+    - *download-cache
+    - CACHE_FILE=core/.twigcsfixercache
+    - *download-cache
+    - if [ -d vendor ]; then tar -czf vendor.tar.gz vendor; fi
+    - CACHE_FILE=vendor.tar.gz
+    - *download-cache
     # Exit with an error if any of the lint cache files do not exist.
     - if [ ! -f core/phpstan-tmp/resultCache.php ]; then exit 1; fi
     # cspell only runs on pushes to main, scheduled pipelines on main and MRs
@@ -1108,9 +1090,6 @@ default:
     - if [ ! -f core/.stylelintcache ]; then exit 1; fi
     - if [ ! -f core/.phpcscache ]; then exit 1; fi
     - if [ ! -f core/.twigcsfixercache ]; then exit 1; fi
-    # Performance pipelines run no lint jobs, so there is no vendor directory;
-    # keep the tarball passed through by 'Lint cache download' instead.
-    - if [ -d vendor ]; then tar -czf vendor.tar.gz vendor; fi
     - if [ ! -f vendor.tar.gz ]; then exit 1; fi
   artifacts:
     paths:
