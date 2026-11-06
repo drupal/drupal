@@ -1,0 +1,5 @@
+name: 'Test .module deprecation'
+type: module
+description: 'Test .module deprecation messages.'
+version: VERSION
+package: Testing

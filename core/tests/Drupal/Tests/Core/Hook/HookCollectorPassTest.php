@@ -12,6 +12,7 @@ use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -19,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 #[CoversClass(HookCollectorPass::class)]
 #[Group('Hook')]
+#[IgnoreDeprecations]
 class HookCollectorPassTest extends UnitTestCase {
 
   /**
@@ -28,6 +30,7 @@ class HookCollectorPassTest extends UnitTestCase {
    * @see ::getHookFileIterator
    */
   public function testCollectAllHookImplementations(): void {
+    $this->expectUserDeprecationMessage('Code in test_module.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     vfsStream::setup('drupal_root');
     $files = [
       'modules/test_module/test_module_info.yml',

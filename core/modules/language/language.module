@@ -5,6 +5,7 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Element\LanguageConfiguration;
 use Drupal\language\Entity\ContentLanguageSettings;
@@ -17,6 +18,7 @@ use Drupal\language\Entity\ContentLanguageSettings;
  *
  * @see https://www.drupal.org/node/3566774
  */
+#[ExtensionFileIsConverted]
 function language_configuration_element_submit(&$form, FormStateInterface $form_state): void {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use \Drupal\language\Element\LanguageConfiguration::submit() instead. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   LanguageConfiguration::submit($form, $form_state);

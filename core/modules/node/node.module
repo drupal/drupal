@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeAccessRebuild;
@@ -22,6 +23,7 @@ use Drupal\node\NodeInterface;
  * @deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use \Drupal::service('entity_type.bundle.info')->getBundleLabels('node') instead.
  * @see https://www.drupal.org/node/3534849
  */
+#[ExtensionFileIsConverted]
 function node_type_get_names() {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.3.0 and is removed from drupal:13.0.0. Use \Drupal::service(\'entity_type.bundle.info\')->getBundleLabels(\'node\') instead. See https://www.drupal.org/node/3534849', E_USER_DEPRECATED);
   return \Drupal::service('entity_type.bundle.info')->getBundleLabels('node');

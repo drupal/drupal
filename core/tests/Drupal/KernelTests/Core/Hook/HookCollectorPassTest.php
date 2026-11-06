@@ -16,6 +16,7 @@ use Drupal\module_handler_test_all1\Hook\ModuleHandlerTestAll1Hooks;
 use Drupal\user_hooks_test\Hook\UserHooksTest;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -64,7 +65,10 @@ class HookCollectorPassTest extends KernelTestBase {
   /**
    * Test that ordering works.
    */
+  #[IgnoreDeprecations]
   public function testOrdering(): void {
+    $this->expectUserDeprecationMessage('Code in module_handler_test_all1.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in module_handler_test_all2.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     $container = new ContainerBuilder();
     $module_filenames = [
       'module_handler_test_all1' => ['pathname' => "core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all1/module_handler_test_all1.info.yml"],
@@ -99,7 +103,9 @@ class HookCollectorPassTest extends KernelTestBase {
    * They should be picked up but only executed when the other
    * module is installed.
    */
+  #[IgnoreDeprecations]
   public function testHooksImplementedOnBehalfFileCache(): void {
+    $this->expectUserDeprecationMessage('Code in hook_collector_on_behalf_procedural.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     $module_installer = $this->container->get('module_installer');
     $this->assertTrue($module_installer->install(['hook_collector_on_behalf']));
     $this->assertTrue($module_installer->install(['hook_collector_on_behalf_procedural']));
@@ -115,7 +121,11 @@ class HookCollectorPassTest extends KernelTestBase {
   /**
    * Test procedural hooks for a module are skipped when skip is set.
    */
+  #[IgnoreDeprecations]
   public function testProceduralHooksSkippedWhenConfigured(): void {
+    $this->expectUserDeprecationMessage('Code in hook_collector_on_behalf_procedural.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in hook_collector_skip_procedural.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
+    $this->expectUserDeprecationMessage('Code in hook_collector_skip_procedural_attribute.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     $module_installer = $this->container->get('module_installer');
     $this->assertTrue($module_installer->install(['hook_collector_skip_procedural']));
     $this->assertTrue($module_installer->install(['hook_collector_on_behalf_procedural']));

@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleWeight;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -350,7 +351,9 @@ class ModuleHandlerTest extends KernelTestBase {
   /**
    * Tests procedural preprocess functions.
    */
+  #[IgnoreDeprecations]
   public function testProceduralPreprocess(): void {
+    $this->expectUserDeprecationMessage('Code in module_test_procedural_preprocess.module is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     $this->moduleInstaller()->install(['module_test_procedural_preprocess']);
     $preprocess_function = [];
     $preprocess_invoke = [];

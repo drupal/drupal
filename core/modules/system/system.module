@@ -9,6 +9,7 @@ use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\Theme;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 
 /**
  * Disabled option on forms and settings.
@@ -76,6 +77,7 @@ const REGIONS_ALL = 'all';
  *
  * @see https://www.drupal.org/node/3566774
  */
+#[ExtensionFileIsConverted]
 function system_check_directory($form_element, FormStateInterface $form_state) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. There is no replacement. See https://www.drupal.org/node/3566774', E_USER_DEPRECATED);
   $directory = $form_element['#value'];

@@ -1,0 +1,5 @@
+name: 'Test .module deprecation with scan stop'
+type: module
+description: 'Test .module deprecation when the first function has ProceduralHookScanStop.'
+version: VERSION
+package: Testing

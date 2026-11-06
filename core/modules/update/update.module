@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\Core\Url;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
@@ -16,6 +17,7 @@ use Drupal\update\UpdateManagerInterface;
  *
  * @see https://www.drupal.org/node/3592959
  */
+#[ExtensionFileIsConverted]
 function _update_no_data() {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:13.0.0. Use \Drupal\update\UpdateMessageTrait::noData() instead. See https://www.drupal.org/node/3592959', E_USER_DEPRECATED);
   $destination = \Drupal::destination()->getAsArray();

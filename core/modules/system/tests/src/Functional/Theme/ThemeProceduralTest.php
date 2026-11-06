@@ -8,6 +8,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -30,7 +31,9 @@ class ThemeProceduralTest extends BrowserTestBase {
   /**
    * Ensures preprocess functions run from procedural implementations.
    */
+  #[IgnoreDeprecations]
   public function testPreprocess(): void {
+    $this->expectUserDeprecationMessage('Code in procedural_hook_theme.theme is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3581222');
     $node_article_type = NodeType::create([
       'type' => 'article',
       'name' => 'Article',

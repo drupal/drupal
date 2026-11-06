@@ -6,6 +6,7 @@
 
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Hook\Attribute\ExtensionFileIsConverted;
 use Drupal\views\ContextualLinksHelper;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
@@ -77,6 +78,7 @@ use Drupal\views\Views;
  *
  * @see https://www.drupal.org/node/3382344
  */
+#[ExtensionFileIsConverted]
 function views_add_contextual_links(&$render_element, $location, $display_id, ?array $view_element = NULL): void {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:11.4.0 and is removed from drupal:13.0.0. Use Drupal\views\ContextualLinksHelper::addLinks() instead. See https://www.drupal.org/node/3382344', E_USER_DEPRECATED);
   \Drupal::service(ContextualLinksHelper::class)->addLinks($render_element, $location, $display_id, $view_element);

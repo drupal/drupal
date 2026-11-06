@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Functions to support deprecation testing.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
+
+/**
+ * The first function stops the scan but is not marked as converted.
+ */
+#[ProceduralHookScanStop]
+function _test_module_scan_stop_deprecation(): void {}

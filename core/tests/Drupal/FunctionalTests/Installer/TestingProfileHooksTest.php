@@ -6,6 +6,7 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
@@ -28,7 +29,9 @@ class TestingProfileHooksTest extends BrowserTestBase {
   /**
    * Test hooks are picked up.
    */
+  #[IgnoreDeprecations]
   public function testHookPickup(): void {
+    $this->expectUserDeprecationMessage('Code in testing_hooks.profile is deprecated in drupal:11.5.0 and must be converted before drupal:13.0.0. Use classes instead. See https://www.drupal.org/node/3619765');
     $this->assertFalse(isset($GLOBALS['profile_procedural']));
     $this->assertFalse(isset($GLOBALS['profile_oop']));
     drupal_flush_all_caches();
