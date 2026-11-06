@@ -6,8 +6,11 @@ namespace Drupal\KernelTests\Core\Cache;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\DatabaseBackend;
+use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
+use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\TestWith;
 
 /**
  * Unit test of the database backend using the generic cache unit test base.
@@ -101,6 +104,49 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
     $backend->garbageCollection();
     $this->assertSame($max_rows, $this->getNumRows());
     $this->assertFalse($backend->get('test0'));
+  }
+
+  /**
+   * Tests write operations when another process makes the bin table.
+   *
+   * The other process makes the table after the first query fails.
+   *
+   * @param string $method
+   *   The name of the cache backend method to call.
+   */
+  #[TestWith(['setMultiple'])]
+  #[TestWith(['invalidateMultiple'])]
+  #[TestWith(['deleteMultiple'])]
+  #[TestWith(['deleteAll'])]
+  public function testBinCreatedAfterQueryFailure(string $method): void {
+    $backend = $this->createCacheBackend('created_concurrently');
+    $connection = $this->container->get('database');
+    $table = 'cache_created_concurrently';
+    $this->assertFalse($connection->schema()->tableExists($table));
+
+    // Make the table after the first query fails and before the backend
+    // catches the exception. Another process can do this.
+    $created = FALSE;
+    $connection->enableEvents([
+      StatementExecutionStartEvent::class,
+      StatementExecutionFailureEvent::class,
+    ]);
+    $this->container->get('event_dispatcher')->addListener(StatementExecutionFailureEvent::class, function () use ($backend, $connection, $table, &$created): void {
+      if (!$created) {
+        $created = TRUE;
+        $connection->schema()->createTable($table, $backend->schemaDefinition());
+      }
+    });
+
+    match ($method) {
+      'setMultiple' => $backend->setMultiple(['test' => ['data' => 'value']]),
+      'deleteAll' => $backend->deleteAll(),
+      default => $backend->$method(['test']),
+    };
+    $this->assertTrue($created);
+    if ($method === 'setMultiple') {
+      $this->assertSame('value', $backend->get('test')->data);
+    }
   }
 
   /**
