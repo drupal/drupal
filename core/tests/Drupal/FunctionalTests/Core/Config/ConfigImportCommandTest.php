@@ -274,7 +274,7 @@ class ConfigImportCommandTest extends BrowserTestBase {
 
     // Acquire a fake lock on the import mechanism.
     $lock = $this->container->get('lock.persistent');
-    $lock->acquire(ConfigImporter::LOCK_NAME);
+    $this->assertTrue($lock->acquire(ConfigImporter::LOCK_NAME));
 
     // Attempt to import configuration and verify that an error message appears.
     $tester = $this->commandTester();
