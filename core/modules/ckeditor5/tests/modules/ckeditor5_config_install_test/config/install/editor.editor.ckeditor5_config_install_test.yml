@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.ckeditor5_config_install_test
+  module:
+    - ckeditor5
+format: ckeditor5_config_install_test
+editor: ckeditor5
+settings:
+  toolbar:
+    items:
+      - bold
+  plugins: {}
+image_upload:
+  status: false
