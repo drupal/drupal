@@ -264,6 +264,14 @@ router_test.string_method_scheme:
   methods: 'GET'
   schemes: 'https'
 
+router_test.post_only:
+  path: '/router_test/post-only'
+  defaults:
+    _controller: '\Drupal\router_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+  methods: [POST]
+
 router_test.alias:
   alias: 'router_test.1'
 

@@ -125,6 +125,28 @@ class ExceptionHandlingTest extends KernelTestBase {
   }
 
   /**
+   * Tests the router context is restored after showing an HTML error page.
+   */
+  public function testRouterContextRestoredAfterErrorPage(): void {
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
+    $kernel = \Drupal::getContainer()->get('http_kernel');
+
+    $request = Request::create('/not-found', 'POST');
+    $request->setFormat('html', ['text/html']);
+    $this->assertSame(Response::HTTP_NOT_FOUND, $kernel->handle($request)->getStatusCode());
+
+    // The router must reuse the shared context, not the error page's clone.
+    $this->assertSame(
+      $this->container->get('router.request_context'),
+      $this->container->get('router.no_access_checks')->getContext(),
+    );
+
+    // POST-only routes should not fall back to GET.
+    $response = $kernel->handle(Request::create('/router_test/post-only', 'POST'));
+    $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+  }
+
+  /**
    * Tests that the exception response is executed in the original context.
    */
   public function testExceptionResponseGeneratedForOriginalRequest(): void {
