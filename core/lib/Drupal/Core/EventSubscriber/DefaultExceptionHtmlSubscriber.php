@@ -138,6 +138,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
   protected function makeSubrequest(ExceptionEvent $event, $url, $status_code) {
     $request = $event->getRequest();
     $exception = $event->getThrowable();
+    $original_request_context = $this->accessUnawareRouter->getContext();
 
     try {
       // Reuse the exact same request (so keep the same URL, keep the access
@@ -153,7 +154,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
       // The routing to the 404 page should be done as GET request because it is
       // restricted to GET and POST requests only. Otherwise a DELETE request
       // would for example trigger a method not allowed exception.
-      $request_context = clone ($this->accessUnawareRouter->getContext());
+      $request_context = clone $original_request_context;
       $request_context->setMethod('GET');
       $this->accessUnawareRouter->setContext($request_context);
 
@@ -194,6 +195,10 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
       // exception and handle it normally.
       $error = Error::decodeException($e);
       $this->logger->log($error['severity_level'], Error::DEFAULT_ERROR_MESSAGE, $error);
+    }
+    finally {
+      // Restore the shared context for later requests.
+      $this->accessUnawareRouter->setContext($original_request_context);
     }
   }
 
