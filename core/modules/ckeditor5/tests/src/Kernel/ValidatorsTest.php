@@ -517,6 +517,27 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_style.styles.1.element' => 'The <code>&lt;br&gt;</code> tag is not yet supported by the Style plugin.',
       ],
     ];
+    $data['VALID: Style plugin configured to add class to <hr>'] = [
+      'ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => [
+            'horizontalLine',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Fancy rule',
+                'element' => '<hr class="fancy">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'expected_violations' => [],
+    ];
     $data['INVALID: Style plugin has multiple styles with same label'] = [
       'ckeditor5_settings' => [
         'toolbar' => [

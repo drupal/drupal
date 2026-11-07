@@ -43,7 +43,6 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
     '<applet>',
     '<basefont>',
     '<isindex>',
-    '<hr>',
     '<br>',
     '<area>',
     '<command>',
