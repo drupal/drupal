@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies: {}
+name: 'CKEditor 5 config install test'
+format: ckeditor5_config_install_test
+weight: 0
+filters:
+  filter_html:
+    id: filter_html
+    provider: filter
+    status: true
+    weight: 0
+    settings:
+      allowed_html: '<p> <br> <strong>'
+      filter_html_help: false
+      filter_html_nofollow: false
