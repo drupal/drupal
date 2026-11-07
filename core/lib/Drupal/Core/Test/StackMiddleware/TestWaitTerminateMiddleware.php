@@ -42,7 +42,8 @@ class TestWaitTerminateMiddleware implements HttpKernelInterface {
     // Set a header on the response to instruct the test runner that it must
     // await the lock. Note that the lock acquired here is automatically
     // released from within a shutdown function.
-    $this->lock->acquire('test_wait_terminate');
+    $acquired = $this->lock->acquire('test_wait_terminate');
+    assert($acquired);
     $result->headers->set('X-Drupal-Wait-Terminate', '1');
 
     return $result;

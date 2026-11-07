@@ -52,8 +52,8 @@ class ImageUploadAccessTest extends ImageUploadTest {
     // Ensure lock failures are reported correctly.
     $d = 'public://inline-images/test.jpg';
     $f = $this->container->get('file_system')->getDestinationFilename($d, FileExists::Rename);
-    $this->container->get('lock')
-      ->acquire('file:ckeditor5:' . Crypt::hashBase64($f));
+    $this->assertTrue($this->container->get('lock')
+      ->acquire('file:ckeditor5:' . Crypt::hashBase64($f)));
     $response = $this->uploadRequest($url, $test_image, 'test.jpg');
     $this->assertSame(503, $response->getStatusCode());
     $this->assertStringContainsString('File &quot;public://inline-images/test_0.jpg&quot; is already locked for writing.', (string) $response->getBody());

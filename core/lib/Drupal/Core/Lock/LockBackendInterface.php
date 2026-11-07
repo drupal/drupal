@@ -93,6 +93,7 @@ interface LockBackendInterface {
    * @return bool
    *   TRUE if the lock was successfully acquired, FALSE otherwise.
    */
+  #[\NoDiscard]
   public function acquire($name, $timeout = 30.0);
 
   /**

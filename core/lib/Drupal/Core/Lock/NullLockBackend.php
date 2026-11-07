@@ -22,6 +22,7 @@ class NullLockBackend implements LockBackendInterface {
   /**
    * {@inheritdoc}
    */
+  #[\NoDiscard]
   public function acquire($name, $timeout = 30.0) {
     return TRUE;
   }

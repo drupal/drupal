@@ -36,6 +36,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
   /**
    * {@inheritdoc}
    */
+  #[\NoDiscard]
   public function acquire($name, $timeout = 30.0) {
     $name = $this->normalizeName($name);
 

@@ -248,7 +248,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Acquire a fake-lock on the import mechanism.
     $config_importer = $this->configImporter();
-    $this->container->get('lock.persistent')->acquire($config_importer::LOCK_NAME);
+    $this->assertTrue($this->container->get('lock.persistent')->acquire($config_importer::LOCK_NAME));
 
     // Attempt to import configuration and verify that an error message appears.
     $this->submitForm([], 'Import all');
