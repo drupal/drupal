@@ -349,6 +349,8 @@
  * @typedef {module:ckbox/utils} module:ckbox/utils~convertMimeTypeToExtension
  * @typedef {module:ckbox/utils} module:ckbox/utils~getContentTypeOfUrl
  * @typedef {module:ckbox/utils} module:ckbox/utils~getFileExtension
+ * @typedef {module:ckbox/utils} module:ckbox/utils~CKBoxWrapperView
+ * @typedef {module:ckbox/utils} module:ckbox/utils~mountCKBoxDialog
  */
 
 /**
@@ -547,6 +549,17 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-core/dist/actionsrecorderconfig.d.ts
+ *
+ * @typedef {module:core/actionsrecorderconfig} module:core/actionsrecorderconfig~ActionsRecorderConfig
+ * @typedef {module:core/actionsrecorderconfig} module:core/actionsrecorderconfig~ActionsRecorderFilterCallback
+ * @typedef {module:core/actionsrecorderconfig} module:core/actionsrecorderconfig~ActionsRecorderErrorCallback
+ * @typedef {module:core/actionsrecorderconfig} module:core/actionsrecorderconfig~ActionsRecorderMaxEntriesCallback
+ * @typedef {module:core/actionsrecorderconfig} module:core/actionsrecorderconfig~ActionsRecorderEntryEditorSnapshot
+ * @typedef {module:core/actionsrecorderconfig} module:core/actionsrecorderconfig~ActionsRecorderEntry
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-core/dist/command.d.ts
  *
  * @typedef {module:core/command} module:core/command~Command
@@ -616,6 +629,32 @@
  * Declared in file @ckeditor/ckeditor5-core/dist/editor/utils/rootacceptsblocks.d.ts
  *
  * @typedef {module:core/editor/utils/rootacceptsblocks} module:core/editor/utils/rootacceptsblocks~rootAcceptsBlocks
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-core/dist/errorattribution/getsubnodes.d.ts
+ *
+ * @typedef {module:core/errorattribution/getsubnodes} module:core/errorattribution/getsubnodes~getSubNodes
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-core/dist/errorattribution/liveeditors.d.ts
+ *
+ * @typedef {module:core/errorattribution/liveeditors} module:core/errorattribution/liveeditors~_addLiveEditor
+ * @typedef {module:core/errorattribution/liveeditors} module:core/errorattribution/liveeditors~_removeLiveEditor
+ * @typedef {module:core/errorattribution/liveeditors} module:core/errorattribution/liveeditors~_getLiveEditors
+ * @typedef {module:core/errorattribution/liveeditors} module:core/errorattribution/liveeditors~_addLiveContext
+ * @typedef {module:core/errorattribution/liveeditors} module:core/errorattribution/liveeditors~_removeLiveContext
+ * @typedef {module:core/errorattribution/liveeditors} module:core/errorattribution/liveeditors~_getLiveContexts
+ * @typedef {module:core/errorattribution/liveeditors} module:core/errorattribution/liveeditors~_isLiveContext
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-core/dist/errorreporter.d.ts
+ *
+ * @typedef {module:core/errorreporter} module:core/errorreporter~EditorErrorData
+ * @typedef {module:core/errorreporter} module:core/errorreporter~EditorErrorCallback
+ * @typedef {module:core/errorreporter} module:core/errorreporter~onEditorError
  */
 
 /**
@@ -2147,6 +2186,7 @@
  * Declared in file @ckeditor/ckeditor5-html-support/dist/htmlpagedataprocessor.d.ts
  *
  * @typedef {module:html-support/htmlpagedataprocessor} module:html-support/htmlpagedataprocessor~HtmlPageDataProcessor
+ * @typedef {module:html-support/htmlpagedataprocessor} module:html-support/htmlpagedataprocessor~FullPageHeadStyle
  */
 
 /**
@@ -2264,13 +2304,15 @@
  * @typedef {module:icons/index} module:icons/index~IconCaseChange
  * @typedef {module:icons/index} module:icons/index~IconCheck
  * @typedef {module:icons/index} module:icons/index~IconChevronDown
- * @typedef {module:icons/index} module:icons/index~IconChevronUp
+ * @typedef {module:icons/index} module:icons/index~IconChevronLeft
  * @typedef {module:icons/index} module:icons/index~IconChevronRight
+ * @typedef {module:icons/index} module:icons/index~IconChevronUp
  * @typedef {module:icons/index} module:icons/index~IconCkboxImageEdit
  * @typedef {module:icons/index} module:icons/index~IconClose
  * @typedef {module:icons/index} module:icons/index~IconCodeBlock
  * @typedef {module:icons/index} module:icons/index~IconCode
  * @typedef {module:icons/index} module:icons/index~IconCog
+ * @typedef {module:icons/index} module:icons/index~IconComments
  * @typedef {module:icons/index} module:icons/index~IconColorPalette
  * @typedef {module:icons/index} module:icons/index~IconColorTileCheck
  * @typedef {module:icons/index} module:icons/index~IconCommentsArchive
@@ -2340,6 +2382,7 @@
  * @typedef {module:icons/index} module:icons/index~IconListStyleUpperRoman
  * @typedef {module:icons/index} module:icons/index~IconListStyleArabicIndic
  * @typedef {module:icons/index} module:icons/index~IconLocal
+ * @typedef {module:icons/index} module:icons/index~IconLock
  * @typedef {module:icons/index} module:icons/index~IconLoupe
  * @typedef {module:icons/index} module:icons/index~IconLowVision
  * @typedef {module:icons/index} module:icons/index~IconMagicWand
@@ -2402,6 +2445,7 @@
  * @typedef {module:icons/index} module:icons/index~IconSparkle
  * @typedef {module:icons/index} module:icons/index~IconSpecialCharacters
  * @typedef {module:icons/index} module:icons/index~IconStop
+ * @typedef {module:icons/index} module:icons/index~IconStopCircle
  * @typedef {module:icons/index} module:icons/index~IconStrikethrough
  * @typedef {module:icons/index} module:icons/index~IconSubmit
  * @typedef {module:icons/index} module:icons/index~IconSubscript
@@ -3381,13 +3425,6 @@
  * Declared in file @ckeditor/ckeditor5-markdown-gfm/dist/markdown.d.ts
  *
  * @typedef {module:markdown-gfm/markdown} module:markdown-gfm/markdown~Markdown
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-markdown-gfm/dist/markdown2html/markdown2html.d.ts
- *
- * @typedef {module:markdown-gfm/markdown2html/markdown2html} module:markdown-gfm/markdown2html/markdown2html~MarkdownGfmMdToHtmlDefaultPlugins
- * @typedef {module:markdown-gfm/markdown2html/markdown2html} module:markdown-gfm/markdown2html/markdown2html~MarkdownGfmMdToHtml
  */
 
 /**
@@ -4651,6 +4688,7 @@
  *
  * @typedef {module:table/tablescroll/watchers} module:table/tablescroll/watchers~watchTableModelElements
  * @typedef {module:table/tablescroll/watchers} module:table/tablescroll/watchers~watchRootsWidthResize
+ * @typedef {module:table/tablescroll/watchers} module:table/tablescroll/watchers~watchRootsScroll
  */
 
 /**
@@ -4960,11 +4998,19 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/dist/colorgrid/colors.d.ts
+ *
+ * @typedef {module:ui/colorgrid/colors} module:ui/colorgrid/colors~defaultColors
+ * @typedef {module:ui/colorgrid/colors} module:ui/colorgrid/colors~defaultColorGridColumns
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/dist/colorgrid/utils.d.ts
  *
  * @typedef {module:ui/colorgrid/utils} module:ui/colorgrid/utils~ColorOption
  * @typedef {module:ui/colorgrid/utils} module:ui/colorgrid/utils~NormalizedColorOption
  * @typedef {module:ui/colorgrid/utils} module:ui/colorgrid/utils~getLocalizedColorOptions
+ * @typedef {module:ui/colorgrid/utils} module:ui/colorgrid/utils~getLocalizedColorName
  * @typedef {module:ui/colorgrid/utils} module:ui/colorgrid/utils~normalizeColorOptions
  * @typedef {module:ui/colorgrid/utils} module:ui/colorgrid/utils~normalizeSingleColorDefinition
  */
@@ -5194,12 +5240,6 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-ui/dist/highlightedtext/highlightedtextview.d.ts
- *
- * @typedef {module:ui/highlightedtext/highlightedtextview} module:ui/highlightedtext/highlightedtextview~HighlightedTextView
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-ui/dist/highlightedtext/labelwithhighlightview.d.ts
  *
  * @typedef {module:ui/highlightedtext/labelwithhighlightview} module:ui/highlightedtext/labelwithhighlightview~LabelWithHighlightView
@@ -5357,6 +5397,13 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-ui/dist/overlayhost.d.ts
+ *
+ * @typedef {module:ui/overlayhost} module:ui/overlayhost~OverlayHost
+ * @typedef {module:ui/overlayhost} module:ui/overlayhost~OverlayHostOptions
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-ui/dist/panel/balloon/balloonpanelview.d.ts
  *
  * @typedef {module:ui/panel/balloon/balloonpanelview} module:ui/panel/balloon/balloonpanelview~BalloonPanelView
@@ -5410,6 +5457,21 @@
  * Declared in file @ckeditor/ckeditor5-ui/dist/spinner/spinnerview.d.ts
  *
  * @typedef {module:ui/spinner/spinnerview} module:ui/spinner/spinnerview~SpinnerView
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/dist/tabs/tabbuttonview.d.ts
+ *
+ * @typedef {module:ui/tabs/tabbuttonview} module:ui/tabs/tabbuttonview~TAB_POSITIONS
+ * @typedef {module:ui/tabs/tabbuttonview} module:ui/tabs/tabbuttonview~TabPosition
+ * @typedef {module:ui/tabs/tabbuttonview} module:ui/tabs/tabbuttonview~TabButtonView
+ * @typedef {module:ui/tabs/tabbuttonview} module:ui/tabs/tabbuttonview~TabButtonViewOptions
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-ui/dist/tabs/tabpanelview.d.ts
+ *
+ * @typedef {module:ui/tabs/tabpanelview} module:ui/tabs/tabpanelview~TabPanelView
  */
 
 /**
@@ -5494,6 +5556,7 @@
  *
  * @typedef {module:ui/tooltipmanager} module:ui/tooltipmanager~TooltipManager
  * @typedef {module:ui/tooltipmanager} module:ui/tooltipmanager~TooltipPosition
+ * @typedef {module:ui/tooltipmanager} module:ui/tooltipmanager~BodyCollectionRegistration
  */
 
 /**
@@ -5654,6 +5717,13 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/dist/dom/domtargetslistener.d.ts
+ *
+ * @typedef {module:utils/dom/domtargetslistener} module:utils/dom/domtargetslistener~DomTargetsListener
+ * @typedef {module:utils/dom/domtargetslistener} module:utils/dom/domtargetslistener~DomTargetsListenerOptions
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/dist/dom/emittermixin.d.ts
  *
  * @typedef {module:utils/dom/emittermixin} module:utils/dom/emittermixin~DomEmitterMixinConstructor
@@ -5661,6 +5731,12 @@
  * @typedef {module:utils/dom/emittermixin} module:utils/dom/emittermixin~DomEmitterMixin
  * @typedef {module:utils/dom/emittermixin} module:utils/dom/emittermixin~DomEventMap
  * @typedef {module:utils/dom/emittermixin} module:utils/dom/emittermixin~DomEmitter
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/dist/dom/getactiveelement.d.ts
+ *
+ * @typedef {module:utils/dom/getactiveelement} module:utils/dom/getactiveelement~getActiveElement
  */
 
 /**
@@ -5683,9 +5759,10 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-utils/dist/dom/getrangefrommouseevent.d.ts
+ * Declared in file @ckeditor/ckeditor5-utils/dist/dom/getselection.d.ts
  *
- * @typedef {module:utils/dom/getrangefrommouseevent} module:utils/dom/getrangefrommouseevent~getRangeFromMouseEvent
+ * @typedef {module:utils/dom/getselection} module:utils/dom/getselection~getSelection
+ * @typedef {module:utils/dom/getselection} module:utils/dom/getselection~ShadowSelection
  */
 
 /**
@@ -5713,15 +5790,40 @@
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/dist/dom/isdomselectionbackward.d.ts
+ *
+ * @typedef {module:utils/dom/isdomselectionbackward} module:utils/dom/isdomselectionbackward~isDomSelectionBackward
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/dist/dom/isnode.d.ts
  *
  * @typedef {module:utils/dom/isnode} module:utils/dom/isnode~isNode
  */
 
 /**
+ * Declared in file @ckeditor/ckeditor5-utils/dist/dom/isprocessinginstruction.d.ts
+ *
+ * @typedef {module:utils/dom/isprocessinginstruction} module:utils/dom/isprocessinginstruction~isProcessingInstruction
+ */
+
+/**
  * Declared in file @ckeditor/ckeditor5-utils/dist/dom/isrange.d.ts
  *
  * @typedef {module:utils/dom/isrange} module:utils/dom/isrange~isRange
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/dist/dom/isshadowhostof.d.ts
+ *
+ * @typedef {module:utils/dom/isshadowhostof} module:utils/dom/isshadowhostof~isShadowHostOf
+ */
+
+/**
+ * Declared in file @ckeditor/ckeditor5-utils/dist/dom/isshadowroot.d.ts
+ *
+ * @typedef {module:utils/dom/isshadowroot} module:utils/dom/isshadowroot~isShadowRoot
+ * @typedef {module:utils/dom/isshadowroot} module:utils/dom/isshadowroot~isNativeShadowRoot
  */
 
 /**
@@ -5737,28 +5839,10 @@
  */
 
 /**
- * Declared in file @ckeditor/ckeditor5-utils/dist/dom/remove.d.ts
- *
- * @typedef {module:utils/dom/remove} module:utils/dom/remove~remove
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-utils/dist/dom/setdatainelement.d.ts
- *
- * @typedef {module:utils/dom/setdatainelement} module:utils/dom/setdatainelement~setDataInElement
- */
-
-/**
  * Declared in file @ckeditor/ckeditor5-utils/dist/dom/tounit.d.ts
  *
  * @typedef {module:utils/dom/tounit} module:utils/dom/tounit~toUnit
  * @typedef {module:utils/dom/tounit} module:utils/dom/tounit~ToUnitHelper
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-utils/dist/elementreplacer.d.ts
- *
- * @typedef {module:utils/elementreplacer} module:utils/elementreplacer~ElementReplacer
  */
 
 /**
@@ -5963,56 +6047,6 @@
  * Declared in file @ckeditor/ckeditor5-utils/dist/wait.d.ts
  *
  * @typedef {module:utils/wait} module:utils/wait~wait
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-watchdog/dist/actionsrecorder.d.ts
- *
- * @typedef {module:watchdog/actionsrecorder} module:watchdog/actionsrecorder~ActionsRecorder
- * @typedef {module:watchdog/actionsrecorder} module:watchdog/actionsrecorder~tapObjectMethod
- * @typedef {module:watchdog/actionsrecorder} module:watchdog/actionsrecorder~serializeValue
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-watchdog/dist/actionsrecorderconfig.d.ts
- *
- * @typedef {module:watchdog/actionsrecorderconfig} module:watchdog/actionsrecorderconfig~ActionsRecorderConfig
- * @typedef {module:watchdog/actionsrecorderconfig} module:watchdog/actionsrecorderconfig~ActionsRecorderFilterCallback
- * @typedef {module:watchdog/actionsrecorderconfig} module:watchdog/actionsrecorderconfig~ActionsRecorderErrorCallback
- * @typedef {module:watchdog/actionsrecorderconfig} module:watchdog/actionsrecorderconfig~ActionsRecorderMaxEntriesCallback
- * @typedef {module:watchdog/actionsrecorderconfig} module:watchdog/actionsrecorderconfig~ActionsRecorderEntryEditorSnapshot
- * @typedef {module:watchdog/actionsrecorderconfig} module:watchdog/actionsrecorderconfig~ActionsRecorderEntry
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-watchdog/dist/contextwatchdog.d.ts
- *
- * @typedef {module:watchdog/contextwatchdog} module:watchdog/contextwatchdog~ContextWatchdog
- * @typedef {module:watchdog/contextwatchdog} module:watchdog/contextwatchdog~ContextWatchdogRestartEvent
- * @typedef {module:watchdog/contextwatchdog} module:watchdog/contextwatchdog~ContextWatchdogItemErrorEvent
- * @typedef {module:watchdog/contextwatchdog} module:watchdog/contextwatchdog~ContextWatchdogItemErrorEventData
- * @typedef {module:watchdog/contextwatchdog} module:watchdog/contextwatchdog~ContextWatchdogItemRestartEvent
- * @typedef {module:watchdog/contextwatchdog} module:watchdog/contextwatchdog~ContextWatchdogItemRestartEventData
- * @typedef {module:watchdog/contextwatchdog} module:watchdog/contextwatchdog~ContextWatchdogItemConfiguration
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-watchdog/dist/utils/getsubnodes.d.ts
- *
- * @typedef {module:watchdog/utils/getsubnodes} module:watchdog/utils/getsubnodes~getSubNodes
- */
-
-/**
- * Declared in file @ckeditor/ckeditor5-watchdog/dist/watchdog.d.ts
- *
- * @typedef {module:watchdog/watchdog} module:watchdog/watchdog~WatchdogErrorEvent
- * @typedef {module:watchdog/watchdog} module:watchdog/watchdog~WatchdogErrorEventData
- * @typedef {module:watchdog/watchdog} module:watchdog/watchdog~WatchdogStateChangeEvent
- * @typedef {module:watchdog/watchdog} module:watchdog/watchdog~WatchdogEventMap
- * @typedef {module:watchdog/watchdog} module:watchdog/watchdog~WatchdogEventArgs
- * @typedef {module:watchdog/watchdog} module:watchdog/watchdog~WatchdogEventCallback
- * @typedef {module:watchdog/watchdog} module:watchdog/watchdog~WatchdogConfig
- * @typedef {module:watchdog/watchdog} module:watchdog/watchdog~WatchdogState
  */
 
 /**

@@ -17,7 +17,7 @@
   min-height: var(--ck-min-height);
   /* Set the max-height to not grow beyond the height of the viewport (minus
    * any toolbars. */
-  max-height: calc(100vh - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - 20px);
+  max-height: calc(100vh - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - 35px);
 }
 
 /* Show the scrollbar on the source editing area. */
