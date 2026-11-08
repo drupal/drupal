@@ -202,12 +202,26 @@ class HtmxAttributesTest extends UnitTestCase {
   /**
    * Test boost method.
    */
-  #[DataProvider('booleanStringDataProvider')]
-  public function testHxBoost(bool $value, string $expected): void {
+  #[DataProvider('boostStringDataProvider')]
+  public function testHxBoost(bool|string $value, string $expected): void {
     $this->htmx->boost($value);
     $render = $this->apply();
     $this->assertTrue(isset($render['#attributes']['data-hx-boost']));
     $this->assertEquals($expected, $render['#attributes']['data-hx-boost']);
+  }
+
+  /**
+   * Provides data to self::testHxBoost.
+   *
+   * @return array{bool|string, string}[]
+   *   First parameter is a boolean or string, second parameter is a string.
+   */
+  public static function boostStringDataProvider(): array {
+    return [
+      [TRUE, 'true'],
+      [FALSE, 'false'],
+      ['swap:outerSync select:#main target:#main', 'swap:outerSync select:#main target:#main'],
+    ];
   }
 
   /**
