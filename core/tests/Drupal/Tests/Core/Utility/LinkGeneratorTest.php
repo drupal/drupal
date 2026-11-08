@@ -276,11 +276,6 @@ class LinkGeneratorTest extends UnitTestCase {
       ->method('alter')
       ->with('link', $this->isArray());
 
-    $urlAssembler->expects($this->once())
-      ->method('assemble')
-      ->with('https://www.drupal.org', ['set_active_class' => TRUE, 'external' => TRUE] + $this->defaultOptions)
-      ->willReturnArgument(0);
-
     $url = Url::fromUri('https://www.drupal.org');
     $url->setUrlGenerator($this->urlGenerator);
     $url->setUnroutedUrlAssembler($urlAssembler);

@@ -46729,12 +46729,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Password\\\\PasswordInterface\\:\\:method\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/user/tests/src/Unit/UserAuthenticationTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Storing entity storage as a class property is not recommended\\. Call Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStoragePropertyAssignment',
 	'count' => 1,
