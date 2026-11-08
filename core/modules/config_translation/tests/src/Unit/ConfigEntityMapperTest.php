@@ -17,7 +17,6 @@ use Drupal\locale\LocaleConfigManager;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Routing\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -39,24 +38,12 @@ class ConfigEntityMapperTest extends UnitTestCase {
   protected EntityTypeManagerInterface&MockObject $entityTypeManager;
 
   /**
-   * The route provider used for testing.
-   */
-  protected RouteProviderInterface&MockObject $routeProvider;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
 
     $this->entityTypeManager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
-
-    $this->routeProvider = $this->createMock(RouteProviderInterface::class);
-
-    $this->routeProvider
-      ->method('getRouteByName')
-      ->with('entity.configurable_language.edit_form')
-      ->willReturn(new Route('/admin/config/regional/language/edit/{configurable_language}'));
 
     $definition = [
       'class' => '\Drupal\config_translation\ConfigEntityMapper',
@@ -74,7 +61,7 @@ class ConfigEntityMapperTest extends UnitTestCase {
       $this->createStub(TypedConfigManagerInterface::class),
       $this->createStub(LocaleConfigManager::class),
       $this->createStub(ConfigMapperManagerInterface::class),
-      $this->routeProvider,
+      $this->createStub(RouteProviderInterface::class),
       $this->getStringTranslationStub(),
       $this->entityTypeManager,
       $this->createStub(LanguageManagerInterface::class),

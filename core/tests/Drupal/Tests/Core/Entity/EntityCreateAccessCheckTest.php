@@ -103,13 +103,12 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
 
     $applies_check = new EntityCreateAccessCheck($this->entityTypeManager);
 
-    $route = $this->getMockBuilder('Symfony\Component\Routing\Route')
-      ->disableOriginalConstructor()
-      ->getMock();
+    $route = $this->createStub('Symfony\Component\Routing\Route');
     $route
       ->method('getRequirement')
-      ->with('_entity_create_access')
-      ->willReturn($requirement);
+      ->willReturnMap([
+        ['_entity_create_access', $requirement],
+      ]);
 
     $raw_variables = new InputBag();
     if ($entity_bundle) {

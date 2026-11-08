@@ -154,10 +154,11 @@ class AliasManagerTest extends UnitTestCase {
     $path_part2 = $this->randomMachineName();
     $path = '/' . $path_part1 . '/' . $path_part2;
 
-    $this->setUpCurrentLanguage();
-
+    $language = new Language(['id' => 'en']);
     $this->languageManager->expects($this->atLeastOnce())
-      ->method('getCurrentLanguage');
+      ->method('getCurrentLanguage')
+      ->with(LanguageInterface::TYPE_URL)
+      ->willReturn($language);
 
     $this->aliasPrefixList->expects($this->once())
       ->method('get')
@@ -287,8 +288,8 @@ class AliasManagerTest extends UnitTestCase {
   public function testCacheClear(): void {
     $path = '/path';
     $alias = '/alias';
-    $language = $this->setUpCurrentLanguage();
 
+    $language = new Language(['id' => 'en']);
     $this->languageManager->expects($this->never())
       ->method('getCurrentLanguage');
 
@@ -328,7 +329,7 @@ class AliasManagerTest extends UnitTestCase {
   protected function setUpCurrentLanguage(): Language {
     $language = new Language(['id' => 'en']);
 
-    $this->languageManager
+    $this->languageManager->expects($this->exactly(2))
       ->method('getCurrentLanguage')
       ->with(LanguageInterface::TYPE_URL)
       ->willReturn($language);

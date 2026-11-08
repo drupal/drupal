@@ -201,19 +201,7 @@ class EntityUnitTest extends UnitTestCase {
       ->method('getKey')
       ->with('label')
       ->willReturn('label');
-
-    // Set a dummy property on the entity under test to test that the label can
-    // be returned form a property if there is no callback.
-    $this->entityTypeManager->expects($this->atLeastOnce())
-      ->method('getDefinition')
-      ->with($this->entityTypeId)
-      ->willReturn([
-        'entity_keys' => [
-          'label' => 'label',
-        ],
-      ]);
     $this->entity->label = $property_label;
-
     $this->assertSame($property_label, $this->entity->label());
   }
 

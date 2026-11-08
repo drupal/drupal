@@ -17,7 +17,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -34,17 +34,16 @@ class CssCollectionOptimizerLazyUnitTest extends UnitTestCase {
   /**
    * The file URL generator mock.
    */
-  protected FileUrlGeneratorInterface&MockObject $fileUrlGenerator;
+  protected FileUrlGeneratorInterface&Stub $fileUrlGenerator;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
+    $this->fileUrlGenerator = $this->createStub(FileUrlGeneratorInterface::class);
     $this->fileUrlGenerator
       ->method('generateString')
-      ->with($this->isString())
       ->willReturnCallback(function (string $uri): string {
         return 'generated-relative-url:' . $uri;
       });
