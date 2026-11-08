@@ -162,6 +162,10 @@ class MediaLinkabilityTest extends MediaTestBase {
 
     // Add `class="trusted"` to the link.
     $this->assertEmpty($xpath->query('//a[@href="http://linking-embedded-media.com" and @class="trusted"]'));
+    // Click the button add a new line after the media element, so that the
+    // media balloon closes.
+    $this->click('.ck-widget__type-around__button_after');
+    $this->assertBalloonClosed();
     $this->pressEditorButton('Source');
     $source_text_area = $assert_session->waitForElement('css', '.ck-source-editing-area textarea');
     $this->assertNotEmpty($source_text_area);

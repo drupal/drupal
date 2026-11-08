@@ -135,6 +135,17 @@
     background: var(--ck-color-image-caption-background);
   }
 
+  /**
+   * In v49, CKEditor 5's value for this rule provides backwards compatibility
+   * for setting the background with the --ck-color-panel-background custom
+   * property. Since default_admin overrides --ck-color-panel-background with a
+   * value dependent on light or dark mode, in light mode, tooltips become
+   * invisible with white text on a white background.
+   */
+  .ck.ck-balloon-panel {
+    background: var(--ck-balloon-panel-background-color);
+  }
+
   .ck.ck.ck-balloon-panel.ck-powered-by-balloon {
     z-index: 2;
     transform: translateY(-0.8125rem);

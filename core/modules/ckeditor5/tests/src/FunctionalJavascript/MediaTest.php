@@ -737,8 +737,19 @@ class MediaTest extends MediaTestBase {
     // Add `layercake-side` class which is used in `ckeditor5_test_layercake`,
     // as well as an arbitrary class to compare behavior between these.
     $drupal_media_element->setAttribute('class', 'layercake-side arbitrary-class');
+    // Click the button add a new line after the media element, so that the
+    // media balloon closes.
+    $this->click('.ck-widget__type-around__button_after');
+    $this->assertBalloonClosed();
+    // Source textarea element is not available until after pressing 'Source'.
+    $page->pressButton('Source');
     $textarea = $page->find('css', '.ck-source-editing-area > textarea');
     $textarea->setValue($editor_dom->C14N());
+    // Switch back to rich text editing for changes to take effect in the
+    // CKEditor data model, so that the next assertion passes. This seems to be
+    // necessary only for the purposes of this test and not in actual usage,
+    // where changes in source editing are saved without switching back to rich
+    // text editing.
     $page->pressButton('Source');
 
     // Ensure that the `layercake-side` class is retained.
