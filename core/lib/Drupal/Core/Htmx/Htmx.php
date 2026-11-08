@@ -1046,16 +1046,31 @@ class Htmx {
    * form tags to use AJAX instead. This has the nice fallback that, if the
    * user does not have javascript enabled, the site will continue to work.
    *
-   * @param bool $value
-   *   Should the element and its descendants be "boosted"?
+   * The simple syntax is `hx-boost="true"` or `hx-boost="false"`.
+   *
+   * You can configure boost behavior using a config string that sets swap,
+   * target, and other options directly on the hx-boost attribute. Set the
+   * @code Htmx::INHERITED @endcode modifier to pass that config down to all
+   * boosted descendants.
+   *
+   * The documentation link below has more information on the syntax and
+   * precedence of the attributes between inherited and element attributes.
+   *
+   * @param bool|string $value
+   *   The value to be set for the attribute.
+   * @param int $modifiers
+   *   The modifiers to apply to the attribute. Defaults to no modifiers.
    *
    * @return static
    *   Returns this object to allow chaining methods.
    *
    * @see https://four.htmx.org/reference/attributes/hx-boost/
    */
-  public function boost(bool $value = TRUE): static {
-    $this->createStringAttribute('hx-boost', $value ? 'true' : 'false', self::NO_MODIFIER);
+  public function boost(bool|string $value = TRUE, int $modifiers = self::NO_MODIFIER): static {
+    if (is_bool($value)) {
+      $value = $value ? 'true' : 'false';
+    }
+    $this->createStringAttribute('hx-boost', $value, $modifiers);
     return $this;
   }
 
