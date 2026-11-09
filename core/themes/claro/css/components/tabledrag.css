@@ -17,7 +17,6 @@
 body.drag {
   cursor: move;
 }
-
 body.drag-y {
   cursor: row-resize;
 }
@@ -37,13 +36,11 @@ body.drag-y {
 }
 
 /* The block region's title row in table. */
-
 .region-title {
   font-weight: bold;
 }
 
 /* Empty region message row in table. */
-
 .region-message {
   color: var(--color-gray-600);
 
@@ -57,7 +54,6 @@ body.drag-y {
  * Remove border-bottom from abbr element. Class is duplicated in the selector
  * to increase weight to be able to win normalize.css selectors.
  */
-
 .tabledrag-changed.tabledrag-changed {
   border-bottom: none;
 }
@@ -82,7 +78,6 @@ body.drag-y {
 /**
  * Draggable row state colors.
  */
-
 .draggable.drag,
 .draggable.drag:focus {
   background-color: var(--table-row--dragging-bg-color);
@@ -93,7 +88,6 @@ body.drag-y {
 }
 
 /* Auto width for weight selects and number inputs. */
-
 .draggable td .form-element--type-select[name$="][_weight]"], /* Multiple field */
 .draggable td .term-weight, /* Taxonomy term list */
 .draggable td .field-weight /* Field UI table */ {
@@ -103,7 +97,6 @@ body.drag-y {
 /**
  * Handle styles.
  */
-
 .tabledrag-handle {
   position: relative;
   z-index: 1;
@@ -132,7 +125,6 @@ body.drag-y {
 }
 
 /* Change icon and cursor if only vertical drag is allowed. */
-
 .tabledrag-handle.tabledrag-handle-y {
   cursor: row-resize;
 }
@@ -169,7 +161,6 @@ body.drag-y {
 }
 
 /* Disabled tabledrag handle. */
-
 .tabledrag-disabled {
   & .tabledrag-handle {
     cursor: default;
@@ -188,7 +179,6 @@ body.drag-y {
 /**
  * Increase handle size.
  */
-
 .touchevents {
   & .tabledrag-handle::after {
     padding-block: var(--space-s);
@@ -202,7 +192,6 @@ body.drag-y {
 /**
  * Wrapper of the toggle weight button (styled as a link).
  */
-
 .tabledrag-toggle-weight-wrapper {
   text-align: end;
 
@@ -215,7 +204,6 @@ body.drag-y {
 /**
  * Keep crowded tabledrag cells vertically centered.
  */
-
 .tabledrag-cell {
   padding-block: 0;
 }
@@ -226,7 +214,6 @@ body.drag-y {
  * If it isn't empty (Field UI table, taxonomy term overview page), this CSS
  * class won't be added.
  */
-
 .tabledrag-cell--only-drag {
   width: 1px; /* This forces this cell to use the smallest possible width. */
   padding-inline-end: 0;
@@ -262,7 +249,6 @@ body.drag-y {
 /**
  * Indentation.
  */
-
 .indentation {
   position: relative;
   inset-inline-start: calc(var(--space-xs) * -0.5);
@@ -294,7 +280,6 @@ body.drag-y {
  * These rules are styling the inline SVG that is placed inside the .indentation
  * element.
  */
-
 .tree {
   width: 1.5625rem;
   height: 1.5625rem;
@@ -305,7 +290,6 @@ body.drag-y {
 }
 
 /* LTR tree child. */
-
 .tree-child path {
   &:not(.tree__item-child-ltr) {
     display: none;
@@ -317,7 +301,6 @@ body.drag-y {
 }
 
 /* RTL tree child. */
-
 [dir="rtl"] {
   & .tree-child path {
     &:not(.tree__item-child-rtl) {
@@ -340,7 +323,6 @@ body.drag-y {
 }
 
 /* Last LTR tree child. */
-
 .tree-child-last path {
   &:not(.tree__item-child-last-ltr) {
     display: none;
@@ -351,7 +333,6 @@ body.drag-y {
 }
 
 /* Horizontal line. */
-
 .tree-child-horizontal path {
   &:not(.tree__item-horizontal) {
     display: none;

@@ -14,7 +14,6 @@
   margin-right: 1em;
   margin-left: 1em;
 }
-
 .layout-container::after {
   display: table;
   clear: both;

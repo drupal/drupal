@@ -131,7 +131,6 @@
 /*
   Top level specific styles.
 */
-
 .primary-nav__menu--level-1 {
   margin-block: 0;
   margin-inline-start: 0;
@@ -150,7 +149,6 @@
 /*
   Secondary menu specific styles.
 */
-
 .primary-nav__menu--level-2 {
   visibility: hidden;
   overflow: hidden;
@@ -195,7 +193,6 @@
  *
  * @see https://www.drupal.org/project/drupal/issues/3221399
  */
-
 .primary-nav__menu--level-2 .primary-nav__menu-item--has-children {
   display: block;
 }

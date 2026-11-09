@@ -23,7 +23,6 @@
 /**
  * Add/remove links.
  */
-
 .shortcut-action {
   display: inline-block;
   margin-inline-start: var(--space-xs);
@@ -34,7 +33,6 @@
     opacity: 1;
   }
 }
-
 .shortcut-action__message {
   display: inline-block;
   margin-inline-start: var(--space-s);

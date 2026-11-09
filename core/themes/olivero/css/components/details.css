@@ -25,7 +25,6 @@
 }
 
 /* Details summary styles */
-
 .olivero-details__summary {
   position: relative;
   padding-block: var(--sp1);
@@ -44,7 +43,6 @@
 }
 
 /* Arrow icon */
-
 .olivero-details__summary::before {
   position: absolute;
   inset-block-start: 50%;
@@ -63,7 +61,6 @@
 }
 
 /* Pseudo-selector to manage focus styles */
-
 .olivero-details__summary::after {
   position: absolute;
   inset: calc(var(--details-border-width) * -1);
@@ -75,40 +72,34 @@
 }
 
 /* Hide the marker */
-
 .olivero-details__summary::-webkit-details-marker {
   display: none;
 }
 
 /* Disable default outline for summary, since we have own implementation */
-
 .olivero-details__summary:focus {
   outline: solid 2px transparent;
   outline-offset: -4px;
 }
 
 /* Details summary, hover state */
-
 .olivero-details__summary:hover {
   background-color: var(--color--gray-95);
 }
 
 /* Details summary, focus and active states */
-
 .olivero-details__summary:focus::after,
 .olivero-details__summary:active::after {
   opacity: 1;
 }
 
 /* Rotate arrow icon of the details summary, when details expanded */
-
 .olivero-details[open] > .olivero-details__summary::before {
   margin-block-start: -2px;
   transform: translateY(-50%) rotate(135deg);
 }
 
 /* Details content wrapper */
-
 .olivero-details__wrapper {
   margin: var(--sp1);
 
@@ -121,7 +112,6 @@
 }
 
 /* Description */
-
 .olivero-details__description {
   margin-block-end: var(--sp1);
   color: var(--color-text-neutral-medium);

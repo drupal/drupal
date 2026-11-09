@@ -13,12 +13,10 @@
 /**
  * Admin list (wrapper of admin items).
  */
-
 .admin-list {
   margin-block: 1em 2em;
   padding: 0;
 }
-
 .admin-list--panel {
   margin: -1em -1.5em;
 }
@@ -26,7 +24,6 @@
 /**
  * Admin item.
  */
-
 .admin-item {
   padding-block: 0.75em;
   padding-inline: 3em 1.5em;
@@ -51,7 +48,6 @@
 /**
  * Admin item link icon.
  */
-
 .admin-item__link::before {
   position: absolute;
   inset-block-start: 0;

@@ -24,7 +24,6 @@
 }
 
 /* Visually hide the module filter input description. */
-
 .modules-table-filter .form-item__description,
 .permissions-table-filter .form-item__description {
   position: absolute !important;
@@ -76,7 +75,6 @@
 }
 
 /* Set width only on wider view where description is visible by default. */
-
 @media screen and (min-width: 60em) {
   td.module-list__module {
     width: 25%;
@@ -91,7 +89,6 @@
   padding-left: 0.6875rem; /* LTR */
   text-align: left; /* LTR */
 }
-
 [dir="rtl"] .module-list__checkbox {
   padding-right: 0.6875rem;
   padding-left: var(--module-table-cell-padding-horizontal);
@@ -156,7 +153,6 @@ td.module-list__description {
 .module-details__links .action-link + .action-link {
   margin-left: 0; /* LTR */
 }
-
 [dir="rtl"] .module-details__links .action-link + .action-link {
   margin-right: 0;
 }
@@ -164,7 +160,6 @@ td.module-list__description {
 .claro-details .tableresponsive-toggle {
   padding: var(--space-m) var(--space-m) var(--space-m) 0;
 }
-
 .claro-details .tableresponsive-toggle::before {
   /* This adjustment is necessary for better alignment with the adjacent button
    text. */
@@ -184,7 +179,6 @@ td.module-list__description {
   color: var(--color-absolutezero-hover);
   background-color: var(--color-bgblue-hover);
 }
-
 .claro-details .tableresponsive-toggle:hover::before {
   background-image: url("data:image/svg+xml,%3csvg height='16' stroke='%230036b1' stroke-width='2' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M3 8h10M8 3v10'/%3e%3c/svg%3e");
 }

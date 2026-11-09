@@ -27,7 +27,6 @@
     - .layout--content-narrow class.
     - Element that's inheriting the layout--content-narrow styles from its parent region.
 */
-
 .layout--content-narrow .grid-full,
 .layout--pass--content-narrow > * .grid-full {
   @media (min-width: 43.75rem) {
@@ -44,7 +43,6 @@
     - .layout--content-medium class.
     - Element that's inheriting the layout--content-medium styles from its parent region.
 */
-
 .layout--content-medium .grid-full,
 .layout--pass--content-medium > * .grid-full {
   @media (min-width: 43.75rem) {

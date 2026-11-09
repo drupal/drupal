@@ -13,7 +13,6 @@
 /**
  * Form item modifiers.
  */
-
 .form-type--boolean {
   margin-inline-start: var(--input--label-spacing);
   line-height: var(--admin-space-l);
@@ -139,7 +138,6 @@
 /*
  * Checkboxes.
  */
-
 .form-boolean--type-checkbox {
   &:not(:checked) {
     .dark-mode & {
@@ -188,7 +186,6 @@
 /**
  * Error states.
  */
-
 .form-boolean.error {
   border-color: var(--input--error-border-color);
   background-color: var(--input-bg-color);
@@ -203,13 +200,11 @@
     background-color: var(--input-bg-color);
   }
 }
-
 .form-boolean--type-checkbox.error:checked,
 .form-boolean--type-checkbox.error:checked:active,
 .form-boolean--type-checkbox.error:checked:hover {
   background-color: var(--input--error-border-color);
 }
-
 .form-boolean--type-radio.error:checked,
 .form-boolean--type-radio.error:checked:active,
 .form-boolean--type-radio.error:checked:hover {
@@ -219,7 +214,6 @@
 /**
  * Disabled states.
  */
-
 .form-boolean[disabled],
 .form-boolean[disabled]:hover,
 .form-boolean[disabled].error,
@@ -232,11 +226,9 @@
   background-image: none;
   box-shadow: none;
 }
-
 .form-boolean--type-checkbox[disabled]:checked {
   background-image: url("data:image/svg+xml,%3csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M3.795 7.096l2.387 2.506 6.023-6.327 1.484 1.56-7.507 7.89L2.31 8.656z' fill='%2382828c'/%3e%3c/svg%3e");
 }
-
 .form-boolean--type-radio[disabled]:checked,
 .form-boolean--type-radio[disabled].error:checked {
   background-image: url("data:image/svg+xml,%3csvg width='17' height='17' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle r='4.5' cx='8.5' cy='8.5' fill='%2382828c'/%3e%3c/svg%3e");

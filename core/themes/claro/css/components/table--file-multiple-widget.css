@@ -72,7 +72,6 @@
 /**
  * The cell that contains file operations (usually, this is the remove button).
  */
-
 .file-operations-cell {
   width: 1px;
   white-space: nowrap; /* Don't let ajax-progress be broken into a new line. */
@@ -82,7 +81,6 @@
  * Remove the border for the last table row if upload is not possible.
  * (A full file widget with limited cardinality.)
  */
-
 .table-file-multiple-widget--no-upload > tbody:last-child > tr:last-child {
   border-block-end: 0;
 }
@@ -90,7 +88,6 @@
 /**
  * Take as much space as possible.
  */
-
 @media screen and (max-width: 37.5em) {
   .claro-details__wrapper .file-widget-multiple__table-wrapper {
     margin-inline: calc(var(--space-m) * -1);

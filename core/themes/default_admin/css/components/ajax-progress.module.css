@@ -26,7 +26,6 @@
 /**
  * Throbber.
  */
-
 .ajax-progress--throbber {
   position: relative;
   display: inline-flex;
@@ -42,16 +41,13 @@
  * Remove margin from ajax throbbers following buttons because buttons already
  * have a large margin set.
  */
-
 .js .action-link:not(.js-hide, .button--action) + .ajax-progress--throbber,
 .js .button:not(.js-hide, .button--action) + .ajax-progress--throbber {
   margin-inline-start: 0;
 }
-
 /**
  * Restore start margin for ajax throbbers inside a managed file widget.
  */
-
 .js .form-type--managed-file .button:not(.js-hide) + .ajax-progress--throbber,
 .js .file-operations-cell .button:not(.js-hide) + .ajax-progress--throbber {
   margin-inline-start: var(--ajax-progress-margin-horizontal); /* LTR */
@@ -76,7 +72,6 @@
 /**
  * Full screen throbber.
  */
-
 .ajax-progress--fullscreen,
 .ui-dialog .ajax-progress--throbber {
   position: fixed;
@@ -92,7 +87,6 @@
   background: var(--admin-color-bg-raised);
   box-shadow: 0 0.25rem 0.625rem var(--jui-dropdown-shadow-color);
 }
-
 .ajax-progress__throbber--fullscreen,
 .ui-dialog .ajax-progress__throbber {
   position: absolute;

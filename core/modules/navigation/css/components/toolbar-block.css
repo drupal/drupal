@@ -9,6 +9,7 @@
  * @file
  * Toolbar block styles.
  */
+
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
   .toolbar-block {
     display: grid;

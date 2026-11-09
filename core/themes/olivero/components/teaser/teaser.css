@@ -4,6 +4,7 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 .teaser {
   position: relative; /* Anchor after pseudo-element. */
   padding-block-end: var(--sp1-5);
@@ -22,6 +23,7 @@
     padding-block-end: var(--sp3);
   }
 }
+
 .teaser__content {
   display: grid;
   grid-auto-rows: max-content;
@@ -35,6 +37,7 @@
     gap: var(--sp2);
   }
 }
+
 .teaser__image {
   flex-shrink: 0;
   margin: 0;
@@ -70,9 +73,11 @@
     margin: 0;
   }
 }
+
 .teaser__meta {
   margin-block-end: var(--sp);
 }
+
 .teaser__title {
   margin-block: 0;
   flex-basis: calc(100% - var(--sp4-5));
@@ -86,6 +91,7 @@
     line-height: var(--sp3);
   }
 }
+
 .teaser__top {
   display: flex;
   flex-wrap: nowrap;

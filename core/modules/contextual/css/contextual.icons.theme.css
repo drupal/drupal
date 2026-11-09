@@ -13,7 +13,6 @@
 /**
  * Contextual trigger.
  */
-
 .contextual .trigger {
   /* Override the .focusable height: auto */
   width: 26px !important;

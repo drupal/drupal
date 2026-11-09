@@ -32,14 +32,12 @@
  * Creates stacking context ensuring that child elements can never appear in
  * front of mobile navigation.
  */
-
 .layout-main-wrapper {
   position: relative;
   z-index: 2; /* Ensure dropdown is not cut off by footer. */
 }
 
 /* Contains the social sidebar, and the primary content area. */
-
 .layout-main {
   @media (min-width: 75rem) {
     display: flex;
@@ -67,7 +65,6 @@
  * Contextual link wrappers load without the ".contextual" CSS class, which
  * causes layout shifts. We fix this by setting this to position: absolute;
  */
-
 [data-contextual-id]:not(.contextual) {
   position: absolute;
 }

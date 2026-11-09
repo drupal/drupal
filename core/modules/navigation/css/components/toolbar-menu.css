@@ -9,6 +9,7 @@
  * @file
  * Admin Toolbar menus styles.
  */
+
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
   .toolbar-menu {
     display: grid;

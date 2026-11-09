@@ -30,7 +30,6 @@
     width: 100%;
   }
 }
-
 .tabs {
   display: flex;
   flex-direction: column;
@@ -123,16 +122,13 @@
     z-index: 3;
   }
 }
-
 /* Active and hover indicator. */
-
 .tabs__tab::before,
 .tabs__link::before {
   position: absolute;
   display: block;
   content: "";
 }
-
 .tabs {
   &.is-open {
     & .tabs__tab.is-active::before {
@@ -140,13 +136,11 @@
     }
   }
 }
-
 .tabs--secondary {
   & .tabs__tab:not(.is-active) {
     display: block;
   }
 }
-
 .tabs.is-open > .tabs__tab {
   display: flex;
 }

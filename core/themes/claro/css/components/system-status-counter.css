@@ -20,6 +20,7 @@
   inline-size: 100%;
   white-space: nowrap;
 }
+
 .system-status-counter__status-icon {
   display: inline-block;
   block-size: 4.0625rem;
@@ -48,15 +49,19 @@
     }
   }
 }
+
 .system-status-counter__status-icon--error::before {
   background-image: var(--system-status-counter-status-icon-error);
 }
+
 .system-status-counter__status-icon--warning::before {
   background-image: var(--system-status-counter-status-icon-warning);
 }
+
 .system-status-counter__status-icon--checked::before {
   background-image: var(--system-status-counter-status-icon-checked);
 }
+
 @media (forced-colors: active) {
   .system-status-counter__status-icon--error::before {
     mask-image: var(--system-status-counter-status-icon-error);
@@ -70,6 +75,7 @@
     mask-image: var(--system-status-counter-status-icon-checked);
   }
 }
+
 .system-status-counter__status-title {
   display: inline-block;
   padding: 0 1.125rem;
@@ -78,10 +84,12 @@
   font-weight: bold;
   line-height: 1em;
 }
+
 .system-status-counter__title-count {
   display: block;
   margin-block-end: 0.5rem;
 }
+
 .system-status-counter__details {
   display: block;
   text-transform: none;
@@ -89,6 +97,7 @@
   font-weight: normal;
   line-height: 1.5;
 }
+
 @media screen and (min-width: 61rem) {
   .system-status-report-counters__item {
     padding-block: var(--space-s);

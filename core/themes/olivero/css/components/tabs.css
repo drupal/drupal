@@ -4,7 +4,9 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 /* Breakpoint where tabs switch between vertical and horizontal layouts. */
+
 .tabs {
   --tabs-height: var(--sp3);
   --tabs-padding-inline: var(--sp1-5);
@@ -33,6 +35,7 @@
     flex-wrap: wrap;
   }
 }
+
 .tabs__tab {
   display: none;
   margin: 0;
@@ -67,6 +70,7 @@
     margin-inline-start: calc(-1 * var(--tabs-border-width));
   }
 }
+
 .tabs__link {
   display: flex;
   flex-grow: 1;
@@ -129,6 +133,7 @@
     }
   }
 }
+
 /* Button that opens and closes primary tabs at narrow viewports. */
 .tabs__trigger {
   display: flex;
@@ -160,6 +165,7 @@
     display: none;
   }
 }
+
 .tabs__trigger-icon {
   position: relative;
   display: block;

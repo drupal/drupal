@@ -11,7 +11,6 @@
  */
 
 /* Override contextual links so we can position against .site-header. */
-
 .block-search-wide.contextual-region {
   position: static;
 }
@@ -148,7 +147,6 @@
 }
 
 /* Override specificity from container-inline.module.css */
-
 .container-inline {
   & .block-search-wide__container {
     display: block;
@@ -235,14 +233,12 @@
 }
 
 /* Provide rudimentary access to site search if JS is disabled. */
-
 html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
   visibility: visible;
   max-height: var(--sp8);
 }
 
 /* Necessary to override specificity of transpiled PostCSS properties from default input focus styling. */
-
 [dir] .block-search-wide__wrapper input[type="search"] {
   background-color: transparent;
   background-image: linear-gradient(var(--color--primary-50));

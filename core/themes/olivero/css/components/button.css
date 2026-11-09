@@ -63,7 +63,6 @@
 }
 
 /* No margin if is part of a menu. */
-
 .menu .button {
   margin-block: 0;
   margin-inline-start: 0;

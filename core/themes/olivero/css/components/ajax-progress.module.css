@@ -17,7 +17,6 @@
 /**
  * Throbber.
  */
-
 .ajax-progress-throbber {
   position: relative;
   display: inline-flex;
@@ -49,7 +48,6 @@
 /**
  * Full screen throbber.
  */
-
 .ajax-progress-fullscreen {
   position: fixed;
   z-index: 1000;
@@ -82,7 +80,6 @@
 /**
  * Common styles for all kinds of throbbers.
  */
-
 .ajax-progress-throbber .throbber,
 .ajax-progress-fullscreen::before {
   animation: olivero-throbber 0.75s linear infinite;
@@ -95,7 +92,6 @@
  * Remove margin from ajax throbbers following buttons because buttons already
  * have a large margin set.
  */
-
 html.js .button:not(.js-hide) + .ajax-progress-throbber {
   margin-inline-start: 0;
 }

@@ -20,7 +20,6 @@
 /**
  * The root element of the file/image widget.
  */
-
 .form-managed-file {
   &.no-upload {
     display: inline-flex;
@@ -61,7 +60,6 @@
  * preview if there is enough space left. Enough space means the value of the
  * '--file-widget-form-item-min-width' variable.
  */
-
 .form-managed-file__meta {
   display: flex;
   flex-wrap: wrap;
@@ -102,7 +100,6 @@
  *
  * This is used and display only by the image widget.
  */
-
 .form-managed-file__image-preview {
   flex: 0 0 auto;
   max-width: 100%;
@@ -132,7 +129,6 @@
  *
  * We limit the max width directly on the '.form-item' elements.
  */
-
 .form-managed-file__meta-items {
   flex: 1 1 var(--file-widget-form-item-min-width);
   max-width: 100%;
@@ -148,7 +144,6 @@
  * The inline-flex display shrinks the width to the minimal needed amount. This
  * helps to keep the remove as close to the other elements as possible.
  */
-
 .form-managed-file__main {
   display: inline-flex;
   align-items: center;
@@ -192,7 +187,6 @@
 /**
  * Add side margins if a table precedes the managed file form element.
  */
-
 .file-widget-multiple.has-table .form-type--managed-file {
   margin-inline: var(--admin-space-m);
 }

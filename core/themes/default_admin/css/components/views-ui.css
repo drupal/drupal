@@ -314,7 +314,6 @@
 }
 
 /* These header classes are ambiguous and should be scoped to th elements */
-
 .views-ui-name {
   width: 20%;
 }
@@ -350,7 +349,6 @@
 }
 
 /* This makes the form elements after the "Display Format" label flow underneath the label */
-
 .form-item-page-style-style-plugin > label,
 .form-item-block-style-style-plugin > label {
   display: block;
@@ -530,7 +528,6 @@
  * generic icon classed element. For the moment, we'll style the bucket
  * header specifically with the overridden font style.
  */
-
 .views-ui-display-tab-setting.overridden,
 .views-ui-display-tab-bucket.overridden .views-ui-display-tab-bucket__title {
   font-style: italic;
@@ -552,14 +549,12 @@
  * @see https://www.drupal.org/project/drupal/issues/3134107
  * @see https://www.drupal.org/project/drupal/issues/1899236
  */
-
 .edit-display-settings-top.views-ui-display-tab-bucket .dropbutton-wrapper {
   top: 0.8125rem;
   inset-inline-end: var(--admin-space-s);
 }
 
 /* Styles on devices with touchevents. */
-
 html:not(.no-touchevents) {
   .views-ui-display-tab-bucket__header--actions {
     padding: var(--admin-space-l) var(--admin-space-xs);
@@ -573,7 +568,6 @@ html:not(.no-touchevents) {
 /* @end */
 
 /* @group Filter rearrange grouping */
-
 .views-ui-dialog td.group-title {
   height: 1px;
   margin: 0;
@@ -1051,7 +1045,6 @@ html:not(.no-touchevents) {
  *   valid HTML markup in any way. Refactor Views UI to not produce such invalid
  *   markup.
  */
-
 details.fieldset-no-legend {
   padding-top: 0;
 }
@@ -1061,7 +1054,6 @@ details.fieldset-no-legend {
 /* This is necessary to supercede the Default Admin .form-item
  * reset declaration that sets the margin to zero.
  */
-
 .form-item-options-expose-required,
 .form-item-options-expose-label,
 .form-item-options-expose-field-identifier,
@@ -1357,7 +1349,6 @@ details.fieldset-no-legend {
 }
 
 /* #3186729: Drupal 9.1 fix */
-
 .views-ui-display-tab-bucket__header {
   display: inline-flex;
   justify-content: space-between;
@@ -1406,7 +1397,6 @@ details.fieldset-no-legend {
  * For grouping related form elements together, mainly used with exposed
  * filters.
  */
-
 .views-config-group-region {
   display: table;
   margin: var(--admin-space-l) 0;
@@ -1496,7 +1486,6 @@ a.views-field-excluded {
 }
 
 /* @todo. This was in Default Admin's Views file. Might could move it. */
-
 .system-modules,
 .locale-translation-status-form {
   tr.even,

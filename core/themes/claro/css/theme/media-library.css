@@ -15,12 +15,10 @@
  * Negative margins compensate for modal dialog padding and compensate for
  * positioning that would otherwise hide the active tab indicator on the left.
  */
-
 .media-library-wrapper {
   display: flex;
   margin: -1rem -1.5rem -1rem -1rem; /* LTR */
 }
-
 [dir="rtl"] .media-library-wrapper {
   margin-right: -1em;
   margin-left: -1.5em;
@@ -41,7 +39,6 @@
   list-style: none;
   color: var(--color-text);
 }
-
 [dir="rtl"] .media-library-menu {
   margin: 0;
 }
@@ -87,7 +84,6 @@
 }
 
 /* Menu link states. */
-
 .media-library-menu__link:focus {
   z-index: calc(var(--vertical-tabs-menu--z-index) + 3); /* Focus state should be on the highest level to make the focus effect be fully visible. This also means that it should have bigger z-index than the selected link. */
   -webkit-text-decoration: none;
@@ -106,7 +102,6 @@
 }
 
 /* This pseudo element provides the background for the hover state. */
-
 .media-library-menu__link::before {
   position: absolute;
   z-index: calc(var(--vertical-tabs-menu--z-index) - 1); /* This should be on a lower level than the menu-item separator lines. */
@@ -118,7 +113,6 @@
   pointer-events: none;
   background-clip: padding-box;
 }
-
 [dir="rtl"] .media-library-menu__link::before {
   right: calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
   left: 0;
@@ -155,7 +149,6 @@
   border-left: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color); /* LTR */
   border-radius: var(--base-border-radius) 0 0 var(--base-border-radius); /* LTR */
 }
-
 [dir="rtl"] .media-library-menu__link.active::before {
   border-right: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
   border-left: 0;
@@ -184,7 +177,6 @@
 }
 
 /* Generic media add form styles. */
-
 .media-library-add-form--without-input .form-item {
   margin-right: 1rem;
 }
@@ -195,7 +187,6 @@
  * The added media list receives focus after adding new media, but since it is
  * not an interactive element, it does not need an outline.
  */
-
 .media-library-add-form__added-media {
   margin: 0;
   padding: 0;
@@ -207,7 +198,6 @@
  * Additional padding is needed to accommodate the remove button icon. The
  * margin is adjusted for alignment within the media library dialog.
  */
-
 .media-library-add-form__added-media .media-library-add-form__remove-button.button--extrasmall {
   margin: var(--space-xs) 0; /* LTR */
   /* Left padding is double the background size of the button icon. */
@@ -215,7 +205,6 @@
 }
 
 /* This is needed to override the default extrasmall button left margin. */
-
 [dir="rtl"] .media-library-add-form__added-media .media-library-add-form__remove-button.button--extrasmall {
   margin-left: 0;
 }
@@ -229,18 +218,15 @@
 }
 
 /* Style the media add upload form. */
-
 .media-library-add-form--upload.media-library-add-form--without-input .form-item-upload {
   margin-bottom: 0;
 }
-
 .media-library-add-form--upload.media-library-add-form--with-input .form-managed-file__main,
 .media-library-add-form--upload.media-library-add-form--with-input .form-managed-file.no-upload {
   display: block;
 }
 
 /* Adjust the focus border on this element so it is not too close to buttons. */
-
 .media-library-add-form__added-media:focus {
   box-shadow:
     0 0 0 calc(var(--focus-border-offset-size) + 2px) var(--color-white),
@@ -252,7 +238,6 @@
 }
 
 /* Style the media add oEmbed form. */
-
 .media-library-add-form--oembed .media-library-add-form__input-wrapper {
   display: flex;
   align-items: center;
@@ -273,13 +258,11 @@
 }
 
 /* Media add form selection styles. */
-
 .media-library-add-form__selected-media {
   margin-top: 1em;
 }
 
 /* Change to padding to account for the negative margin for flex grid. */
-
 .media-library-add-form__selected-media .details-wrapper {
   padding: 0 0.625rem 1em 0.625rem;
 }
@@ -289,23 +272,19 @@
 }
 
 /* Prevent media item from collapsing if thumbnail image is broken/missing. */
-
 .media-library-add-form__selected-media .media-library-item--small .media-library-item__preview {
   min-height: 6.25rem;
 }
 
 /* Generic media library view styles. */
-
 .media-library-select-all {
   flex-basis: 100%;
   width: 100%;
   margin: 0.625rem 0.5rem;
 }
-
 .media-library-select-all input {
   margin-right: 0.625rem;
 }
-
 [dir="rtl"] .media-library-select-all input {
   margin-left: 0.625rem;
 }
@@ -345,13 +324,11 @@
  * .visually-hidden class do not work correctly if the element has a table
  * display.
  */
-
 .media-library-item label {
   display: inline-block;
 }
 
 /* Media library widget view styles. */
-
 .media-library-wrapper .media-library-view {
   position: relative;
   display: flex;
@@ -364,7 +341,6 @@
   margin: 1em 0;
   text-align: right; /* LTR */
 }
-
 [dir="rtl"] .media-library-wrapper .view-header {
   text-align: left;
 }
@@ -381,7 +357,6 @@
   font-size: 0.9375rem;
   line-height: 1rem;
 }
-
 [dir="rtl"] .media-library-wrapper .views-display-link {
   padding-right: 1.375rem;
   padding-left: 0;
@@ -395,7 +370,6 @@
   margin-right: 0.9375rem;
   background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cpath fill='%23333333' d='M10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3A1.5 1.5 0 0 1 10.5 9zm-8 0h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3A1.5 1.5 0 0 1 2.5 9zm8-8h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3A1.5 1.5 0 0 1 10.5 1zm-8 0h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3A1.5 1.5 0 0 1 2.5 1z'/%3e%3c/svg%3e") left 0 no-repeat; /* LTR */
 }
-
 [dir="rtl"] .media-library-wrapper .views-display-link-widget {
   background-position: right 0;
 }
@@ -403,7 +377,6 @@
 .media-library-wrapper .views-display-link-widget_table {
   background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cpath fill='%23333333' d='M7 15a1.5 1.5 0 0 1 0-3h7a1.5 1.5 0 0 1 0 3H7zm-4.5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM7 9.5a1.5 1.5 0 0 1 0-3h7a1.5 1.5 0 0 1 0 3H7zm-4.5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM7 4a1.5 1.5 0 0 1 0-3h7a1.5 1.5 0 0 1 0 3H7zM2.5 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z'/%3e%3c/svg%3e") left 0 no-repeat; /* LTR */
 }
-
 [dir="rtl"] .media-library-wrapper .views-display-link-widget_table {
   background-position: right 0;
 }
@@ -411,7 +384,6 @@
 /**
  * Style the media library grid items.
  */
-
 .media-library-item,
 .media-library-item__preview-wrapper {
   position: relative;
@@ -420,7 +392,6 @@
 /**
  * Ajax throbbers inside a media library item.
  */
-
 .media-library-item .ajax-progress.ajax-progress.ajax-progress {
   position: absolute;
   z-index: calc(var(--vertical-tabs-menu--z-index) + 1);
@@ -435,7 +406,6 @@
   background: var(--color-white);
   box-shadow: 0 0.25rem 0.625rem var(--jui-dropdown-shadow-color);
 }
-
 .media-library-item .ajax-progress__throbber {
   position: absolute;
   top: 50%;
@@ -446,7 +416,6 @@
   border: 3px solid var(--color-absolutezero);
   border-right: 3px dotted transparent;
 }
-
 .media-library-item .ajax-progress__message {
   display: none;
 }
@@ -482,7 +451,6 @@
 * The media library grid item focus border is moved to a child element to
 * improve padding.
 */
-
 .media-library-item--grid:focus {
   outline: none;
   box-shadow: none;
@@ -494,13 +462,11 @@
 }
 
 /* Media library widget weight field styles. */
-
 .media-library-item--grid .form-item {
   margin: 0.75em;
 }
 
 /* The selected items in the add form should be shown a bit smaller. */
-
 .media-library-add-form__selected-media .media-library-item--small {
   width: 33.3%;
 }
@@ -519,7 +485,6 @@
  * By default, the dialog is too narrow to be usable.
  * @see Drupal.ckeditor5.openDialog()
  */
-
 .ui-dialog--narrow.media-library-widget-modal {
   max-width: 75%;
 }
@@ -588,7 +553,6 @@
 }
 
 /* Prevent media item from collapsing if thumbnail image is broken/missing. */
-
 .media-library-item--grid .media-library-item__preview {
   min-height: 11.25rem;
 }
@@ -601,7 +565,6 @@
   border-width: 3px;
   border-radius: 0.1875rem;
 }
-
 .media-library-item--grid.is-hover::before,
 .media-library-item--grid.checked.is-hover::before {
   border-color: var(--color-absolutezero-hover);
@@ -627,7 +590,6 @@
   left: 1rem; /* LTR */
   display: block;
 }
-
 [dir="rtl"] .media-library-item__click-to-select-checkbox {
   right: 1rem;
   left: auto;
@@ -649,14 +611,12 @@
 }
 
 /* Media library item table styles. */
-
 .media-library-item--table img {
   max-width: 6.25rem;
   height: auto;
 }
 
 /* Media library entity view display styles. */
-
 .media-library-item__preview {
   padding-bottom: 2.125rem;
 }
@@ -685,7 +645,6 @@
   font-size: 0.75rem;
   font-style: italic;
 }
-
 [dir="rtl"] .media-library-item__status {
   right: 0.3125rem;
   left: auto;
@@ -728,7 +687,6 @@
 }
 
 /* Media library widget styles. */
-
 .media-library-widget {
   position: relative;
 }
@@ -740,14 +698,12 @@
   -webkit-text-decoration: none;
   text-decoration: none;
 }
-
 [dir="rtl"] .media-library-widget__toggle-weight.media-library-widget__toggle-weight {
   right: auto;
   left: var(--space-m);
 }
 
 /* Add negative margin for flex grid. */
-
 .media-library-selection {
   margin: 1em -0.5rem;
 }
@@ -758,7 +714,6 @@
  * We have to override the .button styles since buttons make heavy use of
  * background and border property changes.
  */
-
 .media-library-item__edit,
 .media-library-item__edit:hover,
 .media-library-item__edit:focus,
@@ -789,7 +744,6 @@
 .media-library-item__edit {
   right: 2.5rem; /* LTR */
 }
-
 [dir="rtl"] .media-library-item__edit {
   right: auto;
   left: 2.5rem;
@@ -798,7 +752,6 @@
 .media-library-item__remove {
   right: 0.625rem; /* LTR */
 }
-
 [dir="rtl"] .media-library-item__remove {
   right: auto;
   left: 0.625rem;
@@ -812,11 +765,9 @@
   background-position: center;
   background-size: 0.75rem;
 }
-
 .media-library-item__edit:active {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cg%3e%3cpath fill='%23ffffff' d='M14.545 3.042l-1.586-1.585c-.389-.389-1.025-.389-1.414 0l-1.293 1.293 3 3 1.293-1.293c.389-.389.389-1.026 0-1.415z'/%3e%3crect fill='%23ffffff' x='5.129' y='3.8' transform='matrix(-.707 -.707 .707 -.707 6.189 20.064)' width='4.243' height='9.899'/%3e%3cpath fill='%23ffffff' d='M.908 14.775c-.087.262.055.397.316.312l2.001-.667-1.65-1.646-.667 2.001z'/%3e%3c/g%3e%3c/svg%3e");
 }
-
 .media-library-item__remove,
 .media-library-item__remove.button,
 .media-library-item__remove.button:first-child,
@@ -841,7 +792,6 @@
 }
 
 /* Style the added media item container. */
-
 .media-library-add-form__media {
   position: relative;
   display: flex;
@@ -849,7 +799,6 @@
 }
 
 /* Do not show the bottom border and padding for the last item. */
-
 .media-library-add-form__media:last-child {
   padding-bottom: 0;
   border-bottom: 0;
@@ -863,7 +812,6 @@
   margin-right: 1.25rem; /* LTR */
   background: var(--color-gray-050-o-40);
 }
-
 [dir="rtl"] .media-library-add-form__preview {
   margin-right: 0;
   margin-left: 1.25rem;
@@ -881,12 +829,10 @@
   background-position: var(--space-xs) center;
   background-size: var(--space-s);
 }
-
 [dir="rtl"] .media-library-add-form__remove-button {
   right: auto;
   left: 0;
 }
-
 .media-library-add-form__remove-button.button:disabled {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cpath fill='%238e929c' d='M3.51 13.925c.194.194.512.195.706.001l3.432-3.431c.194-.194.514-.194.708 0l3.432 3.431c.192.194.514.193.707-.001l1.405-1.417c.191-.195.189-.514-.002-.709l-3.397-3.4c-.192-.193-.192-.514-.002-.708l3.401-3.43c.189-.195.189-.515 0-.709l-1.407-1.418c-.195-.195-.513-.195-.707-.001l-3.43 3.431c-.195.194-.516.194-.708 0l-3.432-3.431c-.195-.195-.512-.194-.706.001l-1.407 1.417c-.194.195-.194.515 0 .71l3.403 3.429c.193.195.193.514-.001.708l-3.4 3.399c-.194.195-.195.516-.001.709l1.406 1.419z'/%3e%3c/svg%3e");
 }

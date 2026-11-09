@@ -32,7 +32,6 @@
     - .layout--content-medium class.
     - Element that's inheriting the layout--content-medium styles from its parent region.
 */
-
 .layout--content-narrow,
 .layout--pass--content-narrow > *,
 .layout--content-medium,
@@ -53,7 +52,6 @@
   Special grid-breaking treatment for text-content elements that
   reside in a content-narrow layout.
 */
-
 .layout--content-narrow,
 .layout--pass--content-narrow > * {
   &.text-content,
@@ -98,7 +96,6 @@
  * <pre> and <blockquote> elements should not break containers and overflow
  * into sidebar region when present.
  */
-
 .sidebar-grid {
   & .layout--content-narrow,
   & .layout--pass--content-narrow > * {

@@ -23,7 +23,6 @@
     opacity: 0.25;
   }
 }
-
 .views-display-disabled {
   & > details > summary,
   & .details-wrapper > .views-ui-display-tab-bucket > *,
@@ -31,7 +30,6 @@
     opacity: 0.5;
   }
 }
-
 .views-display-tab .details-wrapper > .views-ui-display-tab-bucket .actions {
   opacity: 1;
 }
@@ -39,7 +37,6 @@
 .views-display-column {
   box-sizing: border-box;
 }
-
 .views-display-columns > * {
   float: none;
   width: auto;

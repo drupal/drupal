@@ -32,7 +32,6 @@ h3 {
   color: var(--color-gray);
   font-size: var(--font-size-xl);
 }
-
 .site-name--subtle {
   margin-top: var(--space-s);
   color: var(--color-gray-800);
@@ -43,7 +42,6 @@ h3 {
   margin-top: 0;
   font-size: var(--font-size-h3);
 }
-
 .title--broad {
   font-size: var(--font-size-h1);
 }
@@ -57,7 +55,6 @@ h3 {
   margin-bottom: var(--space-m);
   color: var(--color-gray);
 }
-
 .content--subtle {
   color: var(--color-gray-800);
 }
@@ -72,7 +69,6 @@ h3 {
  * Task list & step indicator.
  * Shows on both the install screen and the database update page.
  */
-
 @media all and (max-width: 48em) {
   /* 768px */
   header {
@@ -141,7 +137,6 @@ h3 {
 /**
  * Layout
  */
-
 .layout-container {
   width: auto;
   margin-right: 1.25em;
@@ -152,7 +147,6 @@ h3 {
   background: #fff;
   box-shadow: var(--shadow-z3);
 }
-
 .layout-container::after {
   /* No reason for a clearfix in the markup. */
   display: table;
@@ -235,19 +229,16 @@ h3 {
 /**
  * Status report customization for install and update page.
  */
-
 .system-status-report__status-title {
   float: none;
   width: 100%;
 }
-
 .system-status-report__entry__value {
   float: none;
   width: 100%;
   padding-top: 0;
   padding-left: 3em; /* LTR */
 }
-
 [dir="rtl"] .system-status-report__entry__value {
   padding-right: 3em;
   padding-left: 1em;
@@ -256,7 +247,6 @@ h3 {
 /**
  * Updates list customization for update page.
  */
-
 .update-results {
   overflow: auto; /* Required to prevent text clipping. */
   margin-top: 0;
@@ -265,11 +255,9 @@ h3 {
   border-radius: var(--base-border-radius);
   background: var(--color-gray-050);
 }
-
 .update-results > h3:first-child {
   margin-top: 0;
 }
-
 .update-results .failure strong {
   color: var(--color-maximumred);
 }
@@ -277,7 +265,6 @@ h3 {
 .item-list > h3 {
   font-size: var(--font-size-h5);
 }
-
 .item-list > ul {
   margin-left: 0;
 }

@@ -9,6 +9,7 @@
  * @file
  * Tooltip styles.
  */
+
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
   .toolbar-tooltip {
     position: fixed;

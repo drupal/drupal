@@ -19,7 +19,6 @@
  *   valid HTML markup in any way. Refactor Views UI to not produce such invalid
  *   markup.
  */
-
 details.fieldset-no-legend {
   padding-top: 0;
 }
@@ -29,7 +28,6 @@ details.fieldset-no-legend {
  * a layout problem occurs for the Display format details if we don't fix its
  * padding), but it's probably safe to just let it apply everywhere.
  */
-
 .views-ui-dialog input.form-submit,
 .views-admin a.button,
 .views-ui-dialog a.button {
@@ -37,14 +35,12 @@ details.fieldset-no-legend {
   margin-right: 0;
   margin-bottom: 0;
 }
-
 [dir="rtl"] .views-ui-dialog input.form-submit,
 [dir="rtl"] .views-admin a.button,
 [dir="rtl"] .views-ui-dialog a.button {
   margin-right: 1em;
   margin-left: 0;
 }
-
 [dir="rtl"] .views-ui-dialog input.form-submit:first-child,
 [dir="rtl"] .views-admin a.button:first-child,
 [dir="rtl"] .views-ui-dialog a.button:first-child {
@@ -61,19 +57,16 @@ details.fieldset-no-legend {
   margin-top: var(--space-m);
   margin-bottom: var(--space-m);
 }
-
 .views-ui-dialog .form-type--boolean {
   margin-right: 0;
   margin-left: 0;
 }
-
 .views-ui-dialog .form-type--boolean .form-boolean {
   top: 0;
   float: none;
   margin: 0 0.25rem 0 0; /* LTR */
   transform: none;
 }
-
 [dir="rtl"] .views-ui-dialog .form-type--boolean .form-boolean {
   margin-right: 0;
   margin-left: 0.25rem;
@@ -92,7 +85,6 @@ details.fieldset-no-legend {
 }
 
 /* So "remove" link appears next to the checkbox. */
-
 .views-ui-dialog .draggable .form-type--checkbox {
   display: inline-block;
   margin: 0 0.25rem;
@@ -104,12 +96,10 @@ details.fieldset-no-legend {
   font-size: var(--input-font-size--small);
   line-height: var(--input-line-height--small);
 }
-
 .views-ui-dialog .form-element--type-select {
   padding-inline-end: calc(2rem - var(--input-border-size));
   background-position-y: 56%;
 }
-
 .views-ui-dialog td .form-element {
   width: auto;
 }
@@ -119,14 +109,12 @@ details.fieldset-no-legend {
 /* This is necessary to supercede the Claro .form-item
  * reset declaration that sets the margin to zero.
  */
-
 .form-item-options-expose-required,
 .form-item-options-expose-label,
 .form-item-options-expose-field-identifier,
 .form-item-options-expose-description {
   margin-left: 1.5em; /* LTR */
 }
-
 [dir="rtl"] .form-item-options-expose-required,
 [dir="rtl"] .form-item-options-expose-label,
 [dir="rtl"] .form-item-options-expose-field-identifier,
@@ -165,7 +153,6 @@ details.fieldset-no-legend {
 .views-admin .links li {
   padding-right: 0; /* LTR */
 }
-
 [dir="rtl"] .views-admin .links li {
   padding-left: 0;
 }
@@ -173,7 +160,6 @@ details.fieldset-no-legend {
 .views-admin .button .links li {
   padding-right: 0.75rem; /* LTR */
 }
-
 [dir="rtl"] .views-admin .button .links li {
   padding-left: 0.75rem;
 }
@@ -220,18 +206,15 @@ details.fieldset-no-legend {
   text-align: left; /* LTR */
   border-bottom: 0 none;
 }
-
 [dir="rtl"] .views-tabs {
   margin-right: 0;
   margin-left: var(--space-l);
   text-align: right;
 }
-
 .views-tabs .views-display-deleted-link {
   -webkit-text-decoration: line-through;
   text-decoration: line-through;
 }
-
 .views-tabs li,
 .views-tabs li.is-active {
   width: auto;
@@ -239,33 +222,26 @@ details.fieldset-no-legend {
   border: 0;
   background: transparent;
 }
-
 .views-tabs li.add ul.action-list li {
   margin: 0;
 }
-
 .views-tabs li {
   margin: 0 0.3125rem 0.3125rem 0.375rem; /* LTR */
 }
-
 [dir="rtl"] .views-tabs li {
   margin-right: 0.375rem;
   margin-left: 0.3125rem;
 }
-
 .views-tabs li + li {
   border-top: 0;
 }
-
 .views-tabs li:hover {
   padding-left: 0; /* LTR */
   border: 0;
 }
-
 [dir="rtl"] .views-tabs li:hover {
   padding-right: 0;
 }
-
 .views-tabs a {
   display: inline-block;
   padding: 0.625rem;
@@ -276,34 +252,28 @@ details.fieldset-no-legend {
 }
 
 /* Display a red border if the display doesn't validate. */
-
 .views-tabs li.is-active a.is-active.error,
 .views-tabs .error {
   padding: 0.5rem;
   border: 2px solid #ed541d;
 }
-
 .views-tabs a:focus {
   outline: none;
 }
-
 .views-tabs li a {
   -webkit-text-decoration: none;
   text-decoration: none;
   background-color: #fff;
 }
-
 .views-tabs li a:hover,
 .views-tabs li.is-active a,
 .views-tabs li.is-active a.is-active {
   color: #fff;
   background-color: #555;
 }
-
 .views-tabs .add {
   position: relative;
 }
-
 .views-tabs .add a {
   padding: 0.5625rem 0.8125rem 0.5625rem 0.5625rem;
   color: var(--color-gray-800);
@@ -313,7 +283,6 @@ details.fieldset-no-legend {
   font-size: var(--font-size-base);
   font-weight: 700;
 }
-
 .views-tabs .add a::before {
   display: inline-block;
   width: 1em;
@@ -322,37 +291,29 @@ details.fieldset-no-legend {
   /* Copy of icon from .action-link--icon-plus */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' stroke-width='2' stroke='%23545560'%3E%3Cpath d='m3 8h10'/%3E%3Cpath d='m8 3v10'/%3E%3C/svg%3E");
 }
-
 .views-tabs .add a:hover {
   color: var(--color-absolutezero-hover);
   background-color: var(--color-bgblue-hover);
 }
-
 .views-tabs .add a:hover::before {
   /* Copy of icon from .action-link--icon-plus:hover */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' stroke-width='2' stroke='%230036b1'%3E%3Cpath d='m3 8h10'/%3E%3Cpath d='m8 3v10'/%3E%3C/svg%3E");
 }
-
 .views-tabs .add a:focus {
   background-color: var(--color-bgblue-active);
   box-shadow: 0 0 0 3px #26a769;
 }
-
 .views-tabs .add.open a {
   color: var(--color-white);
   background-color: var(--color-absolutezero);
 }
-
 .views-tabs .add.open a::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' stroke-width='2' stroke='%23FFFFFF'%3E%3Cpath d='m3 8h10'/%3E%3Cpath d='m8 3v10'/%3E%3C/svg%3E");
 }
-
 /* Hide core icon, added via JS that isn't accessible via theme function. */
-
 .views-tabs .add .icon.add {
   display: none;
 }
-
 .views-tabs .action-list {
   position: absolute;
   z-index: 50;
@@ -361,32 +322,26 @@ details.fieldset-no-legend {
   margin: 0;
   box-shadow: var(--details-box-shadow);
 }
-
 [dir="rtl"] .views-tabs .action-list {
   right: 0;
   left: auto;
 }
-
 .views-tabs .action-list li {
   display: block;
 }
-
 .views-tabs .action-list li {
   border-width: 0 1px;
   border-style: solid;
   border-color: #cbcbcb;
   background-color: #fff;
 }
-
 .views-tabs .action-list li:first-child {
   border-width: 1px 1px 0;
   border-radius: 0 var(--base-border-radius) 0 0; /* LTR */
 }
-
 [dir="rtl"] .views-tabs .action-list li:first-child {
   border-radius: 0 0 0 var(--base-border-radius);
 }
-
 .views-tabs .action-list li:last-child,
 .views-displays .action-list li:last-child {
   padding-bottom: 0.4rem;
@@ -394,7 +349,6 @@ details.fieldset-no-legend {
   border-bottom-right-radius: var(--button-border-radius-size);
   border-bottom-left-radius: var(--button-border-radius-size);
 }
-
 .views-tabs__action-list-button {
   width: 100%;
   margin: 0;
@@ -410,7 +364,6 @@ details.fieldset-no-legend {
 a large layout shift. We mitigate this by using animations to temporarily hide
 the buttons, but they will appear after a set amount of time just in case the JS
 is loaded but does not properly run. */
-
 @media (scripting: enabled) {
   .views-tabs__action-list-button:not(.views-tabs--secondary *) {
     animation-name: appear;
@@ -435,19 +388,15 @@ is loaded but does not properly run. */
 }
 
 /* RTL required for precedence over core's styles. */
-
 [dir="rtl"] .views-tabs__action-list-button {
   margin: 0;
 }
-
 .views-tabs__action-list-button.button:hover,
 .views-tabs__action-list-button.button:focus {
   color: var(--color-white);
   background-color: var(--color-absolutezero);
 }
-
 /* Remove outline provided by default styling */
-
 .views-tabs__action-list-button:not(:focus) {
   box-shadow: none;
 }
@@ -466,7 +415,6 @@ is loaded but does not properly run. */
 .views-ui-display-tab-bucket .links li + li {
   margin-left: 0.1875rem; /* LTR */
 }
-
 [dir="rtl"] .views-ui-display-tab-bucket .links li + li {
   margin-right: 0.1875rem;
   margin-left: 0;
@@ -479,21 +427,17 @@ is loaded but does not properly run. */
 .views-ui-rearrange-filter-form tr {
   border-bottom: 0;
 }
-
 .views-ui-rearrange-filter-form tr:first-of-type {
   border-top: 0.0625rem solid var(--color-gray-200);
 }
-
 .views-ui-rearrange-filter-form tr:not(.draggable):hover {
   background: inherit;
 }
-
 .views-ui-rearrange-filter-form .action-links {
   float: left;
   margin: 0 0 1em;
   padding: 0;
 }
-
 .views-ui-rearrange-filter-form .tabledrag-toggle-weight-wrapper {
   float: right;
 }
@@ -509,7 +453,6 @@ is loaded but does not properly run. */
 .views-ui-rearrange-filter-form tr td:last-child {
   border-right: medium none; /* LTR */
 }
-
 [dir="rtl"] .views-ui-rearrange-filter-form tr td:last-child {
   border-right: initial;
   border-left: medium none;
@@ -552,7 +495,6 @@ is loaded but does not properly run. */
   /* Fixes a Claro style that bleeds down into this table unnecessarily */
   border-right: 0 none; /* LTR */
 }
-
 [dir="rtl"] .views-query-info table tr td:last-child {
   border-right: initial;
   border-left: 0 none;
@@ -582,7 +524,6 @@ is loaded but does not properly run. */
   padding-bottom: 0.25rem;
   padding-left: 0.25rem; /* LTR */
 }
-
 [dir="rtl"] .filterable-option .form-item.form-type-checkbox {
   padding-right: 0.25rem;
   padding-left: 0.5rem;
@@ -595,53 +536,44 @@ is loaded but does not properly run. */
  * For grouping related form elements together, mainly used with exposed
  * filters.
  */
-
 .views-config-group-region {
   display: table;
   margin: var(--space-l) 0;
   border: 0.0625rem solid var(--color-gray-200);
   border-collapse: collapse;
 }
-
 .views-config-group-region .views-group-box {
   position: relative;
   display: table-cell;
   padding: var(--space-l);
   border: 0.0625rem solid var(--color-gray-200);
 }
-
 .views-config-group-region .views-group-box--operator {
   padding-right: var(--space-xl);
   border-right-width: 0;
 }
-
 [dir="rtl"] .views-config-group-region .views-group-box--operator {
   padding-right: var(--space-l);
   padding-left: var(--space-xl);
   border-right-width: 0.0625rem;
   border-left-width: 0;
 }
-
 .views-config-group-region .views-group-box--value {
   padding: 0;
   border-left-width: 0; /* LTR */
 }
-
 [dir="rtl"] .views-config-group-region .views-group-box--value {
   border-right-width: 0;
   border-left-width: 0.0625rem;
 }
-
 .views-config-group-region .views-group-box--value > .form-item {
   margin-right: var(--space-l); /* LTR */
   margin-left: var(--space-xl); /* LTR */
 }
-
 [dir="rtl"] .views-config-group-region .views-group-box--value > .form-item {
   margin-right: var(--space-xl); /* LTR */
   margin-left: var(--space-l); /* LTR */
 }
-
 .views-config-group-region .views-group-box--value > .form-item::before {
   position: absolute;
   top: 0;
@@ -651,11 +583,9 @@ is loaded but does not properly run. */
   content: "";
   border-left: 0.0625rem solid var(--color-gray-200);
 }
-
 [dir="rtl"] .views-config-group-region .views-group-box--value > .form-item::before {
   right: 0;
 }
-
 .views-config-group-region .views-group-box--value > .form-item::after {
   position: absolute;
   z-index: 1;

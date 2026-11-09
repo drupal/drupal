@@ -15,7 +15,6 @@
 /**
  * Action links layout.
  */
-
 .action-links {
   margin: var(--space-l) 0;
   list-style: none;
@@ -38,7 +37,6 @@
 /**
  * The action link component.
  */
-
 .action-link {
   display: inline-block;
   padding: calc(var(--space-m) - ((var(--space-l) - var(--space-m)) / 2)) var(--space-m);
@@ -131,9 +129,7 @@
 /**
  * Action link variants.
  */
-
 /* Danger. */
-
 .action-link--danger {
   color: var(--color-maximumred);
 

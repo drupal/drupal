@@ -18,17 +18,14 @@
 /**
  * General form item.
  */
-
 .form-item {
   margin-block: var(--space-l);
 }
-
 /**
  * When a table row or a container-inline has a single form item, prevent it
  * from adding unnecessary extra spacing.
  * If it has multiple form items, allow spacing between them, overriding core.
  */
-
 tr .form-item,
 .container-inline .form-item {
   margin-block: var(--space-s);
@@ -37,7 +34,6 @@ tr .form-item,
 /**
  * Form element label.
  */
-
 .form-item__label {
   display: table;
   margin-block: calc(var(--space-xs) / 2); /* 4px */
@@ -67,9 +63,7 @@ tr .form-item,
     color: var(--input--disabled-fg-color);
   }
 }
-
 /* Multiple selectors used to ensure styling even if modules override markup. */
-
 .form-item__label--multiple-value-form,
 .field-multiple-table .field-label h4.label {
   display: inline-block;
@@ -92,7 +86,6 @@ tr .form-item,
 /**
  * Form item description.
  */
-
 .form-item__description {
   margin-block: calc(6rem / 16); /* 6px */
   color: var(--input-fg-color--description);
@@ -107,7 +100,6 @@ tr .form-item,
 /**
  * Error message (Inline form errors).
  */
-
 .form-item__error-message {
   margin-block: calc(6rem / 16); /* 6px */
   color: var(--input--error-color);
@@ -122,7 +114,6 @@ tr .form-item,
 }
 
 /* Add some spacing so that the focus ring and suffix don't overlap. */
-
 @media screen and (min-width: 37.5625rem) {
   .form-item__suffix {
     margin-inline-start: var(--space-xs);
@@ -133,7 +124,6 @@ tr .form-item,
 /**
  * Form actions.
  */
-
 .form-actions,
 .field-actions {
   display: flex;
@@ -167,7 +157,6 @@ tr .form-item,
  * @legacy
  * @todo These should be in a standalone component file.
  */
-
 .confirm-parent,
 .password-parent {
   overflow: visible;
@@ -182,7 +171,6 @@ tr .form-item,
 /**
  * Custom label placement for editor filter format select.
  */
-
 .form-item--editor-format {
   display: flex;
   flex-wrap: wrap;
@@ -221,7 +209,6 @@ tr .form-item,
  *
  * @legacy
  */
-
 @media screen and (max-width: 37.5rem) {
   .password-strength {
     width: 100%;
@@ -235,11 +222,9 @@ tr .form-item,
  * Prevent regression due to explicit line-heights applied to these elements in
  * normalize.css 7.0.0.
  */
-
 button {
   line-height: 1.125rem;
 }
-
 input,
 optgroup {
   line-height: 1.5rem;
@@ -249,7 +234,6 @@ optgroup {
  * Prevent regression due to -webkit-appearance being set to button in
  * normalize.css 4.1.0.
  */
-
 ::-webkit-file-upload-button {
   -webkit-appearance: push-button;
 }
@@ -258,7 +242,6 @@ optgroup {
  * Claro injects a "Loading" autocomplete message that affects the positioning
  * of the ui-autocomplete dropdown. We remove this to normalize the markup.
  */
-
 #drupal-off-canvas-wrapper .claro-autocomplete__message {
   display: none;
 }

@@ -102,7 +102,6 @@
 }
 
 /* Properly align VBO checkboxes. */
-
 .views-field-node-bulk-form .form-item {
   margin: 0;
 }
@@ -110,7 +109,6 @@
 /**
  * Responsive table cells.
  */
-
 th.priority-medium,
 td.priority-medium {
   display: none;
