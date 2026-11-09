@@ -77,7 +77,7 @@ We need it root to calculate the size of the displace in .dialog-off-canvas-main
   /* Expanded background color. */
   --admin-toolbar-color-expanded: rgb(231, 234, 243, 0.5); /* --admin-toolbar-color-gray-050 */
   /* Fonts. */
-  --admin-toolbar-font-family: inter, sans-serif;
+  --admin-toolbar-font-family: var(--drupal-font-inter);
   /* Shadows. */
   --admin-toolbar-color-shadow-0: rgb(0, 0, 0, 0);
   --admin-toolbar-color-shadow-6: rgb(0, 0, 0, 0.06);

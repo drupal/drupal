@@ -848,6 +848,20 @@ drupal.vertical-tabs:
   before:
     - core/drupal.collapse
 
+font:
+  remote: https://github.com/rsms/inter
+  version: "4.0"
+  license:
+    name: SIL Open Font License 1.1
+    url: https://raw.githubusercontent.com/rsms/inter/v4.0/LICENSE.txt
+    gpl-compatible: true
+  css:
+    base:
+      misc/fonts/inter.css: {}
+  fonts:
+    misc/fonts/inter-latin.woff2:
+      preload: true
+
 htmx:
   remote: https://github.com/bigskysoftware/htmx
   version: "2.0.4"

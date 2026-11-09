@@ -10,18 +10,15 @@ internal.navigation:
     js/arrow-navigation.js: {}
   css:
     theme:
-      css/base/fonts.css: {}
       css/base/variables.css: {}
       css/components/admin-toolbar.css: {}
       css/components/top-bar.css: {}
       css/components/admin-toolbar-control-bar.css: {}
       css/components/toolbar-menu.css: {}
       css/components/toolbar-block.css: {}
-  fonts:
-    assets/fonts/inter-var.woff2:
-      preload: true
   dependencies:
     - core/drupal.displace
+    - core/font
     - core/once
     - core/tabbable
     - navigation/admin-reset-styles
