@@ -27702,12 +27702,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/language/src/Config/LanguageConfigFactoryOverride.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\language\\\\Config\\\\LanguageConfigFactoryOverride\\:\\:getOverride\\(\\) should return Drupal\\\\Core\\\\Config\\\\Config but returns Drupal\\\\language\\\\Config\\\\LanguageConfigOverride\\.$#',
-	'identifier' => 'return.type',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/src/Config/LanguageConfigFactoryOverride.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\language\\\\Config\\\\LanguageConfigFactoryOverride\\:\\:installLanguageOverrides\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -27746,12 +27740,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\language\\\\LanguageNegotiationMethodInterface\\:\\:getLanguageSwitchLinks\\(\\)\\.$#',
 	'identifier' => 'method.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/src/ConfigurableLanguageManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\language\\\\ConfigurableLanguageManager\\:\\:getLanguageConfigOverride\\(\\) should return Drupal\\\\language\\\\Config\\\\LanguageConfigOverride but returns Drupal\\\\Core\\\\Config\\\\Config\\.$#',
-	'identifier' => 'return.type',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/src/ConfigurableLanguageManager.php',
 ];
