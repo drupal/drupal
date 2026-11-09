@@ -79,19 +79,16 @@ class OptionsHooks {
    *   The values to check.
    */
   protected function hasValuesInUse(string $entity_type_id, string $field_name, array $values): bool {
-    if ($values) {
-      $result = \Drupal::entityQuery($entity_type_id)
-        ->accessCheck(FALSE)
-        ->condition($field_name . '.value', $values, 'IN')
-        ->count()
-        ->range(0, 1)
-        ->execute();
-      if ($result) {
-        return TRUE;
-      }
+    if (empty($values)) {
+      return FALSE;
     }
 
-    return FALSE;
+    return (bool) \Drupal::entityQuery($entity_type_id)
+      ->accessCheck(FALSE)
+      ->condition($field_name . '.value', $values, 'IN')
+      ->count()
+      ->range(0, 1)
+      ->execute();
   }
 
 }
