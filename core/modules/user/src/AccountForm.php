@@ -168,9 +168,12 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
           $form['account']['pass']['#required'] = TRUE;
         }
         else {
-          $form['account']['current_pass']['#description'] = $this->t('Required if you want to change the <em>Email address</em> or the <em>Password</em> field below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
-            ':request_new_url' => Url::fromRoute('user.pass')->toString(),
-          ]);
+          $pass_url = Url::fromRoute('user.pass');
+          $form['account']['current_pass']['#description'] = $pass_url->access()
+            ? $this->t('Required if you want to change the <em>Email address</em> or the <em>Password</em> field below. <a href=":request_new_url" title="Send password reset instructions via email.">Reset your password</a>.', [
+              ':request_new_url' => $pass_url->toString(),
+            ])
+            : $this->t('Required if you want to change the <em>Email address</em> or the <em>Password</em> field below.');
         }
       }
     }

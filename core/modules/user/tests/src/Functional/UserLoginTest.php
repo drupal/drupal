@@ -373,4 +373,21 @@ class UserLoginTest extends BrowserTestBase {
     $this->assertEquals('current-password', $pass_field->getAttribute('autocomplete'));
   }
 
+  /**
+   * Tests the failed login warning if there is no access to reset passwords.
+   */
+  public function testFailedLoginMessageWithNoPasswordResetAccess(): void {
+    \Drupal::service('module_installer')->install(['user_disable_password_reset']);
+
+    $this->drupalGet('user/login');
+    $edit = [
+      'name' => $this->randomMachineName(),
+      'pass' => $this->randomMachineName(),
+    ];
+    $this->submitForm($edit, 'Log in');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Unrecognized username or password.');
+    $this->assertSession()->pageTextNotContains('Forgot your password?');
+  }
+
 }

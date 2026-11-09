@@ -251,20 +251,28 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
         $this->userFloodControl->register('user.failed_login_user', $flood_config->get('user_window'), $flood_control_user_identifier);
       }
 
+      $pass_url = Url::fromRoute('user.pass');
       if ($flood_control_triggered = $form_state->get('flood_control_triggered')) {
         if ($flood_control_triggered == 'user') {
-          $message = $this->formatPlural($flood_config->get('user_limit'), 'There has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', 'There have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => Url::fromRoute('user.pass')->toString()]);
+          $message = $pass_url->access()
+            ? $this->formatPlural($flood_config->get('user_limit'), 'There has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', 'There have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => $pass_url->toString()])
+            : $this->formatPlural($flood_config->get('user_limit'), 'There has been more than one failed login attempt for this account. It is temporarily blocked. Try again later.', 'There have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later.');
         }
         else {
           // We did not find a uid, so the limit is IP-based.
-          $message = $this->t('Too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => Url::fromRoute('user.pass')->toString()]);
+          $message = $pass_url->access()
+            ? $this->t('Too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => $pass_url->toString()])
+            : $this->t('Too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later.');
         }
         $response = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $message], $this->t('Login failed'), 'maintenance_page__flood');
         $response->setStatusCode(403);
         $form_state->setResponse($response);
       }
       else {
-        $form_state->setErrorByName('name', $this->t('Unrecognized username or password. <a href=":password">Forgot your password?</a>', [':password' => Url::fromRoute('user.pass')->toString()]));
+        $unrecognized_msg = $pass_url->access()
+          ? $this->t('Unrecognized username or password. <a href=":password">Forgot your password?</a>', [':password' => $pass_url->toString()])
+          : $this->t('Unrecognized username or password.');
+        $form_state->setErrorByName('name', $unrecognized_msg);
         $accounts = $this->userStorage->loadByProperties(['name' => $form_state->getValue('name')]);
         if (!empty($accounts)) {
           $this->logger('user')->notice('Login attempt failed for %user.', ['%user' => $form_state->getValue('name')]);
