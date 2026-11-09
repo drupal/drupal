@@ -41,9 +41,11 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
         'weight' => 0.012,
         'media' => 'all',
         'preprocess' => TRUE,
+        'category' => 'base',
         'aggregate_target' => ['css' => FALSE],
         'data' => 'core/modules/system/system.base.css',
         'basename' => 'system.base.css',
+        'library' => 'system/base',
       ],
       'js.module.css' => [
         'group' => -100,
@@ -51,9 +53,11 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
         'weight' => 0.013,
         'media' => 'all',
         'preprocess' => TRUE,
+        'category' => 'base',
         'aggregate_target' => ['css' => FALSE],
         'data' => 'core/modules/system/js.module.css',
         'basename' => 'js.module.css',
+        'library' => 'system/base',
       ],
       'jquery.ui.core.css' => [
         'group' => -100,
@@ -61,9 +65,11 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
         'weight' => 0.004,
         'media' => 'screen',
         'preprocess' => TRUE,
+        'category' => 'base',
         'aggregate_target' => ['css' => FALSE],
         'data' => 'core/misc/ui/themes/base/jquery.ui.core.css',
         'basename' => 'jquery.ui.core.css',
+        'library' => 'system/base',
       ],
       'field.css' => [
         'group' => 0,
@@ -71,9 +77,11 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
         'weight' => 0.011,
         'media' => 'all',
         'preprocess' => TRUE,
+        'category' => 'base',
         'aggregate_target' => ['css' => FALSE],
         'data' => 'core/modules/field/theme/field.css',
         'basename' => 'field.css',
+        'library' => 'system/base',
       ],
       'external.css' => [
         'group' => 0,
@@ -81,9 +89,11 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
         'weight' => 0.009,
         'media' => 'all',
         'preprocess' => TRUE,
+        'category' => 'base',
         'aggregate_target' => ['css' => FALSE],
         'data' => 'http://example.com/external.css',
         'basename' => 'external.css',
+        'library' => 'system/base',
       ],
       'elements.css' => [
         'group' => 100,
@@ -91,9 +101,11 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
         'type' => 'file',
         'weight' => 0.001,
         'preprocess' => TRUE,
+        'category' => 'base',
         'aggregate_target' => ['css' => FALSE],
         'data' => 'core/themes/example/css/base/elements.css',
         'basename' => 'elements.css',
+        'library' => 'system/base',
       ],
       'print.css' => [
         'group' => 100,
@@ -101,9 +113,11 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
         'type' => 'file',
         'weight' => 0.003,
         'preprocess' => TRUE,
+        'category' => 'base',
         'aggregate_target' => ['css' => FALSE],
         'data' => 'core/themes/example/css/print.css',
         'basename' => 'print.css',
+        'library' => 'system/base',
       ],
     ];
 
@@ -208,20 +222,22 @@ class CssCollectionGrouperUnitTest extends UnitTestCase {
     $this->assertArrayNotHasKey('libraries', $groups[2]);
     $this->assertCount(3, $groups);
 
-    // Now set aggregate_target FALSE for b.css.
+    // Now set aggregate_target FALSE for b.css. It will continue to use the
+    // libraries parameter because that is the default when a library is
+    // encapsulated in a single aggregate.
     $css_assets['b.css']['aggregate_target']['css'] = FALSE;
     $groups = $this->grouper->group($css_assets);
     $this->assertArrayNotHasKey('libraries', $groups[0]);
-    $this->assertArrayNotHasKey('libraries', $groups[1]);
+    $this->assertArrayHasKey('libraries', $groups[1]);
     $this->assertArrayNotHasKey('libraries', $groups[2]);
     $this->assertCount(3, $groups);
 
     // With aggregate_target FALSE for all three files, there should be one
-    // group with no libraries key.
+    // group with a libraries key.
     $css_assets['a.css']['aggregate_target']['css'] = FALSE;
     $css_assets['c.css']['aggregate_target']['css'] = FALSE;
     $groups = $this->grouper->group($css_assets);
-    $this->assertArrayNotHasKey('libraries', $groups[0]);
+    $this->assertArrayHasKey('libraries', $groups[0]);
     $this->assertCount(1, $groups);
 
     // When the libraries match but category is different,

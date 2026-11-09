@@ -54,12 +54,14 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
           // optimizer adds inline 'media' statements for everything except
           // 'print', so only vary groups based on that.
           $group_keys = $item['preprocess'] ? [$item['type'], $item['media'] === 'print'] : FALSE;
-          if ($item['aggregate_target']['css']) {
-            if ($item['aggregate_target']['css'] === TRUE) {
-              $group_keys[] = $item['library'];
-            }
-            else {
-              $group_keys[] = $item['aggregate_target']['css'];
+          if ($group_keys !== FALSE) {
+            if ($item['aggregate_target']['css']) {
+              if ($item['aggregate_target']['css'] !== TRUE) {
+                $group_keys[] = $item['aggregate_target']['css'];
+              }
+              elseif (isset($item['library'])) {
+                $group_keys[] = $item['library'];
+              }
             }
             $group_keys[] = $item['category'];
           }
@@ -88,8 +90,11 @@ class CssCollectionGrouper implements AssetCollectionGrouperInterface {
         $groups[$i]['items'] = [];
         $current_group_keys = $group_keys ?: NULL;
       }
-      // Alter hooks can add items without a library.
-      if ($item['aggregate_target']['css']) {
+      // hook_css_alter() could add an item without a library, since it runs
+      // both when generating aggregate URLs and also when generating
+      // aggregates, we can assume that the alter hook will always add the file
+      // in the same place.
+      if (isset($item['library'])) {
         if ($record_libraries) {
           $groups[$i]['libraries'][] = $item['library'];
         }
