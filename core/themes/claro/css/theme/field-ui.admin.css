@@ -11,32 +11,26 @@
  */
 
 /* 'Manage fields' and 'Manage display' overviews */
-
 .field-ui-overview .region-title td {
   font-weight: bold;
 }
-
 .field-ui-overview .region-message td {
   font-style: italic;
 }
 
 /* 'Manage form display' and 'Manage display' overview */
-
 .field-plugin-summary {
   float: left; /* LTR */
   font-size: var(--font-size-s);
 }
-
 [dir="rtl"] .field-plugin-summary {
   float: right;
 }
-
 .field-plugin-summary-cell .warning {
   display: block;
   float: left; /* LTR */
   margin-right: 0.5em; /* LTR */
 }
-
 [dir="rtl"] .field-plugin-summary-cell .warning {
   float: right;
   margin-right: 0;
@@ -44,7 +38,6 @@
 }
 
 /* Settings edit. */
-
 .field-plugin-settings-edit-wrapper {
   position: relative;
   display: flex;
@@ -65,7 +58,6 @@
 }
 
 /* Settings editing subform. */
-
 .draggable.field-plugin-settings-editing,
 .draggable.drag-previous.field-plugin-settings-editing {
   background: var(--color-blue-050);
@@ -74,11 +66,9 @@
 .field-plugin-settings-editing td {
   vertical-align: top;
 }
-
 .field-plugin-settings-editing .field-plugin-type {
   display: none;
 }
-
 .field-plugin-settings-edit-form .plugin-name {
   font-weight: bold;
 }
@@ -88,11 +78,9 @@
   margin: 0;
   list-style-type: none;
 }
-
 .field-settings-summary-cell li {
   font-size: 0.9em;
 }
-
 .field-settings-summary-cell li:first-child {
   font-size: 1em;
 }

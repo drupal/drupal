@@ -17,7 +17,6 @@
 }
 
 /* Two column layout. */
-
 @media (min-width: 43.75rem) {
   .layout--fourcol-section {
     --layout-fourcol-grid: repeat(2, minmax(0, 1fr));
@@ -25,7 +24,6 @@
 }
 
 /* Four column layout. */
-
 @media (min-width: 62.5rem) {
   .layout--fourcol-section {
     --layout-fourcol-grid: repeat(4, minmax(0, 1fr));

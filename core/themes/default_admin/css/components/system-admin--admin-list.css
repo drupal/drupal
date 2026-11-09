@@ -13,7 +13,6 @@
 /**
  * Admin list (wrapper of admin items).
  */
-
 .admin-list {
   margin-block: 1em 2em;
 
@@ -37,7 +36,6 @@
 /**
  * Admin item.
  */
-
 .admin-item {
   position: relative;
   margin: var(--admin-space-l) var(--admin-space-s);

@@ -53,13 +53,11 @@ tr {
     background: #fcf4f2;
   }
 }
-
 tr,
 .draggable-table.tabledrag-disabled tr {
   color: var(--color-text);
   background: var(--color-white);
 }
-
 thead tr {
   border: 0;
 }
@@ -83,7 +81,6 @@ td {
  * Target every .form-element input that parent is a form-item of a table cell.
  * This ignores the filter format select of the textarea editor.
  */
-
 td {
   & > .form-item > .form-element,
   & > .ajax-new-content > .form-item > .form-element,
@@ -102,13 +99,10 @@ td {
 }
 
 /* Win over table-file-multiple-widget. */
-
 th.is-disabled.is-disabled {
   color: var(--input--disabled-fg-color);
 }
-
 /* Force browsers to calculate the width of a 'select all' <th> element. */
-
 th.select-all {
   width: 1px;
 }
@@ -116,7 +110,6 @@ th.select-all {
 /**
  * Captions.
  */
-
 .caption {
   margin-block-end: 1.25rem; /* 20px */
 }
@@ -136,7 +129,6 @@ tfoot {
 /**
  * Responsive table cells.
  */
-
 th.priority-low,
 th.priority-medium,
 td.priority-low,

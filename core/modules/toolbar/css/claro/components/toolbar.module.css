@@ -25,6 +25,7 @@
   font-size: small;
   line-height: 1;
 }
+
 @media print {
   #toolbar-administration {
     display: none;
@@ -74,6 +75,7 @@
     display: none;
   }
 }
+
 .toolbar-horizontal {
   & .toolbar-tray {
     position: fixed;
@@ -111,6 +113,7 @@
     display: none;
   }
 }
+
 /* Position the admin toolbar fixed when the configured standard breakpoint is
  * active. */
 .toolbar-fixed .toolbar-oriented .toolbar-bar {
@@ -123,6 +126,7 @@
   inset-block-end: 0;
   width: 15rem;
 }
+
 /* Present the admin toolbar tabs horizontally as a default on user agents that
  * do not understand media queries or on user agents where JavaScript is
  * disabled. */
@@ -173,6 +177,7 @@
     float: right;
   }
 }
+
 .toolbar .toolbar-tray-vertical > .toolbar-lining {
   min-height: 100%;
 }
@@ -212,11 +217,13 @@
 .toolbar-tray-open.toolbar-vertical.toolbar-fixed {
   margin-inline-start: 15rem;
 }
+
 @media print {
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed {
     margin-inline-start: 0;
   }
 }
+
 /**
  * ToolBar tray orientation toggle.
  */
@@ -257,6 +264,7 @@
     float: left;
   }
 }
+
 /**
  * Toolbar home button toggle.
  */
@@ -267,6 +275,7 @@
     }
   }
 }
+
 .path-admin {
   & .toolbar-bar {
     & .home-toolbar-tab {
@@ -274,6 +283,7 @@
     }
   }
 }
+
 /* Anti flicker styling. */
 .toolbar-anti-flicker.toolbar-loading.toolbar-fixed body {
   padding-top: 2.4375rem;
@@ -284,6 +294,7 @@
 .toolbar-anti-flicker.toolbar-vertical.toolbar-tray-open .menu-item + .menu-item {
   border-top: 1px solid #ddd;
 }
+
 .toolbar-loading.toolbar-vertical.toolbar-tray-open .toolbar-tray {
   position: fixed;
   z-index: -1;

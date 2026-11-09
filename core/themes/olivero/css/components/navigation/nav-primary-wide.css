@@ -219,7 +219,6 @@ body:not(.is-always-mobile-nav) {
  * Only apply transition styles to menu when JS is loaded. This
  * works around https://bugs.chromium.org/p/chromium/issues/detail?id=332189
  */
-
 html.js body:not(.is-always-mobile-nav) {
   @media (min-width: 75rem) {
     & .primary-nav__menu--level-2,

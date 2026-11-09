@@ -9,6 +9,7 @@
  * @file
  * Toolbar badge styles.
  */
+
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
   .toolbar-badge {
     padding: var(--admin-toolbar-space-4) var(--admin-toolbar-space-8);

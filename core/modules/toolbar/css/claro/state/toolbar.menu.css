@@ -22,12 +22,14 @@
   width: auto;
   line-height: 1em; /* this prevents the value "normal" from being returned as the line-height */
 }
+
 /**
  * Hidden vertical toolbar sub-menus by default.
  */
 .toolbar .toolbar-tray-vertical .toolbar-menu ul {
   display: none;
 }
+
 /**
  * Hidden horizontal toolbar handle icon.
  */
@@ -56,12 +58,14 @@
   background-color: #f5f5f5;
   font-weight: bold;
 }
+
 /* ----- Toolbar menu tray for viewports less than 320px ------ */
 @media screen and (max-width: 19.9375rem) {
   .toolbar .toolbar-tray-vertical.is-active {
     width: 100%;
   }
 }
+
 /**
  * Items.
  */
@@ -100,6 +104,7 @@
   border-bottom-color: #ccc;
   background-color: #ddd;
 }
+
 /**
  * Handle.
  */

@@ -98,7 +98,6 @@
 }
 
 /* Modifiers */
-
 .claro-details__summary--accordion,
 .claro-details__summary--accordion-item,
 .claro-details__summary--vertical-tabs-item {
@@ -112,7 +111,6 @@
  * Accordion list items must not have border radius except they are the first
  * or the last ones.
  */
-
 .claro-details__summary--accordion-item {
   border-radius: 0;
 }
@@ -132,7 +130,6 @@
  */
 
 /* Remove the marker on Chrome */
-
 .claro-details__summary::-webkit-details-marker {
   display: none;
 }
@@ -184,7 +181,6 @@
 /**
  * Details summary focus.
  */
-
 .claro-details__summary::after {
   position: absolute;
   inset: -1px;
@@ -217,7 +213,6 @@
  * Focus box of accordions and accordion items must not have bottom border
  * radius if their accordion is expanded.
  */
-
 .claro-details[open] > .claro-details__summary--accordion::after,
 .claro-details[open] > .claro-details__summary--accordion-item::after,
 .vertical-tabs__item--last[open] > .claro-details__summary--vertical-tabs-item::after {
@@ -228,7 +223,6 @@
 /**
  * Details summary states.
  */
-
 .claro-details__summary:focus {
   box-shadow: none;
 }
@@ -290,7 +284,6 @@
 /**
  * Active has to be here for Firefox.
  */
-
 [open] > .claro-details__summary--accordion:not(:focus, :active)::after,
 [open] > .claro-details__summary--accordion-item:not(:focus, :active)::after,
 [open] > .claro-details__summary--vertical-tabs-item:not(:focus, :active)::after {
@@ -326,7 +319,6 @@
  * because the elements inside the details content won't cause too big
  * vertical spacing.
  */
-
 .claro-details__wrapper,
 .claro-details__content {
   margin: var(--space-m);
@@ -337,7 +329,6 @@
 .claro-details__wrapper--vertical-tabs-item {
   margin: 0;
 }
-
 .claro-details__wrapper--accordion::before,
 .claro-details__wrapper--accordion::after,
 .claro-details__wrapper--accordion-item::before,
@@ -357,7 +348,6 @@
 }
 
 /* @see Drupal.behaviors.verticalTabs */
-
 @media screen and (min-width: 40.0625rem) {
   .claro-details__wrapper {
     margin: var(--space-l) var(--details-desktop-wrapper-padding-start);
@@ -389,14 +379,12 @@
 }
 
 /* Description. */
-
 .claro-details__description {
   margin-block-end: var(--space-m);
   color: var(--input-fg-color--description);
   font-size: var(--font-size-xs); /* ~13px */
   line-height: calc(17rem / 16); /* 17px */
 }
-
 .claro-details__description.is-disabled {
   color: var(--input--disabled-fg-color);
 }

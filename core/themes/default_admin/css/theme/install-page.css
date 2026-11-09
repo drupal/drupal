@@ -51,17 +51,14 @@
 /**
  * Password widget
  */
-
 .install-page .password-parent,
 .install-page .confirm-parent {
   width: auto;
 }
-
 .install-page .form-item .password-suggestions {
   float: none;
   width: auto;
 }
-
 .install-page table td {
   word-break: break-all;
 }

@@ -54,12 +54,14 @@
     width: 100% !important;
   }
 }
+
 /* When off-canvas dialog is at 100% width stop the body from scrolling */
 body.js-off-canvas-dialog-open {
   @media (max-width: 48rem) {
     position: fixed;
   }
 }
+
 /* This is a page level content wrapper that shrinks when off-canvas is open. */
 .dialog-off-canvas-main-canvas {
   transition:

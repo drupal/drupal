@@ -9,6 +9,7 @@
  * @file
  * Toolbar title styles.
  */
+
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) {
   .toolbar-title {
     font-variation-settings: "wght" 500;

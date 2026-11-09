@@ -4,10 +4,12 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 /**
  * @file
  * Styles for action links.
 */
+
 .action-links {
   margin-block: 0;
   margin-inline-start: 0;
@@ -25,6 +27,7 @@
     }
   }
 }
+
 .action-links-item {
   display: inline-block;
 }

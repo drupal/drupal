@@ -4,10 +4,12 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 /**
  * @file
  * Button styles.
  */
+
 /**
  * Base button styles.
  *
@@ -56,9 +58,11 @@
     transition: var(--admin-transition);
   }
 }
+
 .form-actions .button {
   margin-inline-end: var(--admin-space-xs);
 }
+
 /* Common styles for small buttons. */
 .no-touchevents {
   & .button--small {
@@ -80,12 +84,14 @@
     padding-inline: var(--admin-space-xs);
   }
 }
+
 .button.button--small {
   border-radius: var(--admin-radius-s);
   font-size: var(--admin-font-size-2xs);
   padding-block: calc(var(--admin-space-2xs) + 2px);
   padding-inline: var(--admin-space-s);
 }
+
 /* Common styles for extra small buttons. */
 .button.button--extrasmall {
   border-radius: var(--admin-radius-s);
@@ -93,6 +99,7 @@
   padding-block: var(--admin-space-2xs);
   padding-inline: var(--admin-space-s);
 }
+
 /* Styles for action link buttons. */
 .button--action {
   margin: 0;
@@ -104,9 +111,11 @@
     font-weight: 900;
   }
 }
+
 /*
  * Primary button styles.
  */
+
 /* @todo the .toolbar-button--primary styling needs to be moved to the
    Navigation module after Drupal core supports dark mode. */
 :is(#extra-specificity-hack, [data-drupal-admin-styles]) .top-bar__actions .toolbar-button--primary,
@@ -133,6 +142,7 @@
     color: var(--admin-color-text-on-primary);
   }
 }
+
 /* Danger button styles */
 .button--danger {
   color: var(--button-fg-color--danger);
@@ -144,16 +154,19 @@
     background-color: var(--button--hover-bg-color--danger);
   }
 }
+
 a.button:hover,
 a.button:active {
   color: var(--admin-color-text-on-primary);
 }
+
 a.button--primary:hover,
 a.button--primary:active {
   .dark-mode & {
     color: var(--admin-color-bg);
   }
 }
+
 /**
  * Disabled state styles as last.
  *
@@ -177,6 +190,7 @@ a.button--primary:active {
     pointer-events: none;
   }
 }
+
 .button.button--primary:disabled,
 .button.button--primary.is-disabled {
   &,
@@ -186,6 +200,7 @@ a.button--primary:active {
     background-color: var(--admin-color-bg-disabled);
   }
 }
+
 /**
  * Style a clickable/tappable element as a link. Duplicates the base style for
  * the <a> tag, plus a reset for padding, borders and background.
@@ -200,6 +215,7 @@ a.button--primary:active {
   background: none;
   appearance: none;
 }
+
 /* Autocomplete field remove button. */
 .multiple-fields-remove-button.button {
   border: 0 none !important;

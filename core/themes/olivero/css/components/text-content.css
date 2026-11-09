@@ -129,7 +129,6 @@
 /**
  * Special colors for footer that has a dark background.
  */
-
 .site-footer .text-content {
   color: inherit;
 
@@ -155,7 +154,6 @@
 /**
  * Decrease font-size for blockquote placed in sidebar region.
  */
-
 .region--sidebar .text-content blockquote {
   @media (min-width: 62.5rem) {
     font-size: 1.5rem;

@@ -56,7 +56,6 @@ html.admin-toolbar-expanded {
 }
 
 /* Workspaces. */
-
 .toolbar-button--workspaces {
   .dark-mode & {
     --toolbar-button-color: #222330;

@@ -11,6 +11,7 @@ We need it root to calculate the size of the displace in .dialog-off-canvas-main
   /* stylelint-disable-next-line */
   --admin-toolbar-rem: max(1rem, 16PX); /* Workaround until postcss-px-to-rem is removed so this is not converted to rems. */
 }
+
 [data-drupal-admin-styles] {
   /*
    * Color Palette.
@@ -166,12 +167,14 @@ We need it root to calculate the size of the displace in .dialog-off-canvas-main
   --admin-toolbar-z-index-footer: var(--drupal-admin-z-index-footer, 701);
   --admin-toolbar-z-index-tooltip: var(--drupal-admin-z-index-tooltip, 801);
 }
+
 /**
   * Transitions.
   */
 [data-admin-toolbar-transitions] {
   --admin-toolbar-transition: 150ms ease-out;
 }
+
 @media (prefers-reduced-motion) {
   [data-admin-toolbar-transitions] {
     --admin-toolbar-transition: 0s linear;

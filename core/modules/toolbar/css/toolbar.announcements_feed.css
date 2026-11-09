@@ -23,7 +23,6 @@
 }
 
 /* Pushes the tab to the opposite side of the page. */
-
 .toolbar .toolbar-bar .announce-toolbar-tab.toolbar-tab {
   float: right; /* LTR */
 

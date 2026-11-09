@@ -36,7 +36,6 @@
     box-shadow: var(--details-box-shadow);
   }
 }
-
 .views-exposed-form--preview {
   &.views-exposed-form--preview {
     margin-top: 0;

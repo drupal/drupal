@@ -15,7 +15,6 @@
   padding: 0;
   border-block-end: calc(1em / 16) solid var(--color-gray-200);
 }
-
 .panel__title {
   margin: 0;
   padding-block: calc(12em / 18);
@@ -24,7 +23,6 @@
   font-size: calc(18em / 16);
   line-height: calc(24em / 18);
 }
-
 .panel__content,
 .panel__description {
   padding-block: 1em;

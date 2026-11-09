@@ -31,7 +31,6 @@
  * making changes to this file, remember to check if that needs to be applied to
  * dropbutton.css or action-links.css as well.
  */
-
 .button {
   display: inline-block;
   margin-block: var(--space-m);
@@ -73,7 +72,6 @@
 }
 
 /* Common styles for small buttons. */
-
 .no-touchevents {
   & .button--small {
     margin-block: var(--space-s);
@@ -92,7 +90,6 @@
 }
 
 /* Styles for action link buttons. */
-
 .button--action {
   margin: 0;
 
@@ -105,7 +102,6 @@
 }
 
 /* Primary button style.s */
-
 .button--primary {
   color: var(--button-fg-color--primary);
   background-color: var(--button-bg-color--primary);
@@ -117,7 +113,6 @@
 }
 
 /* Danger button styles */
-
 .button--danger {
   color: var(--button-fg-color--danger);
   background-color: var(--button-bg-color--danger);
@@ -133,7 +128,6 @@
  *
  * Overrides every definitions before, including variants.
  */
-
 .button {
   &:is(:disabled, .is-disabled) {
     color: var(--button--disabled-fg-color);
@@ -152,7 +146,6 @@
  * Style a clickable/tappable element as a link. Duplicates the base style for
  * the <a> tag, plus a reset for padding, borders and background.
  */
-
 .link {
   display: inline;
   padding: 0;

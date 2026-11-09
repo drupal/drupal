@@ -66,7 +66,6 @@
 /**
  * Dropbutton list.
  */
-
 .dropbutton {
   display: block;
   overflow: visible;
@@ -210,7 +209,6 @@
 }
 
 /* Variants. */
-
 .dropbutton--small {
   height: var(--dropbutton-small-toggle-size);
 }
@@ -222,7 +220,6 @@
 /**
  * First dropbutton list item.
  */
-
 .dropbutton--multiple .dropbutton__item:first-of-type {
   height: 100%;
   margin-right: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing));
@@ -245,7 +242,6 @@
 }
 
 /* First dropbutton list item variants */
-
 .no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing));
   /* LTR */
@@ -271,7 +267,6 @@
 /**
  * Dropbutton toggler.
  */
-
 .dropbutton__toggle {
   position: absolute;
   z-index: 3;
@@ -366,7 +361,6 @@
 }
 
 /* Toggler variants */
-
 .no-touchevents .dropbutton--small .dropbutton__toggle {
   width: var(--dropbutton-small-toggle-size);
   height: var(--dropbutton-small-toggle-size);
@@ -384,7 +378,6 @@
 }
 
 /* High contrast. */
-
 @media (forced-colors: active) {
   /* Default. */
   .dropbutton__toggle::before {
@@ -425,7 +418,6 @@
  *
  * Duplicates base button styles.
  */
-
 .dropbutton__item:first-of-type {
   & > * {
     display: inline-flex;
@@ -564,7 +556,6 @@
 /**
  * Non-first dropbutton list elements.
  */
-
 .dropbutton__item:first-of-type ~ .dropbutton__item {
   max-width: unset;
   border: var(--dropbutton-border-size) solid var(--admin-color-primary);
@@ -588,7 +579,6 @@
 /**
  * Dropbutton items of non-first dropbutton list elements.
  */
-
 .dropbutton__item:first-of-type ~ .dropbutton__item {
   max-width: var(--dropbutton-item-max-width);
 }
@@ -618,7 +608,6 @@
 }
 
 /* Variants. */
-
 .no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > a,
 .no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
   padding-top: var(--dropbutton-small-spacing-size);
@@ -636,7 +625,6 @@
 }
 
 /* States. */
-
 .dropbutton__item {
   & > *:focus {
     position: relative;
@@ -658,7 +646,6 @@
 }
 
 /* Overlay the dropdown button on top of the sticky header and main toolbar */
-
 html.js {
   .dropbutton-wrapper.open {
     .dropbutton-widget {

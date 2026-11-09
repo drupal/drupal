@@ -21,6 +21,7 @@
 
   margin-block: var(--space-m);
 }
+
 .pager__items {
   display: flex;
   flex-wrap: wrap;
@@ -31,11 +32,13 @@
   text-align: center;
   font-weight: bold;
 }
+
 .pager__item {
   display: inline-block;
   margin-inline: calc(var(--space-xs) / 2);
   vertical-align: top;
 }
+
 .pager__link,
 .pager__item--current {
   display: flex;
@@ -98,6 +101,7 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+
 @media (forced-colors: active) {
   .pager__item--first .pager__link::before,
   .pager__item--previous .pager__link::before,
@@ -110,18 +114,21 @@
     mask-position: center;
   }
 }
+
 [dir="rtl"] .pager__item--first .pager__link::before,
 [dir="rtl"] .pager__item--previous .pager__link::before,
 [dir="rtl"] .pager__item--next .pager__link::after,
 [dir="rtl"] .pager__item--last .pager__link::after {
   transform: scaleX(-1);
 }
+
 .pager__item--mini {
   margin-inline: calc(var(--space-m) / 2);
 }
 .pager__link--mini {
   border-radius: 50%;
 }
+
 /**
 * On the mini pager, remove margins for the previous and next icons.
 * Margins are not needed here as there is no accompanying text.
@@ -129,12 +136,15 @@
 .pager__link--mini::before {
   margin-inline: 0;
 }
+
 .pager__item-title--backwards {
   margin-inline-start: 0.5rem;
 }
+
 .pager__item-title--forward {
   margin-inline-end: 0.5rem;
 }
+
 @media (forced-colors: active) {
   .pager__item a:hover {
     -webkit-text-decoration: underline;

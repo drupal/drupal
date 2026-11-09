@@ -17,7 +17,6 @@
 /**
  * General form item.
  */
-
 .form-item {
   margin-block: var(--sp1);
 }
@@ -34,7 +33,6 @@
  * from adding unnecessary extra spacing.
  * If it has multiple form items, allow spacing between them, overriding core.
  */
-
 tr .form-item,
 .container-inline .form-item {
   margin-block: var(--sp0-5);
@@ -43,7 +41,6 @@ tr .form-item,
 /**
  * Form element label.
  */
-
 .form-item__label {
   display: block;
   margin-block: var(--sp0-5);
@@ -73,14 +70,12 @@ tr .form-item,
 }
 
 /* Label states. */
-
 .form-item__label.is-disabled {
   cursor: default;
   color: var(--color--gray-70);
 }
 
 /* Form required star icon */
-
 .form-item__label.form-required::after,
 .fieldset__label.form-required::after,
 .required-mark::after {
@@ -103,7 +98,6 @@ tr .form-item,
 /**
  * Form item description.
  */
-
 .form-item__description {
   margin-block: var(--sp0-5);
   max-width: 60ch;
@@ -118,7 +112,6 @@ tr .form-item,
 /**
  * Error message (Inline form errors).
  */
-
 .form-item--error-message {
   margin-block: var(--sp0-5);
   padding-inline-start: var(--sp1-5);
@@ -142,7 +135,6 @@ tr .form-item,
 /**
  * Form actions.
  */
-
 .form-actions {
   display: flex;
   flex-wrap: wrap;
@@ -169,7 +161,6 @@ tr .form-item,
 /**
  * Custom label placement for editor filter format select.
  */
-
 .form-item--editor-format {
   display: flex;
   flex-wrap: wrap;
@@ -199,7 +190,6 @@ tr .form-item,
 /**
  * Inline forms.
  */
-
 .form--inline {
   & > * {
     display: inline-block;

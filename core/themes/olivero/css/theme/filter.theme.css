@@ -13,11 +13,9 @@
 /**
  * Filter information under field.
  */
-
 .text-full > .form-item {
   margin-block-end: 0;
 }
-
 .form-element--editor-format {
   vertical-align: top;
 }
@@ -53,7 +51,6 @@
  *
  * Wraps filter tips on page '/filter/tips[/name]'.
  */
-
 .compose-tips__item {
   margin-block: var(--sp1-5);
 }
@@ -61,13 +58,11 @@
 /**
  * Filter guidelines.
  */
-
 .filter-guidelines__item {
   margin-block-start: var(--sp1);
   font-size: var(--font-size-s);
   line-height: var(--line-height-s);
 }
-
 .filter-guidelines p {
   margin-block: var(--sp0-25) 0;
 }
@@ -78,16 +73,13 @@
  * Long is used on '/filter/tips[/name]', short is used for the filter tips
  * below a text format input.
  */
-
 .filter-tips--long {
   margin-block-end: var(--sp1-5);
 }
-
 .filter-tips__item,
 .filter-tips--long p {
   margin-block: var(--sp0-75);
 }
-
 .filter-tips__item--short {
   margin-block: var(--sp0-25) 0;
 }

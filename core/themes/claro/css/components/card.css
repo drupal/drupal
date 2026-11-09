@@ -32,7 +32,6 @@
 }
 
 /* 588px theme screenshot width */
-
 @media screen and (min-width: 36.75rem) {
   .card--horizontal {
     flex-direction: row;
@@ -44,7 +43,6 @@
 }
 
 /* 53.75rem it is width of screenshot image + toolbar width(15rem) + 2rem of margins. */
-
 @media screen and (min-width: 53.75rem) {
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal {
     flex-direction: row;
@@ -54,7 +52,6 @@
 /**
  * Card image.
  */
-
 .card__image {
   overflow: hidden;
   border-radius: var(--card-image-border-radius-size) var(--card-image-border-radius-size) 0 0;
@@ -72,7 +69,6 @@
 }
 
 /* 53.75rem it is width of screenshot image + toolbar width(15rem) + 2rem of margins. */
-
 @media screen and (max-width: 53.75rem) {
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card--horizontal .card__image {
     flex-basis: auto;
@@ -92,7 +88,6 @@
 /**
  * Card content.
  */
-
 .card__content-wrapper {
   display: flex;
   flex-direction: column;
@@ -128,7 +123,6 @@
 /**
  * Card content.
  */
-
 .card__content {
   flex-grow: 1;
 }
@@ -136,7 +130,6 @@
 /**
  * Card content items (title, description).
  */
-
 .card__content-item {
   margin-block: 0 var(--space-m);
 
@@ -148,7 +141,6 @@
 /**
  * Card footer.
  */
-
 .card__footer {
   order: 100;
   margin-block-start: var(--space-l);

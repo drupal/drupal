@@ -18,7 +18,6 @@
 /**
  * Image preview.
  */
-
 .image-preview {
   line-height: 0;
 
@@ -43,7 +42,6 @@
 /**
  * Don't display file icon in image widgets.
  */
-
 .image-widget .file.file {
   padding: 0;
   background: none;

@@ -61,7 +61,6 @@
 /**
  * Dropbutton list.
  */
-
 .dropbutton {
   display: block;
   overflow: visible;
@@ -77,7 +76,6 @@
 }
 
 /* Variants. */
-
 .dropbutton--small {
   height: var(--dropbutton-small-toggle-size);
 }
@@ -89,7 +87,6 @@
 /**
  * First dropbutton list item.
  */
-
 .dropbutton--multiple .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
   white-space: nowrap;
@@ -100,7 +97,6 @@
 }
 
 /* First dropbutton list item variants */
-
 .no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
   margin-right: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
   white-space: nowrap;
@@ -122,7 +118,6 @@
 /**
  * Dropbutton toggler.
  */
-
 .dropbutton__toggle {
   position: absolute;
   z-index: 3;
@@ -177,7 +172,6 @@
 }
 
 /* Toggler variants */
-
 .no-touchevents .dropbutton--small .dropbutton__toggle {
   width: var(--dropbutton-small-toggle-size);
   height: var(--dropbutton-small-toggle-size);
@@ -194,7 +188,6 @@
 }
 
 /* High contrast. */
-
 @media (forced-colors: active) {
   /* Default. */
   .dropbutton__toggle::before {
@@ -233,7 +226,6 @@
  *
  * Duplicates base button styles.
  */
-
 .dropbutton__item:first-of-type {
   & > * {
     display: inline-block;
@@ -323,7 +315,6 @@
   margin: 0;
   text-align: left; /* LTR */
 }
-
 [dir="rtl"] .dropbutton > .dropbutton__item > a,
 [dir="rtl"] .dropbutton > .dropbutton__item > .button {
   text-align: right;
@@ -341,7 +332,6 @@
 /**
  * Non-first dropbutton list elements.
  */
-
 .dropbutton__item:first-of-type ~ .dropbutton__item {
   border: var(--dropbutton-border-size) solid var(--color-gray-200);
   border-bottom: 0;
@@ -359,7 +349,6 @@
 /**
  * Dropbutton items of non-first dropbutton list elements.
  */
-
 .dropbutton__item:first-of-type ~ .dropbutton__item {
   max-width: var(--dropbutton-item-max-width);
 }
@@ -388,7 +377,6 @@
 }
 
 /* Variants. */
-
 .no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > a,
 .no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
   padding-top: var(--dropbutton-small-spacing-size);
@@ -406,7 +394,6 @@
 }
 
 /* States. */
-
 .dropbutton__item {
   & > *:focus {
     position: relative;

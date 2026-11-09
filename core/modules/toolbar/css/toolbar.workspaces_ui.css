@@ -11,16 +11,13 @@
  */
 
 /* Toolbar tab */
-
 .toolbar .toolbar-bar .workspaces-toolbar-tab {
   color: #000;
   background-color: #e09600;
 }
-
 .toolbar .toolbar-bar .workspaces-toolbar-tab--is-default {
   background-color: #81c071;
 }
-
 .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
   float: right; /* LTR */
 
@@ -56,7 +53,6 @@
 }
 
 /* Link within the toolbar tab. */
-
 .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
   width: 100%;
   margin: 0;

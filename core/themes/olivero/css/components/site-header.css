@@ -71,7 +71,6 @@
  * Only apply transition styles when JS is loaded. This
  * works around https://bugs.chromium.org/p/chromium/issues/detail?id=332189
  */
-
 html.js body:not(.is-always-mobile-nav) .site-header__inner {
   @media (min-width: 75rem) {
     transition:
@@ -94,7 +93,6 @@ html.js body:not(.is-always-mobile-nav) .site-header__inner {
 }
 
 /* Hide the desktop nav when it's fixed and not active. */
-
 body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded) .site-header__inner {
   @media (min-width: 75rem) {
     transform: translateX(-101%); /* LTR */
@@ -114,7 +112,6 @@ body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded)
 }
 
 /* Reset width set by layout.css */
-
 body.is-fixed .site-header__inner__container {
   width: auto;
 }

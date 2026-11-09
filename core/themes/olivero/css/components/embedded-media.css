@@ -62,7 +62,6 @@ figcaption {
 }
 
 /* Pull out of grid if nested in content narrow layout. */
-
 .layout--content-narrow .align-right,
 .layout--pass--content-narrow > * .align-right {
   /* @todo this can be simplified. */
@@ -114,7 +113,6 @@ figcaption {
 }
 
 /* Pull out of grid if nested in content narrow layout. */
-
 .layout--content-narrow .align-left,
 .layout--pass--content-narrow > * .align-left {
   @media (min-width: 43.75rem) {

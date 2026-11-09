@@ -53,7 +53,6 @@
 }
 
 /* This is the button that expands/collapses the secondary options. */
-
 .dropbutton-toggle button {
   position: absolute;
   top: 0;
@@ -96,7 +95,6 @@
 }
 
 /* This is the first <li> element in the list of actions. */
-
 .dropbutton-action {
   &:first-child {
     margin-inline-end: 2px;
@@ -148,7 +146,6 @@
 }
 
 /* These are the <li> elements other than the first. */
-
 .secondary-action {
   visibility: hidden;
   width: calc(100% + var(--dropbutton--height));

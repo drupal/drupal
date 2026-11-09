@@ -11,7 +11,6 @@
  */
 
 /* Checked */
-
 .admin-dblog .dblog-info .icon,
 .admin-dblog .dblog-notice .icon {
   background-color: var(--admin-color-success);
@@ -23,7 +22,6 @@
 }
 
 /* Warning */
-
 .admin-dblog .dblog-warning .icon {
   background-color: var(--admin-color-warning);
   background-image: none;
@@ -34,7 +32,6 @@
 }
 
 /* Error */
-
 .admin-dblog .dblog-error .icon,
 .admin-dblog .dblog-critical .icon,
 .admin-dblog .dblog-alert .icon,
