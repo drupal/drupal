@@ -1,8 +1,5 @@
 global-styling:
   version: VERSION
-  fonts:
-    font/inter.woff2:
-      preload: true
   css:
     base:
       css/_variables/variables-color-primitive.css: {}
@@ -11,7 +8,6 @@ global-styling:
       css/_variables/variables-typography.css: {}
       css/_variables/variables-misc.css: {}
       css/_variables/variables-components.css: {}
-      css/base/font.css: {}
       css/base/icons.css: {}
       css/base/elements.css: {}
       css/base/typography.css: {}
@@ -67,6 +63,7 @@ global-styling:
       css/layout/layout.css: {}
   dependencies:
     - system/admin
+    - core/font
     - core/jquery
     - core/drupal
     # Admin has small and extra small variation for most control elements
