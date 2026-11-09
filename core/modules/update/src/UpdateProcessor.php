@@ -190,6 +190,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
     // Now that we processed the fetch task for this project, clear out the
     // record for this task so we're willing to fetch again.
     $this->fetchTaskStore->delete($project_name);
+    unset($this->fetchTasks[$project_name]);
 
     return $success;
   }

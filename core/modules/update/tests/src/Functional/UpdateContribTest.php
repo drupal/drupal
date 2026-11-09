@@ -235,7 +235,7 @@ class UpdateContribTest extends UpdateTestBase {
       'update_test_subtheme' => '1_0',
       'update_test_base_theme' => '1_1-sec',
     ];
-    $this->refreshUpdateStatus($xml_mapping);
+    $this->refreshUpdateStatus($xml_mapping, 'update-test', TRUE);
     $this->assertSession()->pageTextContains('Security update required!');
     $this->updateProject = 'update_test_base_theme';
     $this->assertVersionUpdateLinks('Security update', '8.x-1.1');
@@ -460,7 +460,7 @@ class UpdateContribTest extends UpdateTestBase {
       'bbb_update_test' => 'does-not-exist',
       'ccc_update_test' => '1_0',
     ];
-    $this->refreshUpdateStatus($xml_mapping);
+    $this->refreshUpdateStatus($xml_mapping, 'update-test', TRUE);
 
     $this->assertSession()->pageTextContains('Up to date');
     // We're expecting the report to say most projects are up to date, so we

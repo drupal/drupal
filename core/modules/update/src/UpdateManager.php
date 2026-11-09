@@ -81,6 +81,7 @@ class UpdateManager implements UpdateManagerInterface {
     // modules that implement hook_extension_info_alter() such as cvs_deploy.
     $this->keyValueStore->delete('update_project_projects');
     $this->keyValueStore->delete('update_project_data');
+    $this->projects = [];
 
     $projects = $this->getProjects();
 

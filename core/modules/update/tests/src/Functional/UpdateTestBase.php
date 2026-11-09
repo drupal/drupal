@@ -71,19 +71,29 @@ abstract class UpdateTestBase extends BrowserTestBase {
    * @param string $url
    *   (optional) A string containing the URL to fetch update data from.
    *   Defaults to 'update-test'.
+   * @param bool $ui_only
+   *   Whether to refresh the update status data entirely via the user
+   *   interface.
    *
    * @see \Drupal\update_test\Controller\UpdateTestController::updateTest()
    */
-  protected function refreshUpdateStatus(array $xml_map, string $url = 'update-test') {
+  protected function refreshUpdateStatus(array $xml_map, string $url = 'update-test', bool $ui_only = FALSE) {
     // Tell the Update Status module to fetch from the URL provided by
     // update_test module.
     $this->config('update.settings')->set('fetch.url', Url::fromUri('base:' . $url, ['absolute' => TRUE])->toString())->save();
     // Save the map for UpdateTestController::updateTest() to use.
     $this->mockReleaseHistory($xml_map);
-    // Manually check the update status.
-    $this->drupalGet('admin/reports/updates');
-    $this->clickLink('Check manually');
-    $this->checkForMetaRefresh();
+
+    if ($ui_only) {
+      $this->drupalGet('admin/reports/updates');
+      $this->clickLink('Check manually');
+      $this->checkForMetaRefresh();
+    }
+    else {
+      \Drupal::service('update.manager')->refreshUpdateData();
+      \Drupal::service('update.processor')->fetchData();
+      $this->drupalGet('admin/reports/updates');
+    }
   }
 
   /**

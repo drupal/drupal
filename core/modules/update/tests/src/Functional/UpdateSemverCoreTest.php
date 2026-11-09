@@ -44,7 +44,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
    * Tests the Update Status module when the update server returns 503 errors.
    */
   public function testServiceUnavailable(): void {
-    $this->refreshUpdateStatus([], '503-error');
+    $this->refreshUpdateStatus([], '503-error', TRUE);
     // Ensure that no "Warning: SimpleXMLElement..." parse errors are found.
     $this->assertSession()->pageTextNotContains('SimpleXMLElement');
     $this->assertSession()->pageTextContainsOnce('Failed to get available update data for one project.');
