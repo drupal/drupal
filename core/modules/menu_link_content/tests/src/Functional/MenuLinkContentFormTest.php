@@ -111,7 +111,7 @@ class MenuLinkContentFormTest extends BrowserTestBase {
       'title[0][value]' => 'Test page',
       'link[0][uri]' => '<test>',
     ], 'Save');
-    $this->assertSession()->pageTextContains('Enter a content title to select it, or enter an internal path starting with /, ? or #.');
+    $this->assertSession()->pageTextContains('The Link field must contain a content title, an internal path starting with /, ? or #, or a full external URL including the protocol, such as https://example.com.');
   }
 
   /**

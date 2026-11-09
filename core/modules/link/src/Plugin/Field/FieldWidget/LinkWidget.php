@@ -150,19 +150,22 @@ class LinkWidget extends WidgetBase {
     //   https://www.drupal.org/node/2421941
     if (parse_url($uri, PHP_URL_SCHEME) === 'internal' && !in_array($element['#value'][0], ['/', '?', '#'], TRUE) && !str_starts_with($element['#value'], '<front>')) {
       // Display an error message according to the link type.
-      $args = ['%link_example' => 'https://example.com'];
+      $args = [
+        '%field_name' => $element['#field_label'],
+        '%link_example' => 'https://example.com',
+      ];
       switch ($element['#link_type']) {
         case LinkItemInterface::LINK_EXTERNAL:
-          $error_message = new TranslatableMarkup('External links must be a full URL including the protocol, such as %link_example.', $args);
+          $error_message = new TranslatableMarkup('The %field_name field must contain a full URL including the protocol, such as %link_example.', $args);
           break;
 
         case LinkItemInterface::LINK_INTERNAL:
-          $error_message = new TranslatableMarkup('Enter a content title to select it, or enter an internal path starting with /, ? or #.');
+          $error_message = new TranslatableMarkup('The %field_name field must contain a content title or an internal path starting with /, ? or #.', $args);
           break;
 
         case LinkItemInterface::LINK_GENERIC:
         default:
-          $error_message = new TranslatableMarkup('Enter a content title to select it, or enter an internal path starting with /, ? or #. External links must be a full URL including the protocol, such as %link_example.', $args);
+          $error_message = new TranslatableMarkup('The %field_name field must contain a content title, an internal path starting with /, ? or #, or a full external URL including the protocol, such as %link_example.', $args);
       }
       $form_state->setError($element, $error_message);
       return;
@@ -176,7 +179,8 @@ class LinkWidget extends WidgetBase {
    */
   public static function validateTitleNoLink(&$element, FormStateInterface $form_state, $form) {
     if ($element['uri']['#value'] === '' && $element['title']['#value'] !== '') {
-      $form_state->setError($element['uri'], new TranslatableMarkup('The @uri field is required when the @title field is specified.', [
+      $form_state->setError($element['uri'], new TranslatableMarkup('The %field_name field: @uri is required when @title is specified.', [
+        '%field_name' => $element['#title'],
         '@title' => $element['title']['#title'],
         '@uri' => $element['uri']['#title'],
       ]));
@@ -215,6 +219,7 @@ class LinkWidget extends WidgetBase {
       '#element_validate' => [[static::class, 'validateUriElement']],
       '#maxlength' => 2048,
       '#required' => $element['#required'],
+      '#field_label' => $element['#title'],
       '#link_type' => $this->getFieldSetting('link_type'),
     ];
 

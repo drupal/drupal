@@ -190,10 +190,10 @@ class LinkFieldTest extends BrowserTestBase {
 
     // Define some invalid URLs.
     $validation_error_1 = "The URL '@link_path' is invalid.";
-    $validation_error_2 = "Enter a content title to select it, or enter an internal path starting with /, ? or #. External links must be a full URL including the protocol, such as";
+    $validation_error_2 = "The <em class=\"placeholder\">@field_name</em> field must contain a content title, an internal path starting with /, ? or #, or a full external URL including the protocol, such as";
     $validation_error_3 = "The URL '@link_path' is inaccessible.";
-    $validation_error_4 = 'Enter a content title to select it, or enter an internal path starting with /, ? or #.';
-    $validation_error_5 = "External links must be a full URL including the protocol, such as";
+    $validation_error_4 = 'The <em class="placeholder">@field_name</em> field must contain a content title or an internal path starting with /, ? or #.';
+    $validation_error_5 = "The <em class=\"placeholder\">@field_name</em> field must contain a full URL including the protocol, such as";
     $validation_error_6 = "The URL '@link_path' doesn't exist.";
     $validation_error_7 = "The URL '@link_path' has an invalid parameter.";
     $validation_error_8 = "The URL '@uri' is internal, but the {$field_name} field only supports external URLs.";
@@ -290,7 +290,10 @@ class LinkFieldTest extends BrowserTestBase {
       ];
       $this->drupalGet('entity_test/add');
       $this->submitForm($edit, 'Save');
-      $this->assertSession()->responseContains(strtr($error_message, ['@link_path' => $invalid_value]));
+      $this->assertSession()->responseContains(strtr($error_message, [
+        '@link_path' => $invalid_value,
+        '@field_name' => $field_name,
+      ]));
     }
   }
 
@@ -361,7 +364,7 @@ class LinkFieldTest extends BrowserTestBase {
             "{$field_name}[0][title]" => 'Example',
           ];
           $this->submitForm($edit, 'Save');
-          $this->assertSession()->statusMessageContains('The URL field is required when the Link text field is specified.', 'error');
+          $this->assertSession()->statusMessageContains('The Read more about this entity field: URL is required when Link text is specified.', 'error');
         }
         if ($title_setting === LinkTitleVisibility::Required) {
           // Verify that the link text is required, if the URL is non-empty.
