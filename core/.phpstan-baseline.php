@@ -386,18 +386,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/includes/install.core.inc',
 ];
 $ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @param for parameter \\$extension with type Drupal\\\\Core\\\\Extension is not subtype of native type Drupal\\\\Core\\\\Extension\\\\Extension\\.$#',
-	'identifier' => 'parameter.phpDocType',
-	'count' => 1,
-	'path' => __DIR__ . '/includes/install.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Parameter \\$extension of function install_check_class_requirements\\(\\) has invalid type Drupal\\\\Core\\\\Extension\\.$#',
-	'identifier' => 'class.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/includes/install.inc',
-];
-$ignoreErrors[] = [
 	'message' => '#^Function _system_default_theme_features\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
