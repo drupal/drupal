@@ -991,6 +991,50 @@ END CUSTOM TEMPLATE OUTPUT from 'container.html.twig'
       ],
     ];
     $this->assertFilteredString($filter, $tests);
+
+    // With no maximum link text length configured, the full URL should be
+    // preserved as the anchor text instead of being truncated to an
+    // ellipsis.
+    $filter->setConfiguration([
+      'settings' => [
+        'filter_url_length' => NULL,
+      ],
+    ]);
+    $tests = [
+      'www.untrimmed.com/d/ff.ext?a=1&b=2#a1' => [
+        '<a href="http://www.untrimmed.com/d/ff.ext?a=1&amp;b=2#a1">www.untrimmed.com/d/ff.ext?a=1&amp;b=2#a1</a>' => TRUE,
+      ],
+    ];
+    $this->assertFilteredString($filter, $tests);
+
+    // An empty string, as submitted by the settings form when the field is
+    // left blank, is treated the same as an unset length.
+    $filter->setConfiguration([
+      'settings' => [
+        'filter_url_length' => '',
+      ],
+    ]);
+    $tests = [
+      'www.untrimmed.com/d/ff.ext?a=1&b=2#a1' => [
+        '<a href="http://www.untrimmed.com/d/ff.ext?a=1&amp;b=2#a1">www.untrimmed.com/d/ff.ext?a=1&amp;b=2#a1</a>' => TRUE,
+      ],
+    ];
+    $this->assertFilteredString($filter, $tests);
+
+    // A maximum link text length of 0 is distinct from an unset length: it
+    // is passed through to Unicode::truncate(), which trims the link text,
+    // and the ellipsis itself, down to nothing.
+    $filter->setConfiguration([
+      'settings' => [
+        'filter_url_length' => 0,
+      ],
+    ]);
+    $tests = [
+      'www.trimmed-to-nothing.com' => [
+        '<a href="http://www.trimmed-to-nothing.com"></a>' => TRUE,
+      ],
+    ];
+    $this->assertFilteredString($filter, $tests);
   }
 
   /**
