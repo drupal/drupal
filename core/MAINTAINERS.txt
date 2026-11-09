@@ -463,20 +463,6 @@ The security team lead is:
 
 - Michael Hess 'mlhess' (mlhess) https://www.drupal.org/u/mlhess
 
-
-Initiative coordinators
------------------------
-
-The Drupal core initiative coordinators oversee approved projects that
-re-architect or otherwise improve large areas of Drupal core. See
-https://www.drupal.org/contribute/core/maintainers for more information on
-their responsibilities. The initiative coordinators are:
-
-Project Browser Initiative
-- Leslie Glynn 'leslieg' (lglynn2299) https://www.drupal.org/u/leslieg
-- Chris Wells 'chrisfromredfin' (chrisfromredfin) https://www.drupal.org/u/chrisfromredfin
-
-
 Core mentoring coordinators
 ---------------------------
 
