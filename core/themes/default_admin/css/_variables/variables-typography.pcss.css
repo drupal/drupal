@@ -17,7 +17,7 @@
 
 :root {
   /* Font families. */
-  --admin-font-family: inter, "Helvetica Neue", blinkmacsystemfont, -apple-system, "Segoe UI", roboto, oxygen-sans, ubuntu, cantarell, sans-serif;
+  --admin-font-family: var(--drupal-font-inter);
   --admin-font-family-serif: "Times New Roman", times, serif;
 
   /* Line heights. (Unitless ratios are not lengths; -label is a fixed 18px.) */
