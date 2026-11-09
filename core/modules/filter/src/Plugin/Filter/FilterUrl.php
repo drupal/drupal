@@ -326,9 +326,13 @@ class FilterUrl extends FilterBase implements ContainerFactoryPluginInterface {
    *   The shortened URL by a 'filter_url_length' setting cutoff.
    */
   protected function trimUrl(string $url): string {
+    $max_length = $this->settings['filter_url_length'] ?? NULL;
+    if (!isset($max_length) || $max_length === '') {
+      return $url;
+    }
     return Unicode::truncate(
       string: $url,
-      max_length: $this->settings['filter_url_length'],
+      max_length: $max_length,
       add_ellipsis: TRUE,
     );
   }
