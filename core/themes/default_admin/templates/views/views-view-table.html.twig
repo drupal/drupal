@@ -106,7 +106,7 @@
       </caption>
     {% endif %}
     {% if header %}
-      {{ macros.table_header(header, fields) }}
+      {{ macros.table_header(header, fields, false) }}
     {% endif %}
     <tbody>
       {% for row in rows %}
