@@ -307,13 +307,11 @@ optgroups
 optin
 outdent
 overrider
-overrider's
 overriders
 paramconverter
 parsererror
 pathauto
 pcre
-pcre's
 pcss
 peast
 persistable
@@ -415,7 +413,6 @@ subcompile
 subcondition
 subelements
 subform
-subform's
 subforms
 subkey
 subkeys
@@ -424,14 +421,12 @@ subparse
 subplugins
 subproperties
 subrequest
-subrequest's
 subrequests
 subresults
 subselect
 substrategies
 subsubtheme
 subtheme
-subtheme's
 subthemes
 subtoken
 subvalue
@@ -537,7 +532,7 @@ yottabyte
 yottabytes
 zettabyte
 zettabytes
-zipf's
+zipf
 zoneinfo
 zoomin
 zoomout

@@ -3,11 +3,9 @@ autoplay
 bartik
 bubbleable
 buytaert
-buytaert's
 daterange
 dbtng
 dependee
-dependee's
 dependees
 drupalci
 drupaldevdays
@@ -41,7 +39,6 @@ revpub
 simpletest
 sitename
 tempstore
-tempstore's
 umami
 unpromote
 unsticky
