@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\dialog_renderer_test\Controller;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
 
 /**
@@ -114,6 +116,96 @@ class TestController {
           'data-dialog-type' => 'modal',
           'data-dialog-renderer' => 'extra_wide',
         ],
+        '#attached' => [
+          'library' => [
+            'core/drupal.ajax',
+          ],
+        ],
+      ],
+      'attack_modal' => [
+        '#title' => 'Attack modal!',
+        '#type' => 'link',
+        '#url' => Url::fromRoute('dialog_renderer_test.modal_content'),
+        '#attributes' => [
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'buttons' => [
+              [
+                'text' => '<script data-attack>alert("💥")</script>',
+                'onclick' => 'alert("💥 onclick attack");',
+              ],
+              [
+                'icon' => '<script data-attack>alert("💥")</script>',
+                'onmouseover' => 'alert("💥 onmouseover attack");',
+              ],
+              [
+                'text' => 'Button with onscroll',
+                'onscroll' => 'alert("💥 onscroll attack");',
+              ],
+              [
+                'text' => 'Button with onfocus',
+                'onfocus' => 'alert("💥 onfocus attack");',
+              ],
+              [
+                'text' => 'Button with onblur',
+                'onblur' => 'alert("💥 onblur attack");',
+              ],
+              [
+                'text' => 'Button with onkeydown',
+                'onkeydown' => 'alert("💥 onkeydown attack");',
+              ],
+              [
+                'text' => 'Button with onload',
+                'onload' => 'alert("💥 onload attack");',
+              ],
+              [
+                'text' => 'Button with multiple handlers',
+                'onclick' => 'alert("💥 click");',
+                'onmouseover' => 'alert("💥 hover");',
+                'class' => 'safe-class',
+              ],
+              [
+                'click' => '() => { alert("💥") }',
+              ],
+              [
+                'html' => '<script data-attack>alert("💥")</script>',
+              ],
+            ],
+          ]),
+        ],
+        '#attached' => [
+          'library' => [
+            'core/drupal.ajax',
+          ],
+        ],
+      ],
+      'attack_modal_raw' => [
+        '#markup' => Markup::create(\sprintf(
+          '<a href="%s" class="use-ajax" data-dialog-type="modal" data-dialog-options="%s">Attack modal raw!</a>',
+          Url::fromRoute('dialog_renderer_test.modal_content')->toString(),
+          Html::escape(Json::encode([
+            'buttons' => [
+              [
+                'text' => '<script data-attack>alert("💥")</script>',
+                'onclick' => 'alert("💥 raw onclick");',
+              ],
+              [
+                'icon' => '<script data-attack>alert("💥")</script>',
+                'onmouseover' => 'alert("💥 raw onmouseover");',
+              ],
+              [
+                'text' => 'Raw combined attack',
+                'onclick' => 'alert("💥");',
+                'onkeydown' => 'window.location="http://evil.com";',
+                'onfocus' => 'document.cookie="stolen=true";',
+              ],
+              [
+                'click' => '() => { alert("💥") }',
+              ],
+            ],
+          ]))
+        )),
         '#attached' => [
           'library' => [
             'core/drupal.ajax',
