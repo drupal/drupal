@@ -48,12 +48,7 @@ class ViewPageController implements ContainerInjectionInterface {
       if (isset($map[$attribute])) {
         $attribute = $map[$attribute];
       }
-      if ($arg = $route_match->getRawParameter($attribute)) {
-      }
-      else {
-        $arg = $route_match->getParameter($attribute);
-      }
-
+      $arg = $route_match->getRawParameter($attribute);
       if (isset($arg)) {
         $args[] = $arg;
       }
