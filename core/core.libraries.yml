@@ -642,10 +642,10 @@ htmx:
   aggregate_target:
     js: 'htmx'
   remote: https://github.com/bigskysoftware/htmx
-  version: "4.0.0"
+  version: "4.0.1"
   license:
     name: Zero-Clause BSD
-    url:  https://raw.githubusercontent.com/bigskysoftware/htmx/refs/tags/v4.0.0/LICENSE
+    url:  https://raw.githubusercontent.com/bigskysoftware/htmx/refs/tags/v4.0.1/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/htmx/htmx.min.js: { minified: true }

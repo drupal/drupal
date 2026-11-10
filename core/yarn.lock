@@ -3253,7 +3253,7 @@ __metadata:
     eslint-plugin-yml: "npm:^1.19.1"
     glob: "npm:^13.0.6"
     globals: "npm:^17.12.0"
-    htmx.org: "npm:4.0.0"
+    htmx.org: "npm:4.0.1"
     jquery: "npm:^4.0.0"
     jquery-ui: "npm:^1.14.2"
     jsdom: "npm:^30.1.0"
@@ -6476,12 +6476,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"htmx.org@npm:4.0.0":
-  version: 4.0.0
-  resolution: "htmx.org@npm:4.0.0"
+"htmx.org@npm:4.0.1":
+  version: 4.0.1
+  resolution: "htmx.org@npm:4.0.1"
   bin:
     upgrade-check: dist/scripts/upgrade-check.js
-  checksum: 10c0/4c365b8731d00e233e507b2f5a8016b7dbe68a48fa147fbff540cc7b08f7f3d8c80362004bf0b38671c2f9d7c8e41578a780160c120d70a8768bfdde70de2ccf
+  checksum: 10c0/e447c35d4b5c2fb86469c0fdaddfb90dac4e0163bdf7cf191fcbb3733597f8f4a48eaec2a8bb39402434fdf0f3b4d5690d80859d86c89b15777f6be342e6713c
   languageName: node
   linkType: hard
 

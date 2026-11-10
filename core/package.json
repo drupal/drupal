@@ -50,7 +50,7 @@
     "eslint-plugin-yml": "^1.19.1",
     "glob": "^13.0.6",
     "globals": "^17.12.0",
-    "htmx.org": "4.0.0",
+    "htmx.org": "4.0.1",
     "jquery": "^4.0.0",
     "jquery-ui": "^1.14.2",
     "jsdom": "^30.1.0",
