@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
@@ -81,6 +82,53 @@ class NodeStorageLoadFieldDataTest extends KernelTestBase {
       ])->save();
     }
 
+    // Create a node in a non-default language. When the configurable language
+    // is deleted, the row for the node in the revision table will be set to
+    // 'und'. Confirm that data for fields on a node in that state still populate
+    // correctly on entity load.
+    // @see NodeEntityHooks::configurableLanguageDelete()
+    // @see NodeStorage::clearRevisionsLanguage()
+    $esLanguage = ConfigurableLanguage::createFromLangcode('es');
+    $esLanguage->save();
+    $this->assertSame('en', \Drupal::languageManager()->getDefaultLanguage()->getId());
+    $esValues = [
+      'field_single_translatable' => ['(es) Single translatable'],
+      'field_single_untranslatable' => ['(es) Single untranslatable'],
+      'field_mul_translatable' => [
+        '(es) Multiple translatable 1',
+        '(es) Multiple translatable 2',
+      ],
+      'field_mul_untranslatable' => [
+        '(es) Multiple untranslatable 1',
+        '(es) Multiple untranslatable 2',
+      ],
+    ];
+    $esId = $this->createNode($esValues + ['langcode' => 'es'])->id();
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+    $storage->resetCache();
+    $esNode = $storage->load($esId);
+    $storedValues = $esNode->toArray();
+    foreach ($esValues as $fieldName => $fieldValue) {
+      $this->assertSame($fieldValue, array_column($storedValues[$fieldName], 'value'));
+    }
+    $esLanguage->delete();
+    $langcodes = \Drupal::database()->select($storage->getRevisionTable(), 'node_revision')
+      ->condition('nid', $esId)
+      ->fields('node_revision', ['langcode'])
+      ->execute()
+      ->fetchCol();
+    $this->assertSame(['und'], $langcodes);
+    $storage->resetCache();
+    $esNode = $storage->load($esId);
+    $storedValues = $esNode->toArray();
+    foreach ($esValues as $fieldName => $fieldValue) {
+      $this->assertSame($fieldValue, array_column($storedValues[$fieldName], 'value'));
+    }
+
+    // Create another node in the default language ('en'). When the language
+    // module is uninstalled, the 'en' configurable language will be deleted.
+    // Since 'en' is the site default language, the entries for the node in the
+    // revision table will keep the langcode as 'en'.
     $values = [
       'field_single_translatable' => ['Single translatable'],
       'field_single_untranslatable' => ['Single untranslatable'],
@@ -94,7 +142,6 @@ class NodeStorageLoadFieldDataTest extends KernelTestBase {
       ],
     ];
     $id = $this->createNode($values + ['langcode' => 'en'])->id();
-    $storage = \Drupal::entityTypeManager()->getStorage('node');
     $storage->resetCache();
     $node = $storage->load($id);
     $storedValues = $node->toArray();
@@ -102,11 +149,14 @@ class NodeStorageLoadFieldDataTest extends KernelTestBase {
       $this->assertSame($fieldValue, array_column($storedValues[$fieldName], 'value'));
     }
 
-    // Uninstalling the language module will delete the 'en' configurable
-    // language. This will cause the langcode for the node in the node_revision
-    // table to be changed to 'und'.
-    // @see NodeStorage::clearRevisionsLanguage().
     \Drupal::service(ModuleInstallerInterface::class)->uninstall(['language']);
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+    $langcodes = Database::getConnection()->select($storage->getRevisionTable(), 'node_revision')
+      ->condition('nid', $id)
+      ->fields('node_revision', ['langcode'])
+      ->execute()
+      ->fetchCol();
+    $this->assertSame(['en'], $langcodes);
     $storage->resetCache();
     $node = $storage->load($id);
     $storedValues = $node->toArray();

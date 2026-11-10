@@ -146,8 +146,11 @@ class NodeEntityHooks {
    */
   #[Hook('configurable_language_delete')]
   public function configurableLanguageDelete(ConfigurableLanguageInterface $language): void {
-    // On nodes with this language, unset the language.
-    \Drupal::entityTypeManager()->getStorage('node')->clearRevisionsLanguage($language);
+    // On nodes with this language, unset the language unless it is the site
+    // default language.
+    if (!$language->isDefault()) {
+      \Drupal::entityTypeManager()->getStorage('node')->clearRevisionsLanguage($language);
+    }
   }
 
 }
