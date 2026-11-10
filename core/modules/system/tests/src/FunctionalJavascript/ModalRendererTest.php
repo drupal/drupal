@@ -63,6 +63,24 @@ class ModalRendererTest extends WebDriverTestBase {
     $this->assertJsCondition('document.activeElement === tabbable.tabbable(document.querySelector(".ui-dialog .ui-dialog-buttonpane"))[0]');
 
     $this->drupalGet('/dialog_renderer-test-links');
+    $this->clickLink('Attack modal!');
+    $session_assert->waitForElementVisible('css', '.ui-dialog');
+    $session_assert->assertVisibleInViewport('css', '.ui-dialog .ui-dialog-buttonpane');
+
+    // Tabbable should focus the first tabbable item inside button pane.
+    $this->assertJsCondition('document.activeElement === tabbable.tabbable(document.querySelector(".ui-dialog .ui-dialog-buttonpane"))[0]');
+    $this->assertSession()->elementNotExists('css', 'script[data-attack]');
+
+    $this->drupalGet('/dialog_renderer-test-links');
+    $this->clickLink('Attack modal raw!');
+    $session_assert->waitForElementVisible('css', '.ui-dialog');
+    $session_assert->assertVisibleInViewport('css', '.ui-dialog .ui-dialog-buttonpane');
+
+    // Tabbable should focus the first tabbable item inside button pane.
+    $this->assertJsCondition('document.activeElement === tabbable.tabbable(document.querySelector(".ui-dialog .ui-dialog-buttonpane"))[0]');
+    $this->assertSession()->elementNotExists('css', 'script[data-attack]');
+
+    $this->drupalGet('/dialog_renderer-test-links');
     $this->clickLink('Content link modal!');
     $session_assert->waitForElementVisible('css', '.ui-dialog');
     $session_assert->assertVisibleInViewport('css', '.ui-dialog .ui-dialog-content');
@@ -100,6 +118,50 @@ class ModalRendererTest extends WebDriverTestBase {
     $this->clickLink('Auto buttons true!');
     $this->assertNotNull($session_assert->waitForElement('css', '.ui-dialog-buttonpane .ui-dialog-buttonset .js-form-submit'));
     $session_assert->elementExists('css', '.ui-dialog-buttonpane .ui-dialog-buttonset .js-form-submit');
+
+    // Test event handler attributes are filtered from attack modal buttons.
+    $this->drupalGet('/dialog_renderer-test-links');
+    $this->clickLink('Attack modal!');
+    $session_assert->waitForElementVisible('css', '.ui-dialog');
+    $session_assert->assertVisibleInViewport('css', '.ui-dialog .ui-dialog-buttonpane');
+
+    // Verify buttons are present.
+    $buttons = $this->getSession()->getPage()->findAll('css', '.ui-dialog-buttonpane button');
+    $this->assertGreaterThan(0, count($buttons));
+
+    // Get the HTML of the button pane to check for event handler attributes.
+    $button_pane_html = $this->getSession()->getPage()->find('css', '.ui-dialog-buttonpane')->getHtml();
+
+    // Verify that no event handler attributes are present in button HTML.
+    $event_handlers = [
+      'onclick', 'onmouseover', 'onscroll', 'onfocus', 'onblur',
+      'onkeydown', 'onload', 'onmousedown', 'onmouseup', 'onkeyup',
+    ];
+
+    foreach ($event_handlers as $handler) {
+      $session_assert->elementNotExists('css', "[$handler]");
+    }
+
+    // Verify that button text content is preserved while malicious attributes are filtered.
+    $this->assertStringContainsString('Button with onscroll', $button_pane_html);
+    $this->assertStringContainsString('Button with multiple handlers', $button_pane_html);
+
+    // Test the raw attack modal version as well.
+    $this->drupalGet('/dialog_renderer-test-links');
+    $this->clickLink('Attack modal raw!');
+    $session_assert->waitForElementVisible('css', '.ui-dialog');
+    $session_assert->assertVisibleInViewport('css', '.ui-dialog .ui-dialog-buttonpane');
+
+    // Get the HTML again for the raw version.
+    $button_pane_html_raw = $this->getSession()->getPage()->find('css', '.ui-dialog-buttonpane')->getHtml();
+
+    // Verify event handlers are also not present in the raw version.
+    foreach ($event_handlers as $handler) {
+      $this->assertStringNotContainsString($handler . '=', $button_pane_html_raw);
+    }
+
+    // Verify that legitimate button content is preserved in the raw version.
+    $this->assertStringContainsString('Raw combined attack', $button_pane_html_raw);
   }
 
   /**
