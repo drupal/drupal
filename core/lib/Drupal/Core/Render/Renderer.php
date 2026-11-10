@@ -293,10 +293,6 @@ class Renderer implements RendererInterface {
       return '';
     }
 
-    $context = $this->getCurrentRenderContext();
-    if (!isset($context)) {
-      throw new \LogicException("Render context is empty, because render() was called outside of a renderRoot() or renderInIsolation() call. Use renderInIsolation()/renderRoot() or #lazy_builder/#pre_render instead.");
-    }
     $context->push(new BubbleableMetadata());
 
     // Set the bubbleable rendering metadata that has configurable defaults if
