@@ -93,6 +93,7 @@ class ViewPageControllerTest extends UnitTestCase {
     $request->attributes->set('display_id', 'page_1');
     // Add the argument to the request.
     $request->attributes->set('arg_0', 'test-argument');
+    $request->attributes->set('_raw_variables', new InputBag(['arg_0' => 'test-argument']));
     $options = [
       '_view_argument_map' => ['arg_0' => 'arg_0'],
       '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
@@ -131,6 +132,7 @@ class ViewPageControllerTest extends UnitTestCase {
     $request->attributes->set('display_id', 'page_1');
     // Add the argument to the request.
     $request->attributes->set('parameter', 'test-argument');
+    $request->attributes->set('_raw_variables', new InputBag(['parameter' => 'test-argument']));
     $options = [
       '_view_argument_map' => [
         'arg_0' => 'parameter',
