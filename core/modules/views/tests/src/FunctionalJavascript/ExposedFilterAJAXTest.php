@@ -117,7 +117,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $html = $session->getPage()->getHtml();
     $this->assertStringContainsString('Page Two', $html);
     $this->assertStringNotContainsString('Page One', $html);
-    $this->assertSession()->addressEquals('admin/content?type=All&status=All&title=Page%20Two');
+    $this->assertSession()->addressEquals('admin/content?title=Page%20Two&type=All&status=All');
 
     // Submit bulk actions form to ensure that the previous AJAX submit does not
     // break it.
@@ -128,7 +128,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
 
     // Verify that the action was performed.
     $this->assertSession()->pageTextContains('Make content sticky was applied to 1 item.');
-    $this->assertSession()->addressEquals('admin/content?type=All&status=All&title=Page%20Two');
+    $this->assertSession()->addressEquals('admin/content?title=Page%20Two&type=All&status=All');
 
     // Reset the form.
     $this->submitForm([], 'Reset');
@@ -250,6 +250,59 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     // Make sure that the views_dom_id didn't change, which would indicate that
     // the page reloaded instead of doing an AJAX update.
     $this->assertSame($ajax_views_before, $ajax_views_after);
+  }
+
+  /**
+   * Tests deselecting a multi-select exposed filter clears it from the URL.
+   */
+  public function testUnselectMultiSelectExposedFilter(): void {
+    // Flip the type filter to allow multiple selections.
+    \Drupal::configFactory()->getEditable('views.view.content')
+      ->set('display.default.display_options.filters.type.expose.multiple', TRUE)
+      ->save();
+
+    // Create a second content type and a node of that type so we can tell the
+    // filter was actually cleared.
+    $this->createContentType(['type' => 'article']);
+    $this->createNode(['type' => 'article', 'title' => 'Article One']);
+
+    $assert = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalGet('admin/content', ['query' => ['type[]' => 'page']]);
+    $assert->pageTextContains('Page One');
+    $assert->pageTextNotContains('Article One');
+
+    $select = $page->find('css', 'select[name="type[]"]');
+    $this->assertNotNull($select);
+    $select->setValue([]);
+    $page->pressButton('Filter');
+    $assert->assertWaitOnAjaxRequest();
+
+    $assert->pageTextContains('Page One');
+    $assert->pageTextContains('Article One');
+    $url = $this->getSession()->getCurrentUrl();
+    $this->assertStringNotContainsString('type%5B%5D=page', $url);
+    $this->assertStringNotContainsString('type[]=page', $url);
+
+    $this->drupalGet('admin/content', [
+      'query' => ['type[0]' => 'article', 'type[1]' => 'page'],
+    ]);
+    $assert->pageTextContains('Page One');
+    $assert->pageTextContains('Article One');
+
+    $select = $page->find('css', 'select[name="type[]"]');
+    $this->assertNotNull($select);
+    // Keep only article selected; drop page.
+    $select->setValue(['article']);
+    $page->pressButton('Filter');
+    $assert->assertWaitOnAjaxRequest();
+
+    $assert->pageTextContains('Article One');
+    $assert->pageTextNotContains('Page One');
+    $assert->pageTextNotContains('Page Two');
+    $url = $this->getSession()->getCurrentUrl();
+    $this->assertStringNotContainsString('=page', $url);
   }
 
   /**
