@@ -6,14 +6,14 @@ namespace Drupal\KernelTests\Core\Test;
 
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Tests \Drupal\Core\Test\AssertMailTrait works.
  */
-#[CoversClass(AssertMailTrait::class)]
+#[CoversTrait(AssertMailTrait::class)]
 #[Group('Test')]
 #[RunTestsInSeparateProcesses]
 class AssertMailTraitTest extends KernelTestBase {

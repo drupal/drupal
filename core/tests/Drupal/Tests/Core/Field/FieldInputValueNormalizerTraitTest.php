@@ -6,14 +6,14 @@ namespace Drupal\Tests\Core\Field;
 
 use Drupal\Core\Field\FieldInputValueNormalizerTrait;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Drupal\Core\Field\FieldInputValueNormalizerTrait.
  */
-#[CoversClass(FieldInputValueNormalizerTrait::class)]
+#[CoversTrait(FieldInputValueNormalizerTrait::class)]
 #[Group('Field')]
 class FieldInputValueNormalizerTraitTest extends UnitTestCase {
 

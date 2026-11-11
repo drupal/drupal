@@ -8,7 +8,7 @@ use Drupal\Component\Plugin\Exception\ContextException;
 use Drupal\Core\Condition\ConditionAccessResolverTrait;
 use Drupal\Core\Condition\ConditionInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\Stub;
@@ -16,7 +16,7 @@ use PHPUnit\Framework\MockObject\Stub;
 /**
  * Tests Drupal\Core\Condition\ConditionAccessResolverTrait.
  */
-#[CoversClass(ConditionAccessResolverTrait::class)]
+#[CoversTrait(ConditionAccessResolverTrait::class)]
 #[Group('Condition')]
 class ConditionAccessResolverTraitTest extends UnitTestCase {
 

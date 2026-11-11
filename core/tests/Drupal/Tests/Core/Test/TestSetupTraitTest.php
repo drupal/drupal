@@ -8,7 +8,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Test\TestSetupTrait;
 use Drupal\Tests\DrupalTestCase;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -19,7 +19,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  * Run in a separate process as this test involves Database statics and
  * environment variables.
  */
-#[CoversClass(TestSetupTrait::class)]
+#[CoversTrait(TestSetupTrait::class)]
 #[Group('Testing')]
 #[PreserveGlobalState(FALSE)]
 #[RunTestsInSeparateProcesses]

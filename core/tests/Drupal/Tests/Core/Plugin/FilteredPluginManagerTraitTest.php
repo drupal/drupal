@@ -11,14 +11,14 @@ use Drupal\Core\Plugin\FilteredPluginManagerInterface;
 use Drupal\Core\Plugin\FilteredPluginManagerTrait;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Drupal\Core\Plugin\FilteredPluginManagerTrait.
  */
-#[CoversClass(FilteredPluginManagerTrait::class)]
+#[CoversTrait(FilteredPluginManagerTrait::class)]
 #[Group('Plugin')]
 class FilteredPluginManagerTraitTest extends UnitTestCase {
 

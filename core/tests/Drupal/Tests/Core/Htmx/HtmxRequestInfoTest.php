@@ -6,14 +6,14 @@ namespace Drupal\Tests\Core\Htmx;
 
 use Drupal\Core\Htmx\HtmxRequestInfoTrait;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Test all HtmxRequestInfoTrait methods.
  */
-#[CoversClass(HtmxRequestInfoTrait::class)]
+#[CoversTrait(HtmxRequestInfoTrait::class)]
 #[Group('Htmx')]
 class HtmxRequestInfoTest extends UnitTestCase {
 

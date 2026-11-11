@@ -10,14 +10,14 @@ use Drupal\Core\Access\RefinableDependentAccessInterface;
 use Drupal\Core\Access\RefinableDependentAccessTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Drupal\Core\Access\RefinableDependentAccessTrait.
  */
-#[CoversClass(RefinableDependentAccessTrait::class)]
+#[CoversTrait(RefinableDependentAccessTrait::class)]
 #[Group('Access')]
 class DependentAccessTest extends UnitTestCase {
   use AccessibleTestingTrait;

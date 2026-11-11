@@ -7,7 +7,7 @@ namespace Drupal\Tests\Core\Plugin;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\ConfigurableTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Tests for ConfigurableTrait.
  */
-#[CoversClass(ConfigurableTrait::class)]
+#[CoversTrait(ConfigurableTrait::class)]
 #[Group('Plugin')]
 class ConfigurableTraitTest extends TestCase {
 

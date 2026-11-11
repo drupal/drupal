@@ -6,7 +6,7 @@ namespace Drupal\Tests\Core\Test;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\XdebugRequestTrait;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Provides tests for the Xdebug request trait.
  */
-#[CoversClass(XdebugRequestTrait::class)]
+#[CoversTrait(XdebugRequestTrait::class)]
 #[Group('Test')]
 class XdebugRequestTraitTest extends UnitTestCase {
 

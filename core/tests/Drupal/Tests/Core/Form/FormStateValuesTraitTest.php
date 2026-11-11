@@ -6,14 +6,14 @@ namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Form\FormStateValuesTrait;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Tests Drupal\Core\Form\FormStateValuesTrait.
  */
-#[CoversClass(FormStateValuesTrait::class)]
+#[CoversTrait(FormStateValuesTrait::class)]
 #[Group('Form')]
 class FormStateValuesTraitTest extends UnitTestCase {
 

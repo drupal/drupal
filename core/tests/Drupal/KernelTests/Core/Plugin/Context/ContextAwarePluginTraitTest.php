@@ -18,7 +18,7 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\Plugin\DataType\StringData;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests Drupal\Core\Plugin\ContextAwarePluginTrait.
  */
-#[CoversClass(ContextAwarePluginTrait::class)]
+#[CoversTrait(ContextAwarePluginTrait::class)]
 #[Group('Plugin')]
 #[RunTestsInSeparateProcesses]
 class ContextAwarePluginTraitTest extends KernelTestBase {
