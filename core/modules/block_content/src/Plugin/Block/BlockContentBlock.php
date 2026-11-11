@@ -2,12 +2,14 @@
 
 namespace Drupal\block_content\Plugin\Block;
 
+use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\BlockContentUuidLookup;
 use Drupal\block_content\Plugin\Derivative\BlockContent;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockManagerInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -142,6 +144,39 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
     }
     /** @var \Drupal\block_content\BlockContentInterface|null */
     return $this->entityRepository->getTranslationFromContext($this->blockContent);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $contexts = parent::getCacheContexts();
+    if (($entity = $this->getEntity()) && $entity instanceof BlockContentInterface) {
+      $contexts = Cache::mergeContexts($contexts, $entity->getCacheContexts());
+    }
+    return $contexts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    $tags = parent::getCacheTags();
+    if (($entity = $this->getEntity()) && $entity instanceof BlockContentInterface) {
+      $tags = Cache::mergeTags($tags, $entity->getCacheTags());
+    }
+    return $tags;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheMaxAge() {
+    $max_age = parent::getCacheMaxAge();
+    if (($entity = $this->getEntity()) && $entity instanceof BlockContentInterface) {
+      $max_age = Cache::mergeMaxAges($max_age, $entity->getCacheMaxAge());
+    }
+    return $max_age;
   }
 
 }

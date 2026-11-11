@@ -43,6 +43,7 @@ CacheTagGroupedLookups:
   -
     - 'config:block_list'
   -
+    - 'block_content:1'
     - 'config:filter.format.basic_html'
     - 'config:system.menu.footer'
   -
