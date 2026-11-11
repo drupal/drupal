@@ -6,6 +6,7 @@ namespace Drupal\container_rebuild_test;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * The service provider for testing container rebuilds.
@@ -16,8 +17,10 @@ class ContainerRebuildTestServiceProvider implements ServiceModifierInterface {
    * {@inheritdoc}
    */
   public function alter(ContainerBuilder $container): void {
-    $count = $container->get('state')->get('container_rebuild_test.count', 0);
-    $container->get('state')->set('container_rebuild_test.count', ++$count);
+    $state = $container->get('state');
+    $count = $state->get('container_rebuild_test.count', 0);
+    $state->set('container_rebuild.trusted_hosts', Request::getTrustedHosts());
+    $state->set('container_rebuild_test.count', ++$count);
   }
 
 }
