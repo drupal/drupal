@@ -42,7 +42,7 @@ abstract class OrderOperation {
   /**
    * Converts the operation to a structure that can be stored in the container.
    *
-   * @return array
+   * @return array{bool, array}
    *   Packed operation.
    */
   final public function pack(): array {
@@ -56,7 +56,7 @@ abstract class OrderOperation {
   /**
    * Converts the stored operation to objects that can apply ordering rules.
    *
-   * @param array $packed_operation
+   * @param array{bool, array} $packed_operation
    *   Packed operation.
    *
    * @return self
@@ -64,8 +64,9 @@ abstract class OrderOperation {
    */
   final public static function unpack(array $packed_operation): self {
     [$is_before_or_after, $args] = $packed_operation;
-    $class = $is_before_or_after ? BeforeOrAfter::class : FirstOrLast::class;
-    return new $class(...$args);
+    return $is_before_or_after
+      ? new BeforeOrAfter(...$args)
+      : new FirstOrLast(...$args);
   }
 
 }

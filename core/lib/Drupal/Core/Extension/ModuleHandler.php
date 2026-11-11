@@ -77,7 +77,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * Ordering rules by hook name, packed.
    *
-   * @param array<string, list<string>>
+   * @var array<string, list<array{bool, array}>>
    */
   protected array $packedOrderOperations = [];
 
