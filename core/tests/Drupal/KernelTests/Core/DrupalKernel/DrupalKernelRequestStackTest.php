@@ -15,6 +15,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -37,6 +38,11 @@ class DrupalKernelRequestStackTest extends KernelTestBase implements EventSubscr
    * The request stack count when the kernel request event is fired.
    */
   protected ?int $recordedRequestStackCount;
+
+  /**
+   * Whether the kernel terminate event listener throws an exception.
+   */
+  protected bool $throwOnTerminate = FALSE;
 
   /**
    * {@inheritdoc}
@@ -63,7 +69,7 @@ class DrupalKernelRequestStackTest extends KernelTestBase implements EventSubscr
   public function testRequestStackHandling(): void {
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = \Drupal::service('request_stack');
-    // KernelTestBase pushes a request on to the stack.
+    // KernelTestBase pushes a request onto the stack.
     $request_stack->pop();
 
     $http_kernel = \Drupal::service('kernel');
@@ -147,6 +153,46 @@ class DrupalKernelRequestStackTest extends KernelTestBase implements EventSubscr
   }
 
   /**
+   * Tests the request stack when termination fails.
+   */
+  public function testRequestStackAfterFailedTermination(): void {
+    /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
+    $request_stack = \Drupal::service('request_stack');
+    // KernelTestBase pushes a request onto the stack.
+    $request_stack->pop();
+
+    /** @var \Drupal\Core\DrupalKernel $http_kernel */
+    $http_kernel = \Drupal::service('kernel');
+
+    $main_request = Request::create('/http-kernel-test');
+    $main_response = $http_kernel->handle($main_request);
+    $this->assertSame(1, $this->getRequestStackCount($request_stack));
+
+    $this->throwOnTerminate = TRUE;
+    try {
+      $http_kernel->terminate($main_request, $main_response);
+      $this->fail('Expected exception was not thrown.');
+    }
+    catch (\RuntimeException $e) {
+      $this->assertSame('Termination failed.', $e->getMessage());
+    }
+    // The main request is popped even though termination failed.
+    $this->assertNull($request_stack->getMainRequest());
+    $this->assertSame(0, $this->getRequestStackCount($request_stack));
+
+    // A request that bypasses preHandle(), such as a page cache hit, must not
+    // be terminated or pop a request it did not push.
+    $other_request = Request::create('/http-kernel-test');
+    $request_stack->push($other_request);
+    $http_kernel->terminate($other_request, $main_response);
+    $this->assertSame($other_request, $request_stack->getMainRequest());
+    $this->assertSame(1, $this->getRequestStackCount($request_stack));
+
+    $request_stack->pop();
+    $this->throwOnTerminate = FALSE;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function checkErrorHandlerOnTearDown(): void {
@@ -175,11 +221,24 @@ class DrupalKernelRequestStackTest extends KernelTestBase implements EventSubscr
   }
 
   /**
+   * Throws an exception during termination when requested by a test.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\TerminateEvent $event
+   *   The terminate event.
+   */
+  public function onTerminate(TerminateEvent $event): void {
+    if ($this->throwOnTerminate) {
+      throw new \RuntimeException('Termination failed.');
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
     return [
       KernelEvents::REQUEST => ['onRequest', 50],
+      KernelEvents::TERMINATE => ['onTerminate'],
     ];
   }
 

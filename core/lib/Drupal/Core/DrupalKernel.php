@@ -692,25 +692,29 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public function terminate(Request $request, Response $response): void {
     if ($this->booted && $this->getHttpKernel() instanceof TerminableInterface) {
-      // Only run terminate() when essential services have been set up properly
-      // by preHandle() before.
-      if ($this->prepared === TRUE) {
-        $this->getHttpKernel()->terminate($request, $response);
-      }
-      // For destructable services, always call the destruct method if they were
-      // initialized during the request. Destruction is not necessary if the
-      // service was not used.
-      foreach ($this->container->getParameter('kernel.destructable_services') as $id) {
-        if ($this->container->initialized($id)) {
-          $service = $this->container->get($id);
-          $service->destruct();
+      try {
+        // Only run terminate() when essential services have been set up
+        // properly by preHandle() before.
+        if ($this->prepared === TRUE) {
+          $this->getHttpKernel()->terminate($request, $response);
+        }
+        // For destructable services, always call the destruct method if they
+        // were initialized during the request. Destruction is not necessary if
+        // the service was not used.
+        foreach ($this->container->getParameter('kernel.destructable_services') as $id) {
+          if ($this->container->initialized($id)) {
+            $service = $this->container->get($id);
+            $service->destruct();
+          }
         }
       }
-
-      // Pop the request added in \Drupal\Core\DrupalKernel::preHandle() from
-      // request stack at the end of the execution cycle.
-      if ($this->prepared === TRUE) {
-        $this->container->get('request_stack')->pop();
+      finally {
+        // Release the request even if termination fails. Subsequent requests
+        // may bypass preHandle(), for example when served from the page cache.
+        if ($this->prepared === TRUE) {
+          $this->prepared = FALSE;
+          $this->container->get('request_stack')->pop();
+        }
       }
     }
   }
