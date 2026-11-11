@@ -499,7 +499,9 @@ class FixtureManipulator {
     /** @var \PhpTuf\ComposerStager\API\Process\Service\ComposerProcessRunnerInterface $runner */
     $runner = \Drupal::service(ComposerProcessRunnerInterface::class);
     $command_options[] = "--working-dir={$this->dir}";
-    $runner->run($command_options, callback: $plain_output);
+    $runner->run($command_options, callback: $plain_output, env: [
+      'COMPOSER_NO_AUDIT' => '1',
+    ]);
     return $plain_output;
   }
 

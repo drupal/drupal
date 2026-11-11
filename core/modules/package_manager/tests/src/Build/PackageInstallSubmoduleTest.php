@@ -43,7 +43,7 @@ class PackageInstallSubmoduleTest extends TemplateProjectTestBase {
 
     // Repository definitions affect the lock file hash, so update the hash to
     // ensure that Composer won't complain that the lock file is out of sync.
-    $this->runComposer('composer update --lock', 'project');
+    $this->runComposer('composer update --no-audit --lock', 'project');
 
     $this->makePackageManagerTestApiRequest(
       '/package-manager-test-api',
