@@ -746,6 +746,32 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
+   * Tests an AND group of OR groups on a multi-value field.
+   */
+  public function testAndGroupOfOrGroupsOnMultiValueField(): void {
+    foreach ([$this->figures, $this->figuresUnlimited] as $field_name) {
+      $query = $this->storage->getQuery()->accessCheck(FALSE);
+
+      $red_or_square = $query->orConditionGroup()
+        ->condition("$field_name.color", 'red')
+        ->condition("$field_name.shape", 'square');
+      $blue_or_hexagon = $query->orConditionGroup()
+        ->condition("$field_name.color", 'blue')
+        ->condition("$field_name.shape", 'hexagon');
+      $and = $query->andConditionGroup()
+        ->condition($red_or_square)
+        ->condition($blue_or_hexagon);
+
+      $this->queryResults = $query
+        ->condition($and)
+        ->sort('revision_id')
+        ->execute();
+      // Only entities that match both OR groups should be found.
+      $this->assertResult(3, 7, 11, 15);
+    }
+  }
+
+  /**
    * Tests that condition count returns expected number of conditions.
    */
   public function testConditionCount(): void {
