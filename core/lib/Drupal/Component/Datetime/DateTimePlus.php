@@ -418,8 +418,14 @@ class DateTimePlus implements \Stringable {
    *
    * @return string
    *   The massaged PHP format string.
+   *
+   * @deprecated in drupal:11.5.0 and is removed from drupal:12.0.0.
+   * There is no replacement.
+   *
+   * @see https://www.drupal.org/node/3619997
    */
   protected function prepareFormat($format) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.5.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3619997', E_USER_DEPRECATED);
     return $format;
   }
 
