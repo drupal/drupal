@@ -340,4 +340,23 @@ class ViewStorageTest extends ViewsKernelTestBase {
     }
   }
 
+  /**
+   * Tests that the view entity type labels use the translation context.
+   */
+  public function testEntityTypeLabelContext(): void {
+    $entity_type = \Drupal::entityTypeManager()->getDefinition('view');
+    $labels = [
+      'View' => $entity_type->getLabel(),
+      'Views' => $entity_type->getCollectionLabel(),
+      'view' => $entity_type->getSingularLabel(),
+      'views' => $entity_type->getPluralLabel(),
+    ];
+    foreach ($labels as $string => $label) {
+      $this->assertSame($string, $label->getUntranslatedString());
+      $this->assertSame('View entity type', $label->getOption('context'));
+      $this->assertSame([], $label->getArguments());
+    }
+    $this->assertSame('View entity type', $entity_type->getCountLabel(1)->getOption('context'));
+  }
+
 }

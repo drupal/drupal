@@ -21,10 +21,10 @@ use Drupal\views\ViewEntityInterface;
  */
 #[ConfigEntityType(
   id: 'view',
-  label: new TranslatableMarkup('View', ['context' => 'View entity type']),
-  label_collection: new TranslatableMarkup('Views', ['context' => 'View entity type']),
-  label_singular: new TranslatableMarkup('view', ['context' => 'View entity type']),
-  label_plural: new TranslatableMarkup('views', ['context' => 'View entity type']),
+  label: new TranslatableMarkup('View', [], ['context' => 'View entity type']),
+  label_collection: new TranslatableMarkup('Views', [], ['context' => 'View entity type']),
+  label_singular: new TranslatableMarkup('view', [], ['context' => 'View entity type']),
+  label_plural: new TranslatableMarkup('views', [], ['context' => 'View entity type']),
   entity_keys: [
     'id' => 'id',
     'label' => 'label',
@@ -34,6 +34,7 @@ use Drupal\views\ViewEntityInterface;
   label_count: [
     'singular' => '@count view',
     'plural' => '@count views',
+    'context' => 'View entity type',
   ],
   config_export: [
     'id',
