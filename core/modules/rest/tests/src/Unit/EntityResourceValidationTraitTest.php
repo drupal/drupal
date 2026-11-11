@@ -9,7 +9,7 @@ use Drupal\node\Entity\Node;
 use Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 /**
  * Tests Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait.
  */
-#[CoversClass(EntityResourceValidationTrait::class)]
+#[CoversTrait(EntityResourceValidationTrait::class)]
 #[Group('rest')]
 class EntityResourceValidationTraitTest extends UnitTestCase {
 

@@ -56,6 +56,14 @@ class TestClassClassMetadataTest extends RuleTestCase {
           'Test class Drupal\Tests\Core\Foo\ConcreteWithAnnotationTest must have attribute \PHPUnit\Framework\Attributes\Group.',
           35,
         ],
+        [
+          'Test class Drupal\Tests\Core\Foo\TraitInClassAttributeTest must use attribute \PHPUnit\Framework\Attributes\CoversTrait, not \PHPUnit\Framework\Attributes\CoversClass, for trait Drupal\Tests\Core\Foo\FooTrait.',
+          48,
+        ],
+        [
+          'Test class Drupal\Tests\Core\Foo\TraitInClassAttributeTest must use attribute \PHPUnit\Framework\Attributes\UsesTrait, not \PHPUnit\Framework\Attributes\UsesClass, for trait Drupal\Tests\Core\Foo\FooTrait.',
+          48,
+        ],
       ]
     );
 

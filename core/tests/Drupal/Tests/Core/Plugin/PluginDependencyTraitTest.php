@@ -12,7 +12,7 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\Definition\DependentPluginDefinitionInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Prophecy\ProphecyInterface;
@@ -21,7 +21,7 @@ use Prophecy\Prophet;
 /**
  * Tests Drupal\Core\Plugin\PluginDependencyTrait.
  */
-#[CoversClass(PluginDependencyTrait::class)]
+#[CoversTrait(PluginDependencyTrait::class)]
 #[Group('Plugin')]
 class PluginDependencyTraitTest extends UnitTestCase {
 

@@ -11,7 +11,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
@@ -19,7 +19,7 @@ use Prophecy\Argument;
 /**
  * Tests Drupal\Core\Config\StorageCopyTrait.
  */
-#[CoversClass(StorageCopyTrait::class)]
+#[CoversTrait(StorageCopyTrait::class)]
 #[Group('Config')]
 class StorageCopyTraitTest extends UnitTestCase {
 

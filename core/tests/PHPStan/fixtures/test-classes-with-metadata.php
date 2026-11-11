@@ -41,3 +41,18 @@ class ConcreteWithAttributeTest extends TestCase {
 
 class NotATestClass {
 }
+
+trait FooTrait {
+}
+
+#[Group('Test')]
+#[\PHPUnit\Framework\Attributes\CoversClass(FooTrait::class)]
+#[\PHPUnit\Framework\Attributes\UsesClass(FooTrait::class)]
+class TraitInClassAttributeTest extends TestCase {
+}
+
+#[Group('Test')]
+#[\PHPUnit\Framework\Attributes\CoversTrait(FooTrait::class)]
+#[\PHPUnit\Framework\Attributes\UsesClass(ConcreteWithAttributeTest::class)]
+class TraitInTraitAttributeTest extends TestCase {
+}

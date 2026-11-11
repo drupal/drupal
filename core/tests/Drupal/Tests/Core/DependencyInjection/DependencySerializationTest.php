@@ -8,14 +8,14 @@ use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Test\TestKernel;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests Drupal\Core\DependencyInjection\DependencySerializationTrait.
  */
-#[CoversClass(DependencySerializationTrait::class)]
+#[CoversTrait(DependencySerializationTrait::class)]
 #[Group('DependencyInjection')]
 class DependencySerializationTest extends UnitTestCase {
 

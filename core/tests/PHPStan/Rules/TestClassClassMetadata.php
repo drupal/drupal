@@ -14,8 +14,12 @@ use PHPStan\Node\InClassNode;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\Attributes\UsesTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -145,6 +149,21 @@ final class TestClassClassMetadata implements Rule {
 
           case RunTestsInSeparateProcesses::class:
             $has_run_in_separate_process_attribute = TRUE;
+            break;
+
+          // PHPUnit 12 rejects a trait in these attributes, but only when it
+          // collects code coverage, which core's CI doesn't for most tests.
+          case CoversClass::class:
+          case UsesClass::class:
+            $replacement = $attribute->getName() === CoversClass::class ? CoversTrait::class : UsesTrait::class;
+            foreach ($attribute->getArgumentTypes()['className']->getConstantStrings() as $name) {
+              if ($this->reflectionProvider->hasClass($name->getValue()) && $this->reflectionProvider->getClass($name->getValue())->isTrait()) {
+                $fails[] = RuleErrorBuilder::message("Test class {$class->getName()} must use attribute \\{$replacement}, not \\{$attribute->getName()}, for trait {$name->getValue()}.")
+                  ->identifier('testClass.traitInClassAttribute')
+                  ->line($node->getStartLine())
+                  ->build();
+              }
+            }
             break;
         }
       }

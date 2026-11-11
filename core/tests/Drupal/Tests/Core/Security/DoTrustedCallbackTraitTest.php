@@ -10,7 +10,7 @@ use Drupal\Core\Security\StaticTrustedCallbackHelper;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Security\UntrustedCallbackException;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
@@ -18,7 +18,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 /**
  * Tests Drupal\Core\Security\DoTrustedCallbackTrait.
  */
-#[CoversClass(DoTrustedCallbackTrait::class)]
+#[CoversTrait(DoTrustedCallbackTrait::class)]
 #[Group('Security')]
 class DoTrustedCallbackTraitTest extends UnitTestCase {
   use DoTrustedCallbackTrait;
