@@ -72,7 +72,7 @@ class Condition extends ConditionBase {
         // use condition groups to fetch where a entity has X AND Y.
         // If we did not join the table again, the values only exist once
         // and the AND fails to match even though an entity has both X and Y.
-        $condition['field']->tableIndexPrefix = $this->conjunction === 'AND' ? $this->tableIndexPrefix . '.' . $key : $this->tableIndexPrefix;
+        $condition['field']->tableIndexPrefix = strtoupper($this->conjunction) === 'AND' ? $this->tableIndexPrefix . '.' . $key : $this->tableIndexPrefix;
         $condition['field']->nestedInsideOrCondition = $this->nestedInsideOrCondition || strtoupper($this->conjunction) === 'OR';
         $condition['field']->compile($sql_condition);
         $conditionContainer->condition($sql_condition);
