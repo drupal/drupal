@@ -34392,12 +34392,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrateSourceTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method PHPUnit\\\\Metadata\\\\MetadataCollection\\:\\:isCovers\\(\\)\\.$#',
-	'identifier' => 'method.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrateSourceTestBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to method get\\(\\) on an unknown class Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MemoryCounterBackend\\.$#',
 	'identifier' => 'class.notFound',
 	'count' => 2,
