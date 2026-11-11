@@ -390,4 +390,41 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     $this->assertSame($expected, $data['suggestions']);
   }
 
+  /**
+   * Tests that entity labels with HTML characters are properly escaped.
+   */
+  public function testLabelXssSanitization(): void {
+    // Create a node with a title containing a potential XSS payload.
+    $malicious_title = 'Test Node <script>alert(1)</script>';
+    $node = Node::create([
+      'type' => 'page',
+      'title' => $malicious_title,
+    ]);
+    $node->setCreatedTime(1695058272);
+    $node->save();
+
+    $editor = Editor::load('test_format');
+    $controller = EntityLinkSuggestionsController::create($this->container);
+
+    // Simulate an autocomplete request as sent by the CKEditor frontend.
+    // The URL path is irrelevant in a kernel test (no HTTP routing occurs).
+    $request = Request::create('/irrelevant-in-kernel-test');
+    $request->query->set('q', 'Test Node');
+    $request->query->set('hostEntityTypeId', 'node');
+    $request->query->set('hostEntityLangcode', 'en');
+    $response = $controller->suggestions($request, $editor);
+
+    $this->assertInstanceOf(JsonResponse::class, $response);
+    $data = json_decode($response->getContent(), TRUE);
+    $this->assertArrayHasKey('suggestions', $data);
+    $this->assertNotEmpty($data['suggestions']);
+
+    $suggestion = $data['suggestions'][0];
+
+    // The label must be HTML-escaped, not raw HTML.
+    $this->assertSame('Test Node &lt;script&gt;alert(1)&lt;/script&gt;', $suggestion['label']);
+    // Verify the raw XSS payload is not present.
+    $this->assertStringNotContainsString('<script>', $suggestion['label']);
+  }
+
 }
