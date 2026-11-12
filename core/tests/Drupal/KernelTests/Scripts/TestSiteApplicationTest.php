@@ -70,7 +70,10 @@ class TestSiteApplicationTest extends KernelTestBase {
     $process = Process::fromShellCommandline($command_line, $this->root);
     $process->run();
 
-    $this->assertStringContainsString('The file core/tests/fixtures/empty_file.php.module does not contain a class', $process->getErrorOutput());
+    // Account for different line lengths in output formatting by removing new
+    // lines and extra spaces.
+    $output = str_replace(["\n", '  '], [' '], $process->getErrorOutput());
+    $this->assertStringContainsString('The file core/tests/fixtures/empty_file.php.module does not contain a class', $output);
   }
 
   /**
