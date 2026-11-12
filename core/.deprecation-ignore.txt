@@ -33,3 +33,6 @@
 %Since symfony/http-foundation 8\.1: Directly setting property "headers" of "Drupal\\Core\\Cache\\CacheableResponse" is deprecated; pass the header bag as a constructor argument instead\.%
 %Since symfony/http-foundation 8\.1: Directly setting property "headers" of "Drupal\\big_pipe\\Render\\BigPipeResponse" is deprecated; pass the header bag as a constructor argument instead\.%
 %Since symfony/validator 8\.1: The "ConstraintValidator::initialize\(\)" method is deprecated. Use the "validateInContext\(\)" method instead of the "initialize\(\)" and "validate\(\)" ones\.%
+
+# Symfony 8.2.
+%The "Drupal\\Core\\DependencyInjection\\ContainerBuilder::reset\(\)" method will require a new "bool \$shutdown" argument in the next major version of its parent class "Symfony\\Component\\DependencyInjection\\Container", not defining it is deprecated\.%

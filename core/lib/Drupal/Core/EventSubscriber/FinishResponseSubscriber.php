@@ -201,11 +201,12 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    * @see \Symfony\Component\HttpFoundation\ResponseHeaderBag::computeCacheControlValue()
    */
   protected function isCacheControlCustomized(Response $response) {
-    // Symfony >= 3.2 explicitly removes the Cache-Control header for 301
-    // redirects which do not have a custom Cache-Control header. Treat those
-    // redirect responses as not customized.
+    // Symfony >= 8.2 explicitly removes the Cache-Control header for 301 and
+    // 308 redirects which do not have a custom Cache-Control header. Treat
+    // those redirect responses as not customized.
     // @see https://github.com/symfony/symfony/issues/17139
-    if ($response->getStatusCode() === 301 && !$response->headers->has('Cache-Control')) {
+    // @see https://github.com/symfony/http-foundation/commit/44b8a6043d8013a555c8b4283ae4ddfd4469328d
+    if (in_array($response->getStatusCode(), [301, 308], TRUE) && !$response->headers->has('Cache-Control')) {
       return FALSE;
     }
 

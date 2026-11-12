@@ -107,7 +107,8 @@ class Route extends SymfonyRoute {
     string|DeprecatedAlias|array $alias = [],
     string|\Stringable|\Closure|null $title = NULL,
   ) {
-    parent::__construct($path, $name, $requirements, $options, $defaults, $host, $methods, $schemes, $condition, $priority, $locale, $format, $utf8, $stateless, $env, $alias);
+    // The 'firewall' parameter on the parent class is not supported.
+    parent::__construct($path, $name, $requirements, $options, $defaults, $host, $methods, $schemes, $condition, $priority, $locale, $format, $utf8, $stateless, NULL, $env, $alias);
     if ($title !== NULL) {
       assert(!array_key_exists('_title', $this->defaults), 'The "title" property cannot be used together with a "_title" default on the Route attribute.');
       $this->defaults['_title'] = $title;

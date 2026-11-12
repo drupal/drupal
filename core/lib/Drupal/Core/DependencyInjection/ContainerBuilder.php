@@ -83,7 +83,8 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
   /**
    * {@inheritdoc}
    */
-  public function reset(): void {
+  public function reset(/* bool $shutdown = false */): void {
+    $shutdown = \func_num_args() && func_get_arg(0);
     $persist_services = [];
     foreach (array_keys($this->services) as $id) {
       $definition = $this->hasDefinition($id) ? $this->getDefinition($id) : NULL;
@@ -92,7 +93,7 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
         $persist_services[$id] = $this->services[$id];
       }
     }
-    parent::reset();
+    parent::reset($shutdown);
     $this->services = $persist_services;
   }
 

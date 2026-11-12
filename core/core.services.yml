@@ -1026,6 +1026,7 @@ services:
   argument_resolver.query_parameter:
     class: Symfony\Component\HttpKernel\Controller\ArgumentResolver\QueryParameterValueResolver
     public: false
+  Symfony\Component\HttpKernel\Controller\ArgumentResolver\QueryParameterValueResolver: '@argument_resolver.query_parameter'
   http_middleware.content_length:
     class: Drupal\Core\StackMiddleware\ContentLength
     tags:
