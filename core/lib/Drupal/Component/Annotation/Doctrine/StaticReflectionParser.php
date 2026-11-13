@@ -169,10 +169,7 @@ class StaticReflectionParser
         $this->classAnnotationOptimize = $classAnnotationOptimize;
     }
 
-    /**
-     * @return void
-     */
-    protected function parse()
+    protected function parse(): void
     {
         $fileName = $this->finder->findFile($this->className);
 

@@ -36,7 +36,7 @@ class DiffFormatter extends DiffFormatterBase {
   /**
    * {@inheritdoc}
    */
-  protected function _start_diff() {
+  protected function _start_diff(): void {
     $this->rows = [];
   }
 
@@ -66,7 +66,7 @@ class DiffFormatter extends DiffFormatterBase {
   /**
    * {@inheritdoc}
    */
-  protected function _start_block($header) {
+  protected function _start_block($header): void {
     if ($this->show_header) {
       $this->rows[] = $header;
     }
@@ -75,7 +75,7 @@ class DiffFormatter extends DiffFormatterBase {
   /**
    * {@inheritdoc}
    */
-  protected function _lines($lines, $prefix = ' ', $color = 'white') {
+  protected function _lines($lines, $prefix = ' ', $color = 'white'): void {
   }
 
   /**
@@ -157,7 +157,7 @@ class DiffFormatter extends DiffFormatterBase {
   /**
    * {@inheritdoc}
    */
-  protected function _added($lines) {
+  protected function _added($lines): void {
     foreach ($lines as $line) {
       $this->rows[] = array_merge($this->emptyLine(), $this->addedLine(Html::escape($line)));
     }
@@ -166,7 +166,7 @@ class DiffFormatter extends DiffFormatterBase {
   /**
    * {@inheritdoc}
    */
-  protected function _deleted($lines) {
+  protected function _deleted($lines): void {
     foreach ($lines as $line) {
       $this->rows[] = array_merge($this->deletedLine(Html::escape($line)), $this->emptyLine());
     }
@@ -175,7 +175,7 @@ class DiffFormatter extends DiffFormatterBase {
   /**
    * {@inheritdoc}
    */
-  protected function _context($lines) {
+  protected function _context($lines): void {
     foreach ($lines as $line) {
       $this->rows[] = array_merge($this->contextLine(Html::escape($line)), $this->contextLine(Html::escape($line)));
     }
@@ -184,7 +184,7 @@ class DiffFormatter extends DiffFormatterBase {
   /**
    * {@inheritdoc}
    */
-  protected function _changed($orig, $closing) {
+  protected function _changed($orig, $closing): void {
     $orig = array_map('\Drupal\Component\Utility\Html::escape', $orig);
     $closing = array_map('\Drupal\Component\Utility\Html::escape', $closing);
     $diff = new WordLevelDiff($orig, $closing);

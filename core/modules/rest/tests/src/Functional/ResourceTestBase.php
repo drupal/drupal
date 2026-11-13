@@ -221,7 +221,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   The HTTP method for which to set up authentication.
    *
    * @return void
-   *   Returns nothing.
    *
    * @see ::grantPermissionsToAnonymousRole()
    * @see ::grantPermissionsToAuthenticatedRole()
@@ -237,7 +236,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   The response to assert.
    *
    * @return void
-   *   Returns nothing.
    */
   abstract protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response);
 
@@ -254,7 +252,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   Request options to apply.
    *
    * @return void
-   *   Returns nothing.
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
@@ -273,7 +270,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   Request options to apply.
    *
    * @return void
-   *   Returns nothing.
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
@@ -293,7 +289,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * E.g. for cookie authentication, we first need to get a cookie.
    *
    * @return void
-   *   Returns nothing.
    */
   protected function initAuthentication() {}
 

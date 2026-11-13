@@ -21,9 +21,6 @@ trait InfoWriterTrait {
    *   The info file path.
    * @param array $info
    *   The info array.
-   *
-   * @return void
-   *   No return value.
    */
   protected function writeInfoFile(string $file_path, array $info): void {
     $mtime = file_exists($file_path) ? filemtime($file_path) : FALSE;

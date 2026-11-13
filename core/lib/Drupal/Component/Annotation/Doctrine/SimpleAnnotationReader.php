@@ -83,10 +83,8 @@ final class SimpleAnnotationReader
      * Adds a namespace in which we will look for annotations.
      *
      * @param string $namespace
-     *
-     * @return void
      */
-    public function addNamespace($namespace)
+    public function addNamespace($namespace): void
     {
         $this->parser->addNamespace($namespace);
     }

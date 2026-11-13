@@ -774,9 +774,6 @@ class WebAssert extends MinkWebAssert {
    * @param string|\Drupal\Core\Url $page
    *   A url string, or object.
    *
-   * @return void
-   *   No return value.
-   *
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function addressEquals(string|Url $page): void {

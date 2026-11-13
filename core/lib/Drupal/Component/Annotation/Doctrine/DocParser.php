@@ -244,10 +244,8 @@ final class DocParser
      * fully qualified class names.
      *
      * @param array $names
-     *
-     * @return void
      */
-    public function setIgnoredAnnotationNames(array $names)
+    public function setIgnoredAnnotationNames(array $names): void
     {
         $this->ignoredAnnotationNames = $names;
     }
@@ -256,10 +254,8 @@ final class DocParser
      * Sets ignore on not-imported annotations.
      *
      * @param boolean $bool
-     *
-     * @return void
      */
-    public function setIgnoreNotImportedAnnotations($bool)
+    public function setIgnoreNotImportedAnnotations($bool): void
     {
         $this->ignoreNotImportedAnnotations = (bool) $bool;
     }
@@ -269,11 +265,9 @@ final class DocParser
      *
      * @param array $namespace
      *
-     * @return void
-     *
      * @throws \RuntimeException
      */
-    public function addNamespace($namespace)
+    public function addNamespace($namespace): void
     {
         if ($this->imports) {
             throw new \RuntimeException('You must either use addNamespace(), or setImports(), but not both.');
@@ -287,11 +281,9 @@ final class DocParser
      *
      * @param array $imports
      *
-     * @return void
-     *
      * @throws \RuntimeException
      */
-    public function setImports(array $imports)
+    public function setImports(array $imports): void
     {
         if ($this->namespaces) {
             throw new \RuntimeException('You must either use addNamespace(), or setImports(), but not both.');
@@ -304,10 +296,8 @@ final class DocParser
      * Sets current target context as bitmask.
      *
      * @param integer $target
-     *
-     * @return void
      */
-    public function setTarget($target)
+    public function setTarget($target): void
     {
         $this->target = $target;
     }
@@ -401,11 +391,9 @@ final class DocParser
      * @param string     $expected Expected string.
      * @param array|null $token    Optional token.
      *
-     * @return void
-     *
      * @throws AnnotationException
      */
-    private function syntaxError($expected, $token = null)
+    private function syntaxError($expected, $token = null): void
     {
         if ($token === null) {
             $token = $this->lexer->lookahead;
@@ -452,10 +440,8 @@ final class DocParser
      * Collects parsing metadata for a given annotation class
      *
      * @param string $name The annotation name
-     *
-     * @return void
      */
-    private function collectAnnotationMetadata($name)
+    private function collectAnnotationMetadata($name): void
     {
         if (self::$metadataParser === null) {
             self::$metadataParser = new self();
@@ -556,10 +542,8 @@ final class DocParser
      *
      * @param array     $metadata
      * @param Attribute $attribute
-     *
-     * @return void
      */
-    private function collectAttributeTypeMetadata(&$metadata, Attribute $attribute)
+    private function collectAttributeTypeMetadata(&$metadata, Attribute $attribute): void
     {
         // handle internal type declaration
         $type = isset(self::$typeMap[$attribute->type])
