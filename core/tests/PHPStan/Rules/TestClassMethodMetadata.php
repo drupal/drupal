@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\PHPStan\Rules;
 
-// cspell:ignore analyse testdox
+// cspell:ignore testdox
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;

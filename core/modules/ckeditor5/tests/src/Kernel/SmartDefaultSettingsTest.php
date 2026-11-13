@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
-// cspell:ignore arta codesnippet
-
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\SmartDefaultSettings;
 use Drupal\Component\Utility\NestedArray;

@@ -7,7 +7,7 @@ namespace Drupal\Tests\config_translation\Functional;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore anonyme viewsviewfiles
+// cspell:ignore viewsviewfiles
 /**
  * Translate settings and entities to various languages.
  */

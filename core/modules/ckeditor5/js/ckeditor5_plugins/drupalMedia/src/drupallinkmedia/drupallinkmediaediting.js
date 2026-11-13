@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:ignore drupallinkmediaediting linkediting linkimageediting linkcommand */
+/* cspell:ignore linkimageediting linkcommand */
 import { Plugin, Matcher, toMap } from 'ckeditor5';
 /**
  * Returns the first drupal-media element in a given view element.

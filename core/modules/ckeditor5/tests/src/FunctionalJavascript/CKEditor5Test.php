@@ -19,7 +19,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
-// cspell:ignore esque māori sourceediting splitbutton upcasted
+// cspell:ignore esque māori sourceediting
 /**
  * Tests for CKEditor 5.
  *

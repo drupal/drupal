@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 
-// cspell:ignore ascript barbaz ckers cript CVEs dynsrc fooÿñ msgbox ncript
+// cspell:ignore ascript barbaz cript dynsrc fooÿñ msgbox ncript
 // cspell:ignore nfocus nmedi nosuchscheme nosuchtag onmediaerror scrscriptipt
 // cspell:ignore tascript vbscript
 /**

@@ -17,8 +17,6 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\Attributes\TestWith;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
-// cspell:ignore sourceediting
-
 /**
  * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing.
  *

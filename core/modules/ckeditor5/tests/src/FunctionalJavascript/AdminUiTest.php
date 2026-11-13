@@ -7,7 +7,7 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore sourceediting xmlhttprequest
+// cspell:ignore sourceediting
 /**
  * Tests for CKEditor 5 in the admin UI.
  *

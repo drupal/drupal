@@ -7,8 +7,6 @@ namespace Drupal\Tests\help\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\Locale\InstallerLanguageTrait;
 
-// cspell:ignore hilfetestmodul übersetzung
-
 /**
  * Provides a base class for functional help topic tests that use translation.
  *

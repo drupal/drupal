@@ -22,7 +22,7 @@ use Drupal\migrate\Row;
 use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-// cspell:ignore huhuu maailma otsikko sivun validatable
+// cspell:ignore huhuu maailma otsikko sivun
 
 /**
  * Provides destination class for all content entities lacking a specific class.

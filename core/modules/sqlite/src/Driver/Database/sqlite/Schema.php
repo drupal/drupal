@@ -8,7 +8,7 @@ use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 
-// cspell:ignore autoincrement autoindex xinfo
+// cspell:ignore autoincrement xinfo
 
 /**
  * @ingroup schemaapi

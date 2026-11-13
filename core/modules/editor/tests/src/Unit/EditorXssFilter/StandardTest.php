@@ -12,9 +12,9 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
-// cspell:ignore ascript attributename bgsound bscript ckers cript datafld
-// cspell:ignore dataformatas datasrc dynsrc ession livescript msgbox nmouseover
-// cspell:ignore noxss pression ript scri scriptlet unicoded vbscript
+// cspell:ignore ascript attributename bscript ckers cript dataformatas dynsrc
+// cspell:ignore ession livescript msgbox noxss pression ript scri scriptlet
+// cspell:ignore unicoded vbscript
 /**
  * Tests Drupal\editor\EditorXssFilter\Standard.
  */

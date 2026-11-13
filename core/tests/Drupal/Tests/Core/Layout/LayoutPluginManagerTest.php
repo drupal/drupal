@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Prophecy\Argument;
 
-// cspell:ignore lorem, ipsum, consectetur, adipiscing
+// cspell:ignore consectetur adipiscing
 /**
  * Tests Drupal\Core\Layout\LayoutPluginManager.
  */

@@ -9,7 +9,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore hola
 /**
  * Tests translating a non-revisionable field.
  */

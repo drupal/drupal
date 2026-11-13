@@ -10,7 +10,7 @@ use Drupal\locale\Model\TranslationUpdateMode;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore anonyme viewsviewfiles
+// cspell:ignore anonyme
 /**
  * Translate settings and entities to various languages.
  */

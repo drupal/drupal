@@ -14,8 +14,6 @@ use PhpTuf\ComposerStager\API\Process\Service\OutputCallbackInterface;
 use PhpTuf\ComposerStager\API\Process\Service\ProcessInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 
-// cspell:ignore BINDIR
-
 /**
  * Runs Composer through the current PHP interpreter.
  *

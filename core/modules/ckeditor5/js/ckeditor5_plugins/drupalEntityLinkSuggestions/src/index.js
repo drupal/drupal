@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cspell:ignore linksuggestionediting focusables
+// cspell:ignore linksuggestionediting
 
 import {
   Plugin,

@@ -13,7 +13,6 @@ use Drupal\file\Entity\File;
  */
 class FileHooks {
 
-  // cspell:ignore widthx
   use StringTranslationTrait;
 
   /**

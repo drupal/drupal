@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Icon;
 
-// cspell:ignore corge grault garply quux plugh errfile errline
+// cspell:ignore corge grault garply plugh errfile errline
 
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Theme\Icon\IconFinder;

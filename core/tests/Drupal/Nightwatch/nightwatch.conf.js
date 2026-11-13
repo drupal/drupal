@@ -1,4 +1,3 @@
-// cspell:ignore testcases
 const path = require('node:path');
 const { globSync } = require('glob');
 

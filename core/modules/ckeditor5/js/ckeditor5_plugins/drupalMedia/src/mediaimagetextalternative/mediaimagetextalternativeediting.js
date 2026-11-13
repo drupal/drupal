@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:ignore drupalmediametadatarepository insertdrupalmediacommand */
+/* cspell:ignore drupalmediametadatarepository */
 /* cspell:ignore mediaimagetextalternative mediaimagetextalternativecommand */
 /* cspell:ignore mediaimagetextalternativeediting */
 

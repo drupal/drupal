@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Password;
 
-// cspell:ignore abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+// cspell:ignore abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789
 
 /**
  * Provides a default password generator.

@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// cspell:ignore datafilter downcasted linkimageediting emptyelement downcastdispatcher imageloadobserver
+// cspell:ignore datafilter downcasted linkimageediting emptyelement downcastdispatcher
 import {
   Plugin,
   _setHtmlSupportViewAttributes as setViewAttributes,

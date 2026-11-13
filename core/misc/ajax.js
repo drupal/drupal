@@ -1,5 +1,3 @@
-/* cspell:ignore xmlhttprequest */
-
 /**
  * @file
  * Provides Ajax page updating via jQuery $.ajax.

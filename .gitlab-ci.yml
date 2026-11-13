@@ -1,4 +1,4 @@
-# cspell:ignore codequality Micheh micheh webide testdox updatedb stylelintrc fastzip phpcscache Ksection drupaltestbot drupaltestbotpw Dwebdriver logfile XVFB pipefail
+# cspell:ignore codequality Micheh micheh webide testdox updatedb fastzip phpcscache Ksection drupaltestbot drupaltestbotpw Dwebdriver logfile pipefail
 
 ################
 # Drupal GitLabCI template.

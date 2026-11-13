@@ -174,7 +174,7 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     // Change the site name.
     // The site name token in the email will be replaced by this one.
-    // cspell:ignore L'Equipe de l'Agriculture
+    // cspell:ignore L'Equipe
     $config = $this->config('system.site');
     $config->set('name', "L'Equipe de l'Agriculture")->save();
     $this->rebuildContainer();

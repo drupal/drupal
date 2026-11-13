@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-// cspell:ignore analyse
 namespace Drupal\PHPStan\Rules;
 
 use Drupal\BuildTests\Framework\BuildTestBase;

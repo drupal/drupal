@@ -12,7 +12,6 @@ use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\DuplicateConfigActionIdException;
 use Drupal\Core\Config\Action\EntityMethodException;
 use Drupal\KernelTests\KernelTestBase;
-// cspell:ignore inflector
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 

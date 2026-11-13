@@ -2,8 +2,6 @@
 
 namespace Drupal\Component\FileSystem;
 
-// cspell:ignore winnt
-
 /**
  * Provides file system functions.
  */
