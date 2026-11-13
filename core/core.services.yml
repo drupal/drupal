@@ -246,10 +246,7 @@ services:
   Drupal\Core\Cache\Context\CacheContextsManager: '@cache_contexts_manager'
   cache_tags.invalidator:
     class: Drupal\Core\Cache\CacheTagsInvalidator
-    tags:
-      - { name: service_collector, call: addInvalidator, tag: cache_tags_invalidator }
-      - { name: service_collector, call: addBin, tag: cache.bin }
-      - { name: service_collector, call: addBin, tag: cache.bin.memory }
+    arguments: [!tagged_iterator cache_tags_invalidator, !tagged_iterator cache.bin, !tagged_iterator cache.bin.memory]
   Drupal\Core\Cache\CacheTagsInvalidatorInterface: '@cache_tags.invalidator'
   cache_tags.invalidator.checksum:
     class: Drupal\Core\Cache\DatabaseCacheTagsChecksum
