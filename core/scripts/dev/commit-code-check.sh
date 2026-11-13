@@ -245,7 +245,15 @@ if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]]; then
 else
   # Only run PHPStan on changed files locally.
   printf "\nRunning PHPStan on changed files.\n"
-  php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan-partial.neon" $ABS_FILES $memory_limit
+  PHPSTAN_OUTPUT=$(php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan-partial.neon" $ABS_FILES $memory_limit 2>&1)
+  PHPSTAN_STATUS=$?
+  printf "%s\n" "$PHPSTAN_OUTPUT"
+  # PHPStan exits with an error when every changed file is excluded from
+  # analysis, for example when only *.api.php files changed.
+  if [[ $PHPSTAN_STATUS -ne 0 && "$PHPSTAN_OUTPUT" == *"No files found to analyse"* ]]; then
+    PHPSTAN_STATUS=0
+  fi
+  (exit $PHPSTAN_STATUS)
 fi
 
 if [ "$?" -ne "0" ]; then
@@ -360,7 +368,7 @@ CSS_FILES=""
 TWIG_FILES=""
 for FILE in $FILES; do
   if [[ -f "$TOP_LEVEL/$FILE" ]]; then
-    if [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]]; then
+    if [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]] && [[ $FILE != "core/.phpstan-baseline.php" ]]; then
       PHP_FILES="$PHP_FILES $TOP_LEVEL/$FILE"
     fi
     if [[ $FILE =~ \.(yml|js)$ ]]; then
