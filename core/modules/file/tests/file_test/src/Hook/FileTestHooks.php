@@ -9,9 +9,6 @@ use Drupal\file\Entity\File;
 use Drupal\file_test\FileTestCdn;
 use Drupal\file_test\FileTestHelper;
 
-// cspell:ignore tarz
-// cspell:ignore garply
-
 /**
  * Hook implementations for file_test.
  */

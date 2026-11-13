@@ -10,8 +10,6 @@ use Drupal\Core\Image\ImageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-// cspell:ignore IMG_NEAREST_NEIGHBOUR
-
 /**
  * GD image toolkit image manipulation test base class.
  */

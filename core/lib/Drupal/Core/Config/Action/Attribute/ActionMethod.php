@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Config\Action\Attribute;
 
-// cspell:ignore inflector
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Config\Action\Exists;
 use Drupal\Core\Extension\ExtensionDiscovery;

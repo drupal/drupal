@@ -10,7 +10,6 @@
  * Navigation top bar layout styles.
  */
 
-/* cspell:ignore xxxs */
 :root {
   --drupal-displace-offset-top: 4rem;
   --admin-toolbar-top-bar-height: 4rem;

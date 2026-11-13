@@ -256,7 +256,7 @@ class NotificationHandlerTest extends EntityKernelTestBase {
     $config = $this->config('system.site');
     $config->set('langcode', 'en');
     // Use a name that could trigger HTML entity replacements.
-    // cspell:ignore L'Equipe de l'Agriculture
+    // cspell:ignore L'Equipe
     $config->set('name', "L'Equipe de l'Agriculture")->save();
 
     $hooks = \Drupal::service(UserHooks::class);

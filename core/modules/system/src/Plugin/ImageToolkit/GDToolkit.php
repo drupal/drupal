@@ -19,7 +19,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-// cspell:ignore imagecreatefrom rrggbb
+// cspell:ignore imagecreatefrom
 
 /**
  * Defines the GD2 toolkit for image manipulation within Drupal.

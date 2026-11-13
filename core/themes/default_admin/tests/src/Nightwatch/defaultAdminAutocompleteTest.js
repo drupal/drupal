@@ -1,5 +1,3 @@
-// cspell:ignore is-autocompleting
-
 module.exports = {
   '@tags': ['core'],
 

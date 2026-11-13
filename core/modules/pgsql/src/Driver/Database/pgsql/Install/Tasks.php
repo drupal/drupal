@@ -7,7 +7,7 @@ use Drupal\Core\Database\Install\Tasks as InstallTasks;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
-// cspell:ignore proname trgm
+// cspell:ignore proname
 
 /**
  * Specifies installation tasks for PostgreSQL databases.

@@ -4,7 +4,7 @@ namespace Drupal\Core\PreWarm;
 
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 
-// cspell:ignore ABCDEF FCDABE BEDAFC
+// cspell:ignore FCDABE BEDAFC
 
 /**
  * Prewarms caches for services that implement PreWarmableInterface.

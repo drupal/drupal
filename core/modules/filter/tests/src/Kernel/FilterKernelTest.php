@@ -18,7 +18,6 @@ use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore outro
 // cspell:ignore toolongdomainexampledomainexampledomainexampledomainexampledomain
 /**
  * Tests Filter module filters individually.

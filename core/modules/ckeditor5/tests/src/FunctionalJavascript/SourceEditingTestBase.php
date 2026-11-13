@@ -10,8 +10,6 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
-// cspell:ignore sourceediting
-
 /**
  * Provides a base class for testing the source editing function.
  *

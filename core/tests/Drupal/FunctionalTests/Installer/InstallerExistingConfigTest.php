@@ -7,7 +7,7 @@ namespace Drupal\FunctionalTests\Installer;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore nmsgid nmsgstr enregistrer
+// cspell:ignore enregistrer
 /**
  * Verifies that installing from existing configuration works.
  */

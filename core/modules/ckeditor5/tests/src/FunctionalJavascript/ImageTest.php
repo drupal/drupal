@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore imageresize imageupload
+// cspell:ignore imageresize
 /**
  * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image.
  *

@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
-// cspell:ignore attribute\'close
 /**
  * Ensures that a form's action attribute can't be exploited with XSS.
  */

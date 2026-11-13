@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
-// cspell:ignore Sofie Deutsch doo
+// cspell:ignore Sofie Deutsch
 
 use Drupal\ckeditor5\Controller\EntityLinkSuggestionsController;
 use Drupal\language\Entity\ConfigurableLanguage;

@@ -8,8 +8,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 
-// cspell:ignore imageresize
-
 /**
  * Trait with common test methods for image tests.
  */

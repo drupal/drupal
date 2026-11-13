@@ -9,8 +9,6 @@ use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
-// cspell:ignore imageresize
-
 /**
  * Provides a base class for testing CKEditor 5 image URL insertion.
  *

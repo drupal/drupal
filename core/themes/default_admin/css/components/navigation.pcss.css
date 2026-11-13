@@ -3,8 +3,6 @@
  * Navigation layout overrides for the admin toolbar.
  */
 
-/* cspell:ignore navigationcreate, toolsextra, xxxs */
-
 @import "../base/media-queries.pcss.css";
 
 :root {

@@ -11,8 +11,7 @@ use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore displaymessage scriptalertxsssubjectscript
-// cspell:ignore testcontextawareblock
+// cspell:ignore displaymessage testcontextawareblock
 /**
  * Tests that the block configuration UI exists and stores data correctly.
  */

@@ -17,8 +17,6 @@ use Drupal\file\Entity\File;
 use Drupal\file\Upload\ManagedFileElementHelper;
 use Symfony\Component\HttpFoundation\Request;
 
-// cspell:ignore filefield
-
 /**
  * Provides an AJAX/progress aware widget for uploading and saving a file.
  */

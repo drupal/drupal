@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\content_moderation\Plugin\ConfigAction;
 
-// cspell:ignore inflector
-
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;

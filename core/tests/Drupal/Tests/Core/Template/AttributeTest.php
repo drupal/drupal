@@ -19,8 +19,6 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use Twig\Environment;
 use Twig\Markup as TwigMarkup;
 
-// cspell:ignore phpggc
-
 /**
  * Tests Drupal\Core\Template\Attribute.
  */

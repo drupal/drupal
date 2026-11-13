@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Yaml\Yaml;
 
-// cspell:ignore esque imageUpload sourceediting Editing's
+// cspell:ignore esque imageUpload sourceediting
 /**
  * Tests for CKEditor 5.
  *

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\TestSite;
 
-// cspell:ignore nmsgid nmsgstr enregistrer
+// cspell:ignore enregistrer
 
 /**
  * Setup file used by TestSiteApplicationTest.

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver;
 
-// cspell:ignore inflector
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;

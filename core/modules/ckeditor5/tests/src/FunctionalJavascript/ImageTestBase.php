@@ -7,8 +7,6 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
-// cspell:ignore imageresize
-
 /**
  * Tests Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image.
  *

@@ -12,7 +12,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-// cSpell:ignore María García Gregorio Sánchez
+// cSpell:ignore María García Sánchez
 
 /**
  * Defines a helper class for importing default content.

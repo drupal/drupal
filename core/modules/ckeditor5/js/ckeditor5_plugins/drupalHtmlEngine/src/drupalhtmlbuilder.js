@@ -1,5 +1,3 @@
-// cspell:ignore apos
-
 /**
  * HTML builder that converts document fragments into strings.
  *

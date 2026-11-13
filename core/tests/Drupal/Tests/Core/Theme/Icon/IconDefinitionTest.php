@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Theme\Icon\Exception\IconDefinitionInvalidDataException;
 use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Tests\UnitTestCase;
-// cspell:ignore corge grault quux
+// cspell:ignore corge grault
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;

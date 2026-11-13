@@ -23,7 +23,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Symfony\Component\Yaml\Yaml;
 
-// cspell:ignore onhover baguette
+// cspell:ignore onhover
 
 /**
  * Tests Validators.

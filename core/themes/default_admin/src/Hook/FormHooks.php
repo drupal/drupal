@@ -19,8 +19,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\views\Form\ViewsForm;
 use Drupal\views_ui\Form\Ajax\ViewsFormInterface;
 
-// cspell:ignore apng
-
 /**
  * Provides form related hook implementations.
  */

@@ -11,8 +11,6 @@
 
 use Drupal\Core\Locale\CountryManager;
 
-// cspell:ignore localenames
-
 // Determine DRUPAL_ROOT.
 $dir = dirname(__FILE__);
 while (!defined('DRUPAL_ROOT')) {

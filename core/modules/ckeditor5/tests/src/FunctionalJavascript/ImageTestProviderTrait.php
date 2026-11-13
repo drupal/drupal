@@ -8,8 +8,6 @@ use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-// cspell:ignore imageresize
-
 /**
  * Provides test methods using data providers for image tests.
  */

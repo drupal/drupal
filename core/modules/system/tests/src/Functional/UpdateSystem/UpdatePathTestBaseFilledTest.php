@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore hola testblock usuario
+// cspell:ignore testblock usuario
 /**
  * Runs UpdatePathTestBase with a dump filled with content.
  */

@@ -13,8 +13,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 use Prophecy\Argument;
 
-// cspell:ignore BINDIR
-
 /**
  * Tests Package Manager's Composer runner service.
  *

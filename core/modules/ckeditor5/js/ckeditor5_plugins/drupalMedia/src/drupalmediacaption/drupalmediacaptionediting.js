@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:ignore insertdrupalmedia JSONified drupalmediacaptioncommand downcasted */
+/* cspell:ignore drupalmediacaptioncommand downcasted */
 import {
   Plugin,
   ModelElement,

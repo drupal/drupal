@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-// cSpell:ignore phpggc, topsecret
+// cSpell:ignore phpggc topsecret
 
 namespace Drupal\KernelTests\Core\User;
 

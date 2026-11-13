@@ -14,8 +14,8 @@ use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-// cspell:ignore chien chiens deutsch januari lundi montag moutons műveletek
-// cspell:ignore svibanj svib räme
+// cspell:ignore chien chiens deutsch januari montag moutons műveletek
+// cspell:ignore svibanj svib
 /**
  * Tests the import of locale files.
  */

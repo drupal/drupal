@@ -83,7 +83,7 @@ class OriginatorSubscriberTest extends KernelTestBase {
     $languageManager = $this->container->get(LanguageManagerInterface::class);
     assert($languageManager instanceof ConfigurableLanguageManagerInterface);
     // Use a name that could trigger HTML entity replacements.
-    // cspell:ignore L'Equipe de l'Agriculture
+    // cspell:ignore L'Equipe
     $languageManager->getLanguageConfigOverride('fr', 'system.site')
       ->set('mail', 'site-mail-fr@example.com')
       ->set('name', "L'Equipe de l'Agriculture")

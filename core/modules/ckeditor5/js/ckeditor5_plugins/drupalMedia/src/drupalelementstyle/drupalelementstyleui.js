@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:ignore buttonview componentfactory drupalelementstyle */
 /* cspell:ignore drupalelementstylecommand drupalelementstyleui */
-/* cspell:ignore drupalelementstyleediting imagestyle splitbutton */
+/* cspell:ignore drupalelementstyleediting */
 import {
   Plugin,
   Collection,

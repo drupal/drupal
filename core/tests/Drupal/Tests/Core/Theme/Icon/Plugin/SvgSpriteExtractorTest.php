@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Icon\Plugin;
 
-// cspell:ignore corge
-
 use Drupal\Core\Theme\Icon\IconDefinition;
 use Drupal\Core\Theme\Icon\IconFinder;
 use Drupal\Core\Theme\Plugin\IconExtractor\SvgSpriteExtractor;

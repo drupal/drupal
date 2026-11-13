@@ -11,7 +11,6 @@ use Drupal\migrate\MigrateSkipRowException;
 use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-// cspell:ignore idmap
 /**
  * Defines the Migration plugin.
  *

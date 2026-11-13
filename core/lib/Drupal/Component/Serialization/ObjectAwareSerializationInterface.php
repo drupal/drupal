@@ -2,7 +2,7 @@
 
 namespace Drupal\Component\Serialization;
 
-// cspell:ignore serializers igbinary
+// cspell:ignore igbinary
 
 /**
  * Ensures that a serializer is usable for serializing PHP objects.

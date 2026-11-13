@@ -9,7 +9,7 @@ use Drupal\Core\Database\SchemaObjectExistsException;
 
 // cSpell:ignore adbin adnum adrelid adsrc attisdropped attname attnum attrdef
 // cSpell:ignore attrelid atttypid atttypmod bigserial conkey conname conrelid
-// cSpell:ignore contype fillfactor indexname indexrelid indisprimary indkey
+// cSpell:ignore contype fillfactor indexrelid indisprimary indkey
 // cSpell:ignore indrelid nextval nspname regclass relkind relname relnamespace
 // cSpell:ignore schemaname setval
 
