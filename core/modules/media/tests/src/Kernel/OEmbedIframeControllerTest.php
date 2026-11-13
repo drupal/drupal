@@ -121,9 +121,6 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
 
   /**
    * Tests that the response max age is set to the same value as that of the resource.
-   *
-   * @return void
-   *   No return value.
    */
   public function testResponseCacheMaxAge(): void {
     $hash = $this->container->get('media.oembed.iframe_url_helper')
@@ -162,9 +159,6 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
 
   /**
    * Tests that the response max age is set to 0 when a ResourceException is raised while fetching the resource.
-   *
-   * @return void
-   *   No return value.
    */
   public function testResponseCacheMaxAgeUponResourceException(): void {
     $hash = $this->container->get('media.oembed.iframe_url_helper')
@@ -193,9 +187,6 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
 
   /**
    * Tests that the response max age is 5 years when the max age returned by the provider is greater than 5 years.
-   *
-   * @return void
-   *   No return value.
    */
   public function testResponseCacheMaxAgeGreaterThanFiveYears(): void {
     $hash = $this->container->get('media.oembed.iframe_url_helper')

@@ -142,11 +142,8 @@ class DiffFormatter {
    *   Length of the changed lines in the new block.
    * @param \Drupal\Component\Diff\Engine\DiffOp[] $edits
    *   An array of diff operations.
-   *
-   * @return void
-   *   No return value.
    */
-  protected function _block($xbeg, $xlen, $ybeg, $ylen, &$edits) {
+  protected function _block($xbeg, $xlen, $ybeg, $ylen, &$edits): void {
     $this->_start_block($this->_block_header($xbeg, $xlen, $ybeg, $ylen));
     foreach ($edits as $edit) {
       if ($edit->type == 'copy') {
@@ -170,11 +167,8 @@ class DiffFormatter {
 
   /**
    * Prepare the start of the diff output.
-   *
-   * @return void
-   *   No return value.
    */
-  protected function _start_diff() {
+  protected function _start_diff(): void {
     ob_start();
   }
 
@@ -221,11 +215,8 @@ class DiffFormatter {
    *
    * @param string $header
    *   The header to output.
-   *
-   * @return void
-   *   No return value.
    */
-  protected function _start_block($header) {
+  protected function _start_block($header): void {
     if ($this->show_header) {
       echo $header . "\n";
     }
@@ -233,11 +224,8 @@ class DiffFormatter {
 
   /**
    * Format the end of the diff block.
-   *
-   * @return void
-   *   No return value.
    */
-  protected function _end_block() {
+  protected function _end_block(): void {
   }
 
   /**
@@ -248,11 +236,8 @@ class DiffFormatter {
    * @param string $prefix
    *   The character to use when prefixing the lines (like '<' or '>');
    *   defaults to ' '.
-   *
-   * @return void
-   *   No return value.
    */
-  protected function _lines($lines, $prefix = ' ') {
+  protected function _lines($lines, $prefix = ' '): void {
     foreach ($lines as $line) {
       echo "$prefix $line\n";
     }
@@ -263,11 +248,8 @@ class DiffFormatter {
    *
    * @param string[] $lines
    *   An array of lines.
-   *
-   * @return void
-   *   No return value.
    */
-  protected function _context($lines) {
+  protected function _context($lines): void {
     $this->_lines($lines);
   }
 
@@ -276,11 +258,8 @@ class DiffFormatter {
    *
    * @param string[] $lines
    *   An array of lines.
-   *
-   * @return void
-   *   No return value.
    */
-  protected function _added($lines) {
+  protected function _added($lines): void {
     $this->_lines($lines, '>');
   }
 
@@ -289,11 +268,8 @@ class DiffFormatter {
    *
    * @param string[] $lines
    *   An array of lines.
-   *
-   * @return void
-   *   No return value.
    */
-  protected function _deleted($lines) {
+  protected function _deleted($lines): void {
     $this->_lines($lines, '<');
   }
 
@@ -304,11 +280,8 @@ class DiffFormatter {
    *   An array of the original lines.
    * @param string[] $closing
    *   An array of the new lines.
-   *
-   * @return void
-   *   No return value.
    */
-  protected function _changed($orig, $closing) {
+  protected function _changed($orig, $closing): void {
     $this->_deleted($orig);
     echo "---\n";
     $this->_added($closing);

@@ -115,9 +115,6 @@ readonly class LocaleProjectRepository {
 
   /**
    * Deletes all projects records.
-   *
-   * @return void
-   *   An associative array of items successfully returned, indexed by key.
    */
   public function deleteAll(): void {
     $this->keyValueFactory->get('locale.project')->deleteAll();

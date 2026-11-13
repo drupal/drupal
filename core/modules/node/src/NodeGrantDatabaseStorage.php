@@ -152,7 +152,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function alterQuery($query, array $tables, $operation, AccountInterface $account, $base_table) {
+  public function alterQuery($query, array $tables, $operation, AccountInterface $account, $base_table): void {
     if (!$langcode = $query->getMetaData('langcode')) {
       $langcode = FALSE;
     }
