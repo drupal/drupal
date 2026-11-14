@@ -216,8 +216,8 @@
     }
 
     &::before {
-      inset-block-start: var(--admin-space-density-xl, var(--admin-space-xl));
-      inset-inline-start: 1.5rem;
+      inset-block-start: var(--admin-space-l);
+      margin-block-start: 0;
     }
 
     &:focus {
