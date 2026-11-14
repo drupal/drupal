@@ -347,6 +347,13 @@ class Page extends PathPluginBase {
           '#type' => 'checkbox',
           '#default_value' => !empty($menu['expanded']),
           '#description' => $this->t('If selected and this menu link has children, the menu will always appear expanded.'),
+          // Only normal menu links end up in a menu and can be expanded.
+          // @see \Drupal\views\Plugin\views\display\PathPluginBase::getMenuLinks()
+          '#states' => [
+            'visible' => [
+              ':input[name="menu[type]"]' => ['value' => 'normal'],
+            ],
+          ],
         ];
 
         $menu_parent = $menu['menu_name'] . ':' . $menu['parent'];

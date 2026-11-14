@@ -90,6 +90,35 @@ class DisplayTest extends WebDriverTestBase {
   }
 
   /**
+   * Tests that "Show as expanded" only shows for a normal menu entry.
+   */
+  public function testMenuExpandedVisibility(): void {
+    $this->drupalGet('admin/structure/views/view/test_content_ajax/edit/page_1');
+    $page = $this->getSession()->getPage();
+
+    // Open the menu settings of the page display.
+    $page->find('css', 'a[href*="/display/test_content_ajax/page_1/menu"]')->click();
+    $expanded = $this->assertSession()->waitForField('menu[expanded]');
+
+    // The display is a menu tab, which never ends up in a menu.
+    $this->assertFalse($expanded->isVisible());
+
+    // A normal menu link can have children to expand.
+    $page->find('css', 'input[name="menu[type]"][value="normal"]')->click();
+    $page->waitFor(10, function () use ($expanded) {
+      return $expanded->isVisible();
+    });
+    $this->assertTrue($expanded->isVisible());
+
+    // Without a menu entry there is nothing to expand.
+    $page->find('css', 'input[name="menu[type]"][value="none"]')->click();
+    $page->waitFor(10, function () use ($expanded) {
+      return !$expanded->isVisible();
+    });
+    $this->assertFalse($expanded->isVisible());
+  }
+
+  /**
    * Tests setting the administrative title.
    */
   public function testRenameDisplayAdminName(): void {
