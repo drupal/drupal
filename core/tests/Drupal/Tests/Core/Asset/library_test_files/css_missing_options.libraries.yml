@@ -1,0 +1,6 @@
+missing_options:
+  css:
+    component:
+      # Explicit null reproduces an omitted options value without an empty mapping value.
+      css/styles.css: null
+      css/other.css: {}
