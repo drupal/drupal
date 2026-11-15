@@ -592,13 +592,11 @@ class LibraryDiscoveryParser {
    *     - 2 if the library definition specifies files as an array
    */
   public static function validateCssLibrary($library) {
-    $categories = [];
     // Verify options first and return early if invalid.
-    foreach ($library as $category => $files) {
+    foreach ($library as $files) {
       if (!is_array($files)) {
         return 2;
       }
-      $categories[] = $category;
       foreach ($files as $options) {
         if (!is_array($options)) {
           return 1;
