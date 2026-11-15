@@ -297,7 +297,6 @@ class FilterHtml extends FilterBase {
     $parser = new class($scanner, $events) extends Tokenizer {
 
       /**
-       * phpcs:ignore Drupal.Commenting.FunctionComment.Missing
        * @phpstan-ignore-next-line
        */
       public function setTextMode($textMode, $untilTag = NULL) {

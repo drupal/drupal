@@ -161,8 +161,6 @@ class DatabaseDriver extends Extension {
    *     'dependencies'?: array<string, array{'autoload': string, 'namespace': string}>,
    *   }
    */
-  // phpcs:enable
-  // phpcs:ignore Drupal.Commenting.FunctionComment.Missing
   public function getAutoloadInfo(): array {
     $this->getModuleInfo();
 
