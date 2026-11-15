@@ -126,6 +126,7 @@ class LibraryDiscoveryParser {
         //   properly resolve dependencies for all (css) libraries per category,
         //   and only once prior to rendering out an HTML page.
         if ($type == 'css' && !empty($library[$type])) {
+          assert(static::validateCssLibrary($library[$type]) !== 3, 'CSS file options must be an array. Use {} when no options are needed. See https://www.drupal.org/node/2274843.');
           assert(static::validateCssLibrary($library[$type]) < 2, 'CSS files should be specified as key/value pairs, where the values are configuration options. See https://www.drupal.org/node/2274843.');
           assert(static::validateCssLibrary($library[$type]) === 0, 'CSS must be nested under a category. See https://www.drupal.org/node/2274843.');
           foreach ($library[$type] as $category => $files) {
@@ -590,6 +591,7 @@ class LibraryDiscoveryParser {
    *     - 0 if the library definition is valid
    *     - 1 if the library definition has improper nesting
    *     - 2 if the library definition specifies files as an array
+   *     - 3 if the library definition is missing options for a file
    */
   public static function validateCssLibrary($library) {
     $categories = [];
@@ -600,6 +602,9 @@ class LibraryDiscoveryParser {
       }
       $categories[] = $category;
       foreach ($files as $options) {
+        if ($options === NULL) {
+          return 3;
+        }
         if (!is_array($options)) {
           return 1;
         }

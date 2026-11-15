@@ -781,6 +781,10 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
         'css_bad_nesting_array',
         'CSS files should be specified as key/value pairs, where the values are configuration options. See https://www.drupal.org/node/2274843.',
       ],
+      'Missing CSS options' => [
+        'css_missing_options',
+        'CSS file options must be an array. Use {} when no options are needed. See https://www.drupal.org/node/2274843.',
+      ],
     ];
   }
 
