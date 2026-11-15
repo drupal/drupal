@@ -137,6 +137,11 @@ class CallableResolverTest extends UnitTestCase {
         \InvalidArgumentException::class,
         'The callable definition provided "[stdClass,method_not_exists]" is not a valid callable.',
       ],
+      'Missing method on object, array notation' => [
+        [new \stdClass(), 'method_not_exists'],
+        \InvalidArgumentException::class,
+        'The callable definition provided "[stdClass,method_not_exists]" is not a valid callable.',
+      ],
       'Missing method on class, static notation' => [
         \stdClass::class . '::method_not_exists',
         \InvalidArgumentException::class,
