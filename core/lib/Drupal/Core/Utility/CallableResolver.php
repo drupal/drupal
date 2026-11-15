@@ -66,7 +66,9 @@ class CallableResolver {
     }
 
     if (is_array($definition)) {
-      throw new \InvalidArgumentException(sprintf('The callable definition provided "[%s]" is not a valid callable.', implode(",", $definition)));
+      // The definition can contain an object, for example [$object, 'method'].
+      $parts = array_map(static fn ($part) => is_scalar($part) ? (string) $part : get_debug_type($part), $definition);
+      throw new \InvalidArgumentException(sprintf('The callable definition provided "[%s]" is not a valid callable.', implode(",", $parts)));
     }
 
     if (!is_string($definition)) {
