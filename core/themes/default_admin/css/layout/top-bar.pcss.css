@@ -161,5 +161,5 @@ body:has(.admin--navigation-top-bar .sticky-form-actions) :where(#default_admin_
 }
 
 #block-default-admin-page-title {
-  margin-block: var(--admin-space-2xs) var(--admin-space-s);
+  margin-block: var(--admin-space-l) var(--admin-space-xs);
 }
