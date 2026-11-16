@@ -15,7 +15,7 @@ trait SchematicNormalizerHelperTrait {
    * Retrieve JSON Schema for the normalization.
    *
    * @param mixed $object
-   *   Supported object or class/interface name being normalized.
+   *   Supported object being normalized.
    * @param array $context
    *   Context options. Well-defined keys include:
    *   - dialect: Used to specify a dialect for the desired schema being
