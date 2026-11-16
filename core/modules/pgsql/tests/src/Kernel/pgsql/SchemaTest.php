@@ -191,7 +191,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     // Finding all tables.
     $tables = $this->schema->findTables('%');
     sort($tables);
-    $this->assertEquals(['config', 'select'], $tables);
+    $this->assertEquals(['config', 'key_value', 'select'], $tables);
 
     // Renaming a table.
     $table_name_new = 'from';

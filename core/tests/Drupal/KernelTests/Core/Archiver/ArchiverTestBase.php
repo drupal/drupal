@@ -49,6 +49,7 @@ abstract class ArchiverTestBase extends FileTestBase {
   protected function assertArchiveContainsFile($path, $file, array $configuration = []) {
     $configuration['filepath'] = $path;
     /** @var \Drupal\Core\Archiver\ArchiverManager $manager */
+    // @phpstan-ignore getDeprecatedService.deprecated
     $manager = $this->container->get('plugin.manager.archiver');
     // @phpstan-ignore method.deprecatedClass
     $archive = $manager->createInstance($this->archiverPluginId, $configuration);
@@ -68,6 +69,7 @@ abstract class ArchiverTestBase extends FileTestBase {
   protected function assertArchiveNotContainsFile($path, $file, array $configuration = []) {
     $configuration['filepath'] = $path;
     /** @var \Drupal\Core\Archiver\ArchiverManager $manager */
+    // @phpstan-ignore getDeprecatedService.deprecated
     $manager = $this->container->get('plugin.manager.archiver');
     // @phpstan-ignore method.deprecatedClass
     $archive = $manager->createInstance($this->archiverPluginId, $configuration);

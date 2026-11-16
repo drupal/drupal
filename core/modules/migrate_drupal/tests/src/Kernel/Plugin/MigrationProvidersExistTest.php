@@ -175,6 +175,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
     ];
     $this->enableAllModules();
 
+    // @phpstan-ignore getDeprecatedService.deprecated
     $definitions = $this->container->get('plugin.manager.migrate.field')->getDefinitions();
     foreach ($definitions as $key => $definition) {
       $this->assertArrayHasKey($key, $expected_mappings);

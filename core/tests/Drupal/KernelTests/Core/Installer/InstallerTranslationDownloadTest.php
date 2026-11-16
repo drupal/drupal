@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Installer;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
@@ -74,6 +75,10 @@ class InstallerTranslationDownloadTest extends KernelTestBase {
     // We need to restore the error handler before tearDown, or the testing
     // system will yell at us.
     $this->errorHandler = get_error_handler();
+
+    // Building the container creates the key_value table, so drop it to
+    // convince the installer that Drupal is not installed.
+    Database::getConnection()->schema()->dropTable('key_value');
   }
 
   /**
