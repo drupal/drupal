@@ -747,7 +747,6 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * @see https://www.drupal.org/node/2535316
  */
 // phpcs:enable
-// phpcs:ignore Drupal.Commenting.FunctionComment.Missing, Drupal.Commenting.FunctionComment.MissingReturnComment
 function hook_update_N(&$sandbox) {
   // For non-batch updates, the signature can simply be:
   // "function hook_update_N() {".
@@ -865,7 +864,6 @@ function hook_update_N(&$sandbox) {
  * @see hook_removed_post_updates()
  */
 // phpcs:enable
-// phpcs:ignore Drupal.Commenting.FunctionComment.Missing
 function hook_post_update_NAME(&$sandbox) {
   // Example of updating some content.
   $node = \Drupal\node\Entity\Node::load(123);

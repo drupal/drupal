@@ -162,7 +162,6 @@ class DatabaseDriver extends Extension {
    *   }
    */
   // phpcs:enable
-  // phpcs:ignore Drupal.Commenting.FunctionComment.Missing
   public function getAutoloadInfo(): array {
     $this->getModuleInfo();
 
