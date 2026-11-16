@@ -45,6 +45,7 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    // @phpstan-ignore getDeprecatedService.deprecated
     $this->pluginManager = $this->container->get('plugin.manager.migrate.field');
   }
 

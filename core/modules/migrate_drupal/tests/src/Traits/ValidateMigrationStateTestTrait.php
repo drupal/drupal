@@ -69,6 +69,7 @@ trait ValidateMigrationStateTestTrait {
 
     // Add the field migrations.
     /** @var \Drupal\migrate\Plugin\MigrationPluginManager $plugin_manager */
+    // @phpstan-ignore getDeprecatedService.deprecated
     $definitions = $this->container->get('plugin.manager.migrate.field')
       ->getDefinitions();
     foreach ($definitions as $key => $definition) {

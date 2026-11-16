@@ -72,6 +72,7 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
     $this->executeMigration('d6_field_instance');
     $this->fieldDiscovery = $this->container->get('migrate_drupal.field_discovery');
     $this->migrationPluginManager = $this->container->get('plugin.manager.migration');
+    // @phpstan-ignore getDeprecatedService.deprecated
     $this->fieldPluginManager = $this->container->get('plugin.manager.migrate.field');
     $this->logger = $this->container->get('logger.channel.migrate_drupal');
 
