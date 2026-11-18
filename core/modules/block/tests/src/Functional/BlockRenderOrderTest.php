@@ -76,6 +76,7 @@ class BlockRenderOrderTest extends BrowserTestBase {
     $test_content = $this->getSession()->getPage()->getContent();
 
     $controller = $this->container->get('entity_type.manager')->getStorage('block');
+    $position = [];
     foreach ($controller->loadMultiple() as $return_block) {
       $id = $return_block->id();
       if ($return_block_weight = $return_block->getWeight()) {
