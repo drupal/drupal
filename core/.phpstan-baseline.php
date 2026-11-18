@@ -14860,12 +14860,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Validation/Plugin/Validation/Constraint/UniqueFieldValueValidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter \\#1 \\$array of function key expects array\\|object, string given\\.$#',
-	'identifier' => 'argument.type',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Validation/Plugin/Validation/Constraint/UniqueFieldValueValidator.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\KeyValueStore\\\\KeyValueStoreInterface\\:\\:setWithExpire\\(\\)\\.$#',
 	'identifier' => 'method.notFound',
 	'count' => 1,
@@ -15356,12 +15350,6 @@ $ignoreErrors[] = [
 	'identifier' => 'assign.propertyType',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block/tests/src/Functional/BlockLanguageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$position might not be defined\\.$#',
-	'identifier' => 'variable.undefined',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/block/tests/src/Functional/BlockRenderOrderTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Property Drupal\\\\Tests\\\\block\\\\Functional\\\\BlockUiTest\\:\\:\\$adminUser \\(Drupal\\\\user\\\\Entity\\\\User\\|false\\) does not accept Drupal\\\\user\\\\UserInterface\\.$#',
@@ -21674,12 +21662,6 @@ $ignoreErrors[] = [
 	'identifier' => 'method.notFound',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/field/src/Hook/FieldHooks.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Offset string\\|null does not exist on string\\.$#',
-	'identifier' => 'offsetAccess.notFound',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/src/Plugin/Validation/Constraint/NoFieldItemsExistWithHigherCardinalityValidator.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field_test\\\\FieldDefaultValueCallbackProvider\\:\\:calculateDefaultValue\\(\\) has no return type specified\\.$#',
@@ -35858,12 +35840,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Direct injection of entity storage via \\$nodeStorage is not recommended\\. Inject Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface and call getStorage\\(\\) at the call\\-site instead\\.$#',
 	'identifier' => 'drupal.entityStorageDirectInjection',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/src/Plugin/views/argument/Vid.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Offset \'title\' does not exist on string\\.$#',
-	'identifier' => 'offsetAccess.notFound',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/Plugin/views/argument/Vid.php',
 ];
