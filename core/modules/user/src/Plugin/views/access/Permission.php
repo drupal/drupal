@@ -4,7 +4,6 @@ namespace Drupal\user\Plugin\views\access;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -26,12 +25,6 @@ use Symfony\Component\Routing\Route;
   help: new TranslatableMarkup('Access will be granted to users with the specified permission string.'),
 )]
 class Permission extends AccessPluginBase implements CacheableDependencyInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * The service properties that should raise a deprecation error.
-   */
-  private array $deprecatedProperties = ['moduleHandler' => 'module_handler'];
 
   /**
    * {@inheritdoc}

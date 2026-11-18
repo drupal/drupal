@@ -3,7 +3,6 @@
 namespace Drupal\user\Plugin\views\filter;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\user\Entity\Role;
 use Drupal\user\PermissionHandlerInterface;
@@ -19,12 +18,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  */
 #[ViewsFilter("user_permissions")]
 class Permissions extends ManyToOne {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * The service properties that should raise a deprecation error.
-   */
-  private array $deprecatedProperties = ['moduleHandler' => 'module_handler'];
 
   /**
    * Constructs a Permissions object.
