@@ -3,7 +3,6 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Access\CheckProviderInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\DestructableInterface;
 use Drupal\Component\EventDispatcher\Event;
@@ -14,7 +13,6 @@ use Symfony\Component\Routing\RouteCollection;
  * Managing class for rebuilding the router table.
  */
 class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
-  use DeprecatedServicePropertyTrait;
 
   /**
    * The dumper to which we should send collected routes.
@@ -64,16 +62,6 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
    * @var \Drupal\Core\Access\CheckProviderInterface
    */
   protected $checkProvider;
-
-  /**
-   * Deprecated service properties.
-   *
-   * @var string[]
-   */
-  protected array $deprecatedProperties = [
-    'controllerResolver' => 'controller_resolver',
-    'moduleHandler' => 'module_handler',
-  ];
 
   /**
    * Constructs the RouteBuilder using the passed MatcherDumperInterface.

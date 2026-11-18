@@ -4,7 +4,6 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Path\CurrentPathStack;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Routing\Exception\CacheableResourceNotFoundException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,12 +31,6 @@ use Symfony\Component\Routing\RouterInterface;
  *    See ::applyRouteEnhancers().
  */
 class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * The service properties that should raise a deprecation error.
-   */
-  private array $deprecatedProperties = ['urlGenerator' => 'url_generator'];
 
   /**
    * The list of available enhancers.

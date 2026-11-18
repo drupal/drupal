@@ -45489,12 +45489,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/src/Plugin/rest/resource/UserRegistrationResource.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Drupal\\\\Core\\\\DependencyInjection\\\\DependencySerializationTrait does not support private properties\\.$#',
-	'identifier' => 'dependencySerializationTraitProperty.unsupportedPrivateProperty',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Plugin/views/access/Permission.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Plugin\\\\views\\\\access\\\\Permission\\:\\:alterRouteDefinition\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -45745,12 +45739,6 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Plugin/views/filter/Name.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Drupal\\\\Core\\\\DependencyInjection\\\\DependencySerializationTrait does not support private properties\\.$#',
-	'identifier' => 'dependencySerializationTraitProperty.unsupportedPrivateProperty',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/src/Plugin/views/filter/Permissions.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\user\\\\Plugin\\\\views\\\\filter\\\\Permissions\\:\\:query\\(\\) has no return type specified\\.$#',

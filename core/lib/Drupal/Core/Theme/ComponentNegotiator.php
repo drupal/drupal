@@ -2,20 +2,12 @@
 
 namespace Drupal\Core\Theme;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Extension\Extension;
 
 /**
  * Determines which component should be used.
  */
 class ComponentNegotiator {
-
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['moduleExtensionList' => 'extension.list.module'];
 
   /**
    * Holds the component IDs from previous negotiations.

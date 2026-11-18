@@ -3,7 +3,6 @@
 namespace Drupal\user\Theme;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Routing\AdminContext;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -14,12 +13,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  * Sets the active theme on admin pages.
  */
 class AdminNegotiator implements ThemeNegotiatorInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * The service properties that should raise a deprecation error.
-   */
-  private array $deprecatedProperties = ['entityTypeManager' => 'entity_type.manager'];
 
   public function __construct(
     protected AccountInterface $user,
