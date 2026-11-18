@@ -9178,7 +9178,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Symfony\\\\Component\\\\Validator\\\\Constraint\\:\\:\\$type\\.$#',
 	'identifier' => 'property.notFound',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Extension/Plugin/Validation/Constraint/ExtensionExistsConstraintValidator.php',
 ];
 $ignoreErrors[] = [
@@ -10329,6 +10329,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Property Drupal\\\\Core\\\\File\\\\MimeType\\\\MimeTypeMap\\:\\:\\$mapping \\(array\\{mimetypes\\: array\\{int, string\\}, extensions\\: array\\{string, int\\}\\}\\) does not accept array\\{mimetypes\\: array\\{int\\}, extensions\\: array\\{string, int\\}\\}\\.$#',
+	'identifier' => 'assign.propertyType',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/File/MimeType/MimeTypeMap.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Property Drupal\\\\Core\\\\File\\\\MimeType\\\\MimeTypeMap\\:\\:\\$mapping \\(array\\{mimetypes\\: array\\{int, string\\}, extensions\\: array\\{string, int\\}\\}\\) does not accept array\\{mimetypes\\: array\\{\\}, extensions\\: array\\{string, int\\}\\}\\.$#',
 	'identifier' => 'assign.propertyType',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/File/MimeType/MimeTypeMap.php',
@@ -13436,7 +13442,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Routing/UrlMatcher.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Parameter &\\$sanitized_keys by\\-ref type of method Drupal\\\\Core\\\\Security\\\\RequestSanitizer\\:\\:stripDangerousValues\\(\\) expects array\\<string\\>, array\\<int\\|string\\> given\\.$#',
+	'message' => '#^Parameter &\\$sanitized_keys by\\-ref type of method Drupal\\\\Core\\\\Security\\\\RequestSanitizer\\:\\:stripDangerousValues\\(\\) expects array\\<string\\>, array\\<\\(int\\|string\\)\\> given\\.$#',
 	'identifier' => 'parameterByRef.type',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Security/RequestSanitizer.php',
@@ -45004,7 +45010,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$weight\\.$#',
 	'identifier' => 'property.notFound',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/modules/user/src/Entity/Role.php',
 ];
 $ignoreErrors[] = [
@@ -47601,7 +47607,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\ViewsHandlerInterface\\:\\:\\$operator\\.$#',
 	'identifier' => 'property.notFound',
-	'count' => 4,
+	'count' => 3,
 	'path' => __DIR__ . '/modules/views/src/ManyToOneHelper.php',
 ];
 $ignoreErrors[] = [
@@ -50979,7 +50985,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$custom_format might not be defined\\.$#',
 	'identifier' => 'variable.undefined',
-	'count' => 9,
+	'count' => 8,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/field/Date.php',
 ];
 $ignoreErrors[] = [
