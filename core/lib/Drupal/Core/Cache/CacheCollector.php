@@ -230,6 +230,21 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
       return;
     }
 
+    if (!($this->cache instanceof CacheBackendInterface)) {
+      throw new \RuntimeException(sprintf(
+        'Unexpected type for %s::$cache (%s).',
+        __CLASS__,
+        get_debug_type($this->cache),
+      ));
+    }
+    if (!($this->lock instanceof LockBackendInterface)) {
+      throw new \RuntimeException(sprintf(
+        'Unexpected type for %s::$lock (%s).',
+        __CLASS__,
+        get_debug_type($this->lock),
+      ));
+    }
+
     // Lock cache writes to help avoid stampedes.
     $cid = $this->getCid();
     $lock_name = $cid . ':' . __CLASS__;

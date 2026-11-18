@@ -65,4 +65,13 @@ class YamlCacheCollectorDiscovery extends YamlDiscovery {
     $this->yamlCacheCollector->destruct();
   }
 
+  /**
+   * Prevents unserialization.
+   *
+   * @throws \BadMethodCallException
+   */
+  public function __unserialize(array $data): void {
+    throw new \BadMethodCallException('Cannot unserialize ' . get_class($this));
+  }
+
 }
