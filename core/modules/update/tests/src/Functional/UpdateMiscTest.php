@@ -186,17 +186,30 @@ class UpdateMiscTest extends UpdateTestBase {
   }
 
   /**
-   * Checks that running cron updates the list of available updates.
+   * Checks that running cron updates the list and sends notifications.
    */
   public function testModulePageRunCron(): void {
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
+      ->set('notification.emails', ['admin@example.com'])
       ->save();
-    $this->mockReleaseHistory(['drupal' => '8.0.0']);
+    $this->mockReleaseHistory(['drupal' => '8.0.1']);
 
     $this->cronRun();
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextNotContains('No update information available.');
+
+    $captured_emails = \Drupal::state()->get('system.test_mail_collector', []);
+    $this->assertIsArray($captured_emails);
+    $emails = array_values(array_filter(
+      $captured_emails,
+      static fn (array $email): bool => ($email['id'] ?? NULL) === 'update_status_notify',
+    ));
+    $this->assertCount(1, $emails);
+    $this->assertSame('admin@example.com', $emails[0]['to']);
+    $this->assertStringContainsString('New release(s) available for', $emails[0]['subject']);
+    $body = is_array($emails[0]['body']) ? implode("\n", $emails[0]['body']) : $emails[0]['body'];
+    $this->assertStringContainsString('There are updates available for your version of Drupal.', $body);
   }
 
   /**
