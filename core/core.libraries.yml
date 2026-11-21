@@ -642,10 +642,10 @@ htmx:
   aggregate_target:
     js: 'htmx'
   remote: https://github.com/bigskysoftware/htmx
-  version: "4.0.1"
+  version: "4.0.2"
   license:
     name: Zero-Clause BSD
-    url:  https://raw.githubusercontent.com/bigskysoftware/htmx/refs/tags/v4.0.1/LICENSE
+    url:  https://raw.githubusercontent.com/bigskysoftware/htmx/refs/tags/v4.0.2/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/htmx/htmx.min.js: { minified: true }
@@ -665,10 +665,10 @@ internal.floating-ui:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: "4.0.0"
+  version: "4.1.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jquery/jquery/4.0.0/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery/4.1.0/LICENSE.txt
     gpl-compatible: true
   js:
     # jquery.min.js is explicitly set to preprocess: false to prevent its
@@ -733,20 +733,20 @@ sortable:
 
 tabbable:
   remote: https://github.com/focus-trap/tabbable
-  version: "6.5.0"
+  version: "6.5.2"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/focus-trap/tabbable/v6.5.0/LICENSE
+    url: https://raw.githubusercontent.com/focus-trap/tabbable/v6.5.2/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { minified: true, preprocess: false }
 
 transliteration:
   remote: https://github.com/yf-hk/transliteration
-  version: "2.6.1"
+  version: "2.7.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/yf-hk/transliteration/refs/tags/v2.6.1/LICENSE.txt
+    url: https://raw.githubusercontent.com/yf-hk/transliteration/refs/tags/v2.7.0/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/transliteration/bundle.umd.min.js: { minified: true, preprocess: false }
