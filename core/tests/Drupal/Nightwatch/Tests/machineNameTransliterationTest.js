@@ -56,7 +56,7 @@ const MachineNameTestArray = [
     replacePattern: '[^a-zA-Z0-9-_.~]+',
     replaceChar: '_',
     maxlength: 64,
-    expectedMachineName: 'dnoooooxouuuuuthss',
+    expectedMachineName: 'dnoooooxouuuuythss',
   },
   {
     machineName: 'àáâãäåæçèéêëìíîï',
