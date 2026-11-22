@@ -1,4 +1,3 @@
-absolutezero
 adamson
 addedline
 addtogroup
@@ -37,8 +36,6 @@ beforecreate
 behat
 bergmann
 berne
-bgblue
-bgred
 bidi
 bigpipe
 bkmgtpezy
@@ -99,10 +96,8 @@ contextuals
 controlgroup
 createrole
 createuser
-crossout
 crème
 csrftoken
-csstools
 cweagans
 datelist
 datestamp
@@ -134,7 +129,6 @@ docroots
 dotenv
 downcasting
 dragtable
-drillable
 dropbutton
 dropbuttons
 dtcg
@@ -164,7 +158,6 @@ fakepath
 falsey
 fastcgi
 fcgi
-fdiv
 fieldapi
 fieldgroup
 fieldnames
@@ -193,9 +186,7 @@ greeking
 gripsmall
 groupable
 guzzlehttp
-hande
 hateoas
-hexcode
 hhvm
 hilited
 hmac
@@ -217,7 +208,6 @@ introspectable
 invalidators
 invokable
 isam
-jangregor
 javascripts
 jessebeach
 jqueryui
@@ -228,7 +218,6 @@ kolkata
 lamoids
 libc
 lified
-lightninggreen
 linkability
 linkback
 linkification
@@ -248,8 +237,6 @@ lrdd
 lstitle
 ltitle
 mainpage
-maryjane
-maximumred
 maxlifetime
 maynot
 mbytes
@@ -280,7 +267,6 @@ multivalued
 mysqladmin
 mysqldump
 mystarterkit
-navs
 ndocs
 newcol
 newwin
@@ -319,12 +305,10 @@ phpass
 phpcbf
 phpcodesniffer
 phpserialize
-pickable
 pingback
 placeholdered
 placeholdering
 plusthick
-porterstemmer
 postorder
 predelete
 prefixsqlite
@@ -347,14 +331,12 @@ qvalues
 rasterizable
 rasterizes
 realpaths
-realword
 rebuilder
 refback
 referenceables
 referencers
 referer
 refinable
-reindexing
 renderables
 replyto
 resaved
@@ -378,7 +360,6 @@ savepoints
 sayre
 schemaapi
 schemeless
-scorewords
 scriptable
 selectbox
 sess
@@ -401,7 +382,6 @@ stitle
 streamwrapper
 streamwrappers
 strikethrough
-striptags
 strs
 styleguide
 stylelintcache
@@ -410,7 +390,6 @@ subarrays
 subchild
 subclassing
 subcompile
-subcondition
 subelements
 subform
 subforms
@@ -487,7 +466,6 @@ undoable
 unfieldable
 ungroup
 ungroupable
-unindexed
 uninstallations
 unminified
 unmoderated
@@ -510,7 +488,6 @@ versionable
 vfsstream
 viewports
 warmable
-wcag
 webcal
 webflo
 webhosting
@@ -532,7 +509,6 @@ yottabyte
 yottabytes
 zettabyte
 zettabytes
-zipf
 zoneinfo
 zoomin
 zoomout
