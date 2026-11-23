@@ -53,7 +53,7 @@ class TransactionManagerTest extends UnitTestCase {
   public function testStartTransactionFailure(): void {
     $this->connection->transactionManager()->success = FALSE;
     $this->expectException(TransactionException::class);
-    $this->expectExceptionMessage('Failed start of transaction');
+    $this->expectExceptionMessageIs('Failed start of transaction');
     // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
     $tx = $this->connection->startTransaction();
   }
@@ -99,7 +99,7 @@ class TransactionManagerTest extends UnitTestCase {
     $tx = $this->connection->startTransaction();
     $this->connection->transactionManager()->success = FALSE;
     $this->expectException(TransactionException::class);
-    $this->expectExceptionMessage('Failed start of savepoint foo');
+    $this->expectExceptionMessageIs('Failed start of savepoint foo');
     // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
     $savepoint = $this->connection->startTransaction('foo');
   }
@@ -141,7 +141,7 @@ class TransactionManagerTest extends UnitTestCase {
     $tx = $this->connection->startTransaction();
     $this->connection->transactionManager()->success = FALSE;
     $this->expectException(TransactionCommitFailedException::class);
-    $this->expectExceptionMessage('Failed commit of transaction');
+    $this->expectExceptionMessageIs('Failed commit of transaction');
     $tx->commitOrRelease();
   }
 
@@ -186,7 +186,7 @@ class TransactionManagerTest extends UnitTestCase {
     $savepoint = $this->connection->startTransaction('foo');
     $this->connection->transactionManager()->success = FALSE;
     $this->expectException(TransactionCommitFailedException::class);
-    $this->expectExceptionMessage('Failed release of savepoint foo');
+    $this->expectExceptionMessageIs('Failed release of savepoint foo');
     $savepoint->commitOrRelease();
   }
 
@@ -228,7 +228,7 @@ class TransactionManagerTest extends UnitTestCase {
     $tx = $this->connection->startTransaction();
     $this->connection->transactionManager()->success = FALSE;
     $this->expectException(TransactionException::class);
-    $this->expectExceptionMessage('Failed rollback of transaction');
+    $this->expectExceptionMessageIs('Failed rollback of transaction');
     $tx->rollback();
   }
 
@@ -276,7 +276,7 @@ class TransactionManagerTest extends UnitTestCase {
     $savepoint = $this->connection->startTransaction('foo');
     $this->connection->transactionManager()->success = FALSE;
     $this->expectException(TransactionException::class);
-    $this->expectExceptionMessage('Failed rollback of savepoint foo');
+    $this->expectExceptionMessageIs('Failed rollback of savepoint foo');
     $savepoint->rollback();
   }
 

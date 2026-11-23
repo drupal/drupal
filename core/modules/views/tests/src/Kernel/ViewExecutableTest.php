@@ -539,7 +539,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    */
   public function testTamperedDeserializationT(): void {
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('Deserialization of Drupal\views\ViewExecutable::$built is not allowed.');
+    $this->expectExceptionMessageIs('Deserialization of Drupal\views\ViewExecutable::$built is not allowed.');
     unserialize('O:27:"Drupal\views\ViewExecutable":2:{s:5:"built";b:1;s:5:"pager";i:1;}');
   }
 
@@ -548,7 +548,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    */
   public function testTamperedSerializationData(): void {
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('Unexpected keys in Drupal\views\ViewExecutable::$serializationData.');
+    $this->expectExceptionMessageIs('Unexpected keys in Drupal\views\ViewExecutable::$serializationData.');
     unserialize('O:27:"Drupal\views\ViewExecutable":1:{s:17:"serializationData";a:1:{s:9:"malicious";s:4:"test";}}');
   }
 
