@@ -44,20 +44,16 @@ class YamlFileLoader
     ];
 
     /**
-     * @var \Drupal\Core\DependencyInjection\ContainerBuilder $container
-     */
-    protected $container;
-
-    /**
      * File cache object.
      *
      * @var \Drupal\Component\FileCache\FileCacheInterface
      */
     protected $fileCache;
 
-    public function __construct(ContainerBuilder $container)
+    public function __construct(
+      protected ContainerBuilder $container
+    )
     {
-        $this->container = $container;
         $this->fileCache = FileCacheFactory::get('container_yaml_loader');
     }
 

@@ -10,18 +10,13 @@ use Symfony\Component\Routing\RouteCollection;
  * The lazy route collection.
  */
 class LazyRouteCollection extends RouteCollection {
-  /**
-   * The route provider for this generator.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $provider;
 
   /**
    * Constructs a LazyRouteCollection.
    */
-  public function __construct(RouteProviderInterface $provider) {
-    $this->provider = $provider;
+  public function __construct(
+    protected RouteProviderInterface $provider,
+  ) {
   }
 
   /**

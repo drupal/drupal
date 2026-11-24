@@ -15,17 +15,11 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class TestContent extends ControllerBase {
 
   /**
-   * The HTTP kernel.
-   *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
-   */
-  protected $httpKernel;
-
-  /**
    * Constructs a TestContent instance.
    */
-  public function __construct(HttpKernelInterface $http_kernel) {
-    $this->httpKernel = $http_kernel;
+  public function __construct(
+    protected HttpKernelInterface $httpKernel,
+  ) {
   }
 
   /**

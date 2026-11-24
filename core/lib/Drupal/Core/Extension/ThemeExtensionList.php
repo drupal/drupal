@@ -57,13 +57,6 @@ class ThemeExtensionList extends ExtensionList {
   ];
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * The list of installed themes.
    *
    * @var string[]
@@ -78,13 +71,11 @@ class ThemeExtensionList extends ExtensionList {
     InfoParserInterface $info_parser,
     ModuleHandlerInterface $module_handler,
     StateInterface $state,
-    ConfigFactoryInterface $config_factory,
+    protected ConfigFactoryInterface $configFactory,
     #[Autowire(param: 'install_profile')]
     $install_profile,
   ) {
     parent::__construct($root, 'theme', $cache, $info_parser, $module_handler, $state, $install_profile);
-
-    $this->configFactory = $config_factory;
   }
 
   /**

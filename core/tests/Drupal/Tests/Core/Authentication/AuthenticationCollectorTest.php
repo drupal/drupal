@@ -62,17 +62,14 @@ class AuthenticationCollectorTest extends UnitTestCase {
 class TestAuthenticationProvider implements AuthenticationProviderInterface {
 
   /**
-   * The provider id.
-   *
-   * @var string
-   */
-  public $providerId;
-
-  /**
    * Constructor.
+   *
+   * @param string $providerId
+   *   The provider id.
    */
-  public function __construct($provider_id) {
-    $this->providerId = $provider_id;
+  public function __construct(
+    public $providerId,
+  ) {
   }
 
   /**

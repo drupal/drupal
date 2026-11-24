@@ -36,60 +36,19 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
  */
 class ModuleInstaller implements ModuleInstallerInterface {
 
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The drupal kernel.
-   *
-   * @var \Drupal\Core\DrupalKernelInterface
-   */
-  protected $kernel;
-
-  /**
-   * The app root.
-   *
-   * @var string
-   */
-  protected $root;
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
-   * The update registry service.
-   *
-   * @var \Drupal\Core\Update\UpdateHookRegistry
-   */
-  protected $updateRegistry;
-
   public function __construct(
     #[Autowire(param: 'app.root')]
-    string $root,
-    ModuleHandlerInterface $module_handler,
-    DrupalKernelInterface $kernel,
-    Connection $connection,
-    UpdateHookRegistry $update_registry,
+    protected string $root,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected DrupalKernelInterface $kernel,
+    protected Connection $connection,
+    protected UpdateHookRegistry $updateRegistry,
     #[Autowire(service: 'logger.channel.default')]
     protected LoggerInterface $logger,
     #[AutowireIterator(tag: 'module_install.uninstall_validator')]
     protected \Traversable $uninstallValidators,
     protected ModuleWeight $moduleWeight,
   ) {
-    $this->root = $root;
-    $this->moduleHandler = $module_handler;
-    $this->kernel = $kernel;
-    $this->connection = $connection;
-    $this->updateRegistry = $update_registry;
-
   }
 
   /**

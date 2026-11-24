@@ -13,13 +13,6 @@ use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 class QueryFactory implements QueryFactoryInterface {
 
   /**
-   * The key value factory.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface
-   */
-  protected $keyValueFactory;
-
-  /**
    * The namespace of this class, the parent class etc.
    *
    * @var array
@@ -29,8 +22,9 @@ class QueryFactory implements QueryFactoryInterface {
   /**
    * Constructs a QueryFactory object.
    */
-  public function __construct(KeyValueFactoryInterface $key_value_factory) {
-    $this->keyValueFactory = $key_value_factory;
+  public function __construct(
+    protected KeyValueFactoryInterface $keyValueFactory,
+  ) {
     $this->namespaces = Query::getNamespaces($this);
   }
 

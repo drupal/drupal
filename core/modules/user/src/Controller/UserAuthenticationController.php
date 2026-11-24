@@ -58,68 +58,28 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
   protected $userStorage;
 
   /**
-   * The CSRF token generator.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfToken;
-
-  /**
    * The user authentication.
    *
    * @var \Drupal\user\UserAuthenticationInterface
    */
   protected $userAuth;
 
-  /**
-   * The route provider.
-   *
-   * @var \Drupal\Core\Routing\RouteProviderInterface
-   */
-  protected $routeProvider;
-
-  /**
-   * The serializer.
-   *
-   * @var \Symfony\Component\Serializer\Serializer
-   */
-  protected $serializer;
-
-  /**
-   * The available serialization formats.
-   *
-   * @var array
-   */
-  protected $serializerFormats = [];
-
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
   public function __construct(
     UserFloodControlInterface $user_flood_control,
     UserStorageInterface $user_storage,
-    CsrfTokenGenerator $csrf_token,
+    protected CsrfTokenGenerator $csrfToken,
     UserAuthenticationInterface $user_auth,
-    RouteProviderInterface $route_provider,
-    Serializer $serializer,
-    array $serializer_formats,
-    LoggerInterface $logger,
+    protected RouteProviderInterface $routeProvider,
+    protected Serializer $serializer,
+    protected array $serializerFormats,
+    protected LoggerInterface $logger,
     protected LoginFinalizer $loginFinalizer,
     protected LogoutFinalizer $logoutFinalizer,
     protected readonly NotificationHandler $notificationHandler,
   ) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
-    $this->csrfToken = $csrf_token;
     $this->userAuth = $user_auth;
-    $this->serializer = $serializer;
-    $this->serializerFormats = $serializer_formats;
-    $this->routeProvider = $route_provider;
-    $this->logger = $logger;
   }
 
   /**

@@ -47,41 +47,17 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
    */
   protected $userStorage;
 
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The flood service.
-   *
-   * @var \Drupal\Core\Flood\FloodInterface
-   */
-  protected $flood;
-
-  /**
-   * The email validator service.
-   *
-   * @var \Drupal\Component\Utility\EmailValidatorInterface
-   */
-  protected $emailValidator;
-
   public function __construct(
     UserStorageInterface $user_storage,
-    LanguageManagerInterface $language_manager,
+    protected LanguageManagerInterface $languageManager,
     ConfigFactory $config_factory,
-    FloodInterface $flood,
+    protected FloodInterface $flood,
     protected UserNameValidator $userNameValidator,
-    EmailValidatorInterface $email_validator,
+    protected EmailValidatorInterface $emailValidator,
     protected NotificationHandler $notificationHandler,
   ) {
     $this->userStorage = $user_storage;
-    $this->languageManager = $language_manager;
     $this->configFactory = $config_factory;
-    $this->flood = $flood;
-    $this->emailValidator = $email_validator;
   }
 
   /**

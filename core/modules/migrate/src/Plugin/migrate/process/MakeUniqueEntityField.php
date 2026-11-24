@@ -82,13 +82,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MakeUniqueEntityField extends MakeUniqueBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The current migration.
    *
    * @var \Drupal\migrate\Plugin\MigrationInterface
@@ -98,10 +91,15 @@ class MakeUniqueEntityField extends MakeUniqueBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    MigrationInterface $migration,
+    protected EntityTypeManagerInterface $entityTypeManager,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->migration = $migration;
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

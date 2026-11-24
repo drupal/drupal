@@ -26,10 +26,21 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class FilterHtmlImageSecure extends FilterBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Drupal root.
+   * Constructs a new FilterHtmlImageSecure object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $fileUrlGenerator
+   *   The file URL generator.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
+   * @param string $root
+   *   Drupal root.
    */
-  protected string $root;
-
   public function __construct(
     array $configuration,
     $plugin_id,
@@ -37,11 +48,9 @@ class FilterHtmlImageSecure extends FilterBase implements ContainerFactoryPlugin
     protected FileUrlGeneratorInterface $fileUrlGenerator,
     protected ModuleHandlerInterface $moduleHandler,
     #[Autowire(param: 'app.root')]
-    string $root,
+    protected string $root,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->root = $root;
   }
 
   /**

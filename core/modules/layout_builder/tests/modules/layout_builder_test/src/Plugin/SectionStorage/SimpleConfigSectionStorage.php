@@ -40,13 +40,6 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
   use SectionListTrait;
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * An array of sections.
    *
    * @var \Drupal\layout_builder\Section[]|null
@@ -56,9 +49,13 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $config_factory) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected ConfigFactoryInterface $configFactory,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->configFactory = $config_factory;
   }
 
   /**

@@ -21,13 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContentModerationConfigureForm extends WorkflowTypeConfigureFormBase implements ContainerInjectionInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The moderation info service.
    *
    * @var \Drupal\content_moderation\ModerationInformationInterface
@@ -35,19 +28,14 @@ class ContentModerationConfigureForm extends WorkflowTypeConfigureFormBase imple
   protected $moderationInfo;
 
   /**
-   * The entity type bundle info service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  /**
    * Create an instance of ContentModerationConfigureForm.
    */
-  public function __construct(EntityTypeManagerInterface $entityTypeManager, ModerationInformationInterface $moderationInformation, EntityTypeBundleInfoInterface $entityTypeBundleInfo) {
-    $this->entityTypeManager = $entityTypeManager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    ModerationInformationInterface $moderationInformation,
+    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+  ) {
     $this->moderationInfo = $moderationInformation;
-    $this->entityTypeBundleInfo = $entityTypeBundleInfo;
   }
 
   /**
