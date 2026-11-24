@@ -33164,7 +33164,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Form\\\\FormInterface\\:\\:getEntity\\(\\)\\.$#',
 	'identifier' => 'method.notFound',
-	'count' => 4,
+	'count' => 3,
 	'path' => __DIR__ . '/modules/menu_ui/src/Hook/MenuUiHooks.php',
 ];
 $ignoreErrors[] = [
