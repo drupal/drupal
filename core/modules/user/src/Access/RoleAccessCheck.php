@@ -28,19 +28,27 @@ class RoleAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access(Route $route, AccountInterface $account) {
+
+    $roles = $account->getRoles();
+    // Forbidden return if user does not have any role defined. This is an error
+    // condition and should not occur.
+    if (empty($roles)) {
+      return AccessResult::forbidden('No user roles found.');
+    }
+
     // Requirements just allow strings, so this might be a comma separated list.
     $rid_string = $route->getRequirement('_role');
 
     $explode_and = array_filter(array_map('trim', explode(',', $rid_string)));
     if (count($explode_and) > 1) {
-      $diff = array_diff($explode_and, $account->getRoles());
+      $diff = array_diff($explode_and, $roles);
       if (empty($diff)) {
         return AccessResult::allowed()->addCacheContexts(['user.roles']);
       }
     }
     else {
       $explode_or = array_filter(array_map('trim', explode('+', $rid_string)));
-      $intersection = array_intersect($explode_or, $account->getRoles());
+      $intersection = array_intersect($explode_or, $roles);
       if (!empty($intersection)) {
         return AccessResult::allowed()->addCacheContexts(['user.roles']);
       }
