@@ -20,6 +20,7 @@ use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Utility\NaturalSort;
 
 /**
  * Defines a Block configuration entity class.
@@ -236,7 +237,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
     }
 
     // Sort by label.
-    return strcmp($a->label(), $b->label());
+    return NaturalSort::strnatcasecmp($a->label(), $b->label());
   }
 
   /**

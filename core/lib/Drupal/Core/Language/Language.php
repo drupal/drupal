@@ -3,6 +3,7 @@
 namespace Drupal\Core\Language;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Utility\NaturalSort;
 
 /**
  * An object containing the information for an interface language.
@@ -158,7 +159,7 @@ class Language implements LanguageInterface {
           $a_name = $a->getId();
           $b_name = $b->getId();
         }
-        return strnatcasecmp($a_name, $b_name);
+        return NaturalSort::strnatcasecmp($a_name, $b_name);
       }
       return $a_weight <=> $b_weight;
     });

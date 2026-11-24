@@ -7,6 +7,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Datetime\DateFormatInterface;
+use Drupal\Core\Utility\NaturalSort;
 use Drupal\system\DateFormatAccessControlHandler;
 
 /**
@@ -88,7 +89,7 @@ class DateFormat extends ConfigEntityBase implements DateFormatInterface {
     if ($a->isLocked() == $b->isLocked()) {
       $a_label = $a->label();
       $b_label = $b->label();
-      return strnatcasecmp($a_label, $b_label);
+      return NaturalSort::strnatcasecmp($a_label, $b_label);
     }
     return $a->isLocked() ? 1 : -1;
   }

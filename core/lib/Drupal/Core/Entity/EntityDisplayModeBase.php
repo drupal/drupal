@@ -4,6 +4,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Utility\NaturalSort;
 
 /**
  * Base class for config entity types with settings for form and view modes.
@@ -66,7 +67,7 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
     // Sort by the type of entity the view mode is used for.
     $a_type = $a->getTargetType();
     $b_type = $b->getTargetType();
-    $type_order = strnatcasecmp($a_type, $b_type);
+    $type_order = NaturalSort::strnatcasecmp($a_type, $b_type);
     return $type_order != 0 ? $type_order : parent::sort($a, $b);
   }
 

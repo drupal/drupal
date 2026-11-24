@@ -12,6 +12,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\system\ActionConfigEntityInterface;
 use Drupal\Core\Action\ActionPluginCollection;
+use Drupal\Core\Utility\NaturalSort;
 
 /**
  * Defines the configured action entity.
@@ -176,7 +177,7 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
     $a_type = $a->getType();
     $b_type = $b->getType();
     if ($a_type != $b_type) {
-      return strnatcasecmp($a_type, $b_type);
+      return NaturalSort::strnatcasecmp($a_type, $b_type);
     }
     return parent::sort($a, $b);
   }

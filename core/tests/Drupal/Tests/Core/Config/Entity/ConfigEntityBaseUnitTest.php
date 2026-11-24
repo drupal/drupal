@@ -153,6 +153,9 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->method('getLanguage')
       ->with('en')
       ->willReturn(new Language(['id' => 'en']));
+    $this->languageManager
+      ->method('getCurrentLanguage')
+      ->willReturn(new Language(['id' => 'en']));
 
     $this->cacheTagsInvalidator = $this->createMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
 
@@ -773,8 +776,8 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->with('label')
       ->willReturn('label');
 
-    $entity_a = new SortTestConfigEntityWithWeight(['label' => 'foo'], $this->entityTypeId);
-    $entity_b = new SortTestConfigEntityWithWeight(['label' => 'bar'], $this->entityTypeId);
+    $entity_a = new SortTestConfigEntityWithWeight(['label' => 'Format 100x100'], $this->entityTypeId);
+    $entity_b = new SortTestConfigEntityWithWeight(['label' => 'Format 10x10'], $this->entityTypeId);
 
     // Test sorting by label.
     $list = [$entity_a, $entity_b];
