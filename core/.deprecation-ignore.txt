@@ -19,6 +19,7 @@
 %Method "Twig\\NodeVisitor\\NodeVisitorInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "Drupal\\Core\\Template\\RemoveCheckToStringNodeVisitor" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Twig\\NodeVisitor\\NodeVisitorInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "Drupal\\Core\\Template\\TwigNodeVisitor" now to avoid errors or add an explicit @return annotation to suppress this message%
 %Method "Twig\\TokenParser\\TokenParserInterface::[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in implementation "Drupal\\Core\\Template\\TwigTransTokenParser" now to avoid errors or add an explicit @return annotation to suppress this message%
+%The "Drupal\\Core\\Template\\Loader\\FilesystemLoader::addPath\(\)" method will require a new "bool \$check" argument in the next major version of its parent class "Twig\\Loader\\FilesystemLoader", not defining it is deprecated.%
 
 # Indirect deprecations. These are not in Drupal's remit to fix, but it is
 # worth keeping track of dependencies' issues.
