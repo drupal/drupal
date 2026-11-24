@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @file
+ * Front controller that reports the files loaded before APCu is available.
+ *
+ * The test copies this file to the web root and deletes it afterwards.
+ *
+ * @see \Drupal\FunctionalTests\Bootstrap\BootstrapClassmapTest
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\DrupalKernel;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+require_once 'autoload_runtime.php';
+
+return static function () {
+  if (!drupal_valid_test_ua()) {
+    return new Response('', 403);
+  }
+
+  return new class('prod', require 'autoload.php') extends DrupalKernel {
+
+    /**
+     * The files that declare classes, keyed by class name.
+     *
+     * @var array<string, string>
+     */
+    protected array $bootstrapFiles = [];
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function initializeContainer() {
+      $container = parent::initializeContainer();
+
+      // DrupalKernel::boot() sets the APCu prefix on the class loader directly
+      // after this method returns. Record every class loaded up to here.
+      $names = array_merge(get_declared_classes(), get_declared_interfaces(), get_declared_traits());
+      foreach ($names as $name) {
+        $reflection = new \ReflectionClass($name);
+        if ($reflection->isUserDefined() && !$reflection->isAnonymous()) {
+          $this->bootstrapFiles[$name] = realpath($reflection->getFileName());
+        }
+      }
+
+      return $container;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
+      parent::handle($request, $type, $catch);
+      return new JsonResponse($this->bootstrapFiles);
+    }
+
+  };
+};
