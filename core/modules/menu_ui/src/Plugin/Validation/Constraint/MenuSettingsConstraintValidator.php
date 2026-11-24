@@ -45,6 +45,7 @@ class MenuSettingsConstraintValidator extends ConstraintValidator implements Con
         $values['parent'] = $parent;
       }
 
+      /** @var \Drupal\menu_ui\Plugin\Validation\Constraint\MenuSettingsConstraint $constraint */
       // Handle the case when the menu link is deleted in a pending revision.
       if (empty($values['enabled']) && $defaults['entity_id']) {
         $this->context->buildViolation($constraint->messageRemove)
