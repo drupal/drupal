@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\EventSubscriber;
 
 use Drupal\file\Entity\File;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -28,6 +29,7 @@ class Fast404Test extends BrowserTestBase {
    */
   protected static $modules = [
     'file',
+    'image',
     'page_cache',
   ];
 
@@ -80,6 +82,23 @@ class Fast404Test extends BrowserTestBase {
     // Fast 404s returned via the exception subscriber still have the
     // X-Generator header.
     $this->assertSession()->responseHeaderContains('X-Generator', 'Drupal');
+  }
+
+  /**
+   * Tests fast 404s for routes whose parameters cannot be converted.
+   */
+  public function testFast404ParamNotConverted(): void {
+    // Image style paths are excluded from fast 404s by default.
+    // @see https://www.drupal.org/project/drupal/issues/3216687
+    $this->config('system.performance')->set('fast_404.exclude_paths', '/\/imagecache\//')->save();
+
+    // An unknown image style fails parameter conversion on a path that
+    // matches fast_404.paths.
+    $style = ImageStyle::create(['name' => 'does_not_exist', 'label' => 'Does not exist']);
+    $this->drupalGet($style->buildUrl('public://fast-404-test.png'));
+    $this->assertSession()->statusCodeEquals(404);
+    $this->assertSession()->responseNotContains('modules/system/css/');
+    $this->assertSession()->pageTextContains('The requested URL');
   }
 
   /**
