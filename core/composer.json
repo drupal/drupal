@@ -39,7 +39,7 @@
         "symfony/polyfill-php86": "^1.37",
         "symfony/yaml": "^7.4.12",
         "revolt/event-loop": "^1.0",
-        "twig/twig": "^3.28.0",
+        "twig/twig": "^3.31.1",
         "doctrine/lexer": "^2 || ^3",
         "drupal/core-composer-scaffold": "self.version",
         "guzzlehttp/guzzle": "^7.15.2 || ^8.0.1",
