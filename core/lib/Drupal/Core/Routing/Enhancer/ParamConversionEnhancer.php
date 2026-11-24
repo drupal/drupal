@@ -94,7 +94,10 @@ class ParamConversionEnhancer implements EnhancerInterface, EventSubscriberInter
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
-    $events[KernelEvents::EXCEPTION][] = ['onException', 75];
+    // Run before the fast 404 subscriber (priority 200), so every 404 handler
+    // receives a NotFoundHttpException.
+    // @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
+    $events[KernelEvents::EXCEPTION][] = ['onException', 250];
     return $events;
   }
 
