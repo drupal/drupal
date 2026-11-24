@@ -62,14 +62,9 @@ class FilesystemLoader extends TwigFilesystemLoader {
   }
 
   /**
-   * Adds a path where templates are stored.
-   *
-   * @param string $path
-   *   A path where to look for templates.
-   * @param string $namespace
-   *   (optional) A path name.
+   * {@inheritdoc}
    */
-  public function addPath(string $path, string $namespace = self::MAIN_NAMESPACE): void {
+  public function addPath(string $path, string $namespace = self::MAIN_NAMESPACE/*, bool $check = TRUE */): void {
     // Invalidate the cache.
     $this->cache = [];
     $this->paths[$namespace][] = rtrim($path, '/\\');
