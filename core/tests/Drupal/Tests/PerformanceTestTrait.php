@@ -28,6 +28,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 trait PerformanceTestTrait {
 
   /**
+   * List of regular expressions of asset paths to exclude from network check.
+   *
+   * @var list<string>
+   */
+  protected array $excludedAssetsPathRegexps = [];
+
+  /**
    * Helper for ::setUp().
    *
    * Resets configuration to be closer to production settings.
@@ -421,25 +428,23 @@ trait PerformanceTestTrait {
     foreach ($stylesheet_urls as $url) {
       $stylesheet_count++;
       if (!str_starts_with($url, $GLOBALS['base_url'])) {
-        $stylesheet_bytes += strlen(file_get_contents($url));
+        $stylesheet_bytes += $this->getBytesSize($url);
       }
       else {
         if ($GLOBALS['base_path'] === '/') {
           $filename = ltrim(parse_url($url, PHP_URL_PATH), '/');
-          $stylesheet_bytes += strlen(file_get_contents($filename));
+          $stylesheet_bytes += $this->getBytesSize($filename);
         }
         else {
           $filename = str_replace($GLOBALS['base_path'], '', parse_url($url, PHP_URL_PATH));
-          // Strip the basepath from the contents of the file so that tests
-          // running in a subdirectory get the same results.
-          $stylesheet_bytes += strlen(str_replace($GLOBALS['base_path'], '/', file_get_contents($filename)));
+          $stylesheet_bytes += $this->getBytesSize($filename, TRUE);
         }
       }
     }
     foreach ($script_urls as $url) {
       $script_count++;
       if (!str_starts_with($url, $GLOBALS['base_url'])) {
-        $script_bytes += strlen(file_get_contents($url));
+        $script_bytes += $this->getBytesSize($url);
       }
       else {
         if ($GLOBALS['base_path'] === '/') {
@@ -448,7 +453,7 @@ trait PerformanceTestTrait {
         else {
           $filename = str_replace($GLOBALS['base_path'], '', parse_url($url, PHP_URL_PATH));
         }
-        $script_bytes += strlen(file_get_contents($filename));
+        $script_bytes += $this->getBytesSize($filename);
       }
     }
 
@@ -877,6 +882,34 @@ trait PerformanceTestTrait {
     }
 
     return $dir . '/' . $name . '.' . $extension;
+  }
+
+  /**
+   * Returns the number of bytes of the content.
+   *
+   * @param string $url
+   *   The URL to get the number bytes from.
+   * @param bool $strip_base_path
+   *   (optional) Strip the basepath from the contents of the file so that tests
+   *   running in a subdirectory get the same results. Defaults to FALSE.
+   *
+   * @return int
+   *   The number of bytes of the content.
+   */
+  private function getBytesSize(string $url, bool $strip_base_path = FALSE): int {
+    if (array_any(
+      $this->excludedAssetsPathRegexps,
+      fn(string $pattern): bool => preg_match($pattern, $url) === 1,
+    )) {
+      return 0;
+    }
+
+    $content = file_get_contents($url);
+    if ($strip_base_path) {
+      $content = str_replace($GLOBALS['base_path'], '/', $content);
+    }
+
+    return strlen($content);
   }
 
 }
