@@ -11,3 +11,10 @@ ckeditor5_test.dialog:
     _controller: '\Drupal\ckeditor5_test\Controller\CKEditor5DialogTestController::testDialog'
   requirements:
     _access: 'TRUE'
+
+ckeditor5_test.dialog_with_editor:
+  path: '/ckeditor5_test/dialog_with_editor'
+  defaults:
+    _form: '\Drupal\ckeditor5_test\Form\CKEditor5DialogTestForm'
+  requirements:
+    _access: 'TRUE'
