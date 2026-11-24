@@ -35,6 +35,7 @@ class CommandsTest extends KernelTestBase {
    * Regression test: Settings command exists regardless of JS aggregation.
    */
   public function testAttachedSettings(): void {
+    $this->installConfig(['system']);
     $assert = function (string $message): void {
       $response = new AjaxResponse();
       $response->setAttachments([

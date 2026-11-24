@@ -185,6 +185,8 @@ system.logging:
 system.performance:
   type: config_object
   label: 'Performance settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     cache:
       type: mapping
@@ -197,6 +199,11 @@ system.performance:
             max_age:
               type: integer
               label: 'Max age'
+              constraints:
+                # @see \Drupal\system\Form\PerformanceForm::buildForm()
+                Range:
+                  min: 0
+                  max: 31536000
     css:
       type: mapping
       label: 'CSS performance settings'
@@ -208,21 +215,8 @@ system.performance:
           type: boolean
           label: 'Compress CSS files'
     fast_404:
-      type: mapping
+      type: system.performance.fast_404.[enabled]
       label: 'Fast 404 settings'
-      mapping:
-        enabled:
-          type: boolean
-          label: 'Fast 404 enabled'
-        paths:
-          type: string
-          label: 'Regular expression to match'
-        exclude_paths:
-          type: string
-          label: 'Regular expression to not match'
-        html:
-          type: string
-          label: 'Fast 404 page html'
     js:
       type: mapping
       label: 'JavaScript performance settings'
@@ -233,6 +227,55 @@ system.performance:
         compress:
           type: boolean
           label: 'Compress JavaScript files.'
+
+system.performance.fast_404.*:
+  type: mapping
+  label: 'Fast 404'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Fast 404 enabled'
+
+# When `system.performance:fast_404.enabled = true`.
+system.performance.fast_404.1:
+  type: system.performance.fast_404.*
+  label: 'Fast 404 settings'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    paths:
+      type: regex
+      label: 'Regular expression of paths to match'
+    exclude_paths:
+      type: regex
+      label: 'Regular expression of paths to NOT match'
+    html:
+      # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
+      type: html_document
+      label: 'Fast 404 page HTML'
+
+# When `system.performance:fast_404.enabled = false`.
+system.performance.fast_404.0:
+  type: system.performance.fast_404.*
+  label: 'Fast 404 settings'
+  constraints:
+    FullyValidatable: ~
+  mapping:
+    paths:
+      requiredKey: false
+      type: regex
+      label: 'Regular expression of paths to match'
+    exclude_paths:
+      requiredKey: false
+      type: regex
+      label: 'Regular expression of paths to NOT match'
+    html:
+      # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
+      requiredKey: false
+      type: html_document
+      label: 'Fast 404 page HTML'
 
 system.theme:
   type: config_object

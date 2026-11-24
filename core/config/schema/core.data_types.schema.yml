@@ -121,6 +121,22 @@ text:
       match: false
       message: 'Text is not allowed to contain control characters, only visible characters.'
 
+# An arbitrary string of HTML.
+html_fragment:
+  type: string
+  label: 'HTML fragment'
+  constraints:
+    Html:
+      mode: fragment
+
+# A full HTML document.
+html_document:
+  type: string
+  label: 'HTML document'
+  constraints:
+    Html:
+      mode: document
+
 # A UUID.
 uuid:
   type: string
@@ -163,6 +179,13 @@ machine_name:
     Length:
       # @see \Drupal\Core\Config\Entity\ConfigEntityStorage::MAX_ID_LENGTH
       max: 166
+
+# A valid regular expression.
+regex:
+  type: string
+  label: 'Regular expression'
+  constraints:
+    ValidRegex: ~
 
 # A language identifier.
 langcode:
