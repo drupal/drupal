@@ -14,18 +14,10 @@ use Psr\Log\LoggerInterface;
  */
 class UserFloodSubscriber implements EventSubscriberInterface {
 
-  /**
-   * The default logger service.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
   public function __construct(
     #[Autowire(service: 'logger.channel.user')]
-    ?LoggerInterface $logger = NULL,
+    protected ?LoggerInterface $logger = NULL,
   ) {
-    $this->logger = $logger;
   }
 
   /**

@@ -15,27 +15,6 @@ use Symfony\Component\Routing\RouteCollection;
 class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
 
   /**
-   * The dumper to which we should send collected routes.
-   *
-   * @var \Drupal\Core\Routing\MatcherDumperInterface
-   */
-  protected $dumper;
-
-  /**
-   * The used lock backend instance.
-   *
-   * @var \Drupal\Core\Lock\LockBackendInterface
-   */
-  protected $lock;
-
-  /**
-   * The event dispatcher to notify of routes.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $dispatcher;
-
-  /**
    * The route collection during the rebuild.
    *
    * @var \Symfony\Component\Routing\RouteCollection
@@ -57,20 +36,14 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
   protected $rebuildNeeded = FALSE;
 
   /**
-   * The check provider.
-   *
-   * @var \Drupal\Core\Access\CheckProviderInterface
-   */
-  protected $checkProvider;
-
-  /**
    * Constructs the RouteBuilder using the passed MatcherDumperInterface.
    */
-  public function __construct(MatcherDumperInterface $dumper, LockBackendInterface $lock, EventDispatcherInterface $dispatcher, CheckProviderInterface $check_provider) {
-    $this->dumper = $dumper;
-    $this->lock = $lock;
-    $this->dispatcher = $dispatcher;
-    $this->checkProvider = $check_provider;
+  public function __construct(
+    protected MatcherDumperInterface $dumper,
+    protected LockBackendInterface $lock,
+    protected EventDispatcherInterface $dispatcher,
+    protected CheckProviderInterface $checkProvider,
+  ) {
   }
 
   /**

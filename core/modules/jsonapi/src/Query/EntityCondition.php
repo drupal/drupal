@@ -52,13 +52,6 @@ class EntityCondition {
   ];
 
   /**
-   * The field to be evaluated.
-   *
-   * @var string
-   */
-  protected $field;
-
-  /**
    * The condition operator.
    *
    * @var string
@@ -66,18 +59,20 @@ class EntityCondition {
   protected $operator;
 
   /**
-   * The value against which the field should be evaluated.
-   *
-   * @var mixed
-   */
-  protected $value;
-
-  /**
    * Constructs a new EntityCondition object.
+   *
+   * @param string $field
+   *   The field to be evaluated.
+   * @param mixed $value
+   *   The value against which the field should be evaluated.
+   * @param string|null $operator
+   *   (optional) The condition operator. Defaults to '='.
    */
-  public function __construct($field, $value, $operator = NULL) {
-    $this->field = $field;
-    $this->value = $value;
+  public function __construct(
+    protected $field,
+    protected $value,
+    $operator = NULL,
+  ) {
     $this->operator = ($operator) ? $operator : '=';
   }
 

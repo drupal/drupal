@@ -58,33 +58,17 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
    */
   protected $userAuth;
 
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
-
-  /**
-   * The bare HTML renderer.
-   *
-   * @var \Drupal\Core\Render\BareHtmlPageRendererInterface
-   */
-  protected $bareHtmlPageRenderer;
-
   public function __construct(
     UserFloodControlInterface $user_flood_control,
     UserStorageInterface $user_storage,
     UserAuthenticationInterface $user_auth,
-    RendererInterface $renderer,
-    BareHtmlPageRendererInterface $bare_html_renderer,
+    protected RendererInterface $renderer,
+    protected BareHtmlPageRendererInterface $bareHtmlPageRenderer,
     protected LoginFinalizer $loginFinalizer,
   ) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
     $this->userAuth = $user_auth;
-    $this->renderer = $renderer;
-    $this->bareHtmlPageRenderer = $bare_html_renderer;
   }
 
   /**

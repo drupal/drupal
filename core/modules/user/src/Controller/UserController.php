@@ -31,13 +31,6 @@ use Symfony\Component\Routing\Attribute\Route;
 class UserController extends ControllerBase {
 
   /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
    * The user storage.
    *
    * @var \Drupal\user\UserStorageInterface
@@ -51,37 +44,20 @@ class UserController extends ControllerBase {
    */
   protected $userData;
 
-  /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * The flood service.
-   *
-   * @var \Drupal\Core\Flood\FloodInterface
-   */
-  protected $flood;
-
   public function __construct(
-    DateFormatterInterface $date_formatter,
+    protected DateFormatterInterface $dateFormatter,
     UserStorageInterface $user_storage,
     UserDataInterface $user_data,
-    LoggerInterface $logger,
-    FloodInterface $flood,
+    protected LoggerInterface $logger,
+    protected FloodInterface $flood,
     protected TimeInterface $time,
     protected OneTimeAuthentication $oneTimeAuthentication,
     protected LoginFinalizer $loginFinalizer,
     protected LogoutFinalizer $logoutFinalizer,
     protected AccountCancellation $accountCancellation,
   ) {
-    $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
     $this->userData = $user_data;
-    $this->logger = $logger;
-    $this->flood = $flood;
   }
 
   /**

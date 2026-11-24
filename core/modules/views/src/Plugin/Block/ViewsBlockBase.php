@@ -41,18 +41,19 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
   protected $displaySet;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $user;
-
-  /**
    * The Views contextual links service.
    */
   protected ContextualLinksHelper $contextualLinks;
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageInterface $storage, AccountInterface $user, ?ContextualLinksHelper $contextual_links = NULL) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    ViewExecutableFactory $executable_factory,
+    EntityStorageInterface $storage,
+    protected AccountInterface $user,
+    ?ContextualLinksHelper $contextual_links = NULL,
+  ) {
     $this->pluginId = $plugin_id;
     $delta = $this->getDerivativeId();
     [$name, $this->displayID] = explode('-', $delta, 2);
@@ -60,7 +61,6 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     $view = $storage->load($name);
     $this->view = $executable_factory->get($view);
     $this->displaySet = $this->view->setDisplay($this->displayID);
-    $this->user = $user;
     if (!$contextual_links) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $contextual_links argument is deprecated in drupal:11.4.0 and will be required in drupal:13.0.0. See https://www.drupal.org/node/3382344', E_USER_DEPRECATED);
       $contextual_links = \Drupal::service(ContextualLinksHelper::class);

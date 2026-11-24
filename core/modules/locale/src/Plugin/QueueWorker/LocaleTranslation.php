@@ -21,23 +21,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 )]
 class LocaleTranslation extends QueueWorkerBase implements ContainerFactoryPluginInterface {
 
-  /**
-   * The queue object.
-   *
-   * @var \Drupal\Core\Queue\QueueInterface
-   */
-  protected $queue;
-
   public function __construct(
     array $configuration,
     string $plugin_id,
     array $plugin_definition,
     protected ModuleHandlerInterface $moduleHandler,
-    QueueInterface $queue,
+    protected QueueInterface $queue,
     protected readonly CallableResolver $callableResolver,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->queue = $queue;
   }
 
   /**

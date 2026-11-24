@@ -29,13 +29,6 @@ use Drupal\Core\Database\SchemaDefinition\Table as TableDefinition;
 abstract class Schema implements PlaceholderInterface {
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * The placeholder counter.
    *
    * @var int
@@ -62,9 +55,16 @@ abstract class Schema implements PlaceholderInterface {
    */
   protected $uniqueIdentifier;
 
-  public function __construct($connection) {
+  /**
+   * Constructs a new Schema object.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
+   */
+  public function __construct(
+    protected $connection,
+  ) {
     $this->uniqueIdentifier = bin2hex(random_bytes(12));
-    $this->connection = $connection;
   }
 
   /**

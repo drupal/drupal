@@ -8,13 +8,6 @@ namespace Drupal\Core\TypedData;
 class ListDataDefinition extends DataDefinition implements ListDataDefinitionInterface {
 
   /**
-   * The data definition of a list item.
-   *
-   * @var \Drupal\Core\TypedData\DataDefinitionInterface
-   */
-  protected $itemDefinition;
-
-  /**
    * Creates a new list definition.
    *
    * @param string $item_type
@@ -47,9 +40,11 @@ class ListDataDefinition extends DataDefinition implements ListDataDefinitionInt
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $values = [], ?DataDefinitionInterface $item_definition = NULL) {
+  public function __construct(
+    array $values = [],
+    protected ?DataDefinitionInterface $itemDefinition = NULL,
+  ) {
     $this->definition = $values;
-    $this->itemDefinition = $item_definition;
   }
 
   /**

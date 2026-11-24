@@ -20,23 +20,17 @@ class LanguageMapper {
    */
   protected BackendChain $cache;
 
-  /**
-   * The config factory service.
-   */
-  protected ConfigFactoryInterface $configFactory;
-
   public function __construct(
     #[Autowire('@cache.discovery')]
     CacheBackendInterface $persistent_cache,
     #[Autowire('@cache.memory')]
     CacheBackendInterface $memory_cache,
     protected ModuleHandlerInterface $moduleHandler,
-    ConfigFactoryInterface $config_factory,
+    protected ConfigFactoryInterface $configFactory,
   ) {
     $this->cache = new BackendChain();
     $this->cache->appendBackend($memory_cache);
     $this->cache->appendBackend($persistent_cache);
-    $this->configFactory = $config_factory;
   }
 
   /**

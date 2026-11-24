@@ -25,20 +25,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ContentModerationConfigureEntityTypesForm extends FormBase {
 
   /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity type bundle information service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $bundleInfo;
-
-  /**
    * The moderation information service.
    *
    * @var \Drupal\content_moderation\ModerationInformationInterface
@@ -81,9 +67,12 @@ class ContentModerationConfigureEntityTypesForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info, ModerationInformationInterface $moderation_information, MessengerInterface $messenger) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->bundleInfo = $bundle_info;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityTypeBundleInfoInterface $bundleInfo,
+    ModerationInformationInterface $moderation_information,
+    MessengerInterface $messenger,
+  ) {
     $this->moderationInformation = $moderation_information;
     $this->messenger = $messenger;
   }

@@ -41,31 +41,21 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
   protected $request;
 
   /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
-
-  /**
    * The messenger.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
    */
   protected $messenger;
 
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ThemeManagerInterface $theme_manager, FormBuilderInterface $form_builder, MessengerInterface $messenger, protected ThemeHandlerInterface $themeHandler) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    EntityStorageInterface $storage,
+    protected ThemeManagerInterface $themeManager,
+    protected FormBuilderInterface $formBuilder,
+    MessengerInterface $messenger,
+    protected ThemeHandlerInterface $themeHandler,
+  ) {
     parent::__construct($entity_type, $storage);
-
-    $this->themeManager = $theme_manager;
-    $this->formBuilder = $form_builder;
     $this->messenger = $messenger;
     $this->limit = FALSE;
   }

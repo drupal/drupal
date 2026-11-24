@@ -27,25 +27,30 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class FilterUrl extends FilterBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The list of protocols that are allowed in URLs.
-   */
-  protected array $filterProtocols;
-
-  /**
    * Temporary storage for HTML comments.
    */
   protected array $htmlComments;
 
+  /**
+   * Constructs a new FilterUrl object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param array $filterProtocols
+   *   The list of protocols that are allowed in URLs.
+   */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
     #[Autowire(param: 'filter_protocols')]
-    array $filter_protocols,
+    protected array $filterProtocols,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->filterProtocols = $filter_protocols;
   }
 
   /**

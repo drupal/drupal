@@ -37,86 +37,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   use HtmxRequestInfoTrait;
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The request stack.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
-   */
-  protected $requestStack;
-
-  /**
-   * The element info manager.
-   *
-   * @var \Drupal\Core\Render\ElementInfoManagerInterface
-   */
-  protected $elementInfo;
-
-  /**
-   * The CSRF token generator to validate the form token.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfToken;
-
-  /**
-   * The class resolver.
-   *
-   * @var \Drupal\Core\DependencyInjection\ClassResolverInterface
-   */
-  protected $classResolver;
-
-  /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
-
-  /**
-   * The theme manager.
-   *
-   * @var \Drupal\Core\Theme\ThemeManagerInterface
-   */
-  protected $themeManager;
-
-  /**
-   * The form validator.
-   *
-   * @var \Drupal\Core\Form\FormValidatorInterface
-   */
-  protected $formValidator;
-
-  /**
-   * The form submitter.
-   *
-   * @var \Drupal\Core\Form\FormSubmitterInterface
-   */
-  protected $formSubmitter;
-
-  /**
-   * The form cache.
-   *
-   * @var \Drupal\Core\Form\FormCacheInterface
-   */
-  protected $formCache;
-
-  /**
-   * The callable resolver.
-   */
-  protected CallableResolver $callableResolver;
 
   /**
    * Defines callables that are safe to run with invalid CSRF tokens.
@@ -160,29 +85,18 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   ];
 
   public function __construct(
-    FormValidatorInterface $form_validator,
-    FormSubmitterInterface $form_submitter,
-    FormCacheInterface $form_cache,
-    ModuleHandlerInterface $module_handler,
-    EventDispatcherInterface $event_dispatcher,
-    RequestStack $request_stack,
-    ClassResolverInterface $class_resolver,
-    ElementInfoManagerInterface $element_info,
-    ThemeManagerInterface $theme_manager,
-    CsrfTokenGenerator $csrf_token,
-    CallableResolver $callableResolver,
+    protected FormValidatorInterface $formValidator,
+    protected FormSubmitterInterface $formSubmitter,
+    protected FormCacheInterface $formCache,
+    protected ModuleHandlerInterface $moduleHandler,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected RequestStack $requestStack,
+    protected ClassResolverInterface $classResolver,
+    protected ElementInfoManagerInterface $elementInfo,
+    protected ThemeManagerInterface $themeManager,
+    protected CsrfTokenGenerator $csrfToken,
+    protected CallableResolver $callableResolver,
   ) {
-    $this->formValidator = $form_validator;
-    $this->formSubmitter = $form_submitter;
-    $this->formCache = $form_cache;
-    $this->moduleHandler = $module_handler;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->requestStack = $request_stack;
-    $this->classResolver = $class_resolver;
-    $this->elementInfo = $element_info;
-    $this->csrfToken = $csrf_token;
-    $this->themeManager = $theme_manager;
-    $this->callableResolver = $callableResolver;
   }
 
   /**

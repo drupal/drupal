@@ -25,23 +25,20 @@ class FilterFormatListBuilder extends DraggableListBuilder {
   protected $entitiesKey = 'formats';
 
   /**
-   * The config factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * The messenger.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
    */
   protected $messenger;
 
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, ConfigFactoryInterface $config_factory, MessengerInterface $messenger, protected FilterFormatRepositoryInterface $formatRepository) {
+  public function __construct(
+    EntityTypeInterface $entity_type,
+    EntityStorageInterface $storage,
+    protected ConfigFactoryInterface $configFactory,
+    MessengerInterface $messenger,
+    protected FilterFormatRepositoryInterface $formatRepository,
+  ) {
     parent::__construct($entity_type, $storage);
-
-    $this->configFactory = $config_factory;
     $this->messenger = $messenger;
   }
 

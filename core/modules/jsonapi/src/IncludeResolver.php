@@ -30,13 +30,6 @@ use Drupal\jsonapi\ResourceType\ResourceType;
 class IncludeResolver {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The JSON:API entity access checker.
    *
    * @var \Drupal\jsonapi\Access\EntityAccessChecker
@@ -46,8 +39,10 @@ class IncludeResolver {
   /**
    * IncludeResolver constructor.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityAccessChecker $entity_access_checker) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    EntityAccessChecker $entity_access_checker,
+  ) {
     $this->entityAccessChecker = $entity_access_checker;
   }
 

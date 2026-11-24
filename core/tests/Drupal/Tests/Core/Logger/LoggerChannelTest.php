@@ -188,19 +188,15 @@ class NaughtyRecursiveLogger implements LoggerInterface {
   use LoggerTrait;
 
   /**
-   * The logger channel.
-   */
-  protected LoggerChannel $channel;
-
-  /**
    * The message to log.
    *
    * @var string|\Stringable
    */
   protected $message;
 
-  public function __construct(LoggerChannel $channel) {
-    $this->channel = $channel;
+  public function __construct(
+    protected LoggerChannel $channel,
+  ) {
   }
 
   public function log($level, string|\Stringable $message, array $context = []): void {

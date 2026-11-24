@@ -231,12 +231,14 @@ class MockControllerPsr7 {
 class MockContainerInjection implements ContainerInjectionInterface {
 
   /**
-   * The test value saved during construction.
+   * Constructs a new MockContainerInjection object.
+   *
+   * @param string $result
+   *   The test value saved during construction.
    */
-  protected string $result;
-
-  public function __construct(string $result) {
-    $this->result = $result;
+  public function __construct(
+    protected string $result,
+  ) {
   }
 
   public static function create(ContainerInterface $container): static {

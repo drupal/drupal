@@ -32,35 +32,19 @@ use Symfony\Component\Routing\Attribute\Route;
 class UserMultipleCancelConfirm extends ConfirmFormBase {
 
   /**
-   * The temp store factory.
-   *
-   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
-   */
-  protected $tempStoreFactory;
-
-  /**
    * The user storage.
    *
    * @var \Drupal\user\UserStorageInterface
    */
   protected $userStorage;
 
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
   public function __construct(
-    PrivateTempStoreFactory $temp_store_factory,
+    protected PrivateTempStoreFactory $tempStoreFactory,
     UserStorageInterface $user_storage,
-    EntityTypeManagerInterface $entity_type_manager,
+    protected EntityTypeManagerInterface $entityTypeManager,
     protected AccountCancellation $accountCancellation,
   ) {
-    $this->tempStoreFactory = $temp_store_factory;
     $this->userStorage = $user_storage;
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**

@@ -61,14 +61,14 @@ class TestPerComponentEntityFormDisplay extends PerComponentEntityFormDisplay {
   protected $testValues;
 
   /**
-   * The test entity.
+   * Constructs a new TestPerComponentEntityFormDisplay object.
    *
-   * @var \PHPUnit\Framework\MockObject\MockObject
+   * @param \PHPUnit\Framework\MockObject\MockObject $entity
+   *   The test entity.
    */
-  protected $entity;
-
-  public function __construct($entity) {
-    $this->entity = $entity;
+  public function __construct(
+    protected $entity,
+  ) {
   }
 
   /**

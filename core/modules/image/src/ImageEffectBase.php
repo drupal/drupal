@@ -35,13 +35,6 @@ abstract class ImageEffectBase extends ConfigurablePluginBase implements ImageEf
   protected $weight = '';
 
   /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(
@@ -49,11 +42,9 @@ abstract class ImageEffectBase extends ConfigurablePluginBase implements ImageEf
     $plugin_id,
     $plugin_definition,
     #[Autowire(service: 'logger.channel.image')]
-    LoggerInterface $logger,
+    protected LoggerInterface $logger,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->logger = $logger;
   }
 
   /**

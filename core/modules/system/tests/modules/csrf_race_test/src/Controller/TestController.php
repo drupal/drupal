@@ -14,17 +14,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class TestController extends ControllerBase {
 
   /**
-   * Token generator service.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $tokenGenerator;
-
-  /**
    * Controller constructor.
    */
-  public function __construct(CsrfTokenGenerator $token_generator) {
-    $this->tokenGenerator = $token_generator;
+  public function __construct(
+    protected CsrfTokenGenerator $tokenGenerator,
+  ) {
   }
 
   /**
