@@ -167,3 +167,16 @@ function system_post_update_migrate_compress_setting(): void {
 function system_post_update_remove_non_admin_routes_state(): void {
   \Drupal::state()->delete('routing.non_admin_routes');
 }
+
+/**
+ * Mark the installation as finished on sites with incomplete install state.
+ */
+function system_post_update_mark_installation_finished(): void {
+  $state = \Drupal::state();
+  if ($state->get('install_task') !== 'done') {
+    $state->set('install_task', 'done');
+  }
+  if (!$state->get('install_time')) {
+    $state->set('install_time', \Drupal::time()->getRequestTime());
+  }
+}
