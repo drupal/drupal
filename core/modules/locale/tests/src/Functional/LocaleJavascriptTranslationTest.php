@@ -79,20 +79,20 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
         'Context Single Quoted t' => 'Context string single quoted',
         'Context Double Quoted t' => 'Context string double quoted',
 
-        "Standard Call plural{$etx}Standard Call @count plural" => '',
-        "Whitespace Call plural{$etx}Whitespace Call @count plural" => '',
+        "Standard Call @count singular{$etx}Standard Call @count plural" => '',
+        "Whitespace Call @count singular{$etx}Whitespace Call @count plural" => '',
 
-        "Single Quote plural{$etx}Single Quote @count plural" => '',
-        "Single Quote \\'Escaped\\' plural{$etx}Single Quote \\'Escaped\\' @count plural" => '',
+        "Single Quote @count singular{$etx}Single Quote @count plural" => '',
+        "Single Quote \\'Escaped\\' @count singular{$etx}Single Quote \\'Escaped\\' @count plural" => '',
 
-        "Double Quote plural{$etx}Double Quote @count plural" => '',
-        "Double Quote \\\"Escaped\\\" plural{$etx}Double Quote \\\"Escaped\\\" @count plural" => '',
+        "Double Quote @count singular{$etx}Double Quote @count plural" => '',
+        "Double Quote \\\"Escaped\\\" @count singular{$etx}Double Quote \\\"Escaped\\\" @count plural" => '',
 
-        "Context !key Args plural{$etx}Context !key Args @count plural" => 'Context string',
+        "Context !key Args @count singular{$etx}Context !key Args @count plural" => 'Context string',
 
-        "Context Unquoted plural{$etx}Context Unquoted @count plural" => 'Context string unquoted',
-        "Context Single Quoted plural{$etx}Context Single Quoted @count plural" => 'Context string single quoted',
-        "Context Double Quoted plural{$etx}Context Double Quoted @count plural" => 'Context string double quoted',
+        "Context Unquoted @count singular{$etx}Context Unquoted @count plural" => 'Context string unquoted',
+        "Context Single Quoted @count singular{$etx}Context Single Quoted @count plural" => 'Context string single quoted',
+        "Context Double Quoted @count singular{$etx}Context Double Quoted @count plural" => 'Context string double quoted',
 
         "No count argument plural - singular{$etx}No count argument plural - plural" => '',
       ];

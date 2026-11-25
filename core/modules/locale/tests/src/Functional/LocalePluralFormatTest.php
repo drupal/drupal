@@ -80,7 +80,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
       // English is not imported in this case, so we assume built-in text
       // and formulas.
       'en' => [
-        0 => '1 hour',
+        0 => '@count hour',
         1 => '@count hours',
       ],
       'fr' => [
@@ -96,7 +96,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
       // English, but it will always pick the plural form as per the built-in
       // logic, so only index -1 is relevant with the plural value.
       'hu' => [
-        0 => '1 hour',
+        0 => '@count hour',
         -1 => '@count hours',
       ],
     ];

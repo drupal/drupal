@@ -293,7 +293,7 @@
           remaining < 0
             ? Drupal.formatPlural(
                 currentSelection.length,
-                '1 item selected',
+                '@count item selected',
                 '@count items selected',
               )
             : Drupal.formatPlural(

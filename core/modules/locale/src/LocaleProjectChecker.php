@@ -141,17 +141,17 @@ class LocaleProjectChecker {
     if ($success) {
       if (isset($results['failed_files'])) {
         if ($this->moduleHandler->moduleExists('dblog') && $this->currentUser->hasPermission('access site reports')) {
-          $message = $this->translationManager->formatPlural(count($results['failed_files']), 'One translation file could not be checked. <a href=":url">See the log</a> for details.', '@count translation files could not be checked. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
+          $message = $this->translationManager->formatPlural(count($results['failed_files']), '@count translation file could not be checked. <a href=":url">See the log</a> for details.', '@count translation files could not be checked. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
         }
         else {
-          $message = $this->translationManager->formatPlural(count($results['failed_files']), 'One translation files could not be checked. See the log for details.', '@count translation files could not be checked. See the log for details.');
+          $message = $this->translationManager->formatPlural(count($results['failed_files']), '@count translation file could not be checked. See the log for details.', '@count translation files could not be checked. See the log for details.');
         }
         $this->messenger->addError($message);
       }
       if (isset($results['files'])) {
         $this->messenger->addStatus($this->translationManager->formatPlural(
           count($results['files']),
-          'Checked available interface translation updates for one project.',
+          'Checked available interface translation updates for @count project.',
           'Checked available interface translation updates for @count projects.'
         ));
       }

@@ -70,7 +70,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   public function testUpdateCheckStatus(): void {
     // Case when contributed modules are absent.
     $this->drupalGet('admin/reports/translations');
-    $this->assertSession()->pageTextContains('Missing translations for one project');
+    $this->assertSession()->pageTextContains('Missing translations for 1 project');
 
     $config = $this->config('locale.settings');
     // Set a flag to let the locale_test module replace the project data with a
@@ -363,7 +363,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Install');
 
     // Check if translations have been imported.
-    $this->assertSession()->pageTextContains("One translation file imported. 7 translations were added, 0 translations were updated and 0 translations were removed.");
+    $this->assertSession()->pageTextContains("1 translation file imported. 7 translations were added, 0 translations were updated and 0 translations were removed.");
     // cSpell:disable-next-line
     $this->assertTranslation('Tuesday', 'Dienstag', 'de');
     $locale_test_translate = \Drupal::service(CurrentImportStorage::class)->get('locale_test_translate', 'de');
@@ -414,7 +414,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Add language');
 
     // Check if the right number of translations are added.
-    $this->assertSession()->pageTextContains("One translation file imported. 8 translations were added, 0 translations were updated and 0 translations were removed.");
+    $this->assertSession()->pageTextContains("1 translation file imported. 8 translations were added, 0 translations were updated and 0 translations were removed.");
     // cSpell:disable-next-line
     $this->assertTranslation('Extra day', 'extra dag', 'nl');
 
@@ -474,8 +474,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Ensure the translation file is automatically imported when the language
     // was added.
-    $this->assertSession()->pageTextContains('One translation file imported.');
-    $this->assertSession()->pageTextContains('One translation string was skipped because of disallowed or malformed HTML');
+    $this->assertSession()->pageTextContains('1 translation file imported.');
+    $this->assertSession()->pageTextContains('1 translation string was skipped because of disallowed or malformed HTML');
 
     // Ensure the strings were successfully imported.
     $search = [

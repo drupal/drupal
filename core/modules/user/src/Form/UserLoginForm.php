@@ -239,8 +239,8 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
       if ($flood_control_triggered = $form_state->get('flood_control_triggered')) {
         if ($flood_control_triggered == 'user') {
           $message = $pass_url->access()
-            ? $this->formatPlural($flood_config->get('user_limit'), 'There has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', 'There have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => $pass_url->toString()])
-            : $this->formatPlural($flood_config->get('user_limit'), 'There has been more than one failed login attempt for this account. It is temporarily blocked. Try again later.', 'There have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later.');
+            ? $this->formatPlural($flood_config->get('user_limit'), 'There has been more than @count failed login attempt for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', 'There have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => $pass_url->toString()])
+            : $this->formatPlural($flood_config->get('user_limit'), 'There has been more than @count failed login attempt for this account. It is temporarily blocked. Try again later.', 'There have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later.');
         }
         else {
           // We did not find a uid, so the limit is IP-based.

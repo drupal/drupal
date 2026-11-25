@@ -110,7 +110,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     $assert_session->checkboxChecked("media_library_select_form[$added_media_id]");
 
     // Assert the created oEmbed video is correctly added to the widget.
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $this->waitForText($youtube_title);
 
     // Open the media library again for the unlimited field and go to the tab
@@ -215,7 +215,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     $this->pressSaveButton();
     $page->uncheckField("media_library_select_form[$selected_item_id]");
     $this->waitForText('1 item selected');
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $this->waitForText('Another video');
 
     // Assert removing an added oEmbed media item before save works as expected.
@@ -298,7 +298,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     $assert_session->checkboxChecked("media_library_select_form[$added_media_id]");
 
     // Assert the created oEmbed video is correctly added to the widget.
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $this->waitForText($youtube_title);
 
     // Open the media library again for the unlimited field and go to the tab
@@ -384,7 +384,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     $this->waitForText('The media item has been created but has not yet been saved.');
 
     $this->saveAnd('insert');
-    $this->waitForText('Added one media item.');
+    $this->waitForText('Added 1 media item.');
     $this->waitForNoText('Add or select media');
     $this->waitForText($vimeo_title);
 
@@ -420,7 +420,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     $assert_session->checkboxChecked('Select Another video');
     $assert_session->checkboxNotChecked("Select $vimeo_title");
     $assert_session->hiddenFieldValueEquals('current_selection', $added_media_id);
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $this->waitForText('Another video');
 
     // Assert removing an added oEmbed media item before save works as expected.

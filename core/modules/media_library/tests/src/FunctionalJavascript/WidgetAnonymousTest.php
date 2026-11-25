@@ -66,7 +66,7 @@ class WidgetAnonymousTest extends MediaLibraryTestBase {
 
     // Select the first media item (should be Dog).
     $this->selectMediaItem(0);
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
 
     // Ensure that the selection completed successfully.
     $this->waitForText('Dog');
@@ -77,7 +77,7 @@ class WidgetAnonymousTest extends MediaLibraryTestBase {
 
     // Select the second media item (should be Cat).
     $this->selectMediaItem(1);
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
 
     // Ensure that the selection completed successfully.
     $this->waitForText('Cat');

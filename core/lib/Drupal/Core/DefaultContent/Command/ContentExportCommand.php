@@ -127,7 +127,7 @@ final class ContentExportCommand extends Command {
 
     $message = (string) $this->formatPlural(
       $count,
-      'One entity was exported to @dir.',
+      '@count entity was exported to @dir.',
       '@count entities were exported to @dir.',
       ['@dir' => $this->fileSystem->realpath($dir)],
     );

@@ -49,7 +49,7 @@ class UserBatchActionTest extends BrowserTestBase {
         'action' => 'user_batch_action_test_action',
       ];
       $this->submitForm($edit, 'Apply');
-      $this->assertSession()->pageTextContains('One item has been processed.');
+      $this->assertSession()->pageTextContains('1 item has been processed.');
       $this->assertSession()->pageTextContains($theme . ' theme used');
     }
   }

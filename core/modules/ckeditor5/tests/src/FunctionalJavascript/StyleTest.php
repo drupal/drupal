@@ -79,7 +79,7 @@ JS;
     $this->assertNotNull($styles_textarea = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-style-styles"]'));
 
     $this->assertSame("p.foo.bar|Foobar paragraph\n", $styles_textarea->getValue());
-    $assert_session->pageTextContains('One style configured');
+    $assert_session->pageTextContains('1 style configured');
     $allowed_html_field = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]');
     $this->assertStringContainsString('<p class="foo bar">', $allowed_html_field->getValue());
 

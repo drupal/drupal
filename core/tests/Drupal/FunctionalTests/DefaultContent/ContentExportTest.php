@@ -223,7 +223,7 @@ class ContentExportTest extends BrowserTestBase {
       "--dir=$dir",
     ]);
     $this->assertSame(0, $process->wait());
-    $this->assertStringContainsString('One entity was exported to', $process->getOutput());
+    $this->assertStringContainsString('1 entity was exported to', $process->getOutput());
     $this->assertFileExists($dir . '/file/' . $file->uuid() . '.yml');
     $this->assertFileExists($dir . '/file/' . $file->getFilename());
   }

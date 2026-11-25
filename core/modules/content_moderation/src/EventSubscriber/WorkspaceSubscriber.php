@@ -86,7 +86,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface {
     $query->condition($workflow_condition_group);
 
     if ($count = $query->count()->execute()) {
-      $message = \Drupal::translation()->formatPlural($count, 'The @label workspace can not be published because it contains 1 item in an unpublished moderation state.', 'The @label workspace can not be published because it contains @count items in an unpublished moderation state.', [
+      $message = \Drupal::translation()->formatPlural($count, 'The @label workspace can not be published because it contains @count item in an unpublished moderation state.', 'The @label workspace can not be published because it contains @count items in an unpublished moderation state.', [
         '@label' => $workspace->label(),
       ]);
 

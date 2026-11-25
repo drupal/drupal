@@ -38,7 +38,7 @@ class BundleEntityDeleteForm extends EntityDeleteForm {
         '#tag' => 'p',
         '#value' => $this->formatPlural(
           $num_content_entities,
-          '%type is used by 1 @singular-content-label on your site. You may not remove this @bundle-label until you have removed all of the %type @plural-content-label.',
+          '%type is used by @count @singular-content-label on your site. You may not remove this @bundle-label until you have removed all of the %type @plural-content-label.',
           '%type is used by @count @plural-content-label on your site. You may not remove this @bundle-label until you have removed all of the %type @plural-content-label.', [
             '%type' => $this->entity->label(),
             '@bundle-label' => $bundle_entity_type->getSingularLabel(),

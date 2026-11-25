@@ -95,7 +95,7 @@ class FieldUiIntegrationTest extends MediaLibraryTestBase {
       ->pressButton('Add media');
     $this->waitForText('Add or select media');
     $this->selectMediaItem(0);
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
 
     $page->pressButton('Save settings');
     $this->assertTrue($assert_session->waitForText('Saved Shatner configuration.'));

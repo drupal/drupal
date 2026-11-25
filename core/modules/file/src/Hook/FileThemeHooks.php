@@ -151,7 +151,7 @@ class FileThemeHooks {
         $descriptions[] = $this->t('Unlimited number of files can be uploaded to this field.');
       }
       else {
-        $descriptions[] = $this->formatPlural($cardinality, 'One file only.', 'Maximum @count files.');
+        $descriptions[] = $this->formatPlural($cardinality, '@count file only.', 'Maximum @count files.');
       }
     }
 
