@@ -325,3 +325,16 @@ function system_post_update_convert_empty_country_and_timezone_settings_to_null(
     $system_date_settings->save();
   }
 }
+
+/**
+ * Mark the installation as finished on sites with incomplete install state.
+ */
+function system_post_update_mark_installation_finished(): void {
+  $state = \Drupal::state();
+  if ($state->get('install_task') !== 'done') {
+    $state->set('install_task', 'done');
+  }
+  if (!$state->get('install_time')) {
+    $state->set('install_time', \Drupal::time()->getRequestTime());
+  }
+}
