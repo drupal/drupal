@@ -536,6 +536,9 @@ function install_begin_request($class_loader, &$install_state): void {
   if ($task === 'done' || (!empty($task) && \Drupal::state()->get('install_time'))) {
     throw new AlreadyInstalledException($container->get('string_translation'));
   }
+  if ($install_state['interactive'] && !empty($task) && \Drupal::state()->get('install_session_token') === NULL) {
+    throw new AlreadyInstalledException($container->get('string_translation'));
+  }
 
   // Ensure that the active configuration is empty before installation starts.
   if ($install_state['config_verified'] && empty($task)) {
