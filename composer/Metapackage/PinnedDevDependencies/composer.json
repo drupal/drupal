@@ -15,7 +15,7 @@
         "colinodell/psr-testlogger": "v1.3.1",
         "composer/ca-bundle": "1.6.1",
         "composer/class-map-generator": "1.9.0",
-        "composer/composer": "2.11.2",
+        "composer/composer": "2.11.3",
         "composer/metadata-minifier": "1.0.1",
         "composer/pcre": "3.4.0",
         "composer/spdx-licenses": "1.6.0",
