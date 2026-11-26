@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Exception\SchemaTableDoesNotExistException;
 use Drupal\Core\Database\InvalidQueryException;
 use Drupal\Core\Database\Query\SelectExtender;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -558,7 +558,7 @@ class SelectTest extends DatabaseTestBase {
    * Tests that an invalid count query throws an exception.
    */
   public function testInvalidSelectCount(): void {
-    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->expectException(SchemaTableDoesNotExistException::class);
     // This query will fail because the table does not exist.
     $this->connection->select('some_table_that_does_not_exist', 't')
       ->fields('t')

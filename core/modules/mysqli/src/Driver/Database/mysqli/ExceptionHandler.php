@@ -15,6 +15,16 @@ class ExceptionHandler extends BaseMySqlExceptionHandler {
   /**
    * {@inheritdoc}
    */
+  public function handleStatementException(\Exception $exception, string $sql, array $options = []): never {
+    if (!$exception instanceof \mysqli_sql_exception) {
+      throw $exception;
+    }
+    $this->rethrowNormalizedException($exception, $exception->getSqlState(), $exception->getCode(), $sql, [], $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function handleExecutionException(\Exception $exception, StatementInterface $statement, array $arguments = [], array $options = []): never {
     // Close the client statement to release handles.
     if ($statement->hasClientStatement()) {
@@ -24,7 +34,7 @@ class ExceptionHandler extends BaseMySqlExceptionHandler {
     if (!($exception instanceof \mysqli_sql_exception)) {
       throw $exception;
     }
-    $this->rethrowNormalizedException($exception, $exception->getSqlState(), $exception->getCode(), $statement->getQueryString(), $arguments);
+    $this->rethrowNormalizedException($exception, $exception->getSqlState(), $exception->getCode(), $statement->getQueryString(), $arguments, $options);
   }
 
 }

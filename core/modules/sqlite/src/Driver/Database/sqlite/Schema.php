@@ -2,6 +2,8 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
+use Drupal\Core\Database\Exception\SchemaTableAlreadyExistsException;
+use Drupal\Core\Database\Exception\SchemaTableDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
 use Drupal\Core\Database\SchemaDefinition\GeneratedColumnStorage;
 use Drupal\Core\Database\SchemaException;
@@ -295,10 +297,10 @@ class Schema extends DatabaseSchema {
    */
   public function renameTable($table, $new_name) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException("Cannot rename '$table' to '$new_name': table '$table' doesn't exist.");
+      throw new SchemaTableDoesNotExistException("Cannot rename '$table' to '$new_name': table '$table' doesn't exist.");
     }
     if ($this->tableExists($new_name)) {
-      throw new SchemaObjectExistsException("Cannot rename '$table' to '$new_name': table '$new_name' already exists.");
+      throw new SchemaTableAlreadyExistsException("Cannot rename '$table' to '$new_name': table '$new_name' already exists.");
     }
 
     $schema = $this->introspectSchema($table);
@@ -1049,7 +1051,7 @@ class Schema extends DatabaseSchema {
    */
   protected function introspectIndexSchema($table) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException("The table $table doesn't exist.");
+      throw new SchemaTableDoesNotExistException("The table $table doesn't exist.");
     }
     $schema = $this->introspectSchema($table);
     unset($schema['fields']);

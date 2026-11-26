@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Exception\SchemaTableDoesNotExistException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -151,10 +151,10 @@ class UpdateTest extends DatabaseTestBase {
   }
 
   /**
-   * Updating a not existing table throws a DatabaseExceptionWrapper.
+   * Updating a not existing table throws a SchemaTableDoesNotExistException.
    */
   public function testUpdateNonExistingTable(): void {
-    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->expectException(SchemaTableDoesNotExistException::class);
     $this->connection->update('a-table-that-does-not-exist')
       ->fields([
         'update' => 'New update value',

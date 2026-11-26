@@ -7,7 +7,7 @@ namespace Drupal\KernelTests\Core\Database;
 // cspell:ignore Zaphod
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Exception\SchemaTableDoesNotExistException;
 use Drupal\Core\Database\Query\UpsertUpdateExpression;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -191,10 +191,10 @@ class UpsertTest extends DatabaseTestBase {
   }
 
   /**
-   * Upsert on a not existing table throws a DatabaseExceptionWrapper.
+   * Upsert on a not existing table throws a SchemaTableDoesNotExistException.
    */
   public function testUpsertNonExistingTable(): void {
-    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->expectException(SchemaTableDoesNotExistException::class);
     $upsert = $this->connection->upsert('a-table-that-does-not-exist')
       ->key('id')
       ->fields(['id', 'update']);

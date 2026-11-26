@@ -5,4 +5,4 @@ namespace Drupal\Core\Database;
 /**
  * Exception thrown if an undefined database connection is requested.
  */
-class ConnectionNotDefinedException extends \RuntimeException {}
+class ConnectionNotDefinedException extends \RuntimeException implements DatabaseException {}

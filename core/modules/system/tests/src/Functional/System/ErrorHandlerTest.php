@@ -112,7 +112,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $message = \Drupal::database()->prepareStatement((string) $select, [])->getQueryString();
     $message = str_replace(["\r", "\n"], ' ', $message);
     $error_pdo_exception = [
-      '%type' => 'DatabaseExceptionWrapper',
+      '%type' => 'SchemaTableDoesNotExistException',
       '@message' => $message,
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerPDOException()',
       '%line' => 64,

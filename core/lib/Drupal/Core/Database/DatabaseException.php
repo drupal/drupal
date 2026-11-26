@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 
 namespace Drupal\Core\Database;
 
@@ -10,4 +9,7 @@ namespace Drupal\Core\Database;
  * throw exceptions that implement this interface to allow database
  * abstraction in Drupal.
  */
-interface DatabaseException extends \Throwable { }
+// phpcs:ignore Generic.NamingConventions.InterfaceNameSuffix.Missing
+interface DatabaseException extends \Throwable {
+
+}

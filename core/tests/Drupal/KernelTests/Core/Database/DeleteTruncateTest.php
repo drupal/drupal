@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Exception\SchemaTableDoesNotExistException;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -156,18 +156,18 @@ class DeleteTruncateTest extends DatabaseTestBase {
   }
 
   /**
-   * Deleting from a not existing table throws a DatabaseExceptionWrapper.
+   * Deleting from not existing table throws SchemaTableDoesNotExistException.
    */
   public function testDeleteFromNonExistingTable(): void {
-    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->expectException(SchemaTableDoesNotExistException::class);
     $this->connection->delete('a-table-that-does-not-exist')->execute();
   }
 
   /**
-   * Truncating a not existing table throws a DatabaseExceptionWrapper.
+   * Truncating a not existing table throws SchemaTableDoesNotExistException.
    */
   public function testTruncateNonExistingTable(): void {
-    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->expectException(SchemaTableDoesNotExistException::class);
     $this->connection->truncate('a-table-that-does-not-exist')->execute();
   }
 

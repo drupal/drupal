@@ -8,4 +8,4 @@ namespace Drupal\Core\Database;
  * This is thrown when a rollBack() resulted in other active transactions being
  * rolled-back.
  */
-class TransactionOutOfOrderException extends TransactionException implements DatabaseException {}
+class TransactionOutOfOrderException extends TransactionException {}
