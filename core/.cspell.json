@@ -4,52 +4,46 @@
     "allowCompoundWords": false,
     "globRoot": ".",
     "ignorePaths": [
-      "**/.*.json",
-      ".*ignore",
-      "../**/composer.json",
-      "composer.lock",
+      "**/LICENSE.txt",
+      "../composer/Metapackage/CoreRecommended/composer.json",
+      "../composer/Metapackage/DevDependencies/composer.json",
       "../composer/Plugin/VendorHardening/Config.php",
+      ".cspell.json",
+      ".deprecation-ignore.txt",
+      ".env.example",
+      ".gitignore",
+      ".phpstan-baseline.php",
+      ".prettierignore",
+      ".stylelintrc.json",
+      "COPYRIGHT.txt",
+      "MAINTAINERS.txt",
       "assets/vendor/**",
-      "misc/jquery.form.js",
       "lib/Drupal/Component/Diff/**",
       "lib/Drupal/Component/Transliteration/data/**",
-      "lib/Drupal/Core/File/MimeType/ExtensionMimeTypeGuesser.php",
-      "**/LICENSE.txt",
-      "../**/LICENSE.txt",
+      "misc/jquery.form.js",
       "modules/**/Migrate*Test.php",
       "modules/ckeditor5/js/build/*",
       "modules/media/tests/fixtures/oembed/*",
-      "modules/navigation/assets/**",
-      "modules/system/tests/logo.svgz",
       "node_modules/*",
-      "profiles/demo_umami/modules/demo_umami_content/default_content/languages/es/**/*",
-      "profiles/**/tests/**/*Assertions/*",
-      "modules/**/tests/**/*Assertions/*",
-      "tests/fixtures/config_install/*",
-      "tests/fixtures/files/*",
-      "tests/fixtures/phpunit_*.xml",
-      "tests/Drupal/Tests/Component/Annotation/Doctrine/**",
-      "tests/PHPStan/vendor/**",
-      "COPYRIGHT.txt",
-      "MAINTAINERS.txt",
       "package.json",
-      "yarn.lock",
-      ".yarnrc.yml",
-      ".yarn/*",
-      "misc/cspell/dictionary.txt",
-      "phpstan*"
+      "phpstan*",
+      "profiles/demo_umami/modules/demo_umami_content/default_content/languages/es/**/*",
+      "tests/Drupal/Tests/Component/Annotation/Doctrine/**",
+      "tests/Drupal/Tests/Composer/Plugin/Scaffold/fixtures/drupal-assets-fixture/assets/.csslintrc",
+      "tests/fixtures/config_install/*",
+      "tests/fixtures/phpunit_*.xml"
     ],
     "ignoreRegExpList": [
-      "^msgstr .*",
       "!!binary .*",
       "%[0-9][0-9A-F]",
       "\\Wi18n",
-      "\\x{[0-9A-F]{4,5}}"
+      "\\x{[0-9A-F]{4,5}}",
+      "^msgstr .*"
     ],
     "dictionaries": [
+      "companies",
       "dictionary",
       "drupal",
-      "companies",
       "fonts",
       "html",
       "php",
@@ -57,13 +51,13 @@
     ],
     "dictionaryDefinitions": [
       {
+        "name": "dictionary",
+        "path": "./misc/cspell/dictionary.txt"
+      },
+      {
         "name": "drupal",
         "path": "./misc/cspell/drupal-dictionary.txt"
       },
-      {
-        "name": "dictionary",
-        "path": "./misc/cspell/dictionary.txt"
-      }
      ],
     "flagWords": [
       "blacklist",
