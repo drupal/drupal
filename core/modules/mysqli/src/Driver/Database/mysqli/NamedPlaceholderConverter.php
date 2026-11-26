@@ -14,8 +14,8 @@ namespace Drupal\mysqli\Driver\Database\mysqli;
  * project.
  *
  * This class is a near-copy of Doctrine\DBAL\SQL\Parser, which is part of the
- * Doctrine project: <http://www.doctrine-project.org>. It was copied from
- * version 4.0.0.
+ * Doctrine project: <http://www.doctrine-project.org>. It was updated from
+ * version 4.5.1.
  *
  * Original copyright:
  *
@@ -31,7 +31,7 @@ namespace Drupal\mysqli\Driver\Database\mysqli;
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  *
- * @see https://github.com/doctrine/dbal/blob/4.0.0/src/SQL/Parser.php
+ * @see https://github.com/doctrine/dbal/blob/4.5.1/src/SQL/Parser.php
  *
  * @internal
  */
@@ -54,6 +54,11 @@ final class NamedPlaceholderConverter {
    * The combined regex pattern for parsing.
    */
   private string $sqlPattern;
+
+  /**
+   * The regex pattern for matching a single token.
+   */
+  private string $tokenPattern;
 
   /**
    * The list of original named arguments.
@@ -98,6 +103,11 @@ final class NamedPlaceholderConverter {
       self::MULTI_LINE_COMMENT,
       self::OTHER,
     ]));
+    $this->tokenPattern = '~\\G'
+      . '(?P<named>' . self::NAMED_PARAMETER . ')'
+      . '|(?P<positional>' . self::POSITIONAL_PARAMETER . ')'
+      . '|(?P<other>' . $this->sqlPattern . '|' . self::SPECIAL . ')'
+      . '~s';
   }
 
   /**
@@ -130,39 +140,26 @@ final class NamedPlaceholderConverter {
       }
     }
 
-    /** @var array<string,callable> $patterns */
-    $patterns = [
-      self::NAMED_PARAMETER => function (string $sql): void {
-        $this->addNamedParameter($sql);
-      },
-      self::POSITIONAL_PARAMETER => function (string $sql): void {
-        $this->addPositionalParameter($sql);
-      },
-      $this->sqlPattern => function (string $sql): void {
-        $this->addOther($sql);
-      },
-      self::SPECIAL => function (string $sql): void {
-        $this->addOther($sql);
-      },
-    ];
-
     $offset = 0;
-
-    while (($handler = current($patterns)) !== FALSE) {
-      if (preg_match('~\G' . key($patterns) . '~s', $sql, $matches, 0, $offset) === 1) {
-        $handler($matches[0]);
-        reset($patterns);
-        $offset += strlen($matches[0]);
+    $length = strlen($sql);
+    while ($offset < $length) {
+      if (preg_match($this->tokenPattern, $sql, $matches, 0, $offset) === 1) {
+        $match = $matches[0];
+        if ($matches['named'] !== '') {
+          $this->addNamedParameter($match);
+        }
+        elseif ($matches['positional'] !== '') {
+          $this->addPositionalParameter($match);
+        }
+        else {
+          $this->addOther($match);
+        }
+        $offset += strlen($match);
       }
       elseif (preg_last_error() !== PREG_NO_ERROR) {
         throw new \RuntimeException('Regular expression error');
       }
-      else {
-        next($patterns);
-      }
     }
-
-    assert($offset === strlen($sql));
   }
 
   /**
