@@ -369,7 +369,7 @@ class CommentHooks {
     // or all comment fields are hidden.
     if ($comments > 0 || $open) {
       return [
-        'comment' => \Drupal::translation()->formatPlural($comments, '1 comment', '@count comments'),
+        'comment' => \Drupal::translation()->formatPlural($comments, '@count comment', '@count comments'),
       ];
     }
     return [];

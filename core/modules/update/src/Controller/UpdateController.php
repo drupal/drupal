@@ -98,10 +98,10 @@ class UpdateController extends ControllerBase {
     if ($success) {
       if (!empty($results)) {
         if (!empty($results['updated'])) {
-          $this->messenger()->addStatus($this->formatPlural($results['updated'], 'Checked available update data for one project.', 'Checked available update data for @count projects.'));
+          $this->messenger()->addStatus($this->formatPlural($results['updated'], 'Checked available update data for @count project.', 'Checked available update data for @count projects.'));
         }
         if (!empty($results['failures'])) {
-          $this->messenger()->addError($this->formatPlural($results['failures'], 'Failed to get available update data for one project.', 'Failed to get available update data for @count projects.'));
+          $this->messenger()->addError($this->formatPlural($results['failures'], 'Failed to get available update data for @count project.', 'Failed to get available update data for @count projects.'));
         }
       }
     }

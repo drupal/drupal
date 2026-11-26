@@ -78,7 +78,7 @@ class ByteSizeMarkupTest extends UnitTestCase {
   public function testTranslatableMarkupObject(): void {
     $result = ByteSizeMarkup::create(1, NULL, $this->getStringTranslationStub());
     $this->assertInstanceOf(PluralTranslatableMarkup::class, $result);
-    $this->assertEquals("1 byte\03@count bytes", $result->getUntranslatedString());
+    $this->assertEquals("@count byte\03@count bytes", $result->getUntranslatedString());
 
     $result = ByteSizeMarkup::create(1048576, 'fr', $this->getStringTranslationStub());
     $this->assertInstanceOf(TranslatableMarkup::class, $result);

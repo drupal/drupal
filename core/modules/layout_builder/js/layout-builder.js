@@ -80,7 +80,7 @@
           announce(
             formatPlural(
               $categories.find('.js-layout-builder-block-link:visible').length,
-              '1 block is available in the modified list.',
+              '@count block is available in the modified list.',
               '@count blocks are available in the modified list.',
             ),
           );

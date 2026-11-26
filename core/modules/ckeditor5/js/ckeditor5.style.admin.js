@@ -29,7 +29,7 @@
           }
           return Drupal.formatPlural(
             styleCount,
-            'One style configured',
+            '@count style configured',
             '@count styles configured',
           );
         },

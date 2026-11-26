@@ -243,7 +243,7 @@ class OverviewTerms extends EntityForm implements WorkspaceSafeFormInterface {
     if ($pending_term_ids) {
       $help_message = $this->formatPlural(
         count($pending_term_ids),
-        '%capital_name contains 1 term with pending revisions. Drag and drop of terms with pending revisions is not supported, but you can re-enable drag-and-drop support by getting each term to a published state.',
+        '%capital_name contains @count term with pending revisions. Drag and drop of terms with pending revisions is not supported, but you can re-enable drag-and-drop support by getting each term to a published state.',
         '%capital_name contains @count terms with pending revisions. Drag and drop of terms with pending revisions is not supported, but you can re-enable drag-and-drop support by getting each term to a published state.',
         $args
       );

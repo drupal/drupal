@@ -53,7 +53,7 @@ class UpdateMiscTest extends UpdateTestBase {
     $this->refreshUpdateStatus([], '503-error');
     // Ensure that no "Warning: SimpleXMLElement..." parse errors are found.
     $this->assertSession()->pageTextNotContains('SimpleXMLElement');
-    $this->assertSession()->pageTextContainsOnce('Failed to get available update data for one project.');
+    $this->assertSession()->pageTextContainsOnce('Failed to get available update data for 1 project.');
   }
 
   /**
@@ -103,7 +103,7 @@ class UpdateMiscTest extends UpdateTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
     $this->checkForMetaRefresh();
-    $this->assertSession()->pageTextContains('Checked available update data for one project.');
+    $this->assertSession()->pageTextContains('Checked available update data for 1 project.');
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextNotContains('There are updates available for your version of Drupal.');
     $this->assertSession()->pageTextNotContains('There is a security update available for your version of Drupal.');
@@ -129,7 +129,7 @@ class UpdateMiscTest extends UpdateTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
     $this->checkForMetaRefresh();
-    $this->assertSession()->pageTextContains('Checked available update data for one project.');
+    $this->assertSession()->pageTextContains('Checked available update data for 1 project.');
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextContains('There are updates available for your version of Drupal.');
     $this->assertSession()->pageTextNotContains('There is a security update available for your version of Drupal.');
@@ -164,7 +164,7 @@ class UpdateMiscTest extends UpdateTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
     $this->checkForMetaRefresh();
-    $this->assertSession()->pageTextContains('Checked available update data for one project.');
+    $this->assertSession()->pageTextContains('Checked available update data for 1 project.');
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextNotContains('There are updates available for your version of Drupal.');
     $this->assertSession()->pageTextContains('There is a security update available for your version of Drupal.');

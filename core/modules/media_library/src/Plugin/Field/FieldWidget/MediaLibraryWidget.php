@@ -468,7 +468,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     // Inform the user of how many items are remaining.
     if (!$cardinality_unlimited) {
       if ($remaining) {
-        $cardinality_message = $this->formatPlural($remaining, 'One media item remaining.', '@count media items remaining.');
+        $cardinality_message = $this->formatPlural($remaining, '@count media item remaining.', '@count media items remaining.');
       }
       else {
         $cardinality_message = $this->t('The maximum number of media items have been selected.');
@@ -712,7 +712,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     }
     else {
       $new_items = count(static::getNewMediaItems($element, $form_state));
-      $announcement = \Drupal::translation()->formatPlural($new_items, 'Added one media item.', 'Added @count media items.');
+      $announcement = \Drupal::translation()->formatPlural($new_items, 'Added @count media item.', 'Added @count media items.');
     }
 
     $response = new AjaxResponse();
@@ -848,7 +848,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     $cardinality_unlimited = ($element['#cardinality'] === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
     $selection = count($field_state['items']) + count($media);
     if (!$cardinality_unlimited && ($selection > $element['#cardinality'])) {
-      $form_state->setError($element, \Drupal::translation()->formatPlural($element['#cardinality'], 'Only one item can be selected.', 'Only @count items can be selected.'));
+      $form_state->setError($element, \Drupal::translation()->formatPlural($element['#cardinality'], 'Only @count item can be selected.', 'Only @count items can be selected.'));
     }
 
     // Validate that each selected media is of an allowed bundle.

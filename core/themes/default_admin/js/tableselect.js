@@ -333,7 +333,7 @@
 
         statusMessage = Drupal.formatPlural(
           count,
-          '1 item selected',
+          '@count item selected',
           '@count items selected',
         );
       } else {

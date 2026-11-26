@@ -17,7 +17,7 @@ class BlockContentDeleteForm extends ContentEntityDeleteForm {
   public function getDescription() {
     $instances = $this->entity->getInstances();
     if (!empty($instances)) {
-      return $this->formatPlural(count($instances), 'This will also remove 1 placed block instance. This action cannot be undone.', 'This will also remove @count placed block instances. This action cannot be undone.');
+      return $this->formatPlural(count($instances), 'This will also remove @count placed block instance. This action cannot be undone.', 'This will also remove @count placed block instances. This action cannot be undone.');
     }
     return parent::getDescription();
   }
