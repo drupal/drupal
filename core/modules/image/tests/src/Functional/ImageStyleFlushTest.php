@@ -127,12 +127,12 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
     // Post flush, expected no image in the 'private' wrapper.
     $this->assertEquals(0, $this->getImageCount($style, 'private'), "Image style {$style->label()} flushed correctly for private wrapper.");
 
-    $state = \Drupal::state();
-    $state->set('image_module_test_image_style_flush.called', FALSE);
+    $key_value = \Drupal::keyValue('image');
+    $key_value->set('image_module_test_image_style_flush.called', FALSE);
     $style->flush();
-    $this->assertNull($state->get('image_module_test_image_style_flush.called'));
+    $this->assertNull($key_value->get('image_module_test_image_style_flush.called'));
     $style->flush('/made/up/path');
-    $this->assertSame('/made/up/path', $state->get('image_module_test_image_style_flush.called'));
+    $this->assertSame('/made/up/path', $key_value->get('image_module_test_image_style_flush.called'));
   }
 
 }
