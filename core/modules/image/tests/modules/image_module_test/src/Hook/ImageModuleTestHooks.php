@@ -17,16 +17,16 @@ class ImageModuleTestHooks {
    */
   #[Hook('image_effect_info_alter')]
   public function imageEffectInfoAlter(&$effects): void {
-    $state = \Drupal::state();
-    // The 'image_module_test.counter' state variable value is set and accessed
+    $key_value = \Drupal::keyValue('image');
+    // The 'image_module_test.counter' key/value entry is set and accessed
     // from the ImageEffectsTest::testImageEffectsCaching() test and used to
     // signal if the image effect plugin definitions were computed or were
     // retrieved from the cache.
     // @see \Drupal\Tests\image\Kernel\ImageEffectsTest::testImageEffectsCaching()
-    $counter = $state->get('image_module_test.counter');
+    $counter = $key_value->get('image_module_test.counter');
     // Increase the test counter, signaling that image effects were processed,
     // rather than being served from the cache.
-    $state->set('image_module_test.counter', ++$counter);
+    $key_value->set('image_module_test.counter', ++$counter);
   }
 
   /**
@@ -44,8 +44,7 @@ class ImageModuleTestHooks {
    */
   #[Hook('image_style_flush')]
   public function imageStyleFlush($style, $path = NULL): void {
-    $state = \Drupal::state();
-    $state->set('image_module_test_image_style_flush.called', $path);
+    \Drupal::keyValue('image')->set('image_module_test_image_style_flush.called', $path);
   }
 
   /**
@@ -58,9 +57,9 @@ class ImageModuleTestHooks {
       return ['X-Image-Owned-By' => 'image_module_test'];
     }
     // When we have custom stream wrapper is enabled, do the validation based
-    // on state variable to allow it.
+    // on a key/value entry to allow it.
     if (str_starts_with($uri, 'image-test-dummy://')) {
-      if (\Drupal::state()->get('image_module_test.allow_image_test_dummy', FALSE)) {
+      if (\Drupal::keyValue('image')->get('image_module_test.allow_image_test_dummy', FALSE)) {
         return ['X-Allowed-By' => 'image_module_test'];
       }
       return -1;
