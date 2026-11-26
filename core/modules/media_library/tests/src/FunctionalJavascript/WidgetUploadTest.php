@@ -143,7 +143,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains('1 of 2 items selected');
     $assert_session->hiddenFieldValueEquals('current_selection', $added_media_id);
     // Ensure the created item is added in the widget.
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $this->waitForText($png_image->filename);
 
     // Remove the item.
@@ -158,7 +158,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $this->addMediaFileToField('Add files', $this->container->get('file_system')->realpath($png_uri_2));
     $this->waitForFieldExists('Alternative text')->setValue($this->randomString());
     $this->pressSaveButton();
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $this->waitForText(basename($png_uri_2));
 
     // Also make sure that we can upload to the unlimited cardinality field.
@@ -213,7 +213,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $this->switchToMediaType('Four');
     // We set the multiple to FALSE if only one file can be uploaded.
     $this->assertFalse($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
-    $assert_session->pageTextContains('One file only.');
+    $assert_session->pageTextContains('1 file only.');
     $choose_files = $assert_session->elementExists('css', '.form-managed-file');
     $choose_files->hasButton('Choose file');
     $this->assertFalse($choose_files->hasButton('Choose files'));
@@ -242,7 +242,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $this->waitForText('Add or select media');
     $this->waitForText(basename($jpg_uri_2));
     // Ensure the created item is added in the widget.
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $assert_session->pageTextContains(basename($jpg_uri_2));
 
     // Assert we can also remove selected items from the selection area in the
@@ -272,7 +272,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $assert_session->checkboxChecked("Select $added_media_name");
     $assert_session->checkboxNotChecked("Select $existing_media_name");
     $assert_session->hiddenFieldValueEquals('current_selection', $added_media_id);
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $this->waitForText(basename($png_uri_5));
 
     // Assert removing an uploaded media item before save works as expected.
@@ -489,7 +489,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains('1 of 2 items selected');
     $assert_session->hiddenFieldValueEquals('current_selection', $added_media_id);
     // Ensure the created item is added in the widget.
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $this->waitForText($png_image->filename);
 
     // Remove the item.
@@ -505,7 +505,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $this->waitForFieldExists('Alternative text')->setValue($this->randomString());
     // Assert we can also directly insert uploaded files in the widget.
     $this->saveAnd('insert');
-    $this->waitForText('Added one media item.');
+    $this->waitForText('Added 1 media item.');
     $this->waitForNoText('Add or select media');
     $this->waitForText(basename($png_uri_2));
 
@@ -564,7 +564,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
 
     // We set the multiple to FALSE if only one file can be uploaded.
     $this->assertFalse($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
-    $assert_session->pageTextContains('One file only.');
+    $assert_session->pageTextContains('1 file only.');
     $choose_files = $assert_session->elementExists('css', '.form-managed-file');
     $choose_files->hasButton('Choose file');
     $this->assertFalse($choose_files->hasButton('Choose files'));
@@ -593,7 +593,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $this->waitForText('Add or select media');
     $this->waitForText(basename($jpg_uri_2));
     // Ensure the created item is added in the widget.
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $assert_session->pageTextContains(basename($jpg_uri_2));
 
     // Assert users can not select media items they do not have access to.
@@ -654,7 +654,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $assert_session->checkboxChecked("Select $added_media_name");
     $assert_session->checkboxNotChecked("Select $existing_media_name");
     $assert_session->hiddenFieldValueEquals('current_selection', $added_media_id);
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $this->waitForText(basename($png_uri_5));
 
     // Assert removing an uploaded media item before save works as expected.

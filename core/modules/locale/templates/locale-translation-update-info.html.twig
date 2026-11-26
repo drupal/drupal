@@ -23,7 +23,7 @@
   {% elseif not_found %}
     <span class="locale-translation-update__message">
       {%- trans -%}
-        Missing translations for one project
+        Missing translations for @count project
       {%- plural not_found|length -%}
         Missing translations for @count projects
       {%- endtrans -%}

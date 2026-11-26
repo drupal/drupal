@@ -1042,7 +1042,7 @@ display:
           decimal: .
           separator: ','
           format_plural: false
-          format_plural_string: !!binary MQNAY291bnQ=
+          format_plural_string: !!binary QGNvdW50A0Bjb3VudA==
           prefix: ''
           suffix: ''
       pager:

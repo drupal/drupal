@@ -111,12 +111,12 @@ use Drupal\Core\Language\LanguageInterface;
  * @code
  * // PHP code
  * t('May', [], ['context' => 'Long month name']);
- * \Drupal::translation()->formatPlural($count, '1 something',
+ * \Drupal::translation()->formatPlural($count, '@count something',
  *   '@count somethings', [], ['context' => 'My context']);
  *
  * // JavaScript code
  * Drupal.t('May', {}, {'context': 'Long month name'});
- * Drupal.formatPlural(count, '1 something', '@count somethings', {},
+ * Drupal.formatPlural(count, '@count something', '@count somethings', {},
  *   {'context': 'My context'});
  *
  * // *.links.yml file

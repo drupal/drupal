@@ -476,7 +476,7 @@ class UpdateContribTest extends UpdateTestBase {
 
     // We should see the output messages from fetching manually.
     $this->assertSession()->pageTextContainsOnce('Checked available update data for 3 projects.');
-    $this->assertSession()->pageTextContainsOnce('Failed to get available update data for one project.');
+    $this->assertSession()->pageTextContainsOnce('Failed to get available update data for 1 project.');
 
     // The other two should be listed as projects.
     $this->assertSession()->linkExists('AAA Update test');

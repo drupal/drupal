@@ -40,11 +40,11 @@ class DrupalTranslator implements TranslatorInterface {
     $ids = explode('|', $id);
 
     if (!isset($ids[1])) {
-      throw new \InvalidArgumentException(sprintf('The message "%s" cannot be pluralized, because it is missing a plural (e.g. "There is one apple|There are @count apples").', $id));
+      throw new \InvalidArgumentException(sprintf('The message "%s" cannot be pluralized, because it is missing a plural (e.g. "There is @count apple|There are @count apples").', $id));
     }
 
     // Normally, calls to formatPlural() need to use literal strings, like
-    // formatPlural($count, '1 item', '@count items')
+    // formatPlural($count, '@count item', '@count items')
     // so that the Drupal project POTX string extractor will correctly
     // extract the strings for translation and save them in a format that
     // formatPlural() can work with. However, this is a special case, because

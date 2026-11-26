@@ -305,10 +305,10 @@ class LocaleImportBatch {
       $additions = $updates = $deletes = $skips = 0;
       if (isset($results['failed_files'])) {
         if ($this->moduleHandler->moduleExists('dblog') && $this->currentUser->hasPermission('access site reports')) {
-          $message = $this->translation->formatPlural(count($results['failed_files']), 'One translation file could not be imported. <a href=":url">See the log</a> for details.', '@count translation files could not be imported. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
+          $message = $this->translation->formatPlural(count($results['failed_files']), '@count translation file could not be imported. <a href=":url">See the log</a> for details.', '@count translation files could not be imported. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
         }
         else {
-          $message = $this->translation->formatPlural(count($results['failed_files']), 'One translation file could not be imported. See the log for details.', '@count translation files could not be imported. See the log for details.');
+          $message = $this->translation->formatPlural(count($results['failed_files']), '@count translation file could not be imported. See the log for details.', '@count translation files could not be imported. See the log for details.');
         }
         $this->messenger->addError($message);
       }
@@ -333,7 +333,7 @@ class LocaleImportBatch {
           }
         }
         $this->messenger->addStatus($this->translation->formatPlural(count($results['files']),
-          'One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
+          '@count translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
           '@count translation files imported. %number translations were added, %update translations were updated and %delete translations were removed.',
           ['%number' => $additions, '%update' => $updates, '%delete' => $deletes]
         ));
@@ -345,10 +345,10 @@ class LocaleImportBatch {
 
         if ($skips) {
           if ($this->moduleHandler->moduleExists('dblog') && $this->currentUser->hasPermission('access site reports')) {
-            $message = $this->translation->formatPlural($skips, 'One translation string was skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
+            $message = $this->translation->formatPlural($skips, '@count translation string was skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', '@count translation strings were skipped because of disallowed or malformed HTML. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
           }
           else {
-            $message = $this->translation->formatPlural($skips, 'One translation string was skipped because of disallowed or malformed HTML. See the log for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.');
+            $message = $this->translation->formatPlural($skips, '@count translation string was skipped because of disallowed or malformed HTML. See the log for details.', '@count translation strings were skipped because of disallowed or malformed HTML. See the log for details.');
           }
           $this->messenger->addWarning($message);
           $logger->warning('@count disallowed HTML string(s) in files: @files.', [

@@ -31,7 +31,7 @@ class NumericField extends FieldPluginBase {
     $options['decimal'] = ['default' => '.'];
     $options['separator'] = ['default' => ','];
     $options['format_plural'] = ['default' => FALSE];
-    $options['format_plural_string'] = ['default' => '1' . PoItem::DELIMITER . '@count'];
+    $options['format_plural_string'] = ['default' => '@count' . PoItem::DELIMITER . '@count'];
     $options['prefix'] = ['default' => ''];
     $options['suffix'] = ['default' => ''];
 

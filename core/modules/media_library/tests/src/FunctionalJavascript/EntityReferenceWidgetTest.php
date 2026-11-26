@@ -162,7 +162,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $this->switchToMediaType('One');
     $this->assertAnnounceContains('Showing Type One media.');
     $this->selectMediaItem(0);
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
 
     // Assert that the media type menu is not available when only 1 type is
     // configured for the field.
@@ -258,7 +258,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     // Assert adding a single media item and removing it.
     $this->openMediaLibraryForField('field_twin_media');
     $this->selectMediaItem(0);
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     // Assert the focus is set back on the open button of the media field.
     $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":focus")');
 
@@ -278,10 +278,10 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     // Assert we can select the same media item twice.
     $this->openMediaLibraryForField('field_twin_media');
     $page->checkField('Select Dog');
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $this->openMediaLibraryForField('field_twin_media');
     $page->checkField('Select Dog');
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $this->waitForElementsCount('css', '.field--name-field-twin-media [data-media-library-item-delta]', 2);
     // Assert that we can toggle the visibility of the weight inputs when the
     // field contains more than one item.
@@ -395,7 +395,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     // Open the media library again and select another item.
     $this->openMediaLibraryForField('field_twin_media');
     $this->selectMediaItem(0);
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $this->waitForElementTextContains('#field_twin_media-media-library-wrapper', 'Dog');
     $assert_session->elementTextNotContains('css', '#field_twin_media-media-library-wrapper', 'Cat');
     $assert_session->elementTextContains('css', '#field_twin_media-media-library-wrapper', 'Turtle');
@@ -505,7 +505,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     // Open the media library, select an item and save the node.
     $this->openMediaLibraryForField('field_unlimited_media');
     $this->selectMediaItem(0);
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $page->pressButton('Save');
 
     // Confirm that the node was created.
@@ -566,7 +566,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $this->openMediaLibraryForField('field_unlimited_media');
     $this->selectMediaItem(2);
     // Order: Cat - Dog - Bear.
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
 
     $page->pressButton('Save');
 
