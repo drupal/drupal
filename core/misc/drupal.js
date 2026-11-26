@@ -470,8 +470,10 @@ window.Drupal = { behaviors: {}, locale: {} };
    *   The item count to display.
    * @param {string} singular
    *   The string for the singular case. Make sure it is clear this is singular,
-   *   to ease translation (e.g. use "1 new comment" instead of "1 new"). Do not
-   *   use @count in the singular string.
+   *   to ease translation (e.g. use "@count new comment" instead of "@count
+   *   new"). Do not put "1" or "one" in the string, always use "@count". This
+   *   ensures valid .po files and is necessary to correctly translate such
+   *   strings in certain languages.
    * @param {string} plural
    *   The string for the plural case. Make sure it is clear this is plural, to
    *   ease translation. Use @count in place of the item count, as in "@count
@@ -481,7 +483,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    *   of any key in this array are replaced with the corresponding value.
    *   See {@link Drupal.formatString}.
    *   Note that you do not need to include @count in this array.
-   *   This replacement is done automatically for the plural case.
+   *   This replacement is done automatically.
    * @param {object} [options]
    *   The options to pass to the {@link Drupal.t} function.
    *

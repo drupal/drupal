@@ -395,13 +395,13 @@ class DbUpdateController extends ControllerBase {
       if ($incompatible_count) {
         $build['start']['#title'] = $this->formatPlural(
           $count,
-          '1 pending update (@number_applied to be applied, @number_incompatible skipped)',
+          '@count pending update (@number_applied to be applied, @number_incompatible skipped)',
           '@count pending updates (@number_applied to be applied, @number_incompatible skipped)',
           ['@number_applied' => $count - $incompatible_count, '@number_incompatible' => $incompatible_count]
         );
       }
       else {
-        $build['start']['#title'] = $this->formatPlural($count, '1 pending update', '@count pending updates');
+        $build['start']['#title'] = $this->formatPlural($count, '@count pending update', '@count pending updates');
       }
       // @todo Simplify with https://www.drupal.org/node/2548095
       $base_url = str_replace('/update.php', '', $request->getBaseUrl());

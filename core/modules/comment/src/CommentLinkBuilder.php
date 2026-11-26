@@ -107,7 +107,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
           if ($this->currentUser->hasPermission('access comments')) {
             if (!empty($entity->get($field_name)->comment_count)) {
               $links['comment-comments'] = [
-                'title' => $this->formatPlural($entity->get($field_name)->comment_count, '1 comment', '@count comments'),
+                'title' => $this->formatPlural($entity->get($field_name)->comment_count, '@count comment', '@count comments'),
                 'attributes' => ['title' => $this->t('Jump to the first comment.')],
                 'fragment' => 'comments',
                 'url' => $entity->toUrl(),

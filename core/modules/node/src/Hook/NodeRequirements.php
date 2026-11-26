@@ -41,7 +41,7 @@ class NodeRequirements {
     $grant_count = $this->entityTypeManager->getAccessControlHandler('node')->countGrants();
     $has_node_grants_implementations = $this->moduleHandler->hasImplementations('node_grants');
     if ($grant_count != 1 || $has_node_grants_implementations) {
-      $value = $this->translation->formatPlural($grant_count, 'One permission in use', '@count permissions in use', ['@count' => $grant_count]);
+      $value = $this->translation->formatPlural($grant_count, '@count permission in use', '@count permissions in use', ['@count' => $grant_count]);
     }
     else {
       $value = $this->t('Disabled');

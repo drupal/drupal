@@ -488,7 +488,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *   // The 'success' parameter means no fatal PHP errors were detected. All
  *   // other error management should be handled using 'results'.
  *   if ($success) {
- *     $message = \Drupal::translation()->formatPlural(count($results), 'One item processed.', '@count items processed.');
+ *     $message = \Drupal::translation()->formatPlural(count($results), '@count item processed.', '@count items processed.');
  *   }
  *   else {
  *     $message = t('Finished with an error.');

@@ -131,10 +131,10 @@ function update_fetch_data_finished($success, $results): void {
   if ($success) {
     if (!empty($results)) {
       if (!empty($results['updated'])) {
-        \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural($results['updated'], 'Checked available update data for one project.', 'Checked available update data for @count projects.'));
+        \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural($results['updated'], 'Checked available update data for @count project.', 'Checked available update data for @count projects.'));
       }
       if (!empty($results['failures'])) {
-        \Drupal::messenger()->addError(\Drupal::translation()->formatPlural($results['failures'], 'Failed to get available update data for one project.', 'Failed to get available update data for @count projects.'));
+        \Drupal::messenger()->addError(\Drupal::translation()->formatPlural($results['failures'], 'Failed to get available update data for @count project.', 'Failed to get available update data for @count projects.'));
       }
     }
   }

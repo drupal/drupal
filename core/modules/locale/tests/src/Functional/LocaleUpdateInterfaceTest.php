@@ -98,7 +98,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     $this->assertSession()->pageTextContains("Missing translations for: German. See the Available translation updates page for more information.");
     $this->assertSession()->linkByHrefExists(Url::fromRoute('locale.translate_status')->toString());
     $this->drupalGet('admin/reports/translations');
-    $this->assertSession()->pageTextContains('Missing translations for one project');
+    $this->assertSession()->pageTextContains('Missing translations for 1 project');
     $this->assertSession()->pageTextContains('Locale test translate (1.3-dev). File not found at core/modules/locale/tests/test.de.po');
 
     // Override Drupal core translation status as 'no translations found'.

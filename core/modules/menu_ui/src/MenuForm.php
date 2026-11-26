@@ -308,7 +308,7 @@ class MenuForm extends EntityForm {
         'message' => [
           '#markup' => $this->formatPlural(
             count($pending_menu_link_ids),
-            '%capital_name contains 1 menu link with pending revisions. Manipulation of a menu tree having links with pending revisions is not supported, but you can re-enable manipulation by getting each menu link to a published state.',
+            '%capital_name contains @count menu link with pending revisions. Manipulation of a menu tree having links with pending revisions is not supported, but you can re-enable manipulation by getting each menu link to a published state.',
             '%capital_name contains @count menu links with pending revisions. Manipulation of a menu tree having links with pending revisions is not supported, but you can re-enable manipulation by getting each menu link to a published state.',
             [
               '%capital_name' => $this->entity->label(),

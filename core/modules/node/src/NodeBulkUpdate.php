@@ -169,7 +169,7 @@ class NodeBulkUpdate {
     }
     else {
       $messenger->addError(t('An error occurred and processing did not complete.'));
-      $message = \Drupal::translation()->formatPlural(count($results), '1 item successfully processed:', '@count items successfully processed:');
+      $message = \Drupal::translation()->formatPlural(count($results), '@count item successfully processed:', '@count items successfully processed:');
       $item_list = [
         '#theme' => 'item_list',
         '#items' => $results,

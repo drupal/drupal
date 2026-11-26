@@ -33,7 +33,7 @@ class UploadHelpTest extends KernelTestBase {
     ];
     /** @var \Drupal\Component\Render\MarkupInterface $output */
     $output = \Drupal::service('renderer')->renderInIsolation($help_text);
-    $this->assertEquals("One file only.\n", (string) $output);
+    $this->assertEquals("1 file only.\n", (string) $output);
   }
 
 }

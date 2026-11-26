@@ -95,7 +95,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains("The language French has been created.");
 
     // The import should have created 8 strings.
-    $this->assertSession()->pageTextContains("One translation file imported. 8 translations were added, 0 translations were updated and 0 translations were removed.");
+    $this->assertSession()->pageTextContains("1 translation file imported. 8 translations were added, 0 translations were updated and 0 translations were removed.");
 
     // This import should have saved plural forms to have 2 variants.
     $locale_plurals = \Drupal::service('locale.plural.formula')->getNumberOfPlurals('fr');
@@ -110,7 +110,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     ]);
 
     // The import should have created 1 string and rejected 2.
-    $this->assertSession()->pageTextContains("One translation file imported. 1 translations were added, 0 translations were updated and 0 translations were removed.");
+    $this->assertSession()->pageTextContains("1 translation file imported. 1 translations were added, 0 translations were updated and 0 translations were removed.");
     $this->assertSession()->pageTextContains("2 translation strings were skipped because of disallowed or malformed HTML. See the log for details.");
 
     // Repeat the process with a user that can access site reports, and this
@@ -131,7 +131,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'langcode' => 'fr',
     ]);
     // The import should have created 0 string and rejected 0.
-    $this->assertSession()->pageTextContains("One translation file could not be imported. See the log for details.");
+    $this->assertSession()->pageTextContains("1 translation file could not be imported. See the log for details.");
 
     // Repeat the process with a user that can access site reports, and this
     // time the different warnings must contain links to the log.
@@ -141,7 +141,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'langcode' => 'fr',
     ]);
     // The import should have created 0 string and rejected 0.
-    $this->assertSession()->pageTextContains("One translation file could not be imported. See the log for details.");
+    $this->assertSession()->pageTextContains("1 translation file could not be imported. See the log for details.");
 
     // Try importing a .po file which doesn't exist.
     $name = $this->randomMachineName(16);
@@ -160,7 +160,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     ]);
 
     // The import should have created 1 string.
-    $this->assertSession()->pageTextContains("One translation file imported. 1 translations were added, 0 translations were updated and 0 translations were removed.");
+    $this->assertSession()->pageTextContains("1 translation file imported. 1 translations were added, 0 translations were updated and 0 translations were removed.");
     // Ensure string wasn't overwritten.
     $search = [
       'string' => 'Montag',
@@ -183,7 +183,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     ]);
 
     // The import should have updated 2 strings.
-    $this->assertSession()->pageTextContains("One translation file imported. 0 translations were added, 2 translations were updated and 0 translations were removed.");
+    $this->assertSession()->pageTextContains("1 translation file imported. 0 translations were added, 2 translations were updated and 0 translations were removed.");
     // Ensure string was overwritten.
     $search = [
       'string' => 'Montag',
@@ -204,7 +204,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     ]);
 
     // The import should have created 6 strings.
-    $this->assertSession()->pageTextContains("One translation file imported. 6 translations were added, 0 translations were updated and 0 translations were removed.");
+    $this->assertSession()->pageTextContains("1 translation file imported. 6 translations were added, 0 translations were updated and 0 translations were removed.");
 
     // The database should now contain 6 customized strings (two imported
     // strings are not translated).
@@ -224,7 +224,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     ]);
 
     // The import should have created 1 string.
-    $this->assertSession()->pageTextContains("One translation file imported. 1 translations were added, 0 translations were updated and 0 translations were removed.");
+    $this->assertSession()->pageTextContains("1 translation file imported. 1 translations were added, 0 translations were updated and 0 translations were removed.");
     // Ensure string wasn't overwritten.
     $search = [
       'string' => 'januari',
@@ -244,7 +244,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     ]);
 
     // The import should have updated 2 strings.
-    $this->assertSession()->pageTextContains("One translation file imported. 0 translations were added, 2 translations were updated and 0 translations were removed.");
+    $this->assertSession()->pageTextContains("1 translation file imported. 0 translations were added, 2 translations were updated and 0 translations were removed.");
     // Ensure string was overwritten.
     $search = [
       'string' => 'januari',
@@ -293,7 +293,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'langcode' => $langcode,
     ]);
 
-    $this->assertSession()->pageTextContains("One translation file imported. 1 translations were added, 0 translations were updated and 0 translations were removed.");
+    $this->assertSession()->pageTextContains("1 translation file imported. 1 translations were added, 0 translations were updated and 0 translations were removed.");
     $this->assertSame('Műveletek', (string) $this->t('Operations', [], ['langcode' => $langcode]), 'String imported and translated.');
 
     // Try importing a .po file.
@@ -301,7 +301,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'langcode' => $langcode,
       'overwrite_options[not_customized]' => TRUE,
     ]);
-    $this->assertSession()->pageTextContains("One translation file imported. 0 translations were added, 0 translations were updated and 1 translations were removed.");
+    $this->assertSession()->pageTextContains("1 translation file imported. 0 translations were added, 0 translations were updated and 1 translations were removed.");
 
     $str = "Operations";
     $search = [
@@ -446,9 +446,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\\n"
 
-msgid "One sheep"
+msgid "@count sheep"
 msgid_plural "@count sheep"
-msgstr[0] "un mouton"
+msgstr[0] "@count mouton"
 msgstr[1] "@count moutons"
 
 msgid "Monday"
@@ -540,9 +540,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\\n"
 
-msgid "One dog"
+msgid "@count dog"
 msgid_plural "@count dogs"
-msgstr[0] "un chien"
+msgstr[0] "@count chien"
 msgstr[1] "@count chiens"
 
 msgid "January"

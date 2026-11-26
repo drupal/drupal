@@ -29,7 +29,7 @@ final class ByteSizeMarkup {
     $options = ['langcode' => $langcode];
     $absolute_size = abs($size);
     if ($absolute_size < Bytes::KILOBYTE) {
-      return new PluralTranslatableMarkup($size, '1 byte', '@count bytes', [], $options, $stringTranslation);
+      return new PluralTranslatableMarkup($size, '@count byte', '@count bytes', [], $options, $stringTranslation);
     }
     // Create a multiplier to preserve the sign of $size.
     $sign = $absolute_size / $size;

@@ -74,7 +74,7 @@
           Drupal.announce(
             Drupal.formatPlural(
               $rowsAndDetails.filter('tbody tr:visible').length,
-              '1 module is available in the modified list.',
+              '@count module is available in the modified list.',
               '@count modules are available in the modified list.',
             ),
           );

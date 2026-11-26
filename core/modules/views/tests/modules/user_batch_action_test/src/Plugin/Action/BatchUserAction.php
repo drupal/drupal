@@ -88,7 +88,7 @@ class BatchUserAction extends ActionBase {
    */
   public static function finishBatch($success, $results): void {
     \Drupal::messenger()->addMessage(
-      \Drupal::translation()->formatPlural($results['processed'], 'One item has been processed.', '@count items have been processed.')
+      \Drupal::translation()->formatPlural($results['processed'], '@count item has been processed.', '@count items have been processed.')
     );
     \Drupal::messenger()->addMessage($results['theme'] . ' theme used');
   }

@@ -179,7 +179,7 @@
           Drupal.announce(
             Drupal.formatPlural(
               tdsWithModuleOrPermissionClass.length,
-              '1 permission is available in the modified list.',
+              '@count permission is available in the modified list.',
               '@count permissions are available in the modified list.',
             ),
           );

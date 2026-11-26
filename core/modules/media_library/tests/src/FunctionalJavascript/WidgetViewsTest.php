@@ -104,7 +104,7 @@ class WidgetViewsTest extends MediaLibraryTestBase {
     $this->assertCount(24, $this->getCheckboxes());
 
     $page->checkField('Select Bear');
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     $assert_session->pageTextContains('Bear');
     $assert_session->pageTextNotContains('Cat');
     $assert_session->pageTextNotContains('Turtle');
@@ -156,7 +156,7 @@ class WidgetViewsTest extends MediaLibraryTestBase {
     $this->switchToMediaLibraryTable();
 
     // Select the item.
-    $this->pressInsertSelected('Added one media item.');
+    $this->pressInsertSelected('Added 1 media item.');
     // Ensure that the selection completed successfully.
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextContains('Bear');

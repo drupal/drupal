@@ -94,7 +94,7 @@ class WorkspaceDeleteForm extends ContentEntityDeleteForm {
     foreach ($tracked_entities as $entity_type_id => $entity_ids) {
       $revision_ids = $this->workspaceTracker->getAllTrackedRevisions($this->entity->id(), $entity_type_id, $entity_ids);
       $label = $this->entityTypeManager->getDefinition($entity_type_id)->getLabel();
-      $items[] = $this->formatPlural(count($revision_ids), '1 @label revision.', '@count @label revisions.', ['@label' => $label]);
+      $items[] = $this->formatPlural(count($revision_ids), '@count @label revision.', '@count @label revisions.', ['@label' => $label]);
     }
     $form['revisions'] = [
       '#theme' => 'item_list',
