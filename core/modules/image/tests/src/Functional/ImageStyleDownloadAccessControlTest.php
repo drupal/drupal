@@ -134,9 +134,9 @@ class ImageStyleDownloadAccessControlTest extends BrowserTestBase {
     $this->drupalGet($url);
     $this->assertSession()->statusCodeEquals(403);
 
-    // Set the state variable so that file download hook in image_module_test
+    // Set the key/value entry so that file download hook in image_module_test
     // allows the access of the file.
-    \Drupal::state()->set('image_module_test.allow_image_test_dummy', TRUE);
+    \Drupal::keyValue('image')->set('image_module_test.allow_image_test_dummy', TRUE);
     $this->drupalGet($url);
     $this->assertSession()->statusCodeEquals(200);
   }

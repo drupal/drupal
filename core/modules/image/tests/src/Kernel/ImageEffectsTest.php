@@ -226,22 +226,22 @@ class ImageEffectsTest extends KernelTestBase {
    * Tests image effect caching.
    */
   public function testImageEffectsCaching(): void {
-    $state = $this->container->get('state');
+    $key_value = $this->container->get('keyvalue')->get('image');
 
-    // The 'image_module_test.counter' state variable value is incremented in
+    // The 'image_module_test.counter' key/value entry is incremented in
     // image_module_test_image_effect_info_alter() every time the image effect
     // plugin definitions are recomputed.
     // @see image_module_test_image_effect_info_alter()
-    $state->set('image_module_test.counter', 0);
+    $key_value->set('image_module_test.counter', 0);
 
     // First call should grab a fresh copy of the data.
     $effects = $this->imageEffectPluginManager->getDefinitions();
-    $this->assertEquals(1, $state->get('image_module_test.counter'));
+    $this->assertEquals(1, $key_value->get('image_module_test.counter'));
 
     // Second call should come from cache.
-    $state->set('image_module_test.counter', 0);
+    $key_value->set('image_module_test.counter', 0);
     $cached_effects = $this->imageEffectPluginManager->getDefinitions();
-    $this->assertEquals(0, $state->get('image_module_test.counter'));
+    $this->assertEquals(0, $key_value->get('image_module_test.counter'));
 
     // Check that cached effects are the same as the processed.
     $this->assertSame($effects, $cached_effects);
