@@ -116,6 +116,7 @@ class BootstrapClassmapTest extends BrowserTestBase {
     $database_dependent_files = [
       'core/lib/Drupal/Component/Utility/Unicode.php',
       'core/lib/Drupal/Core/Database/Statement/PdoResult.php',
+      'core/lib/Drupal/Core/Database/Statement/PdoTrait.php',
       'core/lib/Drupal/Core/Database/Statement/PrefetchedResult.php',
       'core/lib/Drupal/Core/Database/StatementWrapperIterator.php',
       'core/lib/Drupal/Core/Database/Transaction/ClientConnectionTransactionState.php',
