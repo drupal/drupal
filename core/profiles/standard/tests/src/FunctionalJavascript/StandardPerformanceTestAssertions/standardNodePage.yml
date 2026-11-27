@@ -11,7 +11,7 @@ CacheGetCountByBin:
   routes: 4
   render: 8
   default: 1
-CacheSetCount: 39
+CacheSetCount: 38
 CacheDeleteCount: 0
 CacheTagInvalidationCount: 0
 CacheTagLookupQueryCount: 6
