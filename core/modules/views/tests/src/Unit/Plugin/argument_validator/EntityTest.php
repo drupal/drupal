@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\argument_validator;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\Core\Entity\StubEntityBase;
 use Drupal\Tests\UnitTestCase;
@@ -73,9 +76,9 @@ class EntityTest extends UnitTestCase {
     $mock_entity
       ->method('access')
       ->willReturnMap([
-        ['test_op', NULL, FALSE, TRUE],
-        ['test_op_2', NULL, FALSE, FALSE],
-        ['test_op_3', NULL, FALSE, TRUE],
+        ['test_op', NULL, TRUE, AccessResult::allowed()],
+        ['test_op_2', NULL, TRUE, AccessResult::neutral()],
+        ['test_op_3', NULL, TRUE, AccessResult::allowed()],
       ]);
 
     $mock_entity_bundle_2 = $this->createStub(StubEntityBase::class);
@@ -85,12 +88,26 @@ class EntityTest extends UnitTestCase {
     $mock_entity_bundle_2
       ->method('access')
       ->willReturnMap([
-        ['test_op', NULL, FALSE, FALSE],
-        ['test_op_2', NULL, FALSE, FALSE],
-        ['test_op_3', NULL, FALSE, TRUE],
+        ['test_op', NULL, TRUE, AccessResult::neutral()],
+        ['test_op_2', NULL, TRUE, AccessResult::neutral()],
+        ['test_op_3', NULL, TRUE, AccessResult::allowed()],
       ]);
 
+    foreach ([$mock_entity, $mock_entity_bundle_2] as $entity) {
+      $entity->method('getCacheContexts')->willReturn([]);
+      $entity->method('getCacheTags')->willReturn([]);
+      $entity->method('getCacheMaxAge')->willReturn(Cache::PERMANENT);
+    }
+
+    $entity_type = $this->createStub(EntityTypeInterface::class);
+    $entity_type
+      ->method('getListCacheTags')
+      ->willReturn(['entity_test_list']);
+
     $storage = $this->createStub(EntityStorageInterface::class);
+    $storage
+      ->method('getEntityType')
+      ->willReturn($entity_type);
 
     // Setup values for IDs passed as strings or numbers.
     $value_map = [

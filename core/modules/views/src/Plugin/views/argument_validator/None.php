@@ -19,7 +19,7 @@ class None extends ArgumentValidatorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function validateArgument($argument) {
+  public function validateArgument($argument /* , RefinableCacheableDependencyInterface $cacheability = new CacheableMetadata() */) {
     if (!empty($this->argument->options['must_not_be'])) {
       return !isset($argument);
     }

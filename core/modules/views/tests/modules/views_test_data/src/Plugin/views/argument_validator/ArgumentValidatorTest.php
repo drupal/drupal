@@ -39,7 +39,7 @@ class ArgumentValidatorTest extends ArgumentValidatorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function validateArgument($arg) {
+  public function validateArgument($arg /* , RefinableCacheableDependencyInterface $cacheability = new CacheableMetadata() */) {
     if ($arg === 'this value should be replaced') {
       // Set the argument to a numeric value so this is valid on PostgreSQL for
       // numeric fields.

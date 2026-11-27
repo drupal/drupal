@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Plugin\views\argument_validator;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Attribute\ViewsArgumentValidator;
@@ -33,7 +34,10 @@ class UserName extends User {
   /**
    * {@inheritdoc}
    */
-  public function validateArgument($argument) {
+  public function validateArgument($argument /* , RefinableCacheableDependencyInterface $cacheability = new CacheableMetadata() */) {
+    $this->cacheability = func_get_args()[1] ?? new CacheableMetadata();
+    // Users can be created or renamed to match the argument.
+    $this->cacheability->addCacheTags($this->userStorage->getEntityType()->getListCacheTags());
     if ($this->multipleCapable && $this->options['multiple']) {
       // At this point only interested in individual IDs no matter what type,
       // just splitting by the allowed delimiters.

@@ -2,6 +2,8 @@
 
 namespace Drupal\views\Plugin\views\argument_validator;
 
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -28,6 +30,11 @@ class Entity extends ArgumentValidatorPluginBase {
   protected $multipleCapable = TRUE;
 
   /**
+   * Collects the cacheability of the validation result.
+   */
+  protected RefinableCacheableDependencyInterface $cacheability;
+
+  /**
    * Constructs a \Drupal\views\Plugin\views\argument_validator\Entity object.
    *
    * @param array $configuration
@@ -49,6 +56,7 @@ class Entity extends ArgumentValidatorPluginBase {
     protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->cacheability = new CacheableMetadata();
   }
 
   /**
@@ -148,7 +156,8 @@ class Entity extends ArgumentValidatorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function validateArgument($argument) {
+  public function validateArgument($argument /* , RefinableCacheableDependencyInterface $cacheability = new CacheableMetadata() */) {
+    $this->cacheability = func_get_args()[1] ?? new CacheableMetadata();
     $entity_type = $this->definition['entity_type'];
 
     if ($this->multipleCapable && $this->options['multiple'] && isset($argument)) {
@@ -164,13 +173,16 @@ class Entity extends ArgumentValidatorPluginBase {
       return FALSE;
     }
 
-    $entities = $this->entityTypeManager->getStorage($entity_type)->loadMultiple($ids);
+    $storage = $this->entityTypeManager->getStorage($entity_type);
+    $entities = $storage->loadMultiple($ids);
     // Validate each id => entity. If any fails break out and return false.
     foreach ($ids as $id) {
       // There is no entity for this ID.
       if (!isset($entities[$id])) {
+        $this->cacheability->addCacheTags($storage->getEntityType()->getListCacheTags());
         return FALSE;
       }
+      $this->cacheability->addCacheableDependency($entities[$id]);
       if (!$this->validateEntity($entities[$id])) {
         return FALSE;
       }
@@ -190,8 +202,12 @@ class Entity extends ArgumentValidatorPluginBase {
    */
   protected function validateEntity(EntityInterface $entity) {
     // If access restricted by entity operation.
-    if ($this->options['access'] && !$entity->access($this->options['operation'])) {
-      return FALSE;
+    if ($this->options['access']) {
+      $access = $entity->access($this->options['operation'], NULL, TRUE);
+      $this->cacheability->addCacheableDependency($access);
+      if (!$access->isAllowed()) {
+        return FALSE;
+      }
     }
     // If restricted by bundle.
     $bundles = $this->options['bundles'];

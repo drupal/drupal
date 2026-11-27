@@ -10,6 +10,7 @@ use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
+use Drupal\views\Access\ValidArgumentAccessCheck;
 use Drupal\views\PostSaveProcess;
 use Drupal\views\PostSaveViewInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -112,17 +113,12 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       '_view_display_show_admin_links' => $this->getOption('show_admin_links'),
     ];
 
-    // @todo How do we apply argument validation?
     $path = $this->getOption('path');
 
     // @todo Figure out validation/argument loading.
     // Replace % with %views_arg for menu autoloading and add to the
     // page arguments so the argument actually comes through.
     $arg_counter = 0;
-
-    $argument_ids = array_keys((array) $this->getOption('arguments'));
-    $total_arguments = count($argument_ids);
-
     $argument_map = [];
 
     $bits = [];
@@ -150,6 +146,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     }
 
     // Add missing arguments not defined in the path, but added as handler.
+    $arguments = (array) $this->getOption('arguments');
+    $total_arguments = count($arguments);
     while (($total_arguments - $arg_counter) > 0) {
       $arg_id = 'arg_' . $arg_counter++;
       $bit = '{' . $arg_id . '}';
@@ -179,6 +177,28 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       $access_plugin = \Drupal::service('plugin.manager.views.access')->createInstance('none');
     }
     $access_plugin->alterRouteDefinition($route);
+
+    // If a NULL or invalid argument could lead to a 403 response, we need to
+    // make sure the route checks the argument and does the same. We do not
+    // check for 404 responses as access checks are not fit for that.
+    $arguments_to_check = [];
+    $arg_counter = 0;
+    foreach ($arguments as $argument_id => $argument) {
+      $arg_id = 'arg_' . $arg_counter++;
+
+      // If there are somehow more views argument plugins than route arguments,
+      // we can bail out early.
+      if (!isset($argument_map[$arg_id])) {
+        break;
+      }
+
+      if (ValidArgumentAccessCheck::requiresValue($argument) || ValidArgumentAccessCheck::requiresValidation($argument)) {
+        $arguments_to_check[] = $argument_id;
+      }
+    }
+    if ($arguments_to_check) {
+      $route->setRequirement('_views_argument_access', implode(',', $arguments_to_check));
+    }
 
     // Set the argument map, in order to support named parameters.
     $route->setOption('_view_argument_map', $argument_map);

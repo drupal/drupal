@@ -20,7 +20,7 @@ class NumericArgumentValidator extends ArgumentValidatorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function validateArgument($argument) {
+  public function validateArgument($argument /* , RefinableCacheableDependencyInterface $cacheability = new CacheableMetadata() */) {
     return is_numeric($argument);
   }
 

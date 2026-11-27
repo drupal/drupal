@@ -2,6 +2,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument_validator;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -62,7 +63,9 @@ class TermName extends Entity {
   /**
    * {@inheritdoc}
    */
-  public function validateArgument($argument) {
+  public function validateArgument($argument /* , RefinableCacheableDependencyInterface $cacheability = new CacheableMetadata() */) {
+    $this->cacheability = func_get_args()[1] ?? new CacheableMetadata();
+
     if ($this->options['transform']) {
       $argument = str_replace('-', ' ', $argument);
       $this->argument->argument = $argument;
@@ -70,10 +73,19 @@ class TermName extends Entity {
     // If bundles is set then restrict the loaded terms to the given bundles.
     if (!empty($this->options['bundles'])) {
       $terms = $this->termStorage->loadByProperties(['name' => $argument, 'vid' => $this->options['bundles']]);
+      $list_cache_tags_sets = [];
+      foreach ($this->options['bundles'] as $bundle) {
+        $list_cache_tags_sets[] = $this->termStorage->getEntityType()->getBundleListCacheTags($bundle);
+      }
+      $list_cache_tags = array_merge(...$list_cache_tags_sets);
     }
     else {
       $terms = $this->termStorage->loadByProperties(['name' => $argument]);
+      $list_cache_tags = $this->termStorage->getEntityType()->getListCacheTags();
     }
+
+    // Terms can be created or renamed to match the argument.
+    $this->cacheability->addCacheTags($list_cache_tags);
 
     // $terms are already bundle tested but we need to test access control.
     foreach ($terms as $term) {

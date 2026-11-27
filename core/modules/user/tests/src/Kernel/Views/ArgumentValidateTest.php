@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel\Views;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormState;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -67,6 +68,10 @@ class ArgumentValidateTest extends ViewsKernelTestBase {
     // Fail for a valid numeric, but for a user that doesn't exist.
     $this->assertFalse($view->argument['null']->validateArgument(32));
 
+    $cacheability = new CacheableMetadata();
+    $this->assertTrue($view->argument['null']->getPlugin('argument_validator')->validateArgument($this->account->id(), $cacheability));
+    $this->assertContains('user:' . $this->account->id(), $cacheability->getCacheTags());
+
     $form = [];
     $form_state = new FormState();
     $view->argument['null']->buildOptionsForm($form, $form_state);
@@ -86,6 +91,11 @@ class ArgumentValidateTest extends ViewsKernelTestBase {
     $view->argument['null']->argument_validated = NULL;
     // Fail for a valid string, but for a user that doesn't exist.
     $this->assertFalse($view->argument['null']->validateArgument($this->randomMachineName()));
+
+    // Users can be created or renamed to match any name.
+    $cacheability = new CacheableMetadata();
+    $this->assertFalse($view->argument['null']->getPlugin('argument_validator')->validateArgument($this->randomMachineName(), $cacheability));
+    $this->assertContains('user_list', $cacheability->getCacheTags());
   }
 
 }

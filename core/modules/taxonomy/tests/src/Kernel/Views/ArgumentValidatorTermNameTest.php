@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Kernel\Views;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\views\Views;
 use PHPUnit\Framework\Attributes\Group;
@@ -125,6 +126,11 @@ class ArgumentValidatorTermNameTest extends TaxonomyTestBase {
     $view->argument['name']->validated_title = NULL;
     $view->argument['name']->argument_validated = NULL;
 
+    // Check that the bundle list cache tag is added.
+    $cacheability = new CacheableMetadata();
+    $this->assertFalse($view->argument['name']->getPlugin('argument_validator')->validateArgument('not a term name', $cacheability));
+    $this->assertContains('taxonomy_term_list:views_testing_tags_2', $cacheability->getCacheTags());
+
     // Allow any and all bundles.
     $view->argument['name']->options['validate_options']['bundles'] = [];
 
@@ -137,6 +143,11 @@ class ArgumentValidatorTermNameTest extends TaxonomyTestBase {
 
     $this->assertTrue($view->argument['name']->setArgument($this->names[4]));
     $this->assertEquals($this->names[4], $view->argument['name']->getTitle());
+
+    // Check that the generic list cache tag is added.
+    $cacheability = new CacheableMetadata();
+    $this->assertFalse($view->argument['name']->getPlugin('argument_validator')->validateArgument('not a term name', $cacheability));
+    $this->assertContains('taxonomy_term_list', $cacheability->getCacheTags());
   }
 
   /**

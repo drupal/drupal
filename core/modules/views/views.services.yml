@@ -128,3 +128,7 @@ services:
   Drupal\views\Plugin\views\query\CastSqlInterface: '@views.cast_sql'
   Drupal\views\ViewsConfigUpdater: ~
   Drupal\views\ContextualLinksHelper: ~
+  access_check.views.valid_argument:
+    class: Drupal\views\Access\ValidArgumentAccessCheck
+    tags:
+      - { name: access_check, applies_to: _views_argument_access }

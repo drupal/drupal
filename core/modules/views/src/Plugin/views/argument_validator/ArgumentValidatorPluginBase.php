@@ -101,8 +101,21 @@ abstract class ArgumentValidatorPluginBase extends PluginBase {
 
   /**
    * Performs validation for a given argument.
+   *
+   * @param mixed $arg
+   *   The argument to validate.
+   * phpcs:ignore Drupal.Commenting.FunctionComment.ParamNameNoMatch
+   * @param \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheability
+   *   (optional) Collects the cacheability of the validation result, for
+   *   example the loaded entities and their access results.
+   *
+   * @return bool
+   *   TRUE if the argument is valid, FALSE otherwise.
+   *
+   * @todo Uncomment the new $cacheability method parameter before
+   *   drupal:13.0.0. https://www.drupal.org/node/3631113
    */
-  public function validateArgument($arg) {
+  public function validateArgument($arg /* , RefinableCacheableDependencyInterface $cacheability = new CacheableMetadata() */) {
     return TRUE;
   }
 
