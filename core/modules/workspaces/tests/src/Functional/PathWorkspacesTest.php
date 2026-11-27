@@ -267,8 +267,8 @@ class PathWorkspacesTest extends BrowserTestBase {
     $this->assertNotAccessiblePaths([$stage_translation_path]);
 
     $this->switchToWorkspace($stage);
-    $this->assertAccessiblePaths([$default_path]);
-    $this->assertNotAccessiblePaths([$translation_path, $stage_translation_path]);
+    $this->assertAccessiblePaths([$default_path, $translation_path]);
+    $this->assertNotAccessiblePaths([$stage_translation_path]);
 
     // Create a new workspace-specific revision for the translation with a new
     // path alias.
