@@ -891,6 +891,35 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $switch_events = [];
     $this->workspaceManager->executeOutsideWorkspace(function (): void {});
     $this->assertSame([TRUE, TRUE], $switch_events);
+
+    // A callback that throws an exception should not change the active
+    // workspace, and the switch back should still be temporary.
+    $switch_events = [];
+    try {
+      $this->workspaceManager->executeOutsideWorkspace(function (): void {
+        throw new \RuntimeException('Failed outside the workspace.');
+      });
+      $this->fail('The exception thrown by the callback was not propagated.');
+    }
+    catch (\RuntimeException $e) {
+      $this->assertSame('Failed outside the workspace.', $e->getMessage());
+    }
+    $this->assertSame('stage', $this->workspaceManager->getActiveWorkspace()?->id());
+    $this->assertSame([TRUE, TRUE], $switch_events);
+
+    $this->workspaceManager->switchToLive();
+    $switch_events = [];
+    try {
+      $this->workspaceManager->executeInWorkspace('stage', function (): void {
+        throw new \RuntimeException('Failed in the workspace.');
+      });
+      $this->fail('The exception thrown by the callback was not propagated.');
+    }
+    catch (\RuntimeException $e) {
+      $this->assertSame('Failed in the workspace.', $e->getMessage());
+    }
+    $this->assertFalse($this->workspaceManager->hasActiveWorkspace());
+    $this->assertSame([TRUE, TRUE], $switch_events);
   }
 
   /**
