@@ -593,7 +593,7 @@ class AttributeTest extends UnitTestCase {
     // deprecations for this test.
     $payload = 'O:30:"Drupal\Core\Template\Attribute":1:{s:7:"storage";a:1:{i:0;O:27:"Drupal\views\ViewExecutable":1:{s:17:"serializationData";a:9:{s:4:"args";N;s:15:"current_display";N;s:12:"current_page";N;s:6:"dom_id";N;s:8:"executed";N;s:12:"exposed_data";N;s:13:"exposed_input";N;s:17:"exposed_raw_input";N;s:7:"storage";N;}}}}';
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage('Unexpected type for $value (Drupal\views\ViewExecutable).');
+    $this->expectExceptionMessageIs('Unexpected type for $value (Drupal\views\ViewExecutable).');
     // The print is to invoke the __toString() method.
     print unserialize($payload);
   }
