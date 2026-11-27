@@ -134,13 +134,14 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    * Get a typed data instance for a property of a given typed data object.
    *
    * This method will use prototyping for fast and efficient instantiation of
-   * many property objects with the same property path; for example,
+   * many property objects sharing the same data definition; for example,
    * when multiple comments are used comment_body.0.value needs to be
    * instantiated very often.
    *
-   * Prototyping is done by the root object's data type and the given
-   * property path, i.e. all property instances having the same property path
-   * and inheriting from the same data type are prototyped.
+   * Prototyping is done per data definition object, i.e. all property
+   * instances created from the same property or item data definition object
+   * share a prototype. Two distinct definition objects never share one, even
+   * when they declare the same property name under the same root.
    *
    * @param \Drupal\Core\TypedData\TypedDataInterface $object
    *   The parent typed data object, implementing the TypedDataInterface and
