@@ -5,6 +5,7 @@ namespace Drupal\Core\TypedData;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\TypedData\Attribute\DataType;
@@ -19,6 +20,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  * Manages data type plugins.
  */
 class TypedDataManager extends DefaultPluginManager implements TypedDataManagerInterface {
+  use DependencySerializationTrait;
 
   /**
    * The validator used for validating typed data.
@@ -35,17 +37,11 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
   protected $constraintManager;
 
   /**
-   * Typed data property prototypes, keyed by their data definition object.
+   * An array of typed data property prototypes.
    *
-   * The map is created on the first lookup.
-   *
-   * @var \WeakMap<\Drupal\Core\TypedData\DataDefinitionInterface, \Drupal\Core\TypedData\TypedDataInterface>|null
-   *
-   * @todo Add the ?\WeakMap type in drupal:13.0.0. Until then the property is
-   *   untyped, so that code writing an array to it gets a deprecation instead
-   *   of a TypeError.
+   * @var array
    */
-  protected $prototypes = NULL;
+  protected $prototypes = [];
 
   /**
    * Constructs a new TypedDataManager.
@@ -158,53 +154,64 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
    * {@inheritdoc}
    */
   public function getPropertyInstance(TypedDataInterface $object, $property_name, $value = NULL) {
-    // Fetch the data definition for the child object from the parent.
-    if ($object instanceof ComplexDataInterface) {
-      $definition = $object->getDataDefinition()->getPropertyDefinition($property_name);
-    }
-    elseif ($object instanceof ListInterface) {
-      $definition = $object->getItemDefinition();
-    }
-    else {
-      throw new \InvalidArgumentException("The passed object has to either implement the ComplexDataInterface or the ListInterface.");
-    }
-    if (!$definition) {
-      throw new \InvalidArgumentException("Property $property_name is unknown.");
+    // For performance, try to reuse existing prototypes instead of
+    // constructing new objects when possible. A prototype is reused when
+    // creating a data object:
+    // - for a similar root object (same data type and settings),
+    // - at the same property path under that root object.
+    $root_definition = $object->getRoot()->getDataDefinition();
+    // If the root object is a list, we want to look at the data type and the
+    // settings of its item definition.
+    if ($root_definition instanceof ListDataDefinition) {
+      $root_definition = $root_definition->getItemDefinition();
     }
 
-    // For performance, try to reuse existing prototypes instead of
-    // constructing new objects when possible. A prototype is derived from the
-    // definition it was built from: create() takes the class from
-    // $definition->getClass(), and the name and parent passed below are wiped
-    // again by setContext(NULL, NULL). Prototypes are therefore keyed by the
-    // definition object itself, so that two distinct definition objects never
-    // share a prototype.
-    //
-    // The prototypes are held in a \WeakMap so that each one is released
-    // together with the data definition it was built from, instead of growing
-    // an array that is only ever emptied by clearCachedDefinitions().
-    if (!$this->prototypes instanceof \WeakMap) {
-      if ($this->prototypes !== NULL) {
-        @trigger_error('Setting \\Drupal\\Core\\TypedData\\TypedDataManager::$prototypes to anything other than a \\WeakMap or NULL is deprecated in drupal:11.6.0 and is removed from drupal:13.0.0. See https://www.drupal.org/node/3638699', E_USER_DEPRECATED);
-      }
-      $this->prototypes = new \WeakMap();
+    // Root data type and settings.
+    $parts[] = $root_definition->getDataType();
+    if ($settings = $root_definition->getSettings()) {
+      // Include the settings serialized as JSON as part of the key. The JSON is
+      // a shorter string than the serialized form, so array access is faster.
+      $parts[] = json_encode($settings);
     }
-    $prototype = $this->prototypes[$definition] ?? NULL;
+    // Property path for the requested data object.
+    $parts[] = $object->getPropertyPath();
+    // Only property instances of complex data types should be cached by the
+    // property name, as they represent different properties. Properties of list
+    // data types are the items of the list and the property name represents
+    // only the delta in that list and not an unique property, which is why all
+    // items should use the same prototype.
+    if ($object instanceof ComplexDataInterface) {
+      $parts[] = $property_name;
+    }
+    $key = implode(':', $parts);
 
     // Create the prototype if needed.
-    if ($prototype === NULL) {
+    if (!isset($this->prototypes[$key])) {
+      // Fetch the data definition for the child object from the parent.
+      if ($object instanceof ComplexDataInterface) {
+        $definition = $object->getDataDefinition()->getPropertyDefinition($property_name);
+      }
+      elseif ($object instanceof ListInterface) {
+        $definition = $object->getItemDefinition();
+      }
+      else {
+        throw new \InvalidArgumentException("The passed object has to either implement the ComplexDataInterface or the ListInterface.");
+      }
+      if (!$definition) {
+        throw new \InvalidArgumentException("Property $property_name is unknown.");
+      }
       // Create the prototype without any value, but with initial parenting
       // so that constructors can set up the objects correctly.
       $prototype = $this->create($definition, NULL, $property_name, $object);
       // Unset the parent so that it is not statically cached within the
       // prototype. It will be set again later anyway.
       $prototype->setContext(NULL, NULL);
-      $this->prototypes[$definition] = $prototype;
+      $this->prototypes[$key] = $prototype;
     }
 
     // Clone the prototype, update its parenting information, and assign the
     // value.
-    $property = clone $prototype;
+    $property = clone $this->prototypes[$key];
     $property->setContext($property_name, $object);
     if (isset($value)) {
       $property->setValue($value, FALSE);
@@ -281,7 +288,7 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
    */
   public function clearCachedDefinitions() {
     parent::clearCachedDefinitions();
-    $this->prototypes = new \WeakMap();
+    $this->prototypes = [];
   }
 
   /**
