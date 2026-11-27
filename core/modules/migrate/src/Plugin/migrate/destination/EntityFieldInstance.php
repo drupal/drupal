@@ -41,7 +41,7 @@ use Drupal\migrate\Attribute\MigrateDestination;
  * @endcode
  *
  * @see \Drupal\field\Entity\FieldConfig
- * @see \Drupal\field\Entity\FieldConfigBase
+ * @see \Drupal\Core\Field\FieldConfigBase
  */
 #[MigrateDestination('entity:field_config')]
 class EntityFieldInstance extends EntityConfigBase {
