@@ -183,14 +183,16 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     if ($should_switch_workspace) {
       $this->doSwitchWorkspace($workspace, TRUE);
     }
-    $result = $function();
 
-    // Switch back if needed.
-    if ($should_switch_workspace) {
-      $this->doSwitchWorkspace($previous_active_workspace, TRUE);
+    try {
+      return $function();
     }
-
-    return $result;
+    finally {
+      // Switch back if needed, even when the callback throws an exception.
+      if ($should_switch_workspace) {
+        $this->doSwitchWorkspace($previous_active_workspace, TRUE);
+      }
+    }
   }
 
   /**
@@ -203,14 +205,16 @@ class WorkspaceManager implements WorkspaceManagerInterface {
     if ($previous_active_workspace) {
       $this->doSwitchWorkspace(NULL, TRUE);
     }
-    $result = $function();
 
-    // Switch back if needed.
-    if ($previous_active_workspace) {
-      $this->doSwitchWorkspace($previous_active_workspace, TRUE);
+    try {
+      return $function();
     }
-
-    return $result;
+    finally {
+      // Switch back if needed, even when the callback throws an exception.
+      if ($previous_active_workspace) {
+        $this->doSwitchWorkspace($previous_active_workspace, TRUE);
+      }
+    }
   }
 
   /**
