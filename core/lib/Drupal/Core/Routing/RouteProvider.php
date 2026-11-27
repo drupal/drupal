@@ -70,9 +70,11 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    */
   public function getRouteCollectionForRequest(Request $request) {
     // Cache both the system path as well as route parameters and matching
-    // routes.
-    $cid = $this->getRouteCollectionCacheId($request);
-    if ($cached = $this->cache->get($cid)) {
+    // routes if the request has no query parameters. Requests with query
+    // strings likely have many variations and are often not requested more
+    // than once.
+    $cid = $this->useRouteCache($request) ? $this->getRouteCollectionCacheId($request) : NULL;
+    if ($cid && $cached = $this->cache->get($cid)) {
       $this->currentPath->setPath($cached->data['path'], $request);
       $request->query->replace($cached->data['query']);
       if ($cached->data['routes'] === FALSE) {
@@ -89,14 +91,33 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       // Incoming path processors may also set query parameters.
       $query_parameters = $request->query->all();
       $routes = $this->getRoutesByPath(rtrim($path, '/'));
-      $cache_value = [
-        'path' => $path,
-        'query' => $query_parameters,
-        'routes' => $routes->count() === 0 ? FALSE : $routes,
-      ];
-      $this->cache->set($cid, $cache_value, CacheBackendInterface::CACHE_PERMANENT, ['route_match']);
+      // Only cache lookups with results.
+      if ($cid && ($routes->all() || $routes->getResources())) {
+        $cache_value = [
+          'path' => $path,
+          'query' => $query_parameters,
+          'routes' => $routes->count() === 0 ? FALSE : $routes,
+        ];
+        $this->cache->set($cid, $cache_value, CacheBackendInterface::CACHE_PERMANENT, ['route_match']);
+      }
+
       return $routes;
     }
+  }
+
+  /**
+   * Whether the route lookup for the given request should be cached.
+   *
+   * By default, requests with query parameters are not cached.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @return bool
+   *   Whether the lookup should be cached.
+   */
+  protected function useRouteCache(Request $request): bool {
+    return $request->query->count() === 0;
   }
 
   /**
