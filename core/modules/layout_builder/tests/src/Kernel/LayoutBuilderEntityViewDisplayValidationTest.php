@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\layout_builder\Section;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\TestTools\Attribute\ShareEnvironment;
 use PHPUnit\Framework\Attributes\Group;
@@ -34,6 +35,7 @@ class LayoutBuilderEntityViewDisplayValidationTest extends ConfigEntityValidatio
     'entity_test',
     'field',
     'layout_builder',
+    'layout_discovery',
     'node',
     'text',
     'user',
@@ -83,6 +85,42 @@ class LayoutBuilderEntityViewDisplayValidationTest extends ConfigEntityValidatio
       'targetEntityType' => 'entity_test_with_bundle',
       'bundle' => 'two',
     ]);
+  }
+
+  /**
+   * Tests that the plugin ID of a Layout Builder section is validated.
+   */
+  public function testLayoutSectionPluginIdIsValidated(): void {
+    $this->entity = $this->container->get('entity_display.repository')
+      ->getViewDisplay('user', 'user');
+    // Add 'created' field to display content so that there will be sections
+    // populated in Layout Builder display.
+    $this->entity->setComponent('created', ['type' => 'timestamp'])
+      ->save();
+    $this->assertInstanceOf(LayoutBuilderEntityViewDisplay::class, $this->entity);
+    $this->entity->enableLayoutBuilder()->save();
+    $sections = array_map(fn(Section $section) => $section->toArray(), $this->entity->getSections());
+    $this->assertCount(1, $sections);
+    $sections[0]['layout_id'] = 'non_existent';
+
+    $this->entity->setThirdPartySetting('layout_builder', 'sections', $sections);
+    $this->assertValidationErrors([
+      'third_party_settings.layout_builder.sections.0.layout_id' => "The 'non_existent' plugin does not exist.",
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function resetEnvironment(): void {
+    parent::resetEnvironment();
+
+    // The test class shares its environment, so remove the display that
+    // ::testLayoutSectionPluginIdIsValidated() saves.
+    $this->container->get('entity_type.manager')
+      ->getStorage('entity_view_display')
+      ->load('user.user.default')
+      ?->delete();
   }
 
 }

@@ -205,6 +205,13 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   private ?array $environmentTables = NULL;
 
   /**
+   * The names of the modules that ::bootKernel() enabled for the test method.
+   *
+   * @var list<string>
+   */
+  private array $bootedModules = [];
+
+  /**
    * The key value factory of the container that booted the test method.
    *
    * It is not refreshed when the container is rebuilt during the test method.
@@ -480,7 +487,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Add this test class as a service provider.
     $GLOBALS['conf']['container_service_providers']['test'] = $this;
 
-    $modules = self::getModulesToEnable(static::class);
+    $modules = static::getModulesToEnable(static::class);
 
     // When a module is providing the database driver, then enable that module.
     $connection_info = Database::getConnectionInfo();
@@ -546,6 +553,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       'module' => array_fill_keys($modules, 0),
       'theme' => $themes,
     ]);
+    $this->bootedModules = array_values(array_unique($modules));
 
     $settings = Settings::getAll();
     $settings['php_storage']['default'] = [
@@ -586,8 +594,15 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $kernel->resetContainer();
 
     if ($record === NULL) {
+      $extension = $config_storage->read('core.extension');
       try {
         $this->setUpEnvironment();
+        // ::setUpEnvironment() may have rebuilt the container, so read through
+        // the current one.
+        $changes = $this->getCoreExtensionChanges($extension, $this->container->get('config.storage')->read('core.extension'));
+        if ($changes) {
+          throw $this->createModuleListChangeException($changes);
+        }
       }
       catch (\Throwable $e) {
         // The initial state is half built. Record that, so the test methods
@@ -907,6 +922,19 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *   Whatever ::resetEnvironment() threw, once the failure is recorded.
    */
   protected function tearDownEnvironment(): void {
+    // Check the module list before ::resetEnvironment() runs: restoring the
+    // module list there would not remove what the modules left in the
+    // database, and ::bootKernel() writes the module list again for every test
+    // method anyway.
+    if (static::sharesEnvironment() && $this->environmentTables !== NULL) {
+      try {
+        $this->checkNoModuleWasEnabledOrDisabled();
+      }
+      catch (\Throwable $e) {
+        $this->invalidateDatabaseState($e->getMessage());
+        throw $e;
+      }
+    }
     try {
       $this->resetEnvironment();
     }
@@ -1071,11 +1099,16 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *   is not applied.
    *
    * @throws \LogicException
-   *   If any module in $modules is already enabled.
+   *   If any module in $modules is already enabled, or if the test class shares
+   *   its environment.
    * @throws \RuntimeException
    *   If a module is not enabled after enabling it.
    */
   protected function enableModules(array $modules) {
+    if (static::sharesEnvironment() && ($new_modules = array_diff($modules, array_keys($this->container->get('module_handler')->getModuleList())))) {
+      sort($new_modules);
+      throw $this->createModuleListChangeException(['enabled' => 'enabled ' . implode(', ', $new_modules)]);
+    }
     // Perform an ExtensionDiscovery scan as this function may receive a
     // profile that is not the current profile, and we don't yet have a cached
     // way to receive inactive profile information.
@@ -1131,11 +1164,15 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *   removed from the active module list.
    *
    * @throws \LogicException
-   *   If any module in $modules is already disabled.
+   *   If any module in $modules is already disabled, or if the test class
+   *   shares its environment.
    * @throws \RuntimeException
    *   If a module is not disabled after disabling it.
    */
   protected function disableModules(array $modules) {
+    if (static::sharesEnvironment() && $modules) {
+      throw $this->createModuleListChangeException(['disabled' => 'disabled ' . implode(', ', $modules)]);
+    }
     // Unset the list of modules in the extension handler.
     $module_handler = $this->container->get('module_handler');
     $module_filenames = $module_handler->getModuleList();
@@ -1302,6 +1339,77 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     if ($added_tables !== []) {
       throw new \RuntimeException(sprintf('%s left %s behind. A test method that adds to the database schema must remove what it added, in ::resetEnvironment().', static::class, implode(', ', $added_tables)));
     }
+  }
+
+  /**
+   * Fails when a test method left the module list changed.
+   *
+   * Module weights and the install profile are not checked: ::bootKernel()
+   * writes them again for every test method, and a module leaves no data
+   * behind by changing them.
+   *
+   * @see \Drupal\TestTools\Attribute\ShareEnvironment
+   */
+  protected function checkNoModuleWasEnabledOrDisabled(): void {
+    $changes = $this->getCoreExtensionChanges(
+      ['module' => array_fill_keys($this->bootedModules, 0)],
+      $this->container->get('config.storage')->read('core.extension'),
+    );
+    $changes = array_intersect_key($changes, array_flip(['enabled', 'disabled']));
+    if ($changes) {
+      throw $this->createModuleListChangeException($changes);
+    }
+  }
+
+  /**
+   * Describes how the modules in the core.extension configuration changed.
+   *
+   * The theme list is not compared: ::bootKernel() keeps it between test
+   * methods.
+   *
+   * @param array $before
+   *   The core.extension configuration before the change.
+   * @param array $after
+   *   The core.extension configuration after the change.
+   *
+   * @return array<string, string>
+   *   The changes, keyed by "enabled", "disabled", "weights" and "profile". For
+   *   example, ['enabled' => 'enabled field, node'].
+   */
+  protected function getCoreExtensionChanges(array $before, array $after): array {
+    $before_modules = $before['module'] ?? [];
+    $after_modules = $after['module'] ?? [];
+    $changes = [];
+    if ($enabled = array_keys(array_diff_key($after_modules, $before_modules))) {
+      sort($enabled);
+      $changes['enabled'] = 'enabled ' . implode(', ', $enabled);
+    }
+    if ($disabled = array_keys(array_diff_key($before_modules, $after_modules))) {
+      sort($disabled);
+      $changes['disabled'] = 'disabled ' . implode(', ', $disabled);
+    }
+    if (array_diff_assoc(array_intersect_key($after_modules, $before_modules), $before_modules)) {
+      $changes['weights'] = 'changed the module weights';
+    }
+    if (($after['profile'] ?? NULL) !== ($before['profile'] ?? NULL)) {
+      $changes['profile'] = 'changed the install profile';
+    }
+    return $changes;
+  }
+
+  /**
+   * Creates the exception for a change to the modules.
+   *
+   * @param array<string, string> $changes
+   *   The changes, as returned by ::getCoreExtensionChanges().
+   *
+   * @return \LogicException
+   *   The exception to throw.
+   *
+   * @see \Drupal\TestTools\Attribute\ShareEnvironment
+   */
+  private function createModuleListChangeException(array $changes): \LogicException {
+    return new \LogicException(sprintf('%s %s, which a test class that shares its environment must not do. See \\%s.', static::class, implode(' and ', $changes), ShareEnvironment::class));
   }
 
   /**
