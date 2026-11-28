@@ -49,6 +49,20 @@ class ComponentMetadataTest extends UnitTestCase {
   }
 
   /**
+   * Tests a Windows component path, which mixes both separators.
+   */
+  public function testWindowsPathRelativeToAppRoot(): void {
+    $metadata = new ComponentMetadata([
+      'path' => 'C:\\site\\web/core/themes/test_theme\\components\\teaser',
+      'id' => 'test_theme:teaser',
+      'name' => 'Teaser',
+      'group' => 'my-group',
+      'description' => 'My description',
+    ], 'C:\\site\\web', FALSE);
+    $this->assertSame('core/themes/test_theme/components/teaser', $metadata->path);
+  }
+
+  /**
    * Data provider for the test testMetadataEnforceSchema.
    *
    * @return array[]
