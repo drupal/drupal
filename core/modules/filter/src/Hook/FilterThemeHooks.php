@@ -4,6 +4,7 @@ namespace Drupal\filter\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Template\Attribute;
 use Drupal\filter\FilterFormatRepositoryInterface;
 
 /**
@@ -27,6 +28,7 @@ class FilterThemeHooks {
           'tips' => NULL,
           'long' => FALSE,
         ],
+        'initial preprocess' => static::class . ':preprocessFilterTips',
       ],
       'text_format_wrapper' => [
         'variables' => [
@@ -91,6 +93,47 @@ class FilterThemeHooks {
       // Remove aria-describedby attribute as it shouldn't be visible here.
       unset($variables['attributes']['aria-describedby']);
     }
+  }
+
+  /**
+   * Prepares variables for filter tips templates.
+   *
+   * Default template: filter-tips.html.twig.
+   *
+   * @param array $variables
+   *   An associative array containing:
+   *   - tips: An array containing descriptions and the filter ID for each
+   *     filter in one or more text formats, keyed by format label and filter
+   *     ID. Example:
+   *     @code
+   *       [
+   *         'Full HTML' => [
+   *           'filter_url' => [
+   *             'tip' => ['#markup' => 'Web page addresses and email addresses turn into links automatically.'],
+   *             'id' => 'filter_url',
+   *           ],
+   *         ],
+   *       ];
+   *     @endcode
+   *
+   * @see https://www.drupal.org/node/3567879
+   */
+  public function preprocessFilterTips(array &$variables): void {
+    $tips = $variables['tips'];
+
+    foreach ($variables['tips'] as $name => $tip_list) {
+      foreach ($tip_list as $tip_key => $tip) {
+        $tip_list[$tip_key]['attributes'] = new Attribute();
+      }
+
+      $variables['tips'][$name] = [
+        'attributes' => new Attribute(),
+        'name' => $name,
+        'list' => $tip_list,
+      ];
+    }
+
+    $variables['multiple'] = count($tips) > 1;
   }
 
   /**
