@@ -117,9 +117,10 @@ class ComponentMetadata {
     string $app_root,
     public readonly bool $mandatorySchemas,
   ) {
-    $path = $metadata_info['path'];
-    // Make the absolute path, relative to the Drupal root.
-    $app_root = rtrim($app_root, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    // Make the absolute path, relative to the Drupal root. On Windows the path
+    // mixes both separators, so compare with forward slashes only.
+    $path = str_replace('\\', '/', $metadata_info['path']);
+    $app_root = rtrim(str_replace('\\', '/', $app_root), '/') . '/';
     if (str_starts_with($path, $app_root)) {
       $path = substr($path, strlen($app_root));
     }
