@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests using entity fields of the file field type in a workspace.
  */
-#[Group('workspaces')]
+#[Group('file')]
 #[RunTestsInSeparateProcesses]
 class WorkspacesFileItemTest extends FileItemTest {
 

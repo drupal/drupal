@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @see \Drupal\FunctionalJavascriptTests\TableDrag\TableDragTest
  */
-#[Group('default_admin')]
+#[Group('javascript')]
 #[RunTestsInSeparateProcesses]
 class AdminTableDragTest extends TableDragTest {
 

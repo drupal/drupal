@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
  *
  * @see \Drupal\Tests\field_ui\FunctionalJavascript\EntityDisplayTest.
  */
-#[Group('default_admin')]
+#[Group('field_ui')]
 #[RunTestsInSeparateProcesses]
 class AdminEntityDisplayTest extends EntityDisplayTest {
 

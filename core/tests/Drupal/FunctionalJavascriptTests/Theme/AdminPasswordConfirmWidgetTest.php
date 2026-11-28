@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests the password confirm widget with Admin theme.
  */
-#[Group('default_admin')]
+#[Group('user')]
 #[RunTestsInSeparateProcesses]
 class AdminPasswordConfirmWidgetTest extends PasswordConfirmWidgetTest {
 
