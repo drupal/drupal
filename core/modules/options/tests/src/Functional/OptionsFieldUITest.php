@@ -148,6 +148,22 @@ class OptionsFieldUITest extends FieldTestBase {
     $field_storage = FieldStorageConfig::loadByName('node', $this->fieldName);
     $this->assertSame($field_storage->getSetting('allowed_values'), [0 => 'Zero']);
 
+    // Check that an in-use integer key of zero does not prevent saving.
+    $node = $this->drupalCreateNode([
+      'type' => $this->type,
+      $this->fieldName => [['value' => 0]],
+    ]);
+    $this->drupalGet($this->adminPath);
+    $value_field_0 = $page->findField('field_storage[subform][settings][allowed_values][table][0][item][key]');
+    $this->assertTrue($value_field_0->hasAttribute('disabled'), 'Value field is disabled');
+    $this->submitForm([
+      'field_storage[subform][settings][allowed_values][table][0][item][label]' => 'Updated zero',
+    ], 'Save settings');
+    $assert_session->pageTextNotContains('Value field is required.');
+    $field_storage = FieldStorageConfig::loadByName('node', $this->fieldName);
+    $this->assertSame([0 => 'Updated zero'], $field_storage->getSetting('allowed_values'));
+    $node->delete();
+
     // Check that the same key can only be used once.
     $input = [
       'field_storage[subform][settings][allowed_values][table][0][item][key]' => 0,
