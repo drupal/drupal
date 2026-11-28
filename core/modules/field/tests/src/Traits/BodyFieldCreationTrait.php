@@ -9,6 +9,8 @@ use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Provides a method to create a body field for a given bundle.
+ *
+ * The 'field' and 'text' modules must be installed to use this method.
  */
 trait BodyFieldCreationTrait {
 
