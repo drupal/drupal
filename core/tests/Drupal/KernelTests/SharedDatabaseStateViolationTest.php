@@ -24,7 +24,14 @@ class SharedDatabaseStateViolationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'user'];
+  protected static $modules = [
+    'system',
+    'user',
+    // Listed twice, as when more than one class of the hierarchy declares it.
+    // The module list does not change, so every test method has to pass
+    // ::checkNoModuleWasEnabledOrDisabled() in ::tearDown().
+    'user',
+  ];
 
   /**
    * The name of a table belonging to the initial state.
@@ -60,6 +67,154 @@ class SharedDatabaseStateViolationTest extends KernelTestBase {
     $connection = $this->container->get('database');
     $connection->schema()->createTable(self::PROBE_TABLE, self::PROBE_SCHEMA);
     $connection->insert(self::PROBE_TABLE)->fields(['id' => 1])->execute();
+  }
+
+  /**
+   * Tests how the changes to the modules are described.
+   */
+  public function testCoreExtensionChanges(): void {
+    $extension = $this->container->get('config.storage')->read('core.extension');
+    $added_module = ['field' => 0] + $extension['module'];
+    $changed_weight = ['user' => 1] + $extension['module'];
+    $removed_module = $extension['module'];
+    unset($removed_module['user']);
+
+    $cases = [
+      // The theme list is kept between test methods, so a change to it is not
+      // reported.
+      [[], ['theme' => ['stark' => 0] + $extension['theme']]],
+      [['enabled' => 'enabled field'], ['module' => $added_module]],
+      [['disabled' => 'disabled user'], ['module' => $removed_module]],
+      [['weights' => 'changed the module weights'], ['module' => $changed_weight]],
+      [['profile' => 'changed the install profile'], ['profile' => 'testing']],
+      [
+        ['enabled' => 'enabled field', 'profile' => 'changed the install profile'],
+        ['module' => $added_module, 'profile' => 'testing'],
+      ],
+      [
+        ['enabled' => 'enabled field', 'weights' => 'changed the module weights'],
+        ['module' => ['field' => 0] + $changed_weight],
+      ],
+    ];
+    foreach ($cases as [$expected, $values]) {
+      $this->assertSame($expected, $this->getCoreExtensionChanges($extension, $values + $extension));
+    }
+  }
+
+  /**
+   * Tests that a test method changing the module list is reported.
+   */
+  public function testChangedModuleListInTestMethodIsReported(): void {
+    // Changing the theme list or the weights passes, the module list is the
+    // same.
+    $storage = $this->container->get('config.storage');
+    $extension = $storage->read('core.extension');
+    $changed = $extension;
+    $changed['theme']['stark'] = 0;
+    $changed['module']['user'] = 10;
+    $storage->write('core.extension', $changed);
+    $this->checkNoModuleWasEnabledOrDisabled();
+
+    $changed = $extension;
+    $changed['module']['field'] = 0;
+    $storage->write('core.extension', $changed);
+    $enabled = NULL;
+    try {
+      $this->checkNoModuleWasEnabledOrDisabled();
+    }
+    catch (\LogicException $e) {
+      $enabled = $e;
+    }
+
+    $changed = $extension;
+    unset($changed['module']['user']);
+    $storage->write('core.extension', $changed);
+    $disabled = NULL;
+    try {
+      $this->checkNoModuleWasEnabledOrDisabled();
+    }
+    catch (\LogicException $e) {
+      $disabled = $e;
+    }
+    $storage->write('core.extension', $extension);
+
+    $this->assertNotNull($enabled, 'Enabling a module is reported.');
+    $this->assertStringContainsString('enabled field,', $enabled->getMessage());
+    $this->assertNotNull($disabled, 'Disabling a module is reported.');
+    $this->assertStringContainsString('disabled user,', $disabled->getMessage());
+  }
+
+  /**
+   * Tests that enabling or disabling a module fails right away.
+   */
+  public function testEnableAndDisableModulesFail(): void {
+    // Enabling a module that is already enabled changes nothing.
+    $this->enableModules(['user']);
+
+    try {
+      $this->enableModules(['field']);
+      $this->fail('Enabling a module fails.');
+    }
+    catch (\LogicException $e) {
+      $this->assertStringContainsString('enabled field,', $e->getMessage());
+    }
+    $this->assertFalse($this->container->get('module_handler')->moduleExists('field'));
+
+    try {
+      $this->disableModules(['user']);
+      $this->fail('Disabling a module fails.');
+    }
+    catch (\LogicException $e) {
+      $this->assertStringContainsString('disabled user,', $e->getMessage());
+    }
+    $this->assertTrue($this->container->get('module_handler')->moduleExists('user'));
+  }
+
+  /**
+   * Tests that the module list is checked before the cleanup runs.
+   *
+   * Restoring the module list in ::resetEnvironment() must not hide the change.
+   */
+  public function testModuleListIsCheckedBeforeReset(): void {
+    $connection = $this->container->get('database');
+    $original = $connection->select(self::STATE_TABLE, 's')
+      ->fields('s', ['status', 'message', 'tables'])
+      ->execute()
+      ->fetchAssoc();
+    $storage = $this->container->get('config.storage');
+    $extension = $storage->read('core.extension');
+    $changed = $extension;
+    $changed['module']['field'] = 0;
+    $storage->write('core.extension', $changed);
+
+    // What ::tearDown() runs. ::resetEnvironment() would throw, so the module
+    // list error shows that the check ran first.
+    $this->failReset = TRUE;
+    $caught = NULL;
+    try {
+      $this->tearDownEnvironment();
+    }
+    catch (\LogicException $e) {
+      $caught = $e;
+    }
+    $this->failReset = FALSE;
+
+    $record = $connection->select(self::STATE_TABLE, 's')
+      ->fields('s', ['status', 'message'])
+      ->execute()
+      ->fetchAssoc();
+
+    // Put the module list and the record back, otherwise the following test
+    // methods would refuse to run, which is the behavior under test rather
+    // than a failure.
+    $storage->write('core.extension', $extension);
+    $connection->delete(self::STATE_TABLE)->execute();
+    $connection->insert(self::STATE_TABLE)->fields($original)->execute();
+
+    $this->assertNotNull($caught, 'The module list change is reported.');
+    $this->assertStringContainsString('enabled field,', $caught->getMessage());
+    $this->assertSame('invalid', $record['status']);
+    $this->assertStringContainsString('enabled field,', $record['message']);
   }
 
   /**

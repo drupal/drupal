@@ -30,7 +30,6 @@ class ContentLanguageSettingsValidationTest extends ConfigEntityValidationTestBa
   protected static $modules = [
     'entity_test',
     'field',
-    'language',
     'node',
     'text',
     'user',
