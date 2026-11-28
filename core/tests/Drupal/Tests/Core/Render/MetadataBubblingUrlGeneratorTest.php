@@ -19,7 +19,7 @@ use PHPUnit\Framework\MockObject\Stub;
  * Confirm that the MetadataBubblingUrlGenerator is functioning properly.
  */
 #[CoversClass(MetadataBubblingUrlGenerator::class)]
-#[Group('Render')]
+#[Group('UrlGeneration')]
 class MetadataBubblingUrlGeneratorTest extends UrlGeneratorTest {
 
   /**

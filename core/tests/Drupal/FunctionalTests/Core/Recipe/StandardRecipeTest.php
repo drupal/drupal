@@ -13,8 +13,8 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Tests Standard recipe installation expectations.
  */
+#[Group('standard')]
 #[Group('#slow')]
-#[Group('Recipe')]
 #[RunTestsInSeparateProcesses]
 class StandardRecipeTest extends StandardTest {
 

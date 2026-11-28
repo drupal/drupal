@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 /**
  * Test administration path based entity conversion when moderation enabled.
  */
-#[Group('content_moderation')]
+#[Group('language')]
 #[RunTestsInSeparateProcesses]
 class ContentModerationAdminPathEntityConverterLanguageTest extends AdminPathEntityConverterLanguageTest {
 

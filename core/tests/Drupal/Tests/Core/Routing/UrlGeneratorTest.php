@@ -32,7 +32,7 @@ use Symfony\Component\Routing\RouteCollection;
  * Confirm that the UrlGenerator is functioning properly.
  */
 #[CoversClass(UrlGenerator::class)]
-#[Group('Routing')]
+#[Group('UrlGeneration')]
 class UrlGeneratorTest extends UnitTestCase {
 
   /**
