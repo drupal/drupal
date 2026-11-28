@@ -23,11 +23,6 @@ class ConfigurableLanguageValidationTest extends ConfigEntityValidationTestBase 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['language'];
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUpEnvironment(): void {
     parent::setUpEnvironment();
 

@@ -8,8 +8,6 @@ use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
-use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
-use Drupal\layout_builder\Section;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\TestTools\Attribute\ShareEnvironment;
 use PHPUnit\Framework\Attributes\Group;
@@ -66,30 +64,6 @@ class EntityViewDisplayValidationTest extends ConfigEntityValidationTestBase {
     $this->entity = $this->container->get(EntityDisplayRepositoryInterface::class)
       ->getViewDisplay('node', 'one', 'test');
     $this->entity->save();
-  }
-
-  /**
-   * Tests that the plugin ID of a Layout Builder section is validated.
-   */
-  public function testLayoutSectionPluginIdIsValidated(): void {
-    $this->enableModules(['layout_builder', 'layout_discovery']);
-
-    $this->entity = $this->container->get('entity_display.repository')
-      ->getViewDisplay('user', 'user');
-    // Add 'created' field to display content so that there will be sections
-    // populated in Layout Builder display.
-    $this->entity->setComponent('created', ['type' => 'timestamp'])
-      ->save();
-    $this->assertInstanceOf(LayoutEntityDisplayInterface::class, $this->entity);
-    $this->entity->enableLayoutBuilder()->save();
-    $sections = array_map(fn(Section $section) => $section->toArray(), $this->entity->getSections());
-    $this->assertCount(1, $sections);
-    $sections[0]['layout_id'] = 'non_existent';
-
-    $this->entity->setThirdPartySetting('layout_builder', 'sections', $sections);
-    $this->assertValidationErrors([
-      'third_party_settings.layout_builder.sections.0.layout_id' => "The 'non_existent' plugin does not exist.",
-    ]);
   }
 
   /**

@@ -30,7 +30,9 @@ class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'config_schema_test',
     'field',
+    'menu_ui',
     'node',
     'text',
     'text_with_summary',
@@ -105,16 +107,12 @@ class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
   #[TestWith([TRUE, ["third_party_settings.menu_ui" => "'parent' is a required key."]])]
   #[TestWith([FALSE, []])]
   public function testThirdPartySettingsMenuUi(bool $third_party_settings_menu_ui_fully_validatable, array $expected_validation_errors): void {
-    $this->enableModules(['menu_ui']);
-
     // Set or unset the `FullyValidatable` constraint on
     // `node.type.*.third_party.menu_ui`.
-    $this->enableModules(['config_schema_test']);
     \Drupal::state()->set(self::MENU_UI_VALIDATABLE_STATE, $third_party_settings_menu_ui_fully_validatable);
     $this->container->get('kernel')->rebuildContainer();
 
     // @see system.menu.main.yml
-    $this->installConfig(['system']);
     $this->entity->setThirdPartySetting('menu_ui', 'available_menus', ['main']);
 
     $this->assertValidationErrors($expected_validation_errors);

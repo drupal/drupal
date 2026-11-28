@@ -28,7 +28,14 @@ class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'node', 'entity_test', 'text', 'user'];
+  protected static $modules = [
+    'field',
+    'field_test',
+    'node',
+    'entity_test',
+    'text',
+    'user',
+  ];
 
   /**
    * The state key turning off the `broken` entity reference selection fallback.
@@ -185,7 +192,6 @@ class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
   public function testEntityReferenceSelectionHandlerIsValidated(): void {
     $this->container->get('state')
       ->set(self::DISABLE_BROKEN_HANDLER_STATE, TRUE);
-    $this->enableModules(['field_test']);
 
     // The `field_type` property is immutable, so we need to clone the entity in
     // order to cleanly change its immutable properties.
