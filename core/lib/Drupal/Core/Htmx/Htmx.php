@@ -654,7 +654,8 @@ class Htmx {
    * @param string $event
    *   An event in either camelCase or kebab-case.
    * @param string $action
-   *   The JavaScript statement.
+   *   The JavaScript statement. The inline script runs as-is, so must never
+   *   contain untrusted input.
    *
    * @return static
    *   Returns this object to allow chaining methods.
