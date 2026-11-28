@@ -8,7 +8,9 @@ use Drupal\entity_test\Entity\EntityTestMul;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Views;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
@@ -311,6 +313,69 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $this->assertCount(6, $view->result);
     $this->assertEquals('3', $view->getStyle()->getField(5, 'id'));
     $this->assertEquals('6', $view->getStyle()->getField(5, 'field_test'));
+  }
+
+  /**
+   * Tests aggregate functions on a configurable field.
+   *
+   * @param string $group_type
+   *   The aggregation function.
+   * @param int $expected
+   *   The expected aggregated value.
+   * @param string $additional_function
+   *   The expected function applied to the additional fields.
+   */
+  #[DataProvider('providerAggregateConfigurableField')]
+  public function testAggregateConfigurableField(string $group_type, int $expected, string $additional_function): void {
+    FieldStorageConfig::create([
+      'type' => 'integer',
+      'field_name' => 'field_test',
+      'cardinality' => 4,
+      'entity_type' => 'entity_test_mul',
+    ])->save();
+    FieldConfig::create([
+      'field_name' => 'field_test',
+      'entity_type' => 'entity_test_mul',
+      'bundle' => 'entity_test_mul',
+    ])->save();
+
+    EntityTestMul::create(['field_test' => [1, 3]])->save();
+    EntityTestMul::create(['field_test' => [1, 3]])->save();
+
+    $view = Views::getView('test_group_by_count_multicardinality');
+    $view->setDisplay();
+    $display = $view->displayHandlers->get('default');
+    unset($display->options['fields']['id']);
+    $display->options['sorts'] = [];
+    $display->options['fields']['field_test']['group_type'] = $group_type;
+    $this->executeView($view);
+
+    $this->assertCount(1, $view->result);
+    // PostgreSQL returns the average as a numeric with trailing zeros.
+    $this->assertEquals($expected, (float) (string) $view->getStyle()->getField(0, 'field_test'));
+    // The value column keeps the selected aggregate function. Additional fields
+    // use MIN() for counts and numeric-only functions, preserving column values
+    // and avoiding PostgreSQL errors on string columns such as langcode.
+    $aliases = $view->field['field_test']->aliases;
+    assert($view->query instanceof Sql);
+    $this->assertSame($group_type, $view->query->fields[$aliases['field_test_value']]['function']);
+    foreach (['delta', 'langcode', 'bundle'] as $additional_field) {
+      $this->assertSame($additional_function, $view->query->fields[$aliases[$additional_field]]['function']);
+    }
+  }
+
+  /**
+   * Data provider for testAggregateConfigurableField().
+   */
+  public static function providerAggregateConfigurableField(): array {
+    return [
+      'count' => ['count', 4, 'min'],
+      'count distinct' => ['count_distinct', 2, 'min'],
+      'sum' => ['sum', 8, 'min'],
+      'average' => ['avg', 2, 'min'],
+      'minimum' => ['min', 1, 'min'],
+      'maximum' => ['max', 3, 'max'],
+    ];
   }
 
   /**
