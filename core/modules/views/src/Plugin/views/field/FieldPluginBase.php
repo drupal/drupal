@@ -206,6 +206,20 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       ];
     }
 
+    // Additional fields are the extra columns a handler adds to the query,
+    // for example 'delta', 'langcode' and 'bundle' for a configurable field.
+    // When the view aggregates, these columns get an aggregate function too.
+    // SUM(), AVG() and STDDEV_POP() need numeric values, so PostgreSQL fails
+    // on string columns such as 'langcode' and 'bundle'. Use MIN() for these
+    // additional fields to select a value from the group. Do the same for
+    // COUNT() and COUNT(DISTINCT ...), so these columns retain their values
+    // instead of becoming counts. The real field keeps the selected function,
+    // because it holds the aggregated value.
+    $additional_group_params = $group_params;
+    if (in_array($this->options['group_type'], ['count', 'count_distinct', 'sum', 'avg', 'stddev_pop'], TRUE)) {
+      $additional_group_params = ['function' => 'min'];
+    }
+
     if (!empty($fields) && is_array($fields)) {
       foreach ($fields as $identifier => $info) {
         if (is_array($info)) {
@@ -233,11 +247,13 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
             $params = $info['params'];
           }
 
-          $params += $group_params;
+          $is_real_field = $table_alias === $this->tableAlias && $info['field'] === $this->realField;
+          $params += $is_real_field ? $group_params : $additional_group_params;
           $this->aliases[$identifier] = $this->query->addField($table_alias, $info['field'], NULL, $params);
         }
         else {
-          $this->aliases[$info] = $this->query->addField($this->tableAlias, $info, NULL, $group_params);
+          $params = $info === $this->realField ? $group_params : $additional_group_params;
+          $this->aliases[$info] = $this->query->addField($this->tableAlias, $info, NULL, $params);
         }
       }
     }
