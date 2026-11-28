@@ -755,9 +755,12 @@ class Htmx {
    *
    * @param string|array<string, string> $event
    *   HTMX event names are lowercase, colon-separated, of the pattern:
-   *   htmx:phase:action[:sub-action].
+   *   htmx:phase:action[:sub-action]. In the array form the keys and values
+   *   are built into inline scripts that run as-is, so must never contain
+   *   untrusted input.
    * @param string $action
-   *   The JavaScript statement.
+   *   The JavaScript statement. The inline script runs as-is, so must never
+   *   contain untrusted input.
    * @param int $modifiers
    *   The modifiers to apply to the attribute. Defaults to no modifiers.
    *
